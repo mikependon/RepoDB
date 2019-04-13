@@ -33,18 +33,18 @@ namespace RepoDb.IntegrationTests.Operations
 
         private DateTime EpocDate => Helper.GetEpocDate();
 
-        private List<SimpleTable> CreateSimpleTables(int count)
+        private List<IdentityTable> GetIdentityTables(int count)
         {
-            var tables = new List<SimpleTable>();
+            var tables = new List<IdentityTable>();
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;
-                tables.Add(new SimpleTable
+                tables.Add(new IdentityTable
                 {
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
                     ColumnDateTime = EpocDate.AddDays(index),
-                    ColumnDateTime2 = EpocDate.AddDays(index),
+                    ColumnDateTime2 = DateTime.UtcNow,
                     ColumnDecimal = index,
                     ColumnFloat = index,
                     ColumnInt = index,
@@ -52,6 +52,38 @@ namespace RepoDb.IntegrationTests.Operations
                 });
             }
             return tables;
+        }
+
+        private IdentityTable GetIdentityTable()
+        {
+            var random = new Random();
+            return new IdentityTable
+            {
+                RowGuid = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        private NonIdentityTable GetNonIdentityTable()
+        {
+            var random = new Random();
+            return new NonIdentityTable
+            {
+                Id = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
         }
 
         private void AssertPropertiesEquality<T>(T t1, T t2)
@@ -80,7 +112,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -88,7 +120,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -104,7 +136,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -112,7 +144,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -128,7 +160,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQuerySecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -136,7 +168,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -152,7 +184,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQuerySecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -160,7 +192,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -176,7 +208,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -184,7 +216,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -201,7 +233,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -209,7 +241,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -226,7 +258,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -234,7 +266,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
@@ -251,7 +283,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -259,7 +291,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
@@ -276,8 +308,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryForDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 3);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -285,7 +317,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     where: new { ColumnInt = 3 },
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -301,8 +333,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryForQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 3);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -310,7 +342,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     where: field,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -327,11 +359,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryForQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 10),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 20)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -340,7 +372,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     where: fields,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -357,11 +389,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryForQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 10),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 20)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -371,7 +403,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQuery<SimpleTable>(
+                var result = repository.BatchQuery<IdentityTable>(
                     where: queryGroup,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -392,7 +424,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -400,7 +432,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -416,7 +448,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -424,7 +456,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -440,7 +472,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncSecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -448,7 +480,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -464,7 +496,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncSecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -472,7 +504,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -488,7 +520,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -496,7 +528,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -513,7 +545,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -521,7 +553,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -538,7 +570,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -546,7 +578,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
@@ -563,7 +595,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -571,7 +603,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
@@ -588,8 +620,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncForDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 3);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -597,7 +629,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     where: new { ColumnInt = 3 },
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -613,8 +645,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncForQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 3);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -622,7 +654,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     where: field,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -639,11 +671,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncForQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 10),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 20)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -652,7 +684,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     where: fields,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -669,11 +701,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBatchQueryAsyncForQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 10),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 20)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -683,7 +715,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.BatchQueryAsync<SimpleTable>(
+                var result = repository.BatchQueryAsync<IdentityTable>(
                     where: queryGroup,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -704,7 +736,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBulkInsertForEntities()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -712,7 +744,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var bulkInsertResult = repository.BulkInsert(tables);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>();
+                var queryResult = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -728,17 +760,17 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBulkInsertForEntitiesWithMappings()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -746,7 +778,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var bulkInsertResult = repository.BulkInsert(tables);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>();
+                var queryResult = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -762,19 +794,19 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -787,7 +819,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBulkInsertForEntitiesDbDataReader()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             // Insert the records first
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -799,16 +831,16 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source repository
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination repository
                     using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        repository.BulkInsert<SimpleTable>((DbDataReader)reader);
+                        repository.BulkInsert<IdentityTable>((DbDataReader)reader);
 
                         // Act
-                        var result = repository.Query<SimpleTable>();
+                        var result = repository.Query<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, result.Count());
@@ -821,18 +853,18 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBulkInsertForEntitiesDbDataReaderWithMappings()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.RowGuid), nameof(SimpleTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -844,16 +876,16 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source repository
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination repository
                     using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        repository.BulkInsert<SimpleTable>((DbDataReader)reader, mappings);
+                        repository.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
 
                         // Act
-                        var result = repository.Query<SimpleTable>();
+                        var result = repository.Query<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, result.Count());
@@ -866,19 +898,19 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -890,13 +922,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source repository
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination repository
                     using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        repository.BulkInsert<SimpleTable>((DbDataReader)reader, mappings);
+                        repository.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
                     }
                 }
             }
@@ -910,7 +942,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBulkInsertAsyncForEntities()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -922,7 +954,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, bulkInsertResult.Result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>();
+                var queryResult = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -937,17 +969,17 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBulkInsertAsyncForEntitiesWithMappings()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -959,7 +991,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, bulkInsertResult.Result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>();
+                var queryResult = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -974,19 +1006,19 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1003,7 +1035,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBulkInsertAsyncForEntitiesDbDataReader()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             // Insert the records first
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1015,17 +1047,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source repository
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination repository
                     using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = repository.BulkInsertAsync<SimpleTable>((DbDataReader)reader);
+                        var bulkInsertResult = repository.BulkInsertAsync<IdentityTable>((DbDataReader)reader);
                         bulkInsertResult.Wait();
 
                         // Act
-                        var queryResult = repository.Query<SimpleTable>();
+                        var queryResult = repository.Query<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, queryResult.Count());
@@ -1038,18 +1070,18 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryBulkInsertAsyncForEntitiesDbDataReaderWithMappings()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.RowGuid), nameof(SimpleTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1061,17 +1093,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source repository
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination repository
                     using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = repository.BulkInsertAsync<SimpleTable>((DbDataReader)reader, mappings);
+                        var bulkInsertResult = repository.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
                         bulkInsertResult.Wait();
 
                         // Act
-                        var queryResult = repository.Query<SimpleTable>();
+                        var queryResult = repository.Query<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, queryResult.Count());
@@ -1084,19 +1116,19 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1108,13 +1140,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source repository
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination repository
                     using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = repository.BulkInsertAsync<SimpleTable>((DbDataReader)reader, mappings);
+                        var bulkInsertResult = repository.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
                         bulkInsertResult.Wait();
 
                         // Trigger
@@ -1132,7 +1164,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCount()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1140,7 +1172,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.Count<SimpleTable>();
+                var result = repository.Count<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -1151,7 +1183,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCountViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1159,7 +1191,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.Count<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
+                var result = repository.Count<IdentityTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
 
                 // Assert
                 Assert.AreEqual(7, result);
@@ -1170,7 +1202,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCountViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1178,7 +1210,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.Count<SimpleTable>(new { ColumnInt = 1 });
+                var result = repository.Count<IdentityTable>(new { ColumnInt = 1 });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1189,8 +1221,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCountViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1198,7 +1230,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.Count<SimpleTable>(field);
+                var result = repository.Count<IdentityTable>(field);
 
                 // Assert
                 Assert.AreEqual(5, result);
@@ -1209,11 +1241,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCountViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1222,7 +1254,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.Count<SimpleTable>(fields);
+                var result = repository.Count<IdentityTable>(fields);
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -1233,11 +1265,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCountViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -1247,7 +1279,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.Count<SimpleTable>(queryGroup);
+                var result = repository.Count<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -1262,7 +1294,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCountAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1270,7 +1302,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync<SimpleTable>().Result;
+                var result = repository.CountAsync<IdentityTable>().Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -1281,7 +1313,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCountAsyncViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1289,7 +1321,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
+                var result = repository.CountAsync<IdentityTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
 
                 // Assert
                 Assert.AreEqual(7, result);
@@ -1300,7 +1332,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCountAsyncViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1308,7 +1340,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync<SimpleTable>(new { ColumnInt = 1 }).Result;
+                var result = repository.CountAsync<IdentityTable>(new { ColumnInt = 1 }).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1319,8 +1351,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCountAsyncViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1328,7 +1360,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync<SimpleTable>(field).Result;
+                var result = repository.CountAsync<IdentityTable>(field).Result;
 
                 // Assert
                 Assert.AreEqual(5, result);
@@ -1339,11 +1371,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCountAsyncViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1352,7 +1384,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync<SimpleTable>(fields).Result;
+                var result = repository.CountAsync<IdentityTable>(fields).Result;
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -1363,11 +1395,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryCountAsyncViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -1377,7 +1409,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync<SimpleTable>(queryGroup).Result;
+                var result = repository.CountAsync<IdentityTable>(queryGroup).Result;
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -1392,7 +1424,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteWithoutCondition()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1400,11 +1432,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Delete<SimpleTable>((object)null);
+                var result = repository.Delete<IdentityTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, repository.Count<SimpleTable>());
+                Assert.AreEqual(0, repository.Count<IdentityTable>());
             }
         }
 
@@ -1412,7 +1444,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1421,11 +1453,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Delete<SimpleTable>(last.Id);
+                var result = repository.Delete<IdentityTable>(last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, repository.Count<IdentityTable>());
             }
         }
 
@@ -1433,7 +1465,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteViaDelete()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1442,11 +1474,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Delete<SimpleTable>(new { last.Id });
+                var result = repository.Delete<IdentityTable>(new { last.Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, repository.Count<IdentityTable>());
             }
         }
 
@@ -1454,7 +1486,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1463,11 +1495,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Delete<SimpleTable>(c => c.ColumnInt == last.Id);
+                var result = repository.Delete<IdentityTable>(c => c.ColumnInt == last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, repository.Count<IdentityTable>());
             }
         }
 
@@ -1475,7 +1507,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1483,11 +1515,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Delete<SimpleTable>(new QueryField(nameof(SimpleTable.ColumnInt), 6));
+                var result = repository.Delete<IdentityTable>(new QueryField(nameof(IdentityTable.ColumnInt), 6));
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, repository.Count<IdentityTable>());
             }
         }
 
@@ -1495,11 +1527,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1508,11 +1540,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Delete<SimpleTable>(fields);
+                var result = repository.Delete<IdentityTable>(fields);
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, repository.Count<SimpleTable>());
+                Assert.AreEqual(6, repository.Count<IdentityTable>());
             }
         }
 
@@ -1520,11 +1552,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -1534,11 +1566,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Delete<SimpleTable>(queryGroup);
+                var result = repository.Delete<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, repository.Count<SimpleTable>());
+                Assert.AreEqual(6, repository.Count<IdentityTable>());
             }
         }
 
@@ -1546,7 +1578,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteViaDataEntity()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1555,11 +1587,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Delete<SimpleTable>(last);
+                var result = repository.Delete<IdentityTable>(last);
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, repository.Count<IdentityTable>());
             }
         }
 
@@ -1571,7 +1603,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteAsyncWithoutCondition()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1579,11 +1611,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<SimpleTable>((object)null).Result;
+                var result = repository.DeleteAsync<IdentityTable>((object)null).Result;
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, repository.Count<SimpleTable>());
+                Assert.AreEqual(0, repository.Count<IdentityTable>());
             }
         }
 
@@ -1591,7 +1623,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteAsyncViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1600,11 +1632,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<SimpleTable>(last.Id).Result;
+                var result = repository.DeleteAsync<IdentityTable>(last.Id).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, repository.Count<IdentityTable>());
             }
         }
 
@@ -1612,7 +1644,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteAsyncViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1621,11 +1653,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<SimpleTable>(c => c.ColumnInt == last.Id).Result;
+                var result = repository.DeleteAsync<IdentityTable>(c => c.ColumnInt == last.Id).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, repository.Count<IdentityTable>());
             }
         }
 
@@ -1633,8 +1665,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteAsyncViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), 6);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 6);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1642,11 +1674,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<SimpleTable>(field).Result;
+                var result = repository.DeleteAsync<IdentityTable>(field).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, repository.Count<IdentityTable>());
             }
         }
 
@@ -1654,11 +1686,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteAsyncViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1667,11 +1699,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<SimpleTable>(fields).Result;
+                var result = repository.DeleteAsync<IdentityTable>(fields).Result;
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, repository.Count<SimpleTable>());
+                Assert.AreEqual(6, repository.Count<IdentityTable>());
             }
         }
 
@@ -1679,11 +1711,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteAsyncViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -1693,11 +1725,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<SimpleTable>(queryGroup).Result;
+                var result = repository.DeleteAsync<IdentityTable>(queryGroup).Result;
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, repository.Count<SimpleTable>());
+                Assert.AreEqual(6, repository.Count<IdentityTable>());
             }
         }
 
@@ -1705,7 +1737,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteAsyncViaDataEntity()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1714,11 +1746,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<SimpleTable>(last).Result;
+                var result = repository.DeleteAsync<IdentityTable>(last).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, repository.Count<IdentityTable>());
             }
         }
 
@@ -1730,7 +1762,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteAll()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1738,7 +1770,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.DeleteAll<SimpleTable>();
+                var result = repository.DeleteAll<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -1753,7 +1785,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryDeleteAllAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1761,7 +1793,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.DeleteAllAsync<SimpleTable>().Result;
+                var result = repository.DeleteAllAsync<IdentityTable>().Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -1778,7 +1810,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = new
             {
-                RowGuid = new Guid(),
+                RowGuid = Guid.NewGuid(),
                 ColumnInt = 100,
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
@@ -1787,13 +1819,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = Convert.ToInt32(repository.InlineInsert<SimpleTable>(entity));
+                var result = Convert.ToInt32(repository.InlineInsert<IdentityTable>(entity));
 
                 // Assert
                 Assert.IsTrue(result > 0);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>();
+                var queryResult = repository.Query<IdentityTable>(result);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -1807,6 +1839,86 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.IsNotNull(first.ColumnDateTime2);
                 Assert.IsNotNull(first.ColumnNVarChar);
                 Assert.AreEqual(entity.RowGuid, first.RowGuid);
+                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
+                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
+                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInlineInsertForIdentiyTable()
+        {
+            // Setup
+            var entity = new
+            {
+                RowGuid = Guid.NewGuid(),
+                ColumnInt = 100,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnNVarChar = Helper.GetUnicodeString()
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = repository.InlineInsert<IdentityTable, long>(entity);
+
+                // Assert
+                Assert.IsTrue(result > 0);
+
+                // Act
+                var queryResult = repository.Query<IdentityTable>(result);
+                var first = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Count());
+                Assert.IsNull(first.ColumnBit);
+                Assert.IsNull(first.ColumnDateTime);
+                Assert.IsNull(first.ColumnDecimal);
+                Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.RowGuid);
+                Assert.IsNotNull(first.ColumnInt);
+                Assert.IsNotNull(first.ColumnDateTime2);
+                Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.RowGuid, first.RowGuid);
+                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
+                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
+                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInlineInsertForNonIdentityTable()
+        {
+            // Setup
+            var entity = new
+            {
+                Id = Guid.NewGuid(),
+                ColumnInt = 100,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnNVarChar = Helper.GetUnicodeString()
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = repository.InlineInsert<NonIdentityTable, Guid>(entity);
+
+                // Assert
+                Assert.AreEqual(entity.Id, result);
+
+                // Act
+                var queryResult = repository.Query<NonIdentityTable>(result);
+                var first = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Count());
+                Assert.IsNull(first.ColumnBit);
+                Assert.IsNull(first.ColumnDateTime);
+                Assert.IsNull(first.ColumnDecimal);
+                Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.ColumnInt);
+                Assert.IsNotNull(first.ColumnDateTime2);
+                Assert.IsNotNull(first.ColumnNVarChar);
                 Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
                 Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
                 Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
@@ -1825,7 +1937,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InlineInsert<SimpleTable>(entity);
+                repository.InlineInsert<IdentityTable>(entity);
             }
         }
 
@@ -1839,7 +1951,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = new
             {
-                RowGuid = new Guid(),
+                RowGuid = Guid.NewGuid(),
                 ColumnInt = 100,
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
@@ -1848,13 +1960,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = Convert.ToInt32(repository.InlineInsertAsync<SimpleTable>(entity).Result);
+                var result = Convert.ToInt32(repository.InlineInsertAsync<IdentityTable>(entity).Result);
 
                 // Assert
                 Assert.IsTrue(result > 0);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>();
+                var queryResult = repository.Query<IdentityTable>(result);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -1874,6 +1986,86 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestDbRepositoryInlineInsertAsyncForIdentiyTable()
+        {
+            // Setup
+            var entity = new
+            {
+                RowGuid = Guid.NewGuid(),
+                ColumnInt = 100,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnNVarChar = Helper.GetUnicodeString()
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = repository.InlineInsertAsync<IdentityTable, long>(entity).Result;
+
+                // Assert
+                Assert.IsTrue(result > 0);
+
+                // Act
+                var queryResult = repository.Query<IdentityTable>(result);
+                var first = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Count());
+                Assert.IsNull(first.ColumnBit);
+                Assert.IsNull(first.ColumnDateTime);
+                Assert.IsNull(first.ColumnDecimal);
+                Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.RowGuid);
+                Assert.IsNotNull(first.ColumnInt);
+                Assert.IsNotNull(first.ColumnDateTime2);
+                Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.RowGuid, first.RowGuid);
+                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
+                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
+                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInlineInsertAsyncForNonIdentityTable()
+        {
+            // Setup
+            var entity = new
+            {
+                Id = Guid.NewGuid(),
+                ColumnInt = 100,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnNVarChar = Helper.GetUnicodeString()
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = repository.InlineInsertAsync<NonIdentityTable, Guid>(entity).Result;
+
+                // Assert
+                Assert.AreEqual(entity.Id, result);
+
+                // Act
+                var queryResult = repository.Query<NonIdentityTable>(result);
+                var first = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Count());
+                Assert.IsNull(first.ColumnBit);
+                Assert.IsNull(first.ColumnDateTime);
+                Assert.IsNull(first.ColumnDecimal);
+                Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.ColumnInt);
+                Assert.IsNotNull(first.ColumnDateTime2);
+                Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
+                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
+                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionAtSqlConnectionInlineInsertAsyncIfTheValuesAreInvalid()
         {
@@ -1886,7 +2078,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.InlineInsertAsync<SimpleTable>(entity).Result;
+                var result = repository.InlineInsertAsync<IdentityTable>(entity).Result;
             }
         }
 
@@ -1910,13 +2102,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = Convert.ToInt32(repository.InlineMerge<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id))));
+                var result = Convert.ToInt32(repository.InlineMerge<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id))));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>();
+                var queryResult = repository.Query<IdentityTable>();
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -1940,7 +2132,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryInlineMergeToExistingData()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var entity = new
             {
                 RowGuid = new Guid(),
@@ -1955,13 +2147,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineMerge<SimpleTable>(entity, Field.From(nameof(SimpleTable.ColumnInt))));
+                var result = Convert.ToInt32(repository.InlineMerge<IdentityTable>(entity, Field.From(nameof(IdentityTable.ColumnInt))));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == entity.ColumnInt);
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == entity.ColumnInt);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -1993,7 +2185,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InlineMerge<SimpleTable>(entity);
+                repository.InlineMerge<IdentityTable>(entity);
             }
         }
 
@@ -2010,7 +2202,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InlineMerge<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id)));
+                repository.InlineMerge<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id)));
             }
         }
 
@@ -2026,7 +2218,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InlineMerge<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id)));
+                repository.InlineMerge<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id)));
             }
         }
 
@@ -2043,7 +2235,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InlineMerge<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id)));
+                repository.InlineMerge<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id)));
             }
         }
 
@@ -2067,13 +2259,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = Convert.ToInt32(repository.InlineMergeAsync<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id))).Result);
+                var result = Convert.ToInt32(repository.InlineMergeAsync<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id))).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>();
+                var queryResult = repository.Query<IdentityTable>();
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2097,7 +2289,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryInlineMergeAsyncToExistingData()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var entity = new
             {
                 RowGuid = new Guid(),
@@ -2112,13 +2304,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineMergeAsync<SimpleTable>(entity, Field.From(nameof(SimpleTable.ColumnInt))).Result);
+                var result = Convert.ToInt32(repository.InlineMergeAsync<IdentityTable>(entity, Field.From(nameof(IdentityTable.ColumnInt))).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == entity.ColumnInt);
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == entity.ColumnInt);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2150,7 +2342,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.InlineMergeAsync<SimpleTable>(entity).Result;
+                var result = repository.InlineMergeAsync<IdentityTable>(entity).Result;
             }
         }
 
@@ -2167,7 +2359,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.InlineMergeAsync<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id))).Result;
+                var result = repository.InlineMergeAsync<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id))).Result;
             }
         }
 
@@ -2183,7 +2375,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.InlineMergeAsync<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id))).Result;
+                var result = repository.InlineMergeAsync<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id))).Result;
             }
         }
 
@@ -2200,7 +2392,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.InlineMergeAsync<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id))).Result;
+                var result = repository.InlineMergeAsync<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id))).Result;
             }
         }
 
@@ -2218,7 +2410,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2227,13 +2419,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdate<SimpleTable>(entity, last.Id));
+                var result = Convert.ToInt32(repository.InlineUpdate<IdentityTable>(entity, last.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = repository.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2257,7 +2449,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2266,13 +2458,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdate<SimpleTable>(entity, new { last.Id }));
+                var result = Convert.ToInt32(repository.InlineUpdate<IdentityTable>(entity, new { last.Id }));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = repository.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2296,7 +2488,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2305,13 +2497,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdate<SimpleTable>(entity, e => e.Id == last.Id));
+                var result = Convert.ToInt32(repository.InlineUpdate<IdentityTable>(entity, e => e.Id == last.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = repository.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2335,7 +2527,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2344,13 +2536,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdate<SimpleTable>(entity, new QueryField(nameof(SimpleTable.Id), last.Id)));
+                var result = Convert.ToInt32(repository.InlineUpdate<IdentityTable>(entity, new QueryField(nameof(IdentityTable.Id), last.Id)));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = repository.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2374,11 +2566,11 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 10),
-                new QueryField(nameof(SimpleTable.ColumnBit), true)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
+                new QueryField(nameof(IdentityTable.ColumnBit), true)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2387,14 +2579,14 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdate<SimpleTable>(entity, fields));
+                var result = Convert.ToInt32(repository.InlineUpdate<IdentityTable>(entity, fields));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
                 fields.ResetAll();
-                var queryResult = repository.Query<SimpleTable>(fields);
+                var queryResult = repository.Query<IdentityTable>(fields);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2418,11 +2610,11 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 10),
-                new QueryField(nameof(SimpleTable.ColumnBit), true)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
+                new QueryField(nameof(IdentityTable.ColumnBit), true)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -2432,14 +2624,14 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdate<SimpleTable>(entity, queryGroup));
+                var result = Convert.ToInt32(repository.InlineUpdate<IdentityTable>(entity, queryGroup));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
                 queryGroup.Reset();
-                var queryResult = repository.Query<SimpleTable>(queryGroup);
+                var queryResult = repository.Query<IdentityTable>(queryGroup);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2461,7 +2653,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 ColumnInt = "Invalid"
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2470,7 +2662,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                repository.InlineUpdate<SimpleTable>(entity, last.Id);
+                repository.InlineUpdate<IdentityTable>(entity, last.Id);
             }
         }
 
@@ -2488,7 +2680,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2497,13 +2689,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync<SimpleTable>(entity, last.Id).Result);
+                var result = Convert.ToInt32(repository.InlineUpdateAsync<IdentityTable>(entity, last.Id).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = repository.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2527,7 +2719,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2536,13 +2728,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync<SimpleTable>(entity, new { last.Id }).Result);
+                var result = Convert.ToInt32(repository.InlineUpdateAsync<IdentityTable>(entity, new { last.Id }).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = repository.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2566,7 +2758,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2575,13 +2767,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync<SimpleTable>(entity, e => e.Id == last.Id).Result);
+                var result = Convert.ToInt32(repository.InlineUpdateAsync<IdentityTable>(entity, e => e.Id == last.Id).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = repository.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2605,7 +2797,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2614,13 +2806,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync<SimpleTable>(entity, new QueryField(nameof(SimpleTable.Id), last.Id)).Result);
+                var result = Convert.ToInt32(repository.InlineUpdateAsync<IdentityTable>(entity, new QueryField(nameof(IdentityTable.Id), last.Id)).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = repository.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2644,11 +2836,11 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 10),
-                new QueryField(nameof(SimpleTable.ColumnBit), true)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
+                new QueryField(nameof(IdentityTable.ColumnBit), true)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2657,14 +2849,14 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync<SimpleTable>(entity, fields).Result);
+                var result = Convert.ToInt32(repository.InlineUpdateAsync<IdentityTable>(entity, fields).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
                 fields.ResetAll();
-                var queryResult = repository.Query<SimpleTable>(fields);
+                var queryResult = repository.Query<IdentityTable>(fields);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2688,11 +2880,11 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 10),
-                new QueryField(nameof(SimpleTable.ColumnBit), true)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
+                new QueryField(nameof(IdentityTable.ColumnBit), true)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -2702,14 +2894,14 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync<SimpleTable>(entity, queryGroup).Result);
+                var result = Convert.ToInt32(repository.InlineUpdateAsync<IdentityTable>(entity, queryGroup).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
                 queryGroup.Reset();
-                var queryResult = repository.Query<SimpleTable>(queryGroup);
+                var queryResult = repository.Query<IdentityTable>(queryGroup);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2731,7 +2923,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 ColumnInt = "Invalid"
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2740,7 +2932,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.InlineUpdateAsync<SimpleTable>(entity, last.Id).Result;
+                var result = repository.InlineUpdateAsync<IdentityTable>(entity, last.Id).Result;
             }
         }
 
@@ -2752,7 +2944,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryInsert()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2760,7 +2952,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>();
+                var result = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -2768,6 +2960,47 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
                 });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInsertForIdentityTable()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = GetIdentityTable();
+
+                // Act
+                item.Id = repository.Insert<IdentityTable, long>(item);
+
+                // Act
+                var result = repository.Query<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(item, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInsertForNonIdentityTable()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = GetNonIdentityTable();
+
+                // Act
+                var value = repository.Insert<NonIdentityTable, Guid>(item);
+
+                // Act
+                var result = repository.Query<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(item.Id, value);
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(item, result.First());
             }
         }
 
@@ -2779,7 +3012,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryInsertAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2787,7 +3020,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.InsertAsync(item).Result));
 
                 // Act
-                var result = repository.Query<SimpleTable>();
+                var result = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -2795,6 +3028,47 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
                 });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInsertAsyncForIdentityTable()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = GetIdentityTable();
+
+                // Act
+                item.Id = repository.InsertAsync<IdentityTable, long>(item).Result;
+
+                // Act
+                var result = repository.Query<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(item, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInsertAsyncForNonIdentityTable()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = GetNonIdentityTable();
+
+                // Act
+                var value = repository.InsertAsync<NonIdentityTable, Guid>(item).Result;
+
+                // Act
+                var result = repository.Query<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(item.Id, value);
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(item, result.First());
             }
         }
 
@@ -2806,7 +3080,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMerge()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2815,7 +3089,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(last.Id).First();
+                var queryResult = repository.Query<IdentityTable>(last.Id).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -2833,7 +3107,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(last.Id).First();
+                queryResult = repository.Query<IdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -2850,7 +3124,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeWithPrimaryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2859,7 +3133,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(last.Id).First();
+                var queryResult = repository.Query<IdentityTable>(last.Id).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -2871,13 +3145,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.Merge(queryResult, new Field(nameof(SimpleTable.Id)));
+                var mergeResult = repository.Merge(queryResult, new Field(nameof(IdentityTable.Id)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(last.Id).First();
+                queryResult = repository.Query<IdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -2894,7 +3168,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeWithNonPrimaryFieldViaInstantiation()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2902,7 +3176,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -2913,13 +3187,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.Merge(queryResult, new Field(nameof(SimpleTable.ColumnInt)));
+                var mergeResult = repository.Merge(queryResult, new Field(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -2935,7 +3209,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeWithNonPrimaryFieldViaFromMethod()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2943,7 +3217,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -2954,13 +3228,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.Merge(queryResult, Field.From(nameof(SimpleTable.ColumnInt)));
+                var mergeResult = repository.Merge(queryResult, Field.From(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -2976,7 +3250,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeWithMultipleFieldsViaInstantiation()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2984,7 +3258,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
                 queryResult.ColumnDateTime = Helper.GetEpocDate();
@@ -2996,15 +3270,15 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = repository.Merge(queryResult, new[]
                 {
-                    new Field(nameof(SimpleTable.ColumnInt)),
-                    new Field(nameof(SimpleTable.ColumnBit))
+                    new Field(nameof(IdentityTable.ColumnInt)),
+                    new Field(nameof(IdentityTable.ColumnBit))
                 });
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
@@ -3019,7 +3293,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeWithMultipleFieldsViaFromMethod()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3027,7 +3301,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
                 queryResult.ColumnDateTime = Helper.GetEpocDate();
@@ -3037,13 +3311,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.Merge(queryResult, Field.From(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnBit)));
+                var mergeResult = repository.Merge(queryResult, Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnBit)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
@@ -3062,7 +3336,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3071,7 +3345,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(last.Id).First();
+                var queryResult = repository.Query<IdentityTable>(last.Id).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3089,7 +3363,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(last.Id).First();
+                queryResult = repository.Query<IdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3106,7 +3380,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeAsyncWithPrimaryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3115,7 +3389,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(last.Id).First();
+                var queryResult = repository.Query<IdentityTable>(last.Id).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3127,13 +3401,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.MergeAsync(queryResult, new Field(nameof(SimpleTable.Id))).Result;
+                var mergeResult = repository.MergeAsync(queryResult, new Field(nameof(IdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(last.Id).First();
+                queryResult = repository.Query<IdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3150,7 +3424,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeAsyncWithNonPrimaryFieldViaInstantiation()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3158,7 +3432,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3169,13 +3443,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.MergeAsync(queryResult, new Field(nameof(SimpleTable.ColumnInt))).Result;
+                var mergeResult = repository.MergeAsync(queryResult, new Field(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3191,7 +3465,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeAsyncWithNonPrimaryFieldViaFromMethod()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3199,7 +3473,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3210,13 +3484,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.MergeAsync(queryResult, Field.From(nameof(SimpleTable.ColumnInt))).Result;
+                var mergeResult = repository.MergeAsync(queryResult, Field.From(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3232,7 +3506,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeAsyncWithMultipleFieldsViaInstantiation()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3240,7 +3514,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
                 queryResult.ColumnDateTime = Helper.GetEpocDate();
@@ -3252,15 +3526,15 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = repository.MergeAsync(queryResult, new[]
                 {
-                    new Field(nameof(SimpleTable.ColumnInt)),
-                    new Field(nameof(SimpleTable.ColumnBit))
+                    new Field(nameof(IdentityTable.ColumnInt)),
+                    new Field(nameof(IdentityTable.ColumnBit))
                 }).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
@@ -3275,7 +3549,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeAsyncWithMultipleFieldsViaFromMethod()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3283,7 +3557,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
                 queryResult.ColumnDateTime = Helper.GetEpocDate();
@@ -3293,13 +3567,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.MergeAsync(queryResult, Field.From(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnBit))).Result;
+                var mergeResult = repository.MergeAsync(queryResult, Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnBit))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
@@ -3318,7 +3592,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQuery()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3326,7 +3600,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>();
+                var result = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -3341,7 +3615,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 3;
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3350,7 +3624,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(top: top);
+                var result = repository.Query<IdentityTable>(top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -3366,8 +3640,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var tables = GetIdentityTables(10);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3375,7 +3649,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(orderBy: orderBy.AsEnumerable());
+                var result = repository.Query<IdentityTable>(orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 AssertPropertiesEquality(tables.First(), result.Last());
@@ -3387,9 +3661,9 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3397,7 +3671,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(top: top, orderBy: orderBy.AsEnumerable());
+                var result = repository.Query<IdentityTable>(top: top, orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 Assert.AreEqual(result.Count(), top);
@@ -3410,7 +3684,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3419,7 +3693,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(last.Id);
+                var result = repository.Query<IdentityTable>(last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3431,7 +3705,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3440,7 +3714,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(new { last.Id });
+                var result = repository.Query<IdentityTable>(new { last.Id });
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3452,7 +3726,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3461,7 +3735,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.Id == last.Id);
+                var result = repository.Query<IdentityTable>(c => c.Id == last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3473,7 +3747,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3482,7 +3756,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(new QueryField(nameof(SimpleTable.Id), last.Id));
+                var result = repository.Query<IdentityTable>(new QueryField(nameof(IdentityTable.Id), last.Id));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3494,11 +3768,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3507,7 +3781,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(fields);
+                var result = repository.Query<IdentityTable>(fields);
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
@@ -3523,12 +3797,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaQueryFieldsWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3537,7 +3811,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(fields, top: top);
+                var result = repository.Query<IdentityTable>(fields, top: top);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -3553,13 +3827,13 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaQueryFieldsWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3567,7 +3841,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(fields, orderBy: orderBy.AsEnumerable());
+                var result = repository.Query<IdentityTable>(fields, orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -3579,14 +3853,14 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaQueryFieldsWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3594,7 +3868,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(fields, orderBy: orderBy.AsEnumerable(), top: top);
+                var result = repository.Query<IdentityTable>(fields, orderBy: orderBy.AsEnumerable(), top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -3607,12 +3881,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), 6)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), 6)
             };
             var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
@@ -3622,7 +3896,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(queryGroup);
+                var result = repository.Query<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -3638,12 +3912,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaQueryGroupWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -3653,7 +3927,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(queryGroup, top: top);
+                var result = repository.Query<IdentityTable>(queryGroup, top: top);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -3669,14 +3943,14 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaQueryGroupWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3684,7 +3958,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(queryGroup, orderBy: orderBy.AsEnumerable());
+                var result = repository.Query<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -3696,15 +3970,15 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaQueryGroupWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3712,7 +3986,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(queryGroup, orderBy: orderBy.AsEnumerable(), top: top);
+                var result = repository.Query<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable(), top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -3727,7 +4001,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithArrayContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3736,7 +4010,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar));
+                var result = repository.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar));
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -3749,7 +4023,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3757,7 +4031,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9"));
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9"));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3769,7 +4043,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3777,7 +4051,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("NVAR"));
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("NVAR"));
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -3789,7 +4063,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3797,7 +4071,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9"));
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9"));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3809,7 +4083,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithArrayContainsAndStringContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3818,7 +4092,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4"));
+                var result = repository.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4"));
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -3830,7 +4104,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithArrayContainsAndStringStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3839,7 +4113,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR"));
+                var result = repository.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR"));
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -3851,7 +4125,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithArrayContainsAndStringEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3860,7 +4134,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4"));
+                var result = repository.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4"));
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -3872,7 +4146,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithArrayContainsAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3881,7 +4155,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == true);
+                var result = repository.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == true);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -3893,7 +4167,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithArrayContainsAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3902,7 +4176,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == false);
+                var result = repository.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == false);
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
@@ -3914,7 +4188,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3923,7 +4197,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) != false);
+                var result = repository.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) != false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -3935,7 +4209,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithArrayContainsAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -3944,7 +4218,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => !values.Contains(c.ColumnNVarChar));
+                var result = repository.Query<IdentityTable>(c => !values.Contains(c.ColumnNVarChar));
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
@@ -3956,7 +4230,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringContainsAndStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3964,7 +4238,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR"));
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR"));
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -3976,7 +4250,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringContainsAndEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -3984,7 +4258,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8"));
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8"));
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -3996,7 +4270,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringContainsAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4004,7 +4278,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == true);
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == true);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4016,7 +4290,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringContainsAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4024,7 +4298,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == false);
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == false);
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -4036,7 +4310,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4044,7 +4318,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") != false);
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9") != false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4056,7 +4330,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringContainsAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4064,7 +4338,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => !c.ColumnNVarChar.Contains("9"));
+                var result = repository.Query<IdentityTable>(c => !c.ColumnNVarChar.Contains("9"));
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -4076,7 +4350,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringStartsWithAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4084,7 +4358,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true);
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -4096,7 +4370,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringStartsWithAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4104,7 +4378,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false);
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false);
 
                 // Assert
                 Assert.AreEqual(0, result.Count());
@@ -4115,7 +4389,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4123,7 +4397,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false);
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -4135,7 +4409,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringStartsWithAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4143,7 +4417,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => !c.ColumnNVarChar.StartsWith("NVAR"));
+                var result = repository.Query<IdentityTable>(c => !c.ColumnNVarChar.StartsWith("NVAR"));
 
                 // Assert
                 Assert.AreEqual(0, result.Count());
@@ -4154,7 +4428,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringEndsWithAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4162,7 +4436,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == true);
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == true);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4174,7 +4448,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringEndsWithAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4182,7 +4456,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == false);
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == false);
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -4194,7 +4468,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4202,7 +4476,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") != false);
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") != false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4214,7 +4488,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryViaExpressionWithStringEndsWithAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4222,7 +4496,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query<SimpleTable>(c => !c.ColumnNVarChar.EndsWith("9"));
+                var result = repository.Query<IdentityTable>(c => !c.ColumnNVarChar.EndsWith("9"));
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -4240,7 +4514,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4248,7 +4522,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>().Result;
+                var result = repository.QueryAsync<IdentityTable>().Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -4263,7 +4537,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 3;
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4272,7 +4546,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(top: top).Result;
+                var result = repository.QueryAsync<IdentityTable>(top: top).Result;
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -4288,8 +4562,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var tables = GetIdentityTables(10);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4297,7 +4571,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(orderBy: orderBy.AsEnumerable()).Result;
+                var result = repository.QueryAsync<IdentityTable>(orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
                 AssertPropertiesEquality(tables.First(), result.Last());
@@ -4309,9 +4583,9 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4319,7 +4593,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(top: top, orderBy: orderBy.AsEnumerable()).Result;
+                var result = repository.QueryAsync<IdentityTable>(top: top, orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
                 Assert.AreEqual(result.Count(), top);
@@ -4332,7 +4606,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4341,7 +4615,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(last.Id).Result;
+                var result = repository.QueryAsync<IdentityTable>(last.Id).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4353,7 +4627,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4362,7 +4636,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.Id == last.Id).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.Id == last.Id).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4374,7 +4648,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4383,7 +4657,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(new { last.Id }).Result;
+                var result = repository.QueryAsync<IdentityTable>(new { last.Id }).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4395,7 +4669,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4404,7 +4678,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(new QueryField(nameof(SimpleTable.Id), last.Id)).Result;
+                var result = repository.QueryAsync<IdentityTable>(new QueryField(nameof(IdentityTable.Id), last.Id)).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4416,11 +4690,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4429,7 +4703,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(fields).Result;
+                var result = repository.QueryAsync<IdentityTable>(fields).Result;
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
@@ -4445,12 +4719,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaQueryFieldsWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4459,7 +4733,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(fields, top: top).Result;
+                var result = repository.QueryAsync<IdentityTable>(fields, top: top).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4475,13 +4749,13 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaQueryFieldsWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4489,7 +4763,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(fields, orderBy: orderBy.AsEnumerable()).Result;
+                var result = repository.QueryAsync<IdentityTable>(fields, orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
                 AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -4501,14 +4775,14 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaQueryFieldsWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4516,7 +4790,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(fields, orderBy: orderBy.AsEnumerable(), top: top).Result;
+                var result = repository.QueryAsync<IdentityTable>(fields, orderBy: orderBy.AsEnumerable(), top: top).Result;
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -4529,12 +4803,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), 6)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), 6)
             };
             var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
@@ -4544,7 +4818,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(queryGroup).Result;
+                var result = repository.QueryAsync<IdentityTable>(queryGroup).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4560,12 +4834,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaQueryGroupWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -4575,7 +4849,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(queryGroup, top: top).Result;
+                var result = repository.QueryAsync<IdentityTable>(queryGroup, top: top).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4591,14 +4865,14 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaQueryGroupWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4606,7 +4880,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(queryGroup, orderBy: orderBy.AsEnumerable()).Result;
+                var result = repository.QueryAsync<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
                 AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -4618,15 +4892,15 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaQueryGroupWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4634,7 +4908,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(queryGroup, orderBy: orderBy.AsEnumerable(), top: top).Result;
+                var result = repository.QueryAsync<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable(), top: top).Result;
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -4649,7 +4923,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithArrayContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4658,7 +4932,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar)).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar)).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4671,7 +4945,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4679,7 +4953,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9")).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9")).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4691,7 +4965,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4699,7 +4973,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("NVAR")).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("NVAR")).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -4711,7 +4985,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4719,7 +4993,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9")).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9")).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4731,7 +5005,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithArrayContainsAndStringContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4740,7 +5014,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4")).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4")).Result;
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -4752,7 +5026,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithArrayContainsAndStringStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4761,7 +5035,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR")).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR")).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -4773,7 +5047,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithArrayContainsAndStringEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4782,7 +5056,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4")).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4")).Result;
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -4794,7 +5068,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithArrayContainsAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4803,7 +5077,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == true).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == true).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4815,7 +5089,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithArrayContainsAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4824,7 +5098,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == false).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == false).Result;
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
@@ -4836,7 +5110,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4845,7 +5119,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) != false).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) != false).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4857,7 +5131,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithArrayContainsAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4866,7 +5140,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => !values.Contains(c.ColumnNVarChar)).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => !values.Contains(c.ColumnNVarChar)).Result;
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
@@ -4878,7 +5152,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringContainsAndStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4886,7 +5160,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR")).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR")).Result;
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -4898,7 +5172,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringContainsAndEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4906,7 +5180,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8")).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8")).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4918,7 +5192,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringContainsAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4926,7 +5200,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == true).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == true).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4938,7 +5212,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringContainsAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4946,7 +5220,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == false).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == false).Result;
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -4958,7 +5232,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4966,7 +5240,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") != false).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") != false).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4978,7 +5252,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringContainsAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -4986,7 +5260,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => !c.ColumnNVarChar.Contains("9")).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.Contains("9")).Result;
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -4998,7 +5272,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringStartsWithAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5006,7 +5280,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -5018,7 +5292,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringStartsWithAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5026,7 +5300,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false).Result;
 
                 // Assert
                 Assert.AreEqual(0, result.Count());
@@ -5037,7 +5311,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5045,7 +5319,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -5057,7 +5331,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringStartsWithAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5065,7 +5339,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => !c.ColumnNVarChar.StartsWith("NVAR")).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.StartsWith("NVAR")).Result;
 
                 // Assert
                 Assert.AreEqual(0, result.Count());
@@ -5076,7 +5350,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringEndsWithAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5084,7 +5358,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == true).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == true).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -5096,7 +5370,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringEndsWithAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5104,7 +5378,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == false).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == false).Result;
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -5116,7 +5390,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5124,7 +5398,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") != false).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") != false).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -5136,7 +5410,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryAsyncViaExpressionWithStringEndsWithAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5144,7 +5418,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(c => !c.ColumnNVarChar.EndsWith("9")).Result;
+                var result = repository.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.EndsWith("9")).Result;
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -5164,7 +5438,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleT2()
         {
             // Setup
-            var tables = CreateSimpleTables(2);
+            var tables = GetIdentityTables(2);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5172,7 +5446,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultiple<SimpleTable, SimpleTable>(
+                var result = repository.QueryMultiple<IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2);
 
@@ -5190,7 +5464,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleT3()
         {
             // Setup
-            var tables = CreateSimpleTables(3);
+            var tables = GetIdentityTables(3);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5198,7 +5472,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultiple<SimpleTable, SimpleTable, SimpleTable>(
+                var result = repository.QueryMultiple<IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3);
@@ -5218,7 +5492,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleT4()
         {
             // Setup
-            var tables = CreateSimpleTables(4);
+            var tables = GetIdentityTables(4);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5226,7 +5500,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultiple<SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = repository.QueryMultiple<IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5248,7 +5522,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleT5()
         {
             // Setup
-            var tables = CreateSimpleTables(5);
+            var tables = GetIdentityTables(5);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5256,7 +5530,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultiple<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = repository.QueryMultiple<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5280,7 +5554,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleT6()
         {
             // Setup
-            var tables = CreateSimpleTables(6);
+            var tables = GetIdentityTables(6);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5288,7 +5562,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultiple<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = repository.QueryMultiple<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5314,7 +5588,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleT7()
         {
             // Setup
-            var tables = CreateSimpleTables(7);
+            var tables = GetIdentityTables(7);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5322,7 +5596,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultiple<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = repository.QueryMultiple<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5354,7 +5628,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleAsyncT2()
         {
             // Setup
-            var tables = CreateSimpleTables(2);
+            var tables = GetIdentityTables(2);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5362,7 +5636,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultipleAsync<SimpleTable, SimpleTable>(
+                var result = repository.QueryMultipleAsync<IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2).Result;
 
@@ -5380,7 +5654,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleAsyncT3()
         {
             // Setup
-            var tables = CreateSimpleTables(3);
+            var tables = GetIdentityTables(3);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5388,7 +5662,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultipleAsync<SimpleTable, SimpleTable, SimpleTable>(
+                var result = repository.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3).Result;
@@ -5408,7 +5682,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleAsyncT4()
         {
             // Setup
-            var tables = CreateSimpleTables(4);
+            var tables = GetIdentityTables(4);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5416,7 +5690,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultipleAsync<SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = repository.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5438,7 +5712,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleAsyncT5()
         {
             // Setup
-            var tables = CreateSimpleTables(5);
+            var tables = GetIdentityTables(5);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5446,7 +5720,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultipleAsync<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = repository.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5470,7 +5744,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleAsyncT6()
         {
             // Setup
-            var tables = CreateSimpleTables(6);
+            var tables = GetIdentityTables(6);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5478,7 +5752,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultipleAsync<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = repository.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5504,7 +5778,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryQueryMultipleAsyncT7()
         {
             // Setup
-            var tables = CreateSimpleTables(7);
+            var tables = GetIdentityTables(7);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5512,7 +5786,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryMultipleAsync<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = repository.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5542,7 +5816,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryTruncate()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5550,10 +5824,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                repository.Truncate<SimpleTable>();
+                repository.Truncate<IdentityTable>();
 
                 // Act
-                var result = repository.Count<SimpleTable>();
+                var result = repository.Count<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(0, result);
@@ -5568,7 +5842,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryTruncateAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5576,11 +5850,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var task = repository.TruncateAsync<SimpleTable>();
+                var task = repository.TruncateAsync<IdentityTable>();
                 task.Wait();
 
                 // Act
-                var result = repository.Count<SimpleTable>();
+                var result = repository.Count<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(0, result);
@@ -5595,7 +5869,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateViaDataEntity()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5618,7 +5892,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query<SimpleTable>();
+                var result = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -5630,7 +5904,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5653,7 +5927,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query<SimpleTable>();
+                var result = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -5665,7 +5939,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5688,7 +5962,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query<SimpleTable>();
+                var result = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -5700,7 +5974,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5723,7 +5997,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query<SimpleTable>();
+                var result = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -5735,8 +6009,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), 10);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5756,7 +6030,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 field.Reset();
-                var result = repository.Query<SimpleTable>(field);
+                var result = repository.Query<IdentityTable>(field);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -5768,11 +6042,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnBit), true),
-                new QueryField(nameof(SimpleTable.ColumnInt), 10)
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -5794,7 +6068,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 fields.ResetAll();
-                var result = repository.Query<SimpleTable>(fields);
+                var result = repository.Query<IdentityTable>(fields);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -5806,11 +6080,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnBit), true),
-                new QueryField(nameof(SimpleTable.ColumnInt), 10)
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -5833,7 +6107,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryGroup.Reset();
-                var result = repository.Query<SimpleTable>(queryGroup);
+                var result = repository.Query<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -5849,7 +6123,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateAsyncViaDataEntity()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5872,7 +6146,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query<SimpleTable>();
+                var result = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -5884,7 +6158,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateAsyncViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5907,7 +6181,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query<SimpleTable>();
+                var result = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -5919,7 +6193,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateAsyncViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5942,7 +6216,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query<SimpleTable>();
+                var result = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -5954,7 +6228,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateAsyncViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5977,7 +6251,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query<SimpleTable>();
+                var result = repository.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -5989,8 +6263,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateAsyncViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), 10);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6010,7 +6284,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 field.Reset();
-                var result = repository.Query<SimpleTable>(field);
+                var result = repository.Query<IdentityTable>(field);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6022,11 +6296,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateAsyncViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnBit), true),
-                new QueryField(nameof(SimpleTable.ColumnInt), 10)
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -6048,7 +6322,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 fields.ResetAll();
-                var result = repository.Query<SimpleTable>(fields);
+                var result = repository.Query<IdentityTable>(fields);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6060,11 +6334,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryUpdateAsyncViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnBit), true),
-                new QueryField(nameof(SimpleTable.ColumnInt), 10)
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -6087,7 +6361,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryGroup.Reset();
-                var result = repository.Query<SimpleTable>(queryGroup);
+                var result = repository.Query<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6103,7 +6377,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQuery()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6111,7 +6385,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable];");
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6123,7 +6397,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQueryWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6131,7 +6405,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 });
 
                 // Assert
@@ -6144,7 +6418,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQueryWithArrayParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6152,7 +6426,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } });
 
                 // Assert
@@ -6165,7 +6439,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQueryWithTopParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6173,7 +6447,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<SimpleTable>("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];",
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];",
                     new { Top = 2 });
 
                 // Assert
@@ -6186,7 +6460,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQueryWithStoredProcedure()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6194,7 +6468,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<SimpleTable>("[dbo].[sp_get_simple_tables]",
+                var result = repository.ExecuteQuery<IdentityTable>("[dbo].[sp_get_identity_tables]",
                     commandType: CommandType.StoredProcedure);
 
                 // Assert
@@ -6207,7 +6481,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQueryWithStoredProcedureWithParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6215,7 +6489,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<SimpleTable>("[dbo].[sp_get_simple_table_by_id]",
+                var result = repository.ExecuteQuery<IdentityTable>("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure);
 
@@ -6226,10 +6500,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryWhereTheDataReaderColumnsAreMoreThanClassProperties()
+        public void TestDbRepositoryExecuteQueryWhereTheDataReaderColumnsAreMoreThanClassProperties()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6237,7 +6511,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<LiteSimpleTable>("SELECT * FROM [dbo].[SimpleTable];");
+                var result = repository.ExecuteQuery<LiteIdentityTable>("SELECT * FROM [dbo].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -6252,10 +6526,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryWithDictionaryParameters()
+        public void TestDbRepositoryExecuteQueryWithDictionaryParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = new Dictionary<string, object>
             {
@@ -6269,7 +6543,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6278,10 +6552,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryWithExpandoObjectAsIDictionaryParameters()
+        public void TestDbRepositoryExecuteQueryWithExpandoObjectAsIDictionaryParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = new ExpandoObject() as IDictionary<string, object>;
 
@@ -6295,7 +6569,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6304,10 +6578,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryWithExpandoObjectAsDynamicParameters()
+        public void TestDbRepositoryExecuteQueryWithExpandoObjectAsDynamicParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = (dynamic)new ExpandoObject();
 
@@ -6321,7 +6595,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param);
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6330,7 +6604,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfTheParameterAreInvalidTypeDictionaryObject()
+        public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParameterAreInvalidTypeDictionaryObject()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6338,7 +6612,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);", param);
+                repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param);
             }
         }
 
@@ -6348,7 +6622,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -6358,7 +6632,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteQuery<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                repository.ExecuteQuery<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -6370,7 +6644,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQueryAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6378,7 +6652,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable];").Result;
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable];").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6390,7 +6664,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQueryAsyncWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6398,7 +6672,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 }).Result;
 
                 // Assert
@@ -6411,7 +6685,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQueryAsyncWithArrayParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6419,7 +6693,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } }).Result;
 
                 // Assert
@@ -6432,7 +6706,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQueryAsyncWithTopParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6440,7 +6714,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];",
                     new { Top = 2 }).Result;
 
                 // Assert
@@ -6453,7 +6727,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQueryAsyncWithStoredProcedure()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6461,7 +6735,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("[dbo].[sp_get_simple_tables]",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("[dbo].[sp_get_identity_tables]",
                     commandType: CommandType.StoredProcedure).Result;
 
                 // Assert
@@ -6474,7 +6748,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteQueryAsyncWithStoredProcedureWithParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6482,7 +6756,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("[dbo].[sp_get_simple_table_by_id]",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure).Result;
 
@@ -6493,10 +6767,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncWhereTheDataReaderColumnsAreMoreThanClassProperties()
+        public void TestDbRepositoryExecuteQueryAsyncWhereTheDataReaderColumnsAreMoreThanClassProperties()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6504,7 +6778,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<LiteSimpleTable>("SELECT * FROM [dbo].[SimpleTable];").Result;
+                var result = repository.ExecuteQueryAsync<LiteIdentityTable>("SELECT * FROM [dbo].[IdentityTable];").Result;
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -6519,10 +6793,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncWithDictionaryParameters()
+        public void TestDbRepositoryExecuteQueryAsyncWithDictionaryParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = new Dictionary<string, object>
             {
@@ -6536,7 +6810,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6545,10 +6819,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncWithExpandoObjectAsIDictionaryParameters()
+        public void TestDbRepositoryExecuteQueryAsyncWithExpandoObjectAsIDictionaryParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = new ExpandoObject() as IDictionary<string, object>;
 
@@ -6562,7 +6836,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6571,10 +6845,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncWithExpandoObjectAsDynamicParameters()
+        public void TestDbRepositoryExecuteQueryAsyncWithExpandoObjectAsDynamicParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = (dynamic)new ExpandoObject();
 
@@ -6588,7 +6862,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param).Result;
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6597,7 +6871,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfTheParameterAreInvalidTypeDictionaryObject()
+        public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParameterAreInvalidTypeDictionaryObject()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6605,7 +6879,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);", param).Result;
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param).Result;
             }
         }
 
@@ -6615,7 +6889,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -6625,7 +6899,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -6650,7 +6924,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryDeleteSingle()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6658,7 +6932,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = 10;");
+                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 10;");
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -6669,7 +6943,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryDeleteWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6677,7 +6951,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @ColumnInt;",
+                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 });
 
                 // Assert
@@ -6689,7 +6963,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryDeleteWithMultipleParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6697,7 +6971,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true });
 
                 // Assert
@@ -6709,7 +6983,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryDeleteAll()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6717,7 +6991,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[SimpleTable];");
+                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, 10);
@@ -6728,7 +7002,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryUpdateSingle()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6736,7 +7010,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = 10;");
+                var result = repository.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;");
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -6747,7 +7021,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryUpdateWithSigleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6755,7 +7029,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
+                var result = repository.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 });
 
                 // Assert
@@ -6767,7 +7041,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryUpdateWithMultipleParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6775,7 +7049,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = repository.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true });
 
                 // Assert
@@ -6787,7 +7061,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryUpdateAll()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6795,7 +7069,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100;");
+                var result = repository.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100;");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -6806,7 +7080,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryWithMultipleSqlStatementsWithoutParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6814,9 +7088,9 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
-                    "UPDATE [dbo].[SimpleTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
-                    "DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = 1;");
+                var result = repository.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
+                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
+                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 1;");
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -6827,7 +7101,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryWithMultipleSqlStatementsWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6835,9 +7109,9 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
-                    "UPDATE [dbo].[SimpleTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
-                    "DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @Value3;",
+                var result = repository.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
+                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
+                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @Value3;",
                     new { Value1 = 10, Value2 = 9, Value3 = 1 });
 
                 // Assert
@@ -6849,7 +7123,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6857,7 +7131,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("[dbo].[sp_get_simple_table_by_id]",
+                var result = repository.ExecuteNonQuery("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure);
 
@@ -6887,7 +7161,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -6897,7 +7171,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteQuery<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                repository.ExecuteQuery<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -6922,7 +7196,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryAsyncDeleteSingle()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6930,7 +7204,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = 10;").Result;
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 10;").Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -6941,7 +7215,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryAsyncDeleteWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6949,7 +7223,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @ColumnInt;",
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 }).Result;
 
                 // Assert
@@ -6961,7 +7235,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryAsyncDeleteWithMultipleParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6969,7 +7243,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true }).Result;
 
                 // Assert
@@ -6981,7 +7255,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryAsyncDeleteAll()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -6989,7 +7263,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[SimpleTable];").Result;
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable];").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, 10);
@@ -7000,7 +7274,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryAsyncUpdateSingle()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -7008,7 +7282,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = 10;").Result;
+                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;").Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -7019,7 +7293,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryAsyncUpdateWithSigleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -7027,7 +7301,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
+                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 }).Result;
 
                 // Assert
@@ -7039,7 +7313,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryAsyncUpdateWithMultipleParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -7047,7 +7321,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true }).Result;
 
                 // Assert
@@ -7059,7 +7333,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryAsyncUpdateAll()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -7067,7 +7341,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100;").Result;
+                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100;").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -7078,7 +7352,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryAsyncWithMultipleSqlStatementsWithoutParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -7086,9 +7360,9 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
-                    "UPDATE [dbo].[SimpleTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
-                    "DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = 1;").Result;
+                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
+                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
+                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 1;").Result;
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -7099,7 +7373,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryAsyncWithMultipleSqlStatementsWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -7107,9 +7381,9 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
-                    "UPDATE [dbo].[SimpleTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
-                    "DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @Value3;",
+                var result = repository.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
+                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
+                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @Value3;",
                     new { Value1 = 10, Value2 = 9, Value3 = 1 }).Result;
 
                 // Assert
@@ -7121,7 +7395,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteNonQueryAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -7129,7 +7403,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("[dbo].[sp_get_simple_table_by_id]",
+                var result = repository.ExecuteNonQueryAsync("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure).Result;
 
@@ -7159,7 +7433,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -7169,7 +7443,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -7292,7 +7566,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteScalarByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -7300,7 +7574,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalar("[dbo].[sp_get_simple_table_by_id]",
+                var result = repository.ExecuteScalar("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure);
 
@@ -7330,7 +7604,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteScalar("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                repository.ExecuteScalar("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -7340,7 +7614,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteScalar("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                repository.ExecuteScalar("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -7463,7 +7737,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteScalarAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -7471,7 +7745,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalarAsync("[dbo].[sp_get_simple_table_by_id]",
+                var result = repository.ExecuteScalarAsync("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure).Result;
 
@@ -7501,7 +7775,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteScalarAsync("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = repository.ExecuteScalarAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -7511,7 +7785,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteScalarAsync("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = repository.ExecuteScalarAsync("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -7634,7 +7908,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteScalarTByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -7642,7 +7916,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalar<long>("[dbo].[sp_get_simple_table_by_id]",
+                var result = repository.ExecuteScalar<long>("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure);
 
@@ -7672,7 +7946,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteScalar<object>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                repository.ExecuteScalar<object>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -7682,7 +7956,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteScalar<object>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                repository.ExecuteScalar<object>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -7805,7 +8079,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryExecuteScalarTAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -7813,7 +8087,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalarAsync<long>("[dbo].[sp_get_simple_table_by_id]",
+                var result = repository.ExecuteScalarAsync<long>("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure).Result;
 
@@ -7843,7 +8117,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteScalarAsync<object>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = repository.ExecuteScalarAsync<object>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -7853,7 +8127,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteScalarAsync<object>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = repository.ExecuteScalarAsync<object>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 

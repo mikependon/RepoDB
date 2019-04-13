@@ -22,7 +22,18 @@ namespace RepoDb
             var property = (ClassProperty)null;
             if (m_cache.TryGetValue(key, out property) == false)
             {
-                property = PropertyCache.Get<TEntity>().FirstOrDefault(p => p.IsPrimary() == true);
+                var properties = PropertyCache.Get<TEntity>().Where(p => p.IsPrimary() == true);
+
+                // Check if there is forced [Primary] attribute
+                property = properties.FirstOrDefault(p => p.GetPrimaryAttribute() != null);
+
+                // Otherwise, get any if present
+                if (property == null)
+                {
+                    property = properties?.FirstOrDefault();
+                }
+
+                // Add to the cache (whatever)
                 m_cache.TryAdd(key, property);
             }
             return property;

@@ -29,11 +29,12 @@ namespace RepoDb.IntegrationTests.Caches
 
         #region Helper
 
-        private SimpleTable GetSimpleTable()
+        private IdentityTable GetIdentityTable()
         {
             var random = new Random();
-            return new SimpleTable
+            return new IdentityTable
             {
+                RowGuid = Guid.NewGuid(),
                 ColumnBit = true,
                 ColumnDateTime = DateTime.UtcNow,
                 ColumnDateTime2 = DateTime.UtcNow,
@@ -53,7 +54,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -69,7 +70,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.Query<SimpleTable>(orderBy: null,
+                var result = repository.Query<IdentityTable>(orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
                     transaction: null);
@@ -87,7 +88,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -103,7 +104,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.Query<SimpleTable>((object)null, /* whereOrPrimaryKey */
+                var result = repository.Query<IdentityTable>((object)null, /* whereOrPrimaryKey */
                     (IEnumerable<OrderField>)null, /* orderBy */
                     (string)null, /* hints */
                     cacheKey, /* cacheKey */
@@ -123,7 +124,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -139,7 +140,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.Query<SimpleTable>(where: (QueryField)null,
+                var result = repository.Query<IdentityTable>(where: (QueryField)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
@@ -158,7 +159,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -174,7 +175,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.Query<SimpleTable>(where: (IEnumerable<QueryField>)null,
+                var result = repository.Query<IdentityTable>(where: (IEnumerable<QueryField>)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
@@ -193,7 +194,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -209,7 +210,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.Query<SimpleTable>(where: (Expression<Func<SimpleTable, bool>>)null,
+                var result = repository.Query<IdentityTable>(where: (Expression<Func<IdentityTable, bool>>)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
@@ -228,7 +229,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -244,7 +245,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.Query<SimpleTable>(where: (QueryGroup)null,
+                var result = repository.Query<IdentityTable>(where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
@@ -267,7 +268,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -283,7 +284,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(orderBy: null,
+                var result = repository.QueryAsync<IdentityTable>(orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
                     transaction: null).Result;
@@ -301,7 +302,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -317,7 +318,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>((object)null, /* whereOrPrimaryKey */
+                var result = repository.QueryAsync<IdentityTable>((object)null, /* whereOrPrimaryKey */
                     (IEnumerable<OrderField>)null, /* orderBy */
                     (string)null, /* hints */
                     cacheKey, /* cacheKey */
@@ -337,7 +338,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -353,7 +354,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(where: (QueryField)null,
+                var result = repository.QueryAsync<IdentityTable>(where: (QueryField)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
@@ -372,7 +373,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -388,7 +389,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(where: (IEnumerable<QueryField>)null,
+                var result = repository.QueryAsync<IdentityTable>(where: (IEnumerable<QueryField>)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
@@ -407,7 +408,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -423,7 +424,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(where: (Expression<Func<SimpleTable, bool>>)null,
+                var result = repository.QueryAsync<IdentityTable>(where: (Expression<Func<IdentityTable, bool>>)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
@@ -442,7 +443,7 @@ namespace RepoDb.IntegrationTests.Caches
         {
             // Setup
             var cache = new MemoryCache();
-            var entity = GetSimpleTable();
+            var entity = GetIdentityTable();
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
@@ -458,7 +459,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.QueryAsync<SimpleTable>(where: (QueryGroup)null,
+                var result = repository.QueryAsync<IdentityTable>(where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,

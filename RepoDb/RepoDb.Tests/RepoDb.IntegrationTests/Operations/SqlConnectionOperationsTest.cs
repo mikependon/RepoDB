@@ -33,18 +33,18 @@ namespace RepoDb.IntegrationTests.Operations
 
         private DateTime EpocDate => Helper.GetEpocDate();
 
-        private List<SimpleTable> CreateSimpleTables(int count)
+        private List<IdentityTable> GetIdentityTables(int count)
         {
-            var tables = new List<SimpleTable>();
+            var tables = new List<IdentityTable>();
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;
-                tables.Add(new SimpleTable
+                tables.Add(new IdentityTable
                 {
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
                     ColumnDateTime = EpocDate.AddDays(index),
-                    ColumnDateTime2 = EpocDate.AddDays(index),
+                    ColumnDateTime2 = DateTime.UtcNow,
                     ColumnDecimal = index,
                     ColumnFloat = index,
                     ColumnInt = index,
@@ -52,6 +52,38 @@ namespace RepoDb.IntegrationTests.Operations
                 });
             }
             return tables;
+        }
+
+        private IdentityTable GetIdentityTable()
+        {
+            var random = new Random();
+            return new IdentityTable
+            {
+                RowGuid = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        private NonIdentityTable GetNonIdentityTable()
+        {
+            var random = new Random();
+            return new NonIdentityTable
+            {
+                Id = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
         }
 
         private void AssertPropertiesEquality<T>(T t1, T t2)
@@ -80,7 +112,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -88,7 +120,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -107,7 +139,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -115,7 +147,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -133,7 +165,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQuerySecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -141,7 +173,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -160,7 +192,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQuerySecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -168,7 +200,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -187,7 +219,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -195,7 +227,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -215,7 +247,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -223,7 +255,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -243,7 +275,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -251,7 +283,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
@@ -271,7 +303,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -279,7 +311,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
@@ -299,7 +331,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryForDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -307,7 +339,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     where: new { ColumnInt = 3 },
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -326,8 +358,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryForQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 3);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -335,7 +367,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     where: field,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -355,11 +387,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryForQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 10),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 20)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -368,7 +400,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     where: fields,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -388,11 +420,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryForQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 10),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 20)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -402,7 +434,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQuery<SimpleTable>(
+                var result = connection.BatchQuery<IdentityTable>(
                     where: queryGroup,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -426,7 +458,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -434,7 +466,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -453,7 +485,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -461,7 +493,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -479,7 +511,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncSecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -487,7 +519,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -506,7 +538,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncSecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -514,7 +546,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -533,7 +565,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -541,7 +573,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -561,7 +593,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -569,7 +601,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -589,7 +621,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -597,7 +629,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
@@ -617,7 +649,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -625,7 +657,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
@@ -645,7 +677,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncForDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -653,7 +685,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     where: new { ColumnInt = 3 },
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -672,8 +704,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncForQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 3);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -681,7 +713,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     where: field,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -701,11 +733,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncForQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 10),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 20)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -714,7 +746,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     where: fields,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -734,11 +766,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBatchQueryAsyncForQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(20);
+            var tables = GetIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 10),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 20)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -748,7 +780,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.BatchQueryAsync<SimpleTable>(
+                var result = connection.BatchQueryAsync<IdentityTable>(
                     where: queryGroup,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
@@ -772,7 +804,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntities()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -780,7 +812,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var bulkInsertResult = connection.BulkInsert(tables);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>();
+                var queryResult = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -796,17 +828,17 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntitiesWithMappings()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -814,7 +846,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var bulkInsertResult = connection.BulkInsert(tables);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>();
+                var queryResult = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -830,19 +862,19 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -855,7 +887,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntitiesDbDataReader()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -867,16 +899,16 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert<SimpleTable>((DbDataReader)reader);
+                        destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader);
 
                         // Act
-                        var result = destinationConnection.Query<SimpleTable>();
+                        var result = destinationConnection.Query<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, result.Count());
@@ -889,18 +921,18 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntitiesDbDataReaderWithMappings()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.RowGuid), nameof(SimpleTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -912,16 +944,16 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert<SimpleTable>((DbDataReader)reader, mappings);
+                        destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
 
                         // Act
-                        var result = destinationConnection.Query<SimpleTable>();
+                        var result = destinationConnection.Query<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, result.Count());
@@ -934,19 +966,19 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -958,13 +990,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert<SimpleTable>((DbDataReader)reader, mappings);
+                        destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
                     }
                 }
             }
@@ -974,7 +1006,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForTableNameDbDataReader()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -986,16 +1018,16 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert((DbDataReader)reader, nameof(SimpleTable));
+                        destinationConnection.BulkInsert((DbDataReader)reader, nameof(IdentityTable));
 
                         // Act
-                        var result = destinationConnection.Query<SimpleTable>();
+                        var result = destinationConnection.Query<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, result.Count());
@@ -1008,18 +1040,18 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForTableNameDbDataReaderWithMappings()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.RowGuid), nameof(SimpleTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1031,16 +1063,16 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert((DbDataReader)reader, nameof(SimpleTable), mappings);
+                        destinationConnection.BulkInsert((DbDataReader)reader, nameof(IdentityTable), mappings);
 
                         // Act
-                        var result = destinationConnection.Query<SimpleTable>();
+                        var result = destinationConnection.Query<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, result.Count());
@@ -1053,19 +1085,19 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1077,13 +1109,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert((DbDataReader)reader, nameof(SimpleTable), mappings);
+                        destinationConnection.BulkInsert((DbDataReader)reader, nameof(IdentityTable), mappings);
                     }
                 }
             }
@@ -1093,7 +1125,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1105,7 +1137,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1121,7 +1153,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1133,7 +1165,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1153,7 +1185,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntities()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1162,7 +1194,7 @@ namespace RepoDb.IntegrationTests.Operations
                 bulkInsertResult.Wait();
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>();
+                var queryResult = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult.Result);
@@ -1178,17 +1210,17 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntitiesWithMappings()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1197,7 +1229,7 @@ namespace RepoDb.IntegrationTests.Operations
                 bulkInsertResult.Wait();
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>();
+                var queryResult = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult.Result);
@@ -1213,19 +1245,19 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1242,7 +1274,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntitiesDbDataReader()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1254,17 +1286,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync<SimpleTable>((DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader);
                         bulkInsertResult.Wait();
 
                         // Act
-                        var queryResult = destinationConnection.QueryAsync<SimpleTable>();
+                        var queryResult = destinationConnection.QueryAsync<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
@@ -1277,18 +1309,18 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntitiesDbDataReaderWithMappings()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.RowGuid), nameof(SimpleTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1300,17 +1332,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync<SimpleTable>((DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
                         bulkInsertResult.Wait();
 
                         // Act
-                        var queryResult = destinationConnection.QueryAsync<SimpleTable>();
+                        var queryResult = destinationConnection.QueryAsync<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
@@ -1323,19 +1355,19 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1347,13 +1379,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync<SimpleTable>((DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
                         bulkInsertResult.Wait();
 
                         // Trigger
@@ -1367,7 +1399,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForTableNameDbDataReader()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1379,17 +1411,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync((DbDataReader)reader, nameof(SimpleTable));
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync((DbDataReader)reader, nameof(IdentityTable));
                         bulkInsertResult.Wait();
 
                         // Act
-                        var queryResult = destinationConnection.QueryAsync<SimpleTable>();
+                        var queryResult = destinationConnection.QueryAsync<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
@@ -1402,18 +1434,18 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForTableNameDbDataReaderWithMappings()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.RowGuid), nameof(SimpleTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1425,17 +1457,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync((DbDataReader)reader, nameof(SimpleTable), mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync((DbDataReader)reader, nameof(IdentityTable), mappings);
                         bulkInsertResult.Wait();
 
                         // Act
-                        var queryResult = destinationConnection.QueryAsync<SimpleTable>();
+                        var queryResult = destinationConnection.QueryAsync<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
@@ -1448,19 +1480,19 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDecimal), nameof(SimpleTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnFloat), nameof(SimpleTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnNVarChar), nameof(SimpleTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1472,13 +1504,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync((DbDataReader)reader, nameof(SimpleTable), mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync((DbDataReader)reader, nameof(IdentityTable), mappings);
                         bulkInsertResult.Wait();
 
                         // Trigger
@@ -1492,7 +1524,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1504,7 +1536,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1524,7 +1556,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1536,7 +1568,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [SimpleTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1560,7 +1592,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCount()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1568,7 +1600,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.Count<SimpleTable>();
+                var result = connection.Count<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -1579,7 +1611,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCountViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1587,7 +1619,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.Count<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
+                var result = connection.Count<IdentityTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
 
                 // Assert
                 Assert.AreEqual(7, result);
@@ -1598,7 +1630,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCountViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1606,7 +1638,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.Count<SimpleTable>(new { ColumnInt = 1 });
+                var result = connection.Count<IdentityTable>(new { ColumnInt = 1 });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1617,8 +1649,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCountViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1626,7 +1658,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.Count<SimpleTable>(field);
+                var result = connection.Count<IdentityTable>(field);
 
                 // Assert
                 Assert.AreEqual(5, result);
@@ -1637,11 +1669,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCountViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1650,7 +1682,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.Count<SimpleTable>(fields);
+                var result = connection.Count<IdentityTable>(fields);
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -1661,11 +1693,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCountViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -1675,7 +1707,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.Count<SimpleTable>(queryGroup);
+                var result = connection.Count<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -1690,7 +1722,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCountAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1698,7 +1730,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.CountAsync<SimpleTable>().Result;
+                var result = connection.CountAsync<IdentityTable>().Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -1709,7 +1741,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCountAsyncViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1717,7 +1749,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.CountAsync<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
+                var result = connection.CountAsync<IdentityTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
 
                 // Assert
                 Assert.AreEqual(7, result);
@@ -1728,7 +1760,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCountAsyncViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1736,7 +1768,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.CountAsync<SimpleTable>(new { ColumnInt = 1 }).Result;
+                var result = connection.CountAsync<IdentityTable>(new { ColumnInt = 1 }).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1747,8 +1779,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCountAsyncViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1756,7 +1788,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.CountAsync<SimpleTable>(field).Result;
+                var result = connection.CountAsync<IdentityTable>(field).Result;
 
                 // Assert
                 Assert.AreEqual(5, result);
@@ -1767,11 +1799,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCountAsyncViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1780,7 +1812,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.CountAsync<SimpleTable>(fields).Result;
+                var result = connection.CountAsync<IdentityTable>(fields).Result;
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -1791,11 +1823,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionCountAsyncViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -1805,7 +1837,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.CountAsync<SimpleTable>(queryGroup).Result;
+                var result = connection.CountAsync<IdentityTable>(queryGroup).Result;
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -1820,7 +1852,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteWithoutCondition()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1828,11 +1860,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Delete<SimpleTable>((object)null);
+                var result = connection.Delete<IdentityTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, connection.Count<SimpleTable>());
+                Assert.AreEqual(0, connection.Count<IdentityTable>());
             }
         }
 
@@ -1840,7 +1872,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1849,11 +1881,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Delete<SimpleTable>(last.Id);
+                var result = connection.Delete<IdentityTable>(last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, connection.Count<IdentityTable>());
             }
         }
 
@@ -1861,7 +1893,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1869,11 +1901,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Delete<SimpleTable>(new { ColumnInt = 6 });
+                var result = connection.Delete<IdentityTable>(new { ColumnInt = 6 });
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, connection.Count<IdentityTable>());
             }
         }
 
@@ -1881,7 +1913,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1890,11 +1922,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Delete<SimpleTable>(c => c.Id == last.Id);
+                var result = connection.Delete<IdentityTable>(c => c.Id == last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, connection.Count<IdentityTable>());
             }
         }
 
@@ -1902,7 +1934,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1910,11 +1942,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Delete<SimpleTable>(new QueryField(nameof(SimpleTable.ColumnInt), 6));
+                var result = connection.Delete<IdentityTable>(new QueryField(nameof(IdentityTable.ColumnInt), 6));
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, connection.Count<IdentityTable>());
             }
         }
 
@@ -1922,11 +1954,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1935,11 +1967,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Delete<SimpleTable>(fields);
+                var result = connection.Delete<IdentityTable>(fields);
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, connection.Count<SimpleTable>());
+                Assert.AreEqual(6, connection.Count<IdentityTable>());
             }
         }
 
@@ -1947,11 +1979,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -1961,11 +1993,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Delete<SimpleTable>(queryGroup);
+                var result = connection.Delete<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, connection.Count<SimpleTable>());
+                Assert.AreEqual(6, connection.Count<IdentityTable>());
             }
         }
 
@@ -1973,7 +2005,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteViaDataEntity()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1982,11 +2014,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Delete<SimpleTable>(last);
+                var result = connection.Delete<IdentityTable>(last);
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, connection.Count<IdentityTable>());
             }
         }
 
@@ -1998,7 +2030,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteAsyncWithoutCondition()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -2006,11 +2038,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Delete<SimpleTable>((object)null);
+                var result = connection.Delete<IdentityTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, connection.Count<SimpleTable>());
+                Assert.AreEqual(0, connection.Count<IdentityTable>());
             }
         }
 
@@ -2018,7 +2050,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteAsyncViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2027,11 +2059,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.DeleteAsync<SimpleTable>(last.Id).Result;
+                var result = connection.DeleteAsync<IdentityTable>(last.Id).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, connection.Count<IdentityTable>());
             }
         }
 
@@ -2039,7 +2071,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteAsyncViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -2047,11 +2079,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.DeleteAsync<SimpleTable>(new { ColumnInt = 6 }).Result;
+                var result = connection.DeleteAsync<IdentityTable>(new { ColumnInt = 6 }).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, connection.Count<IdentityTable>());
             }
         }
 
@@ -2059,7 +2091,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteAsyncViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2068,11 +2100,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.DeleteAsync<SimpleTable>(c => c.ColumnInt == last.Id).Result;
+                var result = connection.DeleteAsync<IdentityTable>(c => c.ColumnInt == last.Id).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, connection.Count<IdentityTable>());
             }
         }
 
@@ -2080,8 +2112,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteAsyncViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), 6);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 6);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -2089,11 +2121,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.DeleteAsync<SimpleTable>(field).Result;
+                var result = connection.DeleteAsync<IdentityTable>(field).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, connection.Count<IdentityTable>());
             }
         }
 
@@ -2101,11 +2133,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteAsyncViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2114,11 +2146,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.DeleteAsync<SimpleTable>(fields).Result;
+                var result = connection.DeleteAsync<IdentityTable>(fields).Result;
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, connection.Count<SimpleTable>());
+                Assert.AreEqual(6, connection.Count<IdentityTable>());
             }
         }
 
@@ -2126,11 +2158,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteAsyncViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -2140,11 +2172,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.DeleteAsync<SimpleTable>(queryGroup).Result;
+                var result = connection.DeleteAsync<IdentityTable>(queryGroup).Result;
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, connection.Count<SimpleTable>());
+                Assert.AreEqual(6, connection.Count<IdentityTable>());
             }
         }
 
@@ -2152,7 +2184,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteAsyncViaDataEntity()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2161,11 +2193,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.DeleteAsync<SimpleTable>(last).Result;
+                var result = connection.DeleteAsync<IdentityTable>(last).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, connection.Count<IdentityTable>());
             }
         }
 
@@ -2177,7 +2209,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteAll()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -2185,7 +2217,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.DeleteAll<SimpleTable>();
+                var result = connection.DeleteAll<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -2200,7 +2232,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionDeleteAllAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -2208,7 +2240,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => connection.Insert(entity));
 
                 // Act
-                var result = connection.DeleteAllAsync<SimpleTable>().Result;
+                var result = connection.DeleteAllAsync<IdentityTable>().Result;
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -2234,13 +2266,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = Convert.ToInt32(connection.InlineInsert<SimpleTable>(entity));
+                var result = Convert.ToInt32(connection.InlineInsert<IdentityTable>(entity));
 
                 // Assert
                 Assert.IsTrue(result > 0);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>();
+                var queryResult = connection.Query<IdentityTable>(result);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2260,6 +2292,86 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionInlineInsertForIdentiyTable()
+        {
+            // Setup
+            var entity = new
+            {
+                RowGuid = Guid.NewGuid(),
+                ColumnInt = 100,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnNVarChar = Helper.GetUnicodeString()
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.InlineInsert<IdentityTable, long>(entity);
+
+                // Assert
+                Assert.IsTrue(result > 0);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(result);
+                var first = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Count());
+                Assert.IsNull(first.ColumnBit);
+                Assert.IsNull(first.ColumnDateTime);
+                Assert.IsNull(first.ColumnDecimal);
+                Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.RowGuid);
+                Assert.IsNotNull(first.ColumnInt);
+                Assert.IsNotNull(first.ColumnDateTime2);
+                Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.RowGuid, first.RowGuid);
+                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
+                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
+                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInlineInsertForNonIdentityTable()
+        {
+            // Setup
+            var entity = new
+            {
+                Id = Guid.NewGuid(),
+                ColumnInt = 100,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnNVarChar = Helper.GetUnicodeString()
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.InlineInsert<NonIdentityTable, Guid>(entity);
+
+                // Assert
+                Assert.AreEqual(entity.Id, result);
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(result);
+                var first = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Count());
+                Assert.IsNull(first.ColumnBit);
+                Assert.IsNull(first.ColumnDateTime);
+                Assert.IsNull(first.ColumnDecimal);
+                Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.ColumnInt);
+                Assert.IsNotNull(first.ColumnDateTime2);
+                Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
+                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
+                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(SqlException))]
         public void ThrowExceptionAtSqlConnectionInlineInsertIfTheValuesAreInvalid()
         {
@@ -2272,7 +2384,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InlineInsert<SimpleTable>(entity);
+                connection.InlineInsert<IdentityTable>(entity);
             }
         }
 
@@ -2295,13 +2407,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = Convert.ToInt32(connection.InlineInsertAsync<SimpleTable>(entity).Result);
+                var result = Convert.ToInt32(connection.InlineInsertAsync<IdentityTable>(entity).Result);
 
                 // Assert
                 Assert.IsTrue(result > 0);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>();
+                var queryResult = connection.Query<IdentityTable>(result);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2321,6 +2433,86 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionInlineInsertAsyncForIdentiyTable()
+        {
+            // Setup
+            var entity = new
+            {
+                RowGuid = Guid.NewGuid(),
+                ColumnInt = 100,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnNVarChar = Helper.GetUnicodeString()
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.InlineInsertAsync<IdentityTable, long>(entity).Result;
+
+                // Assert
+                Assert.IsTrue(result > 0);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(result);
+                var first = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Count());
+                Assert.IsNull(first.ColumnBit);
+                Assert.IsNull(first.ColumnDateTime);
+                Assert.IsNull(first.ColumnDecimal);
+                Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.RowGuid);
+                Assert.IsNotNull(first.ColumnInt);
+                Assert.IsNotNull(first.ColumnDateTime2);
+                Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.RowGuid, first.RowGuid);
+                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
+                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
+                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInlineInsertAsyncForNonIdentityTable()
+        {
+            // Setup
+            var entity = new
+            {
+                Id = Guid.NewGuid(),
+                ColumnInt = 100,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnNVarChar = Helper.GetUnicodeString()
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.InlineInsertAsync<NonIdentityTable, Guid>(entity).Result;
+
+                // Assert
+                Assert.AreEqual(entity.Id, result);
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(result);
+                var first = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Count());
+                Assert.IsNull(first.ColumnBit);
+                Assert.IsNull(first.ColumnDateTime);
+                Assert.IsNull(first.ColumnDecimal);
+                Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.ColumnInt);
+                Assert.IsNotNull(first.ColumnDateTime2);
+                Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
+                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
+                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionAtSqlConnectionInlineInsertAsyncIfTheValuesAreInvalid()
         {
@@ -2333,7 +2525,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.InlineInsertAsync<SimpleTable>(entity).Result;
+                var result = connection.InlineInsertAsync<IdentityTable>(entity).Result;
             }
         }
 
@@ -2357,13 +2549,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = Convert.ToInt32(connection.InlineMerge<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id))));
+                var result = Convert.ToInt32(connection.InlineMerge<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id))));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>();
+                var queryResult = connection.Query<IdentityTable>();
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2387,7 +2579,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionInlineMergeToExistingData()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var entity = new
             {
                 RowGuid = Guid.NewGuid(),
@@ -2402,13 +2594,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineMerge<SimpleTable>(entity, Field.From(nameof(SimpleTable.ColumnInt))));
+                var result = Convert.ToInt32(connection.InlineMerge<IdentityTable>(entity, Field.From(nameof(IdentityTable.ColumnInt))));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == entity.ColumnInt);
+                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == entity.ColumnInt);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2440,7 +2632,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InlineMerge<SimpleTable>(entity);
+                connection.InlineMerge<IdentityTable>(entity);
             }
         }
 
@@ -2457,7 +2649,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InlineMerge<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id)));
+                connection.InlineMerge<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id)));
             }
         }
 
@@ -2473,7 +2665,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InlineMerge<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id)));
+                connection.InlineMerge<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id)));
             }
         }
 
@@ -2490,7 +2682,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InlineMerge<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id)));
+                connection.InlineMerge<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id)));
             }
         }
 
@@ -2514,13 +2706,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = Convert.ToInt32(connection.InlineMergeAsync<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id))).Result);
+                var result = Convert.ToInt32(connection.InlineMergeAsync<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id))).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>();
+                var queryResult = connection.Query<IdentityTable>();
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2544,7 +2736,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionInlineMergeAsyncToExistingData()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var entity = new
             {
                 RowGuid = Guid.NewGuid(),
@@ -2559,13 +2751,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineMergeAsync<SimpleTable>(entity, Field.From(nameof(SimpleTable.ColumnInt))).Result);
+                var result = Convert.ToInt32(connection.InlineMergeAsync<IdentityTable>(entity, Field.From(nameof(IdentityTable.ColumnInt))).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == entity.ColumnInt);
+                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == entity.ColumnInt);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2597,7 +2789,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.InlineMergeAsync<SimpleTable>(entity).Result;
+                var result = connection.InlineMergeAsync<IdentityTable>(entity).Result;
             }
         }
 
@@ -2614,7 +2806,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.InlineMergeAsync<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id))).Result;
+                var result = connection.InlineMergeAsync<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id))).Result;
             }
         }
 
@@ -2630,7 +2822,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.InlineMergeAsync<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id))).Result;
+                var result = connection.InlineMergeAsync<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id))).Result;
             }
         }
 
@@ -2647,7 +2839,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.InlineMergeAsync<SimpleTable>(entity, Field.From(nameof(SimpleTable.Id))).Result;
+                var result = connection.InlineMergeAsync<IdentityTable>(entity, Field.From(nameof(IdentityTable.Id))).Result;
             }
         }
 
@@ -2665,7 +2857,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2674,13 +2866,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdate<SimpleTable>(entity, last.Id));
+                var result = Convert.ToInt32(connection.InlineUpdate<IdentityTable>(entity, last.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = connection.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2704,7 +2896,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2713,13 +2905,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdate<SimpleTable>(entity, new { last.Id }));
+                var result = Convert.ToInt32(connection.InlineUpdate<IdentityTable>(entity, new { last.Id }));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(new { last.Id });
+                var queryResult = connection.Query<IdentityTable>(new { last.Id });
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2743,7 +2935,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2752,13 +2944,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdate<SimpleTable>(entity, e => e.Id == last.Id));
+                var result = Convert.ToInt32(connection.InlineUpdate<IdentityTable>(entity, e => e.Id == last.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = connection.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2782,7 +2974,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2791,13 +2983,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdate<SimpleTable>(entity, new QueryField(nameof(SimpleTable.Id), last.Id)));
+                var result = Convert.ToInt32(connection.InlineUpdate<IdentityTable>(entity, new QueryField(nameof(IdentityTable.Id), last.Id)));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = connection.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2821,11 +3013,11 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 10),
-                new QueryField(nameof(SimpleTable.ColumnBit), true)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
+                new QueryField(nameof(IdentityTable.ColumnBit), true)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2834,14 +3026,14 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdate<SimpleTable>(entity, fields));
+                var result = Convert.ToInt32(connection.InlineUpdate<IdentityTable>(entity, fields));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
                 fields.ResetAll();
-                var queryResult = connection.Query<SimpleTable>(fields);
+                var queryResult = connection.Query<IdentityTable>(fields);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2865,11 +3057,11 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 10),
-                new QueryField(nameof(SimpleTable.ColumnBit), true)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
+                new QueryField(nameof(IdentityTable.ColumnBit), true)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -2879,14 +3071,14 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdate<SimpleTable>(entity, queryGroup));
+                var result = Convert.ToInt32(connection.InlineUpdate<IdentityTable>(entity, queryGroup));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
                 queryGroup.Reset();
-                var queryResult = connection.Query<SimpleTable>(queryGroup);
+                var queryResult = connection.Query<IdentityTable>(queryGroup);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2908,7 +3100,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 ColumnInt = "Invalid"
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2917,7 +3109,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                connection.InlineUpdate<SimpleTable>(entity, last.Id);
+                connection.InlineUpdate<IdentityTable>(entity, last.Id);
             }
         }
 
@@ -2935,7 +3127,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2944,13 +3136,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdateAsync<SimpleTable>(entity, last.Id).Result);
+                var result = Convert.ToInt32(connection.InlineUpdateAsync<IdentityTable>(entity, last.Id).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = connection.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -2974,7 +3166,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2983,13 +3175,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdateAsync<SimpleTable>(entity, new { last.Id }).Result);
+                var result = Convert.ToInt32(connection.InlineUpdateAsync<IdentityTable>(entity, new { last.Id }).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(new { last.Id });
+                var queryResult = connection.Query<IdentityTable>(new { last.Id });
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -3013,7 +3205,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3022,13 +3214,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdateAsync<SimpleTable>(entity, e => e.Id == last.Id).Result);
+                var result = Convert.ToInt32(connection.InlineUpdateAsync<IdentityTable>(entity, e => e.Id == last.Id).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = connection.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -3052,7 +3244,7 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3061,13 +3253,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdateAsync<SimpleTable>(entity, new QueryField(nameof(SimpleTable.Id), last.Id)).Result);
+                var result = Convert.ToInt32(connection.InlineUpdateAsync<IdentityTable>(entity, new QueryField(nameof(IdentityTable.Id), last.Id)).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.Id == last.Id);
+                var queryResult = connection.Query<IdentityTable>(item => item.Id == last.Id);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -3091,11 +3283,11 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 10),
-                new QueryField(nameof(SimpleTable.ColumnBit), true)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
+                new QueryField(nameof(IdentityTable.ColumnBit), true)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3104,14 +3296,14 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdateAsync<SimpleTable>(entity, fields).Result);
+                var result = Convert.ToInt32(connection.InlineUpdateAsync<IdentityTable>(entity, fields).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
                 fields.ResetAll();
-                var queryResult = connection.Query<SimpleTable>(fields);
+                var queryResult = connection.Query<IdentityTable>(fields);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -3135,11 +3327,11 @@ namespace RepoDb.IntegrationTests.Operations
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 10),
-                new QueryField(nameof(SimpleTable.ColumnBit), true)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
+                new QueryField(nameof(IdentityTable.ColumnBit), true)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -3149,14 +3341,14 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = Convert.ToInt32(connection.InlineUpdateAsync<SimpleTable>(entity, queryGroup).Result);
+                var result = Convert.ToInt32(connection.InlineUpdateAsync<IdentityTable>(entity, queryGroup).Result);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
                 queryGroup.Reset();
-                var queryResult = connection.Query<SimpleTable>(queryGroup);
+                var queryResult = connection.Query<IdentityTable>(queryGroup);
                 var first = queryResult.FirstOrDefault();
 
                 // Assert
@@ -3178,7 +3370,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 ColumnInt = "Invalid"
             };
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3187,7 +3379,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.InlineUpdateAsync<SimpleTable>(entity, last.Id).Result;
+                var result = connection.InlineUpdateAsync<IdentityTable>(entity, last.Id).Result;
             }
         }
 
@@ -3199,7 +3391,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionInsert()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3207,7 +3399,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>();
+                var result = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -3215,6 +3407,47 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
                 });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertForIdentityTable()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = GetIdentityTable();
+
+                // Act
+                item.Id = connection.Insert<IdentityTable, long>(item);
+
+                // Act
+                var result = connection.Query<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(item, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertForNonIdentityTable()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = GetNonIdentityTable();
+
+                // Act
+                var value = connection.Insert<NonIdentityTable, Guid>(item);
+
+                // Act
+                var result = connection.Query<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(item.Id, value);
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(item, result.First());
             }
         }
 
@@ -3226,7 +3459,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionInsertAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3234,7 +3467,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.InsertAsync(item).Result));
 
                 // Act
-                var result = connection.Query<SimpleTable>();
+                var result = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -3242,6 +3475,47 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
                 });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAsyncForIdentityTable()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = GetIdentityTable();
+
+                // Act
+                item.Id = connection.InsertAsync<IdentityTable, long>(item).Result;
+
+                // Act
+                var result = connection.Query<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(item, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAsyncForNonIdentityTable()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = GetNonIdentityTable();
+
+                // Act
+                var value = connection.InsertAsync<NonIdentityTable, Guid>(item).Result;
+
+                // Act
+                var result = connection.Query<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(item.Id, value);
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(item, result.First());
             }
         }
 
@@ -3253,7 +3527,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMerge()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3262,7 +3536,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(last.Id).First();
+                var queryResult = connection.Query<IdentityTable>(last.Id).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3280,7 +3554,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(last.Id).First();
+                queryResult = connection.Query<IdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3297,7 +3571,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeWithPrimaryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3306,7 +3580,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(last.Id).First();
+                var queryResult = connection.Query<IdentityTable>(last.Id).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3318,13 +3592,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.Merge(queryResult, new Field(nameof(SimpleTable.Id)));
+                var mergeResult = connection.Merge(queryResult, new Field(nameof(IdentityTable.Id)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(last.Id).First();
+                queryResult = connection.Query<IdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3341,7 +3615,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeWithNonPrimaryFieldViaInstantiation()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3349,7 +3623,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3360,13 +3634,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.Merge(queryResult, new Field(nameof(SimpleTable.ColumnInt)));
+                var mergeResult = connection.Merge(queryResult, new Field(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3382,7 +3656,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeWithNonPrimaryFieldViaFromMethod()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3390,7 +3664,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3401,13 +3675,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.Merge(queryResult, Field.From(nameof(SimpleTable.ColumnInt)));
+                var mergeResult = connection.Merge(queryResult, Field.From(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3423,7 +3697,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeWithMultipleFieldsViaInstantiation()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3431,7 +3705,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
                 queryResult.ColumnDateTime = Helper.GetEpocDate();
@@ -3443,15 +3717,15 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = connection.Merge(queryResult, new[]
                 {
-                    new Field(nameof(SimpleTable.ColumnInt)),
-                    new Field(nameof(SimpleTable.ColumnBit))
+                    new Field(nameof(IdentityTable.ColumnInt)),
+                    new Field(nameof(IdentityTable.ColumnBit))
                 });
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
@@ -3466,7 +3740,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeWithMultipleFieldsViaFromMethod()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3474,7 +3748,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
                 queryResult.ColumnDateTime = Helper.GetEpocDate();
@@ -3484,13 +3758,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.Merge(queryResult, Field.From(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnBit)));
+                var mergeResult = connection.Merge(queryResult, Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnBit)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
@@ -3509,7 +3783,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3518,7 +3792,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(last.Id).First();
+                var queryResult = connection.Query<IdentityTable>(last.Id).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3536,7 +3810,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(last.Id).First();
+                queryResult = connection.Query<IdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3553,7 +3827,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeAsyncWithPrimaryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3562,7 +3836,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(last.Id).First();
+                var queryResult = connection.Query<IdentityTable>(last.Id).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3574,13 +3848,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.MergeAsync(queryResult, new Field(nameof(SimpleTable.Id))).Result;
+                var mergeResult = connection.MergeAsync(queryResult, new Field(nameof(IdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(last.Id).First();
+                queryResult = connection.Query<IdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3597,7 +3871,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeAsyncWithNonPrimaryFieldViaInstantiation()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3605,7 +3879,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3616,13 +3890,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.MergeAsync(queryResult, new Field(nameof(SimpleTable.ColumnInt))).Result;
+                var mergeResult = connection.MergeAsync(queryResult, new Field(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3638,7 +3912,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeAsyncWithNonPrimaryFieldViaFromMethod()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3646,7 +3920,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Act
                 queryResult.ColumnBit = false;
@@ -3657,13 +3931,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.MergeAsync(queryResult, Field.From(nameof(SimpleTable.ColumnInt))).Result;
+                var mergeResult = connection.MergeAsync(queryResult, Field.From(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10).First();
+                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -3679,7 +3953,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeAsyncWithMultipleFieldsViaInstantiation()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3687,7 +3961,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
                 queryResult.ColumnDateTime = Helper.GetEpocDate();
@@ -3699,15 +3973,15 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = connection.MergeAsync(queryResult, new[]
                 {
-                    new Field(nameof(SimpleTable.ColumnInt)),
-                    new Field(nameof(SimpleTable.ColumnBit))
+                    new Field(nameof(IdentityTable.ColumnInt)),
+                    new Field(nameof(IdentityTable.ColumnBit))
                 }).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
@@ -3722,7 +3996,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeAsyncWithMultipleFieldsViaFromMethod()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3730,7 +4004,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
                 queryResult.ColumnDateTime = Helper.GetEpocDate();
@@ -3740,13 +4014,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.MergeAsync(queryResult, Field.From(nameof(SimpleTable.ColumnInt), nameof(SimpleTable.ColumnBit))).Result;
+                var mergeResult = connection.MergeAsync(queryResult, Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnBit))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<SimpleTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
@@ -3765,7 +4039,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQuery()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3773,7 +4047,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>();
+                var result = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -3788,7 +4062,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 3;
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3797,7 +4071,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(top: top);
+                var result = connection.Query<IdentityTable>(top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -3813,8 +4087,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var tables = GetIdentityTables(10);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3822,7 +4096,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(orderBy: orderBy.AsEnumerable());
+                var result = connection.Query<IdentityTable>(orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 AssertPropertiesEquality(tables.First(), result.Last());
@@ -3834,9 +4108,9 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3844,7 +4118,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(top: top, orderBy: orderBy.AsEnumerable());
+                var result = connection.Query<IdentityTable>(top: top, orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 Assert.AreEqual(result.Count(), top);
@@ -3857,7 +4131,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3866,7 +4140,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(last.Id);
+                var result = connection.Query<IdentityTable>(last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3878,7 +4152,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3887,7 +4161,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(new { last.Id });
+                var result = connection.Query<IdentityTable>(new { last.Id });
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3899,7 +4173,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3908,7 +4182,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.Id == last.Id);
+                var result = connection.Query<IdentityTable>(c => c.Id == last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3920,7 +4194,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3929,7 +4203,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(new QueryField(nameof(SimpleTable.Id), last.Id));
+                var result = connection.Query<IdentityTable>(new QueryField(nameof(IdentityTable.Id), last.Id));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3941,11 +4215,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3954,7 +4228,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(fields);
+                var result = connection.Query<IdentityTable>(fields);
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
@@ -3970,12 +4244,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaQueryFieldsWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3984,7 +4258,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(fields, top: top);
+                var result = connection.Query<IdentityTable>(fields, top: top);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4000,13 +4274,13 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaQueryFieldsWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4014,7 +4288,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(fields, orderBy: orderBy.AsEnumerable());
+                var result = connection.Query<IdentityTable>(fields, orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -4026,14 +4300,14 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaQueryFieldsWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4041,7 +4315,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(fields, orderBy: orderBy.AsEnumerable(), top: top);
+                var result = connection.Query<IdentityTable>(fields, orderBy: orderBy.AsEnumerable(), top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -4054,12 +4328,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), 6)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), 6)
             };
             var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
@@ -4069,7 +4343,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(queryGroup);
+                var result = connection.Query<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4085,12 +4359,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaQueryGroupWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -4100,7 +4374,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(queryGroup, top: top);
+                var result = connection.Query<IdentityTable>(queryGroup, top: top);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4116,14 +4390,14 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaQueryGroupWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4131,7 +4405,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(queryGroup, orderBy: orderBy.AsEnumerable());
+                var result = connection.Query<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -4143,15 +4417,15 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaQueryGroupWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4159,7 +4433,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(queryGroup, orderBy: orderBy.AsEnumerable(), top: top);
+                var result = connection.Query<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable(), top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -4174,7 +4448,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithArrayContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4183,7 +4457,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar));
+                var result = connection.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar));
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4196,7 +4470,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4204,7 +4478,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9"));
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9"));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4216,7 +4490,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4224,7 +4498,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("NVAR"));
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("NVAR"));
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -4236,7 +4510,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4244,7 +4518,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9"));
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9"));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4256,7 +4530,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithArrayContainsAndStringContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4265,7 +4539,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4"));
+                var result = connection.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4"));
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -4277,7 +4551,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithArrayContainsAndStringStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4286,7 +4560,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR"));
+                var result = connection.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR"));
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -4298,7 +4572,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithArrayContainsAndStringEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4307,7 +4581,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4"));
+                var result = connection.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4"));
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -4319,7 +4593,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithArrayContainsAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4328,7 +4602,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == true);
+                var result = connection.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == true);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4340,7 +4614,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithArrayContainsAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4349,7 +4623,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == false);
+                var result = connection.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == false);
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
@@ -4361,7 +4635,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4370,7 +4644,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) != false);
+                var result = connection.Query<IdentityTable>(c => values.Contains(c.ColumnNVarChar) != false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4382,7 +4656,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithArrayContainsAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4391,7 +4665,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => !values.Contains(c.ColumnNVarChar));
+                var result = connection.Query<IdentityTable>(c => !values.Contains(c.ColumnNVarChar));
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
@@ -4403,7 +4677,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringContainsAndStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4411,7 +4685,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR"));
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR"));
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -4423,7 +4697,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringContainsAndEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4431,7 +4705,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8"));
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8"));
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4443,7 +4717,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringContainsAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4451,7 +4725,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == true);
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == true);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4463,7 +4737,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringContainsAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4471,7 +4745,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == false);
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == false);
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -4483,7 +4757,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4491,7 +4765,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") != false);
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("9") != false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4503,7 +4777,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringContainsAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4511,7 +4785,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => !c.ColumnNVarChar.Contains("9"));
+                var result = connection.Query<IdentityTable>(c => !c.ColumnNVarChar.Contains("9"));
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -4523,7 +4797,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringStartsWithAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4531,7 +4805,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true);
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -4543,7 +4817,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringStartsWithAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4551,7 +4825,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false);
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false);
 
                 // Assert
                 Assert.AreEqual(0, result.Count());
@@ -4562,7 +4836,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4570,7 +4844,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false);
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -4582,7 +4856,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringStartsWithAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4590,7 +4864,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => !c.ColumnNVarChar.StartsWith("NVAR"));
+                var result = connection.Query<IdentityTable>(c => !c.ColumnNVarChar.StartsWith("NVAR"));
 
                 // Assert
                 Assert.AreEqual(0, result.Count());
@@ -4601,7 +4875,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringEndsWithAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4609,7 +4883,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == true);
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == true);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4621,7 +4895,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringEndsWithAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4629,7 +4903,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == false);
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == false);
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -4641,7 +4915,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4649,7 +4923,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") != false);
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") != false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4661,7 +4935,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryViaExpressionWithStringEndsWithAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4669,7 +4943,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Query<SimpleTable>(c => !c.ColumnNVarChar.EndsWith("9"));
+                var result = connection.Query<IdentityTable>(c => !c.ColumnNVarChar.EndsWith("9"));
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -4687,7 +4961,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4695,7 +4969,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>().Result;
+                var result = connection.QueryAsync<IdentityTable>().Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -4710,7 +4984,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 3;
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4719,7 +4993,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(top: top).Result;
+                var result = connection.QueryAsync<IdentityTable>(top: top).Result;
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -4735,8 +5009,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var tables = GetIdentityTables(10);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4744,7 +5018,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(orderBy: orderBy.AsEnumerable()).Result;
+                var result = connection.QueryAsync<IdentityTable>(orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
                 AssertPropertiesEquality(tables.First(), result.Last());
@@ -4756,9 +5030,9 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4766,7 +5040,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(top: top, orderBy: orderBy.AsEnumerable()).Result;
+                var result = connection.QueryAsync<IdentityTable>(top: top, orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
                 Assert.AreEqual(result.Count(), top);
@@ -4779,7 +5053,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4788,7 +5062,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(last.Id).Result;
+                var result = connection.QueryAsync<IdentityTable>(last.Id).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4800,7 +5074,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4809,7 +5083,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(new { last.Id }).Result;
+                var result = connection.QueryAsync<IdentityTable>(new { last.Id }).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4821,7 +5095,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4830,7 +5104,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.Id == last.Id).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.Id == last.Id).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4842,7 +5116,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4851,7 +5125,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(new QueryField(nameof(SimpleTable.Id), last.Id)).Result;
+                var result = connection.QueryAsync<IdentityTable>(new QueryField(nameof(IdentityTable.Id), last.Id)).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4863,11 +5137,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4876,7 +5150,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(fields).Result;
+                var result = connection.QueryAsync<IdentityTable>(fields).Result;
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
@@ -4892,12 +5166,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaQueryFieldsWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4906,7 +5180,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(fields, top: top).Result;
+                var result = connection.QueryAsync<IdentityTable>(fields, top: top).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -4922,13 +5196,13 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaQueryFieldsWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4936,7 +5210,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(fields, orderBy: orderBy.AsEnumerable()).Result;
+                var result = connection.QueryAsync<IdentityTable>(fields, orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
                 AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -4948,14 +5222,14 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaQueryFieldsWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4963,7 +5237,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(fields, orderBy: orderBy.AsEnumerable(), top: top).Result;
+                var result = connection.QueryAsync<IdentityTable>(fields, orderBy: orderBy.AsEnumerable(), top: top).Result;
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -4976,12 +5250,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), 6)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), 6)
             };
             var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
@@ -4991,7 +5265,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(queryGroup).Result;
+                var result = connection.QueryAsync<IdentityTable>(queryGroup).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -5007,12 +5281,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaQueryGroupWithTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -5022,7 +5296,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(queryGroup, top: top).Result;
+                var result = connection.QueryAsync<IdentityTable>(queryGroup, top: top).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -5038,14 +5312,14 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaQueryGroupWithOrderBy()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5053,7 +5327,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(queryGroup, orderBy: orderBy.AsEnumerable()).Result;
+                var result = connection.QueryAsync<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
                 AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -5065,15 +5339,15 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaQueryGroupWithOrderByAndTop()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
-                new QueryField(nameof(SimpleTable.ColumnInt), Operation.LessThanOrEqual, 8)
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var queryGroup = new QueryGroup(fields);
             var top = 3;
-            var orderBy = new OrderField(nameof(SimpleTable.ColumnInt), Order.Descending);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5081,7 +5355,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(queryGroup, orderBy: orderBy.AsEnumerable(), top: top).Result;
+                var result = connection.QueryAsync<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable(), top: top).Result;
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -5096,7 +5370,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5105,7 +5379,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar)).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar)).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -5118,7 +5392,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5126,7 +5400,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9")).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9")).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -5138,7 +5412,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5146,7 +5420,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("NVAR")).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("NVAR")).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -5158,7 +5432,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5166,7 +5440,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9")).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9")).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -5178,7 +5452,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringContains()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5187,7 +5461,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4")).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4")).Result;
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -5199,7 +5473,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5208,7 +5482,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR")).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR")).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -5220,7 +5494,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5229,7 +5503,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4")).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4")).Result;
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -5241,7 +5515,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5250,7 +5524,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == true).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == true).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -5262,7 +5536,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5271,7 +5545,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == false).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == false).Result;
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
@@ -5283,7 +5557,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5292,7 +5566,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) != false).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) != false).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -5304,7 +5578,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5313,7 +5587,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => !values.Contains(c.ColumnNVarChar)).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => !values.Contains(c.ColumnNVarChar)).Result;
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
@@ -5325,7 +5599,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAndStartsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5333,7 +5607,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR")).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR")).Result;
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -5345,7 +5619,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAndEndsWith()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5353,7 +5627,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8")).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8")).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -5365,7 +5639,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5373,7 +5647,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == true).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == true).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -5385,7 +5659,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5393,7 +5667,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == false).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == false).Result;
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -5405,7 +5679,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5413,7 +5687,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") != false).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") != false).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -5425,7 +5699,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5433,7 +5707,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => !c.ColumnNVarChar.Contains("9")).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.Contains("9")).Result;
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -5445,7 +5719,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5453,7 +5727,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -5465,7 +5739,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5473,7 +5747,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false).Result;
 
                 // Assert
                 Assert.AreEqual(0, result.Count());
@@ -5484,7 +5758,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5492,7 +5766,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -5504,7 +5778,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5512,7 +5786,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => !c.ColumnNVarChar.StartsWith("NVAR")).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.StartsWith("NVAR")).Result;
 
                 // Assert
                 Assert.AreEqual(0, result.Count());
@@ -5523,7 +5797,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanTrue()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5531,7 +5805,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == true).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == true).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -5543,7 +5817,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5551,7 +5825,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == false).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == false).Result;
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -5563,7 +5837,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5571,7 +5845,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") != false).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") != false).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -5583,7 +5857,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsUnaryFalse()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5591,7 +5865,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryAsync<SimpleTable>(c => !c.ColumnNVarChar.EndsWith("9")).Result;
+                var result = connection.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.EndsWith("9")).Result;
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -5611,7 +5885,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleT2()
         {
             // Setup
-            var tables = CreateSimpleTables(2);
+            var tables = GetIdentityTables(2);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5619,7 +5893,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultiple<SimpleTable, SimpleTable>(
+                var result = connection.QueryMultiple<IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2);
 
@@ -5637,7 +5911,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleT3()
         {
             // Setup
-            var tables = CreateSimpleTables(3);
+            var tables = GetIdentityTables(3);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5645,7 +5919,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultiple<SimpleTable, SimpleTable, SimpleTable>(
+                var result = connection.QueryMultiple<IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3);
@@ -5665,7 +5939,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleT4()
         {
             // Setup
-            var tables = CreateSimpleTables(4);
+            var tables = GetIdentityTables(4);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5673,7 +5947,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultiple<SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = connection.QueryMultiple<IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5695,7 +5969,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleT5()
         {
             // Setup
-            var tables = CreateSimpleTables(5);
+            var tables = GetIdentityTables(5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5703,7 +5977,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultiple<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = connection.QueryMultiple<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5727,7 +6001,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleT6()
         {
             // Setup
-            var tables = CreateSimpleTables(6);
+            var tables = GetIdentityTables(6);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5735,7 +6009,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultiple<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = connection.QueryMultiple<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5761,7 +6035,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleT7()
         {
             // Setup
-            var tables = CreateSimpleTables(7);
+            var tables = GetIdentityTables(7);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5769,7 +6043,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultiple<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = connection.QueryMultiple<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5801,7 +6075,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleAsyncT2()
         {
             // Setup
-            var tables = CreateSimpleTables(2);
+            var tables = GetIdentityTables(2);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5809,7 +6083,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultipleAsync<SimpleTable, SimpleTable>(
+                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2).Result;
 
@@ -5827,7 +6101,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleAsyncT3()
         {
             // Setup
-            var tables = CreateSimpleTables(3);
+            var tables = GetIdentityTables(3);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5835,7 +6109,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultipleAsync<SimpleTable, SimpleTable, SimpleTable>(
+                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3).Result;
@@ -5855,7 +6129,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleAsyncT4()
         {
             // Setup
-            var tables = CreateSimpleTables(4);
+            var tables = GetIdentityTables(4);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5863,7 +6137,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultipleAsync<SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5885,7 +6159,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleAsyncT5()
         {
             // Setup
-            var tables = CreateSimpleTables(5);
+            var tables = GetIdentityTables(5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5893,7 +6167,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultipleAsync<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5917,7 +6191,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleAsyncT6()
         {
             // Setup
-            var tables = CreateSimpleTables(6);
+            var tables = GetIdentityTables(6);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5925,7 +6199,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultipleAsync<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5951,7 +6225,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionQueryMultipleAsyncT7()
         {
             // Setup
-            var tables = CreateSimpleTables(7);
+            var tables = GetIdentityTables(7);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5959,7 +6233,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.QueryMultipleAsync<SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable, SimpleTable>(
+                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -5989,7 +6263,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionTruncate()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5997,10 +6271,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                connection.Truncate<SimpleTable>();
+                connection.Truncate<IdentityTable>();
 
                 // Act
-                var result = connection.Count<SimpleTable>();
+                var result = connection.Count<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(0, result);
@@ -6015,7 +6289,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionTruncateAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6023,11 +6297,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var task = connection.TruncateAsync<SimpleTable>();
+                var task = connection.TruncateAsync<IdentityTable>();
                 task.Wait();
 
                 // Act
-                var result = connection.Count<SimpleTable>();
+                var result = connection.Count<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(0, result);
@@ -6042,7 +6316,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateViaDataEntity()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6065,7 +6339,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = connection.Query<SimpleTable>();
+                var result = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6077,7 +6351,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6100,7 +6374,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = connection.Query<SimpleTable>();
+                var result = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6112,7 +6386,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6135,7 +6409,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = connection.Query<SimpleTable>();
+                var result = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6147,7 +6421,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6170,7 +6444,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = connection.Query<SimpleTable>();
+                var result = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6182,8 +6456,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), 10);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6203,7 +6477,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 field.Reset();
-                var result = connection.Query<SimpleTable>(field);
+                var result = connection.Query<IdentityTable>(field);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6215,11 +6489,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnBit), true),
-                new QueryField(nameof(SimpleTable.ColumnInt), 10)
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -6241,7 +6515,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 fields.ResetAll();
-                var result = connection.Query<SimpleTable>(fields);
+                var result = connection.Query<IdentityTable>(fields);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6253,11 +6527,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnBit), true),
-                new QueryField(nameof(SimpleTable.ColumnInt), 10)
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -6280,7 +6554,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryGroup.Reset();
-                var result = connection.Query<SimpleTable>(queryGroup);
+                var result = connection.Query<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6296,7 +6570,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateAsyncViaDataEntity()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6319,7 +6593,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = connection.Query<SimpleTable>();
+                var result = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6331,7 +6605,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateAsyncViaPrimaryKey()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6354,7 +6628,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = connection.Query<SimpleTable>();
+                var result = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6366,7 +6640,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateAsyncViaDynamic()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6389,7 +6663,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = connection.Query<SimpleTable>();
+                var result = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6401,7 +6675,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateAsyncViaExpression()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6424,7 +6698,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = connection.Query<SimpleTable>();
+                var result = connection.Query<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6436,8 +6710,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateAsyncViaQueryField()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
-            var field = new QueryField(nameof(SimpleTable.ColumnInt), 10);
+            var tables = GetIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6457,7 +6731,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 field.Reset();
-                var result = connection.Query<SimpleTable>(field);
+                var result = connection.Query<IdentityTable>(field);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6469,11 +6743,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateAsyncViaQueryFields()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnBit), true),
-                new QueryField(nameof(SimpleTable.ColumnInt), 10)
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -6495,7 +6769,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 fields.ResetAll();
-                var result = connection.Query<SimpleTable>(fields);
+                var result = connection.Query<IdentityTable>(fields);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6507,11 +6781,11 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionUpdateAsyncViaQueryGroup()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(SimpleTable.ColumnBit), true),
-                new QueryField(nameof(SimpleTable.ColumnInt), 10)
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
             var queryGroup = new QueryGroup(fields);
 
@@ -6534,7 +6808,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryGroup.Reset();
-                var result = connection.Query<SimpleTable>(queryGroup);
+                var result = connection.Query<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -6550,7 +6824,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryForDynamics()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6558,23 +6832,23 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[SimpleTable];");
+                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -6583,7 +6857,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryForDynamicsWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6591,7 +6865,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 });
 
                 // Assert
@@ -6599,16 +6873,16 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -6617,7 +6891,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryForDynamicsWithArrayParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6625,7 +6899,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } });
 
                 // Assert
@@ -6633,16 +6907,16 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -6651,7 +6925,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryForDynamicsWithTopParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6659,7 +6933,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];",
+                var result = connection.ExecuteQuery("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];",
                     new { Top = 2 });
 
                 // Assert
@@ -6667,16 +6941,16 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -6685,7 +6959,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryForDynamicsWithStoredProcedure()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6693,7 +6967,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery("[dbo].[sp_get_simple_tables]",
+                var result = connection.ExecuteQuery("[dbo].[sp_get_identity_tables]",
                     commandType: CommandType.StoredProcedure);
 
                 // Assert
@@ -6701,16 +6975,16 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -6719,7 +6993,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryForDynamicsWithStoredProcedureWithParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6727,7 +7001,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery("[dbo].[sp_get_simple_table_by_id]",
+                var result = connection.ExecuteQuery("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure);
 
@@ -6736,16 +7010,16 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -6754,7 +7028,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryForDynamicsWithStoredProcedureWithMultipleParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6779,7 +7053,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -6789,7 +7063,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -6801,7 +7075,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncForDynamics()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6809,23 +7083,23 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[SimpleTable];").Result;
+                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[IdentityTable];").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -6834,7 +7108,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncForDynamicsWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6842,7 +7116,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 }).Result;
 
                 // Assert
@@ -6850,16 +7124,16 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -6868,7 +7142,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncForDynamicsWithArrayParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6876,7 +7150,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } }).Result;
 
                 // Assert
@@ -6884,16 +7158,16 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -6902,7 +7176,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncForDynamicsWithTopParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6910,7 +7184,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];",
+                var result = connection.ExecuteQueryAsync("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];",
                     new { Top = 2 }).Result;
 
                 // Assert
@@ -6918,16 +7192,16 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -6936,7 +7210,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncForDynamicsWithStoredProcedure()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6944,7 +7218,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync("[dbo].[sp_get_simple_tables]",
+                var result = connection.ExecuteQueryAsync("[dbo].[sp_get_identity_tables]",
                     commandType: CommandType.StoredProcedure).Result;
 
                 // Assert
@@ -6952,16 +7226,16 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -6970,7 +7244,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncForDynamicsWithStoredProcedureWithParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -6978,7 +7252,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync("[dbo].[sp_get_simple_table_by_id]",
+                var result = connection.ExecuteQueryAsync("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure).Result;
 
@@ -6987,16 +7261,16 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
 
                     // Assert
-                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
-                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
-                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
-                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
-                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
-                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
             }
         }
@@ -7005,7 +7279,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncForDynamicsWithStoredProcedureWithMultipleParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7030,7 +7304,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -7040,7 +7314,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -7052,7 +7326,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQuery()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7060,7 +7334,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable];");
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -7072,7 +7346,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7080,7 +7354,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 });
 
                 // Assert
@@ -7093,7 +7367,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWithArrayParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7101,7 +7375,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } });
 
                 // Assert
@@ -7114,7 +7388,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWithTopParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7122,7 +7396,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<SimpleTable>("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];",
                     new { Top = 2 });
 
                 // Assert
@@ -7135,7 +7409,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWithStoredProcedure()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7143,7 +7417,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<SimpleTable>("[dbo].[sp_get_simple_tables]",
+                var result = connection.ExecuteQuery<IdentityTable>("[dbo].[sp_get_identity_tables]",
                     commandType: CommandType.StoredProcedure);
 
                 // Assert
@@ -7156,7 +7430,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWithStoredProcedureWithParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7164,7 +7438,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<SimpleTable>("[dbo].[sp_get_simple_table_by_id]",
+                var result = connection.ExecuteQuery<IdentityTable>("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure);
 
@@ -7178,7 +7452,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWhereTheDataReaderColumnsAreMoreThanClassProperties()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7186,7 +7460,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<LiteSimpleTable>("SELECT * FROM [dbo].[SimpleTable];");
+                var result = connection.ExecuteQuery<LiteIdentityTable>("SELECT * FROM [dbo].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -7204,7 +7478,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWithDictionaryParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = new Dictionary<string, object>
             {
@@ -7218,7 +7492,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -7230,7 +7504,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWithExpandoObjectAsIDictionaryParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = new ExpandoObject() as IDictionary<string, object>;
 
@@ -7244,7 +7518,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -7256,7 +7530,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWithExpandoObjectAsDynamicParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = (dynamic)new ExpandoObject();
 
@@ -7270,7 +7544,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param);
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -7287,7 +7561,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);", param);
+                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param);
             }
         }
 
@@ -7297,7 +7571,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -7307,7 +7581,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -7319,7 +7593,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7327,7 +7601,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable];").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable];").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -7339,7 +7613,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7347,7 +7621,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 }).Result;
 
                 // Assert
@@ -7360,7 +7634,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWithArrayParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7368,7 +7642,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } }).Result;
 
                 // Assert
@@ -7381,7 +7655,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWithTopParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7389,7 +7663,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];",
                     new { Top = 2 }).Result;
 
                 // Assert
@@ -7402,7 +7676,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWithStoredProcedure()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7410,7 +7684,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("[dbo].[sp_get_simple_tables]",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("[dbo].[sp_get_identity_tables]",
                     commandType: CommandType.StoredProcedure).Result;
 
                 // Assert
@@ -7423,7 +7697,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWithStoredProcedureWithParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7431,7 +7705,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("[dbo].[sp_get_simple_table_by_id]",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure).Result;
 
@@ -7445,7 +7719,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWhereTheDataReaderColumnsAreMoreThanClassProperties()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7453,7 +7727,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<LiteSimpleTable>("SELECT * FROM [dbo].[SimpleTable];").Result;
+                var result = connection.ExecuteQueryAsync<LiteIdentityTable>("SELECT * FROM [dbo].[IdentityTable];").Result;
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -7471,7 +7745,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWithDictionaryParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = new Dictionary<string, object>
             {
@@ -7485,7 +7759,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -7497,7 +7771,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWithExpandoObjectAsIDictionaryParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = new ExpandoObject() as IDictionary<string, object>;
 
@@ -7511,7 +7785,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -7523,7 +7797,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWithExpandoObjectAsDynamicParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
             var last = tables.Last();
             var param = (dynamic)new ExpandoObject();
 
@@ -7537,7 +7811,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -7554,7 +7828,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);", param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param).Result;
             }
         }
 
@@ -7564,7 +7838,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -7574,7 +7848,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -7586,7 +7860,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryMultipleForExtractWithoutParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7594,11 +7868,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP 1 * FROM [dbo].[SimpleTable];
-                    SELECT TOP 2 * FROM [dbo].[SimpleTable];
-                    SELECT TOP 3 * FROM [dbo].[SimpleTable];
-                    SELECT TOP 4 * FROM [dbo].[SimpleTable];
-                    SELECT TOP 5 * FROM [dbo].[SimpleTable];"))
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP 1 * FROM [dbo].[IdentityTable];
+                    SELECT TOP 2 * FROM [dbo].[IdentityTable];
+                    SELECT TOP 3 * FROM [dbo].[IdentityTable];
+                    SELECT TOP 4 * FROM [dbo].[IdentityTable];
+                    SELECT TOP 5 * FROM [dbo].[IdentityTable];"))
                 {
                     while (result.Position >= 0)
                     {
@@ -7606,7 +7880,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.Extract<SimpleTable>();
+                        var items = result.Extract<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -7625,7 +7899,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryMultipleForExtractWithMultipleTopParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7633,11 +7907,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top2) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top3) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top4) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top5) * FROM [dbo].[SimpleTable];",
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [dbo].[IdentityTable];",
                     new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }))
                 {
                     while (result.Position >= 0)
@@ -7646,7 +7920,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.Extract<SimpleTable>();
+                        var items = result.Extract<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -7665,7 +7939,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryMultipleForExtractWithMultipleArrayParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7673,11 +7947,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top2) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top3) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top4) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top5) * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }))
                 {
                     while (result.Position >= 0)
@@ -7686,7 +7960,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.Extract<SimpleTable>();
+                        var items = result.Extract<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -7705,7 +7979,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryMultipleForExtractWithNormalStatementFollowedByStoredProcedures()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7713,27 +7987,27 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
-                    EXEC [dbo].[sp_get_simple_tables];
-                    EXEC [dbo].[sp_get_simple_table_by_id] @Id",
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
+                    EXEC [dbo].[sp_get_identity_tables];
+                    EXEC [dbo].[sp_get_identity_table_by_id] @Id",
                     new { Top1 = 1, tables.Last().Id }, CommandType.Text))
                 {
                     // Act
-                    var value1 = result.Extract<SimpleTable>();
+                    var value1 = result.Extract<IdentityTable>();
 
                     // Assert
                     Assert.AreEqual(1, value1.Count());
                     AssertPropertiesEquality(tables.Where(t => t.Id == value1.First().Id).First(), value1.First());
 
                     // Act
-                    var value2 = result.Extract<SimpleTable>();
+                    var value2 = result.Extract<IdentityTable>();
 
                     // Assert
                     Assert.AreEqual(tables.Count, value2.Count());
                     tables.ForEach(item => AssertPropertiesEquality(item, value2.ElementAt(tables.IndexOf(item))));
 
                     // Act
-                    var value3 = result.Extract<SimpleTable>();
+                    var value3 = result.Extract<IdentityTable>();
 
                     // Assert
                     Assert.AreEqual(1, value3.Count());
@@ -7749,7 +8023,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQueryMultiple("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteQueryMultiple("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -7759,7 +8033,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQueryMultiple("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteQueryMultiple("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -7771,7 +8045,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncMultipleForExtractWithoutParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7779,11 +8053,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [dbo].[SimpleTable];
-                    SELECT TOP 2 * FROM [dbo].[SimpleTable];
-                    SELECT TOP 3 * FROM [dbo].[SimpleTable];
-                    SELECT TOP 4 * FROM [dbo].[SimpleTable];
-                    SELECT TOP 5 * FROM [dbo].[SimpleTable];").Result)
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [dbo].[IdentityTable];
+                    SELECT TOP 2 * FROM [dbo].[IdentityTable];
+                    SELECT TOP 3 * FROM [dbo].[IdentityTable];
+                    SELECT TOP 4 * FROM [dbo].[IdentityTable];
+                    SELECT TOP 5 * FROM [dbo].[IdentityTable];").Result)
                 {
                     while (result.Position >= 0)
                     {
@@ -7791,7 +8065,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.Extract<SimpleTable>();
+                        var items = result.Extract<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -7810,7 +8084,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractWithMultipleTopParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7818,11 +8092,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top2) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top3) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top4) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top5) * FROM [dbo].[SimpleTable];",
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [dbo].[IdentityTable];",
                     new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }).Result)
                 {
                     while (result.Position >= 0)
@@ -7831,7 +8105,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.Extract<SimpleTable>();
+                        var items = result.Extract<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -7850,7 +8124,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractWithMultipleArrayParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7858,11 +8132,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top2) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top3) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top4) * FROM [dbo].[SimpleTable];
-                    SELECT TOP (@Top5) * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [dbo].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }).Result)
                 {
                     while (result.Position >= 0)
@@ -7871,7 +8145,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.Extract<SimpleTable>();
+                        var items = result.Extract<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -7890,7 +8164,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractWithNormalStatementFollowedByStoredProcedures()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -7898,27 +8172,27 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
-                    EXEC [dbo].[sp_get_simple_tables];
-                    EXEC [dbo].[sp_get_simple_table_by_id] @Id",
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
+                    EXEC [dbo].[sp_get_identity_tables];
+                    EXEC [dbo].[sp_get_identity_table_by_id] @Id",
                     new { Top1 = 1, tables.Last().Id }, CommandType.Text).Result)
                 {
                     // Act
-                    var value1 = result.Extract<SimpleTable>();
+                    var value1 = result.Extract<IdentityTable>();
 
                     // Assert
                     Assert.AreEqual(1, value1.Count());
                     AssertPropertiesEquality(tables.Where(t => t.Id == value1.First().Id).First(), value1.First());
 
                     // Act
-                    var value2 = result.Extract<SimpleTable>();
+                    var value2 = result.Extract<IdentityTable>();
 
                     // Assert
                     Assert.AreEqual(tables.Count, value2.Count());
                     tables.ForEach(item => AssertPropertiesEquality(item, value2.ElementAt(tables.IndexOf(item))));
 
                     // Act
-                    var value3 = result.Extract<SimpleTable>();
+                    var value3 = result.Extract<IdentityTable>();
 
                     // Assert
                     Assert.AreEqual(1, value3.Count());
@@ -7934,7 +8208,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryMultipleAsync("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryMultipleAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -7944,7 +8218,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryMultipleAsync("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryMultipleAsync("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -8408,7 +8682,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReader()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8416,10 +8690,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[SimpleTable];"))
+                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable];"))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -8432,7 +8706,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReaderWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8440,11 +8714,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 }))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
@@ -8457,7 +8731,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReaderWithArrayParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8465,11 +8739,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } }))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(3, result.Count());
@@ -8482,7 +8756,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReaderWithTopParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8490,10 +8764,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];", new { Top = 2 }))
+                using (var reader = connection.ExecuteReader("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];", new { Top = 2 }))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
@@ -8506,7 +8780,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReaderWithStoredProcedure()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8514,10 +8788,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("[dbo].[sp_get_simple_tables]", commandType: CommandType.StoredProcedure))
+                using (var reader = connection.ExecuteReader("[dbo].[sp_get_identity_tables]", commandType: CommandType.StoredProcedure))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -8530,7 +8804,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReaderWithStoredProcedureWithParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8538,12 +8812,12 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("[dbo].[sp_get_simple_table_by_id]",
+                using (var reader = connection.ExecuteReader("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -8558,7 +8832,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -8568,7 +8842,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -8580,7 +8854,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReaderAsync()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8588,10 +8862,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[SimpleTable];").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable];").Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -8604,7 +8878,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReaderAsyncWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8612,11 +8886,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
@@ -8629,7 +8903,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReaderAsyncWithArrayParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8637,11 +8911,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(3, result.Count());
@@ -8654,7 +8928,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReaderAsyncWithTopParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8662,10 +8936,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];", new { Top = 2 }).Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];", new { Top = 2 }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
@@ -8678,7 +8952,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReaderAsyncWithStoredProcedure()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8686,10 +8960,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("[dbo].[sp_get_simple_tables]", commandType: CommandType.StoredProcedure).Result)
+                using (var reader = connection.ExecuteReaderAsync("[dbo].[sp_get_identity_tables]", commandType: CommandType.StoredProcedure).Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -8702,7 +8976,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteReaderAsyncWithStoredProcedureWithParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8710,12 +8984,12 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("[dbo].[sp_get_simple_table_by_id]",
+                using (var reader = connection.ExecuteReaderAsync("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure).Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -8730,7 +9004,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -8740,7 +9014,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -8765,7 +9039,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryDeleteSingle()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8773,7 +9047,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = 10;");
+                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 10;");
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -8784,7 +9058,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryDeleteWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8792,7 +9066,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @ColumnInt;",
+                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 });
 
                 // Assert
@@ -8804,7 +9078,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryDeleteWithMultipleParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8812,7 +9086,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true });
 
                 // Assert
@@ -8824,7 +9098,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryDeleteAll()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8832,7 +9106,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[SimpleTable];");
+                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, 10);
@@ -8843,7 +9117,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryUpdateSingle()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8851,7 +9125,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = 10;");
+                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;");
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -8862,7 +9136,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryUpdateWithSigleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8870,7 +9144,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
+                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 });
 
                 // Assert
@@ -8882,7 +9156,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryUpdateWithMultipleParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8890,7 +9164,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true });
 
                 // Assert
@@ -8902,7 +9176,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryUpdateAll()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8910,7 +9184,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100;");
+                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100;");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -8921,7 +9195,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryWithMultipleSqlStatementsWithoutParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8929,9 +9203,9 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
-                    "UPDATE [dbo].[SimpleTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
-                    "DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = 1;");
+                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
+                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
+                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 1;");
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -8942,7 +9216,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryWithMultipleSqlStatementsWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8950,9 +9224,9 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
-                    "UPDATE [dbo].[SimpleTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
-                    "DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @Value3;",
+                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
+                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
+                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @Value3;",
                     new { Value1 = 10, Value2 = 9, Value3 = 1 });
 
                 // Assert
@@ -8964,7 +9238,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -8972,7 +9246,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("[dbo].[sp_get_simple_table_by_id]",
+                var result = connection.ExecuteNonQuery("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure);
 
@@ -9002,7 +9276,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -9012,7 +9286,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -9037,7 +9311,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryAsyncDeleteSingle()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9045,7 +9319,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = 10;").Result;
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 10;").Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -9056,7 +9330,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryAsyncDeleteWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9064,7 +9338,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @ColumnInt;",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 }).Result;
 
                 // Assert
@@ -9076,7 +9350,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryAsyncDeleteWithMultipleParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9084,7 +9358,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true }).Result;
 
                 // Assert
@@ -9096,7 +9370,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryAsyncDeleteAll()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9104,7 +9378,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[SimpleTable];").Result;
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable];").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, 10);
@@ -9115,7 +9389,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryAsyncUpdateSingle()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9123,7 +9397,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = 10;").Result;
+                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;").Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -9134,7 +9408,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryAsyncUpdateWithSigleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9142,7 +9416,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
+                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 }).Result;
 
                 // Assert
@@ -9154,7 +9428,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryAsyncUpdateWithMultipleParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9162,7 +9436,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true }).Result;
 
                 // Assert
@@ -9174,7 +9448,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryAsyncUpdateAll()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9182,7 +9456,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100;").Result;
+                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100;").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -9193,7 +9467,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryAsyncWithMultipleSqlStatementsWithoutParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9201,9 +9475,9 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
-                    "UPDATE [dbo].[SimpleTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
-                    "DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = 1;").Result;
+                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
+                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
+                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 1;").Result;
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -9214,7 +9488,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryAsyncWithMultipleSqlStatementsWithParameters()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9222,9 +9496,9 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[SimpleTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
-                    "UPDATE [dbo].[SimpleTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
-                    "DELETE FROM [dbo].[SimpleTable] WHERE ColumnInt = @Value3;",
+                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
+                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
+                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @Value3;",
                     new { Value1 = 10, Value2 = 9, Value3 = 1 }).Result;
 
                 // Assert
@@ -9236,7 +9510,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteNonQueryAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9244,7 +9518,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("[dbo].[sp_get_simple_table_by_id]",
+                var result = connection.ExecuteNonQueryAsync("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure).Result;
 
@@ -9274,7 +9548,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -9284,7 +9558,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -9407,7 +9681,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteScalarByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9415,7 +9689,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalar("[dbo].[sp_get_simple_table_by_id]",
+                var result = connection.ExecuteScalar("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure);
 
@@ -9445,7 +9719,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteScalar("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -9455,7 +9729,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteScalar("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -9578,7 +9852,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteScalarAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9586,7 +9860,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalarAsync("[dbo].[sp_get_simple_table_by_id]",
+                var result = connection.ExecuteScalarAsync("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure).Result;
 
@@ -9616,7 +9890,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteScalarAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -9626,7 +9900,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteScalarAsync("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -9749,7 +10023,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteScalarTByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9757,7 +10031,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalar<long>("[dbo].[sp_get_simple_table_by_id]",
+                var result = connection.ExecuteScalar<long>("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure);
 
@@ -9787,7 +10061,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar<object>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteScalar<object>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -9797,7 +10071,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar<object>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+                connection.ExecuteScalar<object>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -9920,7 +10194,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteScalarTAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = CreateSimpleTables(10);
+            var tables = GetIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9928,7 +10202,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalarAsync<long>("[dbo].[sp_get_simple_table_by_id]",
+                var result = connection.ExecuteScalarAsync<long>("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
                     commandType: CommandType.StoredProcedure).Result;
 
@@ -9958,7 +10232,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync<object>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteScalarAsync<object>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -9968,7 +10242,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync<object>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteScalarAsync<object>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
