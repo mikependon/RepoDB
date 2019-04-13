@@ -6,7 +6,7 @@ A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.
 Goal
 ----
 
-To be the fastest and easiest-to-use ORM for .NET.
+To be the fastest and easiest-to-use ORM library for .NET.
 
 Vision
 ------

@@ -706,6 +706,7 @@ Inserts a new data in the database (certain fields only).
 A dynamic typed-based call is also provided when calling this method, see below.
 
 ::
+
 	// The first type is the entity type, the second type is the result type
 	var id = connection.InlineInsert<Order, long>(entity);
 
@@ -828,6 +829,7 @@ Inserts a new data in the database.
 A dynamic typed-based call is also provided when calling this method, see below.
 
 ::
+
 	// The first type is the entity type, the second type is the result type
 	var id = connection.Insert<Order, long>(order);
 
