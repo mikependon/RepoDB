@@ -4,42 +4,6 @@
         <name>RepoDb</name>
     </assembly>
     <members>
-        <member name="T:RepoDb.AsyncResultExtractor`1">
-            <summary>
-            A class that is being used to extract the result of the asynchronous method. This class assures that the 
-            <see cref="T:System.Data.IDbConnection"/> object used during the asynchronous operation within the repositories will be disposed.
-            </summary>
-            <typeparam name="T">The type of the result set.</typeparam>
-        </member>
-        <member name="M:RepoDb.AsyncResultExtractor`1.#ctor(System.Threading.Tasks.Task{`0})">
-            <summary>
-            Creates a new instance of <see cref="T:RepoDb.AsyncResultExtractor`1"/> class.
-            </summary>
-            <param name="result">The type of the result.</param>
-        </member>
-        <member name="M:RepoDb.AsyncResultExtractor`1.#ctor(System.Threading.Tasks.Task{`0},System.Data.IDbConnection)">
-            <summary>
-            Creates a new instance of <see cref="T:RepoDb.AsyncResultExtractor`1"/> class.
-            </summary>
-            <param name="result">The type of the result.</param>
-            <param name="dbConnection">The instance of <see cref="T:System.Data.IDbConnection"/> object used.</param>
-        </member>
-        <member name="P:RepoDb.AsyncResultExtractor`1.DbConnection">
-            <summary>
-            Gets the instance of the <see cref="T:System.Data.IDbConnection"/> object used.
-            </summary>
-        </member>
-        <member name="P:RepoDb.AsyncResultExtractor`1.Result">
-            <summary>
-            Gets the current result.
-            </summary>
-        </member>
-        <member name="M:RepoDb.AsyncResultExtractor`1.Extract">
-            <summary>
-            Extract the actual result of the asynchronous operation and disposes the associated <see cref="T:System.Data.IDbConnection"/> object used in the operation.
-            </summary>
-            <returns>The type of T object.</returns>
-        </member>
         <member name="T:RepoDb.Attributes.IdentityAttribute">
             <summary>
             An attribute used to define an identity property for the data entity object.
@@ -160,40 +124,44 @@
             to <see cref="F:RepoDb.Enumerations.ConnectionPersistency.PerCall"/> will create a new connection object on every repository call.
             </param>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache)">
+        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,System.Int32)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.BaseRepository`2"/> class.
             </summary>
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
             <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ICache"/> interface.</param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,System.Int32,RepoDb.Interfaces.ITrace)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.BaseRepository`2"/> class.
             </summary>
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
             <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ICache"/> interface.</param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ITrace"/> interface.</param>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,System.Int32,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.BaseRepository`2"/> class.
             </summary>
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
             <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ICache"/> interface.</param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ITrace"/> interface.</param>
             <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.IStatementBuilder"/> interface.</param>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,RepoDb.Enumerations.ConnectionPersistency)">
+        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Enumerations.ConnectionPersistency,RepoDb.Interfaces.ICache,System.Int32,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.BaseRepository`2"/> object.
             </summary>
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
             <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ICache"/> interface.</param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ITrace"/> interface.</param>
             <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ITrace"/> interface.</param>
             <param name="connectionPersistency">
@@ -219,6 +187,11 @@
         <member name="P:RepoDb.BaseRepository`2.Cache">
             <summary>
             Gets the cache object that is being used by this repository.
+            </summary>
+        </member>
+        <member name="P:RepoDb.BaseRepository`2.CacheItemExpiration">
+            <summary>
+            Gets the expiration in minutes of the cache item.
             </summary>
         </member>
         <member name="P:RepoDb.BaseRepository`2.Trace">
@@ -524,19 +497,27 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Delete(System.Object,System.Data.IDbTransaction)">
-            <summary>
-            Deletes an existing data from the database.
-            </summary>
-            <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        </member>
         <member name="M:RepoDb.BaseRepository`2.Delete(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
             Deletes an existing data from the database.
             </summary>
             <param name="where">The query expression to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.Delete(`0,System.Data.IDbTransaction)">
+            <summary>
+            Deletes an existing data from the database.
+            </summary>
+            <param name="entity">The actual instance of the data entity.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.Delete(System.Object,System.Data.IDbTransaction)">
+            <summary>
+            Deletes an existing data from the database.
+            </summary>
+            <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
@@ -564,6 +545,22 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.BaseRepository`2.DeleteAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Data.IDbTransaction)">
+            <summary>
+            Deletes an existing data from the database in an asynchronous way.
+            </summary>
+            <param name="where">The query expression to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.DeleteAsync(`0,System.Data.IDbTransaction)">
+            <summary>
+            Deletes an existing data from the database in an asynchronous way.
+            </summary>
+            <param name="entity">The actual instance of the data entity.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.BaseRepository`2.DeleteAsync(System.Object,System.Data.IDbTransaction)">
             <summary>
             Deletes an existing data from the database in an asynchronous way.
@@ -573,14 +570,6 @@
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.DeleteAsync(RepoDb.QueryField,System.Data.IDbTransaction)">
-            <summary>
-            Deletes an existing data from the database in an asynchronous way.
-            </summary>
-            <param name="where">The query expression to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.DeleteAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
             Deletes an existing data from the database in an asynchronous way.
             </summary>
@@ -626,10 +615,28 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
+        <member name="M:RepoDb.BaseRepository`2.InlineInsert``1(System.Object,System.Data.IDbTransaction)">
+            <summary>
+            Inserts a new data into the database (certain fields only).
+            </summary>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        </member>
         <member name="M:RepoDb.BaseRepository`2.InlineInsertAsync(System.Object,System.Data.IDbTransaction)">
             <summary>
             Inserts a new data into the database (certain fields only) in an asynchronous way.
             </summary>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.InlineInsertAsync``1(System.Object,System.Data.IDbTransaction)">
+            <summary>
+            Inserts a new data into the database (certain fields only) in an asynchronous way.
+            </summary>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
@@ -787,10 +794,34 @@
             primary key property is not present.
             </returns>
         </member>
+        <member name="M:RepoDb.BaseRepository`2.Insert``1(`0,System.Data.IDbTransaction)">
+            <summary>
+            Inserts a new data in the database.
+            </summary>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <param name="entity">The data entity object to be inserted by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>
+            The value of the primary key of the newly inserted data entity object. Returns null if the 
+            primary key property is not present.
+            </returns>
+        </member>
         <member name="M:RepoDb.BaseRepository`2.InsertAsync(`0,System.Data.IDbTransaction)">
             <summary>
             Inserts a new data in the database in an asynchronous way.
             </summary>
+            <param name="entity">The data entity object to be inserted by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>
+            The value of the primary key of the newly inserted data entity object. Returns null if the 
+            primary key property is not present.
+            </returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.InsertAsync``1(`0,System.Data.IDbTransaction)">
+            <summary>
+            Inserts a new data in the database in an asynchronous way.
+            </summary>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
             <param name="entity">The data entity object to be inserted by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>
@@ -864,11 +895,12 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Query(System.Object,System.String,System.String,System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.Query(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             Queries a data from the database.
             </summary>
             <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
@@ -951,11 +983,12 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Object,System.String,System.String,System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             Queries a data from the database in an asynchronous way.
             </summary>
             <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
@@ -1230,6 +1263,34 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
+        <member name="M:RepoDb.BaseRepository`2.ExecuteScalar``1(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
+            <summary>
+            Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
+            returns the first occurence value (first column of first row) of the execution.
+            </summary>
+            <param name="commandText">The command text to be used by this operation.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property.
+            </param>
+            <param name="commandType">The command type to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>A first occurence value (first column of first row) of the execution.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.ExecuteScalarAsync``1(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
+            <summary>
+            Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
+            returns the first occurence value (first column of first row) of the execution.
+            </summary>
+            <param name="commandText">The command text to be used by this operation.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property.
+            </param>
+            <param name="commandType">The command type to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>A first occurence value (first column of first row) of the execution.</returns>
+        </member>
         <member name="T:RepoDb.BulkInsertMapItem">
             <summary>
             A class used to define a mapping for the bulk insert operation.
@@ -1270,7 +1331,7 @@
             </summary>
             <param name="key">The key of the cache item.</param>
             <param name="value">The value of the cache item.</param>
-            <param name="expirationInMinutes">The expiration in minutes of the cache item.</param>
+            <param name="expiration">The expiration in minutes of the cache item.</param>
         </member>
         <member name="M:RepoDb.CacheItem.UpdateFrom(RepoDb.CacheItem)">
             <summary>
@@ -1413,12 +1474,6 @@
             <summary>
             Gets the wrapped property of this object.
             </summary>
-        </member>
-        <member name="M:RepoDb.ClassProperty.DeclaringTypeHasForcedPrimaryKey">
-            <summary>
-            Checks whether the declaring type of the <see cref="P:RepoDb.ClassProperty.PropertyInfo"/> has forced primary key.
-            </summary>
-            <returns>Returns true if there are forced declared primary key.</returns>
         </member>
         <member name="M:RepoDb.ClassProperty.GetPrimaryAttribute">
             <summary>
@@ -2000,12 +2055,13 @@
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on every operations by this repository.</param>
         </member>
-        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,RepoDb.Interfaces.ICache)">
+        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,RepoDb.Interfaces.ICache,System.Int32)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.DbRepository`1"/> object.
             </summary>
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ICache"/> interface.</param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         </member>
         <member name="M:RepoDb.DbRepository`1.#ctor(System.String,RepoDb.Interfaces.ITrace)">
             <summary>
@@ -2031,46 +2087,50 @@
             to <see cref="F:RepoDb.Enumerations.ConnectionPersistency.PerCall"/> will create a new connection object on every repository call.
             </param>
         </member>
-        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache)">
+        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,System.Int32)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.DbRepository`1"/> object.
             </summary>
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
             <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ICache"/> interface.</param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         </member>
-        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,System.Int32,RepoDb.Interfaces.ITrace)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.DbRepository`1"/> object.
             </summary>
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
             <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ICache"/> interface.</param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ITrace"/> interface.</param>
         </member>
-        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,System.Int32,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.DbRepository`1"/> object.
             </summary>
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
             <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ICache"/> interface.</param>
-            <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ITrace"/> interface.</param>
-            <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.IStatementBuilder"/> interface.</param>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,RepoDb.Enumerations.ConnectionPersistency)">
-            <summary>
-            Creates a new instance of <see cref="T:RepoDb.DbRepository`1"/> object.
-            </summary>
-            <param name="connectionString">The connection string to be used by this repository.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
-            <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ICache"/> interface.</param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ITrace"/> interface.</param>
             <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.IStatementBuilder"/> interface.</param>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Enumerations.ConnectionPersistency,RepoDb.Interfaces.ICache,System.Int32,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.DbRepository`1"/> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
             <param name="connectionPersistency">
             The database connection persistency type. Setting to <see cref="F:RepoDb.Enumerations.ConnectionPersistency.Instance"/> will make the repository re-used a single connection all throughout its lifespan. Setting 
             to <see cref="F:RepoDb.Enumerations.ConnectionPersistency.PerCall"/> will create a new connection object on every repository call.
             </param>
+            <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ICache"/> interface.</param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+            <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.ITrace"/> interface.</param>
+            <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="T:RepoDb.Interfaces.IStatementBuilder"/> interface.</param>
         </member>
         <member name="P:RepoDb.DbRepository`1.ConnectionString">
             <summary>
@@ -2085,6 +2145,11 @@
         <member name="P:RepoDb.DbRepository`1.Cache">
             <summary>
             Gets the cache object that is being used by this repository.
+            </summary>
+        </member>
+        <member name="P:RepoDb.DbRepository`1.CacheItemExpiration">
+            <summary>
+            Gets the expiration in minutes of the cache item.
             </summary>
         </member>
         <member name="P:RepoDb.DbRepository`1.Trace">
@@ -2131,19 +2196,8 @@
             Disposes an <see cref="T:System.Data.IDbConnection"/> object if there is no <see cref="T:System.Data.IDbTransaction"/> object connected
             and if the current <see cref="P:RepoDb.DbRepository`1.ConnectionPersistency"/> value is <see cref="F:RepoDb.Enumerations.ConnectionPersistency.PerCall"/>.
             </summary>
-            <param name="connection"></param>
-            <param name="transaction"></param>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.ConvertToAsyncResultExtractorForPerCall``1(System.Threading.Tasks.Task{``0},System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Wraps the result into an instance of <see cref="T:RepoDb.AsyncResultExtractor`1"/> object with parameter values based on the given <see cref="T:System.Data.IDbConnection"/> and <see cref="T:System.Data.IDbTransaction"/> object,
-            only if the current <see cref="P:RepoDb.DbRepository`1.ConnectionPersistency"/> value is <see cref="F:RepoDb.Enumerations.ConnectionPersistency.PerCall"/>.
-            </summary>
-            <typeparam name="TEntity">The type of the result.</typeparam>
-            <param name="result">The result to be placed inside the <see cref="T:RepoDb.AsyncResultExtractor`1"/> object.</param>
-            <param name="connection">The connection object that is being used on the operation.</param>
-            <param name="transaction">The transaction object that is being used on the operation.</param>
-            <returns></returns>
+            <param name="connection">The instance of <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The instance of <see cref="T:System.Data.IDbTransaction"/> object.</param>
         </member>
         <member name="M:RepoDb.DbRepository`1.BatchQuery``1(System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction)">
             <summary>
@@ -2462,6 +2516,15 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.Delete``1(``0,System.Data.IDbTransaction)">
+            <summary>
+            Deletes an existing data from the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The actual instance of the data entity.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbRepository`1.Delete``1(RepoDb.QueryField,System.Data.IDbTransaction)">
             <summary>
             Deletes an existing data from the database.
@@ -2504,6 +2567,15 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="where">The query expression to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.DeleteAsync``1(``0,System.Data.IDbTransaction)">
+            <summary>
+            Deletes an existing data from the database in an asynchronous way in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The actual instance of the data entity.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
@@ -2568,10 +2640,30 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.InlineInsert``2(System.Object,System.Data.IDbTransaction)">
+            <summary>
+            Inserts a new data into the database (certain fields only).
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <param name="entity">The key-value pair object to be inserted by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        </member>
         <member name="M:RepoDb.DbRepository`1.InlineInsertAsync``1(System.Object,System.Data.IDbTransaction)">
             <summary>
             Inserts a new data into the database (certain fields only) in an asynchronous way.
             </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The key-value pair object to be inserted by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.InlineInsertAsync``2(System.Object,System.Data.IDbTransaction)">
+            <summary>
+            Inserts a new data into the database (certain fields only) in an asynchronous way.
+            </summary>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The key-value pair object to be inserted by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
@@ -2747,11 +2839,37 @@
             primary key property is not present.
             </returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.Insert``2(``0,System.Data.IDbTransaction)">
+            <summary>
+            Inserts a new data in the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <param name="entity">The data entity object to be inserted by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>
+            The value of the primary key of the newly inserted data entity object. Returns null if the 
+            primary key property is not present.
+            </returns>
+        </member>
         <member name="M:RepoDb.DbRepository`1.InsertAsync``1(``0,System.Data.IDbTransaction)">
             <summary>
             Inserts a new data in the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The data entity object to be inserted by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>
+            The value of the primary key of the newly inserted data entity object. Returns null if the 
+            primary key property is not present.
+            </returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.InsertAsync``2(``0,System.Data.IDbTransaction)">
+            <summary>
+            Inserts a new data in the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
             <param name="entity">The data entity object to be inserted by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>
@@ -2832,6 +2950,21 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.Query``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.String,System.Data.IDbTransaction)">
+            <summary>
+            Queries a data from the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="cacheKey">
+            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+            to null would force the repository to query from the database.
+            </param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An enumerable list of data entity object.</returns>
+        </member>
         <member name="M:RepoDb.DbRepository`1.Query``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             Queries a data from the database.
@@ -2880,20 +3013,6 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.Query``1(System.Object,System.String,System.String,System.Data.IDbTransaction)">
-            <summary>
-            Queries a data from the database.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
-            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
-            <param name="cacheKey">
-            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-            to null would force the repository to query from the database.
-            </param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An enumerable list of data entity object.</returns>
-        </member>
         <member name="M:RepoDb.DbRepository`1.Query``1(RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             Queries a data from the database.
@@ -2917,6 +3036,21 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="top">The top number of data to be used by this operation.</param>
+            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="cacheKey">
+            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+            to null would force the repository to query from the database.
+            </param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An enumerable list of data entity object.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.String,System.Data.IDbTransaction)">
+            <summary>
+            Queries a data from the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
@@ -2965,20 +3099,6 @@
             <param name="where">The query expression to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="top">The top number of data to be used by this operation.</param>
-            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
-            <param name="cacheKey">
-            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-            to null would force the repository to query from the database.
-            </param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An enumerable list of data entity object.</returns>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Object,System.String,System.String,System.Data.IDbTransaction)">
-            <summary>
-            Queries a data from the database in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
             <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
@@ -3603,6 +3723,36 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.ExecuteScalar``1(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
+            <summary>
+            Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
+            returns the first occurence value (first column of first row) of the execution.
+            </summary>
+            <typeparam name="T">The target return type.</typeparam>
+            <param name="commandText">The command text to be used by this operation.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property.
+            </param>
+            <param name="commandType">The command type to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>A first occurence value (first column of first row) of the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.ExecuteScalarAsync``1(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
+            <summary>
+            Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
+            returns the first occurence value (first column of first row) of the execution.
+            </summary>
+            <typeparam name="T">The target return type.</typeparam>
+            <param name="commandText">The command text to be used by this operation.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property.
+            </param>
+            <param name="commandType">The command type to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>A first occurence value (first column of first row) of the execution.</returns>
+        </member>
         <member name="T:RepoDb.Enumerations.Conjunction">
             <summary>
             An enumeration used to define a conjuction for the query grouping. This enumeration is used at <see cref="T:RepoDb.QueryGroup"/> object.
@@ -3910,6 +4060,20 @@
             </summary>
             <param name="command">The command object to be used.</param>
             <param name="param">The object to be used when creating the parameters.</param>
+        </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Creates a parameter from object by mapping the property from the target entity type.
+            </summary>
+            <param name="command">The command object to be used.</param>
+            <param name="dictionary">The parameters from the <see cref="T:System.Collections.Generic.Dictionary`2"/> object.</param>
+        </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,System.Collections.Generic.IEnumerable{RepoDb.PropertyValue})">
+            <summary>
+            Creates a parameter from object by mapping the property from the target entity type.
+            </summary>
+            <param name="command">The command object to be used.</param>
+            <param name="propertyValues">The list <see cref="T:RepoDb.PropertyValue"/> to be added.</param>
         </member>
         <member name="M:RepoDb.Extensions.DbCommandExtension.GetUnderlyingType(System.Type)">
             <summary>
@@ -5314,6 +5478,19 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.Delete``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Deletes an existing data from the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The actual instance of the data entity.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.Delete``1(System.Data.IDbConnection,RepoDb.QueryField,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Deletes an existing data from the database.
@@ -5386,6 +5563,19 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="where">The query expression to be used by this operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.DeleteAsync``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Deletes an existing data from the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The actual instance of the data entity.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -5518,11 +5708,26 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineInsertInternal``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineInsert``2(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a new data in the database (certain fields only).
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The key-value pair object to be inserted by this operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InlineInsertInternal``2(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts a new data in the database (certain fields only).
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The key-value pair object to be inserted by this operation.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -5544,11 +5749,26 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineInsertInternalAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineInsertAsync``2(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a new data in the database (certain fields only) in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The key-value pair object to be inserted by this operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InlineInsertInternalAsync``2(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts a new data in the database (certain fields only) in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The key-value pair object to be inserted by this operation.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -5851,11 +6071,29 @@
             primary key property is not present.
             </returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertInternal``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.Insert``2(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a new data in the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The data entity object to be inserted by this operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>
+            The value of the primary key of the newly inserted data entity object. Returns null if the 
+            primary key property is not present.
+            </returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertInternal``2(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts a new data in the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The data entity object to be inserted by this operation.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -5883,11 +6121,29 @@
             primary key property is not present.
             </returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertInternalAsync``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAsync``2(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a new data in the database in asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The data entity object to be inserted by this operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>
+            The value of the primary key of the newly inserted data entity object. Returns null if the 
+            primary key property is not present.
+            </returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertInternalAsync``2(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts a new data in the database in asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TResult">The type of the primary key result.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The data entity object to be inserted by this operation.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -6009,7 +6265,7 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Queries a data from the database.
             </summary>
@@ -6022,6 +6278,7 @@
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force to query from the database.
             </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="cache">The cache object to be used by this operation.</param>
@@ -6029,60 +6286,20 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,RepoDb.QueryField,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Queries a data from the database.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="where">The query expression to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="top">The top number of data to be used by this operation.</param>
-            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
-            <param name="cacheKey">
-            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-            to null would force to query from the database.
-            </param>
-            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="cache">The cache object to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of data entity object.</returns>
-        </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Queries a data from the database.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="where">The query expression to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="top">The top number of data to be used by this operation.</param>
-            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
-            <param name="cacheKey">
-            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-            to null would force to query from the database.
-            </param>
-            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="cache">The cache object to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of data entity object.</returns>
-        </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Object,System.String,System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Queries a data from the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force to query from the database.
             </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="cache">The cache object to be used by this operation.</param>
@@ -6090,7 +6307,7 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,RepoDb.QueryField,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Queries a data from the database.
             </summary>
@@ -6104,6 +6321,7 @@
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force to query from the database.
             </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="cache">The cache object to be used by this operation.</param>
@@ -6111,7 +6329,7 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Queries a data from the database.
             </summary>
@@ -6125,6 +6343,7 @@
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force to query from the database.
             </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="cache">The cache object to be used by this operation.</param>
@@ -6132,7 +6351,7 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryInternal``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Queries a data from the database.
             </summary>
@@ -6146,6 +6365,7 @@
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force to query from the database.
             </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="cache">The cache object to be used by this operation.</param>
@@ -6153,29 +6373,9 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Queries a data from the database in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="top">The top number of data to be used by this operation.</param>
-            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
-            <param name="cacheKey">
-            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-            to null would force to query from the database.
-            </param>
-            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="cache">The cache object to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of data entity object.</returns>
-        </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,RepoDb.QueryField,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Queries a data from the database in an asynchronous way.
+            Queries a data from the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -6187,6 +6387,7 @@
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force to query from the database.
             </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="cache">The cache object to be used by this operation.</param>
@@ -6194,9 +6395,9 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.QueryInternal``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Queries a data from the database in an asynchronous way.
+            Queries a data from the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -6208,6 +6409,7 @@
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force to query from the database.
             </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="cache">The cache object to be used by this operation.</param>
@@ -6215,18 +6417,41 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Object,System.String,System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Queries a data from the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of data to be used by this operation.</param>
+            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="cacheKey">
+            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+            to null would force to query from the database.
+            </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="cache">The cache object to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An enumerable list of data entity object.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Queries a data from the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force to query from the database.
             </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="cache">The cache object to be used by this operation.</param>
@@ -6234,10 +6459,77 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,RepoDb.QueryField,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Queries a data from the database in an asynchronous way.
             </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where">The query expression to be used by this operation.</param>
+            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of data to be used by this operation.</param>
+            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="cacheKey">
+            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+            to null would force to query from the database.
+            </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="cache">The cache object to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An enumerable list of data entity object.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Queries a data from the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where">The query expression to be used by this operation.</param>
+            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of data to be used by this operation.</param>
+            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="cacheKey">
+            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+            to null would force to query from the database.
+            </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="cache">The cache object to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An enumerable list of data entity object.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Queries a data from the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where">The query expression to be used by this operation.</param>
+            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of data to be used by this operation.</param>
+            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="cacheKey">
+            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+            to null would force to query from the database.
+            </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="cache">The cache object to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An enumerable list of data entity object.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Queries a data from the database in an asynchronous way.
+            </summary>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="where">The query expression to be used by this operation.</param>
@@ -6255,7 +6547,7 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.QueryInternalAsync``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Queries a data from the database in an asynchronous way.
             </summary>
@@ -6269,27 +6561,7 @@
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force to query from the database.
             </param>
-            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="cache">The cache object to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of data entity object.</returns>
-        </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryInternalAsync``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Queries a data from the database in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="where">The query expression to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="top">The top number of data to be used by this operation.</param>
-            <param name="hints">The table hints to be used by this operation. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
-            <param name="cacheKey">
-            The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-            to null would force to query from the database.
-            </param>
+            <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
             <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="cache">The cache object to be used by this operation.</param>
@@ -7709,6 +7981,72 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalar``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
+            returns the first occurence value (first column of first row) of the execution.
+            </summary>
+            <typeparam name="T">The target return type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="commandText">The command text to be used by this operation.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property.
+            </param>
+            <param name="commandType">The command type to be used by this operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>A first occurence value (first column of first row) of the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarInternal``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
+            returns the first occurence value (first column of first row) of the execution.
+            </summary>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="commandText">The command text to be used by this operation.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property.
+            </param>
+            <param name="commandType">The command type to be used by this operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>A first occurence value (first column of first row) of the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarAsync``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
+            returns the first occurence value (first column of first row) of the execution.
+            </summary>
+            <typeparam name="T">The target return type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="commandText">The command text to be used by this operation.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property.
+            </param>
+            <param name="commandType">The command type to be used by this operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>A first occurence value (first column of first row) of the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarInternalAsync``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
+            returns the first occurence value (first column of first row) of the execution.
+            </summary>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="commandText">The command text to be used by this operation.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property.
+            </param>
+            <param name="commandType">The command type to be used by this operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>A first occurence value (first column of first row) of the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.ValidateTransactionConnectionObject(System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
             Validates whether the transaction object connection is object is equals to the connection object.
@@ -7825,8 +8163,7 @@
         </member>
         <member name="M:RepoDb.Field.Parse(System.Object)">
             <summary>
-            Parse an object and creates an enumerable of <see cref="T:RepoDb.Field"/> objects. Each field is equivalent
-            to each property of the given object. The parse operation uses a reflection operation.
+            Parses an object and creates an enumerable of <see cref="T:RepoDb.Field"/> objects.
             </summary>
             <param name="obj">An object to be parsed.</param>
             <returns>An enumerable of <see cref="T:RepoDb.Field"/> objects.</returns>
@@ -7929,21 +8266,13 @@
             An interface used to mark the class to be a cacher for an object.
             </summary>
         </member>
-        <member name="M:RepoDb.Interfaces.ICache.Add(System.String,System.Object,System.Boolean)">
-            <summary>
-            Adds a cache item value.
-            </summary>
-            <param name="key">The key to the cache.</param>
-            <param name="value">The value of the cache.</param>
-            <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
-        </member>
         <member name="M:RepoDb.Interfaces.ICache.Add(System.String,System.Object,System.Int32,System.Boolean)">
             <summary>
             Adds a cache item value.
             </summary>
             <param name="key">The key to the cache.</param>
             <param name="value">The value of the cache.</param>
-            <param name="expirationInMinutes">The expiration in minutes of the cache item.</param>
+            <param name="expiration">The expiration in minutes of the cache item.</param>
             <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
         </member>
         <member name="M:RepoDb.Interfaces.ICache.Add(RepoDb.CacheItem,System.Boolean)">
@@ -7987,7 +8316,7 @@
             statement building approach, or by supporting the other data providers like Oracle, OleDb, MySql, etc.
             </summary>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateBatchQuery``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String)">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateBatchQuery``1(RepoDb.QueryBuilder,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String)">
             <summary>
             Creates a SQL Statement for repository batch query operation.
             </summary>
@@ -8002,7 +8331,7 @@
             <param name="hints">The hints to be used to optimze the query operation.</param>
             <returns>A string containing the composed SQL Statement for batch query operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateCount``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.String)">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateCount``1(RepoDb.QueryBuilder,RepoDb.QueryGroup,System.String)">
             <summary>
             Creates a SQL Statement for repository count operation.
             </summary>
@@ -8014,7 +8343,7 @@
             <param name="hints">The hints to be used to optimze the query operation.</param>
             <returns>A string containing the composed SQL Statement for count operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateDelete``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup)">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateDelete``1(RepoDb.QueryBuilder,RepoDb.QueryGroup)">
             <summary>
             Creates a SQL Statement for repository delete operation.
             </summary>
@@ -8025,7 +8354,7 @@
             <param name="where">The query expression for SQL statement.</param>
             <returns>A string containing the composed SQL Statement for delete operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateDeleteAll``1(RepoDb.QueryBuilder{``0})">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateDeleteAll``1(RepoDb.QueryBuilder)">
             <summary>
             Creates a SQL Statement for repository delete-all operation.
             </summary>
@@ -8035,7 +8364,7 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <returns>A string containing the composed SQL Statement for delete-all operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder,System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Creates a SQL Statement for repository inline-insert operation.
             </summary>
@@ -8046,7 +8375,7 @@
             <param name="fields">The list of fields to be a part of the inline insert operation in SQL Statement composition.</param>
             <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineMerge``1(RepoDb.QueryBuilder,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Creates a SQL Statement for repository inline-merge operation.
             </summary>
@@ -8058,7 +8387,7 @@
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
             <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineUpdate``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup)">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineUpdate``1(RepoDb.QueryBuilder,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup)">
             <summary>
             Creates a SQL Statement for repository inline-update operation.
             </summary>
@@ -8070,7 +8399,7 @@
             <param name="where">The query expression for SQL statement.</param>
             <returns>A string containing the composed SQL Statement for inline-update operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInsert``1(RepoDb.QueryBuilder{``0})">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInsert``1(RepoDb.QueryBuilder)">
             <summary>
             Creates a SQL Statement for repository insert operation.
             </summary>
@@ -8080,7 +8409,7 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <returns>A string containing the composed SQL Statement for insert operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateMerge``1(RepoDb.QueryBuilder,System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Creates a SQL Statement for repository merge operation.
             </summary>
@@ -8091,7 +8420,7 @@
             <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
             <returns>A string containing the composed SQL Statement for merge operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateQuery``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String)">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateQuery``1(RepoDb.QueryBuilder,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String)">
             <summary>
             Creates a SQL Statement for repository query operation.
             </summary>
@@ -8105,7 +8434,7 @@
             <param name="hints">The hints to be used to optimze the query operation.</param>
             <returns>A string containing the composed SQL Statement for query operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateTruncate``1(RepoDb.QueryBuilder{``0})">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateTruncate``1(RepoDb.QueryBuilder)">
             <summary>
             Creates a SQL Statement for repository truncate operation.
             </summary>
@@ -8115,7 +8444,7 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <returns>A string containing the composed SQL Statement for truncate operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateUpdate``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup)">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateUpdate``1(RepoDb.QueryBuilder,RepoDb.QueryGroup)">
             <summary>
             Creates a SQL Statement for repository update operation.
             </summary>
@@ -8359,21 +8688,13 @@
             Creates a new instance <see cref="T:RepoDb.MemoryCache"/> object.
             </summary>
         </member>
-        <member name="M:RepoDb.MemoryCache.Add(System.String,System.Object,System.Boolean)">
-            <summary>
-            Adds a cache item value.
-            </summary>
-            <param name="key">The key to the cache.</param>
-            <param name="value">The value of the cache.</param>
-            <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
-        </member>
         <member name="M:RepoDb.MemoryCache.Add(System.String,System.Object,System.Int32,System.Boolean)">
             <summary>
             Adds a cache item value.
             </summary>
             <param name="key">The key to the cache.</param>
             <param name="value">The value of the cache.</param>
-            <param name="expirationInMinutes">The expiration in minutes of the cache item.</param>
+            <param name="expiration">The expiration in minutes of the cache item.</param>
             <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
         </member>
         <member name="M:RepoDb.MemoryCache.Add(RepoDb.CacheItem,System.Boolean)">
@@ -8707,117 +9028,120 @@
             Gets the actual property object.
             </summary>
         </member>
-        <member name="T:RepoDb.QueryBuilder`1">
+        <member name="T:RepoDb.QueryBuilder">
             <summary>
             An object used to compose a SQL Query Statement.
             </summary>
-            <typeparam name="TEntity">An entity where the SQL Query Statement is bound to.</typeparam>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.ToString">
+        <member name="M:RepoDb.QueryBuilder.ToString">
             <summary>
             Stringify the current object.
             </summary>
             <returns>
-            Returns a string that corresponds to the composed SQL Query Statement. It uses the <see cref="M:RepoDb.QueryBuilder`1.GetString"/>
+            Returns a string that corresponds to the composed SQL Query Statement. It uses the <see cref="M:RepoDb.QueryBuilder.GetString"/>
             method as its underlying method call.
             </returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.GetString">
+        <member name="M:RepoDb.QueryBuilder.GetString">
             <summary>
             Gets the string that corresponds to the composed SQL Query Statement.
+            Starts at index 1 to drop the leading space.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Clear">
+        <member name="M:RepoDb.QueryBuilder.Clear">
             <summary>
             Clears the current composed SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Space">
+        <member name="M:RepoDb.QueryBuilder.Space">
             <summary>
             Append a space to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.NewLine">
+        <member name="M:RepoDb.QueryBuilder.NewLine">
             <summary>
-            Appends a new-line to the SQL Query Statement.
+            Appends a line terminator to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.WriteText(System.String)">
+        <member name="M:RepoDb.QueryBuilder.WriteText(System.String)">
             <summary>
             Writes a custom text to the SQL Query Statement.
             </summary>
             <param name="text">The text to be written.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Delete">
+        <member name="M:RepoDb.QueryBuilder.Delete">
             <summary>
             Appends a word DELETE word to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.End">
+        <member name="M:RepoDb.QueryBuilder.End">
             <summary>
             Appends a character ";" to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Count">
+        <member name="M:RepoDb.QueryBuilder.Count">
             <summary>
             Appends a word COUNT to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.CountBig">
+        <member name="M:RepoDb.QueryBuilder.CountBig">
             <summary>
             Appends a word COUNT_BIG to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Field(RepoDb.Field)">
+        <member name="M:RepoDb.QueryBuilder.Field(RepoDb.Field)">
             <summary>
             Appends a stringified fields to the SQL Query Statement.
             </summary>
             <param name="field">The list of fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.FieldsFrom">
+        <member name="M:RepoDb.QueryBuilder.FieldsFrom``1">
             <summary>
             Appends a stringified fields to the SQL Query Statement.
             </summary>
+            <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.FieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.QueryBuilder.FieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Append a stringified fields to the SQL Query Statement.
             </summary>
             <param name="fields">The list fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.FieldsAndParametersFrom">
+        <member name="M:RepoDb.QueryBuilder.FieldsAndParametersFrom``1">
             <summary>
             Appends a stringified fields and parameters to the SQL Query Statement.
             </summary>
+            <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.FieldsAndParametersFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.QueryBuilder.FieldsAndParametersFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Appends a stringified fields and parameters to the SQL Query Statement.
             </summary>
             <param name="fields">The list fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.FieldsAndAliasFieldsFrom(System.String)">
+        <member name="M:RepoDb.QueryBuilder.FieldsAndAliasFieldsFrom``1(System.String)">
             <summary>
             Appends a stringified fields and parameters to the SQL Query Statement with aliases.
             </summary>
             <param name="alias">The alias to be prepended for each field.</param>
+            <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.FieldsAndAliasFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.String)">
+        <member name="M:RepoDb.QueryBuilder.FieldsAndAliasFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.String)">
             <summary>
             Appends a stringified fields and parameters to the SQL Query Statement with aliases.
             </summary>
@@ -8825,14 +9149,15 @@
             <param name="alias">The alias to be prepended for each field.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.AsAliasFieldsFrom(System.String)">
+        <member name="M:RepoDb.QueryBuilder.AsAliasFieldsFrom``1(System.String)">
             <summary>
             Appends a stringified fields to the SQL Query Statement with aliases.
             </summary>
             <param name="alias">The alias to be prepended for each field.</param>
+            <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.AsAliasFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.String)">
+        <member name="M:RepoDb.QueryBuilder.AsAliasFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.String)">
             <summary>
             Appends a stringified fields to the SQL Query Statement by command with aliases.
             </summary>
@@ -8840,57 +9165,57 @@
             <param name="alias">The alias to be prepended for each field.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.From">
+        <member name="M:RepoDb.QueryBuilder.From">
             <summary>
             Appends a word FROM to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.GroupByFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.QueryBuilder.GroupByFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Appends a word GROUP BY and a stringified fields to the SQL Query Statement.
             </summary>
             <param name="fields">The fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.HavingCountFrom(RepoDb.QueryField)">
+        <member name="M:RepoDb.QueryBuilder.HavingCountFrom(RepoDb.QueryField)">
             <summary>
             Appends a word HAVING COUNT and a conditional field to the SQL Query Statement.
             </summary>
             <param name="queryField">The conditional field object used for composition.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Insert">
+        <member name="M:RepoDb.QueryBuilder.Insert">
             <summary>
             Appends a word INSERT to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.GroupBy">
+        <member name="M:RepoDb.QueryBuilder.GroupBy">
             <summary>
             Appends a word GROUP BY to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.HavingCount">
+        <member name="M:RepoDb.QueryBuilder.HavingCount">
             <summary>
             Appends a word HAVING COUNT to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Into">
+        <member name="M:RepoDb.QueryBuilder.Into">
             <summary>
             Appends a word INTO to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Values">
+        <member name="M:RepoDb.QueryBuilder.Values">
             <summary>
             Appends a word VALUES to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.OrderByFrom(System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String)">
+        <member name="M:RepoDb.QueryBuilder.OrderByFrom(System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String)">
             <summary>
             Appends a word ORDER BY and the stringified fields to the SQL Query Statement with aliases.
             </summary>
@@ -8898,32 +9223,32 @@
             <param name="alias">The aliases to be prepended for each field.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.As(System.String)">
+        <member name="M:RepoDb.QueryBuilder.As(System.String)">
             <summary>
             Appends a word AS to the SQL Query Statement with alias.
             </summary>
             <param name="alias">The alias to be prepended.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.With">
+        <member name="M:RepoDb.QueryBuilder.With">
             <summary>
             Appends a word WITH to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Set">
+        <member name="M:RepoDb.QueryBuilder.Set">
             <summary>
             Appends a word SET to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Join">
+        <member name="M:RepoDb.QueryBuilder.Join">
             <summary>
             Appends a word JOIN to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.JoinQualifiersFrom(RepoDb.Field,System.String,System.String)">
+        <member name="M:RepoDb.QueryBuilder.JoinQualifiersFrom(RepoDb.Field,System.String,System.String)">
             <summary>
             Appends a stringified field as a joined qualifier to the SQL Query Statement with left and right aliases.
             </summary>
@@ -8932,185 +9257,195 @@
             <param name="rightAlias">The right alias.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Merge">
+        <member name="M:RepoDb.QueryBuilder.Merge">
             <summary>
             Appends a word MERGE to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Table">
+        <member name="M:RepoDb.QueryBuilder.Table">
             <summary>
             Appends a word TABLE to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.TableName">
+        <member name="M:RepoDb.QueryBuilder.TableNameFrom(System.String)">
+            <summary>
+            Appends the target name to the SQL Query Statement.
+            </summary>
+            <param name="tableName">The name of the table.</param>
+            <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryBuilder.TableNameFrom``1">
             <summary>
             Appends the mapped entity name to the SQL Query Statement.
             </summary>
+            <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.ParametersFrom">
+        <member name="M:RepoDb.QueryBuilder.ParametersFrom``1">
             <summary>
             Append the mapped properpties name to the SQL Query Statement.
             </summary>
+            <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.ParametersFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.QueryBuilder.ParametersFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Append the stringified field parameters to the SQL Query Statement.
             </summary>
             <param name="fields">The list of fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.ParametersAsFieldsFrom">
+        <member name="M:RepoDb.QueryBuilder.ParametersAsFieldsFrom``1">
             <summary>
             Append the stringified parameter as fields to the SQL Query Statement.
             </summary>
+            <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.ParametersAsFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.QueryBuilder.ParametersAsFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Append the stringified parameter as fields to the SQL Query Statement.
             </summary>
             <param name="fields">The list of fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Select">
+        <member name="M:RepoDb.QueryBuilder.Select">
             <summary>
             Appends a word SELECT to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Top">
+        <member name="M:RepoDb.QueryBuilder.Top">
             <summary>
             Appends a word TOP to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.OrderBy">
+        <member name="M:RepoDb.QueryBuilder.OrderBy">
             <summary>
             Appends a word ORDER BY to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Where">
+        <member name="M:RepoDb.QueryBuilder.Where">
             <summary>
             Appends a word WHERE to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.TopFrom(System.Nullable{System.Int32})">
+        <member name="M:RepoDb.QueryBuilder.TopFrom(System.Nullable{System.Int32})">
             <summary>
             Appends a word TOP and row number to the SQL Query Statement.
             </summary>
             <param name="rows">The row number to be appended.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Update">
+        <member name="M:RepoDb.QueryBuilder.Update">
             <summary>
             Appends a word UPDATE to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Using">
+        <member name="M:RepoDb.QueryBuilder.Using">
             <summary>
             Appends a word USING to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.WhereFrom(RepoDb.QueryGroup)">
+        <member name="M:RepoDb.QueryBuilder.WhereFrom(RepoDb.QueryGroup)">
             <summary>
             Appends a word WHERE and the stringified values of the Query Group to the SQL Query Statement.
             </summary>
             <param name="queryGroup">The query group to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.RowNumber">
+        <member name="M:RepoDb.QueryBuilder.RowNumber">
             <summary>
             Appends a word ROW_NUMBER to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Over">
+        <member name="M:RepoDb.QueryBuilder.Over">
             <summary>
             Appends a word OVER to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.And">
+        <member name="M:RepoDb.QueryBuilder.And">
             <summary>
             Appends a word AND to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Or">
+        <member name="M:RepoDb.QueryBuilder.Or">
             <summary>
             Appends a word OR to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.OpenParen">
+        <member name="M:RepoDb.QueryBuilder.OpenParen">
             <summary>
             Appends a character "(" to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.CloseParen">
+        <member name="M:RepoDb.QueryBuilder.CloseParen">
             <summary>
             Appends a character ")" to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.On">
+        <member name="M:RepoDb.QueryBuilder.On">
             <summary>
             Appends a word ON to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.In">
+        <member name="M:RepoDb.QueryBuilder.In">
             <summary>
             Appends a word IN to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Between">
+        <member name="M:RepoDb.QueryBuilder.Between">
             <summary>
             Appends a word BETWEEN to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.When">
+        <member name="M:RepoDb.QueryBuilder.When">
             <summary>
             Appends a word WHEN to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Not">
+        <member name="M:RepoDb.QueryBuilder.Not">
             <summary>
             Appends a word NOT to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Matched">
+        <member name="M:RepoDb.QueryBuilder.Matched">
             <summary>
             Appends a word MATCHED to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Then">
+        <member name="M:RepoDb.QueryBuilder.Then">
             <summary>
             Appends a word THEN to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Case">
+        <member name="M:RepoDb.QueryBuilder.Case">
             <summary>
             Appends a word CASE to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.Truncate">
+        <member name="M:RepoDb.QueryBuilder.Truncate">
             <summary>
             Appends a word TRUNCATE to the SQL Query Statement.
             </summary>
@@ -9367,15 +9702,16 @@
             </summary>
             <returns>A stringified formatted-text of the current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryGroup.GetAllQueryFields">
+        <member name="M:RepoDb.QueryGroup.GetFields(System.Boolean)">
             <summary>
-            Gets all the child query groups associated on the current instance.
+            Gets all the child <see cref="T:RepoDb.QueryField"/> objects associated on the current instance.
             </summary>
-            <returns>An enumerable list of child query groups.</returns>
+            <param name="traverse">Identify whether to explore all the children of the child <see cref="T:RepoDb.QueryGroup"/> objects.</param>
+            <returns>An enumerable list of <see cref="T:RepoDb.QueryField"/> objects.</returns>
         </member>
         <member name="M:RepoDb.QueryGroup.Parse``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
             <summary>
-            This method is used to parse the customized expression.
+            Parses a customized query expression.
             </summary>
             <typeparam name="TEntity">The target entity type</typeparam>
             <param name="expression">The expression to be converted to a <see cref="T:RepoDb.QueryGroup"/> object.</param>
@@ -9474,6 +9810,13 @@
             <summary>
             Converts the first column of the first row of the <see cref="T:System.Data.Common.DbDataReader"/> to an object.
             </summary>
+            <returns>An instance of extracted object as value result.</returns>
+        </member>
+        <member name="M:RepoDb.QueryMultipleExtractor.Scalar``1">
+            <summary>
+            Converts the first column of the first row of the <see cref="T:System.Data.Common.DbDataReader"/> to an object.
+            </summary>
+            <typeparam name="T">The target return type.</typeparam>
             <returns>An instance of extracted object as value result.</returns>
         </member>
         <member name="P:RepoDb.QueryMultipleExtractor.Position">
@@ -10444,7 +10787,7 @@
             Creates a new instance of <see cref="T:RepoDb.SqlStatementBuilder"/> object.
             </summary>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateBatchQuery``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String)">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateBatchQuery``1(RepoDb.QueryBuilder,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String)">
             <summary>
             Creates a SQL Statement for repository batch query operation that is meant for SQL Server.
             </summary>
@@ -10459,7 +10802,7 @@
             <param name="hints">The hints to be used to optimze the query operation.</param>
             <returns>A string containing the composed SQL Statement for batch query operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateCount``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.String)">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateCount``1(RepoDb.QueryBuilder,RepoDb.QueryGroup,System.String)">
             <summary>
             Creates a SQL Statement for repository count operation that is meant for SQL Server.
             </summary>
@@ -10471,7 +10814,7 @@
             <param name="hints">The hints to be used to optimze the query operation.</param>
             <returns>A string containing the composed SQL Statement for count operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateDelete``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup)">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateDelete``1(RepoDb.QueryBuilder,RepoDb.QueryGroup)">
             <summary>
             Creates a SQL Statement for repository delete operation that is meant for SQL Server.
             </summary>
@@ -10482,7 +10825,7 @@
             <param name="where">The query expression for SQL statement.</param>
             <returns>A string containing the composed SQL Statement for delete operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateDeleteAll``1(RepoDb.QueryBuilder{``0})">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateDeleteAll``1(RepoDb.QueryBuilder)">
             <summary>
             Creates a SQL Statement for repository delete-all operation that is meant for SQL Server.
             </summary>
@@ -10492,7 +10835,7 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <returns>A string containing the composed SQL Statement for delete-all operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder,System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Creates a SQL Statement for repository inline-insert operation.
             </summary>
@@ -10503,7 +10846,7 @@
             <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
             <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Boolean)">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Boolean)">
             <summary>
             Creates a SQL Statement for repository inline-insert operation.
             </summary>
@@ -10515,7 +10858,7 @@
             <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
             <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineMerge``1(RepoDb.QueryBuilder,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Creates a SQL Statement for repository inline-merge operation.
             </summary>
@@ -10527,7 +10870,7 @@
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
             <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean})">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineMerge``1(RepoDb.QueryBuilder,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean})">
             <summary>
             Creates a SQL Statement for repository inline-merge operation.
             </summary>
@@ -10540,7 +10883,7 @@
             <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
             <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineUpdate``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup)">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineUpdate``1(RepoDb.QueryBuilder,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup)">
             <summary>
             Creates a SQL Statement for repository inline update operation that is meant for SQL Server.
             </summary>
@@ -10552,7 +10895,7 @@
             <param name="where">The query expression for SQL statement.</param>
             <returns>A string containing the composed SQL Statement for inline-update operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateInsert``1(RepoDb.QueryBuilder{``0})">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInsert``1(RepoDb.QueryBuilder)">
             <summary>
             Creates a SQL Statement for repository insert operation that is meant for SQL Server.
             </summary>
@@ -10562,7 +10905,7 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <returns>A string containing the composed SQL Statement for insert operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateInsert``1(RepoDb.QueryBuilder{``0},System.Nullable{System.Boolean})">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInsert``1(RepoDb.QueryBuilder,System.Nullable{System.Boolean})">
             <summary>
             Creates a SQL Statement for repository insert operation that is meant for SQL Server.
             </summary>
@@ -10573,7 +10916,7 @@
             <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
             <returns>A string containing the composed SQL Statement for insert operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateMerge``1(RepoDb.QueryBuilder,System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Creates a SQL Statement for repository merge operation that is meant for SQL Server.
             </summary>
@@ -10584,7 +10927,7 @@
             <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
             <returns>A string containing the composed SQL Statement for merge operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean})">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateMerge``1(RepoDb.QueryBuilder,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean})">
             <summary>
             Creates a SQL Statement for repository merge operation that is meant for SQL Server.
             </summary>
@@ -10596,7 +10939,7 @@
             <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
             <returns>A string containing the composed SQL Statement for merge operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateQuery``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String)">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateQuery``1(RepoDb.QueryBuilder,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String)">
             <summary>
             Creates a SQL Statement for repository query operation that is meant for SQL Server.
             </summary>
@@ -10610,7 +10953,7 @@
             <param name="hints">The hints to be used to optimze the query operation.</param>
             <returns>A string containing the composed SQL Statement for query operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateTruncate``1(RepoDb.QueryBuilder{``0})">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateTruncate``1(RepoDb.QueryBuilder)">
             <summary>
             Creates a SQL Statement for repository truncate operation that is meant for SQL Server.
             </summary>
@@ -10620,7 +10963,7 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <returns>A string containing the composed SQL Statement for truncate operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateUpdate``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup)">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateUpdate``1(RepoDb.QueryBuilder,RepoDb.QueryGroup)">
             <summary>
             Creates a SQL Statement for repository update operation that is meant for SQL Server.
             </summary>
@@ -10788,11 +11131,6 @@
             </summary>
             <param name="mapItem">The map item object.</param>
             <param name="force">True if to overwrite existing mapping if present.</param>
-        </member>
-        <member name="T:RepoDb.StringConstant">
-            <summary>
-            A class that holds the string constant values for <see cref="N:RepoDb"/> library.
-            </summary>
         </member>
         <member name="T:RepoDb.TraceLog">
             <summary>

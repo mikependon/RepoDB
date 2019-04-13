@@ -379,12 +379,16 @@
 <span class="s">                        , O.LastUpdatedUtc = @LastUpdatedUtc</span>
 <span class="s">                FROM [dbo].[Order] O</span>
 <span class="s">                WHERE (O.Id = @OrderId);&quot;</span><span class="p">;</span>
+
+        <span class="c1">// Set the parameters</span>
         <span class="kt">var</span> <span class="n">parameters</span> <span class="p">=</span> <span class="k">new</span>
         <span class="p">{</span>
                 <span class="n">OrderId</span> <span class="p">=</span> <span class="m">1002</span><span class="p">,</span>
                 <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
                 <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
         <span class="p">};</span>
+
+        <span class="c1">// Execute the command text</span>
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">parameters</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
@@ -426,12 +430,15 @@
 <p>Below is the code on how to execute a stored procedure mentioned above:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
+        <span class="c1">// Set the parameters</span>
         <span class="kt">var</span> <span class="n">parameters</span> <span class="p">=</span> <span class="k">new</span>
         <span class="p">{</span>
                 <span class="n">OrderId</span> <span class="p">=</span> <span class="m">1002</span><span class="p">,</span>
                 <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
                 <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
         <span class="p">};</span>
+
+        <span class="c1">// Call the procedure</span>
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_update_order_quantity]&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
@@ -442,10 +449,12 @@
 <span class="p">{</span>
         <span class="c1">// Create the parameters</span>
         <span class="kt">var</span> <span class="n">parameters</span> <span class="p">=</span> <span class="p">(</span><span class="kt">dynamic</span><span class="p">)</span><span class="k">new</span> <span class="n">ExpandoObject</span><span class="p">();</span>
+
         <span class="c1">// Set each parameter</span>
         <span class="n">param</span><span class="p">.</span><span class="n">OrderId</span> <span class="p">=</span> <span class="m">1002</span><span class="p">;</span>
         <span class="n">param</span><span class="p">.</span><span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">;</span>
         <span class="n">param</span><span class="p">.</span><span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+
         <span class="c1">// Create the parameters</span>
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_update_order_quantity]&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
 <span class="p">}</span>
@@ -456,10 +465,12 @@
 <span class="p">{</span>
         <span class="c1">// Create the parameters</span>
         <span class="kt">var</span> <span class="n">parameters</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ExpandoObject</span><span class="p">()</span> <span class="k">as</span> <span class="n">IDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">object</span><span class="p">&gt;;</span>
+
         <span class="c1">// Add each parameter</span>
         <span class="n">param</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;OrderId&quot;</span><span class="p">,</span> <span class="m">1002</span><span class="p">);</span>
         <span class="n">param</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;Quantity&quot;</span><span class="p">,</span> <span class="m">5</span><span class="p">);</span>
         <span class="n">param</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;LastUpdatedUtc&quot;</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">);</span>
+
         <span class="c1">// Pass the parameters</span>
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_update_order_quantity]&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
 <span class="p">}</span>
@@ -475,6 +486,7 @@
                 <span class="p">{</span> <span class="s">&quot;Quantity&quot;</span><span class="p">,</span> <span class="m">5</span> <span class="p">},</span>
                 <span class="p">{</span> <span class="s">&quot;LastUpdatedUtc&quot;</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span> <span class="p">}</span>
         <span class="p">};</span>
+
         <span class="c1">// Pass the parameters</span>
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_update_order_quantity]&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
 <span class="p">}</span>

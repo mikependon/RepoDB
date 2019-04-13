@@ -260,12 +260,16 @@ Executes a query from the database. It uses the underlying method `IDbCommand.Ex
 				, O.LastUpdatedUtc = @LastUpdatedUtc
 			FROM [dbo].[Order] O
 			WHERE (O.Id = @OrderId);";
+
+		// Set the parameters
 		var parameters = new
 		{
 			OrderId = 1002,
 			Quantity = 5,
 			LastUpdatedUtc = DateTime.UtcNow
 		};
+
+		// Execute the command text
 		var result = connection.ExecuteNonQuery(commandText, parameters);
 	}
 
@@ -297,12 +301,15 @@ Below is the code on how to execute a stored procedure mentioned above:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
+		// Set the parameters
 		var parameters = new
 		{
 			OrderId = 1002,
 			Quantity = 5,
 			LastUpdatedUtc = DateTime.UtcNow
 		};
+
+		// Call the procedure
 		var result = connection.ExecuteNonQuery("[dbo].[sp_update_order_quantity]", parameters, commandType: CommandType.StoredProcedure);
 	}
 
@@ -316,10 +323,12 @@ Via ExpandoObject as dynamic.
 	{
 		// Create the parameters
 		var parameters = (dynamic)new ExpandoObject();
+
 		// Set each parameter
 		param.OrderId = 1002;
 		param.Quantity = 5;
 		param.LastUpdatedUtc = DateTime.UtcNow
+
 		// Create the parameters
 		var result = connection.ExecuteNonQuery("[dbo].[sp_update_order_quantity]", parameters, commandType: CommandType.StoredProcedure);
 	}
@@ -332,10 +341,12 @@ Via ExpandoObject as Dictionary<string, object>.
 	{
 		// Create the parameters
 		var parameters = new ExpandoObject() as IDictionary<string, object>;
+
 		// Add each parameter
 		param.Add("OrderId", 1002);
 		param.Add("Quantity", 5);
 		param.Add("LastUpdatedUtc", DateTime.UtcNow);
+
 		// Pass the parameters
 		var result = connection.ExecuteNonQuery("[dbo].[sp_update_order_quantity]", parameters, commandType: CommandType.StoredProcedure);
 	}
@@ -354,6 +365,7 @@ Via Dictionary<string, object>.
 			{ "Quantity", 5 },
 			{ "LastUpdatedUtc", DateTime.UtcNow }
 		};
+
 		// Pass the parameters
 		var result = connection.ExecuteNonQuery("[dbo].[sp_update_order_quantity]", parameters, commandType: CommandType.StoredProcedure);
 	}
