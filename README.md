@@ -1,5 +1,5 @@
 
-## <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-32x32.png" height="32px" /> RepoDb
+## <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-32x32.png" style="float:right;" height="32px" /> RepoDb
 
 A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.
 
