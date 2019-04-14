@@ -1,7 +1,9 @@
 
-## <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-32x32.png" height="28px" /> RepoDb
+## RepoDb
 
 A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.
+
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png" height="128px" />
 
 Package: [https://www.nuget.org/packages/RepoDb](https://www.nuget.org/packages/RepoDb)  
 Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthedocs.io/en/latest/)

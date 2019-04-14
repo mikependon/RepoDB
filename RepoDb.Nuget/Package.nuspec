@@ -9,6 +9,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.</description>
     <language>en-US</language>
+    <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
     RepoDb v1.9.0:
     - [New] Updated the description to "A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.".
