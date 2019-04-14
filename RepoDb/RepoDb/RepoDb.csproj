@@ -79,7 +79,6 @@
     <Compile Include="PrimaryKeyIdentityCache.cs" />
     <Compile Include="DataEntityDataReader.cs" />
     <Compile Include="Extensions\MemberInfoExtension.cs" />
-    <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="PropertyMappedNameCache.cs" />
     <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyValue.cs" />

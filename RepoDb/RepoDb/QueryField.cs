@@ -5,6 +5,7 @@ using RepoDb.Extensions;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -17,6 +18,7 @@ namespace RepoDb
         private const int HASHCODE_ISNULL = 128;
         private const int HASHCODE_ISNOTNULL = 256;
         private int? m_hashCode = null;
+        private TextAttribute m_operationTextAttribute = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryField"/> object./
@@ -88,6 +90,7 @@ namespace RepoDb
         public void Reset()
         {
             Parameter?.SetName(Field.Name);
+            m_operationTextAttribute = null;
             m_hashCode = null;
         }
 
@@ -97,11 +100,14 @@ namespace RepoDb
         /// <returns>A string instance containing the value of the <see cref="TextAttribute"/> text property.</returns>
         public string GetOperationText()
         {
-            var textAttribute = typeof(Operation)
-                .GetMembers()
-                .First(member => member.Name.ToLower() == Operation.ToString().ToLower())
-                .GetCustomAttribute<TextAttribute>();
-            return textAttribute.Text;
+            if (m_operationTextAttribute == null)
+            {
+                m_operationTextAttribute = typeof(Operation)
+                    .GetMembers()
+                    .First(member => member.Name.ToLower() == Operation.ToString().ToLower())
+                    .GetCustomAttribute<TextAttribute>();
+            }
+            return m_operationTextAttribute.Text;
         }
 
         /// <summary>

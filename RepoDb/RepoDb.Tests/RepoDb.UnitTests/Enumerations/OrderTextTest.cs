@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
-using RepoDb.Extensions;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb.UnitTests.Enumerations
 {

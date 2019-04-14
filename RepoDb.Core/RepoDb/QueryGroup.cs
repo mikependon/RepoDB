@@ -19,6 +19,7 @@ namespace RepoDb
     {
         private bool m_isFixed = false;
         private int? m_hashCode = null;
+        private TextAttribute m_conjuctionTextAttribute = null;
 
         #region Constructors
 
@@ -232,6 +233,9 @@ namespace RepoDb
                 field.Reset();
             }
 
+            // Reset the attribute
+            m_conjuctionTextAttribute = null;
+
             // Reset the hash code
             m_hashCode = null;
         }
@@ -399,12 +403,15 @@ namespace RepoDb
         /// <returns>A string instance containing the value of the <see cref="TextAttribute"/> text property.</returns>
         public string GetConjunctionText()
         {
-            var textAttribute = typeof(Conjunction)
-                .GetTypeInfo()
-                .GetMembers()
-                .First(member => member.Name.ToLower() == Conjunction.ToString().ToLower())
-                .GetCustomAttribute<TextAttribute>();
-            return textAttribute.Text;
+            if (m_conjuctionTextAttribute == null)
+            {
+                m_conjuctionTextAttribute = typeof(Conjunction)
+                    .GetTypeInfo()
+                    .GetMembers()
+                    .First(member => member.Name.ToLower() == Conjunction.ToString().ToLower())
+                    .GetCustomAttribute<TextAttribute>();
+            }
+            return m_conjuctionTextAttribute.Text;
         }
 
         /// <summary>
