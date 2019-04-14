@@ -77,11 +77,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-                var type = param.GetType().GetTypeInfo();
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
-                {
-                    throw new InvalidOperationException("Invalid parameters passed. The supported type of dictionary object must be typeof(IDictionary<string, object>).");
-                }
+                var type = param.GetType();
                 foreach (var property in type.GetProperties())
                 {
                     if (property.PropertyType.IsArray)
