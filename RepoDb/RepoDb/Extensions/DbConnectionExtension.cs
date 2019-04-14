@@ -3700,8 +3700,8 @@ namespace RepoDb
         /// primary key property is not present.
         /// </returns>
         internal static TResult InsertInternal<TEntity, TResult>(this IDbConnection connection,
-            TEntity entity, int?
-            commandTimeout = null,
+            TEntity entity,
+            int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -3778,8 +3778,12 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public static Task<object> InsertAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<object> InsertAsync<TEntity>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             return InsertInternalAsync<TEntity, object>(connection: connection,
@@ -3836,8 +3840,12 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        internal static async Task<TResult> InsertInternalAsync<TEntity, TResult>(this IDbConnection connection, TEntity entity, int? commandTimeout = null, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        internal static async Task<TResult> InsertInternalAsync<TEntity, TResult>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             // Variables

@@ -15,6 +15,8 @@ namespace RepoDb
     /// </summary>
     public class OrderField
     {
+        private TextAttribute m_orderTextAttribute = null;
+
         /// <summary>
         /// Creates a new instance of <see cref="OrderField"/> object.
         /// </summary>
@@ -42,11 +44,14 @@ namespace RepoDb
         /// <returns>The string containing the text value of the ordering direction.</returns>
         public string GetOrderText()
         {
-            var textAttribute = typeof(Order)
+            if (m_orderTextAttribute == null)
+            {
+                m_orderTextAttribute = typeof(Order)
                 .GetMembers()
                 .First(member => member.Name.ToLower() == Order.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();
-            return textAttribute.Text;
+            }
+            return m_orderTextAttribute.Text;
         }
 
         // Static Methods
@@ -121,7 +126,7 @@ namespace RepoDb
                 throw new NullReferenceException("The 'obj' must not be null.");
             }
             var list = new List<OrderField>();
-            foreach(var property in obj.GetType().GetProperties())
+            foreach (var property in obj.GetType().GetProperties())
             {
                 if (property.PropertyType != typeof(Order))
                 {
