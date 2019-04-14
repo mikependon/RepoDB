@@ -1,7 +1,6 @@
 ### Highlight
 
  - RepoDb is the fastest and the most efficient .NET ORM Library (in set-fetches) as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190307_netcore.txt).
- - Covered by 1700+ Integration/Unit Tests.
 
 ### Why RepoDb
 
