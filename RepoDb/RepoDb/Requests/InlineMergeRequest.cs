@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 
 namespace RepoDb.Requests
 {
@@ -22,7 +21,19 @@ namespace RepoDb.Requests
         /// <param name="qualifiers">The list of the qualifier fields.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public InlineMergeRequest(Type entityType, IDbConnection connection, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
+            : this(entityType.FullName, connection, fields, qualifiers, statementBuilder)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="InlineMergeRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="fields">The list of the target fields.</param>
+        /// <param name="qualifiers">The list of the qualifier fields.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public InlineMergeRequest(string name, IDbConnection connection, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null, IStatementBuilder statementBuilder = null)
+            : base(name, connection, statementBuilder)
         {
             Fields = fields;
             Qualifiers = qualifiers;
@@ -53,7 +64,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(EntityType.FullName, ".InlineMerge").GetHashCode();
+            var hashCode = string.Concat(Name, ".InlineMerge").GetHashCode();
 
             // Gets the target fields
             if (Fields != null)

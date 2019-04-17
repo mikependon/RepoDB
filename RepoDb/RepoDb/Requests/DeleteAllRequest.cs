@@ -19,8 +19,7 @@ namespace RepoDb.Requests
         /// <param name="statementBuilder">The statement builder.</param>
         public DeleteAllRequest(Type entityType, IDbConnection connection, IStatementBuilder statementBuilder = null)
             : base(entityType, connection, statementBuilder)
-        {
-        }
+        { }
 
         // Equality and comparers
 
@@ -37,7 +36,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(EntityType.FullName, ".DeleteAll").GetHashCode();
+            var hashCode = string.Concat(Name, ".DeleteAll").GetHashCode();
 
             // Set back the hash code value
             m_hashCode = hashCode;

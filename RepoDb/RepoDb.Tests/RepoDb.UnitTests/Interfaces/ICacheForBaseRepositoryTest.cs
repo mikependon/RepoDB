@@ -14,6 +14,8 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ICacheForBaseRepositoryTest
     {
+        #region SubClass
+
         public class CacheEntity
         {
             [Primary, Identity]
@@ -33,6 +35,8 @@ namespace RepoDb.UnitTests.Interfaces
                       new SqlStatementBuilder())
             { }
         }
+
+        #endregion
 
         #region Sync
 

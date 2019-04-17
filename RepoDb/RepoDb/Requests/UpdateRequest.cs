@@ -19,7 +19,18 @@ namespace RepoDb.Requests
         /// <param name="where">The query expression.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public UpdateRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
+            : this(entityType.FullName, connection, where, statementBuilder)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="UpdateRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public UpdateRequest(string name, IDbConnection connection, QueryGroup where = null, IStatementBuilder statementBuilder = null)
+            : base(name, connection, statementBuilder)
         {
             Where = where;
         }
@@ -44,7 +55,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(EntityType.FullName, ".Update").GetHashCode();
+            var hashCode = string.Concat(Name, ".Update").GetHashCode();
 
             // Get the properties hash codes
             if (Where != null)

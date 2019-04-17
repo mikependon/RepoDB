@@ -22,7 +22,19 @@ namespace RepoDb.Requests
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public InlineUpdateRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IEnumerable<Field> fields = null, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
+            : this(entityType.FullName, connection, where, fields, statementBuilder)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="InlineUpdateRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="fields">The list of the target fields.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public InlineUpdateRequest(string name, IDbConnection connection, QueryGroup where = null, IEnumerable<Field> fields = null, IStatementBuilder statementBuilder = null)
+            : base(name, connection, statementBuilder)
         {
             Where = where;
             Fields = fields;
@@ -53,7 +65,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(EntityType.FullName, ".InlineUpdate").GetHashCode();
+            var hashCode = string.Concat(Name, ".InlineUpdate").GetHashCode();
 
             // Get the expression hashcode
             if (Where != null)

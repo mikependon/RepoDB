@@ -1,70 +1,93 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Interfaces;
+﻿using RepoDb.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Concurrent;
+using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to map a <see cref="Provider"/> to a <see cref="IStatementBuilder"/> object.
+    /// A class that is used to map the type of <see cref="DbConnection"/> into an instance of <see cref="IStatementBuilder"/> object.
     /// </summary>
     public static class StatementBuilderMapper
     {
-        private static readonly IList<StatementBuilderMapItem> m_maps;
+        private static readonly ConcurrentDictionary<string, IStatementBuilder> m_maps = new ConcurrentDictionary<string, IStatementBuilder>();
+        private static Type m_type = typeof(DbConnection);
 
         static StatementBuilderMapper()
         {
-            // Properties
-            m_maps = new List<StatementBuilderMapItem>();
-
-            // Default for SqlDbConnection
-            Map(Provider.Sql, new SqlStatementBuilder());
+            // Default for SqlConnection
+            Add(typeof(SqlConnection), new SqlStatementBuilder());
         }
 
         /// <summary>
-        /// Gets an instance of mapping defined for the target <see cref="Provider"/>.
+        /// Throws an exception if the type is not a sublcass of type <see cref="DbConnection"/>.
         /// </summary>
-        /// <param name="provider">The target provider.</param>
-        /// <returns>An instance of <see cref="StatementBuilderMapItem"/> defined on the mapping.</returns>
-        public static StatementBuilderMapItem Get(Provider provider)
+        private static void Guard(Type type)
         {
-            return m_maps.FirstOrDefault(m => m.Provider == provider);
-        }
-
-        /// <summary>
-        /// Creates a mapping between the <see cref="Provider"/> and <see cref="IStatementBuilder"/>) object.
-        /// </summary>
-        /// <param name="provider">The target provider.</param>
-        /// <param name="statementBuilder">The statement builder to be mapped.</param>
-        /// <param name="force">True if to overwrite existing mapping if present.</param>
-        public static void Map(Provider provider, IStatementBuilder statementBuilder, bool force = false)
-        {
-            Map(new StatementBuilderMapItem(provider, statementBuilder));
-        }
-
-        /// <summary>
-        /// Creates a mapping between the <see cref="Provider"/> and <see cref="IStatementBuilder"/>) object.
-        /// </summary>
-        /// <param name="mapItem">The map item object.</param>
-        /// <param name="force">True if to overwrite existing mapping if present.</param>
-        public static void Map(StatementBuilderMapItem mapItem, bool force = false)
-        {
-            var mapping = Get(mapItem.Provider);
-            if (mapping == null)
+            if (type.IsSubclassOf(m_type) == false)
             {
-                m_maps.Add(mapItem);
+                throw new InvalidOperationException($"Type must be a subclass of '{m_type.FullName}'.");
             }
-            else
+        }
+
+        /// <summary>
+        /// Gets the mapped <see cref="IStatementBuilder"/> from the type of <see cref="DbConnection"/>.
+        /// </summary>
+        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
+        /// <returns>An instance of <see cref="IStatementBuilder"/> defined on the mapping.</returns>
+        public static IStatementBuilder Get<TDbConnection>()
+            where TDbConnection : DbConnection
+        {
+            return Get(typeof(TDbConnection));
+        }
+
+        /// <summary>
+        /// Gets the mapped <see cref="IStatementBuilder"/> from the type of <see cref="DbConnection"/>.
+        /// </summary>
+        /// <param name="type">The type of <see cref="DbConnection"/>.</param>
+        /// <returns>An instance of <see cref="IStatementBuilder"/> defined on the mapping.</returns>
+        public static IStatementBuilder Get(Type type)
+        {
+            Guard(type);
+
+            var value = (IStatementBuilder)null;
+
+            if (m_maps.TryGetValue(type.FullName, out value))
             {
-                if (force)
+                return value;
+            }
+
+            throw new InvalidOperationException($"There is no existing mapping for '{type.FullName}'.");
+        }
+
+        /// <summary>
+        /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IStatementBuilder"/> object.
+        /// </summary>
+        /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
+        /// <param name="statementBuilder">The statement builder to be mapped.</param>
+        /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
+        public static void Add(Type type, IStatementBuilder statementBuilder, bool @override = false)
+        {
+            Guard(type);
+
+            var value = (IStatementBuilder)null;
+            var key = type.FullName;
+
+            if (m_maps.TryGetValue(key, out value))
+            {
+                if (@override)
                 {
-                    mapping.StatementBuilder = mapItem.StatementBuilder;
+                    m_maps.TryUpdate(key, statementBuilder, value);
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Mapping is already exists for provider {mapItem.Provider.ToString()}.");
+                    throw new InvalidOperationException($"Mapping to provider '{key}' already exists.");
                 }
+            }
+            else
+            {
+                m_maps.TryAdd(key, statementBuilder);
             }
         }
     }

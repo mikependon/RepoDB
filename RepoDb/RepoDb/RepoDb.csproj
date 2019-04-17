@@ -57,8 +57,8 @@
     <Compile Include="BulkInsertMapItem.cs" />
     <Compile Include="CommandArrayParameter.cs" />
     <Compile Include="CommandParameter.cs" />
+    <Compile Include="DbHelperMapper.cs" />
     <Compile Include="Enumerations\ConversionType.cs" />
-    <Compile Include="Enumerations\Provider.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="ClassExpressions\ClassPropertiesExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
@@ -66,9 +66,11 @@
     <Compile Include="DataReaderFieldDefinition.cs" />
     <Compile Include="Extensions\ExpressionExtension.cs" />
     <Compile Include="Extensions\MemberBindingExtension.cs" />
-    <Compile Include="FieldDefinition.cs" />
-    <Compile Include="FieldDefinitionCache.cs" />
+    <Compile Include="DbField.cs" />
+    <Compile Include="DbFieldCache.cs" />
+    <Compile Include="DbIdentityCache.cs" />
     <Compile Include="IdentityCache.cs" />
+    <Compile Include="Interfaces\IDbHelper.cs" />
     <Compile Include="NamespaceConstant.cs" />
     <Compile Include="PrimaryKeyCache.cs" />
     <Compile Include="CommandTextCache.cs" />
@@ -101,7 +103,7 @@
     <Compile Include="Requests\InsertRequest.cs" />
     <Compile Include="Requests\QueryRequest.cs" />
     <Compile Include="QueryMultipleExtractor.cs" />
-    <Compile Include="SqlHelper.cs" />
+    <Compile Include="DbHelpers\SqlDbHelper.cs" />
     <Compile Include="ClassExpressions\ClassPropertyValuesExpression.cs" />
     <Compile Include="CacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />
@@ -142,7 +144,6 @@
     <Compile Include="ObjectConverter.cs" />
     <Compile Include="Reflection\DataReaderConverter.cs" />
     <Compile Include="SqlStatementBuilder.cs" />
-    <Compile Include="StatementBuilderMapItem.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="SqlTableHints.cs" />
     <Compile Include="TraceLog.cs" />

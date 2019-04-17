@@ -1,5 +1,4 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Exceptions;
+﻿using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection;
@@ -21,59 +20,6 @@ namespace RepoDb
     public static class DbConnectionExtension
     {
         #region Other Methods
-
-        /// <summary>
-        /// Identify whether the current instance of <see cref="IDbConnection"/> object corresponds to the target provider.
-        /// </summary>
-        /// <param name="connection">The connection to be identified.</param>
-        /// <param name="provider">The target provider for comparisson.</param>
-        /// <returns>Returns true if the <see cref="IDbConnection"/> object corresponds to the target provider.</returns>
-        internal static bool IsForProvider(this IDbConnection connection, Provider provider)
-        {
-            switch (provider)
-            {
-                case Provider.Sql:
-                    return NamespaceConstant.SqlConnection.Equals(connection.GetType().FullName);
-                case Provider.Oracle:
-                    return NamespaceConstant.OracleConnection.Equals(connection.GetType().FullName);
-                case Provider.Sqlite:
-                    return NamespaceConstant.SqliteConnection.Equals(connection.GetType().FullName);
-                case Provider.Npgsql:
-                    return NamespaceConstant.NpgsqlConnection.Equals(connection.GetType().FullName);
-                case Provider.MySql:
-                    return NamespaceConstant.MySqlConnection.Equals(connection.GetType().FullName);
-                case Provider.OleDb:
-                    return NamespaceConstant.OleDbConnection.Equals(connection.GetType().FullName);
-                default:
-                    return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets the provider of the current <see cref="IDbConnection"/> object.
-        /// </summary>
-        /// <param name="connection">The target connection object.</param>
-        /// <returns>The provider of the target <see cref="IDbConnection"/> object.</returns>
-        internal static Provider GetProvider(this IDbConnection connection)
-        {
-            switch (connection.GetType().FullName)
-            {
-                case NamespaceConstant.SqlConnection:
-                    return Provider.Sql;
-                case NamespaceConstant.OracleConnection:
-                    return Provider.Oracle;
-                case NamespaceConstant.SqliteConnection:
-                    return Provider.Sqlite;
-                case NamespaceConstant.NpgsqlConnection:
-                    return Provider.Npgsql;
-                case NamespaceConstant.MySqlConnection:
-                    return Provider.MySql;
-                case NamespaceConstant.OleDbConnection:
-                    return Provider.OleDb;
-                default:
-                    throw new NotSupportedException($"The connection object type '{connection.GetType().FullName}' is currently not supported.");
-            }
-        }
 
         /// <summary>
         /// Creates a command object.
@@ -420,10 +366,7 @@ namespace RepoDb
             }
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<TEntity>(connection);
 
             // Before Execution
             if (trace != null)
@@ -747,10 +690,7 @@ namespace RepoDb
             }
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<TEntity>(connection);
 
             // Before Execution
             if (trace != null)
@@ -886,7 +826,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
+            if (connection is SqlConnection == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -971,7 +911,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
+            if (connection is SqlConnection == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -1045,7 +985,7 @@ namespace RepoDb
             ITrace trace = null)
         {
             // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
+            if (connection is SqlConnection == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -1196,7 +1136,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
+            if (connection is SqlConnection == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -1281,7 +1221,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
+            if (connection is SqlConnection == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -1355,7 +1295,7 @@ namespace RepoDb
             ITrace trace = null)
         {
             // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
+            if (connection is SqlConnection == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -2662,12 +2602,81 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var commandType = CommandType.Text;
             var request = new InlineInsertRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
                 statementBuilder);
             var commandText = CommandTextCache.GetInlineInsertText<TEntity>(request);
+
+            // Return the value from base method
+            return InlineInsertInternalBase<TResult>(connection: connection,
+                commandText: commandText,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static TResult InlineInsertInternal<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Variables
+            var request = new InlineInsertRequest(tableName,
+                connection,
+                entity?.AsFields(),
+                statementBuilder);
+            var commandText = CommandTextCache.GetInlineInsertText(request);
+
+            // Return the value from base method
+            return InlineInsertInternalBase<TResult>(connection: connection,
+                commandText: commandText,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static TResult InlineInsertInternalBase<TResult>(this IDbConnection connection,
+            string commandText,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Variables
+            var commandType = CommandType.Text;
 
             // Before Execution
             if (trace != null)
@@ -2696,9 +2705,6 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction);
-
-            // Set back result equals to PrimaryKey type
-            result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
 
             // After Execution
             if (trace != null)
@@ -4579,10 +4585,7 @@ namespace RepoDb
             }
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<TEntity>(connection);
 
             // Before Execution
             if (trace != null)
@@ -4982,10 +4985,7 @@ namespace RepoDb
             }
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<TEntity>(connection);
 
             // Before Execution
             if (trace != null)
@@ -5152,11 +5152,8 @@ namespace RepoDb
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2);
@@ -5371,12 +5368,9 @@ namespace RepoDb
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
@@ -5633,13 +5627,10 @@ namespace RepoDb
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
@@ -5936,14 +5927,11 @@ namespace RepoDb
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
@@ -6280,15 +6268,12 @@ namespace RepoDb
             var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
+            DbFieldCache.Get<T6>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
@@ -6666,16 +6651,13 @@ namespace RepoDb
             var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T7>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
+            DbFieldCache.Get<T6>(connection);
+            DbFieldCache.Get<T7>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
@@ -6885,11 +6867,8 @@ namespace RepoDb
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2);
@@ -7104,12 +7083,9 @@ namespace RepoDb
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
@@ -7366,13 +7342,10 @@ namespace RepoDb
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
@@ -7669,14 +7642,11 @@ namespace RepoDb
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
@@ -8013,15 +7983,12 @@ namespace RepoDb
             var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
+            DbFieldCache.Get<T6>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
@@ -8399,16 +8366,13 @@ namespace RepoDb
             var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T7>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
+            DbFieldCache.Get<T6>(connection);
+            DbFieldCache.Get<T7>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
@@ -10137,6 +10101,8 @@ namespace RepoDb
         {
             // Check Transaction
             ValidateTransactionConnectionObject(connection, transaction);
+
+            // TODO: Add checking to the others here
 
             // Process the array parameters
             var commandArrayParameters = ExtractAndReplace(param, ref commandText);

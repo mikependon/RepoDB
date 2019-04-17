@@ -20,7 +20,18 @@ namespace RepoDb.Requests
         /// <param name="connection">The connection object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public MergeRequest(Type entityType, IDbConnection connection, IEnumerable<Field> qualifiers = null, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
+            : this(entityType.FullName, connection, qualifiers, statementBuilder)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="MergeRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="qualifiers">The list of qualifier fields.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public MergeRequest(string name, IDbConnection connection, IEnumerable<Field> qualifiers = null, IStatementBuilder statementBuilder = null)
+            : base(name, connection, statementBuilder)
         {
             Qualifiers = qualifiers;
         }
@@ -45,7 +56,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(EntityType.FullName, ".Merge").GetHashCode();
+            var hashCode = string.Concat(Name, ".Merge").GetHashCode();
 
             // Get the qualifier fields
             if (Qualifiers != null) // Much faster than Qualifers?.<Methods|Properties>

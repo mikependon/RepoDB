@@ -76,11 +76,26 @@ namespace RepoDb.Interfaces
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="fields">The list of fields to be a part of the inline insert operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
         string CreateInlineInsert<TEntity>(QueryBuilder queryBuilder,
+            DbField primaryField = null,
             IEnumerable<Field> fields = null)
             where TEntity : class;
+
+        /// <summary>
+        /// Creates a SQL Statement for repository inline-insert operation.
+        /// </summary>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="fields">The list of fields to be a part of the inline insert operation in SQL Statement composition.</param>
+        /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
+        string CreateInlineInsert(QueryBuilder queryBuilder,
+            string tableName,
+            DbField primaryField = null,
+            IEnumerable<Field> fields = null);
 
         /// <summary>
         /// Creates a SQL Statement for repository inline-merge operation.
@@ -89,10 +104,12 @@ namespace RepoDb.Interfaces
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
         string CreateInlineMerge<TEntity>(QueryBuilder queryBuilder,
+            DbField primaryField = null,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null)
             where TEntity : class;
@@ -119,8 +136,10 @@ namespace RepoDb.Interfaces
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A string containing the composed SQL Statement for insert operation.</returns>
-        string CreateInsert<TEntity>(QueryBuilder queryBuilder)
+        string CreateInsert<TEntity>(QueryBuilder queryBuilder,
+            DbField primaryField = null)
             where TEntity : class;
 
         /// <summary>
@@ -131,8 +150,10 @@ namespace RepoDb.Interfaces
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A string containing the composed SQL Statement for merge operation.</returns>
         string CreateMerge<TEntity>(QueryBuilder queryBuilder,
+            DbField primaryField = null,
             IEnumerable<Field> qualifiers = null)
             where TEntity : class;
 

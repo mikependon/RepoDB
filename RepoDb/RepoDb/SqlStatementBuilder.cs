@@ -16,6 +16,8 @@ namespace RepoDb
         /// </summary>
         public SqlStatementBuilder() { }
 
+        #region CreateBatchQuery
+
         /// <summary>
         /// Creates a SQL Statement for repository batch query operation that is meant for SQL Server.
         /// </summary>
@@ -87,6 +89,10 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
+        #endregion
+
+        #region CreateCount
+
         /// <summary>
         /// Creates a SQL Statement for repository count operation that is meant for SQL Server.
         /// </summary>
@@ -128,6 +134,10 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
+        #endregion
+
+        #region CreateDelete
+
         /// <summary>
         /// Creates a SQL Statement for repository delete operation that is meant for SQL Server.
         /// </summary>
@@ -152,6 +162,10 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
+        #endregion
+
+        #region CreateDeleteAll
+
         /// <summary>
         /// Creates a SQL Statement for repository delete-all operation that is meant for SQL Server.
         /// </summary>
@@ -173,28 +187,9 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
-        /// <summary>
-        /// Creates a SQL Statement for repository inline-insert operation.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
-        /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
-        public string CreateInlineInsert<TEntity>(QueryBuilder queryBuilder,
-            IEnumerable<Field> fields = null)
-            where TEntity : class
-        {
-            var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = IdentityCache.Get<TEntity>();
-            if (identity != null && identity != primary)
-            {
-                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-            }
-            var isPrimaryIdentity = (identity != null) && identity == primary;
-            return CreateInlineInsert<TEntity>(queryBuilder, fields, isPrimaryIdentity);
-        }
+        #endregion
+
+        #region CreateInlineInsert
 
         /// <summary>
         /// Creates a SQL Statement for repository inline-insert operation.
@@ -203,12 +198,12 @@ namespace RepoDb
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
-        /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
-        internal string CreateInlineInsert<TEntity>(QueryBuilder queryBuilder,
-            IEnumerable<Field> fields = null,
-            bool isPrimaryIdentity = false)
+        public string CreateInlineInsert<TEntity>(QueryBuilder queryBuilder,
+            DbField primaryField,
+            IEnumerable<Field> fields = null)
             where TEntity : class
         {
             // Check for the fields presence
@@ -229,21 +224,91 @@ namespace RepoDb
                     $"present at type '{typeof(TEntity).FullName}'.");
             }
 
-            // Variables
+            // Get the needed properties
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) : fields?.Any();
+            var isPrimaryIdentity = (primaryField?.IsIdentity == true);
+
+            if (isPrimaryIdentity == false)
+            {
+                var identity = IdentityCache.Get<TEntity>();
+
+                // Check the equalities
+                if (identity != null && identity != primary)
+                {
+                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                }
+
+                // Set the primary identification value
+                isPrimaryIdentity = (identity != null && identity == primary);
+            }
+
+            // Get the primary name
+            var primaryName = primary?.GetMappedName() ?? primaryField?.Name;
+
+            // Return the value
+            return CreateInlineInsert(queryBuilder: queryBuilder,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                primaryName: primaryName,
+                isPrimaryIdentity: isPrimaryIdentity,
+                fields: fields);
+        }
+
+        /// <summary>
+        /// Creates a SQL Statement for repository inline-insert operation.
+        /// </summary>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
+        /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
+        public string CreateInlineInsert(QueryBuilder queryBuilder,
+            string tableName,
+            DbField primaryField = null,
+            IEnumerable<Field> fields = null)
+        {
+            // Check for the fields presence
+            if (fields == null)
+            {
+                throw new NullReferenceException("The target fields must be present.");
+            }
+
+            // Return the value
+            return CreateInlineInsert(queryBuilder: queryBuilder,
+                tableName: tableName,
+                primaryName: primaryField?.Name,
+                isPrimaryIdentity: (primaryField?.IsIdentity == true),
+                fields: fields);
+        }
+
+        /// <summary>
+        /// Creates a SQL Statement for repository inline-insert operation.
+        /// </summary>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="primaryName">The name of the primary field from the database.</param>
+        /// <param name="isPrimaryIdentity">The value that indicates whether the primary is an identity.</param>
+        /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
+        /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
+        internal string CreateInlineInsert(QueryBuilder queryBuilder,
+            string tableName,
+            string primaryName,
+            bool isPrimaryIdentity = false,
+            IEnumerable<Field> fields = null)
+        {
+            // Variables
+            var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != primaryName.ToLower()) : fields?.Any();
 
             // Check if there are fields
             if (hasFields == false)
             {
-                throw new InvalidOperationException($"No inline insertable fields for object '{ClassMappedNameCache.Get<TEntity>()}'.");
+                throw new InvalidOperationException($"No inline insertable fields for object '{tableName}'.");
             }
 
             // Check for the primary key
-            if (primary != null && isPrimaryIdentity)
+            if (primaryName != null && isPrimaryIdentity)
             {
                 fields = fields?
-                    .Where(field => field.Name.ToLower() != primary.GetMappedName().ToLower());
+                    .Where(field => field.Name.ToLower() != primaryName.ToLower());
             }
 
             // Build the SQL Statement
@@ -252,7 +317,7 @@ namespace RepoDb
                 .Clear()
                 .Insert()
                 .Into()
-                .TableNameFrom<TEntity>()
+                .TableNameFrom(tableName)
                 .OpenParen()
                 .FieldsFrom(fields)
                 .CloseParen()
@@ -261,7 +326,7 @@ namespace RepoDb
                 .ParametersFrom(fields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? string.Concat("@", primary.GetMappedName()) : "NULL";
+            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : string.IsNullOrEmpty(primaryName) == false ? primaryName.AsParameter() : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -272,6 +337,10 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
+        #endregion
+
+        #region CreateInlineMerge
+
         /// <summary>
         /// Creates a SQL Statement for repository inline-merge operation.
         /// </summary>
@@ -279,55 +348,49 @@ namespace RepoDb
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
         public string CreateInlineMerge<TEntity>(QueryBuilder queryBuilder,
+            DbField primaryField = null,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null)
             where TEntity : class
         {
-            var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = IdentityCache.Get<TEntity>();
-            if (identity != null && identity != primary)
-            {
-                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-            }
-            var isPrimaryIdentity = (identity != null) && identity == primary;
-            return CreateInlineMerge<TEntity>(queryBuilder, fields, qualifiers, isPrimaryIdentity);
-        }
-
-        /// <summary>
-        /// Creates a SQL Statement for repository inline-merge operation.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
-        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
-        /// <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
-        internal string CreateInlineMerge<TEntity>(QueryBuilder queryBuilder,
-            IEnumerable<Field> fields = null,
-            IEnumerable<Field> qualifiers = null,
-            bool? isPrimaryIdentity = false)
-            where TEntity : class
-        {
-            // Variables
-            var primary = PrimaryKeyCache.Get<TEntity>();
-
             // Check for the fields presence
             if (fields == null)
             {
                 throw new NullReferenceException("The target fields must be present.");
             }
 
+            // Get the needed properties
+            var primary = PrimaryKeyCache.Get<TEntity>();
+            var isPrimaryIdentity = (primaryField?.IsIdentity == true);
+
             // Check for the qualifiers presence
             if (primary == null && qualifiers == null)
             {
                 throw new NullReferenceException("The qualifiers must be present.");
             }
+
+            if (isPrimaryIdentity == false)
+            {
+                // Checks for the identity
+                var identity = IdentityCache.Get<TEntity>();
+
+                // Check the equalities
+                if (identity != null && identity != primary)
+                {
+                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                }
+
+                // Set the primary identification value
+                isPrimaryIdentity = (identity != null && identity == primary);
+            }
+
+            // Get the primary name
+            var primaryName = primary?.GetMappedName() ?? primaryField?.Name;
 
             // Check for all the fields (must be present from the database table)
             var properties = PropertyCache.Get<TEntity>()?
@@ -366,25 +429,25 @@ namespace RepoDb
             else
             {
                 // The primary key must be in the passed object if the qualifiers are null
-                if (fields?.FirstOrDefault(f => f.Name.ToLower() == primary.GetMappedName().ToLower()) == null)
+                if (fields?.FirstOrDefault(f => f.Name.ToLower() == primaryName.ToLower()) == null)
                 {
-                    throw new InvalidOperationException($"The primary key '{primary.GetMappedName()}' must be preset at the " +
+                    throw new InvalidOperationException($"The primary key '{primaryName}' must be preset at the " +
                         $"object properties if the qualifiers are not defined.");
                 }
 
                 // Use the primary for qualifiers if there is no any
-                if (primary != null)
+                if (string.IsNullOrEmpty(primaryName) == false)
                 {
-                    qualifiers = Field.From(primary.GetMappedName());
+                    qualifiers = Field.From(primaryName);
                 }
             }
 
             // Get the insertable and updateable fields
             var targetFields = fields.ToList();
             var insertableFields = fields
-                .Where(field => (field.Name.ToLower() == primary?.GetMappedName().ToLower() && isPrimaryIdentity.Value) == false);
+                .Where(field => (field.Name.ToLower() == primaryName?.ToLower() && isPrimaryIdentity) == false);
             var updateableFields = fields
-                .Where(field => (field.Name.ToLower() == primary?.GetMappedName().ToLower()) == false && qualifiers?.Any(f => f == field) == false);
+                .Where(field => (field.Name.ToLower() == primaryName?.ToLower()) == false && qualifiers?.Any(f => f == field) == false);
 
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder();
@@ -433,6 +496,10 @@ namespace RepoDb
             // Return the query
             return queryBuilder.GetString();
         }
+
+        #endregion
+
+        #region CreateInlineUpdate
 
         /// <summary>
         /// Creates a SQL Statement for repository inline update operation that is meant for SQL Server.
@@ -506,26 +573,9 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
-        /// <summary>
-        /// Creates a SQL Statement for repository insert operation that is meant for SQL Server.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for insert operation.</returns>
-        public string CreateInsert<TEntity>(QueryBuilder queryBuilder)
-            where TEntity : class
-        {
-            var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = IdentityCache.Get<TEntity>();
-            if (identity != null && identity != primary)
-            {
-                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-            }
-            var isPrimaryIdentity = (identity != null) && identity == primary;
-            return CreateInsert<TEntity>(queryBuilder, isPrimaryIdentity);
-        }
+        #endregion
+
+        #region CreateInsert
 
         /// <summary>
         /// Creates a SQL Statement for repository insert operation that is meant for SQL Server.
@@ -534,13 +584,25 @@ namespace RepoDb
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A string containing the composed SQL Statement for insert operation.</returns>
-        internal string CreateInsert<TEntity>(QueryBuilder queryBuilder,
-            bool? isPrimaryIdentity = null)
+        public string CreateInsert<TEntity>(QueryBuilder queryBuilder,
+            DbField primaryField = null)
             where TEntity : class
         {
+            // Get the primary and identity field locally
             var primary = PrimaryKeyCache.Get<TEntity>();
+            var identity = IdentityCache.Get<TEntity>();
+
+            // Check if the primary is an identity
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+
+            // Variables needed
+            var primaryName = primary?.GetMappedName() ?? primaryField?.Name;
+            var isPrimaryIdentity = primaryField?.IsIdentity == true || (identity != null && identity == primary);
             var fields = PropertyCache.Get<TEntity>()
                 .Where(property => !(isPrimaryIdentity == true && property.IsPrimary() == true))
                 .Select(property => new Field(property.GetMappedName()));
@@ -560,7 +622,7 @@ namespace RepoDb
                 .ParametersFrom(fields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity == true ? "SCOPE_IDENTITY()" : (primary != null) ? string.Concat("@", primary.GetMappedName()) : "NULL";
+            var result = isPrimaryIdentity == true ? "SCOPE_IDENTITY()" : string.IsNullOrEmpty(primaryName) == false ? primaryName.AsParameter() : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -571,6 +633,10 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
+        #endregion
+
+        #region CreateMerge
+
         /// <summary>
         /// Creates a SQL Statement for repository merge operation that is meant for SQL Server.
         /// </summary>
@@ -578,20 +644,40 @@ namespace RepoDb
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for merge operation.</returns>
         public string CreateMerge<TEntity>(QueryBuilder queryBuilder,
+            DbField primaryField = null,
             IEnumerable<Field> qualifiers = null)
             where TEntity : class
         {
+            // Get the needed properties
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = IdentityCache.Get<TEntity>();
-            if (identity != null && identity != primary)
+            var isPrimaryIdentity = primaryField?.IsIdentity == true;
+
+            if (isPrimaryIdentity == false)
             {
-                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                var identity = IdentityCache.Get<TEntity>();
+
+                // Check the equalities
+                if (identity != null && identity != primary)
+                {
+                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                }
+
+                // Identify whether the primary key is an identity
+                isPrimaryIdentity = (identity != null && identity == primary);
             }
-            var isPrimaryIdentity = (identity != null) && identity == primary;
-            return CreateMerge<TEntity>(queryBuilder, qualifiers, isPrimaryIdentity);
+
+            // Get the primary name
+            var primaryName = primary?.GetMappedName() ?? primaryField?.Name;
+
+            // Return the value
+            return CreateMerge<TEntity>(queryBuilder: queryBuilder,
+                primaryName: primaryName,
+                isPrimaryIdentity: isPrimaryIdentity,
+                qualifiers: qualifiers);
         }
 
         /// <summary>
@@ -601,17 +687,16 @@ namespace RepoDb
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
+        /// <param name="primaryName">The name of the primary field from the database.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for merge operation.</returns>
         internal string CreateMerge<TEntity>(QueryBuilder queryBuilder,
-            IEnumerable<Field> qualifiers,
-            bool? isPrimaryIdentity = false)
+            string primaryName,
+            bool isPrimaryIdentity = false,
+            IEnumerable<Field> qualifiers = null)
             where TEntity : class
         {
-            // Variables
-            var primary = PrimaryKeyCache.Get<TEntity>();
-
             // Check for all the fields
             var fields = PropertyCache.Get<TEntity>()?
                 .Select(property => new Field(property.GetMappedName()));
@@ -631,17 +716,17 @@ namespace RepoDb
             else
             {
                 // Use the primary for qualifiers if there is no any
-                if (primary != null)
+                if (string.IsNullOrEmpty(primaryName) == false)
                 {
-                    qualifiers = Field.From(primary.GetMappedName());
+                    qualifiers = Field.From(primaryName);
                 }
             }
 
             // Get the insertable and updateable fields
             var insertableFields = fields
-                .Where(field => (field.Name.ToLower() == primary?.GetMappedName().ToLower() && isPrimaryIdentity.Value) == false);
+                .Where(field => (field.Name.ToLower() == primaryName?.ToLower() && isPrimaryIdentity) == false);
             var updateableFields = fields
-                .Where(field => (field.Name.ToLower() == primary?.GetMappedName().ToLower()) == false);
+                .Where(field => (field.Name.ToLower() == primaryName?.ToLower()) == false);
 
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder();
@@ -690,6 +775,10 @@ namespace RepoDb
             // Return the query
             return queryBuilder.GetString();
         }
+
+        #endregion
+
+        #region CreateQuery
 
         /// <summary>
         /// Creates a SQL Statement for repository query operation that is meant for SQL Server.
@@ -747,6 +836,10 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
+        #endregion
+
+        #region CreateTruncate
+
         /// <summary>
         /// Creates a SQL Statement for repository truncate operation that is meant for SQL Server.
         /// </summary>
@@ -771,6 +864,10 @@ namespace RepoDb
             // Return the query
             return queryBuilder.GetString();
         }
+
+        #endregion
+
+        #region CreateUpdate
 
         /// <summary>
         /// Creates a SQL Statement for repository update operation that is meant for SQL Server.
@@ -811,5 +908,7 @@ namespace RepoDb
             // Return the query
             return queryBuilder.GetString();
         }
+
+        #endregion
     }
 }

@@ -18,9 +18,18 @@ namespace RepoDb.Requests
         /// <param name="connection">The connection object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public InsertRequest(Type entityType, IDbConnection connection, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
-        {
-        }
+            : this(entityType.FullName, connection, statementBuilder)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="InsertRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public InsertRequest(string name, IDbConnection connection, IStatementBuilder statementBuilder = null)
+            : base(name, connection, statementBuilder)
+        { }
 
         // Equality and comparers
 
@@ -37,7 +46,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(EntityType.FullName, ".Insert").GetHashCode();
+            var hashCode = string.Concat(Name, ".Insert").GetHashCode();
 
             // Set back the hash code value
             m_hashCode = hashCode;

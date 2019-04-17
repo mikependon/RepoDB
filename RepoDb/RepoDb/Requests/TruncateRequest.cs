@@ -18,7 +18,18 @@ namespace RepoDb.Requests
         /// <param name="connection">The connection object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public TruncateRequest(Type entityType, IDbConnection connection, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
+            : this(entityType.FullName, connection, statementBuilder)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="TruncateRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public TruncateRequest(string name, IDbConnection connection, IStatementBuilder statementBuilder = null)
+            : base(name, connection, statementBuilder)
         {
         }
 
@@ -37,7 +48,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(EntityType.FullName, ".Truncate").GetHashCode();
+            var hashCode = string.Concat(Name, ".Truncate").GetHashCode();
 
             // Set back the hash code value
             m_hashCode = hashCode;

@@ -3,6 +3,8 @@ using RepoDb.Requests;
 using System;
 using System.Collections.Concurrent;
 using System.Data;
+using System.Data.Common;
+using System.Linq;
 
 namespace RepoDb
 {
@@ -26,11 +28,11 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateBatchQuery<TEntity>(queryBuilder: new QueryBuilder(),
-                    where: request.Where,
-                    page: request.Page,
-                    rowsPerBatch: request.RowsPerBatch,
-                    orderBy: request.OrderBy);
+                commandText = statementBuilder.CreateBatchQuery<TEntity>(new QueryBuilder(),
+                    request.Where,
+                    request.Page,
+                    request.RowsPerBatch,
+                    request.OrderBy);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -49,8 +51,8 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateCount<TEntity>(queryBuilder: new QueryBuilder(),
-                    where: request.Where);
+                commandText = statementBuilder.CreateCount<TEntity>(new QueryBuilder(),
+                    request.Where);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -69,8 +71,8 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateDelete<TEntity>(queryBuilder: new QueryBuilder(),
-                    where: request.Where);
+                commandText = statementBuilder.CreateDelete<TEntity>(new QueryBuilder(),
+                    request.Where);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -89,7 +91,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateDeleteAll<TEntity>(queryBuilder: new QueryBuilder());
+                commandText = statementBuilder.CreateDeleteAll<TEntity>(new QueryBuilder());
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -107,30 +109,32 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var primary = PrimaryKeyCache.Get<TEntity>();
-                var identity = IdentityCache.Get<TEntity>();
-                if (identity != null && identity != primary)
-                {
-                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-                }
-                var isPrimaryIdentity = (identity != null);
+                var primaryField = DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                if (statementBuilder is SqlStatementBuilder)
-                {
-                    var sqlStatementBuilder = (SqlStatementBuilder)statementBuilder;
-                    if (isPrimaryIdentity == false)
-                    {
-                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
-                    }
-                    commandText = sqlStatementBuilder.CreateInlineInsert<TEntity>(queryBuilder: new QueryBuilder(),
-                        fields: request.Fields,
-                        isPrimaryIdentity: isPrimaryIdentity);
-                }
-                else
-                {
-                    commandText = statementBuilder.CreateInlineInsert<TEntity>(queryBuilder: new QueryBuilder(),
-                        fields: request.Fields);
-                }
+                commandText = statementBuilder.CreateInlineInsert<TEntity>(new QueryBuilder(),
+                    primaryField,
+                    request.Fields);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        /// Gets a command text from the cache for the inline-insert operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetInlineInsertText(InlineInsertRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var primaryField = DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateInlineInsert(new QueryBuilder(),
+                    request.Name,
+                    primaryField,
+                    request.Fields);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -148,31 +152,12 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var primary = PrimaryKeyCache.Get<TEntity>();
-                var identity = IdentityCache.Get<TEntity>();
-                if (identity != null && identity != primary)
-                {
-                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-                }
-                var isPrimaryIdentity = (identity != null);
+                var primaryField = DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                if (statementBuilder is SqlStatementBuilder)
-                {
-                    if (isPrimaryIdentity == false)
-                    {
-                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
-                    }
-                    commandText = ((SqlStatementBuilder)statementBuilder).CreateInlineMerge<TEntity>(queryBuilder: new QueryBuilder(),
-                        fields: request.Fields,
-                        qualifiers: request.Qualifiers,
-                        isPrimaryIdentity: isPrimaryIdentity);
-                }
-                else
-                {
-                    commandText = statementBuilder.CreateInlineMerge<TEntity>(queryBuilder: new QueryBuilder(),
-                        fields: request.Fields,
-                        qualifiers: request.Qualifiers);
-                }
+                commandText = statementBuilder.CreateInlineMerge<TEntity>(new QueryBuilder(),
+                    primaryField,
+                    request.Fields,
+                    request.Qualifiers);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -191,9 +176,9 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateInlineUpdate<TEntity>(queryBuilder: new QueryBuilder(),
-                    where: request.Where,
-                    fields: request.Fields);
+                commandText = statementBuilder.CreateInlineUpdate<TEntity>(new QueryBuilder(),
+                     request.Fields,
+                     request.Where);
                 m_cache.TryAdd(request, commandText);
             }
             else
@@ -215,28 +200,9 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var primary = PrimaryKeyCache.Get<TEntity>();
-                var identity = IdentityCache.Get<TEntity>();
-                if (identity != null && identity != primary)
-                {
-                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-                }
-                var isPrimaryIdentity = (identity != null);
+                var primaryField = DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                if (statementBuilder is SqlStatementBuilder)
-                {
-                    var sqlStatementBuilder = (SqlStatementBuilder)statementBuilder;
-                    if (isPrimaryIdentity == false)
-                    {
-                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
-                    }
-                    commandText = sqlStatementBuilder.CreateInsert<TEntity>(queryBuilder: new QueryBuilder(),
-                        isPrimaryIdentity: isPrimaryIdentity);
-                }
-                else
-                {
-                    commandText = statementBuilder.CreateInsert<TEntity>(queryBuilder: new QueryBuilder());
-                }
+                commandText = statementBuilder.CreateInsert<TEntity>(new QueryBuilder(), primaryField);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -254,30 +220,11 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var primary = PrimaryKeyCache.Get<TEntity>();
-                var identity = IdentityCache.Get<TEntity>();
-                if (identity != null && identity != primary)
-                {
-                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-                }
-                var isPrimaryIdentity = (identity != null);
+                var primaryField = DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                if (statementBuilder is SqlStatementBuilder)
-                {
-                    var sqlStatementBuilder = (SqlStatementBuilder)statementBuilder;
-                    if (isPrimaryIdentity == false)
-                    {
-                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
-                    }
-                    commandText = sqlStatementBuilder.CreateMerge<TEntity>(queryBuilder: new QueryBuilder(),
-                        qualifiers: request.Qualifiers,
-                        isPrimaryIdentity: isPrimaryIdentity);
-                }
-                else
-                {
-                    commandText = statementBuilder.CreateMerge<TEntity>(queryBuilder: new QueryBuilder(),
-                        qualifiers: request.Qualifiers);
-                }
+                commandText = statementBuilder.CreateMerge<TEntity>(new QueryBuilder(),
+                    primaryField,
+                    request.Qualifiers);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -296,11 +243,11 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateQuery<TEntity>(queryBuilder: new QueryBuilder(),
-                    where: request.Where,
-                    orderBy: request.OrderBy,
-                    top: request.Top,
-                    hints: request.Hints);
+                commandText = statementBuilder.CreateQuery<TEntity>(new QueryBuilder(),
+                     request.Where,
+                     request.OrderBy,
+                     request.Top,
+                     request.Hints);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -319,11 +266,11 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateQuery<TEntity>(queryBuilder: new QueryBuilder(),
-                    where: request.Where,
-                    orderBy: request.OrderBy,
-                    top: request.Top,
-                    hints: request.Hints);
+                commandText = statementBuilder.CreateQuery<TEntity>(new QueryBuilder(),
+                     request.Where,
+                     request.OrderBy,
+                     request.Top,
+                     request.Hints);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -342,7 +289,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateTruncate<TEntity>(queryBuilder: new QueryBuilder());
+                commandText = statementBuilder.CreateTruncate<TEntity>(new QueryBuilder());
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -361,8 +308,8 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateUpdate<TEntity>(queryBuilder: new QueryBuilder(),
-                    where: request.Where);
+                commandText = statementBuilder.CreateUpdate<TEntity>(new QueryBuilder(),
+                     request.Where);
                 m_cache.TryAdd(request, commandText);
             }
             else
@@ -380,10 +327,10 @@ namespace RepoDb
         /// <returns>The instance of available statement builder.</returns>
         private static IStatementBuilder EnsureStatementBuilder(IDbConnection connection, IStatementBuilder builder)
         {
-            builder = builder ?? StatementBuilderMapper.Get(connection.GetProvider())?.StatementBuilder;
+            builder = builder ?? StatementBuilderMapper.Get(connection.GetType());
             if (builder == null)
             {
-                throw new InvalidOperationException("There is no 'IStatementBuilder' object defined. Please visit your mapping and make sure to map a 'Provider' to a correct 'IStatementBuilder' object.");
+                throw new InvalidOperationException($"There is no '{nameof(IStatementBuilder)}' object defined. Please visit your mappings and make sure to map a type of '{nameof(DbConnection)}' to a correct '{nameof(IStatementBuilder)}' object.");
             }
             return builder;
         }

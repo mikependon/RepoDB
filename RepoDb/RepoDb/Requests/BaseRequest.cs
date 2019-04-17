@@ -16,8 +16,18 @@ namespace RepoDb.Requests
         /// <param name="connection">The connection object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public BaseRequest(Type entityType, IDbConnection connection, IStatementBuilder statementBuilder = null)
+            : this(entityType.FullName, connection, statementBuilder)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="BaseRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public BaseRequest(string name, IDbConnection connection, IStatementBuilder statementBuilder = null)
         {
-            EntityType = entityType;
+            Name = name;
             Connection = connection;
             StatementBuilder = statementBuilder;
         }
@@ -25,7 +35,7 @@ namespace RepoDb.Requests
         /// <summary>
         /// Gets the entity type.
         /// </summary>
-        public Type EntityType { get; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the connection object.

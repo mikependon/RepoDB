@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 
 namespace RepoDb.Requests
 {
@@ -21,10 +20,22 @@ namespace RepoDb.Requests
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public InlineInsertRequest(Type entityType, IDbConnection connection, IEnumerable<Field> fields = null, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
+            : this(entityType.FullName, connection, fields, statementBuilder)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="InlineInsertRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="fields">The list of the target fields.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public InlineInsertRequest(string name, IDbConnection connection, IEnumerable<Field> fields = null, IStatementBuilder statementBuilder = null)
+            : base(name, connection, statementBuilder)
         {
             Fields = fields;
         }
+
         /// <summary>
         /// Gets the target fields.
         /// </summary>
@@ -45,7 +56,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(EntityType.FullName, ".InlineInsert").GetHashCode();
+            var hashCode = string.Concat(Name, ".InlineInsert").GetHashCode();
 
             // Get the qualifier fields
             if (Fields != null)
