@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using RepoDb.Enumerations;
 using System;
 using System.Linq.Expressions;
+using System.Dynamic;
 
 namespace RepoDb
 {
@@ -2097,8 +2098,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the express of <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2126,8 +2127,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2155,8 +2156,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2182,8 +2183,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2209,8 +2210,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2236,8 +2237,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2263,8 +2264,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2290,8 +2291,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
