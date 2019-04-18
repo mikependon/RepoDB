@@ -29,9 +29,9 @@ namespace RepoDb.Extensions
         }
 
         // AsParameter
-        internal static string AsParameter(this QueryField queryField)
+        internal static string AsParameter(this QueryField queryField, string prefix = Constant.DefaultParameterPrefix)
         {
-            return queryField.Parameter.Name.AsParameter();
+            return queryField.Parameter.Name.AsParameter(prefix);
         }
 
         // AsParameterAsField
@@ -41,18 +41,18 @@ namespace RepoDb.Extensions
         }
 
         // AsBetweenParameter
-        internal static string AsBetweenParameter(this QueryField queryField)
+        internal static string AsBetweenParameter(this QueryField queryField, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Format(queryField.Parameter.Name.AsParameter(), "_Left AND ", queryField.Parameter.Name.AsParameter(), "_Right");
+            return string.Format(queryField.Parameter.Name.AsParameter(prefix), "_Left AND ", queryField.Parameter.Name.AsParameter(prefix), "_Right");
         }
 
         // AsInParameter
-        internal static string AsInParameter(this QueryField queryField)
+        internal static string AsInParameter(this QueryField queryField, string prefix = Constant.DefaultParameterPrefix)
         {
             var array = ((Array)queryField.Parameter.Value);
             var value = array
                 .OfType<object>()
-                .Select((qf, i) => string.Concat(queryField.Parameter.Name.AsParameter(), "_In_", i))
+                .Select((qf, i) => string.Concat(queryField.Parameter.Name.AsParameter(prefix), "_In_", i))
                 .Join(", ");
             return string.Concat("(", value, ")");
         }
@@ -70,18 +70,17 @@ namespace RepoDb.Extensions
             }
             else
             {
-                var operationText = queryField.GetOperationText();
                 if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                 {
-                    return string.Concat(queryField.AsField(), " ", operationText, " ", queryField.AsBetweenParameter());
+                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsBetweenParameter());
                 }
                 else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
                 {
-                    return string.Concat(queryField.AsField(), " ", operationText, " ", queryField.AsInParameter());
+                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsInParameter());
                 }
                 else
                 {
-                    return string.Concat(queryField.AsField(), " ", operationText, " ", queryField.AsParameter());
+                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsParameter());
                 }
             }
         }

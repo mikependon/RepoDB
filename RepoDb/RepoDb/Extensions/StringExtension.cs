@@ -89,9 +89,9 @@ namespace RepoDb.Extensions
         }
 
         // AsParameter
-        internal static string AsParameter(this string value)
+        internal static string AsParameter(this string value, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Concat("@", value.AsUnquoted());
+            return string.Concat(prefix, value.AsUnquoted());
         }
 
         // AsAliasField
@@ -101,15 +101,15 @@ namespace RepoDb.Extensions
         }
 
         // AsParameterAsField
-        internal static string AsParameterAsField(this string value)
+        internal static string AsParameterAsField(this string value, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Concat(AsParameter(value), " AS ", AsField(value));
+            return string.Concat(AsParameter(value, prefix), " AS ", AsField(value));
         }
 
         // AsFieldAndParameter
-        internal static string AsFieldAndParameter(this string value)
+        internal static string AsFieldAndParameter(this string value, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Concat(AsField(value), " = ", AsParameter(value));
+            return string.Concat(AsField(value), " = ", AsParameter(value, prefix));
         }
 
         // AsFieldAndAliasField
@@ -127,9 +127,9 @@ namespace RepoDb.Extensions
         }
 
         // AsParameters
-        internal static IEnumerable<string> AsParameters(this IEnumerable<string> values)
+        internal static IEnumerable<string> AsParameters(this IEnumerable<string> values, string prefix = Constant.DefaultParameterPrefix)
         {
-            return values?.Select(value => value.AsParameter());
+            return values?.Select(value => value.AsParameter(prefix));
         }
 
         // AsAliasFields
@@ -139,15 +139,15 @@ namespace RepoDb.Extensions
         }
 
         // AsParametersAsFields
-        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<string> values)
+        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<string> values, string prefix = Constant.DefaultParameterPrefix)
         {
-            return values?.Select(value => value.AsParameterAsField());
+            return values?.Select(value => value.AsParameterAsField(prefix));
         }
 
         // AsFieldsAndParameters
-        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<string> values)
+        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<string> values, string prefix = Constant.DefaultParameterPrefix)
         {
-            return values?.Select(value => value.AsFieldAndParameter());
+            return values?.Select(value => value.AsFieldAndParameter(prefix));
         }
 
         // AsFieldsAndAliasFields
