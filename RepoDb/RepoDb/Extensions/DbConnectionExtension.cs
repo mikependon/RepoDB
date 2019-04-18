@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -9362,8 +9363,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9395,8 +9396,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9433,8 +9434,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9466,8 +9467,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9502,8 +9503,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9531,8 +9532,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9565,8 +9566,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9589,8 +9590,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9620,8 +9621,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9649,8 +9650,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9680,8 +9681,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9709,8 +9710,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9740,8 +9741,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9769,8 +9770,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9800,8 +9801,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9829,8 +9830,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9860,8 +9861,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9889,8 +9890,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9921,8 +9922,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9950,8 +9951,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9982,8 +9983,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -10011,8 +10012,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -10187,10 +10188,8 @@ namespace RepoDb
             // Check Transaction
             ValidateTransactionConnectionObject(connection, transaction);
 
-            // TODO: Add checking to the others here
-
             // Process the array parameters
-            var commandArrayParameters = ExtractAndReplace(param, ref commandText);
+            var commandArrayParameters = AsCommandArrayParameters(param, ref commandText);
 
             // Command object initialization
             var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction);
@@ -10206,55 +10205,6 @@ namespace RepoDb
 
             // Execute the scalar
             return (DbCommand)command;
-        }
-
-        /// <summary>
-        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
-        /// </summary>
-        /// <param name="param">The parameter passed.</param>
-        /// <param name="commandText">The command text to be replaced.</param>
-        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
-        private static IList<CommandArrayParameter> ExtractAndReplace(object param, ref string commandText)
-        {
-            if (param == null)
-            {
-                return null;
-            }
-
-            // Declare return values
-            var commandArrayParameters = (IList<CommandArrayParameter>)null;
-
-            // Iterate the properties
-            foreach (var property in param.GetType().GetProperties())
-            {
-                // Skip if null
-                if (property == null)
-                {
-                    continue;
-                }
-
-                // Skip if it is not an array
-                if (property.PropertyType.IsArray == false)
-                {
-                    continue;
-                }
-
-                // Initialize the array if it not yet initialized
-                if (commandArrayParameters == null)
-                {
-                    commandArrayParameters = new List<CommandArrayParameter>();
-                }
-
-                // Replace the target parameters
-                var values = ((Array)property.GetValue(param)).AsEnumerable();
-                commandText = ToRawSqlWithArrayParams(commandText, property.Name, values);
-
-                // Add to the list
-                commandArrayParameters.Add(new CommandArrayParameter(property.Name, values));
-            }
-
-            // Return the values
-            return commandArrayParameters;
         }
 
         /// <summary>
@@ -10285,6 +10235,226 @@ namespace RepoDb
             // Replace the target parameter
             return commandText.Replace(parameterName.AsParameter(), parameters.Join(", "));
         }
+
+        #region AsCommandArrayParameters
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="param">The parameter passed.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(object param, ref string commandText)
+        {
+            if (param == null)
+            {
+                return null;
+            }
+
+            // Declare return values
+            var commandArrayParameters = (IList<CommandArrayParameter>)null;
+
+            // Return if any of this
+            if (param is ExpandoObject || param is IDictionary<string, object>)
+            {
+                return AsCommandArrayParameters((IDictionary<string, object>)param, ref commandText);
+            }
+            else if (param is QueryGroup)
+            {
+                return AsCommandArrayParameters((QueryGroup)param, ref commandText);
+            }
+            else if (param is IEnumerable<QueryField>)
+            {
+                return AsCommandArrayParameters((IEnumerable<QueryField>)param, ref commandText);
+            }
+            else if (param is QueryField)
+            {
+                return AsCommandArrayParameters((QueryField)param, ref commandText);
+            }
+            else
+            {
+                // Iterate the properties
+                foreach (var property in param.GetType().GetProperties())
+                {
+                    // Skip if null
+                    if (property == null)
+                    {
+                        continue;
+                    }
+
+                    // Skip if it is not an array
+                    if (property.PropertyType.IsArray == false)
+                    {
+                        continue;
+                    }
+
+                    // Initialize the array if it not yet initialized
+                    if (commandArrayParameters == null)
+                    {
+                        commandArrayParameters = new List<CommandArrayParameter>();
+                    }
+
+                    // Replace the target parameters
+                    commandArrayParameters.Add(AsCommandArrayParameter(property.Name,
+                        ((Array)property.GetValue(param)).AsEnumerable(),
+                        ref commandText));
+                }
+            }
+
+            // Return the values
+            return commandArrayParameters;
+        }
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(IDictionary<string, object> dictionary, ref string commandText)
+        {
+            if (dictionary == null)
+            {
+                return null;
+            }
+
+            // Declare return values
+            var commandArrayParameters = (IList<CommandArrayParameter>)null;
+
+            // Iterate the properties
+            foreach (var kvp in dictionary)
+            {
+                // Get type of the value
+                var type = kvp.Value?.GetType();
+
+                // Skip if it is not an array
+                if (type.IsArray == false)
+                {
+                    continue;
+                }
+
+                // Initialize the array if it not yet initialized
+                if (commandArrayParameters == null)
+                {
+                    commandArrayParameters = new List<CommandArrayParameter>();
+                }
+
+                // Replace the target parameters
+                commandArrayParameters.Add(AsCommandArrayParameter(kvp.Key,
+                    ((Array)kvp.Value).AsEnumerable(),
+                    ref commandText));
+            }
+
+            // Return the values
+            return commandArrayParameters;
+        }
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryGroup queryGroup, ref string commandText)
+        {
+            return AsCommandArrayParameters(queryGroup.GetFields(true), ref commandText);
+        }
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(IEnumerable<QueryField> queryFields, ref string commandText)
+        {
+            if (queryFields == null)
+            {
+                return null;
+            }
+
+            // Declare return values
+            var commandArrayParameters = (IList<CommandArrayParameter>)null;
+
+            // Iterate the properties
+            foreach (var field in queryFields)
+            {
+                // Get type of the value
+                var type = field.Parameter.Value?.GetType();
+
+                // Skip if it is not an array
+                if (type.IsArray == false)
+                {
+                    continue;
+                }
+
+                // Initialize the array if it not yet initialized
+                if (commandArrayParameters == null)
+                {
+                    commandArrayParameters = new List<CommandArrayParameter>();
+                }
+
+                // Replace the target parameters
+                commandArrayParameters.Add(AsCommandArrayParameter(field.Field.Name,
+                    ((Array)field.Parameter.Value).AsEnumerable(),
+                    ref commandText));
+            }
+
+            // Return the values
+            return commandArrayParameters;
+        }
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryField queryField, ref string commandText)
+        {
+            if (queryField == null)
+            {
+                return null;
+            }
+
+            // Get type of the value
+            var type = queryField.Parameter.Value?.GetType();
+
+            // Skip if it is not an array
+            if (type.IsArray == false)
+            {
+                return null;
+            }
+
+            // Initialize the array if it not yet initialized
+            var commandArrayParameters = new List<CommandArrayParameter>();
+
+            // Replace the target parameters
+            commandArrayParameters.Add(AsCommandArrayParameter(queryField.Field.Name,
+                ((Array)queryField.Parameter.Value).AsEnumerable(),
+                ref commandText));
+
+            // Return the values
+            return commandArrayParameters;
+        }
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="name">The target name of the <see cref="CommandArrayParameter"/> object.</param>
+        /// <param name="values">The array value of the <see cref="CommandArrayParameter"/> object.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>An instance of <see cref="CommandArrayParameter"/> object.</returns>
+        private static CommandArrayParameter AsCommandArrayParameter(string name, IEnumerable<object> values, ref string commandText)
+        {
+            // Convert to raw sql
+            commandText = ToRawSqlWithArrayParams(commandText, name, values);
+
+            // Add to the list
+            return new CommandArrayParameter(name, values);
+        }
+
+        #endregion
 
         #endregion
     }

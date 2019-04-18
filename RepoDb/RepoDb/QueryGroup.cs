@@ -26,6 +26,14 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
+        /// <param name="queryField">The field to be grouped for the query expressions.</param>
+        public QueryGroup(QueryField queryField) :
+            this(queryField.AsEnumerable(), null, Conjunction.And, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
         /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields) :
             this(queryFields, null, Conjunction.And, false)

@@ -69,16 +69,16 @@ namespace RepoDb.Extensions
                 return;
             }
 
-            // Supporting the IDictionary<string, object>
-            if (param is ExpandoObject || param is IDictionary<string, object>)
-            {
-                CreateParameters(command, (IDictionary<string, object>)param);
-            }
-
             // Supporting the IEnumerable<PropertyValue>
-            else if (param is IEnumerable<PropertyValue>)
+            if (param is IEnumerable<PropertyValue>)
             {
                 CreateParameters(command, (IEnumerable<PropertyValue>)param);
+            }
+
+            // Supporting the IDictionary<string, object>
+            else if (param is ExpandoObject || param is IDictionary<string, object>)
+            {
+                CreateParameters(command, (IDictionary<string, object>)param);
             }
 
             // Supporting the QueryGroup
