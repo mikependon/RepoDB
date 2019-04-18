@@ -77,7 +77,7 @@ namespace RepoDb.Reflection
             var memberAssignments = new List<MemberAssignment>();
             var dataReaderType = typeof(DbDataReader);
             var tableFields = DbFieldCache.Get<TEntity>(connection);
-            var isStrict = TypeMapper.ConversionType == ConversionType.Default;
+            var strict = TypeMapper.ConversionType == ConversionType.Default;
 
             // Iterate each properties
             foreach (var property in PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite))
@@ -103,7 +103,7 @@ namespace RepoDb.Reflection
                     if (readerGetValueMethod == null)
                     {
                         // Single value is throwing an exception in GetString(), skip it and use the GetValue() instead
-                        if (isStrict == false && readerField.Type != typeof(Single))
+                        if (strict == false && readerField.Type != typeof(Single))
                         {
                             readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod(string.Concat("Get", propertyType.Name));
                         }
@@ -149,13 +149,13 @@ namespace RepoDb.Reflection
                         // Only if there are conversions, execute the logics inside
                         if (isConversionNeeded == true)
                         {
-                            if (isStrict == true)
+                            if (strict == true)
                             {
                                 falseExpression = Expression.Convert(falseExpression, propertyType);
                             }
                             else
                             {
-                                falseExpression = Convert(falseExpression, readerField, propertyType, convertType);
+                                falseExpression = Convert(falseExpression, readerField, propertyType, convertType, strict);
                             }
                         }
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
@@ -177,7 +177,7 @@ namespace RepoDb.Reflection
                         // Convert to correct type if necessary
                         if (isConversionNeeded == true)
                         {
-                            valueExpression = Convert(valueExpression, readerField, propertyType, convertType);
+                            valueExpression = Convert(valueExpression, readerField, propertyType, convertType, strict);
                         }
 
                         // Set for the 'Nullable' property
@@ -197,17 +197,20 @@ namespace RepoDb.Reflection
             return memberAssignments;
         }
 
-        private static Expression Convert(Expression falseExpression, DataReaderFieldDefinition readerField,
-            Type propertyType, Type convertType)
+        private static Expression Convert(Expression expression,
+            DataReaderFieldDefinition readerField,
+            Type propertyType,
+            Type convertType,
+            bool strict)
         {
-            var result = (Expression)null;
-
-            if (TypeMapper.ConversionType == ConversionType.Default == true)
+            if (strict == true)
             {
-                result = Expression.Convert(falseExpression, propertyType);
+                return Expression.Convert(expression, propertyType);
             }
             else
             {
+                var result = (Expression)null;
+
                 // Variables needed
                 var targetInstance = (Expression)null;
                 var targetMethod = (MethodInfo)null;
@@ -219,13 +222,13 @@ namespace RepoDb.Reflection
                     // This is Guid.Parse()
                     targetMethod = typeof(Guid).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
                     targetInstance = null;
-                    targetParameter = falseExpression;
+                    targetParameter = expression;
                 }
                 else if (propertyType == typeof(string) && readerField.Type == typeof(Guid))
                 {
                     // This is Guid.ToString()
                     targetMethod = typeof(Guid).GetTypeInfo().GetMethod("ToString", new Type[0]);
-                    targetInstance = falseExpression;
+                    targetInstance = expression;
                     targetParameter = null;
                 }
                 else
@@ -233,7 +236,7 @@ namespace RepoDb.Reflection
                     // This System.Convert.To<Type>()
                     targetMethod = typeof(Convert).GetTypeInfo().GetMethod(string.Concat("To", propertyType.Name), new[] { convertType });
                     targetInstance = null;
-                    targetParameter = falseExpression;
+                    targetParameter = expression;
                 }
 
                 // If there are methods found from System.Convert(), then use it, otherwise use the normal
@@ -251,11 +254,11 @@ namespace RepoDb.Reflection
                 else
                 {
                     // There are coersion problem on certain types (i.e: Guid-to-String (vice versa))
-                    result = Expression.Convert(falseExpression, propertyType);
+                    result = Expression.Convert(expression, propertyType);
                 }
-            }
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>

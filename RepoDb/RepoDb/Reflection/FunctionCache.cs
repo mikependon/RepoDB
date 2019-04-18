@@ -108,7 +108,9 @@ namespace RepoDb
                 var fields = Enumerable.Range(0, reader.FieldCount)
                     .Select(reader.GetName)
                     .Join(".");
-                var key = string.Concat(typeof(TEntity).FullName, ".", fields);
+                var key = string.Concat(connection?.ConnectionString, ".",
+                    typeof(TEntity).FullName, ".",
+                    fields);
                 if (m_cache.TryGetValue(key, out result) == false)
                 {
                     result = FunctionFactory.GetDataReaderToDataEntityFunction<TEntity>(reader, connection);
