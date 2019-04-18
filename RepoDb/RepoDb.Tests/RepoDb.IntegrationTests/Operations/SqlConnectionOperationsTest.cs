@@ -9205,7 +9205,7 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable];"))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -9230,7 +9230,7 @@ namespace RepoDb.IntegrationTests.Operations
                     new { From = 3, To = 4 }))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
@@ -9255,7 +9255,7 @@ namespace RepoDb.IntegrationTests.Operations
                     new { ColumnInt = new[] { 5, 6, 7 } }))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(3, result.Count());
@@ -9279,7 +9279,7 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReader("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];", new { Top = 2 }))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
@@ -9303,7 +9303,7 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReader("[dbo].[sp_get_identity_tables]", commandType: CommandType.StoredProcedure))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -9329,7 +9329,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandType: CommandType.StoredProcedure))
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -9377,7 +9377,7 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable];").Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -9402,7 +9402,7 @@ namespace RepoDb.IntegrationTests.Operations
                     new { From = 3, To = 4 }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
@@ -9427,7 +9427,7 @@ namespace RepoDb.IntegrationTests.Operations
                     new { ColumnInt = new[] { 5, 6, 7 } }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(3, result.Count());
@@ -9451,7 +9451,7 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReaderAsync("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];", new { Top = 2 }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
@@ -9475,7 +9475,7 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReaderAsync("[dbo].[sp_get_identity_tables]", commandType: CommandType.StoredProcedure).Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -9501,7 +9501,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandType: CommandType.StoredProcedure).Result)
                 {
                     // Act
-                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader).ToList();
+                    var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
 
                     // Assert
                     Assert.AreEqual(1, result.Count());

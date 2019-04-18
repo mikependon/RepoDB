@@ -2,6 +2,7 @@
 using RepoDb.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
@@ -19,9 +20,10 @@ namespace RepoDb.Reflection
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The target entity type.</typeparam>
-        /// <param name="reader">The data reader object.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>The entity instance with the converted values from the data reader.</returns>
-        public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader)
+        public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader, IDbConnection connection)
             where TEntity : class
         {
             // Expression variables
@@ -39,7 +41,7 @@ namespace RepoDb.Reflection
                 });
 
             // Get the member assignments
-            var memberAssignments = GetMemberAssignments<TEntity>(newEntityExpression, readerParameterExpression, readerFields);
+            var memberAssignments = GetMemberAssignments<TEntity>(newEntityExpression, readerParameterExpression, readerFields, connection);
 
             // Throw an error if there are no matching atleast one
             if (memberAssignments.Any() == false)
@@ -63,15 +65,18 @@ namespace RepoDb.Reflection
         /// <param name="newEntityExpression">The new entity expression.</param>
         /// <param name="readerParameterExpression">The data reader parameter.</param>
         /// <param name="readerFields">The list of fields to be bound from the data reader.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>The enumerable list of member assignment and bindings.</returns>
         private static IEnumerable<MemberAssignment> GetMemberAssignments<TEntity>(Expression newEntityExpression,
-            ParameterExpression readerParameterExpression, IEnumerable<DataReaderFieldDefinition> readerFields)
+            ParameterExpression readerParameterExpression,
+            IEnumerable<DataReaderFieldDefinition> readerFields,
+            IDbConnection connection)
             where TEntity : class
         {
             // Initialize variables
             var memberAssignments = new List<MemberAssignment>();
             var dataReaderType = typeof(DbDataReader);
-            var tableFields = (IEnumerable<DbField>)null; // TODO: DbFieldCache.Get<TEntity>();
+            var tableFields = DbFieldCache.Get<TEntity>(connection);
             var isStrict = TypeMapper.ConversionType == ConversionType.Default;
 
             // Iterate each properties

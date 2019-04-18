@@ -398,7 +398,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction))
             {
-                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader)?.ToList();
+                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader, connection)?.ToList();
             }
 
             // After Execution
@@ -4702,7 +4702,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction))
             {
-                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader)?.ToList();
+                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader, connection)?.ToList();
             }
 
             // After Execution
@@ -5280,11 +5280,11 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
@@ -5498,15 +5498,15 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
@@ -5759,19 +5759,19 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
@@ -6061,23 +6061,23 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
@@ -6404,27 +6404,27 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
@@ -6789,31 +6789,31 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the seventh result
                 reader?.NextResult();
-                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader)?.ToList();
+                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
@@ -6995,11 +6995,11 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
@@ -7213,15 +7213,15 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
@@ -7474,19 +7474,19 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
@@ -7776,23 +7776,23 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
@@ -8119,27 +8119,27 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
@@ -8504,31 +8504,31 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the seventh result
                 reader?.NextResult();
-                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader)?.ToList();
+                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
@@ -9417,7 +9417,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReaderConverter.ToEnumerable<TEntity>(reader, true).ToList();
+                    return DataReaderConverter.ToEnumerable<TEntity>(reader, connection, true).ToList();
                 }
             }
         }
@@ -9488,7 +9488,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return DataReaderConverter.ToEnumerable<TEntity>(reader, true).ToList();
+                    return DataReaderConverter.ToEnumerable<TEntity>(reader, connection, true).ToList();
                 }
             }
         }
@@ -9523,7 +9523,7 @@ namespace RepoDb
                 commandType,
                 commandTimeout,
                 transaction);
-            return new QueryMultipleExtractor((DbDataReader)reader);
+            return new QueryMultipleExtractor((DbDataReader)reader, connection);
         }
 
         /// <summary>
@@ -9552,7 +9552,7 @@ namespace RepoDb
                 commandType,
                 commandTimeout,
                 transaction);
-            return new QueryMultipleExtractor((DbDataReader)reader);
+            return new QueryMultipleExtractor((DbDataReader)reader, connection);
         }
 
         #endregion

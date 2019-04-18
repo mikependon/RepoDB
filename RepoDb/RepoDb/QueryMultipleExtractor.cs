@@ -1,6 +1,7 @@
 using RepoDb.Reflection;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 
@@ -9,17 +10,20 @@ namespace RepoDb
     /// <summary>
     /// A class used to extract the multiple resultsets of the query operation.
     /// </summary>
-    public class QueryMultipleExtractor : IDisposable
+    public sealed class QueryMultipleExtractor : IDisposable
     {
         private DbDataReader m_reader = null;
+        private IDbConnection m_connection = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
         /// </summary>
-        /// <param name="reader">The data reader to be used for extraction.</param>
-        internal QueryMultipleExtractor(DbDataReader reader)
+        /// <param name="reader">The <see cref="DbDataReader"/> to be extracted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        internal QueryMultipleExtractor(DbDataReader reader, IDbConnection connection)
         {
             m_reader = reader;
+            m_connection = connection;
             Position = 0;
         }
 
@@ -38,7 +42,7 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public IEnumerable<TEntity> Extract<TEntity>() where TEntity : class
         {
-            var result = DataReaderConverter.ToEnumerable<TEntity>(m_reader, true).ToList();
+            var result = DataReaderConverter.ToEnumerable<TEntity>(m_reader, m_connection, true).ToList();
 
             // Move to next result
             NextResult();
