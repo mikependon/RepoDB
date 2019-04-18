@@ -932,15 +932,15 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int BulkInsert<TEntity>(IEnumerable<TEntity> entities,
-IEnumerable<BulkInsertMapItem> mappings = null)
-where TEntity : class
+            IEnumerable<BulkInsertMapItem> mappings = null)
+            where TEntity : class
         {
             // Create a connection
             using (var connection = CreateConnection())
             {
                 // Call the method
                 return connection.BulkInsert<TEntity>(entities: entities,
-                    mappings: mappings,
+                    mapItems: mappings,
                     commandTimeout: CommandTimeout,
                     trace: Trace);
             }

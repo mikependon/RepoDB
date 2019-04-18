@@ -741,20 +741,20 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
             int? commandTimeout = null,
             ITrace trace = null)
             where TEntity : class
         {
             return BulkInsertInternal<TEntity>(connection: connection,
                 entities: entities,
-                mapItems: mappings,
+                mapItems: mapItems,
                 commandTimeout: commandTimeout,
                 trace: trace);
         }
@@ -786,24 +786,49 @@ namespace RepoDb
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int BulkInsert(this IDbConnection connection,
-            DbDataReader reader,
             string tableName,
+            DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             int? commandTimeout = null,
             ITrace trace = null)
         {
             return BulkInsertInternal(connection: connection,
-                reader: reader,
                 tableName: tableName,
+                reader: reader,
                 mapItems: mappings,
+                commandTimeout: commandTimeout,
+                trace: trace);
+        }
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static int BulkInsertInternal<TEntity>(this IDbConnection connection,
+            DbDataReader reader,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
+            int? commandTimeout = null,
+            ITrace trace = null)
+            where TEntity : class
+        {
+            return BulkInsertInternal(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                reader: reader,
+                mapItems: mapItems,
                 commandTimeout: commandTimeout,
                 trace: trace);
         }
@@ -886,80 +911,6 @@ namespace RepoDb
             if (trace != null)
             {
                 trace.AfterBulkInsert(new TraceLog("BulkInsert", entities, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Result
-            return result;
-        }
-
-        /// <summary>
-        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static int BulkInsertInternal<TEntity>(this IDbConnection connection,
-            DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mapItems = null,
-            int? commandTimeout = null,
-            ITrace trace = null)
-            where TEntity : class
-        {
-            // Validate, only supports SqlConnection
-            if (connection is SqlConnection == false)
-            {
-                throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
-            }
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
-                trace.BeforeBulkInsert(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BulkInsert");
-                    }
-                    return 0;
-                }
-            }
-
-            var result = 0;
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
-            {
-                sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
-                if (commandTimeout != null && commandTimeout.HasValue)
-                {
-                    sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
-                }
-                if (mapItems != null)
-                {
-                    foreach (var mapItem in mapItems)
-                    {
-                        sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
-                    }
-                }
-                connection.EnsureOpen();
-                sqlBulkCopy.WriteToServer(reader);
-                result = reader.RecordsAffected;
-            }
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1096,24 +1047,49 @@ namespace RepoDb
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> BulkInsertAsync(this IDbConnection connection,
-            DbDataReader reader,
             string tableName,
+            DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             int? commandTimeout = null,
             ITrace trace = null)
         {
             return BulkInsertInternalAsync(connection: connection,
-                reader: reader,
                 tableName: tableName,
+                reader: reader,
                 mapItems: mappings,
+                commandTimeout: commandTimeout,
+                trace: trace);
+        }
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
+            DbDataReader reader,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
+            int? commandTimeout = null,
+            ITrace trace = null)
+            where TEntity : class
+        {
+            return BulkInsertInternalAsync(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                reader: reader,
+                mapItems: mapItems,
                 commandTimeout: commandTimeout,
                 trace: trace);
         }
@@ -1128,7 +1104,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal async static Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
+        internal static async Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mapItems = null,
             int? commandTimeout = null,
@@ -1206,80 +1182,6 @@ namespace RepoDb
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal async static Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
-            DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mapItems = null,
-            int? commandTimeout = null,
-            ITrace trace = null)
-            where TEntity : class
-        {
-            // Validate, only supports SqlConnection
-            if (connection is SqlConnection == false)
-            {
-                throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
-            }
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
-                trace.BeforeBulkInsert(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BulkInsert");
-                    }
-                    return 0;
-                }
-            }
-
-            var result = 0;
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
-            {
-                sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
-                if (commandTimeout != null && commandTimeout.HasValue)
-                {
-                    sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
-                }
-                if (mapItems != null)
-                {
-                    foreach (var mapItem in mapItems)
-                    {
-                        sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
-                    }
-                }
-                connection.EnsureOpen();
-                await sqlBulkCopy.WriteToServerAsync(reader);
-                result = reader.RecordsAffected;
-            }
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Result
-            return result;
-        }
-
-        /// <summary>
-        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
-        /// </summary>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
@@ -1287,7 +1189,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal async static Task<int> BulkInsertInternalAsync(this IDbConnection connection,
+        internal static async Task<int> BulkInsertInternalAsync(this IDbConnection connection,
             DbDataReader reader,
             string tableName,
             IEnumerable<BulkInsertMapItem> mapItems = null,
@@ -2584,6 +2486,63 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new data in the database (certain fields only).
         /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public static object InlineInsert(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineInsertInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public static TResult InlineInsert<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineInsertInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -2746,7 +2705,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InlineInsertInternalAsync<TEntity, object>(connection: connection,
+            return InlineInsertAsyncInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2774,7 +2733,64 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InlineInsertInternalAsync<TEntity, TResult>(connection: connection,
+            return InlineInsertAsyncInternal<TEntity, TResult>(connection: connection,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only) in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public static Task<object> InlineInsertAsync(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineInsertAsyncInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only) in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public static Task<TResult> InlineInsertAsync<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineInsertAsyncInternal<TResult>(connection: connection,
+                tableName: tableName,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2794,7 +2810,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
-        internal static async Task<TResult> InlineInsertInternalAsync<TEntity, TResult>(this IDbConnection connection,
+        internal static Task<TResult> InlineInsertAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             object entity,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -2803,12 +2819,81 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var commandType = CommandType.Text;
             var request = new InlineInsertRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
                 statementBuilder);
             var commandText = CommandTextCache.GetInlineInsertText<TEntity>(request);
+
+            // Return the value from base method
+            return InlineInsertInternalAsyncBase<TResult>(connection: connection,
+                commandText: commandText,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only) in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static Task<TResult> InlineInsertAsyncInternal<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Variables
+            var request = new InlineInsertRequest(tableName,
+                connection,
+                entity?.AsFields(),
+                statementBuilder);
+            var commandText = CommandTextCache.GetInlineInsertText(request);
+
+            // Return the value from base method
+            return InlineInsertInternalAsyncBase<TResult>(connection: connection,
+                commandText: commandText,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static async Task<TResult> InlineInsertInternalAsyncBase<TResult>(this IDbConnection connection,
+            string commandText,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Variables
+            var commandType = CommandType.Text;
 
             // Before Execution
             if (trace != null)
