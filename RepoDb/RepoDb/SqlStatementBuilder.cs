@@ -177,12 +177,50 @@ namespace RepoDb
         public string CreateDeleteAll<TEntity>(QueryBuilder queryBuilder)
             where TEntity : class
         {
+            return CreateDeleteAll(queryBuilder, ClassMappedNameCache.Get<TEntity>());
+        }
+
+        /// <summary>
+        /// Creates a SQL Statement for repository delete-all operation that is meant for SQL Server.
+        /// </summary>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A string containing the composed SQL Statement for delete-all operation.</returns>
+        public string CreateDeleteAll(QueryBuilder queryBuilder,
+            string tableName)
+        {
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Delete()
                 .From()
-                .TableNameFrom<TEntity>()
+                .TableNameFrom(tableName)
+                .End();
+            return queryBuilder.GetString();
+        }
+
+        #endregion
+
+        #region CreateInlineDelete
+
+        /// <summary>
+        /// Creates a SQL Statement for repository inline-delete operation that is meant for SQL Server.
+        /// </summary>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression for SQL statement.</param>
+        /// <returns>A string containing the composed SQL Statement for delete operation.</returns>
+        public string CreateInlineDelete(QueryBuilder queryBuilder,
+            string tableName,
+            QueryGroup where = null)
+        {
+            queryBuilder = queryBuilder ?? new QueryBuilder();
+            queryBuilder
+                .Clear()
+                .Delete()
+                .From()
+                .TableNameFrom(tableName)
+                .WhereFrom(where)
                 .End();
             return queryBuilder.GetString();
         }

@@ -68,6 +68,12 @@ namespace RepoDb.Interfaces
         void BeforeExecuteScalar(CancellableTraceLog log);
 
         /// <summary>
+        /// A method being raised before the actual inline-delete operation execution.
+        /// </summary>
+        /// <param name="log">The cancellable log object referenced by the inline-delete execution.</param>
+        void BeforeInlineDelete(CancellableTraceLog log);
+
+        /// <summary>
         /// A method being raised before the actual inline-insert operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the inline-insert execution.</param>
@@ -179,6 +185,12 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="log">The log object referenced by the execute scalar execution.</param>
         void AfterExecuteScalar(TraceLog log);
+
+        /// <summary>
+        /// A method being raised after the actual inline-delete operation execution.
+        /// </summary>
+        /// <param name="log">The log object referenced by the inline-delete execution.</param>
+        void AfterInlineDelete(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual inline-insert operation execution.

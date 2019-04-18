@@ -153,7 +153,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQuery<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -192,7 +192,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQuery<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -231,7 +231,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQuery<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -270,7 +270,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQuery<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -478,7 +478,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -516,7 +516,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -555,7 +555,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -594,7 +594,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -632,7 +632,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return BatchQueryInternalAsync<TEntity>(connection: connection,
+            return BatchQueryAsyncInternal<TEntity>(connection: connection,
                 where: where,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -659,7 +659,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        internal static Task<IEnumerable<TEntity>> BatchQueryInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<IEnumerable<TEntity>> BatchQueryAsyncInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
             int page,
             int rowsPerBatch,
@@ -714,7 +714,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteQueryInternalAsync<TEntity>(connection: connection,
+            var result = ExecuteQueryAsyncInternal<TEntity>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1014,7 +1014,7 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            return BulkInsertInternalAsync<TEntity>(connection: connection,
+            return BulkInsertAsyncInternal<TEntity>(connection: connection,
                 entities: entities,
                 mapItems: mappings,
                 commandTimeout: commandTimeout,
@@ -1038,7 +1038,7 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            return BulkInsertInternalAsync<TEntity>(connection: connection,
+            return BulkInsertAsyncInternal<TEntity>(connection: connection,
                 reader: reader,
                 mapItems: mappings,
                 commandTimeout: commandTimeout,
@@ -1062,7 +1062,7 @@ namespace RepoDb
             int? commandTimeout = null,
             ITrace trace = null)
         {
-            return BulkInsertInternalAsync(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
                 reader: reader,
                 mapItems: mappings,
@@ -1080,14 +1080,14 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<int> BulkInsertAsyncInternal<TEntity>(this IDbConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mapItems = null,
             int? commandTimeout = null,
             ITrace trace = null)
             where TEntity : class
         {
-            return BulkInsertInternalAsync(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
                 mapItems: mapItems,
@@ -1105,7 +1105,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static async Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
+        internal static async Task<int> BulkInsertAsyncInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mapItems = null,
             int? commandTimeout = null,
@@ -1190,7 +1190,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static async Task<int> BulkInsertInternalAsync(this IDbConnection connection,
+        internal static async Task<int> BulkInsertAsyncInternal(this IDbConnection connection,
             DbDataReader reader,
             string tableName,
             IEnumerable<BulkInsertMapItem> mapItems = null,
@@ -1308,7 +1308,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Count<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1338,7 +1338,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Count<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1368,7 +1368,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Count<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1398,7 +1398,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Count<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1566,7 +1566,7 @@ namespace RepoDb
             where TEntity : class
         {
             return CountAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1596,7 +1596,7 @@ namespace RepoDb
             where TEntity : class
         {
             return CountAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1626,7 +1626,7 @@ namespace RepoDb
             where TEntity : class
         {
             return CountAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1656,7 +1656,7 @@ namespace RepoDb
             where TEntity : class
         {
             return CountAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1685,7 +1685,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountInternalAsync<TEntity>(connection: connection,
+            return CountAsyncInternal<TEntity>(connection: connection,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -1706,7 +1706,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        internal static Task<long> CountInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<long> CountAsyncInternal<TEntity>(this IDbConnection connection,
             QueryGroup where, int? commandTimeout = null,
             string hints = null,
             IDbTransaction transaction = null,
@@ -1751,7 +1751,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternalAsync<long>(connection: connection,
+            var result = ExecuteScalarAsyncInternal<long>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1778,6 +1778,34 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int Delete<TEntity>(this IDbConnection connection,
+            object whereOrPrimaryKey,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            GetAndGuardPrimaryKey<TEntity>();
+            return Delete<TEntity>(connection: connection,
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -1793,7 +1821,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1820,7 +1848,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(GetAndGuardPrimaryKey<TEntity>(), entity),
+                where: ToQueryGroup(GetAndGuardPrimaryKey<TEntity>(), entity),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1847,7 +1875,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1874,35 +1902,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Deletes an existing data from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection,
-            object whereOrPrimaryKey,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            GetAndGuardPrimaryKey<TEntity>();
-            return Delete<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2018,114 +2018,6 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            Expression<Func<TEntity, bool>> where,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return DeleteAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The actual instance of the data entity.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            TEntity entity,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return DeleteAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(GetAndGuardPrimaryKey<TEntity>(), entity),
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            QueryField where,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return DeleteAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return DeleteAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2159,6 +2051,114 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, bool>> where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return DeleteAsync<TEntity>(connection: connection,
+                where: ToQueryGroup(where),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The actual instance of the data entity.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return DeleteAsync<TEntity>(connection: connection,
+                where: ToQueryGroup(GetAndGuardPrimaryKey<TEntity>(), entity),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+            QueryField where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return DeleteAsync<TEntity>(connection: connection,
+                where: ToQueryGroup(where),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+            IEnumerable<QueryField> where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return DeleteAsync<TEntity>(connection: connection,
+                where: ToQueryGroup(where),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -2166,7 +2166,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return DeleteInternalAsync<TEntity>(connection: connection,
+            return DeleteAsyncInternal<TEntity>(connection: connection,
                 where: where,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2185,7 +2185,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static Task<int> DeleteInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<int> DeleteAsyncInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -2229,7 +2229,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQueryInternalAsync(connection: connection,
+            var result = ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -2357,7 +2357,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return DeleteAllInternalAsync<TEntity>(connection: connection,
+            return DeleteAllAsyncInternal<TEntity>(connection: connection,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2374,7 +2374,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static Task<int> DeleteAllInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<int> DeleteAllAsyncInternal<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2408,7 +2408,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQueryInternalAsync(connection: connection,
+            var result = ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -2418,6 +2418,384 @@ namespace RepoDb
             if (trace != null)
             {
                 trace.AfterDeleteAll(new TraceLog(commandText, null, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region InlineDelete
+
+        /// <summary>
+        /// Deletes an existing data from the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int InlineDelete(this IDbConnection connection,
+            string tableName,
+            object where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineDelete(connection: connection,
+                tableName: tableName,
+                where: ToQueryGroup(where),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int InlineDelete<TEntity>(this IDbConnection connection,
+            string tableName,
+            QueryField where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineDelete(connection: connection,
+                tableName: tableName,
+                where: ToQueryGroup(where),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int InlineDelete(this IDbConnection connection,
+            string tableName,
+            IEnumerable<QueryField> where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineDelete(connection: connection,
+                tableName: tableName,
+                where: ToQueryGroup(where),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int InlineDelete(this IDbConnection connection,
+            string tableName,
+            QueryGroup where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineDeleteInternal(connection: connection,
+                tableName: tableName,
+                where: where,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static int InlineDeleteInternal(this IDbConnection connection,
+            string tableName,
+            QueryGroup where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Variables
+            var commandType = CommandType.Text;
+            var request = new DeleteRequest(tableName,
+                connection,
+                where,
+                statementBuilder);
+            var commandText = CommandTextCache.GetDeleteText(request);
+            var param = (object)null;
+
+            // Converts to propery mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo(null) });
+            }
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeInlineDelete(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return 0;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = ExecuteNonQueryInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction);
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterInlineDelete(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region InlineDeleteAsync
+
+        /// <summary>
+        /// Deletes an existing data from the database in asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> InlineDeleteAsync(this IDbConnection connection,
+            string tableName,
+            object where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineDeleteAsync(connection: connection,
+                tableName: tableName,
+                where: ToQueryGroup(where),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> InlineDeleteAsync<TEntity>(this IDbConnection connection,
+            string tableName,
+            QueryField where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineDeleteAsync(connection: connection,
+                tableName: tableName,
+                where: ToQueryGroup(where),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> InlineDeleteAsync(this IDbConnection connection,
+            string tableName,
+            IEnumerable<QueryField> where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineDeleteAsync(connection: connection,
+                tableName: tableName,
+                where: ToQueryGroup(where),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> InlineDeleteAsync(this IDbConnection connection,
+            string tableName,
+            QueryGroup where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineDeleteAsyncInternal(connection: connection,
+                tableName: tableName,
+                where: where,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static async Task<int> InlineDeleteAsyncInternal(this IDbConnection connection,
+            string tableName,
+            QueryGroup where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Variables
+            var commandType = CommandType.Text;
+            var request = new DeleteRequest(tableName,
+                connection,
+                where,
+                statementBuilder);
+            var commandText = CommandTextCache.GetDeleteText(request);
+            var param = (object)null;
+
+            // Converts to propery mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo(null) });
+            }
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeInlineDelete(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return 0;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = await ExecuteNonQueryAsyncInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction);
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterInlineDelete(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2827,7 +3205,7 @@ namespace RepoDb
             var commandText = CommandTextCache.GetInlineInsertText<TEntity>(request);
 
             // Return the value from base method
-            return InlineInsertInternalAsyncBase<TResult>(connection: connection,
+            return InlineInsertAsyncInternalBase<TResult>(connection: connection,
                 commandText: commandText,
                 entity: entity,
                 commandTimeout: commandTimeout,
@@ -2864,7 +3242,7 @@ namespace RepoDb
             var commandText = CommandTextCache.GetInlineInsertText(request);
 
             // Return the value from base method
-            return InlineInsertInternalAsyncBase<TResult>(connection: connection,
+            return InlineInsertAsyncInternalBase<TResult>(connection: connection,
                 commandText: commandText,
                 entity: entity,
                 commandTimeout: commandTimeout,
@@ -2885,7 +3263,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
-        internal static async Task<TResult> InlineInsertInternalAsyncBase<TResult>(this IDbConnection connection,
+        internal static async Task<TResult> InlineInsertAsyncInternalBase<TResult>(this IDbConnection connection,
             string commandText,
             object entity,
             int? commandTimeout = null,
@@ -2917,7 +3295,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = await ExecuteScalarInternalAsync(connection: connection,
+            var result = await ExecuteScalarAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: entity,
                 commandType: commandType,
@@ -3186,7 +3564,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InlineMergeInternalAsync<TEntity>(connection: connection,
+            return InlineMergeAsyncInternal<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
@@ -3207,7 +3585,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static Task<int> InlineMergeInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<int> InlineMergeAsyncInternal<TEntity>(this IDbConnection connection,
             object entity,
             IEnumerable<Field> qualifiers,
             int? commandTimeout = null,
@@ -3247,7 +3625,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQueryInternalAsync(connection: connection,
+            var result = ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: entity,
                 commandType: commandType,
@@ -3322,7 +3700,7 @@ namespace RepoDb
         {
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3351,7 +3729,7 @@ namespace RepoDb
         {
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3381,7 +3759,7 @@ namespace RepoDb
         {
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3545,7 +3923,7 @@ namespace RepoDb
         {
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3574,7 +3952,7 @@ namespace RepoDb
         {
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3604,7 +3982,7 @@ namespace RepoDb
         {
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3632,7 +4010,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InlineUpdateInternalAsync<TEntity>(connection: connection,
+            return InlineUpdateAsyncInternal<TEntity>(connection: connection,
                 entity: entity,
                 where: where,
                 commandTimeout: commandTimeout,
@@ -3653,7 +4031,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static Task<int> InlineUpdateInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<int> InlineUpdateAsyncInternal<TEntity>(this IDbConnection connection,
             object entity,
             QueryGroup where,
             int? commandTimeout = null,
@@ -3693,7 +4071,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQueryInternalAsync(connection: connection,
+            var result = ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -3878,7 +4256,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertInternalAsync<TEntity, object>(connection: connection,
+            return InsertAsyncInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3909,7 +4287,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertInternalAsync<TEntity, TResult>(connection: connection,
+            return InsertAsyncInternal<TEntity, TResult>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3932,7 +4310,7 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        internal static async Task<TResult> InsertInternalAsync<TEntity, TResult>(this IDbConnection connection,
+        internal static async Task<TResult> InsertAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -3969,7 +4347,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = await ExecuteScalarInternalAsync(connection: connection,
+            var result = await ExecuteScalarAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -4240,7 +4618,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeInternalAsync(connection: connection,
+            return MergeAsyncInternal(connection: connection,
                 entity: entity,
                 qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
@@ -4261,7 +4639,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static Task<int> MergeInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<int> MergeAsyncInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             int? commandTimeout = null,
@@ -4303,7 +4681,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQueryInternalAsync(connection: connection,
+            var result = ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -4452,7 +4830,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -4500,7 +4878,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -4547,7 +4925,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null) where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -4852,7 +5230,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -4900,7 +5278,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -4947,7 +5325,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null) where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -4994,7 +5372,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return QueryInternalAsync<TEntity>(connection: connection,
+            return QueryAsyncInternal<TEntity>(connection: connection,
                 where: where,
                 orderBy: orderBy,
                 top: top,
@@ -5028,7 +5406,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        internal static Task<IEnumerable<TEntity>> QueryInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<IEnumerable<TEntity>> QueryAsyncInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -5094,7 +5472,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteQueryInternalAsync<TEntity>(connection: connection,
+            var result = ExecuteQueryAsyncInternal<TEntity>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -6874,7 +7252,7 @@ namespace RepoDb
             where T1 : class
             where T2 : class
         {
-            return QueryMultipleInternalAsync<T1, T2>(connection: connection,
+            return QueryMultipleAsyncInternal<T1, T2>(connection: connection,
                 where1: QueryGroup.Parse<T1>(where1),
                 where2: QueryGroup.Parse<T2>(where2),
                 orderBy1: orderBy1,
@@ -6908,7 +7286,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleInternalAsync<T1, T2>(this IDbConnection connection,
+        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsyncInternal<T1, T2>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             IEnumerable<OrderField> orderBy1 = null,
@@ -6987,7 +7365,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>>)null;
-            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -7065,7 +7443,7 @@ namespace RepoDb
             where T2 : class
             where T3 : class
         {
-            return QueryMultipleInternalAsync<T1, T2, T3>(connection: connection,
+            return QueryMultipleAsyncInternal<T1, T2, T3>(connection: connection,
                 where1: QueryGroup.Parse<T1>(where1),
                 where2: QueryGroup.Parse<T2>(where2),
                 where3: QueryGroup.Parse<T3>(where3),
@@ -7108,7 +7486,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleInternalAsync<T1, T2, T3>(this IDbConnection connection,
+        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsyncInternal<T1, T2, T3>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -7205,7 +7583,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>)null;
-            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -7298,7 +7676,7 @@ namespace RepoDb
             where T3 : class
             where T4 : class
         {
-            return QueryMultipleInternalAsync<T1, T2, T3, T4>(connection: connection,
+            return QueryMultipleAsyncInternal<T1, T2, T3, T4>(connection: connection,
                 where1: QueryGroup.Parse<T1>(where1),
                 where2: QueryGroup.Parse<T2>(where2),
                 where3: QueryGroup.Parse<T3>(where3),
@@ -7351,7 +7729,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleInternalAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<T1, T2, T3, T4>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -7466,7 +7844,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>)null;
-            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -7573,7 +7951,7 @@ namespace RepoDb
             where T4 : class
             where T5 : class
         {
-            return QueryMultipleInternalAsync<T1, T2, T3, T4, T5>(connection: connection,
+            return QueryMultipleAsyncInternal<T1, T2, T3, T4, T5>(connection: connection,
                 where1: QueryGroup.Parse<T1>(where1),
                 where2: QueryGroup.Parse<T2>(where2),
                 where3: QueryGroup.Parse<T3>(where3),
@@ -7635,7 +8013,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleInternalAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<T1, T2, T3, T4, T5>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -7768,7 +8146,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>)null;
-            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -7889,7 +8267,7 @@ namespace RepoDb
             where T5 : class
             where T6 : class
         {
-            return QueryMultipleInternalAsync<T1, T2, T3, T4, T5, T6>(connection: connection,
+            return QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6>(connection: connection,
                 where1: QueryGroup.Parse<T1>(where1),
                 where2: QueryGroup.Parse<T2>(where2),
                 where3: QueryGroup.Parse<T3>(where3),
@@ -7960,7 +8338,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleInternalAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -8111,7 +8489,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>)null;
-            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -8247,7 +8625,7 @@ namespace RepoDb
             where T6 : class
             where T7 : class
         {
-            return QueryMultipleInternalAsync<T1, T2, T3, T4, T5, T6, T7>(connection: connection,
+            return QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6, T7>(connection: connection,
                 where1: QueryGroup.Parse<T1>(where1),
                 where2: QueryGroup.Parse<T2>(where2),
                 where3: QueryGroup.Parse<T3>(where3),
@@ -8327,7 +8705,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleInternalAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -8496,7 +8874,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>)null;
-            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -8647,7 +9025,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return TruncateInternalAsync<TEntity>(connection: connection,
+            return TruncateAsyncInternal<TEntity>(connection: connection,
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -8662,7 +9040,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>The number of rows affected by this operation.</returns>
-        internal static Task<int> TruncateInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<int> TruncateAsyncInternal<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -8694,7 +9072,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQueryInternalAsync(connection: connection,
+            var result = ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: null,
                 commandType: commandType,
@@ -8767,7 +9145,7 @@ namespace RepoDb
         {
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -8827,7 +9205,7 @@ namespace RepoDb
         {
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -9019,7 +9397,7 @@ namespace RepoDb
         {
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -9079,7 +9457,7 @@ namespace RepoDb
         {
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(where),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -9139,7 +9517,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return UpdateInternalAsync<TEntity>(connection: connection,
+            return UpdateAsyncInternal<TEntity>(connection: connection,
                 entity: entity,
                 where: where,
                 commandTimeout: commandTimeout,
@@ -9160,7 +9538,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static Task<int> UpdateInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<int> UpdateAsyncInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
             int? commandTimeout = null,
@@ -9199,7 +9577,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQueryInternalAsync(connection: connection,
+            var result = ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -9311,7 +9689,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return ExecuteQueryInternalAsync(connection: connection,
+            return ExecuteQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -9335,7 +9713,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        internal static async Task<IEnumerable<object>> ExecuteQueryInternalAsync(this IDbConnection connection,
+        internal static async Task<IEnumerable<object>> ExecuteQueryAsyncInternal(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -9451,7 +9829,7 @@ namespace RepoDb
             IDbTransaction transaction = null)
             where TEntity : class
         {
-            return ExecuteQueryInternalAsync<TEntity>(connection: connection,
+            return ExecuteQueryAsyncInternal<TEntity>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -9476,7 +9854,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        internal static async Task<IEnumerable<TEntity>> ExecuteQueryInternalAsync<TEntity>(this IDbConnection connection,
+        internal static async Task<IEnumerable<TEntity>> ExecuteQueryAsyncInternal<TEntity>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -9546,7 +9924,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            var reader = await ExecuteReaderInternalAsync(connection,
+            var reader = await ExecuteReaderAsyncInternal(connection,
                 commandText,
                 param,
                 commandType,
@@ -9635,7 +10013,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return ExecuteReaderInternalAsync(connection: connection,
+            return ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -9657,7 +10035,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns><returns>The instance of the <see cref="IDataReader"/> object.</returns></returns>
-        internal static async Task<IDataReader> ExecuteReaderInternalAsync(this IDbConnection connection,
+        internal static async Task<IDataReader> ExecuteReaderAsyncInternal(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -9755,7 +10133,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return ExecuteNonQueryInternalAsync(connection: connection,
+            return ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -9777,7 +10155,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static async Task<int> ExecuteNonQueryInternalAsync(this IDbConnection connection,
+        internal static async Task<int> ExecuteNonQueryAsyncInternal(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -9875,7 +10253,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return ExecuteScalarInternalAsync(connection: connection,
+            return ExecuteScalarAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -9897,7 +10275,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        internal static async Task<object> ExecuteScalarInternalAsync(this IDbConnection connection,
+        internal static async Task<object> ExecuteScalarAsyncInternal(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -9997,7 +10375,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return ExecuteScalarInternalAsync<T>(connection: connection,
+            return ExecuteScalarAsyncInternal<T>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -10019,7 +10397,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
-        internal static async Task<T> ExecuteScalarInternalAsync<T>(this IDbConnection connection,
+        internal static async Task<T> ExecuteScalarAsyncInternal<T>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -10083,11 +10461,9 @@ namespace RepoDb
         /// <summary>
         /// Converts the primary key to <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The dynamic expression.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup ToQueryGroup<TEntity>(object where)
-            where TEntity : class
+        private static QueryGroup ToQueryGroup(object where)
         {
             if (where == null)
             {
@@ -10099,7 +10475,7 @@ namespace RepoDb
             }
             else
             {
-                throw new InvalidOperationException("Only dynamic object is supported in the 'where' expression.");
+                throw new InvalidOperationException("Only dynamic object is not supported in the 'where' expression.");
             }
         }
 
@@ -10139,11 +10515,9 @@ namespace RepoDb
         /// <summary>
         /// Converts the <see cref="QueryField"/> to become a <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The instance of <see cref="QueryField"/> to be converted.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup ToQueryGroup<TEntity>(QueryField field)
-            where TEntity : class
+        private static QueryGroup ToQueryGroup(QueryField field)
         {
             if (field == null)
             {
@@ -10155,11 +10529,9 @@ namespace RepoDb
         /// <summary>
         /// Converts the <see cref="QueryField"/> to become a <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="fields">The list of <see cref="QueryField"/> objects to be converted.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup ToQueryGroup<TEntity>(IEnumerable<QueryField> fields)
-            where TEntity : class
+        private static QueryGroup ToQueryGroup(IEnumerable<QueryField> fields)
         {
             if (fields == null)
             {

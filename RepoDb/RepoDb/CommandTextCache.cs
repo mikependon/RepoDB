@@ -9,11 +9,13 @@ using System.Linq;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to cache the composed command text used by the library.
+    /// A class used to cache the already-built command texts.
     /// </summary>
     internal static class CommandTextCache
     {
         private static readonly ConcurrentDictionary<BaseRequest, string> m_cache = new ConcurrentDictionary<BaseRequest, string>();
+
+        #region GetBatchQueryText
 
         /// <summary>
         /// Gets a command text from the cache for the batch query operation.
@@ -38,6 +40,10 @@ namespace RepoDb
             return commandText;
         }
 
+        #endregion
+
+        #region GetCountText
+
         /// <summary>
         /// Gets a command text from the cache for the count operation.
         /// </summary>
@@ -57,6 +63,10 @@ namespace RepoDb
             }
             return commandText;
         }
+
+        #endregion
+
+        #region GetDeleteText
 
         /// <summary>
         /// Gets a command text from the cache for the delete operation.
@@ -78,6 +88,10 @@ namespace RepoDb
             return commandText;
         }
 
+        #endregion
+
+        #region GetDeleteAllText
+
         /// <summary>
         /// Gets a command text from the cache for the delete-all operation.
         /// </summary>
@@ -96,6 +110,33 @@ namespace RepoDb
             }
             return commandText;
         }
+
+        #endregion
+
+        #region GetInlineDelete
+
+        /// <summary>
+        /// Gets a command text from the cache for the delete operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetDeleteText(DeleteRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateInlineDelete(new QueryBuilder(),
+                    request.Name,
+                    request.Where);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
+        #region GetInlineInsertText
 
         /// <summary>
         /// Gets a command text from the cache for the inline-insert operation.
@@ -140,6 +181,10 @@ namespace RepoDb
             return commandText;
         }
 
+        #endregion
+
+        #region GetInlineMergeText
+
         /// <summary>
         /// Gets a command text from the cache for the inline-merge operation.
         /// </summary>
@@ -162,6 +207,10 @@ namespace RepoDb
             }
             return commandText;
         }
+
+        #endregion
+
+        #region GetInlineUpdateText
 
         /// <summary>
         /// Gets a command text from the cache for the inline-update operation.
@@ -188,6 +237,10 @@ namespace RepoDb
             return commandText;
         }
 
+        #endregion
+
+        #region GetInsertText
+
         /// <summary>
         /// Gets a command text from the cache for the insert operation.
         /// </summary>
@@ -207,6 +260,10 @@ namespace RepoDb
             }
             return commandText;
         }
+
+        #endregion
+
+        #region GetMergeText
 
         /// <summary>
         /// Gets a command text from the cache for the merge operation.
@@ -229,6 +286,10 @@ namespace RepoDb
             }
             return commandText;
         }
+
+        #endregion
+
+        #region GetQueryText
 
         /// <summary>
         /// Gets a command text from the cache for the query operation.
@@ -253,6 +314,10 @@ namespace RepoDb
             return commandText;
         }
 
+        #endregion
+
+        #region GetQueryMultipleText
+
         /// <summary>
         /// Gets a command text from the cache for the query-multiple operation.
         /// </summary>
@@ -276,6 +341,10 @@ namespace RepoDb
             return commandText;
         }
 
+        #endregion
+
+        #region GetTruncateText
+
         /// <summary>
         /// Gets a command text from the cache for the truncate operation.
         /// </summary>
@@ -294,6 +363,10 @@ namespace RepoDb
             }
             return commandText;
         }
+
+        #endregion
+
+        #region GetUpdateText
 
         /// <summary>
         /// Gets a command text from the cache for the update operation.
@@ -319,6 +392,10 @@ namespace RepoDb
             return commandText;
         }
 
+        #endregion
+
+        #region Helpers
+
         /// <summary>
         /// Throws an exception of the builder is not defined.
         /// </summary>
@@ -334,5 +411,7 @@ namespace RepoDb
             }
             return builder;
         }
+
+        #endregion
     }
 }

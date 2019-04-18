@@ -70,6 +70,17 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
+        /// Creates a SQL Statement for repository inline-delete operation.
+        /// </summary>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression for SQL statement.</param>
+        /// <returns>A string containing the composed SQL Statement for delete operation.</returns>
+        string CreateInlineDelete(QueryBuilder queryBuilder,
+            string tableName,
+            QueryGroup where = null);
+
+        /// <summary>
         /// Creates a SQL Statement for repository inline-insert operation.
         /// </summary>
         /// <typeparam name="TEntity">

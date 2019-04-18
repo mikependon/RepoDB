@@ -19,7 +19,18 @@ namespace RepoDb.Requests
         /// <param name="where">The query expression.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public DeleteRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
+            : this(entityType.FullName, connection, where, statementBuilder)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DeleteRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public DeleteRequest(string name, IDbConnection connection, QueryGroup where = null, IStatementBuilder statementBuilder = null)
+            : base(name, connection, statementBuilder)
         {
             Where = where;
         }
