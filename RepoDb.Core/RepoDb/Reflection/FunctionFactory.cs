@@ -2,6 +2,7 @@
 using RepoDb.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
@@ -19,9 +20,10 @@ namespace RepoDb.Reflection
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The target entity type.</typeparam>
-        /// <param name="reader">The data reader object.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>The entity instance with the converted values from the data reader.</returns>
-        public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader)
+        public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader, IDbConnection connection)
             where TEntity : class
         {
             // Expression variables
@@ -39,7 +41,7 @@ namespace RepoDb.Reflection
                 });
 
             // Get the member assignments
-            var memberAssignments = GetMemberAssignments<TEntity>(newEntityExpression, readerParameterExpression, readerFields);
+            var memberAssignments = GetMemberAssignments<TEntity>(newEntityExpression, readerParameterExpression, readerFields, connection);
 
             // Throw an error if there are no matching atleast one
             if (memberAssignments.Any() == false)
@@ -63,15 +65,18 @@ namespace RepoDb.Reflection
         /// <param name="newEntityExpression">The new entity expression.</param>
         /// <param name="readerParameterExpression">The data reader parameter.</param>
         /// <param name="readerFields">The list of fields to be bound from the data reader.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>The enumerable list of member assignment and bindings.</returns>
         private static IEnumerable<MemberAssignment> GetMemberAssignments<TEntity>(Expression newEntityExpression,
-            ParameterExpression readerParameterExpression, IEnumerable<DataReaderFieldDefinition> readerFields)
+            ParameterExpression readerParameterExpression,
+            IEnumerable<DataReaderFieldDefinition> readerFields,
+            IDbConnection connection)
             where TEntity : class
         {
             // Initialize variables
             var memberAssignments = new List<MemberAssignment>();
             var dataReaderType = typeof(DbDataReader);
-            var tableFields = FieldDefinitionCache.Get<TEntity>();
+            var tableFields = DbFieldCache.Get<TEntity>(connection);
             var isStrict = TypeMapper.ConversionType == ConversionType.Default;
 
             // Iterate each properties
@@ -150,51 +155,7 @@ namespace RepoDb.Reflection
                             }
                             else
                             {
-                                // Variables needed
-                                var targetInstance = (Expression)null;
-                                var targetMethod = (MethodInfo)null;
-                                var targetParameter = (Expression)null;
-
-                                // Identify if the target type is 'Guid'
-                                if (propertyType == typeof(Guid) && readerField.Type == typeof(string))
-                                {
-                                    // This is Guid.Parse()
-                                    targetMethod = typeof(Guid).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
-                                    targetInstance = null;
-                                    targetParameter = falseExpression;
-                                }
-                                else if (propertyType == typeof(string) && readerField.Type == typeof(Guid))
-                                {
-                                    // This is Guid.ToString()
-                                    targetMethod = typeof(Guid).GetTypeInfo().GetMethod("ToString", new Type[0]);
-                                    targetInstance = falseExpression;
-                                    targetParameter = null;
-                                }
-                                else
-                                {
-                                    // This System.Convert.To<Type>()
-                                    targetMethod = typeof(Convert).GetTypeInfo().GetMethod(string.Concat("To", propertyType.Name), new[] { convertType });
-                                    targetInstance = null;
-                                    targetParameter = falseExpression;
-                                }
-
-                                // If there are methods found from System.Convert(), then use it, otherwise use the normal
-                                if (targetMethod != null)
-                                {
-                                    if (targetParameter == null)
-                                    {
-                                        falseExpression = Expression.Call(targetInstance, targetMethod);
-                                    }
-                                    else
-                                    {
-                                        falseExpression = Expression.Call(targetInstance, targetMethod, targetParameter);
-                                    }
-                                }
-                                else
-                                {
-                                    // There are coersion problem on certain types (i.e: Guid-to-String (vice versa))
-                                    falseExpression = Expression.Convert(falseExpression, propertyType);
-                                }
+                                falseExpression = Convert(falseExpression, readerField, propertyType, convertType);
                             }
                         }
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
@@ -216,7 +177,7 @@ namespace RepoDb.Reflection
                         // Convert to correct type if necessary
                         if (isConversionNeeded == true)
                         {
-                            valueExpression = Expression.Convert(valueExpression, propertyType);
+                            valueExpression = Convert(valueExpression, readerField, propertyType, convertType);
                         }
 
                         // Set for the 'Nullable' property
@@ -234,6 +195,67 @@ namespace RepoDb.Reflection
 
             // Return the result
             return memberAssignments;
+        }
+
+        private static Expression Convert(Expression falseExpression, DataReaderFieldDefinition readerField,
+            Type propertyType, Type convertType)
+        {
+            var result = (Expression)null;
+
+            if (TypeMapper.ConversionType == ConversionType.Default == true)
+            {
+                result = Expression.Convert(falseExpression, propertyType);
+            }
+            else
+            {
+                // Variables needed
+                var targetInstance = (Expression)null;
+                var targetMethod = (MethodInfo)null;
+                var targetParameter = (Expression)null;
+
+                // Identify if the target type is 'Guid'
+                if (propertyType == typeof(Guid) && readerField.Type == typeof(string))
+                {
+                    // This is Guid.Parse()
+                    targetMethod = typeof(Guid).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
+                    targetInstance = null;
+                    targetParameter = falseExpression;
+                }
+                else if (propertyType == typeof(string) && readerField.Type == typeof(Guid))
+                {
+                    // This is Guid.ToString()
+                    targetMethod = typeof(Guid).GetTypeInfo().GetMethod("ToString", new Type[0]);
+                    targetInstance = falseExpression;
+                    targetParameter = null;
+                }
+                else
+                {
+                    // This System.Convert.To<Type>()
+                    targetMethod = typeof(Convert).GetTypeInfo().GetMethod(string.Concat("To", propertyType.Name), new[] { convertType });
+                    targetInstance = null;
+                    targetParameter = falseExpression;
+                }
+
+                // If there are methods found from System.Convert(), then use it, otherwise use the normal
+                if (targetMethod != null)
+                {
+                    if (targetParameter == null)
+                    {
+                        result = Expression.Call(targetInstance, targetMethod);
+                    }
+                    else
+                    {
+                        result = Expression.Call(targetInstance, targetMethod, targetParameter);
+                    }
+                }
+                else
+                {
+                    // There are coersion problem on certain types (i.e: Guid-to-String (vice versa))
+                    result = Expression.Convert(falseExpression, propertyType);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>

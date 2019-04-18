@@ -71,7 +71,6 @@
     <Compile Include="DbIdentityCache.cs" />
     <Compile Include="IdentityCache.cs" />
     <Compile Include="Interfaces\IDbHelper.cs" />
-    <Compile Include="NamespaceConstant.cs" />
     <Compile Include="PrimaryKeyCache.cs" />
     <Compile Include="CommandTextCache.cs" />
     <Compile Include="Constant.cs" />

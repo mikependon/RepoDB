@@ -1,4 +1,5 @@
 ﻿using RepoDb.Attributes;
+using RepoDb.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -63,18 +64,43 @@ namespace RepoDb.Extensions
         /// <param name="param">The object to be used when creating the parameters.</param>
         public static void CreateParameters(this IDbCommand command, object param)
         {
+            // Check for presence
             if (param == null)
             {
                 return;
             }
-            if (param is ExpandoObject || param is IDictionary<string, object>)
-            {
-                CreateParameters(command, (IDictionary<string, object>)param);
-            }
-            else if (param is IEnumerable<PropertyValue>)
+
+            // Supporting the IEnumerable<PropertyValue>
+            if (param is IEnumerable<PropertyValue>)
             {
                 CreateParameters(command, (IEnumerable<PropertyValue>)param);
             }
+
+            // Supporting the IDictionary<string, object>
+            else if (param is ExpandoObject || param is IDictionary<string, object>)
+            {
+                CreateParameters(command, (IDictionary<string, object>)param);
+            }
+
+            // Supporting the QueryGroup
+            else if (param is QueryGroup)
+            {
+                CreateParameters(command, (QueryGroup)param);
+            }
+
+            // Supporting the IEnumerable<QueryField>
+            else if (param is IEnumerable<QueryField>)
+            {
+                CreateParameters(command, (IEnumerable<QueryField>)param);
+            }
+
+            // Supporting the QueryField
+            else if (param is QueryField)
+            {
+                CreateParameters(command, (QueryField)param);
+            }
+
+            // Otherwise, iterate the properties
             else
             {
                 var type = param.GetType().GetTypeInfo();
@@ -97,7 +123,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Creates a parameter from object by mapping the property from the target entity type.
+        /// Create the command parameters from the <see cref="IDictionary{TKey, TValue}"/> object.
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
@@ -124,7 +150,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Creates a parameter from object by mapping the property from the target entity type.
+        /// Create the command parameters from the list of <see cref="PropertyValue"/> objects.
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="propertyValues">The list <see cref="PropertyValue"/> to be added.</param>
@@ -142,6 +168,45 @@ namespace RepoDb.Extensions
                 }
                 command.Parameters.Add(command.CreateParameter(propertyValue.Name, propertyValue.Value, dbType));
             }
+        }
+
+        /// <summary>
+        /// Create the command parameters from the <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="command">The command object to be used.</param>
+        /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
+        private static void CreateParameters(this IDbCommand command, QueryGroup queryGroup)
+        {
+            CreateParameters(command, queryGroup?.GetFields(true));
+        }
+
+        /// <summary>
+        /// Create the command parameters from the list of <see cref="QueryField"/> objects.
+        /// </summary>
+        /// <param name="command">The command object to be used.</param>
+        /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
+        private static void CreateParameters(this IDbCommand command, IEnumerable<QueryField> queryFields)
+        {
+            foreach (var queryField in queryFields)
+            {
+                CreateParameters(command, queryField);
+            }
+        }
+
+        /// <summary>
+        /// Creates a command parameter from the <see cref="QueryField"/> object.
+        /// </summary>
+        /// <param name="command">The command object to be used.</param>
+        /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
+        private static void CreateParameters(this IDbCommand command, QueryField queryField)
+        {
+            if (queryField.Operation != Operation.Equal)
+            {
+                throw new InvalidOperationException($"Operation must only be '{nameof(Operation.Equal)}' when calling the 'Execute' methods.");
+            }
+            var value = queryField.Parameter.Value;
+            var dbType = TypeMapper.Get(GetUnderlyingType(value?.GetType()))?.DbType;
+            command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType));
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using RepoDb.Interfaces;
 using System.Threading.Tasks;
 using RepoDb.Enumerations;
 using System.Linq.Expressions;
+using System.Dynamic;
 
 namespace RepoDb
 {
@@ -932,15 +933,15 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int BulkInsert<TEntity>(IEnumerable<TEntity> entities,
-IEnumerable<BulkInsertMapItem> mappings = null)
-where TEntity : class
+            IEnumerable<BulkInsertMapItem> mappings = null)
+            where TEntity : class
         {
             // Create a connection
             using (var connection = CreateConnection())
             {
                 // Call the method
                 return connection.BulkInsert<TEntity>(entities: entities,
-                    mappings: mappings,
+                    mapItems: mappings,
                     commandTimeout: CommandTimeout,
                     trace: Trace);
             }
@@ -5528,8 +5529,8 @@ where TEntity : class
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -5577,8 +5578,8 @@ where TEntity : class
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -5625,8 +5626,8 @@ where TEntity : class
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -5670,8 +5671,8 @@ where TEntity : class
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -5715,8 +5716,8 @@ where TEntity : class
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -5760,8 +5761,8 @@ where TEntity : class
         /// </summary>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -5806,8 +5807,8 @@ where TEntity : class
         /// <typeparam name="T">The target return type.</typeparam>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -5852,8 +5853,8 @@ where TEntity : class
         /// <typeparam name="T">The target return type.</typeparam>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>

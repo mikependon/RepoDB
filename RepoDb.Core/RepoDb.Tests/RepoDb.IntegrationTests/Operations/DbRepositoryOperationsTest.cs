@@ -6603,6 +6603,80 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithQueryGroupAsParameters()
+        {
+            // Setup
+            var tables = GetIdentityTables(10);
+            var last = tables.Last();
+            var param = new QueryGroup(new[]
+            {
+                new QueryField("ColumnFloat", last.ColumnFloat),
+                new QueryField("ColumnInt", last.ColumnInt)
+            });
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithQueryFieldsAsParameters()
+        {
+            // Setup
+            var tables = GetIdentityTables(10);
+            var last = tables.Last();
+            var param = new[]
+            {
+                new QueryField("ColumnFloat", last.ColumnFloat),
+                new QueryField("ColumnInt", last.ColumnInt)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithQueryFieldAsParameter()
+        {
+            // Setup
+            var tables = GetIdentityTables(10);
+            var last = tables.Last();
+            var param = new QueryField("ColumnFloat", last.ColumnFloat);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat;", param);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParameterAreInvalidTypeDictionaryObject()
         {
@@ -6610,6 +6684,19 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Setup
                 var param = new Dictionary<string, int>();
+
+                // Act
+                repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
                 repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param);
@@ -6870,6 +6957,80 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryAsyncWithQueryGroupAsParameters()
+        {
+            // Setup
+            var tables = GetIdentityTables(10);
+            var last = tables.Last();
+            var param = new QueryGroup(new[]
+            {
+                new QueryField("ColumnFloat", last.ColumnFloat),
+                new QueryField("ColumnInt", last.ColumnInt)
+            });
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryAsyncWithQueryFieldsAsParameters()
+        {
+            // Setup
+            var tables = GetIdentityTables(10);
+            var last = tables.Last();
+            var param = new[]
+            {
+                new QueryField("ColumnFloat", last.ColumnFloat),
+                new QueryField("ColumnInt", last.ColumnInt)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryAsyncWithQueryFieldAsParameter()
+        {
+            // Setup
+            var tables = GetIdentityTables(10);
+            var last = tables.Last();
+            var param = new QueryField("ColumnFloat", last.ColumnFloat);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat;", param).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParameterAreInvalidTypeDictionaryObject()
         {
@@ -6877,6 +7038,19 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Setup
                 var param = new Dictionary<string, int>();
+
+                // Act
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param).Result;
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
                 var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param).Result;

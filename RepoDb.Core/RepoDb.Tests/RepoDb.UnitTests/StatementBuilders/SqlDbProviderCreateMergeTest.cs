@@ -24,7 +24,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithoutMappingsClass>(queryBuilder, qualifiers);
+            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithoutMappingsClass>(queryBuilder, null, qualifiers);
             var expected = $"" +
                 $"MERGE [TestSqlDbProviderCreateMergeWithoutMappingsClass] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -56,7 +56,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithClassMappingsClass>(queryBuilder, qualifiers);
+            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithClassMappingsClass>(queryBuilder, null, qualifiers);
             var expected = $"" +
                 $"MERGE [ClassName] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -87,7 +87,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = (IEnumerable<Field>)null;
 
             // Act
-            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithIdFieldClass>(queryBuilder, qualifiers);
+            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithIdFieldClass>(queryBuilder, null, qualifiers);
             var expected = $"" +
                 $"MERGE [TestSqlDbProviderCreateMergeWithIdFieldClass] AS T " +
                 $"USING ( SELECT @Id AS [Id], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -119,7 +119,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = (IEnumerable<Field>)null;
 
             // Act
-            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithPrimaryKeyClass>(queryBuilder, qualifiers);
+            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithPrimaryKeyClass>(queryBuilder, null, qualifiers);
             var expected = $"" +
                 $"MERGE [TestSqlDbProviderCreateMergeWithPrimaryKeyClass] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -150,7 +150,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = (IEnumerable<Field>)null;
 
             // Act
-            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithClassIdClass>(queryBuilder, qualifiers);
+            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithClassIdClass>(queryBuilder, null, qualifiers);
             var expected = $"" +
                 $"MERGE [TestSqlDbProviderCreateMergeWithClassIdClass] AS T " +
                 $"USING ( SELECT @TestSqlDbProviderCreateMergeWithClassIdClassId AS [TestSqlDbProviderCreateMergeWithClassIdClassId], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -182,7 +182,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = (IEnumerable<Field>)null;
 
             // Act
-            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithClassMappingIdClass>(queryBuilder, qualifiers);
+            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithClassMappingIdClass>(queryBuilder, null, qualifiers);
             var expected = $"" +
                 $"MERGE [ClassName] AS T " +
                 $"USING ( SELECT @ClassNameId AS [ClassNameId], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -214,7 +214,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithFieldMappingClass>(queryBuilder, qualifiers);
+            var actual = statementBuilder.CreateMerge<TestSqlDbProviderCreateMergeWithFieldMappingClass>(queryBuilder, null, qualifiers);
             var expected = $"" +
                 $"MERGE [TestSqlDbProviderCreateMergeWithFieldMappingClass] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field4 AS [Field4] ) " +
@@ -267,7 +267,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1", "Field4");
 
             // Act/Assert
-            statementBuilder.CreateMerge<ThrowExceptionOnSqlDbProviderCreateMergeIfAtleastOneQualifierFieldIsMissingFromDataEntityClass>(queryBuilder, qualifiers);
+            statementBuilder.CreateMerge<ThrowExceptionOnSqlDbProviderCreateMergeIfAtleastOneQualifierFieldIsMissingFromDataEntityClass>(queryBuilder, null, qualifiers);
         }
 
         private class ThrowExceptionOnSqlDbProviderCreateMergeIfQualifierFieldIsNotMatchingFromMappingsClass
@@ -287,7 +287,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1", "Field3");
 
             // Act/Assert
-            statementBuilder.CreateMerge<ThrowExceptionOnSqlDbProviderCreateMergeIfQualifierFieldIsNotMatchingFromMappingsClass>(queryBuilder, qualifiers);
+            statementBuilder.CreateMerge<ThrowExceptionOnSqlDbProviderCreateMergeIfQualifierFieldIsNotMatchingFromMappingsClass>(queryBuilder, null, qualifiers);
         }
 
         private class ThrowExceptionOnSqlDbProviderCreateMergeIfTheIdentityFieldIsNotThePrimaryKeyFieldClass

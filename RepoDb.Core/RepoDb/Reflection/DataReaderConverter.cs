@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 
@@ -14,11 +15,12 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>An array of data entity objects.</returns>
-        public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader)
+        public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader, IDbConnection connection)
             where TEntity : class
         {
-            return ToEnumerable<TEntity>(reader, false);
+            return ToEnumerable<TEntity>(reader, connection, false);
         }
 
         /// <summary>
@@ -26,14 +28,15 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
         /// <returns>An array of data entity objects.</returns>
-        internal static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader, bool basedOnFields = false)
+        internal static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader, IDbConnection connection, bool basedOnFields)
             where TEntity : class
         {
             if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
-                var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader, basedOnFields);
+                var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader, connection, basedOnFields);
                 while (reader.Read())
                 {
                     yield return func(reader);
@@ -57,7 +60,7 @@ namespace RepoDb.Reflection
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
         /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
-        internal static IEnumerable<dynamic> ToEnumerable(DbDataReader reader, bool basedOnFields = false)
+        internal static IEnumerable<dynamic> ToEnumerable(DbDataReader reader, bool basedOnFields)
         {
             if (reader != null && reader.HasRows)
             {

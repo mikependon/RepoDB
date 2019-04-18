@@ -10,11 +10,17 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class IStatementBuilderForBaseRepositoryTest
     {
-        public class DataEntity
+        public class StatementBuilderForBaseRepositoryDataEntity
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
+        }
+
+        public class DataEntityRepository : BaseRepository<StatementBuilderForBaseRepositoryDataEntity, CustomDbConnection>
+        {
+            public DataEntityRepository(IStatementBuilder statementBuilder)
+                : base("Connection", statementBuilder) { }
         }
 
         // CreateBatchQuery
@@ -24,30 +30,37 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateBatchQuery<DataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<QueryGroup>(),
-                    It.IsAny<int>(),
-                    It.IsAny<int>(),
-                    It.IsAny<IEnumerable<OrderField>>(),
-                    It.IsAny<string>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.BatchQuery(0, 10, null, null);
+            repository.BatchQuery(0, 10, null, null);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateBatchQuery<DataEntity>(
+                builder.CreateBatchQuery<StatementBuilderForBaseRepositoryDataEntity>(
                     It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<IEnumerable<OrderField>>(),
                     It.IsAny<string>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.BatchQuery(0, 10, null, null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateBatchQuery<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Never);
         }
 
         // CreateCount
@@ -57,24 +70,31 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateCount<DataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<QueryGroup>(),
-                    It.IsAny<string>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.Count();
+            repository.Count();
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateCount<DataEntity>(
+                builder.CreateCount<StatementBuilderForBaseRepositoryDataEntity>(
                     It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Count();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCount<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Never);
         }
 
         // CreateDelete
@@ -84,22 +104,29 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateDelete<DataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<QueryGroup>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.Delete(e => e.Id == 1);
+            repository.Delete(e => e.Id == 1);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateDelete<DataEntity>(
+                builder.CreateDelete<StatementBuilderForBaseRepositoryDataEntity>(
                     It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Delete(e => e.Id == 1);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateDelete<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<QueryGroup>()), Times.Never);
         }
 
         // CreateDeleteAll
@@ -109,20 +136,27 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateDeleteAll<DataEntity>(
-                    It.IsAny<QueryBuilder>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.DeleteAll();
+            repository.DeleteAll();
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateDeleteAll<DataEntity>(
+                builder.CreateDeleteAll<StatementBuilderForBaseRepositoryDataEntity>(
                     It.IsAny<QueryBuilder>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.DeleteAll();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateDeleteAll<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>()), Times.Never);
         }
 
         // CreateInlineInsert
@@ -132,22 +166,31 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateInlineInsert<DataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<IEnumerable<Field>>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.InlineInsert(new { Id = 1 });
+            repository.InlineInsert(new { Id = 1 });
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateInlineInsert<DataEntity>(
+                builder.CreateInlineInsert<StatementBuilderForBaseRepositoryDataEntity>(
                     It.IsAny<QueryBuilder>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InlineInsert(new { Id = 1 });
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInlineInsert<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<IEnumerable<Field>>()), Times.Never);
         }
 
         // CreateInlineMerge
@@ -157,24 +200,33 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateInlineMerge<DataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<IEnumerable<Field>>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.InlineMerge(new { Id = 1, Name = "Name" });
+            repository.InlineMerge(new { Id = 1, Name = "Name" });
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateInlineMerge<DataEntity>(
+                builder.CreateInlineMerge<StatementBuilderForBaseRepositoryDataEntity>(
                     It.IsAny<QueryBuilder>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InlineMerge(new { Id = 1, Name = "Name" });
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInlineMerge<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>()), Times.Never);
         }
 
         // CreateInlineUpdate
@@ -184,24 +236,31 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateInlineUpdate<DataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.InlineUpdate(new { Name = "Name" }, e => e.Id == 1);
+            repository.InlineUpdate(new { Name = "Name" }, e => e.Id == 1);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateInlineUpdate<DataEntity>(
+                builder.CreateInlineUpdate<StatementBuilderForBaseRepositoryDataEntity>(
                     It.IsAny<QueryBuilder>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InlineUpdate(new { Name = "Name" }, e => e.Id == 1);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInlineUpdate<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>()), Times.Never);
         }
 
         // CreateInsert
@@ -211,20 +270,29 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateInsert<DataEntity>(
-                    It.IsAny<QueryBuilder>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.Insert(new DataEntity { Name = "Name" });
+            repository.Insert(new StatementBuilderForBaseRepositoryDataEntity { Name = "Name" });
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateInsert<DataEntity>(
-                    It.IsAny<QueryBuilder>()), Times.Once);
+                builder.CreateInsert<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<DbField>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Insert(new StatementBuilderForBaseRepositoryDataEntity { Name = "Name" });
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsert<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<DbField>()), Times.Never);
         }
 
         // CreateMerge
@@ -234,22 +302,31 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateMerge<DataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<IEnumerable<Field>>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.Merge(new DataEntity { Name = "Name" }, new Field(nameof(DataEntity.Id)));
+            repository.Merge(new StatementBuilderForBaseRepositoryDataEntity { Name = "Name" }, new Field(nameof(StatementBuilderForBaseRepositoryDataEntity.Id)));
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateMerge<DataEntity>(
+                builder.CreateMerge<StatementBuilderForBaseRepositoryDataEntity>(
                     It.IsAny<QueryBuilder>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Merge(new StatementBuilderForBaseRepositoryDataEntity { Name = "Name" }, new Field(nameof(StatementBuilderForBaseRepositoryDataEntity.Id)));
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMerge<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<IEnumerable<Field>>()), Times.Never);
         }
 
         // CreateQuery
@@ -259,28 +336,35 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateQuery<DataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<QueryGroup>(),
-                    It.IsAny<IEnumerable<OrderField>>(),
-                    It.IsAny<int>(),
-                    It.IsAny<string>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.Query(e => e.Id == 1);
+            repository.Query(e => e.Id == 1);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateQuery<DataEntity>(
+                builder.CreateQuery<StatementBuilderForBaseRepositoryDataEntity>(
                     It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<IEnumerable<OrderField>>(),
                     It.IsAny<int>(),
                     It.IsAny<string>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Query(e => e.Id == 1);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Never);
         }
 
         // CreateTruncate
@@ -290,20 +374,27 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateTruncate<DataEntity>(
-                    It.IsAny<QueryBuilder>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.Truncate();
+            repository.Truncate();
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateTruncate<DataEntity>(
+                builder.CreateTruncate<StatementBuilderForBaseRepositoryDataEntity>(
                     It.IsAny<QueryBuilder>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Truncate();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateTruncate<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>()), Times.Never);
         }
 
         // CreateUpdate
@@ -313,22 +404,29 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<BaseRepository<DataEntity, CustomDbConnection>>("ConnectionString", statementBuilder.Object);
-
-            // Setup
-            statementBuilder.Setup(builder =>
-                builder.CreateUpdate<DataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<QueryGroup>()));
+            var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Object.Update(new DataEntity { Name = "Update" }, e => e.Id == 1);
+            repository.Update(new StatementBuilderForBaseRepositoryDataEntity { Name = "Update" }, e => e.Id == 1);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateUpdate<DataEntity>(
+                builder.CreateUpdate<StatementBuilderForBaseRepositoryDataEntity>(
                     It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>()), Times.Once);
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Update(new StatementBuilderForBaseRepositoryDataEntity { Name = "Update" }, e => e.Id == 1);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateUpdate<StatementBuilderForBaseRepositoryDataEntity>(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<QueryGroup>()), Times.Never);
         }
     }
 }

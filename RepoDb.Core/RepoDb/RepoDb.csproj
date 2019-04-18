@@ -4,30 +4,33 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.9.0-beta1</Version>
+    <Version>1.9.0-beta2</Version>
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>RepoDb v1.9.0 (beta1):
-- [New] Updated the description to "A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.".
-- [New] Re-instate the row deletion by entity level (connection.Delete&lt;T&gt;(T entity)) #112
-- [Bug] Query using Expression is failing for 'Contains()' == 'false' #102
-- [Test] Create an Integration Tests for a model with much columns that the result of the 'ExecuteQuery' #103
-- [Test] Add Integration Tests for Execute&lt;Methods&gt; with IDictionary and ExpandoObject parameters. #123
-- [Test] Add an intensive UnitTests for Cache ExpirationInMinutes in the DbConnection, DbRepository and BaseRepository. #129
-- [Test] Add major Integration Tests for Caching for SqlConnection, DbRepository, BaseRepository. #130
-- [Test] Add IntegrationTests for Insert&lt;TEntity, TResult&gt; and InlineInsert&lt;TEntity, TResult&gt; #132
-- [Enhancement, Major] Remove the TEntity in QueryBuilder, implement it like this QueryBuilder (instead of QueryBuilder&lt;TEntity&gt;) #115
-- [Enhancement, Major] Remove the AsyncResultExtractor class. #124
-- [Enhancement] Short datatype used for Enums #107
-- [Enhancement] Remove the internal StringConstants class. #117
-- [Enhancement] Make the 'CountAsync' operation return type 'long' instead of 'object' without affecting the parallelism. #108
-- [Enhancement] Add a new operational method ExecuteScalar&lt;T&gt; (and ExecuteScalarAsync&lt;T&gt;). #121
-- [Enhancement] Support passing of IDictionary&lt;string, object&gt; as 'param' in the Execute&lt;Methods&gt; operation. #125
-- [Enhancement] Allow passing of cache expiration time during creation and in the repository. #128</PackageReleaseNotes>
+    <PackageReleaseNotes>RepoDb v1.9.0-beta2:
+- [Core] Make the DbHelper Pluggable by Provider. #137
+- [Enhancement] Revisits the NET Framework custom method for GetCustomAttributes&amp;lt;T&amp;gt;. #133
+- [Enhancement] Support passing of QueryGroup, QueryField, IEnumerable&amp;lt;QueryField&amp;gt; in the Execution&amp;lt;Method&amp;gt; Operations #140
+- [Enhancement] Remove the 'StatementBuilderMapItem' class if possible. #139
+- [Enhancement] Remove the 'Provider' Enumeration. #138
+- [Enhancement] Reorder the parameter of for target table to BulkInsert(TableName, DbDataReader). #145
+- [Enhancement] Properly parse the type of the passed parameters when parsing the RawSql Array Parameters. #147
+- [Enhancement] [NTH]: Support InlineInsert(string tableName, object param ...) #114
+- [Enhancement] Implement the 'prefix' as a passable argument when during conversion. #148
+- [Enhancement] Add additional argument in the DataReaderConverter.ToEnumerable&amp;lt;T&amp;gt; method to support the calls to DbHelper.Get&amp;lt;T&amp;gt; method. #142
+- [Adhoc] Created a new cache class named 'DbIdentityCache'.
+- [Adhoc] Renamed the 'FieldDefinition' into 'DbField'.
+- [Adhoc] Renamed the 'FieldDefinitionCache' to 'DbFieldCache'.
+- [Adhoc] Renamed the 'SqlHelper' to 'SqlDbHelper'.
+- [Adhoc] Moved the 'DbHelpers' into 'RepoDb.DbHelpers'.
+- [Adhoc] Remove the 'NamespaceConstant' class. #150
+- [Adhoc, Optimization] Made the 'DbFieldCache' object more dynamic to any DB providers.
+- [Test] Add additional logic in the Integration Tests of the IStatementBuilder, verify that the second call is not hitting the method. #141
+- [Test] Add an extensive Unit/Integration Test for InlineInsert that targets a table name. #146</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb</RepositoryUrl>
@@ -35,8 +38,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.9.0.1</AssemblyVersion>
-    <FileVersion>1.9.0.1</FileVersion>
+    <AssemblyVersion>1.9.0.2</AssemblyVersion>
+    <FileVersion>1.9.0.2</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

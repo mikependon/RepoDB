@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Data;
 using System.Linq;
 
 namespace RepoDb
@@ -15,9 +16,9 @@ namespace RepoDb
         /// Gets the value that defines whether the data entity has primary key is identity.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connectionString">The connection string object to be used.</param>
+        /// <param name="connection">The connection object to be used.</param>
         /// <returns>A boolean value indicating the identification of the column.</returns>
-        public static bool Get<TEntity>(string connectionString)
+        public static bool Get<TEntity>(IDbConnection connection)
            where TEntity : class
         {
             var key = typeof(TEntity).FullName;
@@ -27,11 +28,10 @@ namespace RepoDb
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 if (primary != null)
                 {
-                    var tableName = ClassMappedNameCache.Get<TEntity>();
-                    var fieldDefinitions = SqlHelper.GetFieldDefinitions(connectionString, tableName);
-                    if (fieldDefinitions != null)
+                    var fields = DbFieldCache.Get<TEntity>(connection);
+                    if (fields != null)
                     {
-                        var field = fieldDefinitions
+                        var field = fields
                             .FirstOrDefault(fd =>
                                 string.Equals(fd.Name, primary.GetMappedName(), StringComparison.CurrentCultureIgnoreCase));
                         value = field?.IsIdentity == true;

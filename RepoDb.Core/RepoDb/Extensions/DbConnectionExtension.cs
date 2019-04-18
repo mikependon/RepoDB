@@ -1,5 +1,4 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Exceptions;
+﻿using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -22,59 +22,6 @@ namespace RepoDb
     public static class DbConnectionExtension
     {
         #region Other Methods
-
-        /// <summary>
-        /// Identify whether the current instance of <see cref="IDbConnection"/> object corresponds to the target provider.
-        /// </summary>
-        /// <param name="connection">The connection to be identified.</param>
-        /// <param name="provider">The target provider for comparisson.</param>
-        /// <returns>Returns true if the <see cref="IDbConnection"/> object corresponds to the target provider.</returns>
-        internal static bool IsForProvider(this IDbConnection connection, Provider provider)
-        {
-            switch (provider)
-            {
-                case Provider.Sql:
-                    return NamespaceConstant.SqlConnection.Equals(connection.GetType().FullName);
-                case Provider.Oracle:
-                    return NamespaceConstant.OracleConnection.Equals(connection.GetType().FullName);
-                case Provider.Sqlite:
-                    return NamespaceConstant.SqliteConnection.Equals(connection.GetType().FullName);
-                case Provider.Npgsql:
-                    return NamespaceConstant.NpgsqlConnection.Equals(connection.GetType().FullName);
-                case Provider.MySql:
-                    return NamespaceConstant.MySqlConnection.Equals(connection.GetType().FullName);
-                case Provider.OleDb:
-                    return NamespaceConstant.OleDbConnection.Equals(connection.GetType().FullName);
-                default:
-                    return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets the provider of the current <see cref="IDbConnection"/> object.
-        /// </summary>
-        /// <param name="connection">The target connection object.</param>
-        /// <returns>The provider of the target <see cref="IDbConnection"/> object.</returns>
-        internal static Provider GetProvider(this IDbConnection connection)
-        {
-            switch (connection.GetType().FullName)
-            {
-                case NamespaceConstant.SqlConnection:
-                    return Provider.Sql;
-                case NamespaceConstant.OracleConnection:
-                    return Provider.Oracle;
-                case NamespaceConstant.SqliteConnection:
-                    return Provider.Sqlite;
-                case NamespaceConstant.NpgsqlConnection:
-                    return Provider.Npgsql;
-                case NamespaceConstant.MySqlConnection:
-                    return Provider.MySql;
-                case NamespaceConstant.OleDbConnection:
-                    return Provider.OleDb;
-                default:
-                    throw new NotSupportedException($"The connection object type '{connection.GetType().FullName}' is currently not supported.");
-            }
-        }
 
         /// <summary>
         /// Creates a command object.
@@ -421,10 +368,7 @@ namespace RepoDb
             }
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<TEntity>(connection);
 
             // Before Execution
             if (trace != null)
@@ -455,7 +399,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction))
             {
-                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader)?.ToList();
+                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader, connection)?.ToList();
             }
 
             // After Execution
@@ -748,10 +692,7 @@ namespace RepoDb
             }
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<TEntity>(connection);
 
             // Before Execution
             if (trace != null)
@@ -802,20 +743,20 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
             int? commandTimeout = null,
             ITrace trace = null)
             where TEntity : class
         {
             return BulkInsertInternal<TEntity>(connection: connection,
                 entities: entities,
-                mapItems: mappings,
+                mapItems: mapItems,
                 commandTimeout: commandTimeout,
                 trace: trace);
         }
@@ -847,24 +788,49 @@ namespace RepoDb
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int BulkInsert(this IDbConnection connection,
-            DbDataReader reader,
             string tableName,
+            DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             int? commandTimeout = null,
             ITrace trace = null)
         {
             return BulkInsertInternal(connection: connection,
-                reader: reader,
                 tableName: tableName,
+                reader: reader,
                 mapItems: mappings,
+                commandTimeout: commandTimeout,
+                trace: trace);
+        }
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static int BulkInsertInternal<TEntity>(this IDbConnection connection,
+            DbDataReader reader,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
+            int? commandTimeout = null,
+            ITrace trace = null)
+            where TEntity : class
+        {
+            return BulkInsertInternal(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                reader: reader,
+                mapItems: mapItems,
                 commandTimeout: commandTimeout,
                 trace: trace);
         }
@@ -887,7 +853,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
+            if (connection is SqlConnection == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -957,80 +923,6 @@ namespace RepoDb
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static int BulkInsertInternal<TEntity>(this IDbConnection connection,
-            DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mapItems = null,
-            int? commandTimeout = null,
-            ITrace trace = null)
-            where TEntity : class
-        {
-            // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
-            {
-                throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
-            }
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
-                trace.BeforeBulkInsert(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BulkInsert");
-                    }
-                    return 0;
-                }
-            }
-
-            var result = 0;
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
-            {
-                sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
-                if (commandTimeout != null && commandTimeout.HasValue)
-                {
-                    sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
-                }
-                if (mapItems != null)
-                {
-                    foreach (var mapItem in mapItems)
-                    {
-                        sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
-                    }
-                }
-                connection.EnsureOpen();
-                sqlBulkCopy.WriteToServer(reader);
-                result = reader.RecordsAffected;
-            }
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Result
-            return result;
-        }
-
-        /// <summary>
-        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
-        /// </summary>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
@@ -1046,7 +938,7 @@ namespace RepoDb
             ITrace trace = null)
         {
             // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
+            if (connection is SqlConnection == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -1157,24 +1049,49 @@ namespace RepoDb
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> BulkInsertAsync(this IDbConnection connection,
-            DbDataReader reader,
             string tableName,
+            DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             int? commandTimeout = null,
             ITrace trace = null)
         {
             return BulkInsertInternalAsync(connection: connection,
-                reader: reader,
                 tableName: tableName,
+                reader: reader,
                 mapItems: mappings,
+                commandTimeout: commandTimeout,
+                trace: trace);
+        }
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
+            DbDataReader reader,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
+            int? commandTimeout = null,
+            ITrace trace = null)
+            where TEntity : class
+        {
+            return BulkInsertInternalAsync(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                reader: reader,
+                mapItems: mapItems,
                 commandTimeout: commandTimeout,
                 trace: trace);
         }
@@ -1189,7 +1106,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal async static Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
+        internal static async Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mapItems = null,
             int? commandTimeout = null,
@@ -1197,7 +1114,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
+            if (connection is SqlConnection == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -1267,80 +1184,6 @@ namespace RepoDb
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal async static Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
-            DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mapItems = null,
-            int? commandTimeout = null,
-            ITrace trace = null)
-            where TEntity : class
-        {
-            // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
-            {
-                throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
-            }
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
-                trace.BeforeBulkInsert(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BulkInsert");
-                    }
-                    return 0;
-                }
-            }
-
-            var result = 0;
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
-            {
-                sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
-                if (commandTimeout != null && commandTimeout.HasValue)
-                {
-                    sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
-                }
-                if (mapItems != null)
-                {
-                    foreach (var mapItem in mapItems)
-                    {
-                        sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
-                    }
-                }
-                connection.EnsureOpen();
-                await sqlBulkCopy.WriteToServerAsync(reader);
-                result = reader.RecordsAffected;
-            }
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Result
-            return result;
-        }
-
-        /// <summary>
-        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
-        /// </summary>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
@@ -1348,7 +1191,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal async static Task<int> BulkInsertInternalAsync(this IDbConnection connection,
+        internal static async Task<int> BulkInsertInternalAsync(this IDbConnection connection,
             DbDataReader reader,
             string tableName,
             IEnumerable<BulkInsertMapItem> mapItems = null,
@@ -1356,7 +1199,7 @@ namespace RepoDb
             ITrace trace = null)
         {
             // Validate, only supports SqlConnection
-            if (connection.IsForProvider(Provider.Sql) == false)
+            if (connection is SqlConnection == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -2645,6 +2488,63 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new data in the database (certain fields only).
         /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public static object InlineInsert(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineInsertInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public static TResult InlineInsert<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineInsertInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -2663,12 +2563,81 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var commandType = CommandType.Text;
             var request = new InlineInsertRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
                 statementBuilder);
             var commandText = CommandTextCache.GetInlineInsertText<TEntity>(request);
+
+            // Return the value from base method
+            return InlineInsertInternalBase<TResult>(connection: connection,
+                commandText: commandText,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static TResult InlineInsertInternal<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Variables
+            var request = new InlineInsertRequest(tableName,
+                connection,
+                entity?.AsFields(),
+                statementBuilder);
+            var commandText = CommandTextCache.GetInlineInsertText(request);
+
+            // Return the value from base method
+            return InlineInsertInternalBase<TResult>(connection: connection,
+                commandText: commandText,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static TResult InlineInsertInternalBase<TResult>(this IDbConnection connection,
+            string commandText,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Variables
+            var commandType = CommandType.Text;
 
             // Before Execution
             if (trace != null)
@@ -2697,9 +2666,6 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction);
-
-            // Set back result equals to PrimaryKey type
-            result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
 
             // After Execution
             if (trace != null)
@@ -2741,7 +2707,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InlineInsertInternalAsync<TEntity, object>(connection: connection,
+            return InlineInsertAsyncInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2769,7 +2735,64 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InlineInsertInternalAsync<TEntity, TResult>(connection: connection,
+            return InlineInsertAsyncInternal<TEntity, TResult>(connection: connection,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only) in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public static Task<object> InlineInsertAsync(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineInsertAsyncInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only) in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public static Task<TResult> InlineInsertAsync<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return InlineInsertAsyncInternal<TResult>(connection: connection,
+                tableName: tableName,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2789,7 +2812,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
-        internal static async Task<TResult> InlineInsertInternalAsync<TEntity, TResult>(this IDbConnection connection,
+        internal static Task<TResult> InlineInsertAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             object entity,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -2798,12 +2821,81 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var commandType = CommandType.Text;
             var request = new InlineInsertRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
                 statementBuilder);
             var commandText = CommandTextCache.GetInlineInsertText<TEntity>(request);
+
+            // Return the value from base method
+            return InlineInsertInternalAsyncBase<TResult>(connection: connection,
+                commandText: commandText,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only) in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static Task<TResult> InlineInsertAsyncInternal<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Variables
+            var request = new InlineInsertRequest(tableName,
+                connection,
+                entity?.AsFields(),
+                statementBuilder);
+            var commandText = CommandTextCache.GetInlineInsertText(request);
+
+            // Return the value from base method
+            return InlineInsertInternalAsyncBase<TResult>(connection: connection,
+                commandText: commandText,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static async Task<TResult> InlineInsertInternalAsyncBase<TResult>(this IDbConnection connection,
+            string commandText,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Variables
+            var commandType = CommandType.Text;
 
             // Before Execution
             if (trace != null)
@@ -4580,10 +4672,7 @@ namespace RepoDb
             }
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<TEntity>(connection);
 
             // Before Execution
             if (trace != null)
@@ -4614,7 +4703,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction))
             {
-                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader)?.ToList();
+                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader, connection)?.ToList();
             }
 
             // After Execution
@@ -4983,10 +5072,7 @@ namespace RepoDb
             }
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<TEntity>(connection);
 
             // Before Execution
             if (trace != null)
@@ -5153,11 +5239,8 @@ namespace RepoDb
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2);
@@ -5198,11 +5281,11 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
@@ -5372,12 +5455,9 @@ namespace RepoDb
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
@@ -5419,15 +5499,15 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
@@ -5634,13 +5714,10 @@ namespace RepoDb
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
@@ -5683,19 +5760,19 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
@@ -5937,14 +6014,11 @@ namespace RepoDb
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
@@ -5988,23 +6062,23 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
@@ -6281,15 +6355,12 @@ namespace RepoDb
             var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
+            DbFieldCache.Get<T6>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
@@ -6334,27 +6405,27 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
@@ -6667,16 +6738,13 @@ namespace RepoDb
             var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T7>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
+            DbFieldCache.Get<T6>(connection);
+            DbFieldCache.Get<T7>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
@@ -6722,31 +6790,31 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the seventh result
                 reader?.NextResult();
-                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader)?.ToList();
+                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
@@ -6886,11 +6954,8 @@ namespace RepoDb
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2);
@@ -6931,11 +6996,11 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
@@ -7105,12 +7170,9 @@ namespace RepoDb
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
@@ -7152,15 +7214,15 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
@@ -7367,13 +7429,10 @@ namespace RepoDb
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
@@ -7416,19 +7475,19 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
@@ -7670,14 +7729,11 @@ namespace RepoDb
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
@@ -7721,23 +7777,23 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
@@ -8014,15 +8070,12 @@ namespace RepoDb
             var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
+            DbFieldCache.Get<T6>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
@@ -8067,27 +8120,27 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
@@ -8400,16 +8453,13 @@ namespace RepoDb
             var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
 
             // Database pre-touch for field definitions
-            if (connection.IsForProvider(Provider.Sql))
-            {
-                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
-                FieldDefinitionCache.Get<T7>(connection.ConnectionString);
-            }
+            DbFieldCache.Get<T1>(connection);
+            DbFieldCache.Get<T2>(connection);
+            DbFieldCache.Get<T3>(connection);
+            DbFieldCache.Get<T4>(connection);
+            DbFieldCache.Get<T5>(connection);
+            DbFieldCache.Get<T6>(connection);
+            DbFieldCache.Get<T7>(connection);
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
@@ -8455,31 +8505,31 @@ namespace RepoDb
                 transaction: transaction))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the seventh result
                 reader?.NextResult();
-                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader)?.ToList();
+                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
@@ -9314,8 +9364,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9347,8 +9397,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9368,7 +9418,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReaderConverter.ToEnumerable<TEntity>(reader, true).ToList();
+                    return DataReaderConverter.ToEnumerable<TEntity>(reader, connection, true).ToList();
                 }
             }
         }
@@ -9385,8 +9435,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9418,8 +9468,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9439,7 +9489,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return DataReaderConverter.ToEnumerable<TEntity>(reader, true).ToList();
+                    return DataReaderConverter.ToEnumerable<TEntity>(reader, connection, true).ToList();
                 }
             }
         }
@@ -9454,8 +9504,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9474,7 +9524,7 @@ namespace RepoDb
                 commandType,
                 commandTimeout,
                 transaction);
-            return new QueryMultipleExtractor((DbDataReader)reader);
+            return new QueryMultipleExtractor((DbDataReader)reader, connection);
         }
 
         /// <summary>
@@ -9483,8 +9533,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9503,7 +9553,7 @@ namespace RepoDb
                 commandType,
                 commandTimeout,
                 transaction);
-            return new QueryMultipleExtractor((DbDataReader)reader);
+            return new QueryMultipleExtractor((DbDataReader)reader, connection);
         }
 
         #endregion
@@ -9517,8 +9567,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9541,8 +9591,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9572,8 +9622,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9601,8 +9651,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9632,8 +9682,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9661,8 +9711,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9692,8 +9742,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9721,8 +9771,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9752,8 +9802,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9781,8 +9831,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9812,8 +9862,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9841,8 +9891,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9873,8 +9923,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9902,8 +9952,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9934,8 +9984,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -9963,8 +10013,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -10140,7 +10190,7 @@ namespace RepoDb
             ValidateTransactionConnectionObject(connection, transaction);
 
             // Process the array parameters
-            var commandArrayParameters = ExtractAndReplace(param, ref commandText);
+            var commandArrayParameters = AsCommandArrayParameters(param, ref commandText);
 
             // Command object initialization
             var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction);
@@ -10156,55 +10206,6 @@ namespace RepoDb
 
             // Execute the scalar
             return (DbCommand)command;
-        }
-
-        /// <summary>
-        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
-        /// </summary>
-        /// <param name="param">The parameter passed.</param>
-        /// <param name="commandText">The command text to be replaced.</param>
-        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
-        private static IList<CommandArrayParameter> ExtractAndReplace(object param, ref string commandText)
-        {
-            if (param == null)
-            {
-                return null;
-            }
-
-            // Declare return values
-            var commandArrayParameters = (IList<CommandArrayParameter>)null;
-
-            // Iterate the properties
-            foreach (var property in param.GetType().GetTypeInfo().GetProperties())
-            {
-                // Skip if null
-                if (property == null)
-                {
-                    continue;
-                }
-
-                // Skip if it is not an array
-                if (property.PropertyType.IsArray == false)
-                {
-                    continue;
-                }
-
-                // Initialize the array if it not yet initialized
-                if (commandArrayParameters == null)
-                {
-                    commandArrayParameters = new List<CommandArrayParameter>();
-                }
-
-                // Replace the target parameters
-                var values = ((Array)property.GetValue(param)).AsEnumerable();
-                commandText = ToRawSqlWithArrayParams(commandText, property.Name, values);
-
-                // Add to the list
-                commandArrayParameters.Add(new CommandArrayParameter(property.Name, values));
-            }
-
-            // Return the values
-            return commandArrayParameters;
         }
 
         /// <summary>
@@ -10235,6 +10236,226 @@ namespace RepoDb
             // Replace the target parameter
             return commandText.Replace(parameterName.AsParameter(), parameters.Join(", "));
         }
+
+        #region AsCommandArrayParameters
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="param">The parameter passed.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(object param, ref string commandText)
+        {
+            if (param == null)
+            {
+                return null;
+            }
+
+            // Declare return values
+            var commandArrayParameters = (IList<CommandArrayParameter>)null;
+
+            // Return if any of this
+            if (param is ExpandoObject || param is IDictionary<string, object>)
+            {
+                return AsCommandArrayParameters((IDictionary<string, object>)param, ref commandText);
+            }
+            else if (param is QueryGroup)
+            {
+                return AsCommandArrayParameters((QueryGroup)param, ref commandText);
+            }
+            else if (param is IEnumerable<QueryField>)
+            {
+                return AsCommandArrayParameters((IEnumerable<QueryField>)param, ref commandText);
+            }
+            else if (param is QueryField)
+            {
+                return AsCommandArrayParameters((QueryField)param, ref commandText);
+            }
+            else
+            {
+                // Iterate the properties
+                foreach (var property in param.GetType().GetTypeInfo().GetProperties())
+                {
+                    // Skip if null
+                    if (property == null)
+                    {
+                        continue;
+                    }
+
+                    // Skip if it is not an array
+                    if (property.PropertyType.IsArray == false)
+                    {
+                        continue;
+                    }
+
+                    // Initialize the array if it not yet initialized
+                    if (commandArrayParameters == null)
+                    {
+                        commandArrayParameters = new List<CommandArrayParameter>();
+                    }
+
+                    // Replace the target parameters
+                    commandArrayParameters.Add(AsCommandArrayParameter(property.Name,
+                        ((Array)property.GetValue(param)).AsEnumerable(),
+                        ref commandText));
+                }
+            }
+
+            // Return the values
+            return commandArrayParameters;
+        }
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(IDictionary<string, object> dictionary, ref string commandText)
+        {
+            if (dictionary == null)
+            {
+                return null;
+            }
+
+            // Declare return values
+            var commandArrayParameters = (IList<CommandArrayParameter>)null;
+
+            // Iterate the properties
+            foreach (var kvp in dictionary)
+            {
+                // Get type of the value
+                var type = kvp.Value?.GetType();
+
+                // Skip if it is not an array
+                if (type.IsArray == false)
+                {
+                    continue;
+                }
+
+                // Initialize the array if it not yet initialized
+                if (commandArrayParameters == null)
+                {
+                    commandArrayParameters = new List<CommandArrayParameter>();
+                }
+
+                // Replace the target parameters
+                commandArrayParameters.Add(AsCommandArrayParameter(kvp.Key,
+                    ((Array)kvp.Value).AsEnumerable(),
+                    ref commandText));
+            }
+
+            // Return the values
+            return commandArrayParameters;
+        }
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryGroup queryGroup, ref string commandText)
+        {
+            return AsCommandArrayParameters(queryGroup.GetFields(true), ref commandText);
+        }
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(IEnumerable<QueryField> queryFields, ref string commandText)
+        {
+            if (queryFields == null)
+            {
+                return null;
+            }
+
+            // Declare return values
+            var commandArrayParameters = (IList<CommandArrayParameter>)null;
+
+            // Iterate the properties
+            foreach (var field in queryFields)
+            {
+                // Get type of the value
+                var type = field.Parameter.Value?.GetType();
+
+                // Skip if it is not an array
+                if (type.IsArray == false)
+                {
+                    continue;
+                }
+
+                // Initialize the array if it not yet initialized
+                if (commandArrayParameters == null)
+                {
+                    commandArrayParameters = new List<CommandArrayParameter>();
+                }
+
+                // Replace the target parameters
+                commandArrayParameters.Add(AsCommandArrayParameter(field.Field.Name,
+                    ((Array)field.Parameter.Value).AsEnumerable(),
+                    ref commandText));
+            }
+
+            // Return the values
+            return commandArrayParameters;
+        }
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryField queryField, ref string commandText)
+        {
+            if (queryField == null)
+            {
+                return null;
+            }
+
+            // Get type of the value
+            var type = queryField.Parameter.Value?.GetType();
+
+            // Skip if it is not an array
+            if (type.IsArray == false)
+            {
+                return null;
+            }
+
+            // Initialize the array if it not yet initialized
+            var commandArrayParameters = new List<CommandArrayParameter>();
+
+            // Replace the target parameters
+            commandArrayParameters.Add(AsCommandArrayParameter(queryField.Field.Name,
+                ((Array)queryField.Parameter.Value).AsEnumerable(),
+                ref commandText));
+
+            // Return the values
+            return commandArrayParameters;
+        }
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="name">The target name of the <see cref="CommandArrayParameter"/> object.</param>
+        /// <param name="values">The array value of the <see cref="CommandArrayParameter"/> object.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>An instance of <see cref="CommandArrayParameter"/> object.</returns>
+        private static CommandArrayParameter AsCommandArrayParameter(string name, IEnumerable<object> values, ref string commandText)
+        {
+            // Convert to raw sql
+            commandText = ToRawSqlWithArrayParams(commandText, name, values);
+
+            // Add to the list
+            return new CommandArrayParameter(name, values);
+        }
+
+        #endregion
 
         #endregion
     }

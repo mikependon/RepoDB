@@ -1,5 +1,4 @@
 ﻿using RepoDb.Attributes;
-using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using System;
 using System.Data;

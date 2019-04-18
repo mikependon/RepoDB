@@ -30,9 +30,6 @@ namespace RepoDb.UnitTests.Interfaces
                 trace.Object,
                 new SqlStatementBuilder());
 
-            // Setup
-            trace.Setup(t => t.BeforeBatchQuery(It.IsAny<CancellableTraceLog>()));
-
             // Act
             repository.Object.BatchQuery(0, 10, null, null);
 
@@ -51,9 +48,6 @@ namespace RepoDb.UnitTests.Interfaces
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
                 new SqlStatementBuilder());
-
-            // Setup
-            trace.Setup(t => t.AfterBatchQuery(It.IsAny<TraceLog>()));
 
             // Act
             repository.Object.BatchQuery(0, 10, null, null);
@@ -76,9 +70,6 @@ namespace RepoDb.UnitTests.Interfaces
                 trace.Object,
                 new SqlStatementBuilder());
 
-            // Setup
-            trace.Setup(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()));
-
             // Act
             repository.Object.Count();
 
@@ -97,9 +88,6 @@ namespace RepoDb.UnitTests.Interfaces
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
                 new SqlStatementBuilder());
-
-            // Setup
-            trace.Setup(t => t.AfterCount(It.IsAny<TraceLog>()));
 
             // Act
             repository.Object.Count();
@@ -122,9 +110,6 @@ namespace RepoDb.UnitTests.Interfaces
                 trace.Object,
                 new SqlStatementBuilder());
 
-            // Setup
-            trace.Setup(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()));
-
             // Act
             repository.Object.Delete(0);
 
@@ -143,9 +128,6 @@ namespace RepoDb.UnitTests.Interfaces
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
                 new SqlStatementBuilder());
-
-            // Setup
-            trace.Setup(t => t.AfterDelete(It.IsAny<TraceLog>()));
 
             // Act
             repository.Object.Delete(0);
@@ -168,9 +150,6 @@ namespace RepoDb.UnitTests.Interfaces
                 trace.Object,
                 new SqlStatementBuilder());
 
-            // Setup
-            trace.Setup(t => t.BeforeInlineInsert(It.IsAny<CancellableTraceLog>()));
-
             // Act
             repository.Object.InlineInsert(new { Id = 1, Name = "Name" });
 
@@ -189,9 +168,6 @@ namespace RepoDb.UnitTests.Interfaces
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
                 new SqlStatementBuilder());
-
-            // Setup
-            trace.Setup(t => t.AfterInlineInsert(It.IsAny<CancellableTraceLog>()));
 
             // Act
             repository.Object.InlineInsert(new { Id = 1, Name = "Name" });
@@ -214,9 +190,6 @@ namespace RepoDb.UnitTests.Interfaces
                 trace.Object,
                 new SqlStatementBuilder());
 
-            // Setup
-            trace.Setup(t => t.BeforeInlineMerge(It.IsAny<CancellableTraceLog>()));
-
             // Act
             repository.Object.InlineMerge(new { Id = 1, Name = "Name" });
 
@@ -235,9 +208,6 @@ namespace RepoDb.UnitTests.Interfaces
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
                 new SqlStatementBuilder());
-
-            // Setup
-            trace.Setup(t => t.AfterInlineMerge(It.IsAny<CancellableTraceLog>()));
 
             // Act
             repository.Object.InlineMerge(new { Id = 1, Name = "Name" });
@@ -260,9 +230,6 @@ namespace RepoDb.UnitTests.Interfaces
                 trace.Object,
                 new SqlStatementBuilder());
 
-            // Setup
-            trace.Setup(t => t.BeforeInlineUpdate(It.IsAny<CancellableTraceLog>()));
-
             // Act
             repository.Object.InlineUpdate(new { Name = "Name" }, te => te.Id == 1);
 
@@ -281,9 +248,6 @@ namespace RepoDb.UnitTests.Interfaces
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
                 new SqlStatementBuilder());
-
-            // Setup
-            trace.Setup(t => t.AfterInlineUpdate(It.IsAny<CancellableTraceLog>()));
 
             // Act
             repository.Object.InlineUpdate(new { Name = "Name" }, te => te.Id == 1);
@@ -306,9 +270,6 @@ namespace RepoDb.UnitTests.Interfaces
                 trace.Object,
                 new SqlStatementBuilder());
 
-            // Setup
-            trace.Setup(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()));
-
             // Act
             repository.Object.Insert(new TraceEntity { Name = "Name" });
 
@@ -327,9 +288,6 @@ namespace RepoDb.UnitTests.Interfaces
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
                 new SqlStatementBuilder());
-
-            // Setup
-            trace.Setup(t => t.AfterInsert(It.IsAny<CancellableTraceLog>()));
 
             // Act
             repository.Object.Insert(new TraceEntity { Name = "Name" });
@@ -352,9 +310,6 @@ namespace RepoDb.UnitTests.Interfaces
                 trace.Object,
                 new SqlStatementBuilder());
 
-            // Setup
-            trace.Setup(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()));
-
             // Act
             repository.Object.Merge(new TraceEntity { Id = 1, Name = "Name" });
 
@@ -373,9 +328,6 @@ namespace RepoDb.UnitTests.Interfaces
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
                 new SqlStatementBuilder());
-
-            // Setup
-            trace.Setup(t => t.AfterMerge(It.IsAny<CancellableTraceLog>()));
 
             // Act
             repository.Object.Merge(new TraceEntity { Id = 1, Name = "Name" });
@@ -398,9 +350,6 @@ namespace RepoDb.UnitTests.Interfaces
                 trace.Object,
                 new SqlStatementBuilder());
 
-            // Setup
-            trace.Setup(t => t.BeforeQuery(It.IsAny<CancellableTraceLog>()));
-
             // Act
             repository.Object.Query(te => te.Id == 1);
 
@@ -419,9 +368,6 @@ namespace RepoDb.UnitTests.Interfaces
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
                 new SqlStatementBuilder());
-
-            // Setup
-            trace.Setup(t => t.AfterQuery(It.IsAny<CancellableTraceLog>()));
 
             // Act
             repository.Object.Query(new TraceEntity { Id = 1 });
@@ -444,9 +390,6 @@ namespace RepoDb.UnitTests.Interfaces
                 trace.Object,
                 new SqlStatementBuilder());
 
-            // Setup
-            trace.Setup(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()));
-
             // Act
             repository.Object.Truncate();
 
@@ -465,9 +408,6 @@ namespace RepoDb.UnitTests.Interfaces
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
                 new SqlStatementBuilder());
-
-            // Setup
-            trace.Setup(t => t.AfterTruncate(It.IsAny<CancellableTraceLog>()));
 
             // Act
             repository.Object.Truncate();
@@ -490,9 +430,6 @@ namespace RepoDb.UnitTests.Interfaces
                 trace.Object,
                 new SqlStatementBuilder());
 
-            // Setup
-            trace.Setup(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()));
-
             // Act
             repository.Object.Update(new TraceEntity { Id = 1, Name = "Name" });
 
@@ -511,9 +448,6 @@ namespace RepoDb.UnitTests.Interfaces
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
                 new SqlStatementBuilder());
-
-            // Setup
-            trace.Setup(t => t.AfterUpdate(It.IsAny<CancellableTraceLog>()));
 
             // Act
             repository.Object.Update(new TraceEntity { Id = 1, Name = "Name" });

@@ -25,7 +25,23 @@ namespace RepoDb.Requests
         /// <param name="statementBuilder">The statement builder.</param>
         public QueryMultipleRequest(int? index, Type entityType, IDbConnection connection, QueryGroup where = null, IEnumerable<OrderField> orderBy = null,
             int? top = null, string hints = null, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
+            : this(index, entityType.FullName, connection, where, orderBy, top, hints, statementBuilder)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryMultipleRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="index">The index value.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="orderBy">The list of order fields.</param>
+        /// <param name="top">The filter for the rows.</param>
+        /// <param name="hints">The hints for the table.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public QueryMultipleRequest(int? index, string name, IDbConnection connection, QueryGroup where = null, IEnumerable<OrderField> orderBy = null,
+            int? top = null, string hints = null, IStatementBuilder statementBuilder = null)
+            : base(name, connection, statementBuilder)
         {
             Index = index;
             Where = where;
@@ -74,7 +90,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(EntityType.FullName, ".Query").GetHashCode();
+            var hashCode = string.Concat(Name, ".QueryMultiple").GetHashCode();
 
             // Add the index
             if (!ReferenceEquals(null, Index))
