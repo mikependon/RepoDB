@@ -43,6 +43,24 @@ namespace RepoDb.Extensions
             {
                 value = value.Trim();
             }
+            if (value.IndexOf(".") < 0)
+            {
+                return value.AsQuoted();
+            }
+            else
+            {
+                var splitted = value.Split(".".ToCharArray());
+                return splitted.Select(s => s.AsQuoted()).Join(".");
+            }
+        }
+
+        /// <summary>
+        /// Adds a quotes to the string.
+        /// </summary>
+        /// <param name="value">The string value where the database quotes will be added.</param>
+        /// <returns></returns>
+        private static string AsQuoted(this string value)
+        {
             if (!value.StartsWith("["))
             {
                 value = string.Concat("[", value);

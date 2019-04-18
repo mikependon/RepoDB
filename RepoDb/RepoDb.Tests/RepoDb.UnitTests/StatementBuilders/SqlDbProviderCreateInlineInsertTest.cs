@@ -238,6 +238,113 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestSqlDbProviderCreateInlineInsertViaTableName()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+
+            // Act
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, "TargetTable", null, fields);
+            var expected = $"" +
+                $"INSERT INTO [TargetTable] " +
+                $"( [Field1], [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field1, @Field2, @Field3 ) ; " +
+                $"SELECT NULL AS [Result] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlDbProviderCreateInlineInsertViaTableNameWithSchema()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+
+            // Act
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, "[dbo].[TargetTable]", null, fields);
+            var expected = $"" +
+                $"INSERT INTO [dbo].[TargetTable] " +
+                $"( [Field1], [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field1, @Field2, @Field3 ) ; " +
+                $"SELECT NULL AS [Result] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlDbProviderCreateInlineInsertViaTableNameWithUnquotedSchema()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+
+            // Act
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, "dbo.TargetTable", null, fields);
+            var expected = $"" +
+                $"INSERT INTO [dbo].[TargetTable] " +
+                $"( [Field1], [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field1, @Field2, @Field3 ) ; " +
+                $"SELECT NULL AS [Result] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlDbProviderCreateInlineInsertViaTableNameWithIdentityPrimaryDbField()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var dbField = new DbField("Field1", true, true, false);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+
+            // Act
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, "TargetTable", dbField, fields);
+            var expected = $"" +
+                $"INSERT INTO [TargetTable] " +
+                $"( [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field2, @Field3 ) ; " +
+                $"SELECT SCOPE_IDENTITY() AS [Result] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlDbProviderCreateInlineInsertViaTableNameWithNonIdentityPrimaryDbField()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var dbField = new DbField("Field1", true, false, false);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+
+            // Act
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, "TargetTable", dbField, fields);
+            var expected = $"" +
+                $"INSERT INTO [TargetTable] " +
+                $"( [Field1], [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field1, @Field2, @Field3 ) ; " +
+                $"SELECT @Field1 AS [Result] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         private class ThrowExceptionOnSqlDbProviderCreateInlineInsertIfTheIdentityFieldIsNotThePrimaryKeyFieldClass
         {
             [Primary]
