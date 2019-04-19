@@ -1,5 +1,6 @@
 ﻿using RepoDb.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace RepoDb.Requests
@@ -14,13 +15,24 @@ namespace RepoDb.Requests
         /// <summary>
         /// Creates a new instance of <see cref="UpdateRequest"/> object.
         /// </summary>
-        /// <param name="entityType">The entity type.</param>
+        /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="where">The query expression.</param>
+        /// <param name="fields">The list of the target fields.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public UpdateRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IStatementBuilder statementBuilder = null)
-            : this(entityType.FullName, connection, where, statementBuilder)
-        { }
+        public UpdateRequest(Type type,
+            IDbConnection connection,
+            QueryGroup where = null,
+            IEnumerable<Field> fields = null,
+            IStatementBuilder statementBuilder = null)
+            : this(ClassMappedNameCache.Get(type),
+                  connection,
+                  where,
+                  fields,
+                  statementBuilder)
+        {
+            Type = type;
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="UpdateRequest"/> object.
@@ -28,17 +40,30 @@ namespace RepoDb.Requests
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="where">The query expression.</param>
+        /// <param name="fields">The list of the target fields.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public UpdateRequest(string name, IDbConnection connection, QueryGroup where = null, IStatementBuilder statementBuilder = null)
-            : base(name, connection, statementBuilder)
+        public UpdateRequest(string name,
+            IDbConnection connection,
+            QueryGroup where = null,
+            IEnumerable<Field> fields = null,
+            IStatementBuilder statementBuilder = null)
+            : base(name,
+                  connection,
+                  statementBuilder)
         {
             Where = where;
+            Fields = fields;
         }
 
         /// <summary>
         /// Gets the query expression used.
         /// </summary>
         public QueryGroup Where { get; }
+
+        /// <summary>
+        /// Gets the target fields.
+        /// </summary>
+        public IEnumerable<Field> Fields { get; set; }
 
         // Equality and comparers
 
@@ -61,6 +86,15 @@ namespace RepoDb.Requests
             if (Where != null)
             {
                 hashCode += Where.GetHashCode();
+            }
+
+            // Get the qualifier fields
+            if (Fields != null)
+            {
+                foreach (var field in Fields)
+                {
+                    hashCode += field.GetHashCode();
+                }
             }
 
             // Set back the hash code value

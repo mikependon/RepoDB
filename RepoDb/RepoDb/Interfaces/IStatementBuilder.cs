@@ -9,206 +9,165 @@ namespace RepoDb.Interfaces
     /// </summary>
     public interface IStatementBuilder
     {
+        #region CreateBatchQuery
+
         /// <summary>
-        /// Creates a SQL Statement for repository batch query operation.
+        /// Creates a SQL Statement for batch query operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to query.</param>
+        /// <param name="where">The query expression.</param>
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
-        /// <param name="orderBy">The list of fields used for ordering.</param>
-        /// <param name="hints">The hints to be used to optimze the query operation.</param>
-        /// <returns>A string containing the composed SQL Statement for batch query operation.</returns>
-        string CreateBatchQuery<TEntity>(QueryBuilder queryBuilder,
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for batch query operation.</returns>
+        string CreateBatchQuery(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
             QueryGroup where = null,
             int? page = null,
             int? rowsPerBatch = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null)
-            where TEntity : class;
+            string hints = null);
+
+        #endregion
+
+        #region CreateCount
 
         /// <summary>
-        /// Creates a SQL Statement for repository count operation.
+        /// Creates a SQL Statement for count operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <param name="hints">The hints to be used to optimze the query operation.</param>
-        /// <returns>A string containing the composed SQL Statement for count operation.</returns>
-        string CreateCount<TEntity>(QueryBuilder queryBuilder,
-            QueryGroup where = null,
-            string hints = null)
-            where TEntity : class;
-
-        /// <summary>
-        /// Creates a SQL Statement for repository delete operation.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for delete operation.</returns>
-        string CreateDelete<TEntity>(QueryBuilder queryBuilder,
-            QueryGroup where = null)
-            where TEntity : class;
-
-        /// <summary>
-        /// Creates a SQL Statement for repository delete-all operation.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for delete-all operation.</returns>
-        string CreateDeleteAll<TEntity>(QueryBuilder queryBuilder)
-            where TEntity : class;
-
-        /// <summary>
-        /// Creates a SQL Statement for repository inline-delete operation.
-        /// </summary>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for delete operation.</returns>
-        string CreateInlineDelete(QueryBuilder queryBuilder,
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for create operation.</returns>
+        string CreateCount(QueryBuilder queryBuilder,
+            string tableName,
+            QueryGroup where = null,
+            string hints = null);
+
+        #endregion
+
+        #region CreateDelete
+
+        /// <summary>
+        /// Creates a SQL Statement for delete operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <returns>A sql statement for delete operation.</returns>
+        string CreateDelete(QueryBuilder queryBuilder,
             string tableName,
             QueryGroup where = null);
 
-        /// <summary>
-        /// Creates a SQL Statement for repository inline-insert operation.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="fields">The list of fields to be a part of the inline insert operation in SQL Statement composition.</param>
-        /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
-        string CreateInlineInsert<TEntity>(QueryBuilder queryBuilder,
-            DbField primaryField = null,
-            IEnumerable<Field> fields = null)
-            where TEntity : class;
+        #endregion
+
+        #region CreateDeleteAll
 
         /// <summary>
-        /// Creates a SQL Statement for repository inline-insert operation.
+        /// Creates a SQL Statement for delete-all operation.
         /// </summary>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A sql statement for delete-all operation.</returns>
+        string CreateDeleteAll(QueryBuilder queryBuilder,
+            string tableName);
+
+        #endregion
+
+        #region CreateInsert
+
+        /// <summary>
+        /// Creates a SQL Statement for insert operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="fields">The list of fields to be a part of the inline insert operation in SQL Statement composition.</param>
-        /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
-        string CreateInlineInsert(QueryBuilder queryBuilder,
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        string CreateInsert(QueryBuilder queryBuilder,
             string tableName,
             DbField primaryField = null,
             IEnumerable<Field> fields = null);
 
+        #endregion
+
+        #region CreateMerge
+
         /// <summary>
-        /// Creates a SQL Statement for repository inline-merge operation.
+        /// Creates a SQL Statement for merge operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
         /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
-        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
-        string CreateInlineMerge<TEntity>(QueryBuilder queryBuilder,
+        /// <param name="fields">The list of fields to be merged.</param>
+        /// <param name="qualifiers">The list of the qualifier fields.</param>
+        /// <returns>A sql statement for merge operation.</returns>
+        string CreateMerge(QueryBuilder queryBuilder,
+            string tableName,
             DbField primaryField = null,
             IEnumerable<Field> fields = null,
-            IEnumerable<Field> qualifiers = null)
-            where TEntity : class;
+            IEnumerable<Field> qualifiers = null);
+
+        #endregion
+
+        #region CreateQuery
 
         /// <summary>
-        /// Creates a SQL Statement for repository inline-update operation.
+        /// Creates a SQL Statement for query operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="fields">The list of fields to be a part of the inline update operation in SQL Statement composition.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for inline-update operation.</returns>
-        string CreateInlineUpdate<TEntity>(QueryBuilder queryBuilder,
-            IEnumerable<Field> fields = null,
-            QueryGroup where = null)
-            where TEntity : class;
-
-        /// <summary>
-        /// Creates a SQL Statement for repository insert operation.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <returns>A string containing the composed SQL Statement for insert operation.</returns>
-        string CreateInsert<TEntity>(QueryBuilder queryBuilder,
-            DbField primaryField = null)
-            where TEntity : class;
-
-        /// <summary>
-        /// Creates a SQL Statement for repository merge operation.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <returns>A string containing the composed SQL Statement for merge operation.</returns>
-        string CreateMerge<TEntity>(QueryBuilder queryBuilder,
-            DbField primaryField = null,
-            IEnumerable<Field> qualifiers = null)
-            where TEntity : class;
-
-        /// <summary>
-        /// Creates a SQL Statement for repository query operation.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <param name="orderBy">The list of fields to be used for ordering in SQL Statement composition.</param>
-        /// <param name="top">The number of rows to be returned by the query operation in SQL Statement composition.</param>
-        /// <param name="hints">The hints to be used to optimze the query operation.</param>
-        /// <returns>A string containing the composed SQL Statement for query operation.</returns>
-        string CreateQuery<TEntity>(QueryBuilder queryBuilder,
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="top">The number of rows to be returned.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for query operation.</returns>
+        string CreateQuery(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = null,
-            string hints = null)
-            where TEntity : class;
+            string hints = null);
+
+        #endregion
+
+        #region CreateTruncate
 
         /// <summary>
-        /// Creates a SQL Statement for repository truncate operation.
+        /// Creates a SQL Statement for truncate operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for truncate operation.</returns>
-        string CreateTruncate<TEntity>(QueryBuilder queryBuilder)
-            where TEntity : class;
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A sql statement for truncate operation.</returns>
+        string CreateTruncate(QueryBuilder queryBuilder,
+            string tableName);
+
+        #endregion
+
+        #region CreateUpdate
 
         /// <summary>
-        /// Creates a SQL Statement for repository update operation.
+        /// Creates a SQL Statement for inline-update operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for update operation.</returns>
-        string CreateUpdate<TEntity>(QueryBuilder queryBuilder,
-            QueryGroup where = null)
-            where TEntity : class;
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="fields">The list of fields to be updated.</param>
+        /// <param name="where">The query expression.</param>
+        /// <returns>A sql statement for update operation.</returns>
+        string CreateUpdate(QueryBuilder queryBuilder,
+            string tableName,
+            DbField primaryField = null,
+            IEnumerable<Field> fields = null,
+            QueryGroup where = null);
+
+        #endregion
     }
 }

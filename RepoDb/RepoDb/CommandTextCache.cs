@@ -20,17 +20,17 @@ namespace RepoDb
         /// <summary>
         /// Gets a command text from the cache for the batch query operation.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetBatchQueryText<TEntity>(BatchQueryRequest request)
-            where TEntity : class
+        public static string GetBatchQueryText(BatchQueryRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateBatchQuery<TEntity>(new QueryBuilder(),
+                commandText = statementBuilder.CreateBatchQuery(new QueryBuilder(),
+                    request.Name,
+                    request.Fields,
                     request.Where,
                     request.Page,
                     request.RowsPerBatch,
@@ -47,41 +47,16 @@ namespace RepoDb
         /// <summary>
         /// Gets a command text from the cache for the count operation.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetCountText<TEntity>(CountRequest request)
-            where TEntity : class
+        public static string GetCountText(CountRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateCount<TEntity>(new QueryBuilder(),
-                    request.Where);
-                m_cache.TryAdd(request, commandText);
-            }
-            return commandText;
-        }
-
-        #endregion
-
-        #region GetDeleteText
-
-        /// <summary>
-        /// Gets a command text from the cache for the delete operation.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
-        /// <param name="request">The request object.</param>
-        /// <returns>The cached command text.</returns>
-        public static string GetDeleteText<TEntity>(DeleteRequest request)
-            where TEntity : class
-        {
-            var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
-            {
-                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateDelete<TEntity>(new QueryBuilder(),
+                commandText = statementBuilder.CreateCount(new QueryBuilder(),
+                    request.Name,
                     request.Where);
                 m_cache.TryAdd(request, commandText);
             }
@@ -95,17 +70,16 @@ namespace RepoDb
         /// <summary>
         /// Gets a command text from the cache for the delete-all operation.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetDeleteAllText<TEntity>(DeleteAllRequest request)
-            where TEntity : class
+        public static string GetDeleteAllText(DeleteAllRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateDeleteAll<TEntity>(new QueryBuilder());
+                commandText = statementBuilder.CreateDeleteAll(new QueryBuilder(),
+                    request.Name);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -113,7 +87,7 @@ namespace RepoDb
 
         #endregion
 
-        #region GetInlineDelete
+        #region GetDeleteText
 
         /// <summary>
         /// Gets a command text from the cache for the delete operation.
@@ -126,113 +100,10 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateInlineDelete(new QueryBuilder(),
+                commandText = statementBuilder.CreateDelete(new QueryBuilder(),
                     request.Name,
                     request.Where);
                 m_cache.TryAdd(request, commandText);
-            }
-            return commandText;
-        }
-
-        #endregion
-
-        #region GetInlineInsertText
-
-        /// <summary>
-        /// Gets a command text from the cache for the inline-insert operation.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
-        /// <param name="request">The request object.</param>
-        /// <returns>The cached command text.</returns>
-        public static string GetInlineInsertText<TEntity>(InlineInsertRequest request)
-            where TEntity : class
-        {
-            var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
-            {
-                var primaryField = DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
-                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateInlineInsert<TEntity>(new QueryBuilder(),
-                    primaryField,
-                    request.Fields);
-                m_cache.TryAdd(request, commandText);
-            }
-            return commandText;
-        }
-
-        /// <summary>
-        /// Gets a command text from the cache for the inline-insert operation.
-        /// </summary>
-        /// <param name="request">The request object.</param>
-        /// <returns>The cached command text.</returns>
-        public static string GetInlineInsertText(InlineInsertRequest request)
-        {
-            var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
-            {
-                var primaryField = DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
-                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateInlineInsert(new QueryBuilder(),
-                    request.Name,
-                    primaryField,
-                    request.Fields);
-                m_cache.TryAdd(request, commandText);
-            }
-            return commandText;
-        }
-
-        #endregion
-
-        #region GetInlineMergeText
-
-        /// <summary>
-        /// Gets a command text from the cache for the inline-merge operation.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
-        /// <param name="request">The request object.</param>
-        /// <returns>The cached command text.</returns>
-        public static string GetInlineMergeText<TEntity>(InlineMergeRequest request)
-            where TEntity : class
-        {
-            var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
-            {
-                var primaryField = DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
-                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateInlineMerge<TEntity>(new QueryBuilder(),
-                    primaryField,
-                    request.Fields,
-                    request.Qualifiers);
-                m_cache.TryAdd(request, commandText);
-            }
-            return commandText;
-        }
-
-        #endregion
-
-        #region GetInlineUpdateText
-
-        /// <summary>
-        /// Gets a command text from the cache for the inline-update operation.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
-        /// <param name="request">The request object.</param>
-        /// <returns>The cached command text.</returns>
-        public static string GetInlineUpdateText<TEntity>(InlineUpdateRequest request)
-            where TEntity : class
-        {
-            var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
-            {
-                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateInlineUpdate<TEntity>(new QueryBuilder(),
-                     request.Fields,
-                     request.Where);
-                m_cache.TryAdd(request, commandText);
-            }
-            else
-            {
-                request.Where?.AppendParametersPrefix();
             }
             return commandText;
         }
@@ -244,18 +115,19 @@ namespace RepoDb
         /// <summary>
         /// Gets a command text from the cache for the insert operation.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetInsertText<TEntity>(InsertRequest request)
-            where TEntity : class
+        public static string GetInsertText(InsertRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var primaryField = DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
+                var primaryField = GetPrimaryField(request);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateInsert<TEntity>(new QueryBuilder(), primaryField);
+                commandText = statementBuilder.CreateInsert(new QueryBuilder(),
+                    request.Name,
+                    primaryField,
+                    request.Fields);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -268,19 +140,19 @@ namespace RepoDb
         /// <summary>
         /// Gets a command text from the cache for the merge operation.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetMergeText<TEntity>(MergeRequest request)
-            where TEntity : class
+        public static string GetMergeText(MergeRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var primaryField = DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
+                var primaryField = GetPrimaryField(request);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateMerge<TEntity>(new QueryBuilder(),
+                commandText = statementBuilder.CreateMerge(new QueryBuilder(),
+                    request.Name,
                     primaryField,
+                    request.Fields,
                     request.Qualifiers);
                 m_cache.TryAdd(request, commandText);
             }
@@ -304,11 +176,13 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateQuery<TEntity>(new QueryBuilder(),
-                     request.Where,
-                     request.OrderBy,
-                     request.Top,
-                     request.Hints);
+                commandText = statementBuilder.CreateQuery(new QueryBuilder(),
+                    request.Name,
+                    request.Fields,
+                    request.Where,
+                    request.OrderBy,
+                    request.Top,
+                    request.Hints);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -331,11 +205,13 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateQuery<TEntity>(new QueryBuilder(),
-                     request.Where,
-                     request.OrderBy,
-                     request.Top,
-                     request.Hints);
+                commandText = statementBuilder.CreateQuery(new QueryBuilder(),
+                    request.Name,
+                    request.Fields,
+                    request.Where,
+                    request.OrderBy,
+                    request.Top,
+                    request.Hints);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -348,17 +224,16 @@ namespace RepoDb
         /// <summary>
         /// Gets a command text from the cache for the truncate operation.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetTruncateText<TEntity>(TruncateRequest request)
-            where TEntity : class
+        public static string GetTruncateText(TruncateRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateTruncate<TEntity>(new QueryBuilder());
+                commandText = statementBuilder.CreateTruncate(new QueryBuilder(),
+                    request.Name);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -371,18 +246,20 @@ namespace RepoDb
         /// <summary>
         /// Gets a command text from the cache for the update operation.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetUpdateText<TEntity>(UpdateRequest request)
-            where TEntity : class
+        public static string GetUpdateText(UpdateRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
+                var primaryField = GetPrimaryField(request);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateUpdate<TEntity>(new QueryBuilder(),
-                     request.Where);
+                commandText = statementBuilder.CreateUpdate(new QueryBuilder(),
+                    request.Name,
+                    primaryField,
+                    request.Fields,
+                    request.Where);
                 m_cache.TryAdd(request, commandText);
             }
             else
@@ -395,6 +272,32 @@ namespace RepoDb
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Gets the primary <see cref="DbField"/> object.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The primary <see cref="DbField"/> object.</returns>
+        private static DbField GetPrimaryField(BaseRequest request)
+        {
+            if (request.Type != null)
+            {
+                var primaryPropery = PrimaryCache.Get(request.Type);
+                var isIdentity = false;
+                if (primaryPropery != null)
+                {
+                    isIdentity = IdentityCache.Get(request.Type) != null;
+                    if (isIdentity == false)
+                    {
+                        var primaryDbField = DbFieldCache.Get(request.Connection, request.Name)?
+                            .FirstOrDefault(f => f.IsPrimary);
+                        isIdentity = primaryDbField?.IsIdentity == true;
+                    }
+                    return new DbField(primaryPropery.GetMappedName(), true, isIdentity, false);
+                }
+            }
+            return DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
+        }
 
         /// <summary>
         /// Throws an exception of the builder is not defined.

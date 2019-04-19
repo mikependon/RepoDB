@@ -1,6 +1,4 @@
-﻿using System.Data.Common;
-
-namespace RepoDb.Interfaces
+﻿namespace RepoDb.Interfaces
 {
     /// <summary>
     /// An interface used to mark a class to be usable for tracing operations. A trace object is being used by the repositories on every operations
@@ -66,30 +64,6 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the execute scalar execution.</param>
         void BeforeExecuteScalar(CancellableTraceLog log);
-
-        /// <summary>
-        /// A method being raised before the actual inline-delete operation execution.
-        /// </summary>
-        /// <param name="log">The cancellable log object referenced by the inline-delete execution.</param>
-        void BeforeInlineDelete(CancellableTraceLog log);
-
-        /// <summary>
-        /// A method being raised before the actual inline-insert operation execution.
-        /// </summary>
-        /// <param name="log">The cancellable log object referenced by the inline-insert execution.</param>
-        void BeforeInlineInsert(CancellableTraceLog log);
-
-        /// <summary>
-        /// A method being raised before the actual inline-merge operation execution.
-        /// </summary>
-        /// <param name="log">The cancellable log object referenced by the inline-merge execution.</param>
-        void BeforeInlineMerge(CancellableTraceLog log);
-
-        /// <summary>
-        /// A method being raised before the actual inline update operation execution.
-        /// </summary>
-        /// <param name="log">The cancellable log object referenced by the inline update execution.</param>
-        void BeforeInlineUpdate(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual insert operation execution.
@@ -185,30 +159,6 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="log">The log object referenced by the execute scalar execution.</param>
         void AfterExecuteScalar(TraceLog log);
-
-        /// <summary>
-        /// A method being raised after the actual inline-delete operation execution.
-        /// </summary>
-        /// <param name="log">The log object referenced by the inline-delete execution.</param>
-        void AfterInlineDelete(TraceLog log);
-
-        /// <summary>
-        /// A method being raised after the actual inline-insert operation execution.
-        /// </summary>
-        /// <param name="log">The log object referenced by the inline-insert execution.</param>
-        void AfterInlineInsert(TraceLog log);
-
-        /// <summary>
-        /// A method being raised after the actual inline-merge operation execution.
-        /// </summary>
-        /// <param name="log">The log object referenced by the inline-merge execution.</param>
-        void AfterInlineMerge(TraceLog log);
-
-        /// <summary>
-        /// A method being raised after the actual inline update operation execution.
-        /// </summary>
-        /// <param name="log">The log object referenced by the inline update execution.</param>
-        void AfterInlineUpdate(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual insert operation execution.

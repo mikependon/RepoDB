@@ -76,7 +76,7 @@ namespace RepoDb.Reflection
             // Initialize variables
             var memberAssignments = new List<MemberAssignment>();
             var dataReaderType = typeof(DbDataReader);
-            var tableFields = DbFieldCache.Get<TEntity>(connection);
+            var tableFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
             var strict = TypeMapper.ConversionType == ConversionType.Default;
 
             // Iterate each properties

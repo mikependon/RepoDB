@@ -15,37 +15,68 @@ namespace RepoDb.Requests
         /// <summary>
         /// Creates a new instance of <see cref="QueryRequest"/> object.
         /// </summary>
-        /// <param name="entityType">The entity type.</param>
+        /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="fields">The list of the target fields.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="orderBy">The list of order fields.</param>
         /// <param name="top">The filter for the rows.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public QueryRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IEnumerable<OrderField> orderBy = null,
-            int? top = null, string hints = null, IStatementBuilder statementBuilder = null)
-            : this(entityType.FullName, connection, where, orderBy, top, hints, statementBuilder)
-        { }
+        public QueryRequest(Type type,
+            IDbConnection connection,
+            IEnumerable<Field> fields = null,
+            QueryGroup where = null,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = null,
+            string hints = null,
+            IStatementBuilder statementBuilder = null)
+            : this(ClassMappedNameCache.Get(type),
+                  connection,
+                  fields,
+                  where,
+                  orderBy,
+                  top,
+                  hints,
+                  statementBuilder)
+        {
+            Type = type;
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryRequest"/> object.
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="fields">The list of the target fields.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="orderBy">The list of order fields.</param>
         /// <param name="top">The filter for the rows.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public QueryRequest(string name, IDbConnection connection, QueryGroup where = null, IEnumerable<OrderField> orderBy = null,
-            int? top = null, string hints = null, IStatementBuilder statementBuilder = null)
-            : base(name, connection, statementBuilder)
+        public QueryRequest(string name,
+            IDbConnection connection,
+            IEnumerable<Field> fields = null,
+            QueryGroup where = null,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = null,
+            string hints = null,
+            IStatementBuilder statementBuilder = null)
+            : base(name,
+                  connection,
+                  statementBuilder)
         {
+            Fields = fields;
             Where = where;
             OrderBy = orderBy;
             Top = top;
             Hints = hints;
         }
+
+        /// <summary>
+        /// Gets the list of the target fields.
+        /// </summary>
+        public IEnumerable<Field> Fields { get; set; }
 
         /// <summary>
         /// Gets the query expression used.
@@ -83,6 +114,15 @@ namespace RepoDb.Requests
 
             // Get first the entity hash code
             var hashCode = string.Concat(Name, ".Query").GetHashCode();
+
+            // Get the qualifier fields
+            if (Fields != null)
+            {
+                foreach (var field in Fields)
+                {
+                    hashCode += field.GetHashCode();
+                }
+            }
 
             // Add the expression
             if (!ReferenceEquals(null, Where))

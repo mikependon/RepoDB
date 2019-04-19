@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for string.
+    /// Contains the extension methods for <see cref="String"/>.
     /// </summary>
     public static class StringExtension
     {

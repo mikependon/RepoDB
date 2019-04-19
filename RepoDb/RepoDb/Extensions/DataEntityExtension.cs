@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using RepoDb.Attributes;
-using RepoDb.Enumerations;
 
 namespace RepoDb.Extensions
 {
@@ -27,7 +25,7 @@ namespace RepoDb.Extensions
             {
                 return null;
             }
-            var primary = PrimaryKeyCache.Get<TEntity>();
+            var primary = PrimaryCache.Get<TEntity>();
             if (primary != null)
             {
                 if (primary.PropertyInfo.PropertyType == typeof(Guid))

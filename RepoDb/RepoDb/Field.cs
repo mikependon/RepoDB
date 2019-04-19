@@ -54,6 +54,21 @@ namespace RepoDb
         /// <summary>
         /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
         /// </summary>
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <param name="entity">An object to be parsed.</param>
+        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
+        internal static IEnumerable<Field> Parse<TEntity>(TEntity entity)
+            where TEntity : class
+        {
+            foreach (var property in PropertyCache.Get<TEntity>())
+            {
+                yield return new Field(PropertyMappedNameCache.Get(property.PropertyInfo));
+            }
+        }
+
+        /// <summary>
+        /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
+        /// </summary>
         /// <param name="obj">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
         internal static IEnumerable<Field> Parse(object obj)

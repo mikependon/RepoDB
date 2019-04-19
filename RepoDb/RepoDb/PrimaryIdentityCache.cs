@@ -8,7 +8,7 @@ namespace RepoDb
     /// <summary>
     /// A static class used to get the cached value of data entity primary property as an identity.
     /// </summary>
-    internal static class PrimaryKeyIdentityCache
+    internal static class PrimaryIdentityCache
     {
         private static readonly ConcurrentDictionary<string, bool> m_cache = new ConcurrentDictionary<string, bool>();
 
@@ -25,10 +25,10 @@ namespace RepoDb
             var value = false;
             if (!m_cache.TryGetValue(key, out value))
             {
-                var primary = PrimaryKeyCache.Get<TEntity>();
+                var primary = PrimaryCache.Get<TEntity>();
                 if (primary != null)
                 {
-                    var fields = DbFieldCache.Get<TEntity>(connection);
+                    var fields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
                     if (fields != null)
                     {
                         var field = fields

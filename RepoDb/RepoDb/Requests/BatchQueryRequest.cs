@@ -15,24 +15,74 @@ namespace RepoDb.Requests
         /// <summary>
         /// Creates a new instance of <see cref="BatchQueryRequest"/> object.
         /// </summary>
-        /// <param name="entityType">The entity type.</param>
+        /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="fields">The list of the target fields.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of order fields.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public BatchQueryRequest(Type entityType, IDbConnection connection, QueryGroup where = null, int? page = null, int? rowsPerBatch = null,
-            IEnumerable<OrderField> orderBy = null, string hints = null, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
+        public BatchQueryRequest(Type type,
+            IDbConnection connection,
+            IEnumerable<Field> fields = null,
+            QueryGroup where = null,
+            int? page = null,
+            int? rowsPerBatch = null,
+            IEnumerable<OrderField> orderBy = null,
+            string hints = null,
+            IStatementBuilder statementBuilder = null)
+            : this(ClassMappedNameCache.Get(type),
+                  connection,
+                  fields,
+                  where,
+                  page,
+                  rowsPerBatch,
+                  orderBy,
+                  hints,
+                  statementBuilder)
         {
+            Type = type;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="BatchQueryRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="fields">The list of the target fields.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="page">The page of the batch.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch.</param>
+        /// <param name="orderBy">The list of order fields.</param>
+        /// <param name="hints">The hints for the table.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public BatchQueryRequest(string name,
+            IDbConnection connection,
+            IEnumerable<Field> fields = null,
+            QueryGroup where = null,
+            int? page = null,
+            int? rowsPerBatch = null,
+            IEnumerable<OrderField> orderBy = null,
+            string hints = null,
+            IStatementBuilder statementBuilder = null)
+            : base(name,
+                  connection,
+                  statementBuilder)
+        {
+            Fields = fields;
             Where = where;
             Page = page;
             RowsPerBatch = rowsPerBatch;
             OrderBy = orderBy;
             Hints = hints;
         }
+
+        /// <summary>
+        /// Gets the target fields.
+        /// </summary>
+        public IEnumerable<Field> Fields { get; set; }
 
         /// <summary>
         /// Gets the query expression used.
@@ -75,6 +125,15 @@ namespace RepoDb.Requests
 
             // Get first the entity hash code
             var hashCode = string.Concat(Name, ".BatchQuery").GetHashCode();
+
+            // Add the fields
+            if (Fields != null)
+            {
+                foreach (var field in Fields)
+                {
+                    hashCode += field.GetHashCode();
+                }
+            }
 
             // Add the expression
             if (!ReferenceEquals(null, Where))
