@@ -133,7 +133,7 @@ namespace RepoDb
                     throw new InvalidOperationException($"The type of field '{property.Name}' must be of '{typeof(Order).FullName}'.");
                 }
                 var order = (Order)property.GetValue(obj);
-                list.Add(new OrderField(property.Name, order));
+                list.Add(new OrderField(property.Name.AsQuoted(), order));
             }
             return list;
         }

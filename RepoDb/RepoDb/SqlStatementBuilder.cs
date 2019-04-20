@@ -3,6 +3,7 @@ using RepoDb.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using RepoDb.Exceptions;
 
 namespace RepoDb
 {
@@ -24,19 +25,19 @@ namespace RepoDb
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to query.</param>
-        /// <param name="where">The query expression.</param>
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <returns>A sql statement for batch query operation.</returns>
         public string CreateBatchQuery(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
-            QueryGroup where = null,
-            int? page = null,
-            int? rowsPerBatch = null,
+            int page,
+            int rowsPerBatch,
             IEnumerable<OrderField> orderBy = null,
+            QueryGroup where = null,
             string hints = null)
         {
             // Guard the target table
@@ -51,7 +52,19 @@ namespace RepoDb
             // Validate order by
             if (orderBy == null || orderBy?.Any() == false)
             {
-                throw new InvalidOperationException($"The argument 'orderBy' is required.");
+                throw new InvalidOperationException("The argument 'orderBy' is required.");
+            }
+
+            // Validate the page
+            if (page < 0)
+            {
+                throw new InvalidOperationException("The page must be equals or greater than 0.");
+            }
+
+            // Validate the page
+            if (rowsPerBatch < 0)
+            {
+                throw new InvalidOperationException($"The rows per batch must be equals or greater than 0.");
             }
 
             // Build the query
@@ -230,7 +243,7 @@ namespace RepoDb
             }
 
             // Variables needed
-            var primaryName = primaryField?.Name;
+            var primaryName = primaryField?.Name.AsQuoted();
             var isIdentity = primaryField?.IsIdentity == true;
             var insertableFields = fields
                 .Where(f => !(isIdentity == true && f.Name.ToLower() == primaryName?.ToLower()));
@@ -283,32 +296,53 @@ namespace RepoDb
             // Guard the target table
             Guard(tableName);
 
+            // Verify the fields
+            if (fields == null || fields?.Any() == false)
+            {
+                throw new NullReferenceException($"The list of insertable fields must not be null for '{tableName}'.");
+            }
+
             // Get the needed properties
-            var primaryName = primaryField?.Name;
+            var primaryName = primaryField?.Name.AsQuoted();
             var isIdentity = primaryField?.IsIdentity == true;
 
-            // Check for all the qualifier (from the entity table)
             if (qualifiers != null)
             {
+                // Check if the qualifiers are present in the given fields
                 var unmatchesQualifiers = qualifiers?.Where(field =>
                     fields?.FirstOrDefault(f =>
                         field.Name.ToLower() == f.Name.ToLower()) == null);
-                if (unmatchesQualifiers?.Count() > 0)
+
+                // Throw an error we found any unmatches
+                if (unmatchesQualifiers?.Any() == true)
                 {
-                    throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"present at the given fields.");
+                    throw new InvalidQualiferFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
+                        $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
                 }
             }
             else
             {
-                // Use the primary for qualifiers if there is no any
                 if (string.IsNullOrEmpty(primaryName) == false)
                 {
+                    // The primary is present, use it as a default if there are not qualifiers given
                     qualifiers = Field.From(primaryName);
+
+                    // Check if the qualifiers are present in the given fields
+                    var unmatchesQualifiers = qualifiers?.Where(field =>
+                        fields?.FirstOrDefault(f =>
+                            field.Name.ToLower() == f.Name.ToLower()) == null);
+
+                    // Throw an error we found any unmatches
+                    if (unmatchesQualifiers?.Any() == true)
+                    {
+                        throw new InvalidQualiferFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
+                            $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
+                    }
                 }
                 else
                 {
-                    throw new InvalidOperationException($"No qualifier fields found for '{tableName}'.");
+                    // Throw exception, qualifiers are not defined
+                    throw new NullReferenceException($"There are no qualifier fields found for '{tableName}'.");
                 }
             }
 
@@ -398,6 +432,21 @@ namespace RepoDb
                 throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
+            if (orderBy != null)
+            {
+                // Check if the order fields are present in the given fields
+                var unmatchesOrderFields = orderBy?.Where(orderField =>
+                    fields?.FirstOrDefault(f =>
+                        orderField.Name.ToLower() == f.Name.ToLower()) == null);
+
+                // Throw an error we found any unmatches
+                if (unmatchesOrderFields?.Any() == true)
+                {
+                    throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                        $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
+                }
+            }
+
             // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
@@ -463,27 +512,28 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="fields">The list of fields to be updated.</param>
         /// <param name="where">The query expression.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A sql statement for update operation.</returns>
         public string CreateUpdate(QueryBuilder queryBuilder,
             string tableName,
-            DbField primaryField = null,
-            IEnumerable<Field> fields = null,
-            QueryGroup where = null)
+            IEnumerable<Field> fields,
+            QueryGroup where,
+            DbField primaryField = null)
         {
             // Guard the target table
             Guard(tableName);
 
             // Variables needed
-            var primaryName = primaryField?.Name;
-            var isIdentity = primaryField?.IsIdentity == true;
-            var updatableFields = fields
-                .Where(f => !(isIdentity == true && f.Name.ToLower() == primaryName?.ToLower()));
+            var primaryName = primaryField?.Name.AsQuoted();
 
             // Append the proper prefix
             where?.AppendParametersPrefix();
+
+            // Gets the updatable fields
+            var updatableFields = fields
+                .Where(f => (f.Name.ToLower() == primaryName?.ToLower()) == false);
 
             // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
@@ -503,7 +553,7 @@ namespace RepoDb
         #endregion
 
         #region Helper
-        
+
         /// <summary>
         /// Throws an exception of the table name is null or empty.
         /// </summary>

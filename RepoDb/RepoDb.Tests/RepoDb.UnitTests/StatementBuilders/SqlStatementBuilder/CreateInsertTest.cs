@@ -4,9 +4,9 @@ using System;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlDbProviderCreateInsertTest
+    public class SqlStatementBuilderCreateInsertTest
     {
-        public void TestSqlDbProviderCreateInsert()
+        public void TestSqlStatementBuilderCreateInsert()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -30,7 +30,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        public void TestSqlDbProviderCreateInsertWithQuotedTableSchema()
+        public void TestSqlStatementBuilderCreateInsertWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -54,7 +54,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        public void TestSqlDbProviderCreateInsertWithUnquotedTableSchema()
+        public void TestSqlStatementBuilderCreateInsertWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -79,7 +79,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateInsertWithIdentityPrimaryField()
+        public void TestSqlStatementBuilderCreateInsertWithIdentityPrimaryField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -105,7 +105,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateInsertWithNonIdentityPrimaryField()
+        public void TestSqlStatementBuilderCreateInsertWithNonIdentityPrimaryField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -131,7 +131,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateInsertIfTheFieldsAreNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfThereAreNoFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -139,14 +139,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+            statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 primaryField: null,
                 fields: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateInsertIfTheTableIsNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -154,14 +154,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+            statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 primaryField: null,
                 fields: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateInsertIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -169,14 +169,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "";
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+            statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 primaryField: null,
                 fields: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateInsertIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfTheTableIsWhitespace()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -184,7 +184,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+            statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 primaryField: null,
                 fields: null);

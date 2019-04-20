@@ -31,10 +31,10 @@ namespace RepoDb
                 commandText = statementBuilder.CreateBatchQuery(new QueryBuilder(),
                     request.Name,
                     request.Fields,
-                    request.Where,
                     request.Page,
                     request.RowsPerBatch,
-                    request.OrderBy);
+                    request.OrderBy,
+                    request.Where);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -257,9 +257,9 @@ namespace RepoDb
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateUpdate(new QueryBuilder(),
                     request.Name,
-                    primaryField,
                     request.Fields,
-                    request.Where);
+                    request.Where,
+                    primaryField);
                 m_cache.TryAdd(request, commandText);
             }
             else

@@ -32,7 +32,7 @@ namespace RepoDb.UnitTests.Interfaces
             connection.BatchQuery<TraceEntity>(0,
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
-                null,
+                where: (QueryGroup)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 
@@ -51,7 +51,7 @@ namespace RepoDb.UnitTests.Interfaces
             connection.BatchQuery<TraceEntity>(0,
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
-                null,
+                where: (QueryGroup)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 

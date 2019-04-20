@@ -16,6 +16,13 @@ namespace RepoDb
         /// <param name="name">The name of the field.</param>
         public Field(string name)
         {
+            // Name is required
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new NullReferenceException(name);
+            }
+
+            // Set the name
             Name = name;
         }
 

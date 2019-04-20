@@ -79,19 +79,19 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Adds a quotes to the string as a database parameter.
+        /// Set the string to be a database parameterized string.
         /// </summary>
-        /// <param name="value">The string value where the database quotes will be added.</param>
-        /// <param name="trim">The boolean value that indicates whether to trim the string first before unquoting.</param>
-        /// <returns></returns>
-        public static string AsQuotedParameter(this string value, bool trim = false)
+        /// <param name="value">The target string to be quoted.</param>
+        /// <param name="trim">True if to trim the string first.</param>
+        /// <param name="prefix">The prefix to the parameter.</param>
+        /// <returns>A parameterized quoted string.</returns>
+        public static string AsQuotedParameter(this string value, bool trim = false, string prefix = Constant.DefaultParameterPrefix)
         {
             if (trim)
             {
                 value = value.Trim();
             }
-            value = value.AsUnquoted().Replace(" ", "_");
-            return value;
+            return string.Concat(prefix, value.AsUnquoted().Replace(" ", "_"));
         }
 
         // AsEnumerable

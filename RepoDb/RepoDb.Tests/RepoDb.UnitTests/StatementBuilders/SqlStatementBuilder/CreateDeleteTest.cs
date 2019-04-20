@@ -4,10 +4,10 @@ using System;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlDbProviderCreateDeleteTest
+    public class SqlStatementBuilderCreateDeleteTest
     {
         [TestMethod]
-        public void TestSqlDbProviderCreateDelete()
+        public void TestSqlStatementBuilderCreateDelete()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -25,7 +25,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateDeleteWithWhereExpression()
+        public void TestSqlStatementBuilderCreateDeleteWithWhereExpression()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -43,7 +43,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateDeleteWithQuotedTableSchema()
+        public void TestSqlStatementBuilderCreateDeleteWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -62,7 +62,7 @@ namespace RepoDb.UnitTests.StatementBuilders
 
 
         [TestMethod]
-        public void TestSqlDbProviderCreateDeleteWithUnquotedTableSchema()
+        public void TestSqlStatementBuilderCreateDeleteWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -80,7 +80,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateDeleteIfTheTableIsNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateDeleteIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -93,7 +93,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateDeleteIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlStatementBuilderCreateDeleteIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -106,7 +106,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateDeleteIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlStatementBuilderCreateDeleteIfTheTableIsWhitespace()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();

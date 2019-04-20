@@ -64,6 +64,7 @@
     <Compile Include="ClassMappedNameCache.cs" />
     <Compile Include="ClassProperty.cs" />
     <Compile Include="DataReaderFieldDefinition.cs" />
+    <Compile Include="Exceptions\InvalidQualiferFieldsException.cs" />
     <Compile Include="Operations\BaseRepository\Update.cs" />
     <Compile Include="Operations\BaseRepository\Truncate.cs" />
     <Compile Include="Operations\BaseRepository\Query.cs" />

@@ -41,10 +41,10 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
@@ -60,10 +60,10 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
@@ -352,9 +352,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>()), Times.Exactly(1));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -372,9 +372,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>()), Times.Exactly(0));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
     }
 }

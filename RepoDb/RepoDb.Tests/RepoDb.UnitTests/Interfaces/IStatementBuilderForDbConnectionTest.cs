@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Attributes;
+using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
 using System.Collections.Generic;
@@ -90,10 +91,10 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.BatchQuery<DataEntityForDbConnectionStatementBuilder>(0,
-                10,
-                null,
-                null,
+            connection.BatchQuery<DataEntityForDbConnectionStatementBuilder>(page: 0,
+                rowsPerBatch: 10,
+                orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                where: (QueryGroup)null,
                 statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -102,20 +103,20 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.BatchQuery<DataEntityForDbConnectionStatementBuilder>(0,
-                10,
-                null,
-                null,
+            connection.BatchQuery<DataEntityForDbConnectionStatementBuilder>(page: 0,
+                rowsPerBatch: 10,
+                orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                where: (QueryGroup)null,
                 statementBuilder: statementBuilderNever.Object);
 
             // Assert
@@ -124,10 +125,10 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
@@ -1041,9 +1042,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilder>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>()), Times.Exactly(1));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1058,9 +1059,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilder>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>()), Times.Exactly(0));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
 
         [TestMethod]
@@ -1087,9 +1088,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>()), Times.Exactly(1));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1111,9 +1112,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>()), Times.Exactly(0));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
 
         [TestMethod]
@@ -1133,9 +1134,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>()), Times.Exactly(1));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1158,9 +1159,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>()), Times.Exactly(0));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
     }
 }

@@ -5,10 +5,10 @@ using System;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlDbProviderCreateBatchQueryTest
+    public class SqlStatementBuilderCreateBatchQueryTest
     {
         [TestMethod]
-        public void TestSqlDbProviderCreateBatchQueryFirstBatch()
+        public void TestSqlStatementBuilderCreateBatchQueryFirstBatch()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -24,10 +24,10 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: null,
                 page: 0,
                 rowsPerBatch: 10,
-                orderBy: orderBy);
+                orderBy: orderBy,
+                where: null);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -44,7 +44,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateBatchQuerySecondBatch()
+        public void TestSqlStatementBuilderCreateBatchQuerySecondBatch()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -60,10 +60,10 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: null,
                 page: 1,
                 rowsPerBatch: 10,
-                orderBy: orderBy);
+                orderBy: orderBy,
+                where: null);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -80,7 +80,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateBatchQueryWithQuotedTableSchema()
+        public void TestSqlStatementBuilderCreateBatchQueryWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -96,10 +96,10 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: null,
                 page: 0,
                 rowsPerBatch: 10,
-                orderBy: orderBy);
+                orderBy: orderBy,
+                where: null);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -116,7 +116,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateBatchQueryWithUnquotedTableSchema()
+        public void TestSqlStatementBuilderCreateBatchQueryWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -132,10 +132,10 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: null,
                 page: 0,
                 rowsPerBatch: 10,
-                orderBy: orderBy);
+                orderBy: orderBy,
+                where: null);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -152,7 +152,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateBatchQueryWithWhereExpression()
+        public void TestSqlStatementBuilderCreateBatchQueryWithWhereExpression()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -169,10 +169,10 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: where,
                 page: 1,
                 rowsPerBatch: 10,
-                orderBy: orderBy);
+                orderBy: orderBy,
+                where: where);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -190,7 +190,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateBatchQueryWithWhereExpressionUniqueField()
+        public void TestSqlStatementBuilderCreateBatchQueryWithWhereExpressionUniqueField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -207,10 +207,10 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: where,
                 page: 1,
                 rowsPerBatch: 10,
-                orderBy: orderBy);
+                orderBy: orderBy,
+                where: where);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -228,7 +228,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfTheTableIsNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -240,14 +240,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: null,
                 page: 0,
                 rowsPerBatch: 10,
-                orderBy: null);
+                orderBy: null,
+                where: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -259,14 +259,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: null,
                 page: 0,
                 rowsPerBatch: 10,
-                orderBy: null);
+                orderBy: null,
+                where: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheTableIsWhitespace()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -278,14 +278,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: null,
                 page: 0,
                 rowsPerBatch: 10,
-                orderBy: null);
+                orderBy: null,
+                where: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfTheFieldsAreNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheFieldsAreNull()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -300,14 +300,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: null,
-                where: null,
                 page: 0,
                 rowsPerBatch: 10,
-                orderBy: orderBy);
+                orderBy: orderBy,
+                where: null);
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfThereAreNoOrderFields()
+        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfThereAreNoOrderFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -319,10 +319,56 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: null,
                 page: 0,
                 rowsPerBatch: 10,
-                orderBy: null);
+                orderBy: null,
+                where: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfThePageIsLessThanZero()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2");
+            var orderBy = OrderField.Parse(new
+            {
+                Field1 = Order.Ascending
+            });
+
+            // Act/Assert
+            statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                page: -1,
+                rowsPerBatch: 10,
+                orderBy: orderBy,
+                where: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheRowsPerBatchIsLessThanZero()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2");
+            var orderBy = OrderField.Parse(new
+            {
+                Field1 = Order.Ascending
+            });
+
+            // Act/Assert
+            statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                page: 0,
+                rowsPerBatch: -1,
+                orderBy: orderBy,
+                where: null);
         }
     }
 }

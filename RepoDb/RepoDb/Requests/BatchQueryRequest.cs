@@ -18,28 +18,28 @@ namespace RepoDb.Requests
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="fields">The list of the target fields.</param>
-        /// <param name="where">The query expression.</param>
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of order fields.</param>
+        /// <param name="where">The query expression.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public BatchQueryRequest(Type type,
             IDbConnection connection,
-            IEnumerable<Field> fields = null,
+            IEnumerable<Field> fields,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
             QueryGroup where = null,
-            int? page = null,
-            int? rowsPerBatch = null,
-            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
                   fields,
-                  where,
                   page,
                   rowsPerBatch,
                   orderBy,
+                  where,
                   hints,
                   statementBuilder)
         {
@@ -52,19 +52,19 @@ namespace RepoDb.Requests
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="fields">The list of the target fields.</param>
-        /// <param name="where">The query expression.</param>
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of order fields.</param>
+        /// <param name="where">The query expression.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public BatchQueryRequest(string name,
             IDbConnection connection,
-            IEnumerable<Field> fields = null,
+            IEnumerable<Field> fields,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
             QueryGroup where = null,
-            int? page = null,
-            int? rowsPerBatch = null,
-            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
@@ -92,12 +92,12 @@ namespace RepoDb.Requests
         /// <summary>
         /// Gets the filter for the rows.
         /// </summary>
-        public int? Page { get; }
+        public int Page { get; }
 
         /// <summary>
         /// Gets the number of rows per batch.
         /// </summary>
-        public int? RowsPerBatch { get; }
+        public int RowsPerBatch { get; }
 
         /// <summary>
         /// Gets the list of the order fields.

@@ -4,10 +4,10 @@ using System;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlDbProviderCreateCountTest
+    public class SqlStatementBuilderCreateCountTest
     {
         [TestMethod]
-        public void TestSqlDbProviderCreateCount()
+        public void TestSqlStatementBuilderCreateCount()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -25,7 +25,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateCountWithHints()
+        public void TestSqlStatementBuilderCreateCountWithHints()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -44,7 +44,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateCountWithQuotedTableSchema()
+        public void TestSqlStatementBuilderCreateCountWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -62,7 +62,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateCountWithUnquotedTableSchema()
+        public void TestSqlStatementBuilderCreateCountWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -80,7 +80,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateCountIfTheTableIsNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -94,7 +94,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateCountIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -108,7 +108,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlDbProviderCreateCountIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsWhitespace()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
