@@ -9,6 +9,8 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ITraceForDbRepositoryTest
     {
+        private readonly IStatementBuilder m_statementBuilder = new SqlStatementBuilder();
+
         public class TraceEntity
         {
             [Primary, Identity]
@@ -28,10 +30,13 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.BatchQuery<TraceEntity>(0, 10, null, null);
+            repository.Object.BatchQuery<TraceEntity>(0,
+                10,
+                null,
+                null);
 
             // Assert
             trace.Verify(t => t.BeforeBatchQuery(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -47,10 +52,13 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.BatchQuery<TraceEntity>(0, 10, null, null);
+            repository.Object.BatchQuery<TraceEntity>(0,
+                10,
+                null,
+                null);
 
             // Assert
             trace.Verify(t => t.AfterBatchQuery(It.IsAny<TraceLog>()), Times.Once);
@@ -59,7 +67,7 @@ namespace RepoDb.UnitTests.Interfaces
         // Count
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeBulkInsert()
+        public void TestDbRepositoryTraceForBeforeCount()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -68,7 +76,7 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
             repository.Object.Count<TraceEntity>();
@@ -87,10 +95,48 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
             repository.Object.Count<TraceEntity>();
+
+            // Assert
+            trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeCountViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.Count(ClassMappedNameCache.Get<TraceEntity>());
+
+            // Assert
+            trace.Verify(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterCountViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.Count(ClassMappedNameCache.Get<TraceEntity>());
 
             // Assert
             trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Once);
@@ -108,7 +154,7 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
             repository.Object.Delete<TraceEntity>(0);
@@ -127,7 +173,7 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
             repository.Object.Delete<TraceEntity>(0);
@@ -136,10 +182,8 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Once);
         }
 
-        // InlineInsert
-
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeInlineInsert()
+        public void TestDbRepositoryTraceForBeforeDeleteViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -148,17 +192,17 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.InlineInsert<TraceEntity>(new { Id = 1, Name = "Name" });
+            repository.Object.Delete(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 0 });
 
             // Assert
-            trace.Verify(t => t.BeforeInlineInsert(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterInlineInsert()
+        public void TestDbRepositoryTraceForAfterDeleteViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -167,93 +211,13 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.InlineInsert<TraceEntity>(new { Id = 1, Name = "Name" });
+            repository.Object.Delete(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 0 });
 
             // Assert
-            trace.Verify(t => t.AfterInlineInsert(It.IsAny<TraceLog>()), Times.Once);
-        }
-
-        // InlineMerge
-
-        [TestMethod]
-        public void TestDbRepositoryTraceForBeforeInlineMerge()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
-                0,
-                null,
-                Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                new SqlStatementBuilder());
-
-            // Act
-            repository.Object.InlineMerge<TraceEntity>(new { Id = 1, Name = "Name" });
-
-            // Assert
-            trace.Verify(t => t.BeforeInlineMerge(It.IsAny<CancellableTraceLog>()), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestDbRepositoryTraceForAfterInlineMerge()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
-                0,
-                null,
-                Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                new SqlStatementBuilder());
-
-            // Act
-            repository.Object.InlineMerge<TraceEntity>(new { Id = 1, Name = "Name" });
-
-            // Assert
-            trace.Verify(t => t.AfterInlineMerge(It.IsAny<TraceLog>()), Times.Once);
-        }
-
-        // InlineUpdate
-
-        [TestMethod]
-        public void TestDbRepositoryTraceForBeforeInlineUpdate()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
-                0,
-                null,
-                Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                new SqlStatementBuilder());
-
-            // Act
-            repository.Object.InlineUpdate<TraceEntity>(new { Name = "Name" }, te => te.Id == 1);
-
-            // Assert
-            trace.Verify(t => t.BeforeInlineUpdate(It.IsAny<CancellableTraceLog>()), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestDbRepositoryTraceForAfterInlineUpdate()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
-                0,
-                null,
-                Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                new SqlStatementBuilder());
-
-            // Act
-            repository.Object.InlineUpdate<TraceEntity>(new { Name = "Name" }, te => te.Id == 1);
-
-            // Assert
-            trace.Verify(t => t.AfterInlineUpdate(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Once);
         }
 
         // Insert
@@ -268,10 +232,13 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.Insert<TraceEntity>(new TraceEntity { Name = "Name" });
+            repository.Object.Insert<TraceEntity>(new TraceEntity
+            {
+                Name = "Name"
+            });
 
             // Assert
             trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -287,10 +254,57 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.Insert<TraceEntity>(new TraceEntity { Name = "Name" });
+            repository.Object.Insert<TraceEntity>(new TraceEntity
+            {
+                Name = "Name"
+            });
+
+            // Assert
+            trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeInsertViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.Insert(ClassMappedNameCache.Get<TraceEntity>(), new
+            {
+                Name = "Name"
+            });
+
+            // Assert
+            trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterInsertViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.Insert(ClassMappedNameCache.Get<TraceEntity>(), new
+            {
+                Name = "Name"
+            });
 
             // Assert
             trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Once);
@@ -308,10 +322,14 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.Merge<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" });
+            repository.Object.Merge<TraceEntity>(new TraceEntity
+            {
+                Id = 1,
+                Name = "Name"
+            });
 
             // Assert
             trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -327,10 +345,60 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.Merge<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" });
+            repository.Object.Merge<TraceEntity>(new TraceEntity
+            {
+                Id = 1,
+                Name = "Name"
+            });
+
+            // Assert
+            trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMergeViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.Merge(ClassMappedNameCache.Get<TraceEntity>(), new
+            {
+                Id = 1,
+                Name = "Name"
+            });
+
+            // Assert
+            trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMergeViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.Merge(ClassMappedNameCache.Get<TraceEntity>(), new
+            {
+                Id = 1,
+                Name = "Name"
+            });
 
             // Assert
             trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Once);
@@ -348,7 +416,7 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
             repository.Object.Query<TraceEntity>(te => te.Id == 1);
@@ -367,7 +435,7 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
             repository.Object.Query<TraceEntity>(te => te.Id == 1);
@@ -388,10 +456,11 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1, te => te.Id == 1);
+            repository.Object.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1);
 
             // Assert
             trace.Verify(t => t.BeforeQueryMultiple(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -407,10 +476,11 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1, te => te.Id == 1);
+            repository.Object.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1);
 
             // Assert
             trace.Verify(t => t.AfterQueryMultiple(It.IsAny<TraceLog>()), Times.Once);
@@ -428,7 +498,7 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
             repository.Object.Truncate<TraceEntity>();
@@ -447,10 +517,48 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
             repository.Object.Truncate<TraceEntity>();
+
+            // Assert
+            trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeTruncateViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.Truncate(ClassMappedNameCache.Get<TraceEntity>());
+
+            // Assert
+            trace.Verify(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterTruncateViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.Truncate(ClassMappedNameCache.Get<TraceEntity>());
 
             // Assert
             trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Once);
@@ -468,10 +576,14 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.Update<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" });
+            repository.Object.Update<TraceEntity>(new TraceEntity
+            {
+                Id = 1,
+                Name = "Name"
+            });
 
             // Assert
             trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -487,10 +599,68 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace.Object,
-                new SqlStatementBuilder());
+                m_statementBuilder);
 
             // Act
-            repository.Object.Update<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" });
+            repository.Object.Update<TraceEntity>(new TraceEntity
+            {
+                Id = 1,
+                Name = "Name"
+            });
+
+            // Assert
+            trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeUpdateViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.Update(ClassMappedNameCache.Get<TraceEntity>(),
+                new
+                {
+                    Name = "Name"
+                },
+                new
+                {
+                    Id = 1
+                });
+
+            // Assert
+            trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterUpdateViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.Update(ClassMappedNameCache.Get<TraceEntity>(),
+                new
+                {
+                    Name = "Name"
+                },
+                new
+                {
+                    Id = 1
+                });
 
             // Assert
             trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Once);

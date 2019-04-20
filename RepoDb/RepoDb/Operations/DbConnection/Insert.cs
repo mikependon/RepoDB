@@ -455,7 +455,7 @@ namespace RepoDb
                     return default(TResult);
                 }
                 commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = ((IEnumerable<PropertyValue>)cancellableTraceLog?.Parameter ?? param);
+                param = (cancellableTraceLog.Parameter ?? param);
             }
 
             // Before Execution Time
@@ -523,7 +523,7 @@ namespace RepoDb
                     return default(TResult);
                 }
                 commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = ((IEnumerable<PropertyValue>)cancellableTraceLog?.Parameter ?? param);
+                param = (cancellableTraceLog.Parameter ?? param);
             }
 
             // Before Execution Time

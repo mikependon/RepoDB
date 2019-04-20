@@ -92,6 +92,9 @@
     <Compile Include="Interfaces\IStatementBuilderForBaseRepositoryTest.cs" />
     <Compile Include="Interfaces\IStatementBuilderForDbConnectionTest.cs" />
     <Compile Include="Interfaces\IStatementBuilderForDbRepositoryTest.cs" />
+    <Compile Include="Interfaces\ITraceForBaseRepositoryTest.cs" />
+    <Compile Include="Interfaces\ITraceForDbConnectionTest.cs" />
+    <Compile Include="Interfaces\ITraceForDbRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
