@@ -17,14 +17,14 @@ namespace RepoDb.UnitTests.Interfaces
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderViaTableName
+        public class DataEntityForDbRepositoryStatementBuilderForTableName
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderAcrossCalls
+        public class DataEntityForDbRepositoryStatementBuilderForCrossCall
         {
             [Primary, Identity]
             public int Id { get; set; }
@@ -174,13 +174,13 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>());
+            repository.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(1));
 
@@ -189,32 +189,32 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>());
+            repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForCountAcrossCalls()
+        public void TestDbRepositoryStatementBuilderForCountViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Count<DataEntityForDbRepositoryStatementBuilderAcrossCalls>();
+            repository.Count<DataEntityForDbRepositoryStatementBuilderForCrossCall>();
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(1));
 
@@ -223,13 +223,13 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>());
+            repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(0));
         }
@@ -276,7 +276,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Delete(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>(),
+            repository.Delete(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new
                 {
                     Id = 1
@@ -286,7 +286,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<QueryGroup>()), Times.Exactly(1));
 
             // Prepare
@@ -294,7 +294,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Delete(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>(),
+            repositoryNever.Delete(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new
                 {
                     Id = 1
@@ -304,25 +304,25 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<QueryGroup>()), Times.Exactly(0));
         }
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForDeleteAcrossCalls()
+        public void TestDbRepositoryStatementBuilderForDeleteViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Delete<DataEntityForDbRepositoryStatementBuilderAcrossCalls>(e => e.Id == 1);
+            repository.Delete<DataEntityForDbRepositoryStatementBuilderForCrossCall>(e => e.Id == 1);
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<QueryGroup>()), Times.Exactly(1));
 
             // Prepare
@@ -330,7 +330,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Delete(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>(),
+            repositoryNever.Delete(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
                 new
                 {
                     Id = 1
@@ -340,7 +340,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<QueryGroup>()), Times.Exactly(0));
         }
 
@@ -384,56 +384,56 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>());
+            repository.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>())), Times.Exactly(1));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>())), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>());
+            repositoryNever.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>())), Times.Exactly(0));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>())), Times.Exactly(0));
         }
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForDeleteAllAcrossCalls()
+        public void TestDbRepositoryStatementBuilderForDeleteAllViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.DeleteAll<DataEntityForDbRepositoryStatementBuilderAcrossCalls>();
+            repository.DeleteAll<DataEntityForDbRepositoryStatementBuilderForCrossCall>();
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>())), Times.Exactly(1));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>())), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>());
+            repositoryNever.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>())), Times.Exactly(0));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>())), Times.Exactly(0));
         }
 
         // CreateInsert
@@ -481,14 +481,14 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForInsertForTableName()
+        public void TestDbRepositoryStatementBuilderForInsertViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>(),
+            repository.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new
                 {
                     Name = "Name"
@@ -498,7 +498,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Exactly(1));
 
@@ -507,7 +507,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>(),
+            repositoryNever.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new
                 {
                     Name = "Name"
@@ -517,21 +517,21 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Exactly(0));
         }
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForInsertAcrossCalls()
+        public void TestDbRepositoryStatementBuilderForInsertViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Insert<DataEntityForDbRepositoryStatementBuilderAcrossCalls>(
-                new DataEntityForDbRepositoryStatementBuilderAcrossCalls
+            repository.Insert<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new DataEntityForDbRepositoryStatementBuilderForCrossCall
                 {
                     Name = "Name"
                 });
@@ -540,7 +540,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Exactly(1));
 
@@ -549,7 +549,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>(),
+            repositoryNever.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
                 new
                 {
                     Id = 1,
@@ -560,7 +560,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Exactly(0));
         }
@@ -614,25 +614,25 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForMergeForTableName()
+        public void TestDbRepositoryStatementBuilderForMergeViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>(),
+            repository.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new
                 {
                     Name = "Name"
                 },
-                new Field(nameof(DataEntityForDbRepositoryStatementBuilderViaTableName.Id)));
+                new Field(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id)));
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Exactly(1));
@@ -642,43 +642,43 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>(),
+            repositoryNever.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new
                 {
                     Name = "Name"
                 },
-                new Field(nameof(DataEntityForDbRepositoryStatementBuilderViaTableName.Id)));
+                new Field(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id)));
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Exactly(0));
         }
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForMergeAcrossCalls()
+        public void TestDbRepositoryStatementBuilderForMergeViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Merge<DataEntityForDbRepositoryStatementBuilderAcrossCalls>(
-                new DataEntityForDbRepositoryStatementBuilderAcrossCalls
+            repository.Merge<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new DataEntityForDbRepositoryStatementBuilderForCrossCall
                 {
                     Name = "Name"
                 },
-                new Field(nameof(DataEntityForDbRepositoryStatementBuilderAcrossCalls.Id)));
+                new Field(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)));
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Exactly(1));
@@ -688,19 +688,19 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>(),
+            repositoryNever.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
                 new
                 {
                     Id = 1,
                     Name = "Name"
                 },
-                new Field(nameof(DataEntityForDbRepositoryStatementBuilderAcrossCalls.Id)));
+                new Field(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)));
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Exactly(0));
@@ -955,63 +955,63 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForTruncateForTableName()
+        public void TestDbRepositoryStatementBuilderForTruncateViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Truncate(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>());
+            repository.Truncate(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateTruncate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>())), Times.Exactly(1));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>())), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Truncate(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>());
+            repositoryNever.Truncate(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateTruncate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>())), Times.Exactly(0));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>())), Times.Exactly(0));
         }
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForTruncateAcrossCalls()
+        public void TestDbRepositoryStatementBuilderForTruncateViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Truncate<DataEntityForDbRepositoryStatementBuilderAcrossCalls>();
+            repository.Truncate<DataEntityForDbRepositoryStatementBuilderForCrossCall>();
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateTruncate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>())), Times.Exactly(1));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>())), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Truncate(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>());
+            repositoryNever.Truncate(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateTruncate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>())), Times.Exactly(0));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>())), Times.Exactly(0));
         }
 
         // CreateUpdate
@@ -1070,8 +1070,8 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>(),
-                new DataEntityForDbRepositoryStatementBuilderViaTableName
+            repository.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new DataEntityForDbRepositoryStatementBuilderForTableName
                 {
                     Name = "Update"
                 },
@@ -1081,7 +1081,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>()), Times.Exactly(1));
@@ -1091,8 +1091,8 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>(),
-                new DataEntityForDbRepositoryStatementBuilderViaTableName
+            repositoryNever.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new DataEntityForDbRepositoryStatementBuilderForTableName
                 {
                     Name = "Update"
                 },
@@ -1102,22 +1102,22 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderViaTableName>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>()), Times.Exactly(0));
         }
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForUpdateAcrossCalls()
+        public void TestDbRepositoryStatementBuilderForUpdateViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Update<DataEntityForDbRepositoryStatementBuilderAcrossCalls>(
-                new DataEntityForDbRepositoryStatementBuilderAcrossCalls
+            repository.Update<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new DataEntityForDbRepositoryStatementBuilderForCrossCall
                 {
                     Name = "Update"
                 },
@@ -1127,7 +1127,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>()), Times.Exactly(1));
@@ -1137,8 +1137,8 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>(),
-                new DataEntityForDbRepositoryStatementBuilderAcrossCalls
+            repositoryNever.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new DataEntityForDbRepositoryStatementBuilderForCrossCall
                 {
                     Id = 1,
                     Name = "Update"
@@ -1149,7 +1149,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderAcrossCalls>()),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>()), Times.Exactly(0));

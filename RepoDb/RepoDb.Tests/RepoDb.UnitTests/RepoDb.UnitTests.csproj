@@ -90,6 +90,7 @@
     <Compile Include="Fields\FieldTest.cs" />
     <Compile Include="Fields\OrderFieldTest.cs" />
     <Compile Include="Interfaces\IStatementBuilderForBaseRepositoryTest.cs" />
+    <Compile Include="Interfaces\IStatementBuilderForDbConnectionTest.cs" />
     <Compile Include="Interfaces\IStatementBuilderForDbRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
