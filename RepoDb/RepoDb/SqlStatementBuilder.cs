@@ -39,13 +39,22 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null)
         {
+            // Guard the target table
+            Guard(tableName);
+
             // There should be fields
             if (fields == null || fields?.Any() == false)
             {
-                throw new InvalidOperationException($"No batch queryable fields for '{tableName}'.");
+                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
-            // Build the SQL Statement
+            // Validate order by
+            if (orderBy == null || orderBy?.Any() == false)
+            {
+                throw new InvalidOperationException($"The argument 'orderBy' is required.");
+            }
+
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
@@ -104,6 +113,10 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null)
         {
+            // Guard the target table
+            Guard(tableName);
+
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
@@ -144,6 +157,10 @@ namespace RepoDb
             string tableName,
             QueryGroup where = null)
         {
+            // Guard the target table
+            Guard(tableName);
+
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
@@ -152,6 +169,8 @@ namespace RepoDb
                 .TableNameFrom(tableName)
                 .WhereFrom(where)
                 .End();
+
+            // Return the query
             return queryBuilder.GetString();
         }
 
@@ -168,6 +187,10 @@ namespace RepoDb
         public string CreateDeleteAll(QueryBuilder queryBuilder,
             string tableName)
         {
+            // Guard the target table
+            Guard(tableName);
+
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
@@ -175,6 +198,8 @@ namespace RepoDb
                 .From()
                 .TableNameFrom(tableName)
                 .End();
+
+            // Return the query
             return queryBuilder.GetString();
         }
 
@@ -195,13 +220,22 @@ namespace RepoDb
             DbField primaryField = null,
             IEnumerable<Field> fields = null)
         {
+            // Guard the target table
+            Guard(tableName);
+
+            // Verify the fields
+            if (fields == null || fields?.Any() == false)
+            {
+                throw new NullReferenceException($"The list of insertable fields must not be null for '{tableName}'.");
+            }
+
             // Variables needed
             var primaryName = primaryField?.Name;
             var isIdentity = primaryField?.IsIdentity == true;
             var insertableFields = fields
                 .Where(f => !(isIdentity == true && f.Name.ToLower() == primaryName?.ToLower()));
 
-            // Build the SQL Statement
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
@@ -246,6 +280,9 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null)
         {
+            // Guard the target table
+            Guard(tableName);
+
             // Get the needed properties
             var primaryName = primaryField?.Name;
             var isIdentity = primaryField?.IsIdentity == true;
@@ -281,7 +318,7 @@ namespace RepoDb
             var updateableFields = fields
                 .Where(field => (field.Name.ToLower() == primaryName?.ToLower()) == false);
 
-            // Build the SQL Statement
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
@@ -352,16 +389,17 @@ namespace RepoDb
             int? top = null,
             string hints = null)
         {
+            // Guard the target table
+            Guard(tableName);
+
             // There should be fields
             if (fields == null || fields.Any() == false)
             {
-                throw new InvalidOperationException($"There are no queryable fields found for '{tableName}'.");
+                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
-            // Build the SQL Statement
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
-
-            // Build the base
             queryBuilder
                 .Clear()
                 .Select()
@@ -400,9 +438,11 @@ namespace RepoDb
         public string CreateTruncate(QueryBuilder queryBuilder,
             string tableName)
         {
-            queryBuilder = queryBuilder ?? new QueryBuilder();
+            // Guard the target table
+            Guard(tableName);
 
-            // Build the SQL Statement
+            // Build the query
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Truncate()
@@ -433,6 +473,9 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             QueryGroup where = null)
         {
+            // Guard the target table
+            Guard(tableName);
+
             // Variables needed
             var primaryName = primaryField?.Name;
             var isIdentity = primaryField?.IsIdentity == true;
@@ -442,7 +485,7 @@ namespace RepoDb
             // Append the proper prefix
             where?.AppendParametersPrefix();
 
-            // Build the SQL Statement
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
@@ -455,6 +498,22 @@ namespace RepoDb
 
             // Return the query
             return queryBuilder.GetString();
+        }
+
+        #endregion
+
+        #region Helper
+        
+        /// <summary>
+        /// Throws an exception of the table name is null or empty.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        private void Guard(string tableName)
+        {
+            if (string.IsNullOrEmpty(tableName?.Trim()))
+            {
+                throw new NullReferenceException("The name of the table could be null.");
+            }
         }
 
         #endregion

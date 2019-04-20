@@ -1,79 +1,121 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Attributes;
+using System;
 
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
     public class SqlDbProviderCreateDeleteTest
     {
-        private class TestSqlDbProviderCreateDeleteWithoutMappingsClass
-        {
-        }
-
         [TestMethod]
-        public void TestSqlDbProviderCreateDeleteWithoutMappings()
+        public void TestSqlDbProviderCreateDelete()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
 
             // Act
-            var actual = statementBuilder.CreateDelete<TestSqlDbProviderCreateDeleteWithoutMappingsClass>(queryBuilder, null);
-            var expected = $"" +
-                $"DELETE " +
-                $"FROM [TestSqlDbProviderCreateDeleteWithoutMappingsClass] ;";
+            var actual = statementBuilder.CreateDelete(queryBuilder: queryBuilder,
+                tableName: tableName,
+                where: null);
+            var expected = "DELETE FROM [Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestSqlDbProviderCreateDeleteWithoutMappingsAndWithExpressionsClass
-        {
-        }
-
         [TestMethod]
-        public void TestSqlDbProviderCreateDeleteWithExpressions()
+        public void TestSqlDbProviderCreateDeleteWithWhereExpression()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
-            var expression = new { Field1 = 1 };
+            var tableName = "Table";
 
             // Act
-            var queryGroup = QueryGroup.Parse(expression);
-            var actual = statementBuilder.CreateDelete<TestSqlDbProviderCreateDeleteWithoutMappingsAndWithExpressionsClass>(queryBuilder, queryGroup);
-            var expected = $"" +
-                $"DELETE " +
-                $"FROM [TestSqlDbProviderCreateDeleteWithoutMappingsAndWithExpressionsClass] " +
-                $"WHERE ([Field1] = @Field1) ;";
+            var actual = statementBuilder.CreateDelete(queryBuilder: queryBuilder,
+                tableName: tableName,
+                where: null);
+            var expected = "DELETE FROM [Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        [Map("ClassName")]
-        private class TestSqlDbProviderCreateDeleteWithMappingsClass
-        {
-        }
-
         [TestMethod]
-        public void TestSqlDbProviderCreateDeleteWithMappings()
+        public void TestSqlDbProviderCreateDeleteWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
-            var expression = new { Field1 = 1 };
+            var tableName = "[dbo].[Table]";
 
             // Act
-            var queryGroup = QueryGroup.Parse(expression);
-            var actual = statementBuilder.CreateDelete<TestSqlDbProviderCreateDeleteWithMappingsClass>(queryBuilder, queryGroup);
-            var expected = $"" +
-                $"DELETE " +
-                $"FROM [ClassName] " +
-                $"WHERE ([Field1] = @Field1) ;";
+            var actual = statementBuilder.CreateDelete(queryBuilder: queryBuilder,
+                tableName: tableName,
+                where: null);
+            var expected = "DELETE FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
+        }
+
+
+        [TestMethod]
+        public void TestSqlDbProviderCreateDeleteWithUnquotedTableSchema()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "dbo.Table";
+
+            // Act
+            var actual = statementBuilder.CreateDelete(queryBuilder: queryBuilder,
+                tableName: tableName,
+                where: null);
+            var expected = "DELETE FROM [dbo].[Table] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlDbProviderCreateDeleteIfTheTableIsNull()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = (string)null;
+
+            // Act
+            statementBuilder.CreateDelete(queryBuilder: queryBuilder,
+                tableName: tableName);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlDbProviderCreateDeleteIfTheTableIsEmpty()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "";
+
+            // Act
+            statementBuilder.CreateDelete(queryBuilder: queryBuilder,
+                tableName: tableName);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlDbProviderCreateDeleteIfTheTableIsWhitespace()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = " ";
+
+            // Act
+            statementBuilder.CreateDelete(queryBuilder: queryBuilder,
+                tableName: tableName);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Attributes;
+using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
 
@@ -33,7 +34,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.Object.BatchQuery(0,
                 10,
-                null,
+                OrderField.Parse(new { Id = Order.Ascending }),
                 null);
 
             // Assert
@@ -55,7 +56,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.Object.BatchQuery(0,
                 10,
-                null,
+                OrderField.Parse(new { Id = Order.Ascending }),
                 null);
 
             // Assert

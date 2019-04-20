@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using System;
 
@@ -8,31 +7,32 @@ namespace RepoDb.UnitTests.StatementBuilders
     [TestClass]
     public class SqlDbProviderCreateBatchQueryTest
     {
-
-        private class TestSqlDbProviderCreateBatchQueryWithoutMappingsClass
-        {
-            public int Field1 { get; set; }
-            public int Field2 { get; set; }
-        }
-
         [TestMethod]
-        public void TestSqlDbProviderCreateBatchQueryWithoutMappings()
+        public void TestSqlDbProviderCreateBatchQueryFirstBatch()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2");
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
             });
 
             // Act
-            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithoutMappingsClass>(queryBuilder, null, 0, 10, orderBy);
+            var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: null,
+                page: 0,
+                rowsPerBatch: 10,
+                orderBy: orderBy);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [TestSqlDbProviderCreateBatchQueryWithoutMappingsClass] " +
+                $"FROM [Table] " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
                 $"FROM CTE " +
@@ -43,105 +43,68 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestSqlDbProviderCreateBatchQueryWithExpressionsClass
-        {
-            public int Field1 { get; set; }
-            public int Field2 { get; set; }
-        }
-
         [TestMethod]
-        public void TestSqlDbProviderCreateBatchQueryWithExpressions()
+        public void TestSqlDbProviderCreateBatchQuerySecondBatch()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
-            var where = QueryGroup.Parse(new
-            {
-                Field1 = "Test"
-            });
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2");
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
             });
 
             // Act
-            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithExpressionsClass>(queryBuilder, where, 0, 10, orderBy);
+            var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: null,
+                page: 1,
+                rowsPerBatch: 10,
+                orderBy: orderBy);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [TestSqlDbProviderCreateBatchQueryWithExpressionsClass] " +
-                $"WHERE ([Field1] = @Field1) " +
+                $"FROM [Table] " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
                 $"FROM CTE " +
-                $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
+                $"WHERE ([RowNumber] BETWEEN 11 AND 20) " +
                 $"ORDER BY [Field1] ASC ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestSqlDbProviderCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributesClass
-        {
-            public int Field1 { get; set; }
-            public int Field2 { get; set; }
-        }
-
         [TestMethod]
-        public void TestSqlDbProviderCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributes()
+        public void TestSqlDbProviderCreateBatchQueryWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Descending,
-                Field2 = Order.Ascending
-            });
-
-            // Act
-            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributesClass>(queryBuilder, null, 0, 10, orderBy);
-            var expected = $"" +
-                $"WITH CTE AS " +
-                $"( " +
-                $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] DESC, [Field2] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [TestSqlDbProviderCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributesClass] " +
-                $") " +
-                $"SELECT [Field1], [Field2] " +
-                $"FROM CTE " +
-                $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
-                $"ORDER BY [Field1] DESC, [Field2] ASC ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Map("ClassName")]
-        private class TestSqlDbProviderCreateBatchQueryWithClassMappingClass
-        {
-            public int Field1 { get; set; }
-            public int Field2 { get; set; }
-        }
-
-        [TestMethod]
-        public void TestSqlDbProviderCreateBatchQueryWithClassMapping()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder();
+            var tableName = "[dbo].[Table]";
+            var fields = Field.From("Field1", "Field2");
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
             });
 
             // Act
-            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithClassMappingClass>(queryBuilder, null, 0, 10, orderBy);
+            var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: null,
+                page: 0,
+                rowsPerBatch: 10,
+                orderBy: orderBy);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [ClassName] " +
+                $"FROM [dbo].[Table] " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
                 $"FROM CTE " +
@@ -152,67 +115,32 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [Map("ClassName")]
-        private class TestSqlDbProviderCreateBatchQueryWithFieldMappingsClass
-        {
-            public int Field1 { get; set; }
-            [Map("Field3")]
-            public int Field2 { get; set; }
-        }
-
         [TestMethod]
-        public void TestSqlDbProviderCreateBatchQueryWithFieldMappings()
+        public void TestSqlDbProviderCreateBatchQueryWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
+            var tableName = "dbo.Table";
+            var fields = Field.From("Field1", "Field2");
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
             });
 
             // Act
-            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithFieldMappingsClass>(queryBuilder, null, 0, 10, orderBy);
-            var expected = $"" +
-                $"WITH CTE AS " +
-                $"( " +
-                $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field3] " +
-                $"FROM [ClassName] " +
-                $") " +
-                $"SELECT [Field1], [Field3] " +
-                $"FROM CTE " +
-                $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
-                $"ORDER BY [Field1] ASC ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Map("ClassName")]
-        private class TestSqlDbProviderCreateBatchQueryWithTableHintsClass
-        {
-            public int Field1 { get; set; }
-            public int Field2 { get; set; }
-        }
-
-        [TestMethod]
-        public void TestSqlDbProviderCreateBatchQueryWithTableHints()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder();
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Ascending
-            });
-
-            // Act
-            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithTableHintsClass>(queryBuilder, null, 0, 10, orderBy, SqlTableHints.NoLock);
+            var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: null,
+                page: 0,
+                rowsPerBatch: 10,
+                orderBy: orderBy);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [ClassName] WITH (NOLOCK) " +
+                $"FROM [dbo].[Table] " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
                 $"FROM CTE " +
@@ -223,20 +151,178 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class ThrowExceptionSqlDbProviderCreateBatchQueryIfThereAreNoQueryableFieldsClass
+        [TestMethod]
+        public void TestSqlDbProviderCreateBatchQueryWithWhereExpression()
         {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2");
+            var where = new QueryGroup(new QueryField("Field1", Operation.NotEqual, 1));
+            var orderBy = OrderField.Parse(new
+            {
+                Field1 = Order.Ascending
+            });
+
+            // Act
+            var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: where,
+                page: 1,
+                rowsPerBatch: 10,
+                orderBy: orderBy);
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"FROM [Table] " +
+                $"WHERE ([Field1] <> @Field1) " +
+                $") " +
+                $"SELECT [Field1], [Field2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 11 AND 20) " +
+                $"ORDER BY [Field1] ASC ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlDbProviderCreateBatchQueryWithWhereExpressionUniqueField()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2");
+            var where = new QueryGroup(new QueryField("Id", Operation.NotEqual, 1));
+            var orderBy = OrderField.Parse(new
+            {
+                Field1 = Order.Ascending
+            });
+
+            // Act
+            var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: where,
+                page: 1,
+                rowsPerBatch: 10,
+                orderBy: orderBy);
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"FROM [Table] " +
+                $"WHERE ([Id] <> @Id) " +
+                $") " +
+                $"SELECT [Field1], [Field2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 11 AND 20) " +
+                $"ORDER BY [Field1] ASC ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfTheTableIsNull()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = (string)null;
+            var fields = Field.From("Field1", "Field2");
+
+            // Act/Assert
+            statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: null,
+                page: 0,
+                rowsPerBatch: 10,
+                orderBy: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfTheTableIsEmpty()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "";
+            var fields = Field.From("Field1", "Field2");
+
+            // Act/Assert
+            statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: null,
+                page: 0,
+                rowsPerBatch: 10,
+                orderBy: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfTheTableIsWhitespace()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = " ";
+            var fields = Field.From("Field1", "Field2");
+
+            // Act/Assert
+            statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: null,
+                page: 0,
+                rowsPerBatch: 10,
+                orderBy: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfTheFieldsAreNull()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var orderBy = OrderField.Parse(new
+            {
+                Field1 = Order.Ascending
+            });
+
+            // Act/Assert
+            statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: null,
+                where: null,
+                page: 0,
+                rowsPerBatch: 10,
+                orderBy: orderBy);
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfThereAreNoQueryableFields()
+        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfThereAreNoOrderFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
-            var queryGroup = (QueryGroup)null;
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2");
 
             // Act/Assert
-            statementBuilder.CreateBatchQuery<ThrowExceptionSqlDbProviderCreateBatchQueryIfThereAreNoQueryableFieldsClass>(queryBuilder, queryGroup, 0, 10, null);
+            statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: null,
+                page: 0,
+                rowsPerBatch: 10,
+                orderBy: null);
         }
     }
 }
