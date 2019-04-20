@@ -819,7 +819,7 @@ namespace RepoDb
         {
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
-                return (T)ObjectConverter.DbNullToNull(command.ExecuteScalar());
+                return ObjectConverter.ToType<T>(command.ExecuteScalar());
             }
         }
 
@@ -880,7 +880,7 @@ namespace RepoDb
         {
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
-                return (T)ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
+                return ObjectConverter.ToType<T>(await command.ExecuteScalarAsync());
             }
         }
 

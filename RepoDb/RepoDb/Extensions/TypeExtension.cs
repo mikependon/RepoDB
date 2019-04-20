@@ -15,10 +15,7 @@ namespace RepoDb.Extensions
         /// <returns>A list of <see cref="string"/> objects.</returns>
         public static IEnumerable<Field> AsFields(this Type type)
         {
-            foreach (var property in type.GetProperties())
-            {
-                yield return new Field(property.AsField());
-            }
+            return PropertyCache.Get(type).AsFields();
         }
     }
 }

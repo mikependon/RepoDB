@@ -222,7 +222,6 @@ namespace RepoDb
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -448,7 +447,6 @@ namespace RepoDb
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountText(request);
             var param = (object)null;
 
             // Converts to propery mapped object

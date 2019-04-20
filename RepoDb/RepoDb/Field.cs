@@ -30,7 +30,7 @@ namespace RepoDb
         /// <returns>The string value equivalent to the name of the field.</returns>
         public override string ToString()
         {
-            return Name.AsQuoted();
+            return Name;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace RepoDb
             {
                 throw new NullReferenceException($"Field name must not be null.");
             }
-            return fields.Select(field => new Field(field));
+            return fields.Select(field => new Field(field.AsQuoted()));
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace RepoDb
         {
             foreach (var property in PropertyCache.Get<TEntity>())
             {
-                yield return new Field(PropertyMappedNameCache.Get(property.PropertyInfo));
+                yield return new Field(PropertyMappedNameCache.Get(property.PropertyInfo).AsQuoted());
             }
         }
 
@@ -75,7 +75,7 @@ namespace RepoDb
         {
             foreach (var property in obj.GetType().GetProperties())
             {
-                yield return new Field(PropertyMappedNameCache.Get(property));
+                yield return new Field(PropertyMappedNameCache.Get(property).AsQuoted());
             }
         }
 

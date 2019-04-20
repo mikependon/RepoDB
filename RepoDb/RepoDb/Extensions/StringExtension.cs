@@ -25,9 +25,14 @@ namespace RepoDb.Extensions
         /// Removes the database quotes from the string.
         /// </summary>
         /// <param name="value">The string value where the database quotes will be removed.</param>
-        /// <returns></returns>
-        public static string AsUnquoted(this string value)
+        /// <param name="trim">The boolean value that indicates whether to trim the string before unquoting.</param>
+        /// <returns>The quoted string.</returns>
+        public static string AsUnquoted(this string value, bool trim = false)
         {
+            if (trim)
+            {
+                value = value.Trim();
+            }
             var v = value?.IndexOf(".") >= 0 ? value.Split(".".ToCharArray()).Last() : value;
             return Regex.Replace(v, @"[\[\]']+", "");
         }
@@ -36,8 +41,8 @@ namespace RepoDb.Extensions
         /// Adds a quotes to the string.
         /// </summary>
         /// <param name="value">The string value where the database quotes will be added.</param>
-        /// <param name="trim">The boolean value that indicates whether to trim the string first before unquoting.</param>
-        /// <returns></returns>
+        /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
+        /// <returns>The quoted string.</returns>
         public static string AsQuoted(this string value, bool trim = false)
         {
             if (trim)

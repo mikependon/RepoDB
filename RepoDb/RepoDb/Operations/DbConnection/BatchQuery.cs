@@ -279,7 +279,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
             var request = new BatchQueryRequest(typeof(TEntity),
                 connection,
-                PropertyCache.Get<TEntity>().AsFields(),
+                FieldCache.Get<TEntity>(),
                 where,
                 page,
                 rowsPerBatch,
@@ -604,7 +604,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
             var request = new BatchQueryRequest(typeof(TEntity),
                 connection,
-                PropertyCache.Get<TEntity>().AsFields(),
+                FieldCache.Get<TEntity>(),
                 where,
                 page,
                 rowsPerBatch,

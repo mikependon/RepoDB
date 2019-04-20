@@ -84,8 +84,10 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateBatchQuery<StatementBuilderForDbConnectionDataEntity>(
+                builder.CreateBatchQuery(
                     It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderForDbConnectionDataEntity>()),
+                    It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
@@ -104,8 +106,10 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateBatchQuery<StatementBuilderForDbConnectionDataEntity>(
+                builder.CreateBatchQuery(
                     It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderForDbConnectionDataEntity>()),
+                    It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
@@ -127,8 +131,9 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateCount<StatementBuilderForDbConnectionDataEntity>(
+                builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderForDbConnectionDataEntity>()),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Once);
 
@@ -140,8 +145,9 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateCount<StatementBuilderForDbConnectionDataEntity>(
+                builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderForDbConnectionDataEntity>()),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Never);
         }
@@ -161,8 +167,9 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateDelete<StatementBuilderForDbConnectionDataEntity>(
+                builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderForDbConnectionDataEntity>()),
                     It.IsAny<QueryGroup>()), Times.Once);
 
             // Prepare
@@ -174,8 +181,9 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateDelete<StatementBuilderForDbConnectionDataEntity>(
+                builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderForDbConnectionDataEntity>()),
                     It.IsAny<QueryGroup>()), Times.Never);
         }
 
@@ -193,8 +201,9 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateDeleteAll<StatementBuilderForDbConnectionDataEntity>(
-                    It.IsAny<QueryBuilder>()), Times.Once);
+                builder.CreateDeleteAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderForDbConnectionDataEntity>())), Times.Once);
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -204,8 +213,9 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateDeleteAll<StatementBuilderForDbConnectionDataEntity>(
-                    It.IsAny<QueryBuilder>()), Times.Never);
+                builder.CreateDeleteAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderForDbConnectionDataEntity>())), Times.Never);
         }
 
         // CreateInlineInsert

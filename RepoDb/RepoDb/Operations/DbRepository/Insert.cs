@@ -179,10 +179,9 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the primary key of the newly inserted data.</returns>
-        public object InlineInsert<TEntity>(string tableName,
+        public object Insert(string tableName,
             object entity,
             IDbTransaction transaction = null)
-            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());

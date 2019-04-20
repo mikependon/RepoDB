@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using System;
 using System.Linq;
 
@@ -21,7 +21,7 @@ namespace RepoDb.UnitTests.Fields
 
             // Assert
             Assert.AreEqual(3, parsed.Count());
-            Assert.IsTrue(parsed.All(field => fields.Contains(field.Name)));
+            Assert.IsTrue(parsed.All(field => fields.Select(f => f.AsQuoted()).Contains(field.Name)));
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
