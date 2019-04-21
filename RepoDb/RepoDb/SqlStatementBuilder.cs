@@ -519,6 +519,74 @@ namespace RepoDb
 
         #endregion
 
+        #region CreateQueryAll
+
+        /// <summary>
+        /// Creates a SQL Statement for query-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for query operation.</returns>
+        public string CreateQueryAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<OrderField> orderBy = null,
+            string hints = null)
+        {
+            // Guard the target table
+            Guard(tableName);
+
+            // There should be fields
+            if (fields == null || fields.Any() == false)
+            {
+                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+            }
+
+            if (orderBy != null)
+            {
+                // Check if the order fields are present in the given fields
+                var unmatchesOrderFields = orderBy?.Where(orderField =>
+                    fields?.FirstOrDefault(f =>
+                        orderField.Name.ToLower() == f.Name.ToLower()) == null);
+
+                // Throw an error we found any unmatches
+                if (unmatchesOrderFields?.Any() == true)
+                {
+                    throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                        $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
+                }
+            }
+
+            // Build the query
+            queryBuilder = queryBuilder ?? new QueryBuilder();
+            queryBuilder
+                .Clear()
+                .Select()
+                .FieldsFrom(fields)
+                .From()
+                .TableNameFrom(tableName);
+
+            // Build the query optimizers
+            if (hints != null)
+            {
+                queryBuilder
+                    .WriteText(hints);
+            }
+
+            // Build the ordering
+            queryBuilder
+                .OrderByFrom(orderBy)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
+        }
+
+        #endregion
+
         #region CreateTruncate
 
         /// <summary>

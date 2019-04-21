@@ -153,6 +153,25 @@ namespace RepoDb.Interfaces
 
         #endregion
 
+        #region CreateQueryAll
+
+        /// <summary>
+        /// Creates a SQL Statement for query-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for query operation.</returns>
+        string CreateQueryAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<OrderField> orderBy = null,
+            string hints = null);
+
+        #endregion
+
         #region CreateTruncate
 
         /// <summary>

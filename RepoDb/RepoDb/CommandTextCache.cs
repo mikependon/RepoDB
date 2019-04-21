@@ -210,6 +210,33 @@ namespace RepoDb
 
         #endregion
 
+        #region GetQueryAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the query-all operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetQueryAllText<TEntity>(QueryAllRequest request)
+            where TEntity : class
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateQueryAll(new QueryBuilder(),
+                    request.Name,
+                    request.Fields,
+                    request.OrderBy,
+                    request.Hints);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
         #region GetQueryMultipleText
 
         /// <summary>
