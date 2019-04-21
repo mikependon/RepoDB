@@ -118,7 +118,7 @@ namespace RepoDb
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeQuery(cancellableTraceLog);
+                trace.BeforeQueryAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -149,7 +149,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQuery(new TraceLog(commandText, param, result,
+                trace.AfterQueryAll(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -267,7 +267,7 @@ namespace RepoDb
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeQuery(cancellableTraceLog);
+                trace.BeforeQueryAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -294,7 +294,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQuery(new TraceLog(commandText, param, result,
+                trace.AfterQueryAll(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

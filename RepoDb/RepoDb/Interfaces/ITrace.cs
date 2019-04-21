@@ -90,6 +90,12 @@
         void BeforeQuery(CancellableTraceLog log);
 
         /// <summary>
+        /// A method being raised before the actual query-all operation execution.
+        /// </summary>
+        /// <param name="log">The cancellable log object referenced by the query-all execution.</param>
+        void BeforeQueryAll(CancellableTraceLog log);
+
+        /// <summary>
         /// A method being raised before the actual query-multiple operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the query execution.</param>
@@ -189,6 +195,12 @@
         /// </summary>
         /// <param name="log">The log object referenced by the query execution.</param>
         void AfterQuery(TraceLog log);
+
+        /// <summary>
+        /// A method being raised after the actual query-all operation execution.
+        /// </summary>
+        /// <param name="log">The log object referenced by the query-all execution.</param>
+        void AfterQueryAll(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual query-multiple operation execution.
