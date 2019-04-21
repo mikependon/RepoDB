@@ -225,13 +225,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A sql statement for insert operation.</returns>
         public string CreateInsert(QueryBuilder queryBuilder,
             string tableName,
-            DbField primaryField = null,
-            IEnumerable<Field> fields = null)
+            IEnumerable<Field> fields = null,
+            DbField primaryField = null)
         {
             // Guard the target table
             Guard(tableName);
@@ -263,7 +263,7 @@ namespace RepoDb
                 .ParametersFrom(insertableFields)
                 .CloseParen()
                 .End();
-            var result = isIdentity == true ? "SCOPE_IDENTITY()" : string.IsNullOrEmpty(primaryName) == false ? primaryName.AsParameter() : "NULL";
+            var result = isIdentity == true ? "CONVERT(BIGINT, SCOPE_IDENTITY())" : string.IsNullOrEmpty(primaryName) == false ? primaryName.AsParameter() : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -283,15 +283,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="fields">The list of fields to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A sql statement for merge operation.</returns>
         public string CreateMerge(QueryBuilder queryBuilder,
-            string tableName,
-            DbField primaryField = null,
-            IEnumerable<Field> fields = null,
-            IEnumerable<Field> qualifiers = null)
+             string tableName,
+             IEnumerable<Field> fields,
+             IEnumerable<Field> qualifiers = null,
+             DbField primaryField = null)
         {
             // Guard the target table
             Guard(tableName);

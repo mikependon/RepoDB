@@ -86,13 +86,13 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A sql statement for insert operation.</returns>
         string CreateInsert(QueryBuilder queryBuilder,
             string tableName,
-            DbField primaryField = null,
-            IEnumerable<Field> fields = null);
+            IEnumerable<Field> fields = null,
+            DbField primaryField = null);
 
         #endregion
 
@@ -103,15 +103,15 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="fields">The list of fields to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A sql statement for merge operation.</returns>
         string CreateMerge(QueryBuilder queryBuilder,
             string tableName,
-            DbField primaryField = null,
-            IEnumerable<Field> fields = null,
-            IEnumerable<Field> qualifiers = null);
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers = null,
+            DbField primaryField = null);
 
         #endregion
 

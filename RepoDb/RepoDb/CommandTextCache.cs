@@ -122,12 +122,11 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var primaryField = GetPrimaryField(request);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateInsert(new QueryBuilder(),
                     request.Name,
-                    primaryField,
-                    request.Fields);
+                    request.Fields,
+                    GetPrimaryField(request));
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -147,13 +146,12 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var primaryField = GetPrimaryField(request);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMerge(new QueryBuilder(),
                     request.Name,
-                    primaryField,
                     request.Fields,
-                    request.Qualifiers);
+                    request.Qualifiers,
+                    GetPrimaryField(request));
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -253,13 +251,12 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var primaryField = GetPrimaryField(request);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateUpdate(new QueryBuilder(),
                     request.Name,
                     request.Fields,
                     request.Where,
-                    primaryField);
+                    GetPrimaryField(request));
                 m_cache.TryAdd(request, commandText);
             }
             else
@@ -289,9 +286,10 @@ namespace RepoDb
                     isIdentity = IdentityCache.Get(request.Type) != null;
                     if (isIdentity == false)
                     {
-                        var primaryDbField = DbFieldCache.Get(request.Connection, request.Name)?
-                            .FirstOrDefault(f => f.IsPrimary);
-                        isIdentity = primaryDbField?.IsIdentity == true;
+                        isIdentity = DbFieldCache
+                            .Get(request.Connection, request.Name)?
+                            .FirstOrDefault(f => f.IsPrimary)?
+                            .IsIdentity == true;
                     }
                     return new DbField(primaryPropery.GetMappedName(), true, isIdentity, false);
                 }

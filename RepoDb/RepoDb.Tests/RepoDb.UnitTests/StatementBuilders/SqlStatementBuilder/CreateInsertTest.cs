@@ -17,8 +17,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
-                fields: fields);
+                fields: fields,
+                primaryField: null);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -41,8 +41,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
-                fields: fields);
+                fields: fields,
+                primaryField: null);
             var expected = $"" +
                 $"INSERT INTO [dbo].[Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -65,8 +65,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
-                fields: fields);
+                fields: fields,
+                primaryField: null);
             var expected = $"" +
                 $"INSERT INTO [dbo].[Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -85,20 +85,20 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var primaryField = new DbField("Id", true, true, false);
             var fields = Field.From("Field1", "Field2", "Field3");
+            var primaryField = new DbField("Id", true, true, false);
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: primaryField,
-                fields: fields);
+                fields: fields,
+                primaryField: primaryField);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field2, @Field3 ) ; " +
-                $"SELECT SCOPE_IDENTITY() AS [Result] ;";
+                $"SELECT SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -111,14 +111,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var primaryField = new DbField("Id", true, false, false);
             var fields = Field.From("Field1", "Field2", "Field3");
+            var primaryField = new DbField("Id", true, false, false);
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: primaryField,
-                fields: fields);
+                fields: fields,
+                primaryField: primaryField);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -141,8 +141,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
-                fields: null);
+                fields: null,
+                primaryField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -156,8 +156,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
-                fields: null);
+                fields: null,
+                primaryField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -171,8 +171,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
-                fields: null);
+                fields: null,
+                primaryField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -186,8 +186,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
-                fields: null);
+                fields: null,
+                primaryField: null);
         }
     }
 }

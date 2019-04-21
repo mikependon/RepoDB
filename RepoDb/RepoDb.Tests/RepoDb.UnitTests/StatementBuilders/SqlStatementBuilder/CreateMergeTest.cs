@@ -20,9 +20,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
                 fields: fields,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: null);
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -50,9 +50,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
                 fields: fields,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: null);
             var expected = $"" +
                 $"MERGE [dbo].[Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -80,9 +80,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
                 fields: fields,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: null);
             var expected = $"" +
                 $"MERGE [dbo].[Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -104,16 +104,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var primaryField = new DbField("Field1", true, true, false);
             var fields = Field.From("Field1", "Field2", "Field3");
             var qualifiers = Field.From("Field1");
+            var primaryField = new DbField("Field1", true, true, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: primaryField,
                 fields: fields,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: primaryField);
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -135,16 +135,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var primaryField = new DbField("Field1", true, false, false);
             var fields = Field.From("Field1", "Field2", "Field3");
             var qualifiers = Field.From("Field1");
+            var primaryField = new DbField("Field1", true, false, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: primaryField,
                 fields: fields,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: primaryField);
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -166,16 +166,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var primaryField = new DbField("Id", true, true, false);
             var fields = Field.From("Field1", "Field2", "Field3");
             var qualifiers = Field.From("Field1");
+            var primaryField = new DbField("Id", true, true, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: primaryField,
                 fields: fields,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: primaryField);
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -197,16 +197,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var primaryField = new DbField("Id", true, false, false);
             var fields = Field.From("Field1", "Field2", "Field3");
             var qualifiers = Field.From("Field1");
+            var primaryField = new DbField("Id", true, false, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: primaryField,
                 fields: fields,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: primaryField);
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -228,15 +228,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var primaryField = new DbField("Field1", true, true, false);
             var fields = Field.From("Field1", "Field2", "Field3");
+            var primaryField = new DbField("Field1", true, true, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: primaryField,
                 fields: fields,
-                qualifiers: null);
+                qualifiers: null,
+                primaryField: primaryField);
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -258,15 +258,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var primaryField = new DbField("Field1", true, false, false);
             var fields = Field.From("Field1", "Field2", "Field3");
+            var primaryField = new DbField("Field1", true, false, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: primaryField,
                 fields: fields,
-                qualifiers: null);
+                qualifiers: null,
+                primaryField: primaryField);
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -293,9 +293,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
                 fields: null,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -310,9 +310,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
                 fields: fields,
-                qualifiers: null);
+                qualifiers: null,
+                primaryField: null);
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQualiferFieldsException))]
@@ -328,9 +328,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
                 fields: fields,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -346,9 +346,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
                 fields: fields,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -364,9 +364,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
                 fields: fields,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -382,9 +382,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             statementBuilder.CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
-                primaryField: null,
                 fields: fields,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers,
+                primaryField: null);
         }
     }
 }

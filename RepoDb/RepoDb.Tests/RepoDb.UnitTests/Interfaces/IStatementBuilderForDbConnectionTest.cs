@@ -463,8 +463,8 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilder>()),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(1));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -482,8 +482,8 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilder>()),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(0));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
 
         [TestMethod]
@@ -506,8 +506,8 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>()),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(1));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -525,8 +525,8 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>()),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(0));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
 
         [TestMethod]
@@ -549,8 +549,8 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>()),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(1));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -569,8 +569,8 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>()),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(0));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
 
         // CreateMerge
@@ -596,9 +596,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilder>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(1));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -617,9 +617,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilder>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(0));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
 
         [TestMethod]
@@ -643,9 +643,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(1));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -664,9 +664,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(0));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
 
         [TestMethod]
@@ -690,9 +690,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(1));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -712,9 +712,9 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>()),
-                    It.IsAny<DbField>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Exactly(0));
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
 
         // CreateQuery
