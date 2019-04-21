@@ -54,7 +54,6 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - Inline Hints
  - Multi-Resultset Query
  - Operations (Generics/Explicits/MethodCalls)
- - Provider Specific Operations
  - Query Builder
  - Statement Builder
  - Tracing
