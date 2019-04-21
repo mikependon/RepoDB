@@ -12,6 +12,8 @@ namespace RepoDb.UnitTests.Interfaces
     {
         private readonly IStatementBuilder m_statementBuilder = new SqlStatementBuilder();
 
+        #region SubClasses
+
         public class TraceEntity
         {
             [Primary, Identity]
@@ -19,7 +21,9 @@ namespace RepoDb.UnitTests.Interfaces
             public string Name { get; set; }
         }
 
-        // BatchQuery
+        #endregion
+
+        #region BatchQuery
 
         [TestMethod]
         public void TestDbRepositoryTraceForBeforeBatchQuery()
@@ -65,7 +69,9 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Verify(t => t.AfterBatchQuery(It.IsAny<TraceLog>()), Times.Once);
         }
 
-        // Count
+        #endregion
+
+        #region Count
 
         [TestMethod]
         public void TestDbRepositoryTraceForBeforeCount()
@@ -145,7 +151,9 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Once);
         }
 
-        // CountAll
+        #endregion
+
+        #region CountAll
 
         [TestMethod]
         public void TestDbRepositoryTraceForBeforeCountAll()
@@ -223,7 +231,9 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
-        // Delete
+        #endregion
+
+        #region Delete
 
         [TestMethod]
         public void TestDbRepositoryTraceForBeforeDelete()
@@ -301,7 +311,9 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Once);
         }
 
-        // Insert
+        #endregion
+
+        #region Insert
 
         [TestMethod]
         public void TestDbRepositoryTraceForBeforeInsert()
@@ -391,7 +403,9 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Once);
         }
 
-        // Merge
+        #endregion
+
+        #region Merge
 
         [TestMethod]
         public void TestDbRepositoryTraceForBeforeMerge()
@@ -485,7 +499,9 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Once);
         }
 
-        // Query
+        #endregion
+
+        #region Query
 
         [TestMethod]
         public void TestDbRepositoryTraceForBeforeQuery()
@@ -525,7 +541,9 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Verify(t => t.AfterQuery(It.IsAny<TraceLog>()), Times.Once);
         }
 
-        // QueryMultiple
+        #endregion
+
+        #region QueryMultiple
 
         [TestMethod]
         public void TestDbRepositoryTraceForBeforeQueryMultiple()
@@ -567,7 +585,9 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Verify(t => t.AfterQueryMultiple(It.IsAny<TraceLog>()), Times.Once);
         }
 
-        // Truncate
+        #endregion
+
+        #region Truncate
 
         [TestMethod]
         public void TestDbRepositoryTraceForBeforeTruncate()
@@ -645,7 +665,9 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Once);
         }
 
-        // Update
+        #endregion
+
+        #region Update
 
         [TestMethod]
         public void TestDbRepositoryTraceForBeforeUpdate()
@@ -750,5 +772,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Once);
         }
+
+        #endregion
     }
 }

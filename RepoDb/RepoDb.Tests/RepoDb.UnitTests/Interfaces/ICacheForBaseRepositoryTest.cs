@@ -14,7 +14,7 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ICacheForBaseRepositoryTest
     {
-        #region SubClass
+        #region SubClasses
 
         public class CacheEntity
         {

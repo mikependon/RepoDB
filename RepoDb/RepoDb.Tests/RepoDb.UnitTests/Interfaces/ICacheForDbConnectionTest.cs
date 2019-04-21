@@ -13,12 +13,16 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ICacheForDbConnectionTest
     {
+        #region SubClasses
+
         public class CacheEntity
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
+
+        #endregion
 
         #region Sync
 
