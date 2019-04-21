@@ -62,7 +62,7 @@ namespace RepoDb
             }
 
             // Validate the page
-            if (rowsPerBatch < 0)
+            if (rowsPerBatch < 1)
             {
                 throw new InvalidOperationException($"The rows per batch must be equals or greater than 1.");
             }
