@@ -19,7 +19,7 @@ Dynamic way:
 		connection.BatchQuery<Order>(0,
 			24,
 			OrderField.Parse(new { Id = Order.Ascending }),
-			new { d > 1000 });
+			new { CustomerId = 10045 });
 	}
 
 Expression way:
@@ -28,11 +28,10 @@ Expression way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		connection.BatchQuery<Order>(o => o.CustomerId == 10045, 0, 24);
 		connection.BatchQuery<Order>(0,
 			24,
 			OrderField.Ascending<Order>(o => o.Id),
-			o => o.CustomerId == 10045, 0, 24);
+			o => o.CustomerId = 10045);
 	}
 
 Explicit way:
@@ -171,7 +170,7 @@ Explicit way:
 CountAll
 --------
 
-Count all the table data from the database.
+Counts all the table data from the database.
 
 .. highlight:: c#
 
@@ -200,6 +199,15 @@ Dynamic way:
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var counted = connection.CountAll("Order");
+	}
+
+with hints.
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var counted = connection.CountAll("Order", SqlTableHints.NoLock);
 	}
 
 CreateCommand
@@ -801,21 +809,24 @@ A dynamic typed-based call is also provided when calling this method, see below.
 	// The first type is the entity type, the second type is the result type
 	var id = connection.Insert<Order, long>(order);
 
-Certain columns can also be inserted via table name calls.
+**Certain** columns can also be inserted via table name calls.
 
 ::
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var order = new
+		// Instantiate a dynamic object (not really an "Order" object)
+		var entity = new
 		{
 			CustomerId = 10045,
 			ProductId = 12
 			Quantity = 2,
 			CreatedDate = DateTime.UtcNow
 		};
-		var id = connection.Insert<long>("Order", order);
+		var id = connection.Insert<long>("Order", entity);
 	}
+
+**Note**: Use the table name based if the scenario is to only insert targetted columns.
 
 Merge
 -----
@@ -848,12 +859,13 @@ Or, via a literal array of string.
 
 **Note**: The second parameter can be omitted if the data entity has a primary key.
 
-Certail columns can also be merged via table name calls.
+**Certain** columns can also be merged via table name calls.
 
 ::
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
+		// Instantiate a dynamic object (not really an "Order" object)
 		var entity = new
 		{
 			Id = 1,
@@ -862,6 +874,8 @@ Certail columns can also be merged via table name calls.
 		};
 		connection.Merge("Order", entity, Field.From("Id"));
 	}
+
+**Note**: Use the table name based if the scenario is to only merge targetted columns.
 
 Query
 -----
@@ -1053,7 +1067,7 @@ Table can also be truncated via table name.
 Update
 ------
 
-Update an existing data in the database.
+Updates an existing data in the database.
 
 .. highlight:: c#
 
@@ -1114,6 +1128,7 @@ Dynamic way:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
+		// Instantiate a dynamic object (not really an "Order" object)
 		var entity = new
 		{
 			Quantity = 5,
@@ -1128,6 +1143,7 @@ Explicit way:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
+		// Instantiate a dynamic object (not really an "Order" object)
 		var entity = new
 		{
 			Quantity = 5,

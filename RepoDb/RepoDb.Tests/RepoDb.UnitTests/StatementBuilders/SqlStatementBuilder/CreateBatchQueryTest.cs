@@ -349,7 +349,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheRowsPerBatchIsLessThanZero()
+        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheRowsPerBatchIsLessThanOne()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -366,7 +366,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 tableName: tableName,
                 fields: fields,
                 page: 0,
-                rowsPerBatch: -1,
+                rowsPerBatch: 0,
                 orderBy: orderBy,
                 where: null);
         }

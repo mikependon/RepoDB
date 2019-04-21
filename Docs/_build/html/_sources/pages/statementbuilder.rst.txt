@@ -16,28 +16,35 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 
 ::
 
-	public string CreateQuery<TEntity>(QueryBuilder queryBuilder,
+	public string CreateQuery(QueryBuilder queryBuilder,
+		string tableName,
+		IEnumerable<Field> fields,
 		QueryGroup where = null,
 		IEnumerable<OrderField> orderBy = null,
 		int? top = null,
 		string hints = null)
-		where TEntity : class
 	{
-		var fields = PropertyCache.Get<TEntity>();
+		// There should be fields
+		if (fields == null || fields.Any() == false)
+		{
+			throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+		}
 
-		// Create an initial SELECT statement
-		queryBuilder.Clear()
+		// Build the query
+		queryBuilder
+			.Clear()
 			.Select()
+			.TopFrom(top)
 			.FieldsFrom(fields)
 			.From()
-			.TableNameFrom<TEntity>();
-
+			.TableNameFrom(tableName);
+			
 		// Build the query optimizers
 		if (hints != null)
 		{
 			// Write the hints here like: queryBuilder.WriteText(hints);
 		}
-
+		
 		// Add all fields for WHERE
 		if (where != null)
 		{
@@ -58,13 +65,13 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 			}
 		}
 
-		// End the builder
+		// Build the filter and ordering
 		queryBuilder
-			.OrderBy(orderBy)
+			.OrderByFrom(orderBy)
 			.End();
 
-		// Return the Statement
-		return queryBuilder.ToString();
+		// Return the query
+		return queryBuilder.GetString();
 	}
 
 CreateBatchQuery
@@ -72,17 +79,18 @@ CreateBatchQuery
 
 .. highlight:: none
 
-This method is being called when the `BatchQuery` operation of the repository is being called.
+This method is used to compose a SQL statement for `BatchQuery` operation.
 
 ::
 
-	public string CreateBatchQuery<TEntity>(QueryBuilder queryBuilder,
-		QueryGroup where = null,
-		int? page = null,
-		int? rowsPerBatch = null,
+	public string CreateBatchQuery(QueryBuilder queryBuilder,
+		string tableName,
+		IEnumerable<Field> fields,
+		int page,
+		int rowsPerBatch,
 		IEnumerable<OrderField> orderBy = null,
+		QueryGroup where = null,
 		string hints = null)
-		where TEntity : class
 	{
 		...
 	}
@@ -92,14 +100,30 @@ CreateCount
 
 .. highlight:: none
 
-This method is being called when the `Count` operation of the repository is being called.
+This method is used to compose a SQL statement for `Count` operation.
 
 ::
 
-	public string CreateCount<TEntity>(QueryBuilder queryBuilder,
+	public string CreateCount(QueryBuilder queryBuilder,
+		string tableName,
 		QueryGroup where = null,
 		string hints = null)
-		where TEntity : class
+	{
+		...
+	}
+
+CreateCountAll
+--------------
+
+.. highlight:: none
+
+This method is used to compose a SQL statement for `CountAll` operation.
+
+::
+
+	public string CreateCountAll(QueryBuilder queryBuilder,
+		string tableName,
+		string hints = null)
 	{
 		...
 	}
@@ -109,13 +133,13 @@ CreateDelete
 
 .. highlight:: none
 
-This method is being called when the `Delete` operation of the repository is being called.
+This method is used to compose a SQL statement for `Delete` operation.
 
 ::
 
-	public string CreateDelete<TEntity>(QueryBuilder queryBuilder,
+	public string CreateDelete(QueryBuilder queryBuilder,
+		string tableName,
 		QueryGroup where = null)
-		where TEntity : class
 	{
 		...
 	}
@@ -125,62 +149,12 @@ CreateDeleteAll
 
 .. highlight:: none
 
-This method is being called when the `DeleteAll` operation of the repository is being called.
+This method is used to compose a SQL statement for `DeleteAll` operation.
 
 ::
 
-	public string CreateDeleteAll<TEntity>(QueryBuilder queryBuilder)
-		where TEntity : class
-	{
-		...
-	}
-
-CreateInlineInsert
-------------------
-
-.. highlight:: none
-
-This method is being called when the `InlineInsert` operation of the repository is being called.
-
-::
-
-	public string CreateInlineInsert<TEntity>(QueryBuilder queryBuilder,
-		IEnumerable<Field> fields = null)
-		where TEntity : class
-	{
-		...
-	}
-
-CreateInlineMerge
------------------
-
-.. highlight:: none
-
-This method is being called when the `InlineMerge` operation of the repository is being called.
-
-::
-
-	public string CreateInlineMerge<TEntity>(QueryBuilder queryBuilder,
-		IEnumerable<Field> fields = null,
-		IEnumerable<Field> qualifiers = null)
-		where TEntity : class
-	{
-		...
-	}
-
-CreateInlineUpdate
-------------------
-
-.. highlight:: none
-
-This method is being called when the `InlineUpdate` operation of the repository is being called.
-
-::
-
-	public string CreateInlineUpdate<TEntity>(QueryBuilder queryBuilder,
-		IEnumerable<Field> fields = null,
-		QueryGroup where = null)
-		where TEntity : class
+	public string CreateDeleteAll(QueryBuilder queryBuilder,
+		string tableName)
 	{
 		...
 	}
@@ -190,12 +164,14 @@ CreateInsert
 
 .. highlight:: none
 
-This method is being called when the `Insert` operation of the repository is being called.
+This method is used to compose a SQL statement for `Insert` operation.
 
 ::
 
-	public string CreateInsert<TEntity>(QueryBuilder queryBuilder)
-		where TEntity : class
+	public string CreateInsert(QueryBuilder queryBuilder,
+		string tableName,
+		IEnumerable<Field> fields = null,
+		DbField primaryField = null)
 	{
 		...
 	}
@@ -205,13 +181,15 @@ CreateMerge
 
 .. highlight:: none
 
-This method is being called when the `Merge` operation of the repository is being called.
+This method is used to compose a SQL statement for `Merge` operation.
 
 ::
 
-	public string CreateMerge<TEntity>(QueryBuilder queryBuilder,
-		IEnumerable<Field> qualifiers = null)
-		where TEntity : class
+	public string CreateMerge(QueryBuilder queryBuilder,
+		string tableName,
+		IEnumerable<Field> fields,
+		IEnumerable<Field> qualifiers = null,
+		DbField primaryField = null)
 	{
 		...
 	}
@@ -221,16 +199,17 @@ CreateQuery
 
 .. highlight:: none
 
-This method is being called when the `Query` operation of the repository is being called.
+This method is used to compose a SQL statement for `Query` operation.
 
 ::
 
-	public string CreateQuery<TEntity>(QueryBuilder queryBuilder,
+	public string CreateQuery(QueryBuilder queryBuilder,
+		string tableName,
+		IEnumerable<Field> fields,
 		QueryGroup where = null,
 		IEnumerable<OrderField> orderBy = null,
 		int? top = null,
 		string hints = null)
-		where TEntity : class
 	{
 		...
 	}
@@ -240,12 +219,12 @@ CreateTruncate
 
 .. highlight:: none
 
-This method is being called when the `Truncate` operation of the repository is being called.
+This method is used to compose a SQL statement for `Truncate` operation.
 
 ::
 
-	public string CreateTruncate<TEntity>(QueryBuilder queryBuilder)
-		where TEntity : class
+	public string CreateTruncate(QueryBuilder queryBuilder,
+		string tableName)
 	{
 		...
 	}
@@ -255,13 +234,15 @@ CreateUpdate
 
 .. highlight:: none
 
-This method is being called when the `Update` operation of the repository is being called.
+This method is used to compose a SQL statement for `Update` operation.
 
 ::
 
-	public string CreateUpdate<TEntity>(QueryBuilder queryBuilder,
-		QueryGroup where = null)
-		where TEntity : class
+	public string CreateUpdate(QueryBuilder queryBuilder,
+		string tableName,
+		IEnumerable<Field> fields,
+		QueryGroup where = null,
+		DbField primaryField = null)
 	{
 		...
 	}

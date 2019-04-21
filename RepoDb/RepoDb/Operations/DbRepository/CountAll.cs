@@ -13,7 +13,7 @@ namespace RepoDb
         #region CountAll<TEntity>
 
         /// <summary>
-        /// Count all the table data from the database.
+        /// Counts all the table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
@@ -52,7 +52,7 @@ namespace RepoDb
         #region CountAllAsync<TEntity>
 
         /// <summary>
-        /// Count all the number of table data from the database in an asynchronous way.
+        /// Counts all the table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
@@ -91,7 +91,7 @@ namespace RepoDb
         #region CountAll(TableName)
 
         /// <summary>
-        /// Deletes all the data from the database.
+        /// Counts all the table data from the database.
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -131,7 +131,7 @@ namespace RepoDb
         #region CountAllAsync(TableName)
 
         /// <summary>
-        /// Deletes all the data from the database in an asynchronous way.
+        /// Counts all the data from the database in an asynchronous way.
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>

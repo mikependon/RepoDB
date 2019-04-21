@@ -3,6 +3,6 @@ Performance
 
 .. highlight:: c#
 
-Please refer to Frans Bouma's bencher. The RepoDb library is already a part of it.
+RepoDb is the most fastest and most efficient .NET ORM as per FransBouma's bencher, click `here <https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190307_netcore.txt>`_ to see the result.
 
-Located at `https://github.com/FransBouma/RawDataAccessBencher <https://github.com/FransBouma/RawDataAccessBencher>`_
+Link: `https://github.com/FransBouma/RawDataAccessBencher <https://github.com/FransBouma/RawDataAccessBencher>`_

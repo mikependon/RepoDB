@@ -4,7 +4,9 @@ Extensibility
 RepoDb is highly extensible for RDBMS only. Below are the objects that can be extended.
 
 - Cache
+- Database Helpers
 - Inline Hints
+- Provider Operations (soon to come)
 - Repository
 - Statement Builder
 - Trace

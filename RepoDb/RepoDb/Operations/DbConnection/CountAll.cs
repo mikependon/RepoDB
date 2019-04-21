@@ -15,7 +15,7 @@ namespace RepoDb
         #region CountAll<TEntity>
 
         /// <summary>
-        /// Count all the table data from the database.
+        /// Counts all the table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -42,7 +42,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Count all the table data from the database.
+        /// Counts all the table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -147,7 +147,7 @@ namespace RepoDb
         #region CountAll(TableName)
 
         /// <summary>
-        /// Count all the table data from the database.
+        /// Counts all the table data from the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -175,7 +175,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Count all the table data from the database.
+        /// Counts all the table data from the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -283,7 +283,7 @@ namespace RepoDb
         #region CountAllerInternalBase
 
         /// <summary>
-        /// Count all the table data from the database.
+        /// Counts all the table data from the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="CountAllRequest"/> object.</param>

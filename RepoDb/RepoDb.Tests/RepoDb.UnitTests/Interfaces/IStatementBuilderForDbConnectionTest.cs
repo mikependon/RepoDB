@@ -242,6 +242,104 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
+        // CreateCountAll
+
+        [TestMethod]
+        public void TestDbConnectionStatementBuilderForCountAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.CountAll<DataEntityForDbConnectionStatementBuilder>(statementBuilder: statementBuilder.Object);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilder>()),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            connection.CountAll<DataEntityForDbConnectionStatementBuilder>(statementBuilder: statementBuilderNever.Object);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilder>()),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionStatementBuilderForCountAllViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.CountAll(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
+                statementBuilder: statementBuilder.Object);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>()),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            connection.CountAll(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
+                statementBuilder: statementBuilderNever.Object);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>()),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionStatementBuilderForCountAllViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.CountAll<DataEntityForDbConnectionStatementBuilderForCrossCall>(statementBuilder: statementBuilder.Object);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>()),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            connection.CountAll(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>(),
+                statementBuilder: statementBuilderNever.Object);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>()),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
         // CreateDelete
 
         [TestMethod]

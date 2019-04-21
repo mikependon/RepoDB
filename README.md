@@ -35,6 +35,7 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - It is easy to write RawSql statements.
  - It has Linq Expressions.
  - It supports dynamic variable passing.
+ - It has database helpers.
  - It has a tracing capability.
  - It is easy to cache the data.
  - It has a dynamic type mapping.
@@ -47,12 +48,15 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - Asynchronous Operations
  - Caching
  - Connection Persistency
+ - Database Helpers
  - Expression Trees
  - Field Mapping
  - Inline Hints
  - Multi-Resultset Query
- - Operations (native ORM)
- - Statement Building
+ - Operations (Generics/Explicits/MethodCalls)
+ - Provider Specific Operations
+ - Query Builder
+ - Statement Builder
  - Tracing
  - Transaction
  - Type Mapping

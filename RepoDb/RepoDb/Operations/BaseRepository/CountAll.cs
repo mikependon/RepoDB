@@ -12,7 +12,7 @@ namespace RepoDb
         #region CountAll<TEntity>
 
         /// <summary>
-        /// Count all the table data from the database.
+        /// Counts all the table data from the database.
         /// </summary>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -29,7 +29,7 @@ namespace RepoDb
         #region CountAllAsync<TEntity>
 
         /// <summary>
-        /// Deletes all the data from the database in an asynchronous way.
+        /// Counts all the data from the database in an asynchronous way.
         /// </summary>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>

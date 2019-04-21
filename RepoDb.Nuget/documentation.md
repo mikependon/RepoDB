@@ -15,6 +15,7 @@
  - It is easy to write RawSql statements.
  - It has Linq Expressions.
  - It supports dynamic variable passing.
+ - It has database helpers.
  - It has a tracing capability.
  - It is easy to cache the data.
  - It has a dynamic type mapping.

@@ -25,12 +25,14 @@ Features
 * Asynchronous Operations
 * Caching
 * Connection Persistency
+* Database Helpers
 * Expression Trees
 * Field Mapping
 * Inline Hints
 * Multi-Resultset Query
-* Operations (native ORM)
-* Statement Building
+* Operations (Generics/Explicits/MethodCalls)
+* Query Builder
+* Statement Builder
 * Tracing
 * Transaction
 * Type Mapping

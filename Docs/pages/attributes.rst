@@ -83,4 +83,4 @@ Is used to define a property-level mapping of database type.
 		public byte[] Image { get; set; }
 	}
 
-**Note**: Any of the attribute mentioned above is only being used to support the special scenarios and requirements defined by the businesses.
+**Note**: Any of the attribute mentioned above is only being used to support the special scenarios and requirements defined by the businesses. **They are really not necessary!** The library is intelligent enough to identify the characteristics of your columns (`Primary`, `Identity`) by touching the database once and caching everything in the memory.

@@ -19,7 +19,7 @@ namespace RepoDb
 
         /*
         /// <summary>
-        /// Update an existing data in the database.
+        /// Updates an existing data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -244,7 +244,7 @@ namespace RepoDb
 
         /*
         /// <summary>
-        /// Update an existing data in the database in an asynchronous way.
+        /// Updates an existing data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -274,7 +274,7 @@ namespace RepoDb
         */
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -305,7 +305,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -335,7 +335,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -365,7 +365,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -468,7 +468,7 @@ namespace RepoDb
         #region Update(TableName)
 
         /// <summary>
-        /// Update an existing data in the database.
+        /// Updates an existing data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -499,7 +499,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database.
+        /// Updates an existing data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -530,7 +530,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database.
+        /// Updates an existing data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -561,7 +561,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database.
+        /// Updates an existing data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -592,7 +592,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database.
+        /// Updates an existing data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -634,7 +634,7 @@ namespace RepoDb
         #region UpdateAsync(TableName)
 
         /// <summary>
-        /// Update an existing data in the database in asynchronous way.
+        /// Updates an existing data in the database in asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -665,7 +665,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database in asynchronous way.
+        /// Updates an existing data in the database in asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -696,7 +696,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database in asynchronous way.
+        /// Updates an existing data in the database in asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -727,7 +727,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database in asynchronous way.
+        /// Updates an existing data in the database in asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -758,7 +758,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database in asynchronous way.
+        /// Updates an existing data in the database in asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>

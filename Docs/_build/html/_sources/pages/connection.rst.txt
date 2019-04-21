@@ -16,7 +16,10 @@ Dynamic way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		connection.BatchQuery<Order>(new { CustomerId = 10045 }, 0, 24);
+		connection.BatchQuery<Order>(0,
+			24,
+			OrderField.Parse(new { Id = Order.Ascending }),
+			new { CustomerId = 10045 });
 	}
 
 Expression way:
@@ -25,7 +28,10 @@ Expression way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		connection.BatchQuery<Order>(o => o.CustomerId == 10045, 0, 24);
+		connection.BatchQuery<Order>(0,
+			24,
+			OrderField.Ascending<Order>(o => o.Id),
+			o => o.CustomerId = 10045);
 	}
 
 Explicit way:
@@ -34,7 +40,10 @@ Explicit way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		connection.BatchQuery<Order>(new QueryField(nameof(Order.CustomerId), 10045), 0, 24);
+		connection.BatchQuery<Order>(0,
+			24,
+			new OrderField("Id", Order.Ascending).AsEnumerable(),
+			new QueryField(nameof(Order.CustomerId), 10045));
 	}
 
 BulkInsert
@@ -109,13 +118,13 @@ Counts the number of table data from the database.
 
 .. highlight:: c#
 
-Expression way:
+Dynamic way:
 
 ::
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var noOfRows = connection.Count<Order>(new { CustomerId = 10045 });
+		var counted = connection.Count<Order>(new { CustomerId = 10045 });
 	}
 
 Expression way:
@@ -124,7 +133,7 @@ Expression way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var noOfRows = connection.Count<Order>(o => o.CustomerId == 10045);
+		var counted = connection.Count<Order>(o => o.CustomerId == 10045);
 	}
 
 Explicit way:
@@ -133,8 +142,72 @@ Explicit way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var field = new QueryField(nameof(Order.CustomerId), 10045);
-		var noOfRows = connection.Count<Order>(field);
+		var counted = connection.Count<Order>(new QueryField(nameof(Order.CustomerId), 10045));
+	}
+
+Records can all also be counted via table name.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var counted = connection.Count("Order", new { CustomerId = 10045 });
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var counted = connection.Count("Order", new QueryField(nameof(Order.CustomerId), 10045));
+	}
+
+**Note**: By setting the `where` argument to blank would count all the records. Exactly the same as `CountAll` operation.
+
+CountAll
+--------
+
+Counts all the table data from the database.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var counted = connection.CountAll<Order>();
+	}
+
+with hints.
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var counted = connection.Count<Order>(SqlTableHints.NoLock);
+	}
+
+All records can all also be counted via table name.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var counted = connection.CountAll("Order");
+	}
+
+with hints.
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var counted = connection.CountAll("Order", SqlTableHints.NoLock);
 	}
 
 CreateCommand
@@ -166,16 +239,6 @@ Deletes an existing data from the database.
 
 .. highlight:: c#
 
-Via DataEntity:
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		var customer = connection.Query<Customer>(10045);
-		var affectedRows = connection.Delete<Customer>(customer);
-	}
-
 Via PrimaryKey:
 
 ::
@@ -184,10 +247,6 @@ Via PrimaryKey:
 	{
 		var affectedRows = connection.Delete<Customer>(10045);
 	}
-	
-Deleting a data entity without a primary key will throw a `PrimaryFieldNotFoundException` exception.
-
-**Note**: By setting the `where` argument to blank would delete all the records. Exactly the same as `DeleteAll` operation.
 
 Via Dynamic:
 
@@ -216,6 +275,28 @@ Explicit way:
 		var affectedRows = connection.Delete<Customer>(new QueryField(nameof(Order.CustomerId), 10045));
 	}
 
+Records can also be deleted via table name.
+
+Via Dynamic:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Delete("Customer", new { Id = 10045 });
+	}
+	
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Delete("Customer", new QueryField(nameof(Order.CustomerId), 10045));
+	}
+
+**Note**: By setting the `where` argument to blank would delete all the records. Exactly the same as `DeleteAll` operation.
+
 DeleteAll
 ---------
 
@@ -230,6 +311,15 @@ Deletes all the data from the database.
 		var customer = connection.DeleteAll<Customer>();
 	}
 
+All records can also be deleted via table name.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.DeleteAll("Customer");
+	}
+	
 EnsureOpen
 ----------
 
@@ -691,132 +781,6 @@ A dynamic typed-based call is also provided, see below.
 		var maxId = connection.ExecuteScalar<long>("[dbo].[sp_get_latest_customer_id]", commandType: CommandType.StoredProcedure));
 	}
 
-InlineInsert
-------------
-
-Inserts a new data in the database (certain fields only).
-
-.. highlight:: c#
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		// Not really an order object, instead, it is a dynamic object
-		var entity = new
-		{
-			CustomerId = 10045,
-			ProductId = 35,
-			Quantity = 5,
-			CreatedDate = DateTime.UtcNow
-		};
-
-		// Call the operation and define which object you are targetting
-		var id = Convert.ToInt64(connection.InlineInsert<Order>(entity));
-	}
-
-A dynamic typed-based call is also provided when calling this method, see below.
-
-::
-
-	// The first type is the entity type, the second type is the result type
-	var id = connection.InlineInsert<Order, long>(entity);
-
-InlineMerge
------------
-
-Merges an object into an existing data in the database (certain fields only).
-
-.. highlight:: c#
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		// Not really an order object, instead, it is a dynamic object
-		var entity = new
-		{
-			Id = 1002,
-			CustomerId = 10045,
-			ProductId = 35,
-			Quantity = 5,
-			CreatedDate = DateTime.UtcNow
-		};
-
-		// Call the operation and define which object you are targetting
-		var id = connection.InlineMerge<Order>(entity, new []
-		{
-			new Field(nameof(Order.Id)),
-			new Field(nameof(Order.CustomerId))
-		});
-	}
-
-In the second parameter, the `Field.From` method can also be used.
-
-::
-	
-	var id = connection.InlineMerge<Order>(entity, Field.From(nameof(Order.Id), nameof(Order.CustomerId)));
-
-**Note**: The second parameter can be omitted if the data entity has a primary key.
-
-InlineUpdate
-------------
-
-Updates an existing data in the database (certain fields only).
-
-.. highlight:: c#
-
-Let us say a dynamic entity is defined.
-
-::
-
-	// Not really a Customer object, instead, it is a dynamic object
-	var entity = new
-	{
-		Name = "Anna Fullerton",
-		UpdatedDate = DateTime.UtcNow
-	};
-
-Via PrimaryKey:
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		// Call the operation and define which object you are targetting
-		var id = connection.InlineUpdate<Customer>(entity, 10045);
-	}
-	
-Via Dynamic:
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		// Call the operation and define which object you are targetting
-		var id = connection.InlineUpdate<Customer>(entity, new { Id = 10045 });
-	}
-
-Expression way:
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		// Call the operation and define which object you are targetting
-		var id = connection.InlineUpdate<Customer>(entity, o => o.Id == 10045);
-	}
-
-Explicit way:
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		// Call the operation and define which object you are targetting
-		var id = connection.InlineUpdate<Customer>(entity, new QueryField(nameof(Customer.Id), 10045));
-	}
-
 Insert
 ------
 
@@ -844,6 +808,25 @@ A dynamic typed-based call is also provided when calling this method, see below.
 
 	// The first type is the entity type, the second type is the result type
 	var id = connection.Insert<Order, long>(order);
+
+**Certain** columns can also be inserted via table name calls.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Instantiate a dynamic object (not really an "Order" object)
+		var entity = new
+		{
+			CustomerId = 10045,
+			ProductId = 12
+			Quantity = 2,
+			CreatedDate = DateTime.UtcNow
+		};
+		var id = connection.Insert<long>("Order", entity);
+	}
+
+**Note**: Use the table name based if the scenario is to only insert targetted columns.
 
 Merge
 -----
@@ -875,6 +858,24 @@ Or, via a literal array of string.
 	var id = connection.Merge<Order>(entity, Field.From("Id"));
 
 **Note**: The second parameter can be omitted if the data entity has a primary key.
+
+**Certain** columns can also be merged via table name calls.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Instantiate a dynamic object (not really an "Order" object)
+		var entity = new
+		{
+			Id = 1,
+			Quantity = 5,
+			UpdatedDate = DateTime.UtcNow
+		};
+		connection.Merge("Order", entity, Field.From("Id"));
+	}
+
+**Note**: Use the table name based if the scenario is to only merge targetted columns.
 
 Query
 -----
@@ -1051,37 +1052,35 @@ Truncates a table from the database.
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customer = connection.Truncate<Customer>();
+		connection.Truncate<Customer>();
+	}
+
+Table can also be truncated via table name.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		connection.Truncate("Customer");
 	}
 
 Update
 ------
 
-Update an existing data in the database.
+Updates an existing data in the database.
 
 .. highlight:: c#
 
 Let us say an `Order` object was queried from the database.
 
 ::
-	
-		// Query a data from the database
-		var order = connection.Query<Order>(1002).FirstOrDefault();
 
-		// Set the target properties
-		order.Quantity = 5;
-		order.UpdateDate = DateTime.UtcNow;
+	// Query a data from the database
+	var order = connection.Query<Order>(1002).FirstOrDefault();
 
-Via DataEntity:
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		var affectedRows = connection.Update<Order>(order);
-	}
-
-Note: This call will throw an exception if the data entity does not have a primary key.
+	// Set the target properties
+	order.Quantity = 5;
+	order.UpdateDate = DateTime.UtcNow;
 
 Via PrimaryKey:
 
@@ -1091,7 +1090,9 @@ Via PrimaryKey:
 	{
 		var affectedRows = connection.Update<Order>(order, 1002);
 	}
-	
+
+Note: This call will throw an exception if the data entity does not have a primary key.
+
 Via Dynamic:
 
 ::
@@ -1117,4 +1118,36 @@ Explicit way:
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var affectedRows = connection.Update(order, new QueryField(nameof(Order.Id), 1002));
+	}
+
+Record can also be updated via table name.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Instantiate a dynamic object (not really an "Order" object)
+		var entity = new
+		{
+			Quantity = 5,
+			UpdateDate = DateTime.UtcNow
+		};
+		var affectedRows = connection.Update("Order", entity, new { Id = 1002 });
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Instantiate a dynamic object (not really an "Order" object)
+		var entity = new
+		{
+			Quantity = 5,
+			UpdateDate = DateTime.UtcNow
+		};
+		var affectedRows = connection.Update("Order", entity, new QueryField("Id", 1002));
 	}

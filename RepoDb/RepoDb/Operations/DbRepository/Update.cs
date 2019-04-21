@@ -16,7 +16,7 @@ namespace RepoDb
 
         /*
         /// <summary>
-        /// Update an existing data in the database.
+        /// Updates an existing data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -52,7 +52,7 @@ namespace RepoDb
         */
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression.
+        /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -90,7 +90,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression.
+        /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -128,7 +128,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression.
+        /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -166,7 +166,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression.
+        /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -204,7 +204,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression.
+        /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -247,7 +247,7 @@ namespace RepoDb
 
         /*
         /// <summary>
-        /// Update an existing data in the database in an asynchronous way.
+        /// Updates an existing data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -282,7 +282,7 @@ namespace RepoDb
         */
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -320,7 +320,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -358,7 +358,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -396,7 +396,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -434,7 +434,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be used for update.</param>
@@ -476,7 +476,7 @@ namespace RepoDb
         #region Update(TableName)
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression.
+        /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
@@ -515,7 +515,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression.
+        /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
@@ -554,7 +554,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression.
+        /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
@@ -593,7 +593,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression.
+        /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
@@ -636,7 +636,7 @@ namespace RepoDb
         #region UpdateAsync(TableName)
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
@@ -675,7 +675,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
@@ -714,7 +714,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
@@ -753,7 +753,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>

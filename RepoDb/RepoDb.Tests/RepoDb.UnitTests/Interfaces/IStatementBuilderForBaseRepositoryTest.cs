@@ -109,6 +109,40 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
+        // CreateCountAll
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForCountAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            repository.CountAll();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.CountAll();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
         // CreateDelete
 
         [TestMethod]
