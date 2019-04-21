@@ -98,7 +98,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field2, @Field3 ) ; " +
-                $"SELECT SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result] ;";
+                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
