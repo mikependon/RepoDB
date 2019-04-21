@@ -39,7 +39,8 @@ namespace RepoDb.UnitTests.Interfaces
                 new SqlStatementBuilder());
 
             // Act
-            repository.Query<CacheEntity>(orderBy: null,
+            repository.Query<CacheEntity>(where: (QueryGroup)null,
+                orderBy: null,
                 top: 0,
                 hints: null,
                 cacheKey: cacheKey,
@@ -72,6 +73,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.Query<CacheEntity>((object)null, /* whereOrPrimaryKey */
                 (IEnumerable<OrderField>)null, /* orderBy */
+                (int?)null, /* top */
                 (string)null, /* hints */
                 cacheKey, /* cacheKey */
                 (IDbTransaction)null);
@@ -233,7 +235,8 @@ namespace RepoDb.UnitTests.Interfaces
                 new SqlStatementBuilder());
 
             // Act
-            var result = repository.QueryAsync<CacheEntity>(orderBy: null,
+            var result = repository.QueryAsync<CacheEntity>(where: (QueryGroup)null,
+                orderBy: null,
                 top: 0,
                 hints: null,
                 cacheKey: cacheKey,
@@ -266,6 +269,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             var result = repository.QueryAsync<CacheEntity>((object)null, /* whereOrPrimaryKey */
                 (IEnumerable<OrderField>)null, /* orderBy */
+                (int?)null, /* top */
                 (string)null, /* hints */
                 cacheKey, /* cacheKey */
                 (IDbTransaction)null).Result;

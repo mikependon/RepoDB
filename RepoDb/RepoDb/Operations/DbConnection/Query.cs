@@ -25,6 +25,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
@@ -40,6 +41,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
+            object whereOrPrimaryKey = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -53,55 +55,9 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: (QueryGroup)null,
-                orderBy: orderBy,
-                top: top,
-                hints: hints,
-                cacheKey: cacheKey,
-                cacheItemExpiration: cacheItemExpiration,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: cache,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Queries a data from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="orderBy">The order definition of the fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force to query from the database.
-        /// </param>
-        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cache">The cache object to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            object whereOrPrimaryKey = null,
-            IEnumerable<OrderField> orderBy = null,
-            string hints = null,
-            string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return Query<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 orderBy: orderBy,
-                top: 0,
+                top: top,
                 hints: hints,
                 cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
@@ -427,6 +383,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
@@ -442,53 +399,9 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null, ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return QueryAsync<TEntity>(connection: connection,
-                where: (QueryGroup)null,
-                orderBy: orderBy,
-                top: top,
-                hints: hints,
-                cacheKey: cacheKey,
-                cacheItemExpiration: cacheItemExpiration,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: cache,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Queries a data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="orderBy">The order definition of the fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force to query from the database.
-        /// </param>
-        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cache">The cache object to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey = null,
             IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
             string hints = null,
             string cacheKey = null,
             int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
@@ -502,7 +415,7 @@ namespace RepoDb
             return QueryAsync<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 orderBy: orderBy,
-                top: 0,
+                top: top,
                 hints: hints,
                 cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
