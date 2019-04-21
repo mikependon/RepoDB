@@ -4,10 +4,10 @@ using System;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateCountTest
+    public class SqlStatementBuilderCreateCountAllTest
     {
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCount()
+        public void TestSqlStatementBuilderCreateCountAll()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -15,7 +15,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 hints: null);
             var expected = "SELECT COUNT_BIG (1) AS [Counted] FROM [Table] ;";
@@ -25,29 +25,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithWhereExpression()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder();
-            var tableName = "Table";
-            var where = new QueryGroup(new QueryField("Id", 1));
-
-            // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
-                tableName: tableName,
-                where: where);
-            var expected = $"" +
-                $"SELECT COUNT_BIG (1) AS [Counted] " +
-                $"FROM [Table] " +
-                $"WHERE ([Id] = @Id) ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithHints()
+        public void TestSqlStatementBuilderCreateCountAllWithHints()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -56,7 +34,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 hints: hints);
             var expected = "SELECT COUNT_BIG (1) AS [Counted] FROM [Table] WITH (NOLOCK) ;";
@@ -66,31 +44,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithWhereExpressionAndWithHints()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder();
-            var tableName = "Table";
-            var where = new QueryGroup(new QueryField("Id", 1));
-            var hints = "WITH (NOLOCK)";
-
-            // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
-                tableName: tableName,
-                where: where,
-                hints: hints);
-            var expected = $"" +
-                $"SELECT COUNT_BIG (1) AS [Counted] " +
-                $"FROM [Table] WITH (NOLOCK) " +
-                $"WHERE ([Id] = @Id) ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithQuotedTableSchema()
+        public void TestSqlStatementBuilderCreateCountAllWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -98,7 +52,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "[dbo].[Table]";
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 hints: null);
             var expected = "SELECT COUNT_BIG (1) AS [Counted] FROM [dbo].[Table] ;";
@@ -108,7 +62,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithUnquotedTableSchema()
+        public void TestSqlStatementBuilderCreateCountAllWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -116,7 +70,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "dbo.Table";
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 hints: null);
             var expected = "SELECT COUNT_BIG (1) AS [Counted] FROM [dbo].[Table] ;";
@@ -126,7 +80,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateCountAllIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -134,13 +88,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 hints: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlStatementBuilderCreateCountAllIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -148,13 +102,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "";
 
             // Act
-            statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 hints: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlStatementBuilderCreateCountAllIfTheTableIsWhitespace()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -162,7 +116,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 hints: null);
         }

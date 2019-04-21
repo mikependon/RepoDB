@@ -43,10 +43,25 @@ namespace RepoDb.Interfaces
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
-        /// <returns>A sql statement for create operation.</returns>
+        /// <returns>A sql statement for count operation.</returns>
         string CreateCount(QueryBuilder queryBuilder,
             string tableName,
             QueryGroup where = null,
+            string hints = null);
+
+        #endregion
+
+        #region CreateCount
+
+        /// <summary>
+        /// Creates a SQL Statement for count-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for count-all operation.</returns>
+        string CreateCountAll(QueryBuilder queryBuilder,
+            string tableName,
             string hints = null);
 
         #endregion
@@ -165,7 +180,7 @@ namespace RepoDb.Interfaces
         string CreateUpdate(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
-            QueryGroup where,
+            QueryGroup where = null,
             DbField primaryField = null);
 
         #endregion

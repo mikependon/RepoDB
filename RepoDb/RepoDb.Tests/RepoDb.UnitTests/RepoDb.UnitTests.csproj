@@ -119,6 +119,7 @@
     <Compile Include="QueryGroups\QueryGroupParseExpressionForStringTypeTest.cs" />
     <Compile Include="QueryGroups\QueryGroupParseExpressionOperationsTest.cs" />
     <Compile Include="QueryGroups\QueryGroupParseExpressionValuesTest.cs" />
+    <Compile Include="StatementBuilders\SqlStatementBuilder\CreateCountAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateTruncateTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateUpdateTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateBatchQueryTest.cs" />

@@ -65,20 +65,20 @@ namespace RepoDb
 
         #endregion
 
-        #region GetDeleteAllText
+        #region GetCountAllText
 
         /// <summary>
-        /// Gets a command text from the cache for the delete-all operation.
+        /// Gets a command text from the cache for the count-all operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetDeleteAllText(DeleteAllRequest request)
+        public static string GetCountAllText(CountAllRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateDeleteAll(new QueryBuilder(),
+                commandText = statementBuilder.CreateCountAll(new QueryBuilder(),
                     request.Name);
                 m_cache.TryAdd(request, commandText);
             }
@@ -103,6 +103,28 @@ namespace RepoDb
                 commandText = statementBuilder.CreateDelete(new QueryBuilder(),
                     request.Name,
                     request.Where);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
+        #region GetDeleteAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the delete-all operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetDeleteAllText(DeleteAllRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateDeleteAll(new QueryBuilder(),
+                    request.Name);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;

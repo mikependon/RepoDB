@@ -14,6 +14,7 @@ namespace RepoDb
     {
         #region Update<TEntity>
 
+        /*
         /// <summary>
         /// Update an existing data in the database.
         /// </summary>
@@ -48,6 +49,7 @@ namespace RepoDb
                 DisposeConnectionForPerCall(connection, transaction);
             }
         }
+        */
 
         /// <summary>
         /// Update an existing data in the database based on the given query expression.
@@ -58,7 +60,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            object whereOrPrimaryKey,
+            object whereOrPrimaryKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -96,7 +98,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            Expression<Func<TEntity, bool>> where,
+            Expression<Func<TEntity, bool>> where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -134,7 +136,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            QueryField where,
+            QueryField where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -172,7 +174,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -210,7 +212,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            QueryGroup where,
+            QueryGroup where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -243,6 +245,7 @@ namespace RepoDb
 
         #region UpdateAsync<TEntity>
 
+        /*
         /// <summary>
         /// Update an existing data in the database in an asynchronous way.
         /// </summary>
@@ -251,7 +254,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
-                    where TEntity : class
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -276,6 +279,7 @@ namespace RepoDb
                 DisposeConnectionForPerCall(connection, transaction);
             }
         }
+        */
 
         /// <summary>
         /// Update an existing data in the database based on the given query expression in an asynchronous way.
@@ -286,7 +290,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
-            object whereOrPrimaryKey,
+            object whereOrPrimaryKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -324,7 +328,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
-            Expression<Func<TEntity, bool>> where,
+            Expression<Func<TEntity, bool>> where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -362,7 +366,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
-            QueryField where,
+            QueryField where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -400,7 +404,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -438,7 +442,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
-            QueryGroup where,
+            QueryGroup where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -481,7 +485,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
-            object where,
+            object where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -520,7 +524,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
-            QueryField where,
+            QueryField where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -559,7 +563,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -598,7 +602,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
-            QueryGroup where,
+            QueryGroup where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -641,7 +645,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
-            object where,
+            object where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -680,7 +684,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
-            QueryField where,
+            QueryField where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -719,7 +723,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -758,7 +762,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
-            QueryGroup where,
+            QueryGroup where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection

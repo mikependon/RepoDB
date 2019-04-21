@@ -86,7 +86,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            object whereOrPrimaryKey,
+            object whereOrPrimaryKey = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
@@ -133,7 +133,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            QueryField where,
+            QueryField where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -181,7 +181,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -229,7 +229,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            Expression<Func<TEntity, bool>> where,
+            Expression<Func<TEntity, bool>> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -276,7 +276,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            QueryGroup where,
+            QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -324,7 +324,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         internal static IEnumerable<TEntity> QueryInternal<TEntity>(this IDbConnection connection,
-            QueryGroup where,
+            QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -487,7 +487,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            object whereOrPrimaryKey,
+            object whereOrPrimaryKey = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
@@ -534,7 +534,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            QueryField where,
+            QueryField where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -582,7 +582,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -630,7 +630,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            Expression<Func<TEntity, bool>> where,
+            Expression<Func<TEntity, bool>> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -677,7 +677,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            QueryGroup where,
+            QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -725,7 +725,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         internal static Task<IEnumerable<TEntity>> QueryAsyncInternal<TEntity>(this IDbConnection connection,
-            QueryGroup where,
+            QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,

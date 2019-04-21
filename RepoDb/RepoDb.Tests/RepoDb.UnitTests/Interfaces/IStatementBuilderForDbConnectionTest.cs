@@ -142,7 +142,8 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Count<DataEntityForDbConnectionStatementBuilder>(statementBuilder: statementBuilder.Object);
+            connection.Count<DataEntityForDbConnectionStatementBuilder>((object)null,
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -156,7 +157,8 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.Count<DataEntityForDbConnectionStatementBuilder>(statementBuilder: statementBuilderNever.Object);
+            connection.Count<DataEntityForDbConnectionStatementBuilder>((object)null,
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -176,6 +178,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.Count(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
+                (object)null,
                 statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -191,6 +194,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.Count(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
+                (object)null,
                 statementBuilder: statementBuilderNever.Object);
 
             // Assert
@@ -210,7 +214,8 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Count<DataEntityForDbConnectionStatementBuilderForCrossCall>(statementBuilder: statementBuilder.Object);
+            connection.Count<DataEntityForDbConnectionStatementBuilderForCrossCall>((object)null,
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -225,6 +230,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.Count(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>(),
+                (object)null,
                 statementBuilder: statementBuilderNever.Object);
 
             // Assert

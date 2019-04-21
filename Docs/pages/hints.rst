@@ -54,4 +54,4 @@ The query hints are not limited to SQL Server only, it is also applicable to oth
 
 In order to support the other data providers, the `IStatementBuilder` must be overriden by the caller's custom statement builder (ie: `OracleStatementBuilder`, `MySqlStatementBuilder`) when calling the `DbConnection` extended method. And also, the caller must specify a class table hints for that data provider (ie: `OracleQueryHints`, `MySqlQueryHints`) to simplify the call (though this can be written statically through explicit literal string).
 
-**Note**: The `hints` are also supported when calling the `BatchQuery`, `Count` and the `QueryMultiple` operations.
+**Note**: The `hints` are also supported when calling the `BatchQuery`, `Count`, `CountAll` and the `QueryMultiple` operations.

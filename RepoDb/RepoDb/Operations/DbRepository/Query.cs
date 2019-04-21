@@ -76,7 +76,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(object whereOrPrimaryKey,
+        public IEnumerable<TEntity> Query<TEntity>(object whereOrPrimaryKey = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
@@ -126,7 +126,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(Expression<Func<TEntity, bool>> where,
+        public IEnumerable<TEntity> Query<TEntity>(Expression<Func<TEntity, bool>> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -178,7 +178,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(QueryField where,
+        public IEnumerable<TEntity> Query<TEntity>(QueryField where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -229,7 +229,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where,
+        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -281,7 +281,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(QueryGroup where,
+        public IEnumerable<TEntity> Query<TEntity>(QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -385,7 +385,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object whereOrPrimaryKey,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object whereOrPrimaryKey = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
@@ -435,7 +435,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -487,7 +487,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryField where,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryField where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -539,7 +539,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -591,7 +591,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,

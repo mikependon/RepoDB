@@ -21,7 +21,7 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Delete<TEntity>(object whereOrPrimaryKey,
+        public int Delete<TEntity>(object whereOrPrimaryKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -91,7 +91,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Delete<TEntity>(Expression<Func<TEntity, bool>> where,
+        public int Delete<TEntity>(Expression<Func<TEntity, bool>> where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -126,7 +126,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Delete<TEntity>(QueryField where,
+        public int Delete<TEntity>(QueryField where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -161,7 +161,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Delete<TEntity>(IEnumerable<QueryField> where,
+        public int Delete<TEntity>(IEnumerable<QueryField> where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -196,7 +196,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Delete<TEntity>(QueryGroup where,
+        public int Delete<TEntity>(QueryGroup where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -270,7 +270,7 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> DeleteAsync<TEntity>(object whereOrPrimaryKey,
+        public async Task<int> DeleteAsync<TEntity>(object whereOrPrimaryKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -305,7 +305,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public async Task<int> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> where = null,
             IDbTransaction transaction = null)
                     where TEntity : class
         {
@@ -340,7 +340,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> DeleteAsync<TEntity>(QueryField where,
+        public async Task<int> DeleteAsync<TEntity>(QueryField where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -375,7 +375,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> DeleteAsync<TEntity>(IEnumerable<QueryField> where,
+        public async Task<int> DeleteAsync<TEntity>(IEnumerable<QueryField> where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -410,7 +410,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> DeleteAsync<TEntity>(QueryGroup where,
+        public async Task<int> DeleteAsync<TEntity>(QueryGroup where = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -450,7 +450,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Delete(string tableName,
-            object where,
+            object where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -486,7 +486,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Delete(string tableName,
-            QueryField where,
+            QueryField where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -522,7 +522,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Delete(string tableName,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -558,7 +558,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Delete(string tableName,
-            QueryGroup where,
+            QueryGroup where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -598,7 +598,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> DeleteAsync(string tableName,
-            object where,
+            object where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -634,7 +634,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> DeleteAsync(string tableName,
-            QueryField where,
+            QueryField where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -670,7 +670,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> DeleteAsync(string tableName,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -706,7 +706,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> DeleteAsync(string tableName,
-            QueryGroup where,
+            QueryGroup where = null,
             IDbTransaction transaction = null)
         {
             // Create a connection

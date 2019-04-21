@@ -33,7 +33,10 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.BatchQuery(0, 10, null, null);
+            repository.BatchQuery(0,
+                10,
+                null,
+                (object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -52,7 +55,10 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.BatchQuery(0, 10, null, null);
+            repositoryNever.BatchQuery(0,
+                10,
+                null,
+                (object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -77,7 +83,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Count();
+            repository.Count((object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -92,7 +98,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Count();
+            repositoryNever.Count((object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>

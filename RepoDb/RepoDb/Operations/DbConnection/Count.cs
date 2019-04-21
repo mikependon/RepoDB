@@ -22,34 +22,6 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return Count<TEntity>(connection: connection,
-                where: (QueryGroup)null,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Counts the number of table data from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -58,7 +30,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
-            object where,
+            object where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -88,7 +60,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
-            Expression<Func<TEntity, bool>> where,
+            Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -118,7 +90,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
-            QueryField where,
+            QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -148,7 +120,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -178,7 +150,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
-            QueryGroup where,
+            QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -208,7 +180,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         internal static long CountInternal<TEntity>(this IDbConnection connection,
-            QueryGroup where,
+            QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -284,7 +256,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            object where,
+            object where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -314,7 +286,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            Expression<Func<TEntity, bool>> where,
+            Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -344,7 +316,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            QueryField where,
+            QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -374,7 +346,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -404,7 +376,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            QueryGroup where,
+            QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -434,7 +406,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         internal static Task<long> CountAsyncInternal<TEntity>(this IDbConnection connection,
-            QueryGroup where, int? commandTimeout = null,
+            QueryGroup where = null,
+            int? commandTimeout = null,
             string hints = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -473,35 +446,6 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
-            string tableName,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            return Count(connection: connection,
-                tableName: tableName,
-                where: (QueryGroup)null,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Counts the number of table data from the database.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -511,7 +455,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
-            object where,
+            object where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -542,7 +486,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
-            QueryField where,
+            QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -573,7 +517,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -604,7 +548,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
-            QueryGroup where,
+            QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -635,7 +579,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of data from the database.</returns>
         internal static long CountInternal(this IDbConnection connection,
             string tableName,
-            QueryGroup where,
+            QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -713,7 +657,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
-            object where,
+            object where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -744,7 +688,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
-            QueryField where,
+            QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -775,7 +719,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static Task<long> InlineAsyncCount(this IDbConnection connection,
             string tableName,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -806,7 +750,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
-            QueryGroup where,
+            QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -837,7 +781,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of data from the database.</returns>
         internal static Task<long> CountAsyncInternal(this IDbConnection connection,
             string tableName,
-            QueryGroup where,
+            QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,

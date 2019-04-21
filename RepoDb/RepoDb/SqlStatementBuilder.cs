@@ -120,7 +120,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
-        /// <returns>A sql statement for create operation.</returns>
+        /// <returns>A sql statement for count operation.</returns>
         public string CreateCount(QueryBuilder queryBuilder,
             string tableName,
             QueryGroup where = null,
@@ -149,6 +149,49 @@ namespace RepoDb
             // Build the filter and ordering
             queryBuilder
                 .WhereFrom(where)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
+        }
+
+        #endregion
+
+        #region CreateCountAll
+
+        /// <summary>
+        /// Creates a SQL Statement for count-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for count-all operation.</returns>
+        public string CreateCountAll(QueryBuilder queryBuilder,
+            string tableName,
+            string hints = null)
+        {
+            // Guard the target table
+            Guard(tableName);
+
+            // Build the query
+            queryBuilder = queryBuilder ?? new QueryBuilder();
+            queryBuilder
+                .Clear()
+                .Select()
+                .CountBig()
+                .WriteText("(1) AS [Counted]")
+                .From()
+                .TableNameFrom(tableName);
+
+            // Build the query optimizers
+            if (hints != null)
+            {
+                queryBuilder
+                    .WriteText(hints);
+            }
+
+            // End the builder
+            queryBuilder
                 .End();
 
             // Return the query
@@ -519,7 +562,7 @@ namespace RepoDb
         public string CreateUpdate(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
-            QueryGroup where,
+            QueryGroup where = null,
             DbField primaryField = null)
         {
             // Guard the target table

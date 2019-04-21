@@ -16,24 +16,11 @@ namespace RepoDb
         /// <summary>
         /// Counts the number of table data from the database.
         /// </summary>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public long Count(string hints = null,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.Count<TEntity>(hints: hints,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of table data from the database.
-        /// </summary>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public long Count(object where,
+        public long Count(object where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -49,7 +36,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public long Count(Expression<Func<TEntity, bool>> where,
+        public long Count(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -65,7 +52,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public long Count(QueryField where,
+        public long Count(QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -81,7 +68,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public long Count(IEnumerable<QueryField> where,
+        public long Count(IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -97,7 +84,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public long Count(QueryGroup where,
+        public long Count(QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -113,24 +100,11 @@ namespace RepoDb
         /// <summary>
         /// Counts the number of table data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public Task<long> CountAsync(string hints = null,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.CountAsync<TEntity>(hints: hints,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
-        /// </summary>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public Task<long> CountAsync(object where,
+        public Task<long> CountAsync(object where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -146,7 +120,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public Task<long> CountAsync(Expression<Func<TEntity, bool>> where,
+        public Task<long> CountAsync(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -162,7 +136,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public Task<long> CountAsync(QueryField where,
+        public Task<long> CountAsync(QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -178,7 +152,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public Task<long> CountAsync(IEnumerable<QueryField> where,
+        public Task<long> CountAsync(IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -194,7 +168,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public Task<long> CountAsync(QueryGroup where,
+        public Task<long> CountAsync(QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {

@@ -136,7 +136,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> MergeAsync<TEntity>(TEntity entity,
             IDbTransaction transaction = null)
-                    where TEntity : class
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());

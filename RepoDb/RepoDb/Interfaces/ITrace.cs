@@ -30,6 +30,12 @@
         void BeforeCount(CancellableTraceLog log);
 
         /// <summary>
+        /// A method being raised before the actual count-all operation execution.
+        /// </summary>
+        /// <param name="log">The cancellable log object referenced by the count-all execution.</param>
+        void BeforeCountAll(CancellableTraceLog log);
+
+        /// <summary>
         /// A method being raised before the actual delete operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the delete execution.</param>
@@ -123,6 +129,12 @@
         /// </summary>
         /// <param name="log">The log object referenced by the count execution.</param>
         void AfterCount(TraceLog log);
+
+        /// <summary>
+        /// A method being raised after the actual count-all operation execution.
+        /// </summary>
+        /// <param name="log">The log object referenced by the count-all execution.</param>
+        void AfterCountAll(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual delete operation execution.

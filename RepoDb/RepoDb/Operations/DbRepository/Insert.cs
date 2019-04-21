@@ -103,7 +103,8 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public async Task<object> InsertAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
+        public async Task<object> InsertAsync<TEntity>(TEntity entity,
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -141,7 +142,8 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public async Task<TResult> InsertAsync<TEntity, TResult>(TEntity entity, IDbTransaction transaction = null)
+        public async Task<TResult> InsertAsync<TEntity, TResult>(TEntity entity,
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection

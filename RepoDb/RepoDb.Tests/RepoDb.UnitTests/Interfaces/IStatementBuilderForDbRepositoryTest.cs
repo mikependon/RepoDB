@@ -93,7 +93,7 @@ namespace RepoDb.UnitTests.Interfaces
             repository.BatchQuery<DataEntityForDbRepositoryStatementBuilder>(0,
                 10,
                 null,
-                null);
+                (object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -115,7 +115,7 @@ namespace RepoDb.UnitTests.Interfaces
             repositoryNever.BatchQuery<DataEntityForDbRepositoryStatementBuilder>(0,
                 10,
                 null,
-                null);
+                (object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -140,7 +140,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Count<DataEntityForDbRepositoryStatementBuilder>();
+            repository.Count<DataEntityForDbRepositoryStatementBuilder>((object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -155,7 +155,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Count<DataEntityForDbRepositoryStatementBuilder>();
+            repositoryNever.Count<DataEntityForDbRepositoryStatementBuilder>((object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -174,7 +174,8 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
+            repository.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                (object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -189,7 +190,8 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
+            repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                (object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -208,7 +210,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
-            repository.Count<DataEntityForDbRepositoryStatementBuilderForCrossCall>();
+            repository.Count<DataEntityForDbRepositoryStatementBuilderForCrossCall>((object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -223,7 +225,8 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
+            repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                (object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>

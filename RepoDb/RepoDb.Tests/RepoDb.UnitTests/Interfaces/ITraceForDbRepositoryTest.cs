@@ -37,7 +37,7 @@ namespace RepoDb.UnitTests.Interfaces
             repository.Object.BatchQuery<TraceEntity>(0,
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
-                null);
+                (object)null);
 
             // Assert
             trace.Verify(t => t.BeforeBatchQuery(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -59,7 +59,7 @@ namespace RepoDb.UnitTests.Interfaces
             repository.Object.BatchQuery<TraceEntity>(0,
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
-                null);
+                (object)null);
 
             // Assert
             trace.Verify(t => t.AfterBatchQuery(It.IsAny<TraceLog>()), Times.Once);
@@ -80,7 +80,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Object.Count<TraceEntity>();
+            repository.Object.Count<TraceEntity>((object)null);
 
             // Assert
             trace.Verify(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -99,7 +99,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Object.Count<TraceEntity>();
+            repository.Object.Count<TraceEntity>((object)null);
 
             // Assert
             trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Once);
@@ -118,7 +118,8 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Object.Count(ClassMappedNameCache.Get<TraceEntity>());
+            repository.Object.Count(ClassMappedNameCache.Get<TraceEntity>(),
+                (object)null);
 
             // Assert
             trace.Verify(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -137,10 +138,89 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Object.Count(ClassMappedNameCache.Get<TraceEntity>());
+            repository.Object.Count(ClassMappedNameCache.Get<TraceEntity>(),
+                (object)null);
 
             // Assert
             trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        // CountAll
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeCountAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.CountAll<TraceEntity>();
+
+            // Assert
+            trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterCountAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.CountAll<TraceEntity>();
+
+            // Assert
+            trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeCountAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.CountAll(ClassMappedNameCache.Get<TraceEntity>());
+
+            // Assert
+            trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterCountAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Object.CountAll(ClassMappedNameCache.Get<TraceEntity>());
+
+            // Assert
+            trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         // Delete
@@ -580,11 +660,13 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Object.Update<TraceEntity>(new TraceEntity
-            {
-                Id = 1,
-                Name = "Name"
-            });
+            repository.Object.Update<TraceEntity>(
+                new TraceEntity
+                {
+                    Id = 1,
+                    Name = "Name"
+                },
+                whereOrPrimaryKey: 1);
 
             // Assert
             trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -603,11 +685,13 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Object.Update<TraceEntity>(new TraceEntity
-            {
-                Id = 1,
-                Name = "Name"
-            });
+            repository.Object.Update<TraceEntity>(
+                new TraceEntity
+                {
+                    Id = 1,
+                    Name = "Name"
+                },
+                whereOrPrimaryKey: 1);
 
             // Assert
             trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Once);

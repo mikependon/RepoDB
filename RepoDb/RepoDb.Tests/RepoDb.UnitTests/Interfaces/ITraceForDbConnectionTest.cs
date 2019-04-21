@@ -70,6 +70,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.Count<TraceEntity>(trace: trace.Object,
+                where: (object)null,
                 statementBuilder: m_statementBuilder);
 
             // Assert
@@ -85,6 +86,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.Count<TraceEntity>(trace: trace.Object,
+                where: (object)null,
                 statementBuilder: m_statementBuilder);
 
             // Assert
@@ -100,6 +102,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.Count(ClassMappedNameCache.Get<TraceEntity>(),
+                where: (object)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 
@@ -116,11 +119,76 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.Count(ClassMappedNameCache.Get<TraceEntity>(),
+                where: (object)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 
             // Assert
             trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        // CountAll
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeCountAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.CountAll<TraceEntity>(trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterCountAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.CountAll<TraceEntity>(trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeCountAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.CountAll(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterCountAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.CountAll(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
         // Delete
@@ -504,13 +572,15 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Update<TraceEntity>(new TraceEntity
-            {
-                Id = 1,
-                Name = "Name"
-            },
-            trace: trace.Object,
-            statementBuilder: m_statementBuilder);
+            connection.Update<TraceEntity>(
+                new TraceEntity
+                {
+                    Id = 1,
+                    Name = "Name"
+                },
+                whereOrPrimaryKey: 1,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
             trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
@@ -524,13 +594,15 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Update<TraceEntity>(new TraceEntity
-            {
-                Id = 1,
-                Name = "Name"
-            },
-            trace: trace.Object,
-            statementBuilder: m_statementBuilder);
+            connection.Update<TraceEntity>(
+                new TraceEntity
+                {
+                    Id = 1,
+                    Name = "Name"
+                },
+                whereOrPrimaryKey: 1,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
             trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Exactly(1));

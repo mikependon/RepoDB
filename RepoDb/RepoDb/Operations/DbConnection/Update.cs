@@ -17,6 +17,7 @@ namespace RepoDb
     {
         #region Update<TEntity>
 
+        /*
         /// <summary>
         /// Update an existing data in the database.
         /// </summary>
@@ -45,6 +46,7 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
+        */
 
         /// <summary>
         /// Updates an existing data in the database.
@@ -60,7 +62,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            object whereOrPrimaryKey,
+            object whereOrPrimaryKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -91,7 +93,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            Expression<Func<TEntity, bool>> where,
+            Expression<Func<TEntity, bool>> where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -121,7 +123,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryField where,
+            QueryField where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -151,7 +153,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -181,7 +183,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryGroup where,
+            QueryGroup where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -211,7 +213,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         internal static int UpdateInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryGroup where,
+            QueryGroup where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -240,6 +242,7 @@ namespace RepoDb
 
         #region UpdateAsync<TEntity>
 
+        /*
         /// <summary>
         /// Update an existing data in the database in an asynchronous way.
         /// </summary>
@@ -268,6 +271,7 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
+        */
 
         /// <summary>
         /// Update an existing data in the database based on the given query expression in an asynchronous way.
@@ -283,7 +287,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            object whereOrPrimaryKey,
+            object whereOrPrimaryKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -314,7 +318,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            Expression<Func<TEntity, bool>> where,
+            Expression<Func<TEntity, bool>> where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -344,7 +348,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryField where,
+            QueryField where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -374,7 +378,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -404,7 +408,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryGroup where,
+            QueryGroup where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -434,7 +438,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         internal static Task<int> UpdateAsyncInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryGroup where,
+            QueryGroup where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -478,7 +482,7 @@ namespace RepoDb
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
-            object where,
+            object where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -509,7 +513,7 @@ namespace RepoDb
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryField where,
+            QueryField where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -540,7 +544,7 @@ namespace RepoDb
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -571,7 +575,7 @@ namespace RepoDb
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryGroup where,
+            QueryGroup where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -602,7 +606,7 @@ namespace RepoDb
         internal static int UpdateInternal(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryGroup where,
+            QueryGroup where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -644,7 +648,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
-            object where,
+            object where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -675,7 +679,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryField where,
+            QueryField where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -706,7 +710,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
-            IEnumerable<QueryField> where,
+            IEnumerable<QueryField> where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -737,7 +741,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryGroup where,
+            QueryGroup where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -768,7 +772,7 @@ namespace RepoDb
         internal static Task<int> UpdateAsyncInternal(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryGroup where,
+            QueryGroup where = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
