@@ -165,7 +165,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAll(connection: connection,
+            return CountAllInternal(connection: connection,
                 tableName: tableName,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -233,7 +233,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAllAsync(connection: connection,
+            return CountAllAsyncInternal(connection: connection,
                 tableName: tableName,
                 hints: hints,
                 commandTimeout: commandTimeout,

@@ -119,16 +119,16 @@
     <Compile Include="QueryGroups\QueryGroupParseExpressionForStringTypeTest.cs" />
     <Compile Include="QueryGroups\QueryGroupParseExpressionOperationsTest.cs" />
     <Compile Include="QueryGroups\QueryGroupParseExpressionValuesTest.cs" />
-    <Compile Include="StatementBuilders\SqlStatementBuilder\CreateCountAllTest.cs" />
-    <Compile Include="StatementBuilders\SqlStatementBuilder\CreateTruncateTest.cs" />
-    <Compile Include="StatementBuilders\SqlStatementBuilder\CreateUpdateTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateBatchQueryTest.cs" />
+    <Compile Include="StatementBuilders\SqlStatementBuilder\CreateCountAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateCountTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateDeleteAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateDeleteTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateInsertTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateMergeTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateQueryTest.cs" />
+    <Compile Include="StatementBuilders\SqlStatementBuilder\CreateTruncateTest.cs" />
+    <Compile Include="StatementBuilders\SqlStatementBuilder\CreateUpdateTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb\RepoDb.csproj">

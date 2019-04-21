@@ -11,6 +11,8 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class IStatementBuilderForDbConnectionTest
     {
+        #region SubClasses
+
         public class DataEntityForDbConnectionStatementBuilder
         {
             [Primary, Identity]
@@ -81,7 +83,9 @@ namespace RepoDb.UnitTests.Interfaces
             public string Name { get; set; }
         }
 
-        // CreateBatchQuery
+        #endregion
+
+        #region CreateBatchQuery
 
         [TestMethod]
         public void TestDbConnectionStatementBuilderForBatchQuery()
@@ -132,7 +136,9 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
-        // CreateCount
+        #endregion
+
+        #region CreateCount
 
         [TestMethod]
         public void TestDbConnectionStatementBuilderForCount()
@@ -242,7 +248,9 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
-        // CreateCountAll
+        #endregion
+
+        #region CreateCountAll
 
         [TestMethod]
         public void TestDbConnectionStatementBuilderForCountAll()
@@ -340,7 +348,9 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
-        // CreateDelete
+        #endregion
+
+        #region CreateDelete
 
         [TestMethod]
         public void TestDbConnectionStatementBuilderForDelete()
@@ -453,7 +463,9 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryGroup>()), Times.Exactly(0));
         }
 
-        // CreateDeleteAll
+        #endregion
+
+        #region CreateDeleteAll
 
         [TestMethod]
         public void TestDbConnectionStatementBuilderForDeleteAll()
@@ -545,7 +557,9 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>())), Times.Exactly(0));
         }
 
-        // CreateInsert
+        #endregion
+
+        #region CreateInsert
 
         [TestMethod]
         public void TestDbConnectionStatementBuilderForInsert()
@@ -677,7 +691,9 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
 
-        // CreateMerge
+        #endregion
+
+        #region CreateMerge
 
         [TestMethod]
         public void TestDbConnectionStatementBuilderForMerge()
@@ -821,7 +837,9 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
 
-        // CreateQuery
+        #endregion
+
+        #region CreateQuery
 
         [TestMethod]
         public void TestDbConnectionStatementBuilderForQuery()
@@ -862,7 +880,9 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
-        // QueryMultple
+        #endregion
+
+        #region CreateQuery(Multple)
 
         [TestMethod]
         public void TestDbConnectionStatementBuilderForQueryMultiple()
@@ -1035,7 +1055,9 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
-        // CreateTruncate
+        #endregion
+
+        #region CreateTruncate
 
         [TestMethod]
         public void TestDbConnectionStatementBuilderForTruncate()
@@ -1127,7 +1149,9 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForCrossCall>())), Times.Exactly(0));
         }
 
-        // CreateUpdate
+        #endregion
+
+        #region CreateUpdate
 
         [TestMethod]
         public void TestDbConnectionStatementBuilderForUpdate()
@@ -1267,5 +1291,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryGroup>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
+
+        #endregion
     }
 }
