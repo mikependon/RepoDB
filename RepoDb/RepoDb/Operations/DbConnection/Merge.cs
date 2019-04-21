@@ -116,7 +116,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static int MergeInternal<TEntity>(this IDbConnection connection,
+        internal static int MergeInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             int? commandTimeout = null,

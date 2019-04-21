@@ -717,7 +717,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> InlineAsyncCount(this IDbConnection connection,
+        public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where = null,
             string hints = null,
