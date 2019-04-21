@@ -214,6 +214,24 @@ This method is used to compose a SQL statement for `Query` operation.
 		...
 	}
 
+CreateQueryAll
+--------------
+
+.. highlight:: none
+
+This method is used to compose a SQL statement for `QueryAll` operation.
+
+::
+
+	public string CreateQueryAll(QueryBuilder queryBuilder,
+		string tableName,
+		IEnumerable<Field> fields,
+		IEnumerable<OrderField> orderBy = null,
+		string hints = null)
+	{
+		...
+	}
+
 CreateTruncate
 --------------
 

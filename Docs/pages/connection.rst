@@ -920,6 +920,42 @@ Explicit way:
 		var customers = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 10045));
 	}
 
+QueryAll
+--------
+
+Query all the data from the database.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customers = connection.QueryAll<Customer>();
+	}
+	
+With ordering.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var orderBy = new
+		{
+			Id = Order.Ascending
+		};
+		var customers = connection.QueryAll<Customer>(orderBy);
+	}
+
+With hint.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customers = connection.QueryAll<Customer>(SqlTableHints.NoLock);
+	}
+
 QueryMultiple
 -------------
 

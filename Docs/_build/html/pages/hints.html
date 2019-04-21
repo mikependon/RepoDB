@@ -200,7 +200,7 @@
 </div>
 <p>The query hints are not limited to SQL Server only, it is also applicable to other data providers. However, the library only supports table hints for SQL Server as of the moment through <cite>SqlStatementBuilder</cite> and <cite>SqlTableHints</cite> class.</p>
 <p>In order to support the other data providers, the <cite>IStatementBuilder</cite> must be overriden by the caller’s custom statement builder (ie: <cite>OracleStatementBuilder</cite>, <cite>MySqlStatementBuilder</cite>) when calling the <cite>DbConnection</cite> extended method. And also, the caller must specify a class table hints for that data provider (ie: <cite>OracleQueryHints</cite>, <cite>MySqlQueryHints</cite>) to simplify the call (though this can be written statically through explicit literal string).</p>
-<p><strong>Note</strong>: The <cite>hints</cite> are also supported when calling the <cite>BatchQuery</cite>, <cite>Count</cite>, <cite>CountAll</cite> and the <cite>QueryMultiple</cite> operations.</p>
+<p><strong>Note</strong>: The <cite>hints</cite> are also supported when calling the <cite>BatchQuery</cite>, <cite>Count</cite>, <cite>CountAll</cite>, <cite>QueryAll</cite> and the <cite>QueryMultiple</cite> operations.</p>
 </div>
 
 

@@ -104,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#insert">Insert</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#merge">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#query">Query</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#queryall">QueryAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#querymultiple">QueryMultiple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#truncate">Truncate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#update">Update</a></li>
@@ -972,6 +973,34 @@
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="queryall">
+<h2>QueryAll<a class="headerlink" href="#queryall" title="Permalink to this headline">¶</a></h2>
+<p>Query all the data from the database.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryAll</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>With ordering.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">orderBy</span> <span class="p">=</span> <span class="k">new</span>
+        <span class="p">{</span>
+                <span class="n">Id</span> <span class="p">=</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span>
+        <span class="p">};</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryAll</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">orderBy</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>With hint.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryAll</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>

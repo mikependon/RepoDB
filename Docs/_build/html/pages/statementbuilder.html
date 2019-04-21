@@ -105,6 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#createinsert">CreateInsert</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createmerge">CreateMerge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createquery">CreateQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createqueryall">CreateQueryAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createtruncate">CreateTruncate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createupdate">CreateUpdate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#creating-a-custom-statement-builder">Creating a custom Statement Builder</a></li>
@@ -348,6 +349,20 @@
         QueryGroup where = null,
         IEnumerable&lt;OrderField&gt; orderBy = null,
         int? top = null,
+        string hints = null)
+{
+        ...
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="createqueryall">
+<h2>CreateQueryAll<a class="headerlink" href="#createqueryall" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL statement for <cite>QueryAll</cite> operation.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQueryAll(QueryBuilder queryBuilder,
+        string tableName,
+        IEnumerable&lt;Field&gt; fields,
+        IEnumerable&lt;OrderField&gt; orderBy = null,
         string hints = null)
 {
         ...
