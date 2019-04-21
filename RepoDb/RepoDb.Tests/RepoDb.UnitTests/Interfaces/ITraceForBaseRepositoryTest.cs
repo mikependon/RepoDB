@@ -335,6 +335,48 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region QueryAll
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForBeforeQueryAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                new SqlStatementBuilder());
+
+            // Act
+            repository.Object.QueryAll();
+
+            // Assert
+            trace.Verify(t => t.BeforeQueryAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForAfterQueryAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                new SqlStatementBuilder());
+
+            // Act
+            repository.Object.QueryAll();
+
+            // Assert
+            trace.Verify(t => t.AfterQueryAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
         #region Truncate
 
         [TestMethod]

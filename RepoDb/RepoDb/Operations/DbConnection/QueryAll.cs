@@ -48,7 +48,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return QueryAll<TEntity>(connection: connection,
+            return QueryAllInternal<TEntity>(connection: connection,
                 orderBy: orderBy,
                 hints: hints,
                 cacheKey: cacheKey,

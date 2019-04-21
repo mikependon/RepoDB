@@ -480,6 +480,40 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region QueryAll
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.QueryAll<TraceEntity>(trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeQueryAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.QueryAll<TraceEntity>(trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterQueryAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
         #region QueryMultiple
 
         [TestMethod]
