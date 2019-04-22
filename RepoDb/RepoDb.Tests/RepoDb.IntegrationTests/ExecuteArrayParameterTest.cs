@@ -1566,11 +1566,1075 @@ namespace RepoDb.IntegrationTests
 
         #region DbRepository
 
-        #region Sync
+        #region ExecuteQuery
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new { Values = values };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsExpandoObjectAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = (dynamic)new ExpandoObject();
+
+            // Set the properties
+            param.Values = values;
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    (object)param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsExpandoObjectAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Set the properties
+            param.Add("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new Dictionary<string, object>
+            {
+                {"Values", values }
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values).AsEnumerable();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryGroup(new QueryField("Values", values));
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
 
         #endregion
 
-        #region Async
+        #region ExecuteQueryAsync
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryAsyncWithArrayParameterAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new { Values = values };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryAsyncWithArrayParameterAsExpandoObjectAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = (dynamic)new ExpandoObject();
+
+            // Set the properties
+            param.Values = values;
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    (object)param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryAsyncWithArrayParameterAsExpandoObjectAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Set the properties
+            param.Add("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryAsyncWithArrayParameterAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new Dictionary<string, object>
+            {
+                {"Values", values }
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryAsyncWithArrayParameterAsQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryAsyncWithArrayParameterAsQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values).AsEnumerable();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryAsyncWithArrayParameterAsQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryGroup(new QueryField("Values", values));
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        #endregion
+
+        #region ExecuteNonQuery
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryWithArrayParameterAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new { Values = values };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryWithArrayParameterAsExpandoObjectAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = (dynamic)new ExpandoObject();
+
+            // Set the properties
+            param.Values = values;
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    (object)param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryWithArrayParameterAsExpandoObjectAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Set the properties
+            param.Add("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryWithArrayParameterAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new Dictionary<string, object>
+            {
+                {"Values", values }
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryWithArrayParameterAsQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryWithArrayParameterAsQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values).AsEnumerable();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryWithArrayParameterAsQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryGroup(new QueryField("Values", values));
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteNonQueryAsync
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryAsyncWithArrayParameterAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new { Values = values };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryAsyncWithArrayParameterAsExpandoObjectAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = (dynamic)new ExpandoObject();
+
+            // Set the properties
+            param.Values = values;
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    (object)param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryAsyncWithArrayParameterAsExpandoObjectAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Set the properties
+            param.Add("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryAsyncWithArrayParameterAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new Dictionary<string, object>
+            {
+                {"Values", values }
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryAsyncWithArrayParameterAsQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryAsyncWithArrayParameterAsQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values).AsEnumerable();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteNonQueryAsyncWithArrayParameterAsQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryGroup(new QueryField("Values", values));
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteScalar
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarWithArrayParameterAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new { Values = values };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarWithArrayParameterAsExpandoObjectAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = (dynamic)new ExpandoObject();
+
+            // Set the properties
+            param.Values = values;
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    (object)param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarWithArrayParameterAsExpandoObjectAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Set the properties
+            param.Add("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarWithArrayParameterAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new Dictionary<string, object>
+            {
+                {"Values", values }
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarWithArrayParameterAsQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarWithArrayParameterAsQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values).AsEnumerable();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarWithArrayParameterAsQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryGroup(new QueryField("Values", values));
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteScalarAsync
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarAsyncWithArrayParameterAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new { Values = values };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarAsyncWithArrayParameterAsExpandoObjectAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = (dynamic)new ExpandoObject();
+
+            // Set the properties
+            param.Values = values;
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    (object)param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarAsyncWithArrayParameterAsExpandoObjectAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Set the properties
+            param.Add("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarAsyncWithArrayParameterAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new Dictionary<string, object>
+            {
+                {"Values", values }
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarAsyncWithArrayParameterAsQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarAsyncWithArrayParameterAsQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values).AsEnumerable();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteScalarAsyncWithArrayParameterAsQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new int?[] { 1, 3, 4, 8 };
+            var param = new QueryGroup(new QueryField("Values", values));
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                    param).Result;
+
+                // Assert
+                Assert.AreEqual(values.Count(), result);
+            }
+        }
 
         #endregion
 
