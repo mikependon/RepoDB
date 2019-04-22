@@ -100,10 +100,10 @@ namespace RepoDb.Extensions
                 CreateParameters(command, (IDictionary<string, object>)param, skip);
             }
 
-            // Supporting the QueryGroup
-            else if (param is QueryGroup)
+            // Supporting the QueryField
+            else if (param is QueryField)
             {
-                CreateParameters(command, (QueryGroup)param, skip);
+                CreateParameters(command, (QueryField)param, skip);
             }
 
             // Supporting the IEnumerable<QueryField>
@@ -112,10 +112,10 @@ namespace RepoDb.Extensions
                 CreateParameters(command, (IEnumerable<QueryField>)param, skip);
             }
 
-            // Supporting the QueryField
-            else if (param is QueryField)
+            // Supporting the QueryGroup
+            else if (param is QueryGroup)
             {
-                CreateParameters(command, (QueryField)param, skip);
+                CreateParameters(command, (QueryGroup)param, skip);
             }
 
             // Otherwise, iterate the properties

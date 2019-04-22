@@ -322,9 +322,6 @@ namespace RepoDb
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
             }
 
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
-
             // Before Execution
             if (trace != null)
             {
@@ -679,9 +676,6 @@ namespace RepoDb
             {
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
             }
-
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
 
             // Before Execution
             if (trace != null)

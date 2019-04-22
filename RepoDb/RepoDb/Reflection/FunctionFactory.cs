@@ -1,5 +1,6 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -90,7 +91,7 @@ namespace RepoDb.Reflection
                 if (ordinal >= 0)
                 {
                     // Variables needed for the iteration
-                    var tableField = tableFields?.FirstOrDefault(f => f.Name.ToLower() == mappedName);
+                    var tableField = tableFields?.FirstOrDefault(f => f.UnquotedName.ToLower() == mappedName);
                     var readerField = readerFields.First(f => f.Name.ToLower() == mappedName);
                     var isTableFieldNullable = tableField == null || tableField?.IsNullable == true;
                     var underlyingType = Nullable.GetUnderlyingType(property.PropertyInfo.PropertyType);

@@ -137,10 +137,6 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
-
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2);
             var maps = new[]
@@ -355,12 +351,7 @@ namespace RepoDb
                 hints3,
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
-
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>());
-
+            
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
             var maps = new[]
@@ -618,12 +609,6 @@ namespace RepoDb
                 hints4,
                 statementBuilder);
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
-
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>());
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
@@ -923,13 +908,6 @@ namespace RepoDb
                 hints5,
                 statementBuilder);
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
-
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>());
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
@@ -1270,14 +1248,6 @@ namespace RepoDb
                 hints6,
                 statementBuilder);
             var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
-
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>());
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
@@ -1661,15 +1631,6 @@ namespace RepoDb
                 statementBuilder);
             var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
 
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T7>());
-
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
             var maps = new[]
@@ -1878,10 +1839,6 @@ namespace RepoDb
                 hints2,
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
-
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2);
@@ -2097,11 +2054,6 @@ namespace RepoDb
                 hints3,
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
-
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>());
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
@@ -2360,12 +2312,6 @@ namespace RepoDb
                 hints4,
                 statementBuilder);
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
-
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>());
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
@@ -2665,13 +2611,6 @@ namespace RepoDb
                 hints5,
                 statementBuilder);
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
-
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>());
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
@@ -3012,14 +2951,6 @@ namespace RepoDb
                 hints6,
                 statementBuilder);
             var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
-
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>());
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
@@ -3402,15 +3333,6 @@ namespace RepoDb
                 hints7,
                 statementBuilder);
             var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
-
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>());
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<T7>());
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);

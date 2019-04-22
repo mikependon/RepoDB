@@ -1118,17 +1118,17 @@ namespace RepoDb
             {
                 return AsCommandArrayParameters((IDictionary<string, object>)param, ref commandText);
             }
-            else if (param is QueryGroup)
+            else if (param is QueryField)
             {
-                return AsCommandArrayParameters((QueryGroup)param, ref commandText);
+                return AsCommandArrayParameters((QueryField)param, ref commandText);
             }
             else if (param is IEnumerable<QueryField>)
             {
                 return AsCommandArrayParameters((IEnumerable<QueryField>)param, ref commandText);
             }
-            else if (param is QueryField)
+            else if (param is QueryGroup)
             {
-                return AsCommandArrayParameters((QueryField)param, ref commandText);
+                return AsCommandArrayParameters((QueryGroup)param, ref commandText);
             }
             else
             {

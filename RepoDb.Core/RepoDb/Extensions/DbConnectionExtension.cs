@@ -1119,29 +1119,23 @@ namespace RepoDb
             {
                 return AsCommandArrayParameters((IDictionary<string, object>)param, ref commandText);
             }
-            else if (param is QueryGroup)
+            else if (param is QueryField)
             {
-                return AsCommandArrayParameters((QueryGroup)param, ref commandText);
+                return AsCommandArrayParameters((QueryField)param, ref commandText);
             }
             else if (param is IEnumerable<QueryField>)
             {
                 return AsCommandArrayParameters((IEnumerable<QueryField>)param, ref commandText);
             }
-            else if (param is QueryField)
+            else if (param is QueryGroup)
             {
-                return AsCommandArrayParameters((QueryField)param, ref commandText);
+                return AsCommandArrayParameters((QueryGroup)param, ref commandText);
             }
             else
             {
                 // Iterate the properties
                 foreach (var property in param.GetType().GetTypeInfo().GetProperties())
                 {
-                    // Skip if null
-                    if (property == null)
-                    {
-                        continue;
-                    }
-
                     // Skip if it is not an array
                     if (property.PropertyType.IsArray == false)
                     {
@@ -1155,8 +1149,7 @@ namespace RepoDb
                     }
 
                     // Replace the target parameters
-                    commandArrayParameters.Add(AsCommandArrayParameter(property.Name,
-                        ((Array)property.GetValue(param)).AsEnumerable(),
+                    commandArrayParameters.Add(AsCommandArrayParameter(property.Name, ((Array)property.GetValue(param)).AsEnumerable(),
                         ref commandText));
                 }
             }
