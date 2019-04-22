@@ -265,8 +265,8 @@ This method is used to compose a SQL statement for `Update` operation.
 		...
 	}
 
-Cutomized
----------
+Cutomizing a Builder
+--------------------
 
 .. highlight:: c#
 
