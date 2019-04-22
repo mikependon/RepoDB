@@ -265,8 +265,8 @@ This method is used to compose a SQL statement for `Update` operation.
 		...
 	}
 
-Creating a custom Statement Builder
------------------------------------
+Cutomized
+---------
 
 .. highlight:: c#
 
@@ -290,8 +290,8 @@ Once the custom statement builder is created, it then can be used as an injectab
 
 With the code snippets above, everytime the repository operation methods is being called, the `OracleStatementBuilder` corresponding method will be executed.
 
-Mapping a Statement Builder
----------------------------
+SqlDbStatementBuilder
+---------------------
 
 .. highlight:: c#
 
