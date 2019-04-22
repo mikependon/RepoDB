@@ -75,9 +75,10 @@ namespace RepoDb.Extensions
         }
 
         // GetMappedName
-        internal static string GetMappedName(Type type)
+        internal static string GetMappedName(Type type, bool quoted = true)
         {
-            return type.GetCustomAttribute<MapAttribute>()?.Name ?? type.Name;
+            var name = type.GetCustomAttribute<MapAttribute>()?.Name ?? type.Name;
+            return quoted == true ? name.AsQuoted(true) : name;
         }
 
         /// <summary>
@@ -85,11 +86,12 @@ namespace RepoDb.Extensions
         /// <see cref="MapAttribute"/> is not defined, then this will return the name of the class.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity where to get the mapped name.</typeparam>
+        /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>A mapped name for the data entity.</returns>
-        public static string GetMappedName<TEntity>()
+        public static string GetMappedName<TEntity>(bool quoted = true)
             where TEntity : class
         {
-            return GetMappedName(typeof(TEntity));
+            return GetMappedName(typeof(TEntity), quoted);
         }
     }
 }

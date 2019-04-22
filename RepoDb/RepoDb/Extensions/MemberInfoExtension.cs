@@ -15,7 +15,8 @@ namespace RepoDb.Extensions
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
         internal static string GetMappedName(this MemberInfo member)
         {
-            return member.IsPropertyInfo() ? PropertyMappedNameCache.Get(member.ToPropertyInfo(), false) : member.Name;
+            return member.IsPropertyInfo() ? 
+                PropertyMappedNameCache.Get(member.ToPropertyInfo(), false) : member.Name;
         }
 
         /// <summary>

@@ -205,7 +205,7 @@ namespace RepoDb
             {
                 return m_mappedName;
             }
-            return m_mappedName = PropertyMappedNameCache.Get(PropertyInfo, true);
+            return m_mappedName = PropertyMappedNameCache.Get(PropertyInfo, false);
         }
 
         /*

@@ -17,13 +17,13 @@ namespace RepoDb
         /// <param name="property">The target property.</param>
         /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>The cached mapped-name of the property.</returns>
-        public static string Get(PropertyInfo property, bool quoted)
+        public static string Get(PropertyInfo property, bool quoted = true)
         {
-            var key = string.Concat(property.DeclaringType.FullName, ".", property.Name, ".", quoted);
+            var key = string.Concat(property.DeclaringType.FullName, ".", property.Name, ".", quoted.ToString());
             var result = (string)null;
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = PropertyInfoExtension.GetMappedName(property, false);
+                result = PropertyInfoExtension.GetMappedName(property, quoted);
                 m_cache.TryAdd(key, result);
             }
             return result;
