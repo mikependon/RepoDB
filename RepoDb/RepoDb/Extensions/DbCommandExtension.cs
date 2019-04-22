@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -21,7 +22,10 @@ namespace RepoDb.Extensions
         /// <param name="value">The value of the parameter.</param>
         /// <param name="dbType">The database type of the parameter.</param>
         /// <returns>An instance of the newly created parameter object.</returns>
-        public static IDbDataParameter CreateParameter(this IDbCommand command, string name, object value, DbType? dbType = null)
+        public static IDbDataParameter CreateParameter(this IDbCommand command,
+            string name,
+            object value,
+            DbType? dbType = null)
         {
             var parameter = command.CreateParameter();
             parameter.ParameterName = name;
@@ -38,7 +42,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object instance to be used.</param>
         /// <param name="commandArrayParameters">The list of <see cref="CommandArrayParameter"/> to be used for replacement.</param>
-        internal static void CreateParametersFromArray(this IDbCommand command, IEnumerable<CommandArrayParameter> commandArrayParameters)
+        internal static void CreateParametersFromArray(this IDbCommand command,
+            IEnumerable<CommandArrayParameter> commandArrayParameters)
         {
             if (commandArrayParameters == null)
             {
@@ -61,7 +66,21 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
-        public static void CreateParameters(this IDbCommand command, object param)
+        public static void CreateParameters(this IDbCommand command,
+            object param)
+        {
+            CreateParameters(command, param, null);
+        }
+
+        /// <summary>
+        /// Creates a parameter from object by mapping the property from the target entity type.
+        /// </summary>
+        /// <param name="command">The command object to be used.</param>
+        /// <param name="param">The object to be used when creating the parameters.</param>
+        /// <param name="skip">The list of the properties to be skpped.</param>
+        public static void CreateParameters(this IDbCommand command,
+            object param,
+            IEnumerable<string> skip)
         {
             // Check for presence
             if (param == null)
@@ -78,25 +97,25 @@ namespace RepoDb.Extensions
             // Supporting the IDictionary<string, object>
             else if (param is ExpandoObject || param is IDictionary<string, object>)
             {
-                CreateParameters(command, (IDictionary<string, object>)param);
+                CreateParameters(command, (IDictionary<string, object>)param, skip);
             }
 
             // Supporting the QueryGroup
             else if (param is QueryGroup)
             {
-                CreateParameters(command, (QueryGroup)param);
+                CreateParameters(command, (QueryGroup)param, skip);
             }
 
             // Supporting the IEnumerable<QueryField>
             else if (param is IEnumerable<QueryField>)
             {
-                CreateParameters(command, (IEnumerable<QueryField>)param);
+                CreateParameters(command, (IEnumerable<QueryField>)param, skip);
             }
 
             // Supporting the QueryField
             else if (param is QueryField)
             {
-                CreateParameters(command, (QueryField)param);
+                CreateParameters(command, (QueryField)param, skip);
             }
 
             // Otherwise, iterate the properties
@@ -107,12 +126,24 @@ namespace RepoDb.Extensions
                 {
                     throw new InvalidOperationException("Invalid parameters passed. The supported type of dictionary object must be typeof(IDictionary<string, object>).");
                 }
-                foreach (var property in type.GetProperties())
+
+                var properties = (IEnumerable<PropertyInfo>)null;
+
+                // Add this check for performance
+                if (skip == null)
                 {
-                    if (property.PropertyType.IsArray)
-                    {
-                        continue;
-                    }
+                    properties = type.GetProperties();
+                }
+                else
+                {
+                    properties = type
+                        .GetProperties()
+                        .Where(p => skip?.Contains(p.Name, StringComparer.InvariantCultureIgnoreCase) == false);
+                }
+
+                // Iterate the properties
+                foreach (var property in properties)
+                {
                     var dbType = property.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
                         TypeMapper.Get(GetUnderlyingType(property.PropertyType))?.DbType;
                     command.Parameters.Add(command.CreateParameter(
@@ -126,12 +157,24 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
-        private static void CreateParameters(this IDbCommand command, IDictionary<string, object> dictionary)
+        /// <param name="skip">The list of the properties to be skpped.</param>
+        private static void CreateParameters(this IDbCommand command,
+            IDictionary<string, object> dictionary,
+            IEnumerable<string> skip)
         {
             var dbType = (DbType?)null;
+
             foreach (var item in dictionary)
             {
+                // Exclude those to be skipped
+                if (skip?.Contains(item.Key, StringComparer.InvariantCultureIgnoreCase) == true)
+                {
+                    continue;
+                }
+
                 var value = item.Value;
+
+                // Cast the proper object and identify the properties
                 if (item.Value is CommandParameter)
                 {
                     var commandParameter = (CommandParameter)item.Value;
@@ -144,6 +187,8 @@ namespace RepoDb.Extensions
                 {
                     dbType = TypeMapper.Get(GetUnderlyingType(item.Value?.GetType()))?.DbType;
                 }
+
+                // Add the parameter
                 command.Parameters.Add(command.CreateParameter(item.Key, value, dbType));
             }
         }
@@ -153,7 +198,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="propertyValues">The list <see cref="PropertyValue"/> to be added.</param>
-        private static void CreateParameters(this IDbCommand command, IEnumerable<PropertyValue> propertyValues)
+        private static void CreateParameters(this IDbCommand command,
+            IEnumerable<PropertyValue> propertyValues)
         {
             foreach (var propertyValue in propertyValues)
             {
@@ -174,9 +220,12 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
-        private static void CreateParameters(this IDbCommand command, QueryGroup queryGroup)
+        /// <param name="skip">The list of the properties to be skpped.</param>
+        private static void CreateParameters(this IDbCommand command,
+            QueryGroup queryGroup,
+            IEnumerable<string> skip)
         {
-            CreateParameters(command, queryGroup?.GetFields(true));
+            CreateParameters(command, queryGroup?.GetFields(true), skip);
         }
 
         /// <summary>
@@ -184,11 +233,14 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
-        private static void CreateParameters(this IDbCommand command, IEnumerable<QueryField> queryFields)
+        /// <param name="skip">The list of the properties to be skpped.</param>
+        private static void CreateParameters(this IDbCommand command,
+            IEnumerable<QueryField> queryFields,
+            IEnumerable<string> skip)
         {
             foreach (var queryField in queryFields)
             {
-                CreateParameters(command, queryField);
+                CreateParameters(command, queryField, skip);
             }
         }
 
@@ -197,14 +249,28 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
-        private static void CreateParameters(this IDbCommand command, QueryField queryField)
+        /// <param name="skip">The list of the properties to be skpped.</param>
+        private static void CreateParameters(this IDbCommand command,
+            QueryField queryField,
+            IEnumerable<string> skip)
         {
+            // Exclude those to be skipped
+            if (skip?.Contains(queryField.Field.UnquotedName, StringComparer.InvariantCultureIgnoreCase) == true)
+            {
+                return;
+            }
+
+            // Validate, make sure to only have the proper operation
             if (queryField.Operation != Operation.Equal)
             {
                 throw new InvalidOperationException($"Operation must only be '{nameof(Operation.Equal)}' when calling the 'Execute' methods.");
             }
+
+            // Get the values
             var value = queryField.Parameter.Value;
             var dbType = TypeMapper.Get(GetUnderlyingType(value?.GetType()))?.DbType;
+
+            // Create the parameter
             command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType));
         }
 

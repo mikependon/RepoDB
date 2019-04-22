@@ -1054,7 +1054,7 @@ namespace RepoDb
             var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction);
 
             // Add the parameters
-            command.CreateParameters(param);
+            command.CreateParameters(param, commandArrayParameters?.Select(cap => cap.ParameterName));
 
             // Identify target statement, for now, only support array with single parameters
             if (commandArrayParameters != null)
@@ -1199,8 +1199,7 @@ namespace RepoDb
                 }
 
                 // Replace the target parameters
-                commandArrayParameters.Add(AsCommandArrayParameter(kvp.Key,
-                    ((Array)kvp.Value).AsEnumerable(),
+                commandArrayParameters.Add(AsCommandArrayParameter(kvp.Key, ((Array)kvp.Value).AsEnumerable(),
                     ref commandText));
             }
 
@@ -1254,8 +1253,7 @@ namespace RepoDb
                 }
 
                 // Replace the target parameters
-                commandArrayParameters.Add(AsCommandArrayParameter(field.Field.Name,
-                    ((Array)field.Parameter.Value).AsEnumerable(),
+                commandArrayParameters.Add(AsCommandArrayParameter(field.Field.UnquotedName, ((Array)field.Parameter.Value).AsEnumerable(),
                     ref commandText));
             }
 
@@ -1289,8 +1287,7 @@ namespace RepoDb
             var commandArrayParameters = new List<CommandArrayParameter>();
 
             // Replace the target parameters
-            commandArrayParameters.Add(AsCommandArrayParameter(queryField.Field.Name,
-                ((Array)queryField.Parameter.Value).AsEnumerable(),
+            commandArrayParameters.Add(AsCommandArrayParameter(queryField.Field.UnquotedName, ((Array)queryField.Parameter.Value).AsEnumerable(),
                 ref commandText));
 
             // Return the values

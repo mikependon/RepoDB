@@ -61,7 +61,7 @@
     <Compile Include="Models\NonIdentityTable.cs" />
     <Compile Include="Models\TypeClasses.cs" />
     <Compile Include="Models\TypeMappableClasses.cs" />
-    <Compile Include="ArrayParameterTest.cs" />
+    <Compile Include="ExecuteArrayParameterTest.cs" />
     <Compile Include="ObjectMappingTest.cs" />
     <Compile Include="ObjectNameCasingTest.cs" />
     <Compile Include="Operations\SqlConnectionOperationsTest.cs" />
