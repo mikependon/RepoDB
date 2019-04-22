@@ -85,3 +85,21 @@ Via **Dictionary<string, object>**.
 		// Execute the SQL
 		var result = connection.ExecuteNonQuery(commandText, param);
 	}
+
+Via explicit **QueryGroup** or **QueryField** or **IEnumerable<QueryField>**.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Set the values
+		var commandText = "SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName";
+		var param = new QueryGroup(new []
+		{
+			new QueryField("FirstName", "John"),
+			new QueryField("LastName", "Doe")
+		});
+		
+		// Execute the SQL
+		var result = connection.ExecuteNonQuery(commandText, param);
+	}

@@ -240,6 +240,22 @@
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>Via explicit <strong>QueryGroup</strong> or <strong>QueryField</strong> or <strong>IEnumerable&lt;QueryField&gt;</strong>.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="c1">// Set the values</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName&quot;</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">param</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span><span class="p">(</span><span class="k">new</span> <span class="p">[]</span>
+        <span class="p">{</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;FirstName&quot;</span><span class="p">,</span> <span class="s">&quot;John&quot;</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;LastName&quot;</span><span class="p">,</span> <span class="s">&quot;Doe&quot;</span><span class="p">)</span>
+        <span class="p">});</span>
+
+        <span class="c1">// Execute the SQL</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 
 
