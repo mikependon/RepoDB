@@ -8,6 +8,8 @@ A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.
 Package: [https://www.nuget.org/packages/RepoDb](https://www.nuget.org/packages/RepoDb)  
 Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthedocs.io/en/latest/)
 
+Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter to get more updates about this library.
+
 ## Highlight
 
 RepoDb is the fastest and the most efficient ORM library in .NET as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher).
