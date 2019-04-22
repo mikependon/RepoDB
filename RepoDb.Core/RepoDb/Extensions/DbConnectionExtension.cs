@@ -8,6 +8,7 @@ using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -927,7 +928,7 @@ namespace RepoDb
             {
                 return null;
             }
-            if (whereOrPrimaryKey.GetType().IsGenericType)
+            if (whereOrPrimaryKey.GetType().GetTypeInfo().IsGenericType)
             {
                 return QueryGroup.Parse(whereOrPrimaryKey);
             }
@@ -940,7 +941,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    return new QueryGroup(new QueryField(primary.GetMappedName(), whereOrPrimaryKey).AsEnumerable());
+                    return new QueryGroup(new QueryField(primary.GetUnquotedMappedName(), whereOrPrimaryKey).AsEnumerable());
                 }
             }
         }
@@ -956,7 +957,7 @@ namespace RepoDb
             {
                 return null;
             }
-            if (where.GetType().IsGenericType)
+            if (where.GetType().GetTypeInfo().IsGenericType)
             {
                 return QueryGroup.Parse(where);
             }
@@ -1133,7 +1134,7 @@ namespace RepoDb
             else
             {
                 // Iterate the properties
-                foreach (var property in param.GetType().GetProperties())
+                foreach (var property in param.GetType().GetTypeInfo().GetProperties())
                 {
                     // Skip if null
                     if (property == null)

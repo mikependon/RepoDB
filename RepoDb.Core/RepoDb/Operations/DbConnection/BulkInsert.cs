@@ -171,7 +171,7 @@ namespace RepoDb
                     {
                         foreach (var property in reader.Properties)
                         {
-                            var columnName = property.GetMappedName();
+                            var columnName = property.GetUnquotedMappedName();
                             sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
                         }
                     }
@@ -432,7 +432,7 @@ namespace RepoDb
                     {
                         foreach (var property in reader.Properties)
                         {
-                            var columnName = property.GetMappedName();
+                            var columnName = property.GetUnquotedMappedName();
                             sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
                         }
                     }

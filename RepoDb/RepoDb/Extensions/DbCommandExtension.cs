@@ -138,7 +138,7 @@ namespace RepoDb.Extensions
                 {
                     properties = type
                         .GetProperties()
-                        .Where(p => skip?.Contains(p.Name, StringComparer.InvariantCultureIgnoreCase) == false);
+                        .Where(p => skip?.Contains(p.Name, StringComparer.CurrentCultureIgnoreCase) == false);
                 }
 
                 // Iterate the properties
@@ -167,7 +167,7 @@ namespace RepoDb.Extensions
             foreach (var item in dictionary)
             {
                 // Exclude those to be skipped
-                if (skip?.Contains(item.Key, StringComparer.InvariantCultureIgnoreCase) == true)
+                if (skip?.Contains(item.Key, StringComparer.CurrentCultureIgnoreCase) == true)
                 {
                     continue;
                 }
@@ -255,7 +255,7 @@ namespace RepoDb.Extensions
             IEnumerable<string> skip)
         {
             // Exclude those to be skipped
-            if (skip?.Contains(queryField.Field.UnquotedName, StringComparer.InvariantCultureIgnoreCase) == true)
+            if (skip?.Contains(queryField.Field.UnquotedName, StringComparer.CurrentCultureIgnoreCase) == true)
             {
                 return;
             }

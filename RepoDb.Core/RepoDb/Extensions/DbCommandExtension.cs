@@ -122,7 +122,7 @@ namespace RepoDb.Extensions
             else
             {
                 var type = param.GetType();
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
                 {
                     throw new InvalidOperationException("Invalid parameters passed. The supported type of dictionary object must be typeof(IDictionary<string, object>).");
                 }
@@ -132,13 +132,14 @@ namespace RepoDb.Extensions
                 // Add this check for performance
                 if (skip == null)
                 {
-                    properties = type.GetProperties();
+                    properties = type.GetTypeInfo().GetProperties();
                 }
                 else
                 {
                     properties = type
+                        .GetTypeInfo()
                         .GetProperties()
-                        .Where(p => skip?.Contains(p.Name, StringComparer.InvariantCultureIgnoreCase) == false);
+                        .Where(p => skip?.Contains(p.Name, StringComparer.CurrentCultureIgnoreCase) == false);
                 }
 
                 // Iterate the properties
@@ -167,7 +168,7 @@ namespace RepoDb.Extensions
             foreach (var item in dictionary)
             {
                 // Exclude those to be skipped
-                if (skip?.Contains(item.Key, StringComparer.InvariantCultureIgnoreCase) == true)
+                if (skip?.Contains(item.Key, StringComparer.CurrentCultureIgnoreCase) == true)
                 {
                     continue;
                 }
@@ -178,7 +179,7 @@ namespace RepoDb.Extensions
                 if (item.Value is CommandParameter)
                 {
                     var commandParameter = (CommandParameter)item.Value;
-                    var property = commandParameter.MappedToType.GetProperty(item.Key);
+                    var property = commandParameter.MappedToType.GetTypeInfo().GetProperty(item.Key);
                     dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
                         TypeMapper.Get(GetUnderlyingType(property?.PropertyType))?.DbType;
                     value = commandParameter.Value;
@@ -255,7 +256,7 @@ namespace RepoDb.Extensions
             IEnumerable<string> skip)
         {
             // Exclude those to be skipped
-            if (skip?.Contains(queryField.Field.UnquotedName, StringComparer.InvariantCultureIgnoreCase) == true)
+            if (skip?.Contains(queryField.Field.UnquotedName, StringComparer.CurrentCultureIgnoreCase) == true)
             {
                 return;
             }

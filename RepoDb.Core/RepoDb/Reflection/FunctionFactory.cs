@@ -83,7 +83,7 @@ namespace RepoDb.Reflection
             foreach (var property in PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite))
             {
                 // Gets the mapped name and the ordinal
-                var mappedName = property.GetMappedName().ToLower();
+                var mappedName = property.GetUnquotedMappedName().ToLower();
                 var ordinal = readerFields?.Select(f => f.Name).ToList().IndexOf(mappedName);
 
                 // Process only if there is a correct ordinal

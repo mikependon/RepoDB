@@ -47,41 +47,7 @@ namespace RepoDb.IntegrationTests.Caches
 
         #endregion
 
-        #region Sync
-
-        [TestMethod]
-        public void TestSqlConnectionQueryCacheWithoutExpression()
-        {
-            // Setup
-            var cache = new MemoryCache();
-            var entity = GetIdentityTable();
-            var cacheKey = "SimpleTables";
-            var cacheItemExpiration = 60;
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
-                0,
-                ConnectionPersistency.PerCall,
-                cache,
-                cacheItemExpiration,
-                null,
-                null))
-            {
-                // Act
-                entity.Id = Convert.ToInt32(repository.Insert(entity));
-
-                // Act
-                var result = repository.Query<IdentityTable>(orderBy: null,
-                    top: 0,
-                    cacheKey: cacheKey,
-                    transaction: null);
-                var item = cache.Get(cacheKey);
-
-                // Assert
-                Assert.AreEqual(1, result.Count());
-                Assert.IsNotNull(item);
-                Assert.AreEqual(cacheItemExpiration, (item.Expiration - item.CreatedDate).TotalMinutes);
-            }
-        }
+        #region Query
 
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaDynamics()
@@ -106,6 +72,7 @@ namespace RepoDb.IntegrationTests.Caches
                 // Act
                 var result = repository.Query<IdentityTable>((object)null, /* whereOrPrimaryKey */
                     (IEnumerable<OrderField>)null, /* orderBy */
+                    (int?)null, /* top */
                     (string)null, /* hints */
                     cacheKey, /* cacheKey */
                     (IDbTransaction)null);
@@ -143,6 +110,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = repository.Query<IdentityTable>(where: (QueryField)null,
                     orderBy: null,
                     top: 0,
+                    hints: null,
                     cacheKey: cacheKey,
                     transaction: null);
                 var item = cache.Get(cacheKey);
@@ -178,6 +146,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = repository.Query<IdentityTable>(where: (IEnumerable<QueryField>)null,
                     orderBy: null,
                     top: 0,
+                    hints: null,
                     cacheKey: cacheKey,
                     transaction: null);
                 var item = cache.Get(cacheKey);
@@ -213,6 +182,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = repository.Query<IdentityTable>(where: (Expression<Func<IdentityTable, bool>>)null,
                     orderBy: null,
                     top: 0,
+                    hints: null,
                     cacheKey: cacheKey,
                     transaction: null);
                 var item = cache.Get(cacheKey);
@@ -248,6 +218,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = repository.Query<IdentityTable>(where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
+                    hints: null,
                     cacheKey: cacheKey,
                     transaction: null);
                 var item = cache.Get(cacheKey);
@@ -261,10 +232,10 @@ namespace RepoDb.IntegrationTests.Caches
 
         #endregion
 
-        #region Async
+        #region QueryAll
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheWithoutExpression()
+        public void TestSqlConnectionQueryCacheWithoutExpression()
         {
             // Setup
             var cache = new MemoryCache();
@@ -284,10 +255,9 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(repository.Insert(entity));
 
                 // Act
-                var result = repository.QueryAsync<IdentityTable>(orderBy: null,
-                    top: 0,
+                var result = repository.QueryAll<IdentityTable>(orderBy: null,
                     cacheKey: cacheKey,
-                    transaction: null).Result;
+                    transaction: null);
                 var item = cache.Get(cacheKey);
 
                 // Assert
@@ -296,6 +266,10 @@ namespace RepoDb.IntegrationTests.Caches
                 Assert.AreEqual(cacheItemExpiration, (item.Expiration - item.CreatedDate).TotalMinutes);
             }
         }
+
+        #endregion
+
+        #region QueryAsync
 
         [TestMethod]
         public void TestSqlConnectionQueryAsyncCacheViaDynamics()
@@ -320,6 +294,7 @@ namespace RepoDb.IntegrationTests.Caches
                 // Act
                 var result = repository.QueryAsync<IdentityTable>((object)null, /* whereOrPrimaryKey */
                     (IEnumerable<OrderField>)null, /* orderBy */
+                    (int?)null, /* top */
                     (string)null, /* hints */
                     cacheKey, /* cacheKey */
                     (IDbTransaction)null).Result;
@@ -357,6 +332,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = repository.QueryAsync<IdentityTable>(where: (QueryField)null,
                     orderBy: null,
                     top: 0,
+                    hints: null,
                     cacheKey: cacheKey,
                     transaction: null).Result;
                 var item = cache.Get(cacheKey);
@@ -392,6 +368,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = repository.QueryAsync<IdentityTable>(where: (IEnumerable<QueryField>)null,
                     orderBy: null,
                     top: 0,
+                    hints: null,
                     cacheKey: cacheKey,
                     transaction: null).Result;
                 var item = cache.Get(cacheKey);
@@ -427,6 +404,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = repository.QueryAsync<IdentityTable>(where: (Expression<Func<IdentityTable, bool>>)null,
                     orderBy: null,
                     top: 0,
+                    hints: null,
                     cacheKey: cacheKey,
                     transaction: null).Result;
                 var item = cache.Get(cacheKey);
@@ -462,6 +440,44 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = repository.QueryAsync<IdentityTable>(where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
+                    hints: null,
+                    cacheKey: cacheKey,
+                    transaction: null).Result;
+                var item = cache.Get(cacheKey);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Assert.IsNotNull(item);
+                Assert.AreEqual(cacheItemExpiration, (item.Expiration - item.CreatedDate).TotalMinutes);
+            }
+        }
+
+        #endregion
+
+        #region QueryAllAsync
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncCacheWithoutExpression()
+        {
+            // Setup
+            var cache = new MemoryCache();
+            var entity = GetIdentityTable();
+            var cacheKey = "SimpleTables";
+            var cacheItemExpiration = 60;
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+                0,
+                ConnectionPersistency.PerCall,
+                cache,
+                cacheItemExpiration,
+                null,
+                null))
+            {
+                // Act
+                entity.Id = Convert.ToInt32(repository.Insert(entity));
+
+                // Act
+                var result = repository.QueryAllAsync<IdentityTable>(orderBy: null,
                     cacheKey: cacheKey,
                     transaction: null).Result;
                 var item = cache.Get(cacheKey);
