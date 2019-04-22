@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
-using RepoDb.Extensions;
 using System.Linq;
 using System.Reflection;
 
@@ -13,7 +12,6 @@ namespace RepoDb.UnitTests.Enumerations
         private TextAttribute GetOrderTextAttribute(Order order)
         {
             return typeof(Order)
-                .GetTypeInfo()
                 .GetMembers()
                 .First(member => member.Name.ToLower() == order.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();

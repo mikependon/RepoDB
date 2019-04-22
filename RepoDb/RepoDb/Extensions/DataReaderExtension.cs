@@ -25,7 +25,7 @@ namespace RepoDb.Extensions
             var dictionary = new Dictionary<int, ClassProperty>();
             for (var i = 0; i < reader.FieldCount; i++)
             {
-                var property = properties.FirstOrDefault(p => p.GetMappedName().ToLower() == reader.GetName(i).ToLower());
+                var property = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == reader.GetName(i).ToLower());
                 if (property != null)
                 {
                     dictionary.Add(i, property);

@@ -15,6 +15,10 @@ namespace RepoDb.IntegrationTests.Operations
     [TestClass]
     public class BaseRepositoryOperationsTest
     {
+        private const int BatchQueryFirstPage = 0;
+
+        private const int BatchQuerySecondPage = 1;
+
         [TestInitialize]
         public void Initialize()
         {
@@ -53,90 +57,13 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region Helper
-
-        private DateTime EpocDate => Helper.GetEpocDate();
-
-        private List<IdentityTable> GetIdentityTables(int count)
-        {
-            var tables = new List<IdentityTable>();
-            for (var i = 0; i < count; i++)
-            {
-                var index = i + 1;
-                tables.Add(new IdentityTable
-                {
-                    RowGuid = Guid.NewGuid(),
-                    ColumnBit = true,
-                    ColumnDateTime = EpocDate.AddDays(index),
-                    ColumnDateTime2 = DateTime.UtcNow,
-                    ColumnDecimal = index,
-                    ColumnFloat = index,
-                    ColumnInt = index,
-                    ColumnNVarChar = $"NVARCHAR{index}"
-                });
-            }
-            return tables;
-        }
-
-        private IdentityTable GetIdentityTable()
-        {
-            var random = new Random();
-            return new IdentityTable
-            {
-                RowGuid = Guid.NewGuid(),
-                ColumnBit = true,
-                ColumnDateTime = EpocDate,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
-                ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
-                ColumnInt = random.Next(int.MinValue, int.MaxValue),
-                ColumnNVarChar = Guid.NewGuid().ToString()
-            };
-        }
-
-        private NonIdentityTable GetNonIdentityTable()
-        {
-            var random = new Random();
-            return new NonIdentityTable
-            {
-                Id = Guid.NewGuid(),
-                ColumnBit = true,
-                ColumnDateTime = EpocDate,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
-                ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
-                ColumnInt = random.Next(int.MinValue, int.MaxValue),
-                ColumnNVarChar = Guid.NewGuid().ToString()
-            };
-        }
-
-        private void AssertPropertiesEquality<T>(T t1, T t2)
-        {
-            typeof(T).GetProperties().ToList().ForEach(p =>
-            {
-                if (p.Name == "Id")
-                {
-                    return;
-                }
-                var value1 = p.GetValue(t1);
-                var value2 = p.GetValue(t2);
-                Assert.AreEqual(value1, value2, $"Assert failed for '{p.Name}'. The values are '{value1}' and '{value2}'.");
-            });
-        }
-
-        private const int BatchQueryFirstPage = 0;
-
-        private const int BatchQuerySecondPage = 1;
-
-        #endregion
-
         #region BatchQuery
 
         [TestMethod]
         public void TestBaseRepositoryBatchQueryFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -148,11 +75,12 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
                     transaction: null);
 
                 // Assert (0, 3)
-                AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(3));
             }
         }
 
@@ -160,7 +88,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -172,11 +100,12 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
                     transaction: null);
 
                 // Assert (9, 6)
-                AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
             }
         }
 
@@ -184,7 +113,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQuerySecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -196,11 +125,12 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
                     transaction: null);
 
                 // Assert (4, 7)
-                AssertPropertiesEquality(tables.ElementAt(4), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(7), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.ElementAt(3));
             }
         }
 
@@ -208,7 +138,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQuerySecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -220,11 +150,12 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
                     transaction: null);
 
                 // Assert (5, 2)
-                AssertPropertiesEquality(tables.ElementAt(5), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(3));
             }
         }
 
@@ -232,7 +163,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -248,8 +179,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null);
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
             }
         }
 
@@ -257,7 +188,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -273,8 +204,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null);
 
                 // Assert (9, 6)
-                AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
             }
         }
 
@@ -282,7 +213,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -298,8 +229,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null);
 
                 // Assert (14, 17)
-                AssertPropertiesEquality(tables.ElementAt(14), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(17), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(14), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(17), result.ElementAt(3));
             }
         }
 
@@ -307,7 +238,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -323,8 +254,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null);
 
                 // Assert (15, 12)
-                AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(12), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(12), result.ElementAt(3));
             }
         }
 
@@ -332,7 +263,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryForDynamic()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -348,7 +279,7 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null);
 
                 // Assert (2)
-                AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
             }
         }
 
@@ -356,7 +287,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryForQueryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var repository = new IdentityTableRepository())
@@ -373,8 +304,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null);
 
                 // Assert (3, 6)
-                AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
             }
         }
 
@@ -382,7 +313,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryForQueryFields()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
@@ -403,8 +334,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null);
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
             }
         }
 
@@ -412,7 +343,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryForQueryGroup()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
@@ -434,8 +365,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null);
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
             }
         }
 
@@ -447,7 +378,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -459,11 +390,12 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
                     transaction: null).Result;
 
                 // Assert (0, 3)
-                AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(3));
             }
         }
 
@@ -471,7 +403,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -483,11 +415,12 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
                     transaction: null).Result;
 
                 // Assert (9, 6)
-                AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
             }
         }
 
@@ -495,7 +428,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncSecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -507,11 +440,12 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
                     transaction: null).Result;
 
                 // Assert (4, 7)
-                AssertPropertiesEquality(tables.ElementAt(4), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(7), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.ElementAt(3));
             }
         }
 
@@ -519,7 +453,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncSecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -531,11 +465,12 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
                     transaction: null).Result;
 
                 // Assert (5, 2)
-                AssertPropertiesEquality(tables.ElementAt(5), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(3));
             }
         }
 
@@ -543,7 +478,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -559,8 +494,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null).Result;
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
             }
         }
 
@@ -568,7 +503,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -584,8 +519,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null).Result;
 
                 // Assert (9, 6)
-                AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
             }
         }
 
@@ -593,7 +528,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -609,8 +544,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null).Result;
 
                 // Assert (14, 17)
-                AssertPropertiesEquality(tables.ElementAt(14), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(17), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(14), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(17), result.ElementAt(3));
             }
         }
 
@@ -618,7 +553,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -634,8 +569,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null).Result;
 
                 // Assert (15, 12)
-                AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(12), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(12), result.ElementAt(3));
             }
         }
 
@@ -643,7 +578,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncForDynamic()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -659,7 +594,7 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null).Result;
 
                 // Assert (2)
-                AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
             }
         }
 
@@ -667,7 +602,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncForQueryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var repository = new IdentityTableRepository())
@@ -684,8 +619,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null).Result;
 
                 // Assert (3, 6)
-                AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
             }
         }
 
@@ -693,7 +628,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncForQueryFields()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
@@ -714,8 +649,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null).Result;
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
             }
         }
 
@@ -723,7 +658,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBatchQueryAsyncForQueryGroup()
         {
             // Setup
-            var tables = GetIdentityTables(20);
+            var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
@@ -745,8 +680,8 @@ namespace RepoDb.IntegrationTests.Operations
                     transaction: null).Result;
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
             }
         }
 
@@ -758,7 +693,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertForEntities()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -766,14 +701,14 @@ namespace RepoDb.IntegrationTests.Operations
                 var bulkInsertResult = repository.BulkInsert(tables);
 
                 // Act
-                var queryResult = repository.Query();
+                var queryResult = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
-                    AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
             }
         }
@@ -782,7 +717,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertForEntitiesWithMappings()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -800,14 +735,14 @@ namespace RepoDb.IntegrationTests.Operations
                 var bulkInsertResult = repository.BulkInsert(tables);
 
                 // Act
-                var queryResult = repository.Query();
+                var queryResult = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
-                    AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
             }
         }
@@ -816,7 +751,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -845,7 +780,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertAsyncForEntities()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -857,13 +792,13 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, bulkInsertResult.Result);
 
                 // Act
-                var queryResult = repository.Query();
+                var queryResult = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
-                    AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
             }
         }
@@ -872,7 +807,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertAsyncForEntitiesWithMappings()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -894,13 +829,13 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, bulkInsertResult.Result);
 
                 // Act
-                var queryResult = repository.Query();
+                var queryResult = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
-                    AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
             }
         }
@@ -909,7 +844,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -939,10 +874,10 @@ namespace RepoDb.IntegrationTests.Operations
         #region Count
 
         [TestMethod]
-        public void TestBaseRepositoryCount()
+        public void TestBaseRepositoryCountWithoutCondition()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -950,7 +885,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.Count();
+                var result = repository.Count((object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -961,7 +896,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryCountViaExpression()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -980,7 +915,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryCountViaDynamic()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -999,7 +934,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryCountViaQueryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
             using (var repository = new IdentityTableRepository())
@@ -1019,7 +954,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryCountViaQueryFields()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
@@ -1043,7 +978,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryCountViaQueryGroup()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
@@ -1069,10 +1004,10 @@ namespace RepoDb.IntegrationTests.Operations
         #region CountAsync
 
         [TestMethod]
-        public void TestBaseRepositoryCountAsync()
+        public void TestBaseRepositoryCountAsyncWithoutCondition()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -1080,7 +1015,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync().Result;
+                var result = repository.CountAsync((object)null).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -1091,7 +1026,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryCountAsyncViaExpression()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -1110,7 +1045,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryCountAsyncViaDynamic()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -1129,7 +1064,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryCountAsyncViaQueryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
             using (var repository = new IdentityTableRepository())
@@ -1149,7 +1084,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryCountAsyncViaQueryFields()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
@@ -1173,7 +1108,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryCountAsyncViaQueryGroup()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
@@ -1196,13 +1131,97 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region CountAll
+
+        [TestMethod]
+        public void TestBaseRepositoryCountAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryCountAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAll(hints: SqlTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        #endregion
+
+        #region CountAllAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryCountAllAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAllAsync().Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryCountAllAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAllAsync(hints: SqlTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        #endregion
+
         #region Delete
 
         [TestMethod]
         public void TestBaseRepositoryDeleteWithoutCondition()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -1214,7 +1233,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, repository.Count());
+                Assert.AreEqual(0, repository.CountAll());
             }
         }
 
@@ -1222,7 +1241,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteViaPrimaryKey()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -1235,7 +1254,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count());
+                Assert.AreEqual(tables.Count - 1, repository.CountAll());
             }
         }
 
@@ -1243,7 +1262,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteViaExpression()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -1256,7 +1275,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count());
+                Assert.AreEqual(tables.Count - 1, repository.CountAll());
             }
         }
 
@@ -1264,7 +1283,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteViaQueryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -1276,7 +1295,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count());
+                Assert.AreEqual(tables.Count - 1, repository.CountAll());
             }
         }
 
@@ -1284,7 +1303,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteViaQueryFields()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
@@ -1301,7 +1320,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, repository.Count());
+                Assert.AreEqual(6, repository.CountAll());
             }
         }
 
@@ -1309,7 +1328,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteViaQueryGroup()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
@@ -1327,28 +1346,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, repository.Count());
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryDeleteViaDataEntity()
-        {
-            // Setup
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = repository.Delete(last);
-
-                // Assert
-                Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count());
+                Assert.AreEqual(6, repository.CountAll());
             }
         }
 
@@ -1360,7 +1358,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteAsyncWithoutCondition()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -1372,7 +1370,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
-                Assert.AreEqual(0, repository.Count());
+                Assert.AreEqual(0, repository.CountAll());
             }
         }
 
@@ -1380,7 +1378,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteAsyncViaPrimaryKey()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -1393,7 +1391,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count());
+                Assert.AreEqual(tables.Count - 1, repository.CountAll());
             }
         }
 
@@ -1401,7 +1399,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteAsyncViaExpression()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -1414,7 +1412,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count());
+                Assert.AreEqual(tables.Count - 1, repository.CountAll());
             }
         }
 
@@ -1422,7 +1420,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteAsyncViaQueryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), 6);
 
             using (var repository = new IdentityTableRepository())
@@ -1435,7 +1433,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count());
+                Assert.AreEqual(tables.Count - 1, repository.CountAll());
             }
         }
 
@@ -1443,7 +1441,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteAsyncViaQueryFields()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
@@ -1460,7 +1458,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, repository.Count());
+                Assert.AreEqual(6, repository.CountAll());
             }
         }
 
@@ -1468,7 +1466,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteAsyncViaQueryGroup()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
@@ -1486,28 +1484,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual(6, repository.Count());
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryDeleteAsyncViaDataEntity()
-        {
-            // Setup
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = repository.DeleteAsync(last).Result;
-
-                // Assert
-                Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, repository.Count());
+                Assert.AreEqual(6, repository.CountAll());
             }
         }
 
@@ -1519,7 +1496,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteAll()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -1542,7 +1519,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryDeleteAllAsync()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -1559,1149 +1536,13 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region InlineInsert
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineInsert()
-        {
-            // Setup
-            var entity = new
-            {
-                RowGuid = Guid.NewGuid(),
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                var result = Convert.ToInt32(repository.InlineInsert(entity));
-
-                // Assert
-                Assert.IsTrue(result > 0);
-
-                // Act
-                var queryResult = repository.Query(result);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNull(first.ColumnBit);
-                Assert.IsNull(first.ColumnDateTime);
-                Assert.IsNull(first.ColumnDecimal);
-                Assert.IsNull(first.ColumnFloat);
-                Assert.IsNotNull(first.RowGuid);
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.RowGuid, first.RowGuid);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineInsertForIdentiyTable()
-        {
-            // Setup
-            var entity = new
-            {
-                RowGuid = Guid.NewGuid(),
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                var result = repository.InlineInsert<long>(entity);
-
-                // Assert
-                Assert.IsTrue(result > 0);
-
-                // Act
-                var queryResult = repository.Query(result);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNull(first.ColumnBit);
-                Assert.IsNull(first.ColumnDateTime);
-                Assert.IsNull(first.ColumnDecimal);
-                Assert.IsNull(first.ColumnFloat);
-                Assert.IsNotNull(first.RowGuid);
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.RowGuid, first.RowGuid);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineInsertForNonIdentityTable()
-        {
-            // Setup
-            var entity = new
-            {
-                Id = Guid.NewGuid(),
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-
-            using (var repository = new NonIdentityTableRepository())
-            {
-                // Act
-                var result = repository.InlineInsert<Guid>(entity);
-
-                // Assert
-                Assert.AreEqual(entity.Id, result);
-
-                // Act
-                var queryResult = repository.Query(result);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNull(first.ColumnBit);
-                Assert.IsNull(first.ColumnDateTime);
-                Assert.IsNull(first.ColumnDecimal);
-                Assert.IsNull(first.ColumnFloat);
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowExceptionAtSqlConnectionInlineInsertIfTheValuesAreInvalid()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = "Invalid"
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InlineInsert<IdentityTable>(entity);
-            }
-        }
-
-        #endregion
-
-        #region InlineInsertAsync
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineInsertAsync()
-        {
-            // Setup
-            var entity = new
-            {
-                RowGuid = Guid.NewGuid(),
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                var result = Convert.ToInt32(repository.InlineInsertAsync(entity).Result);
-
-                // Assert
-                Assert.IsTrue(result > 0);
-
-                // Act
-                var queryResult = repository.Query(result);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNull(first.ColumnBit);
-                Assert.IsNull(first.ColumnDateTime);
-                Assert.IsNull(first.ColumnDecimal);
-                Assert.IsNull(first.ColumnFloat);
-                Assert.IsNotNull(first.RowGuid);
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.RowGuid, first.RowGuid);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineInsertAsyncForIdentiyTable()
-        {
-            // Setup
-            var entity = new
-            {
-                RowGuid = Guid.NewGuid(),
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                var result = repository.InlineInsertAsync<long>(entity).Result;
-
-                // Assert
-                Assert.IsTrue(result > 0);
-
-                // Act
-                var queryResult = repository.Query(result);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNull(first.ColumnBit);
-                Assert.IsNull(first.ColumnDateTime);
-                Assert.IsNull(first.ColumnDecimal);
-                Assert.IsNull(first.ColumnFloat);
-                Assert.IsNotNull(first.RowGuid);
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.RowGuid, first.RowGuid);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineInsertAsyncForNonIdentityTable()
-        {
-            // Setup
-            var entity = new
-            {
-                Id = Guid.NewGuid(),
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-
-            using (var repository = new NonIdentityTableRepository())
-            {
-                // Act
-                var result = repository.InlineInsertAsync<Guid>(entity).Result;
-
-                // Assert
-                Assert.AreEqual(entity.Id, result);
-
-                // Act
-                var queryResult = repository.Query(result);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNull(first.ColumnBit);
-                Assert.IsNull(first.ColumnDateTime);
-                Assert.IsNull(first.ColumnDecimal);
-                Assert.IsNull(first.ColumnFloat);
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionAtSqlConnectionInlineInsertAsyncIfTheValuesAreInvalid()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = "Invalid"
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                var result = repository.InlineInsertAsync<IdentityTable>(entity).Result;
-            }
-        }
-
-        #endregion
-
-        #region InlineMerge
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineMergeWithEmptyTables()
-        {
-            // Setup
-            var entity = new
-            {
-                Id = 100,
-                RowGuid = Guid.NewGuid(),
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                var result = Convert.ToInt32(repository.InlineMerge(entity, Field.From(nameof(IdentityTable.Id))));
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query();
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNull(first.ColumnBit);
-                Assert.IsNull(first.ColumnDateTime);
-                Assert.IsNull(first.ColumnDecimal);
-                Assert.IsNull(first.ColumnFloat);
-                Assert.IsNotNull(first.RowGuid);
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.RowGuid, first.RowGuid);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineMergeToExistingData()
-        {
-            // Setup
-            var tables = GetIdentityTables(10);
-            var entity = new
-            {
-                RowGuid = Guid.NewGuid(),
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineMerge(entity, Field.From(nameof(IdentityTable.ColumnInt))));
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query(item => item.ColumnInt == entity.ColumnInt);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNull(first.ColumnBit);
-                Assert.IsNull(first.ColumnDateTime);
-                Assert.IsNull(first.ColumnDecimal);
-                Assert.IsNull(first.ColumnFloat);
-                Assert.IsNotNull(first.RowGuid);
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.RowGuid, first.RowGuid);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowErrorAtSqlConnectionInlineMergeIfThereAreNoPrimaryKeyAndNoQualifierFieldsDefined()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InlineMerge(entity);
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowErrorAtSqlConnectionInlineMergeIfTheFieldsAreMissingAtTheDataEntityProperties()
-        {
-            // Setup
-            var entity = new
-            {
-                Id = 1,
-                NotAField = 100
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InlineMerge(entity, Field.From(nameof(IdentityTable.Id)));
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowErrorAtSqlConnectionInlineMergeIfTheQualifierFieldsAreMissingAtTheObjectProperties()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InlineMerge(entity, Field.From(nameof(IdentityTable.Id)));
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowErrorAtSqlConnectionInlineMergeIfTheValuesAreInvalid()
-        {
-            // Setup
-            var entity = new
-            {
-                Id = 100,
-                ColumnInt = "Invalid"
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InlineMerge(entity, Field.From(nameof(IdentityTable.Id)));
-            }
-        }
-
-        #endregion
-
-        #region InlineMergeAsync
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineMergeAsyncWithEmptyTables()
-        {
-            // Setup
-            var entity = new
-            {
-                Id = 100,
-                RowGuid = Guid.NewGuid(),
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                var result = Convert.ToInt32(repository.InlineMergeAsync(entity, Field.From(nameof(IdentityTable.Id))).Result);
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query();
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNull(first.ColumnBit);
-                Assert.IsNull(first.ColumnDateTime);
-                Assert.IsNull(first.ColumnDecimal);
-                Assert.IsNull(first.ColumnFloat);
-                Assert.IsNotNull(first.RowGuid);
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.RowGuid, first.RowGuid);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineMergeAsyncToExistingData()
-        {
-            // Setup
-            var tables = GetIdentityTables(10);
-            var entity = new
-            {
-                RowGuid = Guid.NewGuid(),
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineMergeAsync(entity, Field.From(nameof(IdentityTable.ColumnInt))).Result);
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query(item => item.ColumnInt == entity.ColumnInt);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNull(first.ColumnBit);
-                Assert.IsNull(first.ColumnDateTime);
-                Assert.IsNull(first.ColumnDecimal);
-                Assert.IsNull(first.ColumnFloat);
-                Assert.IsNotNull(first.RowGuid);
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.RowGuid, first.RowGuid);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowErrorAtSqlConnectionInlineMergeAsyncIfThereAreNoPrimaryKeyAndNoQualifierFieldsDefined()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                var result = repository.InlineMergeAsync(entity).Result;
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowErrorAtSqlConnectionInlineMergeAsyncIfTheFieldsAreMissingAtTheDataEntityProperties()
-        {
-            // Setup
-            var entity = new
-            {
-                Id = 1,
-                NotAField = 100
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                var result = repository.InlineMergeAsync(entity, Field.From(nameof(IdentityTable.Id))).Result;
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowErrorAtSqlConnectionInlineMergeAsyncIfTheQualifierFieldsAreMissingAtTheObjectProperties()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                var result = repository.InlineMergeAsync(entity, Field.From(nameof(IdentityTable.Id))).Result;
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowErrorAtSqlConnectionInlineMergeAsyncIfTheValuesAreInvalid()
-        {
-            // Setup
-            var entity = new
-            {
-                Id = 100,
-                ColumnInt = "Invalid"
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                var result = repository.InlineMergeAsync(entity, Field.From(nameof(IdentityTable.Id))).Result;
-            }
-        }
-
-        #endregion
-
-        #region InlineUpdate
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateViaPrimaryKey()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdate(entity, last.Id));
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query(item => item.Id == last.Id);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateViaDynamic()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdate(entity, new { last.Id }));
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query(item => item.Id == last.Id);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateViaExpression()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdate(entity, e => e.Id == last.Id));
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query(item => item.Id == last.Id);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateViaQueryField()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdate(entity, new QueryField(nameof(IdentityTable.Id), last.Id)));
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query(item => item.Id == last.Id);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateViaQueryFields()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var fields = new[]
-            {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
-                new QueryField(nameof(IdentityTable.ColumnBit), true)
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdate(entity, fields));
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                fields.ResetAll();
-                var queryResult = repository.Query(fields);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnDecimal);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateViaQueryGroup()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var fields = new[]
-            {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
-                new QueryField(nameof(IdentityTable.ColumnBit), true)
-            };
-            var queryGroup = new QueryGroup(fields);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdate(entity, queryGroup));
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                queryGroup.Reset();
-                var queryResult = repository.Query(queryGroup);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnDecimal);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowExcpetionAtSqlConnectionInlineUpdateIfTheValuesAreInvalid()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = "Invalid"
-            };
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                repository.InlineUpdate(entity, last.Id);
-            }
-        }
-
-        #endregion
-
-        #region InlineUpdateAsync
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateAsyncViaPrimaryKey()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync(entity, last.Id).Result);
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query(item => item.Id == last.Id);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateAsyncViaDynamic()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync(entity, new { last.Id }).Result);
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query(item => item.Id == last.Id);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateAsyncViaExpression()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync(entity, e => e.Id == last.Id).Result);
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query(item => item.Id == last.Id);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateAsyncViaQueryField()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync(entity, new QueryField(nameof(IdentityTable.Id), last.Id)).Result);
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                var queryResult = repository.Query(item => item.Id == last.Id);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnInt);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateAsyncViaQueryFields()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var fields = new[]
-            {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
-                new QueryField(nameof(IdentityTable.ColumnBit), true)
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync(entity, fields).Result);
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                fields.ResetAll();
-                var queryResult = repository.Query(fields);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnDecimal);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryInlineUpdateAsyncViaQueryGroup()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = 100,
-                ColumnDateTime2 = DateTime.UtcNow,
-                ColumnNVarChar = Helper.GetUnicodeString()
-            };
-            var tables = GetIdentityTables(10);
-            var fields = new[]
-            {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), 10),
-                new QueryField(nameof(IdentityTable.ColumnBit), true)
-            };
-            var queryGroup = new QueryGroup(fields);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = Convert.ToInt32(repository.InlineUpdateAsync(entity, queryGroup).Result);
-
-                // Assert
-                Assert.AreEqual(1, result);
-
-                // Act
-                queryGroup.Reset();
-                var queryResult = repository.Query(queryGroup);
-                var first = queryResult.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, queryResult.Count());
-                Assert.IsNotNull(first.ColumnDecimal);
-                Assert.IsNotNull(first.ColumnDateTime2);
-                Assert.IsNotNull(first.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
-                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
-                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExcpetionAtSqlConnectionInlineUpdateAsyncIfTheValuesAreInvalid()
-        {
-            // Setup
-            var entity = new
-            {
-                ColumnInt = "Invalid"
-            };
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = repository.InlineUpdateAsync(entity, last.Id).Result;
-            }
-        }
-
-        #endregion
-
         #region Insert
 
         [TestMethod]
         public void TestBaseRepositoryInsert()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -2709,13 +1550,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
                 tables.ForEach(table =>
                 {
-                    AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
                 });
             }
         }
@@ -2726,17 +1567,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new IdentityTableRepository())
             {
                 // Setup
-                var item = GetIdentityTable();
+                var item = Helper.CreateIdentityTable();
 
                 // Act
                 item.Id = repository.Insert<long>(item);
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(item, result.First());
+                Helper.AssertPropertiesEquality(item, result.First());
             }
         }
 
@@ -2746,18 +1587,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new NonIdentityTableRepository())
             {
                 // Setup
-                var item = GetNonIdentityTable();
+                var item = Helper.CreateNonIdentityTable();
 
                 // Act
                 var value = repository.Insert<Guid>(item);
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(item.Id, value);
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(item, result.First());
+                Helper.AssertPropertiesEquality(item, result.First());
             }
         }
 
@@ -2769,7 +1610,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryInsertAsync()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -2777,13 +1618,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.InsertAsync(item).Result));
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
                 tables.ForEach(table =>
                 {
-                    AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
                 });
             }
         }
@@ -2794,17 +1635,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new IdentityTableRepository())
             {
                 // Setup
-                var item = GetIdentityTable();
+                var item = Helper.CreateIdentityTable();
 
                 // Act
                 item.Id = repository.InsertAsync<long>(item).Result;
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(item, result.First());
+                Helper.AssertPropertiesEquality(item, result.First());
             }
         }
 
@@ -2814,18 +1655,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new NonIdentityTableRepository())
             {
                 // Setup
-                var item = GetNonIdentityTable();
+                var item = Helper.CreateNonIdentityTable();
 
                 // Act
                 var value = repository.InsertAsync<Guid>(item).Result;
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(item.Id, value);
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(item, result.First());
+                Helper.AssertPropertiesEquality(item, result.First());
             }
         }
 
@@ -2837,7 +1678,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMerge()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -2850,8 +1691,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnInt = 0;
@@ -2868,8 +1709,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual(0, queryResult.ColumnInt);
@@ -2881,7 +1722,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMergeWithPrimaryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -2894,8 +1735,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnInt = 0;
@@ -2912,8 +1753,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual(0, queryResult.ColumnInt);
@@ -2925,7 +1766,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMergeWithNonPrimaryFieldViaInstantiation()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -2937,8 +1778,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnNVarChar = "Merged";
@@ -2954,8 +1795,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
@@ -2966,7 +1807,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMergeWithNonPrimaryFieldViaFromMethod()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -2978,8 +1819,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnNVarChar = "Merged";
@@ -2995,8 +1836,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
@@ -3007,7 +1848,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMergeWithMultipleFieldsViaInstantiation()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -3018,8 +1859,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnNVarChar = "Merged";
@@ -3038,8 +1879,8 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
@@ -3050,7 +1891,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMergeWithMultipleFieldsViaFromMethod()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -3061,8 +1902,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnNVarChar = "Merged";
@@ -3077,8 +1918,8 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
@@ -3093,7 +1934,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMergeAsync()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -3106,8 +1947,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnInt = 0;
@@ -3124,8 +1965,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual(0, queryResult.ColumnInt);
@@ -3137,7 +1978,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMergeAsyncWithPrimaryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -3150,8 +1991,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnInt = 0;
@@ -3168,8 +2009,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual(0, queryResult.ColumnInt);
@@ -3181,7 +2022,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMergeAsyncWithNonPrimaryFieldViaInstantiation()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -3193,8 +2034,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnNVarChar = "Merged";
@@ -3210,8 +2051,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
@@ -3222,7 +2063,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMergeAsyncWithNonPrimaryFieldViaFromMethod()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -3234,8 +2075,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnNVarChar = "Merged";
@@ -3251,8 +2092,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
@@ -3263,7 +2104,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMergeAsyncWithMultipleFieldsViaInstantiation()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -3274,8 +2115,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnNVarChar = "Merged";
@@ -3294,8 +2135,8 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
@@ -3306,7 +2147,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryMergeAsyncWithMultipleFieldsViaFromMethod()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -3317,8 +2158,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Act
-                queryResult.ColumnDateTime = Helper.GetEpocDate();
-                queryResult.ColumnDateTime2 = Helper.GetEpocDate();
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
                 queryResult.ColumnDecimal = 0;
                 queryResult.ColumnFloat = 0;
                 queryResult.ColumnNVarChar = "Merged";
@@ -3333,8 +2174,8 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
 
                 // Assert
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.GetEpocDate(), queryResult.ColumnDateTime2);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
@@ -3346,33 +2187,10 @@ namespace RepoDb.IntegrationTests.Operations
         #region Query
 
         [TestMethod]
-        public void TestBaseRepositoryQuery()
-        {
-            // Setup
-            var tables = GetIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = repository.Query();
-
-                // Assert
-                Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(table =>
-                {
-                    AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
-                });
-            }
-        }
-
-        [TestMethod]
         public void TestBaseRepositoryQueryWithTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var top = 3;
 
             using (var repository = new IdentityTableRepository())
@@ -3381,14 +2199,15 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query(top: top);
+                var result = repository.Query(whereOrPrimaryKey: null,
+                    top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
                 result.ToList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
-                    AssertPropertiesEquality(target, item);
+                    Helper.AssertPropertiesEquality(target, item);
                 });
             }
         }
@@ -3397,7 +2216,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryWithOrderBy()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new IdentityTableRepository())
@@ -3406,11 +2225,12 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query(orderBy: orderBy.AsEnumerable());
+                var result = repository.Query(whereOrPrimaryKey: null,
+                    orderBy: orderBy.AsEnumerable());
 
                 // Assert
-                AssertPropertiesEquality(tables.First(), result.Last());
-                AssertPropertiesEquality(tables.Last(), result.First());
+                Helper.AssertPropertiesEquality(tables.First(), result.Last());
+                Helper.AssertPropertiesEquality(tables.Last(), result.First());
             }
         }
 
@@ -3418,7 +2238,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryWithOrderByAndTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
@@ -3428,12 +2248,14 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Query(top: top, orderBy: orderBy.AsEnumerable());
+                var result = repository.Query(whereOrPrimaryKey: null,
+                    top: top,
+                    orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 Assert.AreEqual(result.Count(), top);
-                AssertPropertiesEquality(tables.ElementAt(9), result.First());
-                AssertPropertiesEquality(tables.ElementAt(7), result.Last());
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.Last());
             }
         }
 
@@ -3441,7 +2263,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaPrimaryKey()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -3454,7 +2276,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -3462,7 +2284,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaDynamic()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -3475,7 +2297,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -3483,7 +2305,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpression()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -3496,7 +2318,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -3504,7 +2326,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaQueryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -3517,7 +2339,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -3525,7 +2347,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaQueryFields()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
@@ -3545,7 +2367,7 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
-                    AssertPropertiesEquality(target, item);
+                    Helper.AssertPropertiesEquality(target, item);
                 });
             }
         }
@@ -3554,7 +2376,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaQueryFieldsWithTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
@@ -3575,7 +2397,7 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
-                    AssertPropertiesEquality(target, item);
+                    Helper.AssertPropertiesEquality(target, item);
                 });
             }
         }
@@ -3584,7 +2406,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaQueryFieldsWithOrderBy()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
@@ -3601,8 +2423,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Query(fields, orderBy: orderBy.AsEnumerable());
 
                 // Assert
-                AssertPropertiesEquality(tables.ElementAt(7), result.First());
-                AssertPropertiesEquality(tables.ElementAt(4), result.Last());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Last());
             }
         }
 
@@ -3610,7 +2432,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaQueryFieldsWithOrderByAndTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
@@ -3629,8 +2451,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
-                AssertPropertiesEquality(tables.ElementAt(7), result.First());
-                AssertPropertiesEquality(tables.ElementAt(5), result.Last());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Last());
             }
         }
 
@@ -3638,7 +2460,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaQueryGroup()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var fields = new[]
             {
@@ -3660,7 +2482,7 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
-                    AssertPropertiesEquality(target, item);
+                    Helper.AssertPropertiesEquality(target, item);
                 });
             }
         }
@@ -3669,7 +2491,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaQueryGroupWithTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
@@ -3691,7 +2513,7 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
-                    AssertPropertiesEquality(target, item);
+                    Helper.AssertPropertiesEquality(target, item);
                 });
             }
         }
@@ -3700,7 +2522,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaQueryGroupWithOrderBy()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
@@ -3718,8 +2540,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Query(queryGroup, orderBy: orderBy.AsEnumerable());
 
                 // Assert
-                AssertPropertiesEquality(tables.ElementAt(7), result.First());
-                AssertPropertiesEquality(tables.ElementAt(4), result.Last());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Last());
             }
         }
 
@@ -3727,7 +2549,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaQueryGroupWithOrderByAndTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
@@ -3747,8 +2569,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
-                AssertPropertiesEquality(tables.ElementAt(7), result.First());
-                AssertPropertiesEquality(tables.ElementAt(5), result.Last());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Last());
             }
         }
 
@@ -3758,7 +2580,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithArrayContains()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -3771,7 +2593,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
 
             }
         }
@@ -3780,7 +2602,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringContains()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -3792,7 +2614,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(8), result.First());
             }
         }
 
@@ -3800,7 +2622,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringStartsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -3812,7 +2634,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
             }
         }
 
@@ -3820,7 +2642,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringEndsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -3832,7 +2654,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(8), result.First());
             }
         }
 
@@ -3840,7 +2662,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAndStringContains()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -3853,7 +2675,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -3861,7 +2683,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAndStringStartsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -3874,7 +2696,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -3882,7 +2704,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAndStringEndsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -3895,7 +2717,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -3903,7 +2725,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAsBooleanTrue()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -3916,7 +2738,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -3924,7 +2746,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAsBooleanFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -3937,7 +2759,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -3945,7 +2767,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -3958,7 +2780,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -3966,7 +2788,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAsUnaryFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -3979,7 +2801,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -3987,7 +2809,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringContainsAndStartsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -3999,7 +2821,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4007,7 +2829,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringContainsAndEndsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4019,7 +2841,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4027,7 +2849,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringContainsAsBooleanTrue()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4039,7 +2861,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4047,7 +2869,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringContainsAsBooleanFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4059,7 +2881,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4067,7 +2889,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4079,7 +2901,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4087,7 +2909,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringContainsAsUnaryFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4099,7 +2921,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4107,7 +2929,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringStartsWithAsBooleanTrue()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4119,7 +2941,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
             }
         }
 
@@ -4127,7 +2949,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringStartsWithAsBooleanFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4146,7 +2968,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4158,7 +2980,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
             }
         }
 
@@ -4166,7 +2988,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringStartsWithAsUnaryFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4185,7 +3007,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringEndsWithAsBooleanTrue()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4197,7 +3019,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+                Helper.AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
             }
         }
 
@@ -4205,7 +3027,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringEndsWithAsBooleanFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4217,7 +3039,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4225,7 +3047,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4237,7 +3059,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+                Helper.AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
             }
         }
 
@@ -4245,7 +3067,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryViaExpressionWithStringEndsWithAsUnaryFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4257,7 +3079,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4271,7 +3093,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsync()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4279,13 +3101,13 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync().Result;
+                var result = repository.QueryAllAsync().Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
                 tables.ForEach(table =>
                 {
-                    AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
                 });
             }
         }
@@ -4294,7 +3116,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncWithTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var top = 3;
 
             using (var repository = new IdentityTableRepository())
@@ -4303,14 +3125,15 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync(top: top).Result;
+                var result = repository.QueryAsync(whereOrPrimaryKey: null,
+                    top: top).Result;
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
                 result.ToList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
-                    AssertPropertiesEquality(target, item);
+                    Helper.AssertPropertiesEquality(target, item);
                 });
             }
         }
@@ -4319,7 +3142,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncWithOrderBy()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var repository = new IdentityTableRepository())
@@ -4328,11 +3151,12 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync(orderBy: orderBy.AsEnumerable()).Result;
+                var result = repository.QueryAsync(whereOrPrimaryKey: null,
+                    orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
-                AssertPropertiesEquality(tables.First(), result.Last());
-                AssertPropertiesEquality(tables.Last(), result.First());
+                Helper.AssertPropertiesEquality(tables.First(), result.Last());
+                Helper.AssertPropertiesEquality(tables.Last(), result.First());
             }
         }
 
@@ -4340,7 +3164,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncWithOrderByAndTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
@@ -4350,12 +3174,14 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.QueryAsync(top: top, orderBy: orderBy.AsEnumerable()).Result;
+                var result = repository.QueryAsync(whereOrPrimaryKey: null,
+                    top: top,
+                    orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
                 Assert.AreEqual(result.Count(), top);
-                AssertPropertiesEquality(tables.ElementAt(9), result.First());
-                AssertPropertiesEquality(tables.ElementAt(7), result.Last());
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.Last());
             }
         }
 
@@ -4363,7 +3189,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaPrimaryKey()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -4376,7 +3202,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -4384,7 +3210,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaDynamic()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -4397,7 +3223,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -4405,7 +3231,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpression()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -4418,7 +3244,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -4426,7 +3252,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaQueryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new IdentityTableRepository())
@@ -4439,7 +3265,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -4447,7 +3273,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaQueryFields()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
@@ -4467,7 +3293,7 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
-                    AssertPropertiesEquality(target, item);
+                    Helper.AssertPropertiesEquality(target, item);
                 });
             }
         }
@@ -4476,7 +3302,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaQueryFieldsWithTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
@@ -4497,7 +3323,7 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
-                    AssertPropertiesEquality(target, item);
+                    Helper.AssertPropertiesEquality(target, item);
                 });
             }
         }
@@ -4506,7 +3332,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaQueryFieldsWithOrderBy()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
@@ -4523,8 +3349,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.QueryAsync(fields, orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
-                AssertPropertiesEquality(tables.ElementAt(7), result.First());
-                AssertPropertiesEquality(tables.ElementAt(4), result.Last());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Last());
             }
         }
 
@@ -4532,7 +3358,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaQueryFieldsWithOrderByAndTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
@@ -4551,8 +3377,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
-                AssertPropertiesEquality(tables.ElementAt(7), result.First());
-                AssertPropertiesEquality(tables.ElementAt(5), result.Last());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Last());
             }
         }
 
@@ -4560,7 +3386,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaQueryGroup()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var fields = new[]
             {
@@ -4582,7 +3408,7 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
-                    AssertPropertiesEquality(target, item);
+                    Helper.AssertPropertiesEquality(target, item);
                 });
             }
         }
@@ -4591,7 +3417,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaQueryGroupWithTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var top = 2;
             var fields = new[]
             {
@@ -4613,7 +3439,7 @@ namespace RepoDb.IntegrationTests.Operations
                 result.ToList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
-                    AssertPropertiesEquality(target, item);
+                    Helper.AssertPropertiesEquality(target, item);
                 });
             }
         }
@@ -4622,7 +3448,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaQueryGroupWithOrderBy()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
@@ -4640,8 +3466,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.QueryAsync(queryGroup, orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
-                AssertPropertiesEquality(tables.ElementAt(7), result.First());
-                AssertPropertiesEquality(tables.ElementAt(4), result.Last());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Last());
             }
         }
 
@@ -4649,7 +3475,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaQueryGroupWithOrderByAndTop()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
@@ -4669,8 +3495,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
-                AssertPropertiesEquality(tables.ElementAt(7), result.First());
-                AssertPropertiesEquality(tables.ElementAt(5), result.Last());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Last());
             }
         }
 
@@ -4680,7 +3506,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContains()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -4693,7 +3519,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
 
             }
         }
@@ -4702,7 +3528,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContains()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4714,7 +3540,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(8), result.First());
             }
         }
 
@@ -4722,7 +3548,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringStartsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4734,7 +3560,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
             }
         }
 
@@ -4742,7 +3568,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringEndsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4754,7 +3580,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(8), result.First());
             }
         }
 
@@ -4762,7 +3588,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAndStringContains()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -4775,7 +3601,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4783,7 +3609,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAndStringStartsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -4796,7 +3622,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4804,7 +3630,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAndStringEndsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -4817,7 +3643,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4825,7 +3651,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAsBooleanTrue()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -4838,7 +3664,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4846,7 +3672,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAsBooleanFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -4859,7 +3685,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4867,7 +3693,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -4880,7 +3706,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4888,7 +3714,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAsUnaryFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
             using (var repository = new IdentityTableRepository())
@@ -4901,7 +3727,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4909,7 +3735,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAndStartsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4921,7 +3747,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4929,7 +3755,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAndEndsWith()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4941,7 +3767,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4949,7 +3775,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAsBooleanTrue()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4961,7 +3787,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4969,7 +3795,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAsBooleanFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -4981,7 +3807,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -4989,7 +3815,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5001,7 +3827,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5009,7 +3835,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAsUnaryFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5021,7 +3847,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5029,7 +3855,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringStartsWithAsBooleanTrue()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5041,7 +3867,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
             }
         }
 
@@ -5049,7 +3875,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringStartsWithAsBooleanFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5068,7 +3894,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5080,7 +3906,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
             }
         }
 
@@ -5088,7 +3914,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringStartsWithAsUnaryFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5107,7 +3933,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringEndsWithAsBooleanTrue()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5119,7 +3945,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+                Helper.AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
             }
         }
 
@@ -5127,7 +3953,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringEndsWithAsBooleanFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5139,7 +3965,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5147,7 +3973,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5159,7 +3985,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+                Helper.AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
             }
         }
 
@@ -5167,7 +3993,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryQueryAsyncViaExpressionWithStringEndsWithAsUnaryFalse()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5179,11 +4005,221 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
         #endregion
+
+        #endregion
+
+        #region QueryAll
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAllWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAll(orderBy: orderBy);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAllWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAll(hints: SqlTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAllWithOrderByAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAll(orderBy: orderBy,
+                    hints: SqlTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        #endregion
+
+        #region QueryAllAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAllAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAllAsync().Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAllAsyncWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAllAsync(orderBy: orderBy).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAllAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAllAsync(hints: SqlTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAllAsyncWithOrderByAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAllAsync(orderBy: orderBy,
+                    hints: SqlTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
 
         #endregion
 
@@ -5193,7 +4229,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryTruncate()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5204,7 +4240,7 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.Truncate();
 
                 // Act
-                var result = repository.Count();
+                var result = repository.CountAll();
 
                 // Assert
                 Assert.AreEqual(0, result);
@@ -5219,7 +4255,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryTruncateAsync()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5231,7 +4267,7 @@ namespace RepoDb.IntegrationTests.Operations
                 task.Wait();
 
                 // Act
-                var result = repository.Count();
+                var result = repository.CountAll();
 
                 // Assert
                 Assert.AreEqual(0, result);
@@ -5243,45 +4279,10 @@ namespace RepoDb.IntegrationTests.Operations
         #region Update
 
         [TestMethod]
-        public void TestBaseRepositoryUpdateViaDataEntity()
-        {
-            // Setup
-            var tables = GetIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                tables.ForEach(item =>
-                {
-                    // Set Values
-                    item.ColumnBit = false;
-                    item.ColumnInt = item.ColumnInt * 100;
-                    item.ColumnDecimal = item.ColumnDecimal * 100;
-
-                    // Update each
-                    var affectedRows = repository.Update(item);
-
-                    // Assert
-                    Assert.AreEqual(1, affectedRows);
-                });
-
-                // Act
-                var result = repository.Query();
-
-                // Assert
-                Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
-            }
-        }
-
-        [TestMethod]
         public void TestBaseRepositoryUpdateViaPrimaryKey()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5304,11 +4305,11 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
 
@@ -5316,7 +4317,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryUpdateViaDynamic()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5339,11 +4340,11 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
 
@@ -5351,7 +4352,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryUpdateViaExpression()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5374,11 +4375,11 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
 
@@ -5386,7 +4387,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryUpdateViaQueryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var repository = new IdentityTableRepository())
@@ -5411,7 +4412,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -5419,7 +4420,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryUpdateViaQueryFields()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnBit), true),
@@ -5449,7 +4450,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -5457,7 +4458,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryUpdateViaQueryGroup()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnBit), true),
@@ -5488,7 +4489,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -5497,45 +4498,10 @@ namespace RepoDb.IntegrationTests.Operations
         #region UpdateAsync
 
         [TestMethod]
-        public void TestBaseRepositoryUpdateAsyncViaDataEntity()
-        {
-            // Setup
-            var tables = GetIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                tables.ForEach(item =>
-                {
-                    // Set Values
-                    item.ColumnBit = false;
-                    item.ColumnInt = item.ColumnInt * 100;
-                    item.ColumnDecimal = item.ColumnDecimal * 100;
-
-                    // Update each
-                    var affectedRows = repository.UpdateAsync(item).Result;
-
-                    // Assert
-                    Assert.AreEqual(1, affectedRows);
-                });
-
-                // Act
-                var result = repository.Query();
-
-                // Assert
-                Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
-            }
-        }
-
-        [TestMethod]
         public void TestBaseRepositoryUpdateAsyncViaPrimaryKey()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5558,11 +4524,11 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
 
@@ -5570,7 +4536,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryUpdateAsyncViaDynamic()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5593,11 +4559,11 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
 
@@ -5605,7 +4571,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryUpdateAsyncViaExpression()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5628,11 +4594,11 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var result = repository.Query();
+                var result = repository.QueryAll();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
 
@@ -5640,7 +4606,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryUpdateAsyncViaQueryField()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var repository = new IdentityTableRepository())
@@ -5665,7 +4631,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -5673,7 +4639,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryUpdateAsyncViaQueryFields()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnBit), true),
@@ -5703,7 +4669,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -5711,7 +4677,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryUpdateAsyncViaQueryGroup()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
                 new QueryField(nameof(IdentityTable.ColumnBit), true),
@@ -5742,7 +4708,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -5754,7 +4720,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQuery()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5766,7 +4732,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
 
@@ -5774,7 +4740,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryWithParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5787,7 +4753,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -5795,7 +4761,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryWithArrayParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5808,7 +4774,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -5816,7 +4782,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryWithTopParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5829,7 +4795,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -5837,7 +4803,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryWithStoredProcedure()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5850,7 +4816,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
 
@@ -5858,7 +4824,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryWithStoredProcedureWithParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -5872,7 +4838,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(tables.Last(), result.First());
+                Helper.AssertPropertiesEquality(tables.Last(), result.First());
             }
         }
 
@@ -5880,7 +4846,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWhereTheDataReaderColumnsAreMoreThanClassProperties()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var simpleTableRepository = new IdentityTableRepository())
             {
@@ -5909,7 +4875,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWithDictionaryParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = new Dictionary<string, object>
             {
@@ -5927,7 +4893,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -5935,7 +4901,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWithExpandoObjectAsIDictionaryParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = new ExpandoObject() as IDictionary<string, object>;
 
@@ -5953,7 +4919,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -5961,7 +4927,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryWithExpandoObjectAsDynamicParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = (dynamic)new ExpandoObject();
 
@@ -5979,7 +4945,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -5987,7 +4953,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryWithQueryGroupAsParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = new QueryGroup(new[]
             {
@@ -6005,7 +4971,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -6013,7 +4979,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryWithQueryFieldsAsParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = new[]
             {
@@ -6031,7 +4997,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -6039,7 +5005,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryWithQueryFieldAsParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = new QueryField("ColumnFloat", last.ColumnFloat);
 
@@ -6053,7 +5019,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -6111,7 +5077,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryAsync()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6123,7 +5089,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
 
@@ -6131,7 +5097,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryAsyncWithParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6144,7 +5110,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -6152,7 +5118,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryAsyncWithArrayParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6165,7 +5131,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -6173,7 +5139,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryAsyncWithTopParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6186,7 +5152,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -6194,7 +5160,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryAsyncWithStoredProcedure()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6207,7 +5173,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
 
@@ -6215,7 +5181,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryAsyncWithStoredProcedureWithParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6229,7 +5195,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(tables.Last(), result.First());
+                Helper.AssertPropertiesEquality(tables.Last(), result.First());
             }
         }
 
@@ -6237,7 +5203,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWhereTheDataReaderColumnsAreMoreThanClassProperties()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var simpleTableRepository = new IdentityTableRepository())
             {
@@ -6266,7 +5232,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWithDictionaryParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = new Dictionary<string, object>
             {
@@ -6284,7 +5250,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -6292,7 +5258,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWithExpandoObjectAsIDictionaryParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = new ExpandoObject() as IDictionary<string, object>;
 
@@ -6310,7 +5276,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -6318,7 +5284,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryAsyncWithExpandoObjectAsDynamicParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = (dynamic)new ExpandoObject();
 
@@ -6336,7 +5302,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -6344,7 +5310,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryAsyncWithQueryGroupAsParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = new QueryGroup(new[]
             {
@@ -6362,7 +5328,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -6370,7 +5336,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryAsyncWithQueryFieldsAsParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = new[]
             {
@@ -6388,7 +5354,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -6396,7 +5362,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteQueryAsyncWithQueryFieldAsParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
             var param = new QueryField("ColumnFloat", last.ColumnFloat);
 
@@ -6410,7 +5376,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                AssertPropertiesEquality(last, result.First());
+                Helper.AssertPropertiesEquality(last, result.First());
             }
         }
 
@@ -6481,7 +5447,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryDeleteSingle()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6500,7 +5466,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryDeleteWithSingleParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6520,7 +5486,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryDeleteWithMultipleParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6540,7 +5506,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryDeleteAll()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6559,7 +5525,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryUpdateSingle()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6578,7 +5544,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryUpdateWithSigleParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6598,7 +5564,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryUpdateWithMultipleParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6618,7 +5584,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryUpdateAll()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6637,7 +5603,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryWithMultipleSqlStatementsWithoutParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6658,7 +5624,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryWithMultipleSqlStatementsWithParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6680,7 +5646,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6753,7 +5719,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryAsyncDeleteSingle()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6772,7 +5738,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryAsyncDeleteWithSingleParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6792,7 +5758,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryAsyncDeleteWithMultipleParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6812,7 +5778,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryAsyncDeleteAll()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6831,7 +5797,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryAsyncUpdateSingle()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6850,7 +5816,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryAsyncUpdateWithSigleParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6870,7 +5836,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryAsyncUpdateWithMultipleParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6890,7 +5856,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryAsyncUpdateAll()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6909,7 +5875,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryAsyncWithMultipleSqlStatementsWithoutParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6930,7 +5896,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryAsyncWithMultipleSqlStatementsWithParameters()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -6952,7 +5918,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteNonQueryAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -7123,7 +6089,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteScalarByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -7294,7 +6260,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteScalarAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -7465,7 +6431,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteScalarTByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {
@@ -7636,7 +6602,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestBaseRepositoryExecuteScalarTAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
-            var tables = GetIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(10);
 
             using (var repository = new IdentityTableRepository())
             {

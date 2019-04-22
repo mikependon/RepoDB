@@ -190,22 +190,41 @@ namespace RepoDb
         }
 
         /*
-         * GetMappedName
+         * GetQuotedMappedName
          */
 
-        private string m_mappedName;
+        private string m_quotedMappedName;
 
         /// <summary>
-        /// Gets the mapped-name for the current property.
+        /// Gets the quoted mapped-name for the current property.
         /// </summary>
-        /// <returns>The mapped-name value.</returns>
-        public string GetMappedName()
+        /// <returns>The quoted mapped-name value.</returns>
+        public string GetQuotedMappedName()
         {
-            if (m_mappedName != null)
+            if (m_quotedMappedName != null)
             {
-                return m_mappedName;
+                return m_quotedMappedName;
             }
-            return m_mappedName = PropertyMappedNameCache.Get(PropertyInfo, false);
+            return m_quotedMappedName = PropertyMappedNameCache.Get(PropertyInfo);
+        }
+
+        /*
+         * GetUnquotedMappedName
+         */
+
+        private string m_unquotedMappedName;
+
+        /// <summary>
+        /// Gets the unquoted mapped-name for the current property.
+        /// </summary>
+        /// <returns>The unquoted mapped-name value.</returns>
+        public string GetUnquotedMappedName()
+        {
+            if (m_unquotedMappedName != null)
+            {
+                return m_unquotedMappedName;
+            }
+            return m_unquotedMappedName = PropertyMappedNameCache.Get(PropertyInfo, false);
         }
 
         /*

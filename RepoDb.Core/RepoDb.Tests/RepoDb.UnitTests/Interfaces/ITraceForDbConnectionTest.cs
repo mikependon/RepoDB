@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Attributes;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
 
@@ -9,6 +10,10 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ITraceForDbConnectionTest
     {
+        private readonly IStatementBuilder m_statementBuilder = new SqlStatementBuilder();
+
+        #region SubClasses
+
         public class TraceEntity
         {
             [Primary, Identity]
@@ -16,7 +21,9 @@ namespace RepoDb.UnitTests.Interfaces
             public string Name { get; set; }
         }
 
-        // BatchQuery
+        #endregion
+
+        #region BatchQuery
 
         [TestMethod]
         public void TestDbConnectionTraceForBeforeBatchQuery()
@@ -26,10 +33,15 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.BatchQuery<TraceEntity>(0, 10, null, null, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.BatchQuery<TraceEntity>(0,
+                10,
+                OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
+                where: (QueryGroup)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.BeforeBatchQuery(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeBatchQuery(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -40,26 +52,35 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.BatchQuery<TraceEntity>(0, 10, null, null, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.BatchQuery<TraceEntity>(0,
+                10,
+                OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
+                where: (QueryGroup)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.AfterBatchQuery(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterBatchQuery(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
-        // Count
+        #endregion
+
+        #region Count
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeBulkInsert()
+        public void TestDbConnectionTraceForBeforeCount()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Count<TraceEntity>(trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Count<TraceEntity>(trace: trace.Object,
+                where: (object)null,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -70,13 +91,117 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Count<TraceEntity>(trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Count<TraceEntity>(trace: trace.Object,
+                where: (object)null,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
-        // Delete
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeCountViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.Count(ClassMappedNameCache.Get<TraceEntity>(),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterCountViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.Count(ClassMappedNameCache.Get<TraceEntity>(),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region CountAll
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeCountAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.CountAll<TraceEntity>(trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterCountAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.CountAll<TraceEntity>(trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeCountAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.CountAll(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterCountAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.CountAll(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region Delete
 
         [TestMethod]
         public void TestDbConnectionTraceForBeforeDelete()
@@ -86,10 +211,12 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Delete<TraceEntity>(0, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Delete<TraceEntity>(0,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -100,103 +227,57 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Delete<TraceEntity>(0, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Delete<TraceEntity>(0,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
-        // InlineInsert
-
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeInlineInsert()
+        public void TestDbConnectionTraceForBeforeDeleteViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new CustomDbConnection();
 
             // Act
-            connection.InlineInsert<TraceEntity>(new { Id = 1, Name = "Name" }, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Delete(ClassMappedNameCache.Get<TraceEntity>(),
+                new
+                {
+                    Id = 1
+                },
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.BeforeInlineInsert(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterInlineInsert()
+        public void TestDbConnectionTraceForAfterDeleteViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new CustomDbConnection();
 
             // Act
-            connection.InlineInsert<TraceEntity>(new { Id = 1, Name = "Name" }, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Delete(ClassMappedNameCache.Get<TraceEntity>(),
+                new
+                {
+                    Id = 1
+                },
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.AfterInlineInsert(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
-        // InlineMerge
+        #endregion
 
-        [TestMethod]
-        public void TestDbConnectionTraceForBeforeInlineMerge()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
-
-            // Act
-            connection.InlineMerge<TraceEntity>(new { Id = 1, Name = "Name" }, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
-
-            // Assert
-            trace.Verify(t => t.BeforeInlineMerge(It.IsAny<CancellableTraceLog>()), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceForAfterInlineMerge()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
-
-            // Act
-            connection.InlineMerge<TraceEntity>(new { Id = 1, Name = "Name" }, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
-
-            // Assert
-            trace.Verify(t => t.AfterInlineMerge(It.IsAny<TraceLog>()), Times.Once);
-        }
-
-        // InlineUpdate
-
-        [TestMethod]
-        public void TestDbConnectionTraceForBeforeInlineUpdate()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
-
-            // Act
-            connection.InlineUpdate<TraceEntity>(new { Name = "Name" }, te => te.Id == 1, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
-
-            // Assert
-            trace.Verify(t => t.BeforeInlineUpdate(It.IsAny<CancellableTraceLog>()), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceForAfterInlineUpdate()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
-
-            // Act
-            connection.InlineUpdate<TraceEntity>(new { Name = "Name" }, te => te.Id == 1, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
-
-            // Assert
-            trace.Verify(t => t.AfterInlineUpdate(It.IsAny<TraceLog>()), Times.Once);
-        }
-
-        // Insert
+        #region Insert
 
         [TestMethod]
         public void TestDbConnectionTraceForBeforeInsert()
@@ -206,10 +287,15 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Insert<TraceEntity>(new TraceEntity { Name = "Name" }, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Insert<TraceEntity>(new TraceEntity
+            {
+                Name = "Name"
+            },
+            trace: trace.Object,
+            statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -220,13 +306,60 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Insert<TraceEntity>(new TraceEntity { Name = "Name" }, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Insert<TraceEntity>(new TraceEntity
+            {
+                Name = "Name"
+            },
+            trace: trace.Object,
+            statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
-        // Merge
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeInsertViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.Insert(ClassMappedNameCache.Get<TraceEntity>(),
+                new
+                {
+                    Name = "Name"
+                },
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterInsertViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.Insert(ClassMappedNameCache.Get<TraceEntity>(),
+                new
+                {
+                    Name = "Name"
+                },
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region Merge
 
         [TestMethod]
         public void TestDbConnectionTraceForBeforeMerge()
@@ -236,10 +369,16 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Merge<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" }, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Merge<TraceEntity>(new TraceEntity
+            {
+                Id = 1,
+                Name = "Name"
+            },
+            trace: trace.Object,
+            statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -250,13 +389,62 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Merge<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" }, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Merge<TraceEntity>(new TraceEntity
+            {
+                Id = 1,
+                Name = "Name"
+            },
+            trace: trace.Object,
+            statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
-        // Query
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMergeViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.Merge(ClassMappedNameCache.Get<TraceEntity>(),
+                new
+                {
+                    Id = 1,
+                    Name = "Name"
+                },
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMergeViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.Merge(ClassMappedNameCache.Get<TraceEntity>(),
+                new
+                {
+                    Id = 1,
+                    Name = "Name"
+                }, trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region Query
 
         [TestMethod]
         public void TestDbConnectionTraceForBeforeQuery()
@@ -266,10 +454,12 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Query<TraceEntity>(te => te.Id == 1, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Query<TraceEntity>(te => te.Id == 1,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.BeforeQuery(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeQuery(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -280,13 +470,51 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Query<TraceEntity>(te => te.Id == 1, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Query<TraceEntity>(te => te.Id == 1,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.AfterQuery(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterQuery(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
-        // QueryMultiple
+        #endregion
+
+        #region QueryAll
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.QueryAll<TraceEntity>(trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeQueryAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.QueryAll<TraceEntity>(trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterQueryAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region QueryMultiple
 
         [TestMethod]
         public void TestDbConnectionTraceForBeforeQueryMultiple()
@@ -296,10 +524,13 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1, te => te.Id == 1, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.BeforeQueryMultiple(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeQueryMultiple(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -310,13 +541,18 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1, te => te.Id == 1, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.AfterQueryMultiple(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterQueryMultiple(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
-        // Truncate
+        #endregion
+
+        #region Truncate
 
         [TestMethod]
         public void TestDbConnectionTraceForBeforeTruncate()
@@ -326,10 +562,11 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Truncate<TraceEntity>(trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Truncate<TraceEntity>(trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -340,13 +577,48 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Truncate<TraceEntity>(trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Truncate<TraceEntity>(trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
-        // Update
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeTruncateViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.Truncate(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterTruncateViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.Truncate(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region Update
 
         [TestMethod]
         public void TestDbConnectionTraceForBeforeUpdate()
@@ -356,10 +628,18 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Update<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" }, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Update<TraceEntity>(
+                new TraceEntity
+                {
+                    Id = 1,
+                    Name = "Name"
+                },
+                whereOrPrimaryKey: 1,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -370,10 +650,68 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
-            connection.Update<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" }, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
+            connection.Update<TraceEntity>(
+                new TraceEntity
+                {
+                    Id = 1,
+                    Name = "Name"
+                },
+                whereOrPrimaryKey: 1,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
 
             // Assert
-            trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeUpdateViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.Update(ClassMappedNameCache.Get<TraceEntity>(),
+                new
+                {
+                    Name = "Name"
+                },
+                new
+                {
+                    Id = 1
+                },
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterUpdateViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+
+            // Act
+            connection.Update(ClassMappedNameCache.Get<TraceEntity>(),
+                new
+                {
+                    Name = "Name"
+                },
+                new
+                {
+                    Id = 1
+                },
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
     }
 }

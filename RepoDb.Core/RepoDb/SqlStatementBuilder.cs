@@ -3,6 +3,7 @@ using RepoDb.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using RepoDb.Exceptions;
 
 namespace RepoDb
 {
@@ -19,35 +20,54 @@ namespace RepoDb
         #region CreateBatchQuery
 
         /// <summary>
-        /// Creates a SQL Statement for repository batch query operation that is meant for SQL Server.
+        /// Creates a SQL Statement for batch query operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to query.</param>
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
-        /// <param name="orderBy">The list of fields used for ordering.</param>
-        /// <param name="hints">The hints to be used to optimze the query operation.</param>
-        /// <returns>A string containing the composed SQL Statement for batch query operation.</returns>
-        public string CreateBatchQuery<TEntity>(QueryBuilder queryBuilder,
-            QueryGroup where = null,
-            int? page = null,
-            int? rowsPerBatch = null,
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for batch query operation.</returns>
+        public string CreateBatchQuery(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            int page,
+            int rowsPerBatch,
             IEnumerable<OrderField> orderBy = null,
+            QueryGroup where = null,
             string hints = null)
-            where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>().Select(property => new Field(property.GetMappedName()));
+            // Guard the target table
+            Guard(tableName);
 
             // There should be fields
             if (fields == null || fields?.Any() == false)
             {
-                throw new InvalidOperationException($"No batch queryable fields found from type '{typeof(TEntity).FullName}'.");
+                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
-            // Build the SQL Statement
+            // Validate order by
+            if (orderBy == null || orderBy?.Any() == false)
+            {
+                throw new InvalidOperationException("The argument 'orderBy' is required.");
+            }
+
+            // Validate the page
+            if (page < 0)
+            {
+                throw new InvalidOperationException("The page must be equals or greater than 0.");
+            }
+
+            // Validate the page
+            if (rowsPerBatch < 1)
+            {
+                throw new InvalidOperationException($"The rows per batch must be equals or greater than 1.");
+            }
+
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
@@ -64,7 +84,7 @@ namespace RepoDb
                 .As("[RowNumber],")
                 .FieldsFrom(fields)
                 .From()
-                .TableNameFrom<TEntity>();
+                .TableNameFrom(tableName);
 
             // Build the query optimizers
             if (hints != null)
@@ -94,20 +114,22 @@ namespace RepoDb
         #region CreateCount
 
         /// <summary>
-        /// Creates a SQL Statement for repository count operation that is meant for SQL Server.
+        /// Creates a SQL Statement for count operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <param name="hints">The hints to be used to optimze the query operation.</param>
-        /// <returns>A string containing the composed SQL Statement for count operation.</returns>
-        public string CreateCount<TEntity>(QueryBuilder queryBuilder,
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for count operation.</returns>
+        public string CreateCount(QueryBuilder queryBuilder,
+            string tableName,
             QueryGroup where = null,
             string hints = null)
-            where TEntity : class
         {
+            // Guard the target table
+            Guard(tableName);
+
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
@@ -115,8 +137,7 @@ namespace RepoDb
                 .CountBig()
                 .WriteText("(1) AS [Counted]")
                 .From()
-                .TableNameFrom<TEntity>();
-
+                .TableNameFrom(tableName);
 
             // Build the query optimizers
             if (hints != null)
@@ -136,29 +157,76 @@ namespace RepoDb
 
         #endregion
 
+        #region CreateCountAll
+
+        /// <summary>
+        /// Creates a SQL Statement for count-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for count-all operation.</returns>
+        public string CreateCountAll(QueryBuilder queryBuilder,
+            string tableName,
+            string hints = null)
+        {
+            // Guard the target table
+            Guard(tableName);
+
+            // Build the query
+            queryBuilder = queryBuilder ?? new QueryBuilder();
+            queryBuilder
+                .Clear()
+                .Select()
+                .CountBig()
+                .WriteText("(1) AS [Counted]")
+                .From()
+                .TableNameFrom(tableName);
+
+            // Build the query optimizers
+            if (hints != null)
+            {
+                queryBuilder
+                    .WriteText(hints);
+            }
+
+            // End the builder
+            queryBuilder
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
+        }
+
+        #endregion
+
         #region CreateDelete
 
         /// <summary>
-        /// Creates a SQL Statement for repository delete operation that is meant for SQL Server.
+        /// Creates a SQL Statement for delete operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for delete operation.</returns>
-        public string CreateDelete<TEntity>(QueryBuilder queryBuilder,
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <returns>A sql statement for delete operation.</returns>
+        public string CreateDelete(QueryBuilder queryBuilder,
+            string tableName,
             QueryGroup where = null)
-            where TEntity : class
         {
+            // Guard the target table
+            Guard(tableName);
+
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Delete()
                 .From()
-                .TableNameFrom<TEntity>()
+                .TableNameFrom(tableName)
                 .WhereFrom(where)
                 .End();
+
+            // Return the query
             return queryBuilder.GetString();
         }
 
@@ -167,406 +235,24 @@ namespace RepoDb
         #region CreateDeleteAll
 
         /// <summary>
-        /// Creates a SQL Statement for repository delete-all operation that is meant for SQL Server.
+        /// Creates a SQL Statement for delete-all operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for delete-all operation.</returns>
-        public string CreateDeleteAll<TEntity>(QueryBuilder queryBuilder)
-            where TEntity : class
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A sql statement for delete-all operation.</returns>
+        public string CreateDeleteAll(QueryBuilder queryBuilder,
+            string tableName)
         {
+            // Guard the target table
+            Guard(tableName);
+
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Delete()
                 .From()
-                .TableNameFrom<TEntity>()
-                .End();
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateInlineInsert
-
-        /// <summary>
-        /// Creates a SQL Statement for repository inline-insert operation.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
-        /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
-        public string CreateInlineInsert<TEntity>(QueryBuilder queryBuilder,
-            DbField primaryField,
-            IEnumerable<Field> fields = null)
-            where TEntity : class
-        {
-            // Check for the fields presence
-            if (fields == null)
-            {
-                throw new NullReferenceException("The target fields must be present.");
-            }
-
-            // Check for all the fields
-            var properties = PropertyCache.Get<TEntity>()?
-                .Select(property => property.GetMappedName());
-            var unmatchesFields = fields?.Where(field =>
-                properties?.FirstOrDefault(property =>
-                    field.Name.ToLower() == property.ToLower()) == null);
-            if (unmatchesFields?.Count() > 0)
-            {
-                throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
-                    $"present at type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Get the needed properties
-            var primary = PrimaryKeyCache.Get<TEntity>();
-            var isPrimaryIdentity = (primaryField?.IsIdentity == true);
-
-            if (isPrimaryIdentity == false)
-            {
-                var identity = IdentityCache.Get<TEntity>();
-
-                // Check the equalities
-                if (identity != null && identity != primary)
-                {
-                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-                }
-
-                // Set the primary identification value
-                isPrimaryIdentity = (identity != null && identity == primary);
-            }
-
-            // Get the primary name
-            var primaryName = primary?.GetMappedName() ?? primaryField?.Name;
-
-            // Return the value
-            return CreateInlineInsert(queryBuilder: queryBuilder,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                primaryName: primaryName,
-                isPrimaryIdentity: isPrimaryIdentity,
-                fields: fields);
-        }
-
-        /// <summary>
-        /// Creates a SQL Statement for repository inline-insert operation.
-        /// </summary>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
-        /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
-        public string CreateInlineInsert(QueryBuilder queryBuilder,
-            string tableName,
-            DbField primaryField = null,
-            IEnumerable<Field> fields = null)
-        {
-            // Check for the fields presence
-            if (fields == null)
-            {
-                throw new NullReferenceException("The target fields must be present.");
-            }
-
-            // Return the value
-            return CreateInlineInsert(queryBuilder: queryBuilder,
-                tableName: tableName,
-                primaryName: primaryField?.Name,
-                isPrimaryIdentity: (primaryField?.IsIdentity == true),
-                fields: fields);
-        }
-
-        /// <summary>
-        /// Creates a SQL Statement for repository inline-insert operation.
-        /// </summary>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="primaryName">The name of the primary field from the database.</param>
-        /// <param name="isPrimaryIdentity">The value that indicates whether the primary is an identity.</param>
-        /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
-        /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
-        internal string CreateInlineInsert(QueryBuilder queryBuilder,
-            string tableName,
-            string primaryName,
-            bool isPrimaryIdentity = false,
-            IEnumerable<Field> fields = null)
-        {
-            // Variables
-            var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != primaryName.ToLower()) : fields?.Any();
-
-            // Check if there are fields
-            if (hasFields == false)
-            {
-                throw new InvalidOperationException($"No inline insertable fields for object '{tableName}'.");
-            }
-
-            // Check for the primary key
-            if (primaryName != null && isPrimaryIdentity)
-            {
-                fields = fields?
-                    .Where(field => field.Name.ToLower() != primaryName.ToLower());
-            }
-
-            // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
-                .Clear()
-                .Insert()
-                .Into()
                 .TableNameFrom(tableName)
-                .OpenParen()
-                .FieldsFrom(fields)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .ParametersFrom(fields)
-                .CloseParen()
-                .End();
-            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : string.IsNullOrEmpty(primaryName) == false ? primaryName.AsParameter() : "NULL";
-            queryBuilder
-                .Select()
-                .WriteText(result)
-                .As("[Result]")
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateInlineMerge
-
-        /// <summary>
-        /// Creates a SQL Statement for repository inline-merge operation.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
-        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
-        public string CreateInlineMerge<TEntity>(QueryBuilder queryBuilder,
-            DbField primaryField = null,
-            IEnumerable<Field> fields = null,
-            IEnumerable<Field> qualifiers = null)
-            where TEntity : class
-        {
-            // Check for the fields presence
-            if (fields == null)
-            {
-                throw new NullReferenceException("The target fields must be present.");
-            }
-
-            // Get the needed properties
-            var primary = PrimaryKeyCache.Get<TEntity>();
-            var isPrimaryIdentity = (primaryField?.IsIdentity == true);
-
-            // Check for the qualifiers presence
-            if (primary == null && qualifiers == null)
-            {
-                throw new NullReferenceException("The qualifiers must be present.");
-            }
-
-            if (isPrimaryIdentity == false)
-            {
-                // Checks for the identity
-                var identity = IdentityCache.Get<TEntity>();
-
-                // Check the equalities
-                if (identity != null && identity != primary)
-                {
-                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-                }
-
-                // Set the primary identification value
-                isPrimaryIdentity = (identity != null && identity == primary);
-            }
-
-            // Get the primary name
-            var primaryName = primary?.GetMappedName() ?? primaryField?.Name;
-
-            // Check for all the fields (must be present from the database table)
-            var properties = PropertyCache.Get<TEntity>()?
-                .Select(property => property.GetMappedName());
-            var unmatchesFields = fields?.Where(field =>
-                properties?.FirstOrDefault(property =>
-                    field.Name.ToLower() == property.ToLower()) == null);
-            if (unmatchesFields?.Count() > 0)
-            {
-                throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
-                    $"present at type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Check for all the qualifiers (from the database table)
-            if (qualifiers != null)
-            {
-                var unmatchesQualifiers = qualifiers.Where(field =>
-                    properties?.FirstOrDefault(property =>
-                        field.Name.ToLower() == property.ToLower()) == null);
-                if (unmatchesQualifiers?.Count() > 0)
-                {
-                    throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"present at type '{typeof(TEntity).FullName}'.");
-                }
-
-                // Check for all the qualifiers (from the passed entity)
-                unmatchesQualifiers = qualifiers.Where(field =>
-                   fields?.FirstOrDefault(f =>
-                       field.Name.ToLower() == f.Name.ToLower()) == null);
-                if (unmatchesQualifiers?.Count() > 0)
-                {
-                    throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"present at the properties of the passed object.");
-                }
-            }
-            else
-            {
-                // The primary key must be in the passed object if the qualifiers are null
-                if (fields?.FirstOrDefault(f => f.Name.ToLower() == primaryName.ToLower()) == null)
-                {
-                    throw new InvalidOperationException($"The primary key '{primaryName}' must be preset at the " +
-                        $"object properties if the qualifiers are not defined.");
-                }
-
-                // Use the primary for qualifiers if there is no any
-                if (string.IsNullOrEmpty(primaryName) == false)
-                {
-                    qualifiers = Field.From(primaryName);
-                }
-            }
-
-            // Get the insertable and updateable fields
-            var targetFields = fields.ToList();
-            var insertableFields = fields
-                .Where(field => (field.Name.ToLower() == primaryName?.ToLower() && isPrimaryIdentity) == false);
-            var updateableFields = fields
-                .Where(field => (field.Name.ToLower() == primaryName?.ToLower()) == false && qualifiers?.Any(f => f == field) == false);
-
-            // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
-                .Clear()
-                // MERGE T USING S
-                .Merge()
-                .TableNameFrom<TEntity>()
-                .As("T")
-                .Using()
-                .OpenParen()
-                .Select()
-                .ParametersAsFieldsFrom(targetFields)
-                .CloseParen()
-                .As("S")
-                // QUALIFIERS
-                .On()
-                .OpenParen()
-                .WriteText(qualifiers?
-                    .Select(
-                        field => field.AsJoinQualifier("S", "T"))
-                            .Join($" AND "))
-                .CloseParen()
-                // WHEN NOT MATCHED THEN INSERT VALUES
-                .When()
-                .Not()
-                .Matched()
-                .Then()
-                .Insert()
-                .OpenParen()
-                .FieldsFrom(insertableFields)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .AsAliasFieldsFrom(insertableFields, "S")
-                .CloseParen()
-                // WHEN MATCHED THEN UPDATE SET
-                .When()
-                .Matched()
-                .Then()
-                .Update()
-                .Set()
-                .FieldsAndAliasFieldsFrom(updateableFields, "S")
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateInlineUpdate
-
-        /// <summary>
-        /// Creates a SQL Statement for repository inline update operation that is meant for SQL Server.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="fields">The list of the fields to be a part of inline update operation in SQL Statement composition.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for inline-update operation.</returns>
-        public string CreateInlineUpdate<TEntity>(QueryBuilder queryBuilder,
-            IEnumerable<Field> fields = null,
-            QueryGroup where = null)
-            where TEntity : class
-        {
-            // Check for the fields presence
-            if (fields == null)
-            {
-                throw new NullReferenceException("The target fields must be present.");
-            }
-
-            // Check for all the fields
-            var properties = PropertyCache.Get<TEntity>()?
-                .Select(property => property.GetMappedName());
-            var unmatchesFields = fields?.Where(field =>
-                properties?.FirstOrDefault(property =>
-                    field.Name.ToLower() == property.ToLower()) == null);
-            if (unmatchesFields?.Count() > 0)
-            {
-                throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
-                    $"present at type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Important fields
-            var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = IdentityCache.Get<TEntity>();
-            if (identity != null && identity != primary)
-            {
-                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Check if there are fields
-            var hasFields = fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) == true;
-            if (hasFields == false)
-            {
-                throw new InvalidOperationException($"No inline updatable fields for object '{ClassMappedNameCache.Get<TEntity>()}'.");
-            }
-
-            // Make sure the primary key is not being updated
-            if (fields.Any(field => field.Name.ToLower() == primary?.GetMappedName().ToLower()))
-            {
-                throw new InvalidOperationException("Primary column is not inline-updateable.");
-            }
-
-            // Append prefix to all parameters
-            where?.AppendParametersPrefix();
-
-            // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
-                .Clear()
-                .Update()
-                .TableNameFrom<TEntity>()
-                .Set()
-                .FieldsAndParametersFrom(fields)
-                .WhereFrom(where)
                 .End();
 
             // Return the query
@@ -578,51 +264,49 @@ namespace RepoDb
         #region CreateInsert
 
         /// <summary>
-        /// Creates a SQL Statement for repository insert operation that is meant for SQL Server.
+        /// Creates a SQL Statement for insert operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="primaryField">The primary field from the database.</param>
-        /// <returns>A string containing the composed SQL Statement for insert operation.</returns>
-        public string CreateInsert<TEntity>(QueryBuilder queryBuilder,
+        /// <returns>A sql statement for insert operation.</returns>
+        public string CreateInsert(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
             DbField primaryField = null)
-            where TEntity : class
         {
-            // Get the primary and identity field locally
-            var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = IdentityCache.Get<TEntity>();
+            // Guard the target table
+            Guard(tableName);
 
-            // Check if the primary is an identity
-            if (identity != null && identity != primary)
+            // Verify the fields
+            if (fields == null || fields?.Any() == false)
             {
-                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                throw new NullReferenceException($"The list of insertable fields must not be null for '{tableName}'.");
             }
 
             // Variables needed
-            var primaryName = primary?.GetMappedName() ?? primaryField?.Name;
-            var isPrimaryIdentity = primaryField?.IsIdentity == true || (identity != null && identity == primary);
-            var fields = PropertyCache.Get<TEntity>()
-                .Where(property => !(isPrimaryIdentity == true && property.IsPrimary() == true))
-                .Select(property => new Field(property.GetMappedName()));
+            var primaryName = primaryField?.Name;
+            var isIdentity = primaryField?.IsIdentity == true;
+            var insertableFields = fields
+                .Where(f => !(isIdentity == true && f.Name.ToLower() == primaryName?.ToLower()));
 
-            // Build the SQL Statement
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Insert()
                 .Into()
-                .TableNameFrom<TEntity>()
+                .TableNameFrom(tableName)
                 .OpenParen()
-                .FieldsFrom(fields)
+                .FieldsFrom(insertableFields)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .ParametersFrom(fields)
+                .ParametersFrom(insertableFields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity == true ? "SCOPE_IDENTITY()" : string.IsNullOrEmpty(primaryName) == false ? primaryName.AsParameter() : "NULL";
+            var result = isIdentity == true ? "CONVERT(BIGINT, SCOPE_IDENTITY())" : string.IsNullOrEmpty(primaryName) == false ? primaryName.AsParameter() : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -638,108 +322,91 @@ namespace RepoDb
         #region CreateMerge
 
         /// <summary>
-        /// Creates a SQL Statement for repository merge operation that is meant for SQL Server.
+        /// Creates a SQL Statement for merge operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be merged.</param>
+        /// <param name="qualifiers">The list of the qualifier fields.</param>
         /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
-        /// <returns>A string containing the composed SQL Statement for merge operation.</returns>
-        public string CreateMerge<TEntity>(QueryBuilder queryBuilder,
-            DbField primaryField = null,
-            IEnumerable<Field> qualifiers = null)
-            where TEntity : class
+        /// <returns>A sql statement for merge operation.</returns>
+        public string CreateMerge(QueryBuilder queryBuilder,
+             string tableName,
+             IEnumerable<Field> fields,
+             IEnumerable<Field> qualifiers = null,
+             DbField primaryField = null)
         {
-            // Get the needed properties
-            var primary = PrimaryKeyCache.Get<TEntity>();
-            var isPrimaryIdentity = primaryField?.IsIdentity == true;
+            // Guard the target table
+            Guard(tableName);
 
-            if (isPrimaryIdentity == false)
+            // Verify the fields
+            if (fields == null || fields?.Any() == false)
             {
-                var identity = IdentityCache.Get<TEntity>();
-
-                // Check the equalities
-                if (identity != null && identity != primary)
-                {
-                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-                }
-
-                // Identify whether the primary key is an identity
-                isPrimaryIdentity = (identity != null && identity == primary);
+                throw new NullReferenceException($"The list of insertable fields must not be null for '{tableName}'.");
             }
 
-            // Get the primary name
-            var primaryName = primary?.GetMappedName() ?? primaryField?.Name;
+            // Get the needed properties
+            var primaryName = primaryField?.Name;
+            var isIdentity = primaryField?.IsIdentity == true;
 
-            // Return the value
-            return CreateMerge<TEntity>(queryBuilder: queryBuilder,
-                primaryName: primaryName,
-                isPrimaryIdentity: isPrimaryIdentity,
-                qualifiers: qualifiers);
-        }
-
-        /// <summary>
-        /// Creates a SQL Statement for repository merge operation that is meant for SQL Server.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="primaryName">The name of the primary field from the database.</param>
-        /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
-        /// <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
-        /// <returns>A string containing the composed SQL Statement for merge operation.</returns>
-        internal string CreateMerge<TEntity>(QueryBuilder queryBuilder,
-            string primaryName,
-            bool isPrimaryIdentity = false,
-            IEnumerable<Field> qualifiers = null)
-            where TEntity : class
-        {
-            // Check for all the fields
-            var fields = PropertyCache.Get<TEntity>()?
-                .Select(property => new Field(property.GetMappedName()));
-
-            // Check for all the qualifier (from the entity table)
             if (qualifiers != null)
             {
+                // Check if the qualifiers are present in the given fields
                 var unmatchesQualifiers = qualifiers?.Where(field =>
                     fields?.FirstOrDefault(f =>
                         field.Name.ToLower() == f.Name.ToLower()) == null);
-                if (unmatchesQualifiers?.Count() > 0)
+
+                // Throw an error we found any unmatches
+                if (unmatchesQualifiers?.Any() == true)
                 {
-                    throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"present at type '{typeof(TEntity).FullName}'.");
+                    throw new InvalidQualiferFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
+                        $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
                 }
             }
             else
             {
-                // Use the primary for qualifiers if there is no any
                 if (string.IsNullOrEmpty(primaryName) == false)
                 {
+                    // The primary is present, use it as a default if there are not qualifiers given
                     qualifiers = Field.From(primaryName);
+
+                    // Check if the qualifiers are present in the given fields
+                    var unmatchesQualifiers = qualifiers?.Where(field =>
+                        fields?.FirstOrDefault(f =>
+                            field.Name.ToLower() == f.Name.ToLower()) == null);
+
+                    // Throw an error we found any unmatches
+                    if (unmatchesQualifiers?.Any() == true)
+                    {
+                        throw new InvalidQualiferFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
+                            $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
+                    }
+                }
+                else
+                {
+                    // Throw exception, qualifiers are not defined
+                    throw new NullReferenceException($"There are no qualifier fields found for '{tableName}'.");
                 }
             }
 
             // Get the insertable and updateable fields
             var insertableFields = fields
-                .Where(field => (field.Name.ToLower() == primaryName?.ToLower() && isPrimaryIdentity) == false);
+                .Where(field => (field.Name.ToLower() == primaryName?.ToLower() && isIdentity) == false);
             var updateableFields = fields
                 .Where(field => (field.Name.ToLower() == primaryName?.ToLower()) == false);
 
-            // Build the SQL Statement
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 // MERGE T USING S
                 .Merge()
-                .TableNameFrom<TEntity>()
+                .TableNameFrom(tableName)
                 .As("T")
                 .Using()
                 .OpenParen()
                 .Select()
-                .ParametersAsFieldsFrom<TEntity>()
+                .ParametersAsFieldsFrom(fields)
                 .CloseParen()
                 .As("S")
                 // QUALIFIERS
@@ -781,43 +448,57 @@ namespace RepoDb
         #region CreateQuery
 
         /// <summary>
-        /// Creates a SQL Statement for repository query operation that is meant for SQL Server.
+        /// Creates a SQL Statement for query operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <param name="orderBy">The list of fields  to be used for ordering in SQL Statement composition.</param>
-        /// <param name="top">The number of rows to be returned by the query operation in SQL Statement composition.</param>
-        /// <param name="hints">The hints to be used to optimze the query operation.</param>
-        /// <returns>A string containing the composed SQL Statement for query operation.</returns>
-        public string CreateQuery<TEntity>(QueryBuilder queryBuilder,
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="top">The number of rows to be returned.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for query operation.</returns>
+        public string CreateQuery(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = null,
             string hints = null)
-            where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => new Field(property.GetMappedName().AsQuoted(true)));
+            // Guard the target table
+            Guard(tableName);
 
             // There should be fields
             if (fields == null || fields.Any() == false)
             {
-                throw new InvalidOperationException($"There are no fields found for type '{typeof(TEntity).Name}'.");
+                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
-            // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder();
+            if (orderBy != null)
+            {
+                // Check if the order fields are present in the given fields
+                var unmatchesOrderFields = orderBy?.Where(orderField =>
+                    fields?.FirstOrDefault(f =>
+                        orderField.Name.ToLower() == f.Name.ToLower()) == null);
 
-            // Build the base
+                // Throw an error we found any unmatches
+                if (unmatchesOrderFields?.Any() == true)
+                {
+                    throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.Name).Join(", ")}' are not " +
+                        $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
+                }
+            }
+
+            // Build the query
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Select()
                 .TopFrom(top)
                 .FieldsFrom(fields)
                 .From()
-                .TableNameFrom<TEntity>();
+                .TableNameFrom(tableName);
 
             // Build the query optimizers
             if (hints != null)
@@ -838,27 +519,95 @@ namespace RepoDb
 
         #endregion
 
+        #region CreateQueryAll
+
+        /// <summary>
+        /// Creates a SQL Statement for query-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <returns>A sql statement for query operation.</returns>
+        public string CreateQueryAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<OrderField> orderBy = null,
+            string hints = null)
+        {
+            // Guard the target table
+            Guard(tableName);
+
+            // There should be fields
+            if (fields == null || fields.Any() == false)
+            {
+                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+            }
+
+            if (orderBy != null)
+            {
+                // Check if the order fields are present in the given fields
+                var unmatchesOrderFields = orderBy?.Where(orderField =>
+                    fields?.FirstOrDefault(f =>
+                        orderField.Name.ToLower() == f.Name.ToLower()) == null);
+
+                // Throw an error we found any unmatches
+                if (unmatchesOrderFields?.Any() == true)
+                {
+                    throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                        $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
+                }
+            }
+
+            // Build the query
+            queryBuilder = queryBuilder ?? new QueryBuilder();
+            queryBuilder
+                .Clear()
+                .Select()
+                .FieldsFrom(fields)
+                .From()
+                .TableNameFrom(tableName);
+
+            // Build the query optimizers
+            if (hints != null)
+            {
+                queryBuilder
+                    .WriteText(hints);
+            }
+
+            // Build the ordering
+            queryBuilder
+                .OrderByFrom(orderBy)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
+        }
+
+        #endregion
+
         #region CreateTruncate
 
         /// <summary>
-        /// Creates a SQL Statement for repository truncate operation that is meant for SQL Server.
+        /// Creates a SQL Statement for truncate operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for truncate operation.</returns>
-        public string CreateTruncate<TEntity>(QueryBuilder queryBuilder)
-            where TEntity : class
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A sql statement for truncate operation.</returns>
+        public string CreateTruncate(QueryBuilder queryBuilder,
+            string tableName)
         {
-            queryBuilder = queryBuilder ?? new QueryBuilder();
+            // Guard the target table
+            Guard(tableName);
 
-            // Build the SQL Statement
+            // Build the query
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Truncate()
                 .Table()
-                .TableNameFrom<TEntity>()
+                .TableNameFrom(tableName)
                 .End();
 
             // Return the query
@@ -870,43 +619,62 @@ namespace RepoDb
         #region CreateUpdate
 
         /// <summary>
-        /// Creates a SQL Statement for repository update operation that is meant for SQL Server.
+        /// Creates a SQL Statement for inline-update operation.
         /// </summary>
-        /// <typeparam name="TEntity">
-        /// The data entity object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for update operation.</returns>
-        public string CreateUpdate<TEntity>(QueryBuilder queryBuilder,
-            QueryGroup where = null)
-            where TEntity : class
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be updated.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <returns>A sql statement for update operation.</returns>
+        public string CreateUpdate(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            QueryGroup where = null,
+            DbField primaryField = null)
         {
-            var properties = PropertyCache.Get<TEntity>();
-            var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = IdentityCache.Get<TEntity>();
-            if (identity != null && identity != primary)
-            {
-                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-            }
-            var fields = properties
-                .Where(property => property.IsPrimary() == false && property.IsIdentity() == false)
-                .Select(p => new Field(p.GetMappedName()));
+            // Guard the target table
+            Guard(tableName);
+
+            // Variables needed
+            var primaryName = primaryField?.Name;
+
+            // Append the proper prefix
             where?.AppendParametersPrefix();
 
-            // Build the SQL Statement
+            // Gets the updatable fields
+            var updatableFields = fields
+                .Where(f => (f.Name.ToLower() == primaryName?.ToLower()) == false);
+
+            // Build the query
             queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Update()
-                .TableNameFrom<TEntity>()
+                .TableNameFrom(tableName)
                 .Set()
-                .FieldsAndParametersFrom(fields)
+                .FieldsAndParametersFrom(updatableFields)
                 .WhereFrom(where)
                 .End();
 
             // Return the query
             return queryBuilder.GetString();
+        }
+
+        #endregion
+
+        #region Helper
+
+        /// <summary>
+        /// Throws an exception of the table name is null or empty.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        private void Guard(string tableName)
+        {
+            if (string.IsNullOrEmpty(tableName?.Trim()))
+            {
+                throw new NullReferenceException("The name of the table could be null.");
+            }
         }
 
         #endregion

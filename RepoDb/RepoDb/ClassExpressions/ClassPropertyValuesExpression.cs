@@ -58,7 +58,7 @@ namespace RepoDb
                 Expression.New(typeof(List<PropertyValue>)),
                 properties.Select(property =>
                 {
-                    var name = Expression.Constant(property.GetMappedName());
+                    var name = Expression.Constant(property.GetUnquotedMappedName());
                     var value = Expression.Convert(Expression.Property(obj, property.PropertyInfo), typeof(object));
                     var propertyValue = Expression.New(propertyValueConstructor,
                         name,

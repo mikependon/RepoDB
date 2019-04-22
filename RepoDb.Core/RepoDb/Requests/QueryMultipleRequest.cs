@@ -15,35 +15,64 @@ namespace RepoDb.Requests
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleRequest"/> object.
         /// </summary>
-        /// <param name="entityType">The entity type.</param>
-        /// <param name="connection">The connection object.</param>
         /// <param name="index">The index value.</param>
+        /// <param name="type">The target type.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="fields">The list of the target fields.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="orderBy">The list of order fields.</param>
         /// <param name="top">The filter for the rows.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public QueryMultipleRequest(int? index, Type entityType, IDbConnection connection, QueryGroup where = null, IEnumerable<OrderField> orderBy = null,
-            int? top = null, string hints = null, IStatementBuilder statementBuilder = null)
-            : this(index, entityType.FullName, connection, where, orderBy, top, hints, statementBuilder)
-        { }
+        public QueryMultipleRequest(int? index,
+            Type type,
+            IDbConnection connection,
+            IEnumerable<Field> fields = null,
+            QueryGroup where = null,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = null,
+            string hints = null,
+            IStatementBuilder statementBuilder = null)
+            : this(index,
+                  ClassMappedNameCache.Get(type),
+                  connection,
+                  fields,
+                  where,
+                  orderBy,
+                  top,
+                  hints,
+                  statementBuilder)
+        {
+            Type = type;
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleRequest"/> object.
         /// </summary>
+        /// <param name="index">The index value.</param>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
-        /// <param name="index">The index value.</param>
+        /// <param name="fields">The list of the target fields.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="orderBy">The list of order fields.</param>
         /// <param name="top">The filter for the rows.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public QueryMultipleRequest(int? index, string name, IDbConnection connection, QueryGroup where = null, IEnumerable<OrderField> orderBy = null,
-            int? top = null, string hints = null, IStatementBuilder statementBuilder = null)
-            : base(name, connection, statementBuilder)
+        public QueryMultipleRequest(int? index,
+            string name,
+            IDbConnection connection,
+            IEnumerable<Field> fields = null,
+            QueryGroup where = null,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = null,
+            string hints = null,
+            IStatementBuilder statementBuilder = null)
+            : base(name,
+                  connection,
+                  statementBuilder)
         {
             Index = index;
+            Fields = fields;
             Where = where;
             OrderBy = orderBy;
             Top = top;
@@ -54,6 +83,11 @@ namespace RepoDb.Requests
         /// Gets the index used.
         /// </summary>
         public int? Index { get; }
+
+        /// <summary>
+        /// Gets the list of the target fields.
+        /// </summary>
+        public IEnumerable<Field> Fields { get; set; }
 
         /// <summary>
         /// Gets the query expression used.
@@ -96,6 +130,15 @@ namespace RepoDb.Requests
             if (!ReferenceEquals(null, Index))
             {
                 hashCode += Index.GetHashCode();
+            }
+
+            // Get the qualifier fields
+            if (Fields != null)
+            {
+                foreach (var field in Fields)
+                {
+                    hashCode += field.GetHashCode();
+                }
             }
 
             // Add the expression

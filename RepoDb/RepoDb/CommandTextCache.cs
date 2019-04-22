@@ -340,7 +340,7 @@ namespace RepoDb
                             .FirstOrDefault(f => f.IsPrimary)?
                             .IsIdentity == true;
                     }
-                    return new DbField(primaryPropery.GetMappedName(), true, isIdentity, false);
+                    return new DbField(primaryPropery.GetUnquotedMappedName(), true, isIdentity, false);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);

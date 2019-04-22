@@ -940,7 +940,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    return new QueryGroup(new QueryField(primary.GetMappedName(), whereOrPrimaryKey).AsEnumerable());
+                    return new QueryGroup(new QueryField(primary.GetUnquotedMappedName(), whereOrPrimaryKey).AsEnumerable());
                 }
             }
         }

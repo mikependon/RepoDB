@@ -1,4 +1,7 @@
-﻿namespace RepoDb
+﻿using RepoDb.Extensions;
+using System;
+
+namespace RepoDb
 {
     /// <summary>
     /// A class the holds the column definition of the database table columns.
@@ -10,16 +13,29 @@
         /// </summary>
         public DbField(string name, bool isPrimary, bool isIdentity, bool isNullable)
         {
-            Name = name;
+            // Name is required
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new NullReferenceException("Name");
+            }
+
+            // Set the properties
+            Name = name.AsQuoted(true);
+            UnquotedName = name;
             IsPrimary = isPrimary;
             IsIdentity = isIdentity;
             IsNullable = isNullable;
         }
 
         /// <summary>
-        /// Gets or sets the name of the field.
+        /// Gets the quoted name of the database field.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Gets the unquoted name of the database field.
+        /// </summary>
+        public string UnquotedName { get; }
 
         /// <summary>
         /// Gets the value whether the column is a primary column.

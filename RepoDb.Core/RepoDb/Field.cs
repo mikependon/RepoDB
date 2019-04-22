@@ -17,13 +17,26 @@ namespace RepoDb
         /// <param name="name">The name of the field.</param>
         public Field(string name)
         {
-            Name = name;
+            // Name is required
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new NullReferenceException(name);
+            }
+
+            // Set the name
+            Name = name.AsQuoted(true);
+            UnquotedName = name.AsUnquoted(true);
         }
 
         /// <summary>
-        /// Gets the name of the field.
+        /// Gets the quoted name of the field.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Gets the unquoted name of the field.
+        /// </summary>
+        public string UnquotedName { get; }
 
         /// <summary>
         /// Stringify the current field object.
@@ -31,7 +44,7 @@ namespace RepoDb
         /// <returns>The string value equivalent to the name of the field.</returns>
         public override string ToString()
         {
-            return Name.AsQuoted();
+            return Name;
         }
 
         /// <summary>
@@ -55,13 +68,28 @@ namespace RepoDb
         /// <summary>
         /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
         /// </summary>
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <param name="entity">An object to be parsed.</param>
+        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
+        internal static IEnumerable<Field> Parse<TEntity>(TEntity entity)
+            where TEntity : class
+        {
+            foreach (var property in PropertyCache.Get<TEntity>())
+            {
+                yield return new Field(PropertyMappedNameCache.Get(property.PropertyInfo, false));
+            }
+        }
+
+        /// <summary>
+        /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
+        /// </summary>
         /// <param name="obj">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
         internal static IEnumerable<Field> Parse(object obj)
         {
             foreach (var property in obj.GetType().GetTypeInfo().GetProperties())
             {
-                yield return new Field(PropertyMappedNameCache.Get(property));
+                yield return new Field(PropertyMappedNameCache.Get(property, false));
             }
         }
 

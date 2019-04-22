@@ -16,7 +16,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.QueryFields.First().Field.Name;
-            var expected = "PropertyInt";
+            var expected = "[PropertyInt]";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -30,7 +30,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.QueryFields.First().Field.Name;
-            var expected = "PropertyString";
+            var expected = "[PropertyString]";
 
             // Assert
             Assert.AreEqual(expected, actual);

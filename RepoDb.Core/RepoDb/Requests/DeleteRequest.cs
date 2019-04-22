@@ -14,12 +14,36 @@ namespace RepoDb.Requests
         /// <summary>
         /// Creates a new instance of <see cref="DeleteRequest"/> object.
         /// </summary>
-        /// <param name="entityType">The entity type.</param>
+        /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public DeleteRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
+        public DeleteRequest(Type type,
+            IDbConnection connection,
+            QueryGroup where = null,
+            IStatementBuilder statementBuilder = null)
+            : this(ClassMappedNameCache.Get(type),
+                  connection,
+                  where,
+                  statementBuilder)
+        {
+            Type = type;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DeleteRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public DeleteRequest(string name,
+            IDbConnection connection,
+            QueryGroup where = null,
+            IStatementBuilder statementBuilder = null)
+            : base(name,
+                  connection,
+                  statementBuilder)
         {
             Where = where;
         }

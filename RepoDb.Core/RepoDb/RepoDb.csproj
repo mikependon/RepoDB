@@ -13,24 +13,38 @@
     <PackageTags>orm sql repo repodb repository</PackageTags>
     <PackageReleaseNotes>RepoDb v1.9.0-beta2:
 - [Core] Make the DbHelper Pluggable by Provider. #137
-- [Enhancement] Revisits the NET Framework custom method for GetCustomAttributes&amp;lt;T&amp;gt;. #133
-- [Enhancement] Support passing of QueryGroup, QueryField, IEnumerable&amp;lt;QueryField&amp;gt; in the Execution&amp;lt;Method&amp;gt; Operations #140
+- [Core] [NTH]: Support InlineDelete(string tableName, object where ...) #113 -- Moved to Delete
+- [Core] Add table based operations for Count, Delete, DeleteAll, Insert, Merge, Truncate, Update. #159
+- [Core] Organize the ordering of the arguments in all operations. #160
+- [Core] Introduce CountAll operation. #161
+- [Enhancement] Revisits the NET Framework custom method for GetCustomAttributes&lt;T&gt;. #133
+- [Enhancement] Support passing of QueryGroup, QueryField, IEnumerable&lt;QueryField&gt; in the Execution&lt;Method&gt; Operations #140
 - [Enhancement] Remove the 'StatementBuilderMapItem' class if possible. #139
 - [Enhancement] Remove the 'Provider' Enumeration. #138
 - [Enhancement] Reorder the parameter of for target table to BulkInsert(TableName, DbDataReader). #145
 - [Enhancement] Properly parse the type of the passed parameters when parsing the RawSql Array Parameters. #147
-- [Enhancement] [NTH]: Support InlineInsert(string tableName, object param ...) #114
+- [Enhancement] [NTH]: Support InlineInsert(string tableName, object param ...) #114 -- Moved to Insert
 - [Enhancement] Implement the 'prefix' as a passable argument when during conversion. #148
-- [Enhancement] Add additional argument in the DataReaderConverter.ToEnumerable&amp;lt;T&amp;gt; method to support the calls to DbHelper.Get&amp;lt;T&amp;gt; method. #142
+- [Enhancement] Add additional argument in the DataReaderConverter.ToEnumerable&lt;T&gt; method to support the calls to DbHelper.Get&lt;T&gt; method. #142
+- [Enhancement] Add a caching mechanism for type 'Field' objects. #157
+- [Enhancement] Merge all inline operations into main operations (InlineMerge should be Merge). #156
 - [Adhoc] Created a new cache class named 'DbIdentityCache'.
 - [Adhoc] Renamed the 'FieldDefinition' into 'DbField'.
 - [Adhoc] Renamed the 'FieldDefinitionCache' to 'DbFieldCache'.
 - [Adhoc] Renamed the 'SqlHelper' to 'SqlDbHelper'.
+- [Adhoc] Renamed the 'PrimaryKeyCache' to 'PrimaryCache'.
+- [Adhoc] Renamed the 'PrimaryKeyIdentityCache' to 'PrimaryIdentityCache'.
 - [Adhoc] Moved the 'DbHelpers' into 'RepoDb.DbHelpers'.
-- [Adhoc] Remove the 'NamespaceConstant' class. #150
 - [Adhoc, Optimization] Made the 'DbFieldCache' object more dynamic to any DB providers.
 - [Test] Add additional logic in the Integration Tests of the IStatementBuilder, verify that the second call is not hitting the method. #141
-- [Test] Add an extensive Unit/Integration Test for InlineInsert that targets a table name. #146</PackageReleaseNotes>
+- [Test] Add an extensive Unit/Integration Test for InlineInsert that targets a table name. #146
+- [Test] Create UnitTests for CountAll. #163
+- [Test] Add separate 'IntegrationTests' for the RawSql ArrayValues #168
+- [Test] Add separate 'IntegrationTests' for different Execute&lt;Method&gt; parameters. #169
+- [Test] Create IntegrationTests for QueryAll. #167
+- [Test] Create IntegrationTests for CountAll. #164
+- [Documentation] Document the CountAll operation. #162
+- [Documentation] Add a separate documentation entry for Execute&lt;Method&gt; with Array parameters argument. #143</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb</RepositoryUrl>

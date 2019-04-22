@@ -7,7 +7,7 @@ using System.Reflection;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for all objects.
+    /// Contains the extension methods for <see cref="Object"/>.
     /// </summary>
     internal static class ObjectExtension
     {
@@ -42,16 +42,16 @@ namespace RepoDb.Extensions
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             var properties = DataEntityExtension.GetProperties(obj.GetType());
             foreach (var property in properties)
-			{
-				expandObject[property.GetMappedName()] = property.PropertyInfo.GetValue(obj);
+            {
+                expandObject[property.GetUnquotedMappedName()] = property.PropertyInfo.GetValue(obj);
             }
-			if (queryGroup != null)
-			{
-				foreach (var queryField in queryGroup.Fix().GetFields())
-				{
+            if (queryGroup != null)
+            {
+                foreach (var queryField in queryGroup.Fix().GetFields())
+                {
                     expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
-				}
-			}
+                }
+            }
             return (ExpandoObject)expandObject;
         }
 
@@ -90,6 +90,18 @@ namespace RepoDb.Extensions
                     yield return new QueryField(property.Name, property.GetValue(obj));
                 }
             }
+        }
+
+        /// <summary>
+        /// Converts an instance of an object into an enumerable list of field.
+        /// </summary>
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <param name="entity">The instance to be converted.</param>
+        /// <returns>An enumerable list of fields.</returns>
+        public static IEnumerable<Field> AsFields<TEntity>(this TEntity entity)
+            where TEntity : class
+        {
+            return Field.Parse<TEntity>(entity);
         }
 
         /// <summary>

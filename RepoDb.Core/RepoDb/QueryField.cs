@@ -47,14 +47,17 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="appendParameterPrefix">
-        /// The value to identify whether the underscope prefix will be appended to the parameter name.
+        /// <param name="appendUnderscore">
+        /// The value to identify whether the underscore prefix will be appended to the parameter name.
         /// </param>
-        internal QueryField(string fieldName, Operation operation, object value, bool appendParameterPrefix)
+        internal QueryField(string fieldName,
+			Operation operation,
+			object value,
+			bool appendUnderscore)
         {
             Field = new Field(fieldName);
             Operation = operation;
-            Parameter = new Parameter(fieldName, value, appendParameterPrefix);
+            Parameter = new Parameter(fieldName, value, appendUnderscore);
         }
 
         // Properties
@@ -81,7 +84,7 @@ namespace RepoDb
         /// </summary>
         internal void AppendParameterPrefix()
         {
-            Parameter?.AppendPrefix();
+            Parameter?.AppendUnderscore();
         }
 
         /// <summary>
@@ -89,7 +92,7 @@ namespace RepoDb
         /// </summary>
         public void Reset()
         {
-            Parameter?.SetName(Field.Name);
+            Parameter?.SetName(Field.UnquotedName);
             m_operationTextAttribute = null;
             m_hashCode = null;
         }

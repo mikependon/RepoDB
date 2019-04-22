@@ -24,7 +24,7 @@ namespace RepoDb.Extensions
         /// <returns>An enumerable list of fields.</returns>
         internal static string AsField(this OrderField orderField)
         {
-            return string.Concat(orderField.Name.AsQuoted(), " ", orderField.GetOrderText());
+            return string.Concat(orderField.Name, " ", orderField.GetOrderText());
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace RepoDb.Extensions
         /// <returns>A string value for the stringified alias-formatted converted string.</returns>
         internal static string AsAliasField(this OrderField orderField, string alias)
         {
-            return string.Concat(alias, ".", orderField.Name.AsQuoted(), " ", orderField.GetOrderText());
+            return string.Concat(alias, ".", orderField.Name, " ", orderField.GetOrderText());
         }
     }
 }

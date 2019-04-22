@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RepoDb.Extensions
 {
@@ -19,13 +20,24 @@ namespace RepoDb.Extensions
 
         /// <summary>
         /// Maps the current <see cref="QueryGroup"/> object to a type.
+        /// </summary> 
+        /// <typeparam name="TEntity">The target type where the current <see cref="QueryGroup"/> is to be mapped.</typeparam>
+        /// <param name="queryGroup">The <see cref="QueryGroup"/> object to be mapped.</param>
+        /// <returns>An instance of <see cref="QueryGroupTypeMap"/> object that holds the mapping.</returns>
+        internal static QueryGroupTypeMap MapTo<TEntity>(this QueryGroup queryGroup) where TEntity : class
+        {
+            return new QueryGroupTypeMap(queryGroup, typeof(TEntity));
+        }
+
+        /// <summary>
+        /// Maps the current <see cref="QueryGroup"/> object to a type.
         /// </summary>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to be mapped.</param>
-        /// <typeparam name="T">The target type where the current <see cref="QueryGroup"/> is to be mapped.</typeparam>
+        /// <param name="type">The target type where the current <see cref="QueryGroup"/> is to be mapped.</param>
         /// <returns>An instance of <see cref="QueryGroupTypeMap"/> object that holds the mapping.</returns>
-        internal static QueryGroupTypeMap MapTo<T>(this QueryGroup queryGroup) where T : class
+        internal static QueryGroupTypeMap MapTo(this QueryGroup queryGroup, Type type)
         {
-            return new QueryGroupTypeMap(queryGroup, typeof(T));
+            return new QueryGroupTypeMap(queryGroup, type);
         }
     }
 }

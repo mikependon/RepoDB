@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using RepoDb.Attributes;
-using RepoDb.Enumerations;
 
 namespace RepoDb.Extensions
 {
@@ -27,7 +25,7 @@ namespace RepoDb.Extensions
             {
                 return null;
             }
-            var primary = PrimaryKeyCache.Get<TEntity>();
+            var primary = PrimaryCache.Get<TEntity>();
             if (primary != null)
             {
                 if (primary.PropertyInfo.PropertyType == typeof(Guid))
@@ -79,9 +77,10 @@ namespace RepoDb.Extensions
         }
 
         // GetMappedName
-        internal static string GetMappedName(Type type)
+        internal static string GetMappedName(Type type, bool quoted = true)
         {
-            return type.GetTypeInfo().GetCustomAttribute<MapAttribute>()?.Name ?? type.Name;
+            var name = type.GetTypeInfo().GetCustomAttribute<MapAttribute>()?.Name ?? type.Name;
+            return quoted == true ? name.AsQuoted(true) : name;
         }
 
         /// <summary>
@@ -89,11 +88,12 @@ namespace RepoDb.Extensions
         /// <see cref="MapAttribute"/> is not defined, then this will return the name of the class.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity where to get the mapped name.</typeparam>
+        /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>A mapped name for the data entity.</returns>
-        public static string GetMappedName<TEntity>()
+        public static string GetMappedName<TEntity>(bool quoted = true)
             where TEntity : class
         {
-            return GetMappedName(typeof(TEntity));
+            return GetMappedName(typeof(TEntity), quoted);
         }
     }
 }

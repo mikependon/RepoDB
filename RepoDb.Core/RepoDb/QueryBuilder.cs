@@ -145,7 +145,7 @@ namespace RepoDb
         public QueryBuilder FieldsFrom<TEntity>()
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName().AsQuoted(true));
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
             return Append(fields?.AsFields().Join(", "));
         }
 
@@ -168,7 +168,7 @@ namespace RepoDb
         public QueryBuilder FieldsAndParametersFrom<TEntity>(string prefix)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
             return Append(fields?.AsFieldsAndParameters(prefix).Join(", "));
         }
 
@@ -192,7 +192,7 @@ namespace RepoDb
         public QueryBuilder FieldsAndAliasFieldsFrom<TEntity>(string alias)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
             return Append(fields?.AsFieldsAndAliasFields(alias).Join(", "));
         }
 
@@ -216,7 +216,7 @@ namespace RepoDb
         public QueryBuilder AsAliasFieldsFrom<TEntity>(string alias)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
             return Append(fields?.AsAliasFields(alias).Join(", "));
         }
 
@@ -404,7 +404,7 @@ namespace RepoDb
         public QueryBuilder TableNameFrom<TEntity>()
             where TEntity : class
         {
-            return Append(ClassMappedNameCache.Get<TEntity>().AsQuoted(true));
+            return Append(ClassMappedNameCache.Get<TEntity>());
         }
 
         /// <summary>
@@ -416,7 +416,7 @@ namespace RepoDb
         public QueryBuilder ParametersFrom<TEntity>(string prefix = Constant.DefaultParameterPrefix)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
             return Append(fields?.AsParameters(prefix).Join(", "));
         }
 
@@ -440,7 +440,7 @@ namespace RepoDb
         public QueryBuilder ParametersAsFieldsFrom<TEntity>(string prefix = Constant.DefaultParameterPrefix)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
             return Append(fields?.AsParametersAsFields(prefix).Join(", "));
         }
 

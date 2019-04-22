@@ -50,7 +50,10 @@ namespace RepoDb
         /// <param name="appendUnderscore">
         /// The value to identify whether the underscore prefix will be appended to the parameter name.
         /// </param>
-        internal QueryField(string fieldName, Operation operation, object value, bool appendUnderscore)
+        internal QueryField(string fieldName,
+			Operation operation,
+			object value,
+			bool appendUnderscore)
         {
             Field = new Field(fieldName);
             Operation = operation;

@@ -15,26 +15,50 @@ namespace RepoDb.Requests
         /// <summary>
         /// Creates a new instance of <see cref="MergeRequest"/> object.
         /// </summary>
-        /// <param name="entityType">The entity type.</param>
+        /// <param name="type">The target type.</param>
+        /// <param name="fields">The list of the target fields.</param>
         /// <param name="qualifiers">The list of qualifier fields.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public MergeRequest(Type entityType, IDbConnection connection, IEnumerable<Field> qualifiers = null, IStatementBuilder statementBuilder = null)
-            : this(entityType.FullName, connection, qualifiers, statementBuilder)
-        { }
+        public MergeRequest(Type type,
+            IDbConnection connection,
+            IEnumerable<Field> fields = null,
+            IEnumerable<Field> qualifiers = null,
+            IStatementBuilder statementBuilder = null)
+            : this(ClassMappedNameCache.Get(type),
+                  connection,
+                  fields,
+                  qualifiers,
+                  statementBuilder)
+        {
+            Type = type;
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="MergeRequest"/> object.
         /// </summary>
         /// <param name="name">The name of the request.</param>
+        /// <param name="fields">The list of the target fields.</param>
         /// <param name="qualifiers">The list of qualifier fields.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public MergeRequest(string name, IDbConnection connection, IEnumerable<Field> qualifiers = null, IStatementBuilder statementBuilder = null)
-            : base(name, connection, statementBuilder)
+        public MergeRequest(string name,
+            IDbConnection connection,
+            IEnumerable<Field> fields = null,
+            IEnumerable<Field> qualifiers = null,
+            IStatementBuilder statementBuilder = null)
+            : base(name,
+                  connection,
+                  statementBuilder)
         {
+            Fields = fields;
             Qualifiers = qualifiers;
         }
+
+        /// <summary>
+        /// Gets the list of the target fields.
+        /// </summary>
+        public IEnumerable<Field> Fields { get; set; }
 
         /// <summary>
         /// Gets the qualifier fields.
@@ -57,6 +81,15 @@ namespace RepoDb.Requests
 
             // Get first the entity hash code
             var hashCode = string.Concat(Name, ".Merge").GetHashCode();
+
+            // Get the qualifier fields
+            if (Fields != null)
+            {
+                foreach (var field in Fields)
+                {
+                    hashCode += field.GetHashCode();
+                }
+            }
 
             // Get the qualifier fields
             if (Qualifiers != null) // Much faster than Qualifers?.<Methods|Properties>

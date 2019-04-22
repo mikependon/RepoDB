@@ -345,7 +345,7 @@ namespace RepoDb
         public override string GetName(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Properties[i].GetMappedName();
+            return Properties[i].GetUnquotedMappedName();
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace RepoDb
         public override int GetOrdinal(string name)
         {
             ThrowExceptionIfNotAvailable();
-            return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetMappedName() == name));
+            return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetUnquotedMappedName() == name));
         }
 
         /// <summary>

@@ -13,7 +13,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
-        public Parameter(string name, object value) : this(name, value, false)
+        public Parameter(string name, object value)
+            : this(name, value, false)
         {
         }
 
@@ -22,14 +23,21 @@ namespace RepoDb
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
-        /// <param name="appendPrefix">The value to identify whether the underscope prefix will be appended.</param>
-        internal Parameter(string name, object value, bool appendPrefix)
+        /// <param name="appendedUnderscore">The value to identify whether the underscope prefix will be appended.</param>
+        internal Parameter(string name, object value, bool appendedUnderscore)
         {
-            Name = name.AsQuotedParameter(true);
-            Value = value;
-            if (appendPrefix)
+            // Name is required
+            if (string.IsNullOrEmpty(name))
             {
-                AppendPrefix();
+                throw new NullReferenceException(name);
+            }
+
+            // Set the properties
+            Name = name.AsUnquoted(true);
+            Value = value;
+            if (appendedUnderscore)
+            {
+                AppendUnderscore();
             }
         }
 
@@ -46,7 +54,7 @@ namespace RepoDb
         /// <summary>
         /// Force to append prefix on the current parameter object.
         /// </summary>
-        internal void AppendPrefix()
+        internal void AppendUnderscore()
         {
             if (!Name.StartsWith("_"))
             {
@@ -60,7 +68,7 @@ namespace RepoDb
         /// <param name="name">The new name.</param>
         internal void SetName(string name)
         {
-            Name = name;
+            Name = name.AsUnquoted(true);
         }
 
         /// <summary>

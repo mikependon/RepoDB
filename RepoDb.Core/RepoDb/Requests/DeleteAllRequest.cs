@@ -14,11 +14,31 @@ namespace RepoDb.Requests
         /// <summary>
         /// Creates a new instance of <see cref="DeleteAllRequest"/> object.
         /// </summary>
-        /// <param name="entityType">The entity type.</param>
+        /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public DeleteAllRequest(Type entityType, IDbConnection connection, IStatementBuilder statementBuilder = null)
-            : base(entityType, connection, statementBuilder)
+        public DeleteAllRequest(Type type,
+            IDbConnection connection,
+            IStatementBuilder statementBuilder = null)
+            : this(ClassMappedNameCache.Get(type),
+                  connection,
+                  statementBuilder)
+        {
+            Type = type;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DeleteAllRequest"/> object.
+        /// </summary>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public DeleteAllRequest(string name,
+            IDbConnection connection,
+            IStatementBuilder statementBuilder = null)
+            : base(name,
+                  connection,
+                  statementBuilder)
         { }
 
         // Equality and comparers

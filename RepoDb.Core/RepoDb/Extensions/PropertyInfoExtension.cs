@@ -72,11 +72,13 @@ namespace RepoDb.Extensions
         /// Gets the mapped name of the propery.
         /// </summary>
         /// <param name="property">The property where the mapped name will be retrieved.</param>
+        /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>A string containing the mapped name.</returns>
-        public static string GetMappedName(this PropertyInfo property)
+        public static string GetMappedName(this PropertyInfo property, bool quoted = false)
         {
             var attribute = (MapAttribute)GetCustomAttribute(property, typeof(MapAttribute));
-            return (attribute?.Name ?? property.Name);
+            var name = (attribute?.Name ?? property.Name);
+            return quoted == true ? name.AsQuoted(true) : name;
         }
 
         /// <summary>
@@ -106,34 +108,24 @@ namespace RepoDb.Extensions
         /// <param name="property">The instance of property info to be converted.</param>
         /// <param name="entity">The entity object where the value of the property will be retrieved.</param>
         /// <returns>An instance of query field object that holds the converted name and values of the property.</returns>
-        /// <param name="appendParameterPrefix">
+        /// <param name="appendUnderscore">
         /// The value to identify whether the underscope prefix will be appended to the parameter name.
         /// </param>
-        internal static QueryField AsQueryField(this PropertyInfo property, object entity, bool appendParameterPrefix)
+        internal static QueryField AsQueryField(this PropertyInfo property, object entity, bool appendUnderscore)
         {
-            return new QueryField(PropertyMappedNameCache.Get(property), Operation.Equal, property.GetValue(entity), appendParameterPrefix);
-        }
-
-        /// <summary>
-        /// Converts a property info into a string qualifier with defined aliases that is usable for SQL Statements.
-        /// </summary>
-        /// <param name="property">The property info to be converted.</param>
-        /// <param name="leftAlias">The left alias to be used.</param>
-        /// <param name="rightAlias">The right alias to be used.</param>
-        /// <returns>A instance of string containing the value of converted property info with defined aliases.</returns>
-        public static string AsJoinQualifier(this PropertyInfo property, string leftAlias, string rightAlias)
-        {
-            return string.Concat(leftAlias, ".", PropertyMappedNameCache.Get(property).AsQuoted(), " = ", rightAlias, ".", PropertyMappedNameCache.Get(property).AsQuoted());
+            return new QueryField(PropertyMappedNameCache.Get(property),
+                Operation.Equal, property.GetValue(entity), appendUnderscore);
         }
 
         /// <summary>
         /// Converts a property info into a mapped name.
         /// </summary>
         /// <param name="property">The instance of the property to be converted.</param>
+        /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>A instance of string containing the value of a mapped name.</returns>
-        public static string AsField(this PropertyInfo property)
+        public static string AsField(this PropertyInfo property, bool quoted = true)
         {
-            return PropertyMappedNameCache.Get(property).AsQuoted();
+            return PropertyMappedNameCache.Get(property, quoted);
         }
 
         /// <summary>
@@ -143,7 +135,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a parameterized name.</returns>
         public static string AsParameter(this PropertyInfo property)
         {
-            return string.Concat("@", PropertyMappedNameCache.Get(property));
+            return string.Concat("@", PropertyMappedNameCache.Get(property, false));
         }
 
         /// <summary>

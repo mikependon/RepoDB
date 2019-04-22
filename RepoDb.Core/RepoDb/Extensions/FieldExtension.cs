@@ -21,19 +21,19 @@ namespace RepoDb.Extensions
         // AsField
         internal static string AsField(this Field field)
         {
-            return field.Name.AsQuoted(true);
+            return field.Name;
         }
 
         // AsParameter
         internal static string AsParameter(this Field field, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Concat(prefix, field.Name.AsQuotedParameter(true));
+            return field.Name.AsQuotedParameter(true, prefix);
         }
 
         // AsAliasField
         internal static string AsAliasField(this Field field, string alias)
         {
-            return string.Concat(alias, ".", field.Name.AsQuoted(true));
+            return string.Concat(alias, ".", field.Name);
         }
 
         // AsParameterAsField
@@ -51,7 +51,7 @@ namespace RepoDb.Extensions
         // AsJoinQualifier
         internal static string AsJoinQualifier(this Field field, string leftAlias, string rightAlias)
         {
-            return string.Concat(leftAlias, ".", field.Name.AsQuoted(true), " = ", rightAlias, ".", field.Name.AsQuoted(true));
+            return string.Concat(leftAlias, ".", field.Name, " = ", rightAlias, ".", field.Name);
         }
 
         // AsFieldAndAliasField

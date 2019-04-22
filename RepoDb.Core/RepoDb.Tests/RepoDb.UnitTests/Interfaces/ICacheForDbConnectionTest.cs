@@ -13,12 +13,16 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ICacheForDbConnectionTest
     {
+        #region SubClasses
+
         public class CacheEntity
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
+
+        #endregion
 
         #region Sync
 
@@ -31,7 +35,8 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CustomDbConnection().Query<CacheEntity>(orderBy: null,
+            new CustomDbConnection().Query<CacheEntity>(where: (QueryGroup)null,
+                orderBy: null,
                 top: 0,
                 hints: null,
                 cacheKey: cacheKey,
@@ -62,6 +67,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             new CustomDbConnection().Query<CacheEntity>((object)null, /* whereOrPrimaryKey */
                 (IEnumerable<OrderField>)null, /* orderBy */
+                (int?)null, /* top */
                 (string)null, /* hints */
                 cacheKey, /* cacheKey */
                 cacheItemExpiration, /* cacheItemExpiration */
@@ -213,7 +219,8 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            var result = new CustomDbConnection().QueryAsync<CacheEntity>(orderBy: null,
+            var result = new CustomDbConnection().QueryAsync<CacheEntity>(where: (QueryGroup)null,
+                orderBy: null,
                 top: 0,
                 hints: null,
                 cacheKey: cacheKey,
@@ -244,6 +251,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             var result = new CustomDbConnection().QueryAsync<CacheEntity>((object)null, /* whereOrPrimaryKey */
                 (IEnumerable<OrderField>)null, /* orderBy */
+                (int?)null, /* top */
                 (string)null, /* hints */
                 cacheKey, /* cacheKey */
                 cacheItemExpiration, /* cacheItemExpiration */

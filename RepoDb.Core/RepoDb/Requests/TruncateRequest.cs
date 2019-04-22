@@ -14,12 +14,17 @@ namespace RepoDb.Requests
         /// <summary>
         /// Creates a new instance of <see cref="TruncateRequest"/> object.
         /// </summary>
-        /// <param name="entityType">The entity type.</param>
+        /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public TruncateRequest(Type entityType, IDbConnection connection, IStatementBuilder statementBuilder = null)
-            : this(entityType.FullName, connection, statementBuilder)
+        public TruncateRequest(Type type,
+            IDbConnection connection,
+            IStatementBuilder statementBuilder = null)
+            : this(ClassMappedNameCache.Get(type),
+                  connection,
+                  statementBuilder)
         {
+            Type = type;
         }
 
         /// <summary>
@@ -28,10 +33,13 @@ namespace RepoDb.Requests
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public TruncateRequest(string name, IDbConnection connection, IStatementBuilder statementBuilder = null)
-            : base(name, connection, statementBuilder)
-        {
-        }
+        public TruncateRequest(string name,
+            IDbConnection connection,
+            IStatementBuilder statementBuilder = null)
+            : base(name,
+                  connection,
+                  statementBuilder)
+        { }
 
         // Equality and comparers
 

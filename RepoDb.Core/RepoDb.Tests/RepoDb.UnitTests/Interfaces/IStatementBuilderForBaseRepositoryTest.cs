@@ -10,20 +10,24 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class IStatementBuilderForBaseRepositoryTest
     {
-        public class StatementBuilderForBaseRepositoryDataEntity
+        #region SubClasses
+
+        public class DataEntityForBaseRepositoryStatementBuilder
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityRepository : BaseRepository<StatementBuilderForBaseRepositoryDataEntity, CustomDbConnection>
+        public class DataEntityRepository : BaseRepository<DataEntityForBaseRepositoryStatementBuilder, CustomDbConnection>
         {
             public DataEntityRepository(IStatementBuilder statementBuilder)
                 : base("Connection", statementBuilder) { }
         }
 
-        // CreateBatchQuery
+        #endregion
+
+        #region CreateBatchQuery
 
         [TestMethod]
         public void TestBaseRepositoryStatementBuilderForBatchQuery()
@@ -33,37 +37,49 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.BatchQuery(0, 10, null, null);
+            repository.BatchQuery(0,
+                10,
+                null,
+                (object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateBatchQuery<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateBatchQuery(
                     It.IsAny<QueryBuilder>(),
-                    It.IsAny<QueryGroup>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<IEnumerable<OrderField>>(),
-                    It.IsAny<string>()), Times.Once);
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.BatchQuery(0, 10, null, null);
+            repositoryNever.BatchQuery(0,
+                10,
+                null,
+                (object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateBatchQuery<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateBatchQuery(
                     It.IsAny<QueryBuilder>(),
-                    It.IsAny<QueryGroup>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<IEnumerable<OrderField>>(),
-                    It.IsAny<string>()), Times.Never);
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
-        // CreateCount
+        #endregion
+
+        #region CreateCount
 
         [TestMethod]
         public void TestBaseRepositoryStatementBuilderForCount()
@@ -73,31 +89,71 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Count();
+            repository.Count((object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateCount<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<QueryGroup>(),
-                    It.IsAny<string>()), Times.Once);
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Count();
+            repositoryNever.Count((object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateCount<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<QueryGroup>(),
-                    It.IsAny<string>()), Times.Never);
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
-        // CreateDelete
+        #endregion
+
+        #region CreateCountAll
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForCountAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            repository.CountAll();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.CountAll();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateDelete
 
         [TestMethod]
         public void TestBaseRepositoryStatementBuilderForDelete()
@@ -111,9 +167,10 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateDelete<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
-                    It.IsAny<QueryGroup>()), Times.Once);
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<QueryGroup>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -124,12 +181,15 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateDelete<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
-                    It.IsAny<QueryGroup>()), Times.Never);
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<QueryGroup>()), Times.Exactly(0));
         }
 
-        // CreateDeleteAll
+        #endregion
+
+        #region CreateDeleteAll
 
         [TestMethod]
         public void TestBaseRepositoryStatementBuilderForDeleteAll()
@@ -143,8 +203,9 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateDeleteAll<StatementBuilderForBaseRepositoryDataEntity>(
-                    It.IsAny<QueryBuilder>()), Times.Once);
+                builder.CreateDeleteAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -155,115 +216,14 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateDeleteAll<StatementBuilderForBaseRepositoryDataEntity>(
-                    It.IsAny<QueryBuilder>()), Times.Never);
+                builder.CreateDeleteAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(0));
         }
 
-        // CreateInlineInsert
+        #endregion
 
-        [TestMethod]
-        public void TestBaseRepositoryStatementBuilderForInlineInsert()
-        {
-            // Prepare
-            var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DataEntityRepository(statementBuilder.Object);
-
-            // Act
-            repository.InlineInsert(new { Id = 1 });
-
-            // Assert
-            statementBuilder.Verify(builder =>
-                builder.CreateInlineInsert<StatementBuilderForBaseRepositoryDataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Once);
-
-            // Prepare
-            var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
-
-            // Act
-            repositoryNever.InlineInsert(new { Id = 1 });
-
-            // Assert
-            statementBuilderNever.Verify(builder =>
-                builder.CreateInlineInsert<StatementBuilderForBaseRepositoryDataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Never);
-        }
-
-        // CreateInlineMerge
-
-        [TestMethod]
-        public void TestBaseRepositoryStatementBuilderForInlineMerge()
-        {
-            // Prepare
-            var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DataEntityRepository(statementBuilder.Object);
-
-            // Act
-            repository.InlineMerge(new { Id = 1, Name = "Name" });
-
-            // Assert
-            statementBuilder.Verify(builder =>
-                builder.CreateInlineMerge<StatementBuilderForBaseRepositoryDataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Once);
-
-            // Prepare
-            var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
-
-            // Act
-            repositoryNever.InlineMerge(new { Id = 1, Name = "Name" });
-
-            // Assert
-            statementBuilderNever.Verify(builder =>
-                builder.CreateInlineMerge<StatementBuilderForBaseRepositoryDataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Never);
-        }
-
-        // CreateInlineUpdate
-
-        [TestMethod]
-        public void TestBaseRepositoryStatementBuilderForInlineUpdate()
-        {
-            // Prepare
-            var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DataEntityRepository(statementBuilder.Object);
-
-            // Act
-            repository.InlineUpdate(new { Name = "Name" }, e => e.Id == 1);
-
-            // Assert
-            statementBuilder.Verify(builder =>
-                builder.CreateInlineUpdate<StatementBuilderForBaseRepositoryDataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>()), Times.Once);
-
-            // Prepare
-            var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
-
-            // Act
-            repositoryNever.InlineUpdate(new { Name = "Name" }, e => e.Id == 1);
-
-            // Assert
-            statementBuilderNever.Verify(builder =>
-                builder.CreateInlineUpdate<StatementBuilderForBaseRepositoryDataEntity>(
-                    It.IsAny<QueryBuilder>(),
-                    It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>()), Times.Never);
-        }
-
-        // CreateInsert
+        #region CreateInsert
 
         [TestMethod]
         public void TestBaseRepositoryStatementBuilderForInsert()
@@ -273,29 +233,41 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Insert(new StatementBuilderForBaseRepositoryDataEntity { Name = "Name" });
+            repository.Insert(new DataEntityForBaseRepositoryStatementBuilder
+            {
+                Name = "Name"
+            });
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateInsert<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.IsAny<DbField>()), Times.Once);
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Insert(new StatementBuilderForBaseRepositoryDataEntity { Name = "Name" });
+            repositoryNever.Insert(new DataEntityForBaseRepositoryStatementBuilder
+            {
+                Name = "Name"
+            });
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateInsert<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.IsAny<DbField>()), Times.Never);
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
 
-        // CreateMerge
+        #endregion
+
+        #region CreateMerge
 
         [TestMethod]
         public void TestBaseRepositoryStatementBuilderForMerge()
@@ -305,31 +277,45 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Merge(new StatementBuilderForBaseRepositoryDataEntity { Name = "Name" }, new Field(nameof(StatementBuilderForBaseRepositoryDataEntity.Id)));
+            repository.Merge(new DataEntityForBaseRepositoryStatementBuilder
+            {
+                Name = "Name"
+            },
+            new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateMerge<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Once);
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Merge(new StatementBuilderForBaseRepositoryDataEntity { Name = "Name" }, new Field(nameof(StatementBuilderForBaseRepositoryDataEntity.Id)));
+            repositoryNever.Merge(new DataEntityForBaseRepositoryStatementBuilder
+            {
+                Name = "Name"
+            },
+            new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateMerge<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.IsAny<DbField>(),
-                    It.IsAny<IEnumerable<Field>>()), Times.Never);
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
 
-        // CreateQuery
+        #endregion
+
+        #region CreateQuery
 
         [TestMethod]
         public void TestBaseRepositoryStatementBuilderForQuery()
@@ -343,12 +329,14 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateQuery<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateQuery(
                     It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<IEnumerable<OrderField>>(),
                     It.IsAny<int>(),
-                    It.IsAny<string>()), Times.Once);
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -359,15 +347,19 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateQuery<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateQuery(
                     It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<IEnumerable<OrderField>>(),
                     It.IsAny<int>(),
-                    It.IsAny<string>()), Times.Never);
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
-        // CreateTruncate
+        #endregion
+
+        #region CreateTruncate
 
         [TestMethod]
         public void TestBaseRepositoryStatementBuilderForTruncate()
@@ -381,8 +373,9 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateTruncate<StatementBuilderForBaseRepositoryDataEntity>(
-                    It.IsAny<QueryBuilder>()), Times.Once);
+                builder.CreateTruncate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -393,11 +386,14 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateTruncate<StatementBuilderForBaseRepositoryDataEntity>(
-                    It.IsAny<QueryBuilder>()), Times.Never);
+                builder.CreateTruncate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(0));
         }
 
-        // CreateUpdate
+        #endregion
+
+        #region CreateUpdate
 
         [TestMethod]
         public void TestBaseRepositoryStatementBuilderForUpdate()
@@ -407,26 +403,42 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Update(new StatementBuilderForBaseRepositoryDataEntity { Name = "Update" }, e => e.Id == 1);
+            repository.Update(new DataEntityForBaseRepositoryStatementBuilder
+            {
+                Name = "Update"
+            },
+            e => e.Id == 1);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateUpdate<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
-                    It.IsAny<QueryGroup>()), Times.Once);
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Update(new StatementBuilderForBaseRepositoryDataEntity { Name = "Update" }, e => e.Id == 1);
+            repositoryNever.Update(new DataEntityForBaseRepositoryStatementBuilder
+            {
+                Name = "Update"
+            },
+            e => e.Id == 1);
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateUpdate<StatementBuilderForBaseRepositoryDataEntity>(
+                builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
-                    It.IsAny<QueryGroup>()), Times.Never);
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
         }
+
+        #endregion
     }
 }

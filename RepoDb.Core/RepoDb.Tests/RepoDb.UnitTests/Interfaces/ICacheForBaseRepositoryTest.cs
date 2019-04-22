@@ -14,7 +14,7 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ICacheForBaseRepositoryTest
     {
-        #region SubClass
+        #region SubClasses
 
         public class CacheEntity
         {
@@ -50,7 +50,8 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new CacheEntityRepository(cache.Object, cacheItemExpiration);
 
             // Act
-            repository.Query(orderBy: null,
+            repository.Query(where: (QueryGroup)null,
+                orderBy: null,
                 top: 0,
                 hints: null,
                 cacheKey: cacheKey,
@@ -77,6 +78,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.Query((object)null, /* whereOrPrimaryKey */
                 (IEnumerable<OrderField>)null, /* orderBy */
+                (int?)null, /* top */
                 (string)null, /* hints */
                 cacheKey, /* cacheKey */
                 (IDbTransaction)null);
@@ -208,7 +210,8 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new CacheEntityRepository(cache.Object, cacheItemExpiration);
 
             // Act
-            var result = repository.QueryAsync(orderBy: null,
+            var result = repository.QueryAsync(where: (QueryGroup)null,
+                orderBy: null,
                 top: 0,
                 hints: null,
                 cacheKey: cacheKey,
@@ -235,6 +238,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             var result = repository.QueryAsync((object)null, /* whereOrPrimaryKey */
                 (IEnumerable<OrderField>)null, /* orderBy */
+                (int?)null, /* top */
                 (string)null, /* hints */
                 cacheKey, /* cacheKey */
                 (IDbTransaction)null).Result;

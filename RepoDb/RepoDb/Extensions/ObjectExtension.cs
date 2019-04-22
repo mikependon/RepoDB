@@ -42,7 +42,7 @@ namespace RepoDb.Extensions
             var properties = DataEntityExtension.GetProperties(obj.GetType());
             foreach (var property in properties)
             {
-                expandObject[property.GetMappedName()] = property.PropertyInfo.GetValue(obj);
+                expandObject[property.GetUnquotedMappedName()] = property.PropertyInfo.GetValue(obj);
             }
             if (queryGroup != null)
             {
