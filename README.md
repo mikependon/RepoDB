@@ -8,7 +8,7 @@ A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.
 Package: [https://www.nuget.org/packages/RepoDb](https://www.nuget.org/packages/RepoDb)  
 Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthedocs.io/en/latest/)
 
-Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter to get more updates about this library.
+Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter.
 
 ## Highlight
 
@@ -107,15 +107,6 @@ Via Object:
 	{
 		var customer = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 10045));
 	}
-
-The expressions can also be used on the following operations:
-
- - BatchQuery
- - Count
- - Delete
- - InlineMerge
- - InlineUpdate
- - Update
 
 ### Insert
 
