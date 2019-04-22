@@ -19,7 +19,7 @@ Below is a sample call which uses a **Dynamic** object as a parameter.
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		// Set the values
-		var commandText = "SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName";
+		var commandText = "SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName;";
 		var param = new
 		{
 			FirstName = "John",
@@ -27,8 +27,11 @@ Below is a sample call which uses a **Dynamic** object as a parameter.
 		};
 
 		// Execute the SQL
-		var result = connection.ExecuteNonQuery(commandText, param);
+		var result = connection.ExecuteQuery<Person>(commandText, param);
 	}
+
+Parameters
+----------
 
 Executing a raw SQL statements support different kind of parameters.
 
@@ -39,7 +42,7 @@ Via **ExpandoObject** (as **Dynamic** Object).
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		// Set the values
-		var commandText = "SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName";
+		var commandText = "SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName;";
 		var param = (dynamic)new ExpandoObject();
 
 		// Set each parameter
@@ -47,7 +50,7 @@ Via **ExpandoObject** (as **Dynamic** Object).
 		param.LastName = "Doe";
 
 		// Execute the SQL
-		var result = connection.ExecuteNonQuery(commandText, param);
+		var result = connection.ExecuteQuery<Person>(commandText, param);
 	}
 
 Via **ExpandoObject** as **Dictionary<string, object>**.
@@ -57,7 +60,7 @@ Via **ExpandoObject** as **Dictionary<string, object>**.
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		// Set the values
-		var commandText = "SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName";
+		var commandText = "SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName;";
 		var param = new ExpandoObject() as IDictionary<string, object>;
 
 		// Set each parameter
@@ -65,7 +68,7 @@ Via **ExpandoObject** as **Dictionary<string, object>**.
 		param.Add("LastName", "Doe");
 
 		// Execute the SQL
-		var result = connection.ExecuteNonQuery(commandText, param);
+		var result = connection.ExecuteQuery<Person>(commandText, param);
 	}
 
 Via **Dictionary<string, object>**.
@@ -75,7 +78,7 @@ Via **Dictionary<string, object>**.
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		// Set the values
-		var commandText = "SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName";
+		var commandText = "SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName;";
 		var param = new Dictionary<string, object>
 		{
 			{ "FirstName", "John" },
@@ -83,7 +86,7 @@ Via **Dictionary<string, object>**.
 		};
 		
 		// Execute the SQL
-		var result = connection.ExecuteNonQuery(commandText, param);
+		var result = connection.ExecuteQuery<Person>(commandText, param);
 	}
 
 Via explicit **QueryGroup** or **QueryField** or **IEnumerable<QueryField>**.
@@ -93,7 +96,7 @@ Via explicit **QueryGroup** or **QueryField** or **IEnumerable<QueryField>**.
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		// Set the values
-		var commandText = "SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName";
+		var commandText = "SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName;";
 		var param = new QueryGroup(new []
 		{
 			new QueryField("FirstName", "John"),
@@ -101,5 +104,87 @@ Via explicit **QueryGroup** or **QueryField** or **IEnumerable<QueryField>**.
 		});
 		
 		// Execute the SQL
-		var result = connection.ExecuteNonQuery(commandText, param);
+		var result = connection.ExecuteQuery<Person>(commandText, param);
+	}
+
+Array Values
+------------
+
+An array values can also be passed a part of the execution.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Set the values
+		var commandText = "SELECT * FROM [dbo].[Person] WHERE Id IN (@Keys);";
+		var param = new { Keys = new [] { 10045, 10102, 11004 }};
+
+		// Execute the SQL
+		var result = connection.ExecuteQuery<Person>(commandText, param);
+	}
+
+Via **ExpandoObject** (as **Dynamic** Object).
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Set the values
+		var commandText = "SELECT * FROM [dbo].[Person] WHERE Id IN (@Keys);";
+		var param = (dynamic)new ExpandoObject();
+
+		// Set each parameter
+		param.Keys = new [] { 10045, 10102, 11004 };
+
+		// Execute the SQL
+		var result = connection.ExecuteQuery<Person>(commandText, param);
+	}
+
+Via **ExpandoObject** as **Dictionary<string, object>**.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Set the values
+		var commandText = "SELECT * FROM [dbo].[Person] WHERE Id IN (@Keys);";
+		var param = new ExpandoObject() as IDictionary<string, object>;
+
+		// Set each parameter
+		param.Add("Keys", new [] { 10045, 10102, 11004 });
+
+		// Execute the SQL
+		var result = connection.ExecuteQuery<Person>(commandText, param);
+	}
+
+Via **Dictionary<string, object>**.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Set the values
+		var commandText = "SELECT * FROM [dbo].[Person] WHERE Id IN (@Keys);";
+		var param = new Dictionary<string, object>
+		{
+			{ "Keys", new [] { 10045, 10102, 11004 } },
+		};
+
+		// Execute the SQL
+		var result = connection.ExecuteQuery<Person>(commandText, param);
+	}
+
+Via explicit **QueryGroup** or **QueryField** or **IEnumerable<QueryField>**.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Set the values
+		var commandText = "SELECT * FROM [dbo].[Person] WHERE Id IN (@Keys);";
+		var param = new QueryGroup(new QueryField("Keys", new [] { 10045, 10102, 11004 })),
+
+		// Execute the SQL
+		var result = connection.ExecuteQuery<Person>(commandText, param);
 	}
