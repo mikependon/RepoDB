@@ -109,7 +109,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#createqueryall">CreateQueryAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createtruncate">CreateTruncate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createupdate">CreateUpdate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cutomized">Cutomized</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cutomizing-a-builder">Cutomizing a Builder</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sqldbstatementbuilder">SqlDbStatementBuilder</a></li>
 </ul>
 </li>
@@ -396,8 +396,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="cutomized">
-<h2>Cutomized<a class="headerlink" href="#cutomized" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cutomizing-a-builder">
+<h2>Cutomizing a Builder<a class="headerlink" href="#cutomizing-a-builder" title="Permalink to this headline">¶</a></h2>
 <p>The main reason why the library supports the statement builder is to allow the developers override the default statement builder of the library. By default, the library statement builder is only limited for SQL Server providers (as SQL Statements). However, it will fail if the library is being used to access the Oracle, MySql or any other providers.</p>
 <p>To create a custom statement builder, simply create a class and implements the <cite>Interfaces.IStatementBuilder</cite> interface.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">OracleDbStatementBuilder</span> <span class="p">:</span> <span class="n">IStatementBuilder</span>
