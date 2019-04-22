@@ -57,6 +57,7 @@
     <Compile Include="Caches\BaseRepositoryCachesTest.cs" />
     <Compile Include="Caches\DbRepositoryCachesTest.cs" />
     <Compile Include="Caches\SqlConnectionCachesTest.cs" />
+    <Compile Include="ExecuteParameterTest.cs" />
     <Compile Include="Models\IdentityTable.cs" />
     <Compile Include="Models\NonIdentityTable.cs" />
     <Compile Include="Models\TypeClasses.cs" />
