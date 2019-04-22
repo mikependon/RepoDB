@@ -47,40 +47,7 @@ namespace RepoDb.IntegrationTests.Caches
 
         #endregion
 
-        #region Sync
-
-        [TestMethod]
-        public void TestSqlConnectionQueryCacheWithoutExpression()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Setup
-                var cache = new MemoryCache();
-                var entity = GetIdentityTable();
-                var cacheKey = "SimpleTables";
-                var cacheItemExpiration = 60;
-
-                // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
-
-                // Act
-                var result = connection.Query<IdentityTable>(orderBy: null,
-                    top: 0,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
-                    commandTimeout: 0,
-                    transaction: null,
-                    cache: cache,
-                    trace: null,
-                    statementBuilder: null);
-                var item = cache.Get(cacheKey);
-
-                // Assert
-                Assert.AreEqual(1, result.Count());
-                Assert.IsNotNull(item);
-                Assert.AreEqual(cacheItemExpiration, (item.Expiration - item.CreatedDate).TotalMinutes);
-            }
-        }
+        #region Query
 
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaDynamics()
@@ -99,6 +66,7 @@ namespace RepoDb.IntegrationTests.Caches
                 // Act
                 var result = connection.Query<IdentityTable>((object)null, /* whereOrPrimaryKey */
                     (IEnumerable<OrderField>)null, /* orderBy */
+                    (int?)null, /* top */
                     (string)null, /* hints */
                     cacheKey, /* cacheKey */
                     cacheItemExpiration, /* cacheItemExpiration */
@@ -132,9 +100,10 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.Query<IdentityTable>(where: (QueryField)null,
+                var result = connection.Query<IdentityTable>(where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
+                    hints: null,
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: 0,
@@ -255,40 +224,7 @@ namespace RepoDb.IntegrationTests.Caches
 
         #endregion
 
-        #region Async
-
-        [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheWithoutExpression()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Setup
-                var cache = new MemoryCache();
-                var entity = GetIdentityTable();
-                var cacheKey = "SimpleTables";
-                var cacheItemExpiration = 60;
-
-                // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
-
-                // Act
-                var result = connection.QueryAsync<IdentityTable>(orderBy: null,
-                    top: 0,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
-                    commandTimeout: 0,
-                    transaction: null,
-                    cache: cache,
-                    trace: null,
-                    statementBuilder: null).Result;
-                var item = cache.Get(cacheKey);
-
-                // Assert
-                Assert.AreEqual(1, result.Count());
-                Assert.IsNotNull(item);
-                Assert.AreEqual(cacheItemExpiration, (item.Expiration - item.CreatedDate).TotalMinutes);
-            }
-        }
+        #region QueryAsync
 
         [TestMethod]
         public void TestSqlConnectionQueryAsyncCacheViaDynamics()
@@ -307,6 +243,7 @@ namespace RepoDb.IntegrationTests.Caches
                 // Act
                 var result = connection.QueryAsync<IdentityTable>((object)null, /* whereOrPrimaryKey */
                     (IEnumerable<OrderField>)null, /* orderBy */
+                    (int?)null, /* top */
                     (string)null, /* hints */
                     cacheKey, /* cacheKey */
                     cacheItemExpiration, /* cacheItemExpiration */
@@ -445,6 +382,80 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = connection.QueryAsync<IdentityTable>(where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
+                    commandTimeout: 0,
+                    transaction: null,
+                    cache: cache,
+                    trace: null,
+                    statementBuilder: null).Result;
+                var item = cache.Get(cacheKey);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Assert.IsNotNull(item);
+                Assert.AreEqual(cacheItemExpiration, (item.Expiration - item.CreatedDate).TotalMinutes);
+            }
+        }
+
+        #endregion
+
+        #region QueryAll
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllCache()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var cache = new MemoryCache();
+                var entity = GetIdentityTable();
+                var cacheKey = "SimpleTables";
+                var cacheItemExpiration = 60;
+
+                // Act
+                entity.Id = Convert.ToInt32(connection.Insert(entity));
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>(orderBy: null,
+                    hints: null,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
+                    commandTimeout: 0,
+                    transaction: null,
+                    cache: cache,
+                    trace: null,
+                    statementBuilder: null);
+                var item = cache.Get(cacheKey);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Assert.IsNotNull(item);
+                Assert.AreEqual(cacheItemExpiration, (item.Expiration - item.CreatedDate).TotalMinutes);
+            }
+        }
+
+        #endregion
+
+        #region QueryAllAsync
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncCache()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var cache = new MemoryCache();
+                var entity = GetIdentityTable();
+                var cacheKey = "SimpleTables";
+                var cacheItemExpiration = 60;
+
+                // Act
+                entity.Id = Convert.ToInt32(connection.Insert(entity));
+
+                // Act
+                var result = connection.QueryAllAsync<IdentityTable>(orderBy: null,
+                    hints: null,
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: 0,
