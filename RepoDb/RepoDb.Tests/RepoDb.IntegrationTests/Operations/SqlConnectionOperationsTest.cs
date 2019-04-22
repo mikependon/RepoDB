@@ -4695,7 +4695,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryAll
 
         [TestMethod]
-        public void TestSqlConnectionQuery()
+        public void TestSqlConnectionQueryAll()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4717,12 +4717,90 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionQueryAllWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>(orderBy: orderBy);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllWithHint()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>(hints: SqlTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllWithOrderByAndWithHint()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>(orderBy: orderBy,
+                    hints: SqlTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
         #endregion
 
         #region QueryAllAsync
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsync()
+        public void TestSqlConnectionQueryAllAsync()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4734,6 +4812,84 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryAllAsync<IdentityTable>().Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAllAsync<IdentityTable>(orderBy: orderBy).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncWithHint()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAllAsync<IdentityTable>(hints: SqlTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncWithOrderByAndWithHint()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAllAsync<IdentityTable>(orderBy: orderBy,
+                    hints: SqlTableHints.NoLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
