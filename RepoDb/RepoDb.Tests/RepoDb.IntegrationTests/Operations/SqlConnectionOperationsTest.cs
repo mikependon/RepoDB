@@ -1802,6 +1802,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionCountAllWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => connection.Insert(entity));
+
+                // Act
+                var result = connection.CountAll<IdentityTable>(hints: SqlTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
         #endregion
 
         #region CountAllAsync
@@ -1819,6 +1838,25 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.CountAllAsync<IdentityTable>().Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionCountAllAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => connection.Insert(entity));
+
+                // Act
+                var result = connection.CountAllAsync<IdentityTable>(hints: SqlTableHints.NoLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -4745,7 +4783,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllWithHint()
+        public void TestSqlConnectionQueryAllWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4768,7 +4806,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllWithOrderByAndWithHint()
+        public void TestSqlConnectionQueryAllWithOrderByAndWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4850,7 +4888,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllAsyncWithHint()
+        public void TestSqlConnectionQueryAllAsyncWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4873,7 +4911,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllAsyncWithOrderByAndWithHint()
+        public void TestSqlConnectionQueryAllAsyncWithOrderByAndWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);

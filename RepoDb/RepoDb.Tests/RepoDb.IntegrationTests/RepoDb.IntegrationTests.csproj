@@ -64,6 +64,7 @@
     <Compile Include="ExecuteArrayParameterTest.cs" />
     <Compile Include="ObjectMappingTest.cs" />
     <Compile Include="ObjectNameCasingTest.cs" />
+    <Compile Include="Operations\BaseRepositoryOperationsTest.cs" />
     <Compile Include="Operations\DbRepositoryOperationsTest.cs" />
     <Compile Include="Operations\SqlConnectionOperationsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
