@@ -72,11 +72,13 @@ namespace RepoDb.Extensions
         /// Gets the mapped name of the propery.
         /// </summary>
         /// <param name="property">The property where the mapped name will be retrieved.</param>
+        /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>A string containing the mapped name.</returns>
-        public static string GetMappedName(this PropertyInfo property)
+        public static string GetMappedName(this PropertyInfo property, bool quoted)
         {
             var attribute = (MapAttribute)GetCustomAttribute(property, typeof(MapAttribute));
-            return (attribute?.Name ?? property.Name);
+            var name = (attribute?.Name ?? property.Name);
+            return quoted == true ? name.AsQuoted(true) : name;
         }
 
         /// <summary>
@@ -111,7 +113,7 @@ namespace RepoDb.Extensions
         /// </param>
         internal static QueryField AsQueryField(this PropertyInfo property, object entity, bool appendUnderscore)
         {
-            return new QueryField(PropertyMappedNameCache.Get(property), Operation.Equal, property.GetValue(entity), appendUnderscore);
+            return new QueryField(PropertyMappedNameCache.Get(property, true), Operation.Equal, property.GetValue(entity), appendUnderscore);
         }
 
         /// <summary>
@@ -120,20 +122,22 @@ namespace RepoDb.Extensions
         /// <param name="property">The property info to be converted.</param>
         /// <param name="leftAlias">The left alias to be used.</param>
         /// <param name="rightAlias">The right alias to be used.</param>
+        /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>A instance of string containing the value of converted property info with defined aliases.</returns>
-        public static string AsJoinQualifier(this PropertyInfo property, string leftAlias, string rightAlias)
+        public static string AsJoinQualifier(this PropertyInfo property, string leftAlias, string rightAlias, bool quoted)
         {
-            return string.Concat(leftAlias, ".", PropertyMappedNameCache.Get(property).AsQuoted(), " = ", rightAlias, ".", PropertyMappedNameCache.Get(property).AsQuoted());
+            return string.Concat(leftAlias, ".", PropertyMappedNameCache.Get(property, quoted), " = ", rightAlias, ".", PropertyMappedNameCache.Get(property, quoted));
         }
 
         /// <summary>
         /// Converts a property info into a mapped name.
         /// </summary>
         /// <param name="property">The instance of the property to be converted.</param>
+        /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>A instance of string containing the value of a mapped name.</returns>
-        public static string AsField(this PropertyInfo property)
+        public static string AsField(this PropertyInfo property, bool quoted)
         {
-            return PropertyMappedNameCache.Get(property).AsQuoted();
+            return PropertyMappedNameCache.Get(property, quoted);
         }
 
         /// <summary>
@@ -143,7 +147,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a parameterized name.</returns>
         public static string AsParameter(this PropertyInfo property)
         {
-            return string.Concat("@", PropertyMappedNameCache.Get(property));
+            return string.Concat("@", PropertyMappedNameCache.Get(property, false));
         }
 
         /// <summary>
@@ -153,7 +157,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a parameterized (as field) name.</returns>
         public static string AsParameterAsField(this PropertyInfo property)
         {
-            return string.Concat(AsParameter(property), " AS ", AsField(property));
+            return string.Concat(AsParameter(property), " AS ", AsField(property, true));
         }
 
         /// <summary>
@@ -163,7 +167,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a field and parameter name.</returns>
         public static string AsFieldAndParameter(this PropertyInfo property)
         {
-            return string.Concat(AsField(property), " = ", AsParameter(property));
+            return string.Concat(AsField(property, true), " = ", AsParameter(property));
         }
 
         /// <summary>
@@ -174,7 +178,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a field (and its alias) name.</returns>
         public static string AsFieldAndAliasField(this PropertyInfo property, string alias)
         {
-            return string.Concat(AsField(property), " = ", alias, ".", AsField(property));
+            return string.Concat(AsField(property, true), " = ", alias, ".", AsField(property, true));
         }
 
         /* IEnumerable<PropertyInfo> */
@@ -186,7 +190,7 @@ namespace RepoDb.Extensions
         /// <returns>An enumerable array of strings containing the converted values of the given properties (as field).</returns>
         public static IEnumerable<string> AsFields(this IEnumerable<PropertyInfo> properties)
         {
-            return properties?.Select(property => property.AsField());
+            return properties?.Select(property => property.AsField(true));
         }
 
         /// <summary>

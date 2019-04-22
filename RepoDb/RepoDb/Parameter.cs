@@ -26,6 +26,13 @@ namespace RepoDb
         /// <param name="appendedUnderscore">The value to identify whether the underscope prefix will be appended.</param>
         internal Parameter(string name, object value, bool appendedUnderscore)
         {
+            // Name is required
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new NullReferenceException(name);
+            }
+
+            // Set the properties
             Name = name.AsUnquoted(true);
             Value = value;
             if (appendedUnderscore)
@@ -61,7 +68,7 @@ namespace RepoDb
         /// <param name="name">The new name.</param>
         internal void SetName(string name)
         {
-            Name = name;
+            Name = name.AsUnquoted(true);
         }
 
         /// <summary>

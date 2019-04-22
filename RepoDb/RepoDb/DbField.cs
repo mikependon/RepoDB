@@ -20,16 +20,22 @@ namespace RepoDb
             }
 
             // Set the properties
-            Name = name.AsQuoted();
+            Name = name.AsQuoted(true);
+            UnquotedName = name;
             IsPrimary = isPrimary;
             IsIdentity = isIdentity;
             IsNullable = isNullable;
         }
 
         /// <summary>
-        /// Gets or sets the name of the field.
+        /// Gets the quoted name of the database field.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Gets the unquoted name of the database field.
+        /// </summary>
+        public string UnquotedName { get; }
 
         /// <summary>
         /// Gets the value whether the column is a primary column.

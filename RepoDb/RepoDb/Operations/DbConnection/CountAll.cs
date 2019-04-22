@@ -99,7 +99,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAllAsync<TEntity>(connection: connection,
+            return CountAllAsyncInternal<TEntity>(connection: connection,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,

@@ -2055,27 +2055,6 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod]
-        public void TestSqlConnectionDeleteViaDataEntity()
-        {
-            // Setup
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
-
-                // Act
-                var result = connection.Delete<IdentityTable>(last);
-
-                // Assert
-                Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.CountAll<IdentityTable>());
-            }
-        }
-
         #endregion
 
         #region DeleteAsync
@@ -2231,27 +2210,6 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(4, result);
                 Assert.AreEqual(6, connection.CountAll<IdentityTable>());
-            }
-        }
-
-        [TestMethod]
-        public void TestSqlConnectionDeleteAsyncViaDataEntity()
-        {
-            // Setup
-            var tables = GetIdentityTables(10);
-            var last = tables.Last();
-
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
-
-                // Act
-                var result = connection.DeleteAsync<IdentityTable>(last).Result;
-
-                // Assert
-                Assert.AreEqual(1, result);
-                Assert.AreEqual(tables.Count - 1, connection.CountAll<IdentityTable>());
             }
         }
 
@@ -9405,6 +9363,5 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         #endregion
-
     }
 }

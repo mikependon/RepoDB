@@ -89,7 +89,7 @@ namespace RepoDb
         /// </summary>
         public void Reset()
         {
-            Parameter?.SetName(Field.Name);
+            Parameter?.SetName(Field.UnquotedName);
             m_operationTextAttribute = null;
             m_hashCode = null;
         }

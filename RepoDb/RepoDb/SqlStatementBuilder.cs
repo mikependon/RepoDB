@@ -286,7 +286,7 @@ namespace RepoDb
             }
 
             // Variables needed
-            var primaryName = primaryField?.Name.AsQuoted();
+            var primaryName = primaryField?.Name;
             var isIdentity = primaryField?.IsIdentity == true;
             var insertableFields = fields
                 .Where(f => !(isIdentity == true && f.Name.ToLower() == primaryName?.ToLower()));
@@ -346,7 +346,7 @@ namespace RepoDb
             }
 
             // Get the needed properties
-            var primaryName = primaryField?.Name.AsQuoted();
+            var primaryName = primaryField?.Name;
             var isIdentity = primaryField?.IsIdentity == true;
 
             if (qualifiers != null)
@@ -485,7 +485,7 @@ namespace RepoDb
                 // Throw an error we found any unmatches
                 if (unmatchesOrderFields?.Any() == true)
                 {
-                    throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                    throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
                 }
             }
@@ -637,7 +637,7 @@ namespace RepoDb
             Guard(tableName);
 
             // Variables needed
-            var primaryName = primaryField?.Name.AsQuoted();
+            var primaryName = primaryField?.Name;
 
             // Append the proper prefix
             where?.AppendParametersPrefix();

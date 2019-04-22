@@ -15,6 +15,19 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod]
+        public void TestOrderFieldQuotes()
+        {
+            // Prepare
+            var objA = new OrderField("FieldName", Order.Ascending);
+
+            // Act
+            var equal = Equals("[FieldName]", objA.Name);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
         public void TestOrderFieldParseExpressionForAscending()
         {
             // Act

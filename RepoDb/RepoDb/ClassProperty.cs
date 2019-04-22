@@ -35,6 +35,30 @@ namespace RepoDb
         #region Methods
 
         /*
+         * AsField
+         */
+
+        private Field m_field;
+
+        /// <summary>
+        /// Convert the <see cref="ClassProperty"/> into a <see cref="Field"/> objects.
+        /// </summary>
+        /// <returns>An instance of <see cref="string"/> object.</returns>
+        public Field AsField()
+        {
+            if (m_field != null)
+            {
+                return m_field;
+            }
+
+            // Set the properties
+            m_field = new Field(PropertyInfo.AsField(false));
+
+            // Return the value
+            return m_field;
+        }
+
+        /*
          * GetPrimaryAttribute
          */
 
@@ -181,7 +205,7 @@ namespace RepoDb
             {
                 return m_mappedName;
             }
-            return m_mappedName = PropertyMappedNameCache.Get(PropertyInfo);
+            return m_mappedName = PropertyMappedNameCache.Get(PropertyInfo, true);
         }
 
         /*

@@ -14,7 +14,7 @@ namespace RepoDb.UnitTests.Equalities
             var objA = new Field("FieldName");
 
             // Act
-            var equal = Equals(objA, "FieldName");
+            var equal = Equals(objA, "[FieldName]");
 
             // Assert
             Assert.IsTrue(equal);
@@ -27,7 +27,7 @@ namespace RepoDb.UnitTests.Equalities
             var objA = new Field("FieldName");
 
             // Act
-            var equal = Equals(objA, "fieldname");
+            var equal = Equals(objA, "[fieldname]");
 
             // Assert
             Assert.IsFalse(equal);
@@ -54,7 +54,7 @@ namespace RepoDb.UnitTests.Equalities
             var objA = new Field("FieldName");
 
             // Act
-            var equal = (objA.GetHashCode() == "FieldName".GetHashCode());
+            var equal = (objA.GetHashCode() == "[FieldName]".GetHashCode());
 
             // Assert
             Assert.IsTrue(equal);
@@ -67,7 +67,7 @@ namespace RepoDb.UnitTests.Equalities
             var objA = new Field("FieldName");
 
             // Act
-            var equal = (objA.GetHashCode() == "fieldname".GetHashCode());
+            var equal = (objA.GetHashCode() == "[fieldname]".GetHashCode());
 
             // Assert
             Assert.IsFalse(equal);

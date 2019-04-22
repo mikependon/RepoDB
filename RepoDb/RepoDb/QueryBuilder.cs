@@ -145,7 +145,7 @@ namespace RepoDb
         public QueryBuilder FieldsFrom<TEntity>()
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName().AsQuoted(true));
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
             return Append(fields?.AsFields().Join(", "));
         }
 
@@ -404,7 +404,7 @@ namespace RepoDb
         public QueryBuilder TableNameFrom<TEntity>()
             where TEntity : class
         {
-            return Append(ClassMappedNameCache.Get<TEntity>().AsQuoted(true));
+            return Append(ClassMappedNameCache.Get<TEntity>());
         }
 
         /// <summary>

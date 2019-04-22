@@ -24,14 +24,27 @@ namespace RepoDb
         /// <param name="order">The ordering direction of the field.</param>
         public OrderField(string name, Order order)
         {
-            Name = name;
+            // Name is required
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new NullReferenceException(name);
+            }
+
+            // Set the properties
+            Name = name.AsQuoted(true);
+            UnquotedName = name.AsUnquoted(true);
             Order = order;
         }
 
         /// <summary>
-        /// Gets the name of the current order field.
+        /// Gets the quoted name of the order field.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Gets the unquoted name of the order field.
+        /// </summary>
+        public string UnquotedName { get; }
 
         /// <summary>
         /// Gets the order direction of the field.
@@ -133,7 +146,7 @@ namespace RepoDb
                     throw new InvalidOperationException($"The type of field '{property.Name}' must be of '{typeof(Order).FullName}'.");
                 }
                 var order = (Order)property.GetValue(obj);
-                list.Add(new OrderField(property.Name.AsQuoted(), order));
+                list.Add(new OrderField(property.Name, order));
             }
             return list;
         }

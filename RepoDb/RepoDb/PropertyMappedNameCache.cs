@@ -9,20 +9,22 @@ namespace RepoDb
     /// </summary>
     public static class PropertyMappedNameCache
     {
-        private static readonly ConcurrentDictionary<PropertyInfo, string> m_cache = new ConcurrentDictionary<PropertyInfo, string>();
+        private static readonly ConcurrentDictionary<string, string> m_cache = new ConcurrentDictionary<string, string>();
 
         /// <summary>
         /// Gets the cached mapped-name of the property.
         /// </summary>
         /// <param name="property">The target property.</param>
+        /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>The cached mapped-name of the property.</returns>
-        public static string Get(PropertyInfo property)
+        public static string Get(PropertyInfo property, bool quoted)
         {
+            var key = string.Concat(property.DeclaringType.FullName, ".", property.Name, ".", quoted);
             var result = (string)null;
-            if (m_cache.TryGetValue(property, out result) == false)
+            if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = PropertyInfoExtension.GetMappedName(property);
-                m_cache.TryAdd(property, result);
+                result = PropertyInfoExtension.GetMappedName(property, false);
+                m_cache.TryAdd(key, result);
             }
             return result;
         }

@@ -25,7 +25,7 @@ namespace RepoDb.Extensions
         // AsField
         internal static string AsField(this QueryField queryField)
         {
-            return queryField.Field.Name.AsQuoted(true);
+            return queryField.Field.Name;
         }
 
         // AsParameter
@@ -37,7 +37,7 @@ namespace RepoDb.Extensions
         // AsParameterAsField
         internal static string AsParameterAsField(this QueryField queryField)
         {
-            return string.Concat(queryField.Parameter.Name, " AS ", queryField.Field.Name.AsQuoted(true));
+            return string.Concat(queryField.Parameter.Name, " AS ", queryField.Field.Name);
         }
 
         // AsBetweenParameter

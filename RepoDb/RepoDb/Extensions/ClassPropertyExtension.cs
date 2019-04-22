@@ -8,16 +8,6 @@ namespace RepoDb.Extensions
     internal static class ClassPropertyExtension
     {
         /// <summary>
-        /// Convert the <see cref="ClassProperty"/> into a <see cref="Field"/> objects.
-        /// </summary>
-        /// <param name="property">The current instance of <see cref="ClassProperty"/>.</param>
-        /// <returns>An instance of <see cref="string"/> object.</returns>
-        public static Field AsField(this ClassProperty property)
-        {
-            return new Field(property.PropertyInfo.AsField());
-        }
-
-        /// <summary>
         /// Converts the list of <see cref="ClassProperty"/> into a a list of <see cref="Field"/> objects.
         /// </summary>
         /// <param name="properties">The current instance of <see cref="ClassProperty"/>.</param>
@@ -26,7 +16,7 @@ namespace RepoDb.Extensions
         {
             foreach (var property in properties)
             {
-                yield return AsField(property);
+                yield return property.AsField();
             }
         }
     }

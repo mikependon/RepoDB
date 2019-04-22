@@ -33,7 +33,7 @@ namespace RepoDb
             var result = (string)null;
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = DataEntityExtension.GetMappedName(type);
+                result = DataEntityExtension.GetMappedName(type).AsQuoted(true);
                 m_cache.TryAdd(key, result);
             }
             return result;

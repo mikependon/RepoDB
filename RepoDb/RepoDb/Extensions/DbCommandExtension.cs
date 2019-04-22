@@ -116,7 +116,7 @@ namespace RepoDb.Extensions
                     var dbType = property.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
                         TypeMapper.Get(GetUnderlyingType(property.PropertyType))?.DbType;
                     command.Parameters.Add(command.CreateParameter(
-                        PropertyMappedNameCache.Get(property), property.GetValue(param), dbType));
+                        PropertyMappedNameCache.Get(property, false), property.GetValue(param), dbType));
                 }
             }
         }

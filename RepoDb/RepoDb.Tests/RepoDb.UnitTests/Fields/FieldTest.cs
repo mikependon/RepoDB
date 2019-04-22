@@ -8,6 +8,19 @@ namespace RepoDb.UnitTests.Fields
     [TestClass]
     public partial class FieldTest
     {
+        [TestMethod]
+        public void TestFieldQuotes()
+        {
+            // Prepare
+            var objA = new Field("FieldName");
+
+            // Act
+            var equal = Equals("[FieldName]", objA.Name);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
         // From
 
         [TestMethod]

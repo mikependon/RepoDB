@@ -23,13 +23,19 @@ namespace RepoDb
             }
 
             // Set the name
-            Name = name;
+            Name = name.AsQuoted(true);
+            UnquotedName = name.AsUnquoted(true);
         }
 
         /// <summary>
-        /// Gets the name of the field.
+        /// Gets the quoted name of the field.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Gets the unquoted name of the field.
+        /// </summary>
+        public string UnquotedName { get; }
 
         /// <summary>
         /// Stringify the current field object.
@@ -55,7 +61,7 @@ namespace RepoDb
             {
                 throw new NullReferenceException($"Field name must not be null.");
             }
-            return fields.Select(field => new Field(field.AsQuoted()));
+            return fields.Select(field => new Field(field));
         }
 
         /// <summary>
@@ -69,7 +75,7 @@ namespace RepoDb
         {
             foreach (var property in PropertyCache.Get<TEntity>())
             {
-                yield return new Field(PropertyMappedNameCache.Get(property.PropertyInfo).AsQuoted());
+                yield return new Field(PropertyMappedNameCache.Get(property.PropertyInfo, false));
             }
         }
 
@@ -82,7 +88,7 @@ namespace RepoDb
         {
             foreach (var property in obj.GetType().GetProperties())
             {
-                yield return new Field(PropertyMappedNameCache.Get(property).AsQuoted());
+                yield return new Field(PropertyMappedNameCache.Get(property, false));
             }
         }
 
