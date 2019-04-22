@@ -416,7 +416,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection,
+        public static int Delete(this IDbConnection connection,
             string tableName,
             QueryField where = null,
             int? commandTimeout = null,
@@ -573,7 +573,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             QueryField where = null,
             int? commandTimeout = null,
