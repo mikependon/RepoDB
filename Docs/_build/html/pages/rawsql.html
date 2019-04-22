@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Hints &mdash; RepoDb 1.1.0 documentation</title>
+  <title>Raw SQL &mdash; RepoDb 1.1.0 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Transaction" href="transaction.html" />
-    <link rel="prev" title="Raw SQL" href="rawsql.html" /> 
+    <link rel="next" title="Hints" href="hints.html" />
+    <link rel="prev" title="Connection" href="connection.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,8 +88,8 @@
 <li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Hints</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
@@ -146,13 +146,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Hints</li>
+      <li>Raw SQL</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/pages/hints.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/pages/rawsql.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -165,43 +165,81 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="hints">
-<h1>Hints<a class="headerlink" href="#hints" title="Permalink to this headline">¶</a></h1>
-<p>This feature is to allow the caller to further optimize the execution of the query when the <cite>Query</cite> operation has been called.</p>
-<p>Below is an example of how to do a query (dirty-read) of customers where name starts with <cite>Joh</cite>.</p>
+  <div class="section" id="raw-sql">
+<h1>Raw SQL<a class="headerlink" href="#raw-sql" title="Permalink to this headline">¶</a></h1>
+<p>Raw SQL is a feature which ables you to execute a raw SQL statements directly into the database.</p>
+<p>The following are the execute methods which can be accessed via <cite>DbConnection</cite> extended methods.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://repodb.readthedocs.io/en/latest/pages/connection.html#executenonquery">ExecuteNonQuery</a></li>
+<li><a class="reference external" href="https://repodb.readthedocs.io/en/latest/pages/connection.html#executequery">ExecuteQuery</a></li>
+<li><a class="reference external" href="https://repodb.readthedocs.io/en/latest/pages/connection.html#executereader">ExecuteReader</a></li>
+<li><a class="reference external" href="https://repodb.readthedocs.io/en/latest/pages/connection.html#executescalar">ExecuteScalar</a></li>
+</ul>
+<p>Below is a sample call which uses a <strong>Dynamic</strong> object as a parameter.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&quot;Joh&quot;</span><span class="p">),</span> <span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
+        <span class="c1">// Set the values</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName&quot;</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">param</span> <span class="p">=</span> <span class="k">new</span>
+        <span class="p">{</span>
+                <span class="n">FirstName</span> <span class="p">=</span> <span class="s">&quot;John&quot;</span><span class="p">,</span>
+                <span class="n">LastName</span> <span class="p">=</span> <span class="s">&quot;Doe&quot;</span>
+        <span class="p">};</span>
+
+        <span class="c1">// Execute the SQL</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The <cite>hints</cite> argument is used define a query-optimizer in the SQL Statement query. It is equivalent to the SQL Server query hints. The caller can also write its own hints via literal string. See below.</p>
+<p>Executing a raw SQL statements support different kind of parameters.</p>
+<p>Via <strong>ExpandoObject</strong> (as <strong>Dynamic</strong> Object).</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&quot;Joh&quot;</span><span class="p">),</span> <span class="n">hints</span><span class="p">:</span> <span class="s">&quot;WITH (NOLOCK)&quot;</span><span class="p">);</span>
+        <span class="c1">// Set the values</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName&quot;</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">param</span> <span class="p">=</span> <span class="p">(</span><span class="kt">dynamic</span><span class="p">)</span><span class="k">new</span> <span class="n">ExpandoObject</span><span class="p">();</span>
+
+        <span class="c1">// Set each parameter</span>
+        <span class="n">param</span><span class="p">.</span><span class="n">FirstName</span> <span class="p">=</span> <span class="s">&quot;John&quot;</span><span class="p">;</span>
+        <span class="n">param</span><span class="p">.</span><span class="n">LastName</span> <span class="p">=</span> <span class="s">&quot;Doe&quot;</span><span class="p">;</span>
+
+        <span class="c1">// Execute the SQL</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Below is a scenario to query all the customers from the database that ignores all the data that are under different transactions and with maximizing the index named <cite>NCIX_Customer$FirstName$LastName</cite>.</p>
+<p>Via <strong>ExpandoObject</strong> as <strong>Dictionary&lt;string, object&gt;</strong>.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="s">&quot;WITH (INDEX(NCIX_Customer$FirstName$LastName), READPAST)&quot;</span><span class="p">);</span>
+        <span class="c1">// Set the values</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName&quot;</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">param</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ExpandoObject</span><span class="p">()</span> <span class="k">as</span> <span class="n">IDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">object</span><span class="p">&gt;;</span>
+
+        <span class="c1">// Set each parameter</span>
+        <span class="n">param</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;FirstName&quot;</span><span class="p">,</span> <span class="s">&quot;John&quot;</span><span class="p">);</span>
+        <span class="n">param</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;LastName&quot;</span><span class="p">,</span> <span class="s">&quot;Doe&quot;</span><span class="p">);</span>
+
+        <span class="c1">// Execute the SQL</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>A default class named <cite>SqlTableHints</cite> is provided to simplify the passing of the parameters. This class only contains the table hints for SQL Server.</p>
+<p>Via <strong>Dictionary&lt;string, object&gt;</strong>.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">ReadPast</span><span class="p">);</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">ReadCommitted</span><span class="p">);</span>
-        <span class="p">...</span>
+        <span class="c1">// Set the values</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName&quot;</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">param</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">object</span><span class="p">&gt;</span>
+        <span class="p">{</span>
+                <span class="p">{</span> <span class="s">&quot;FirstName&quot;</span><span class="p">,</span> <span class="s">&quot;John&quot;</span> <span class="p">},</span>
+                <span class="p">{</span> <span class="s">&quot;LastName&quot;</span><span class="p">,</span> <span class="s">&quot;Doe&quot;</span> <span class="p">}</span>
+        <span class="p">};</span>
+
+        <span class="c1">// Execute the SQL</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The query hints are not limited to SQL Server only, it is also applicable to other data providers. However, the library only supports table hints for SQL Server as of the moment through <cite>SqlStatementBuilder</cite> and <cite>SqlTableHints</cite> class.</p>
-<p>In order to support the other data providers, the <cite>IStatementBuilder</cite> must be overriden by the caller’s custom statement builder (ie: <cite>OracleStatementBuilder</cite>, <cite>MySqlStatementBuilder</cite>) when calling the <cite>DbConnection</cite> extended method. And also, the caller must specify a class table hints for that data provider (ie: <cite>OracleQueryHints</cite>, <cite>MySqlQueryHints</cite>) to simplify the call (though this can be written statically through explicit literal string).</p>
-<p><strong>Note</strong>: The <cite>hints</cite> are also supported when calling the <cite>BatchQuery</cite>, <cite>Count</cite>, <cite>CountAll</cite>, <cite>QueryAll</cite> and the <cite>QueryMultiple</cite> operations.</p>
 </div>
 
 
@@ -212,10 +250,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="transaction.html" class="btn btn-neutral float-right" title="Transaction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="hints.html" class="btn btn-neutral float-right" title="Hints" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="rawsql.html" class="btn btn-neutral float-left" title="Raw SQL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="connection.html" class="btn btn-neutral float-left" title="Connection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -11,6 +11,7 @@ RepoDb Documentation
    pages/field
    pages/orderfield
    pages/connection
+   pages/rawsql
    pages/hints
    pages/transaction
    pages/querygroup

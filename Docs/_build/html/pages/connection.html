@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Hints" href="hints.html" />
+    <link rel="next" title="Raw SQL" href="rawsql.html" />
     <link rel="prev" title="OrderField" href="orderfield.html" /> 
 </head>
 
@@ -110,6 +110,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#update">Update</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
@@ -511,56 +512,6 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The instance of ExpandoObject and IDictionary&lt;string, object&gt; can also be used as parameter.</p>
-<p>Via ExpandoObject as dynamic.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="c1">// Create the parameters</span>
-        <span class="kt">var</span> <span class="n">parameters</span> <span class="p">=</span> <span class="p">(</span><span class="kt">dynamic</span><span class="p">)</span><span class="k">new</span> <span class="n">ExpandoObject</span><span class="p">();</span>
-
-        <span class="c1">// Set each parameter</span>
-        <span class="n">param</span><span class="p">.</span><span class="n">OrderId</span> <span class="p">=</span> <span class="m">1002</span><span class="p">;</span>
-        <span class="n">param</span><span class="p">.</span><span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">;</span>
-        <span class="n">param</span><span class="p">.</span><span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
-
-        <span class="c1">// Create the parameters</span>
-        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_update_order_quantity]&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Via ExpandoObject as Dictionary&lt;string, object&gt;.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="c1">// Create the parameters</span>
-        <span class="kt">var</span> <span class="n">parameters</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ExpandoObject</span><span class="p">()</span> <span class="k">as</span> <span class="n">IDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">object</span><span class="p">&gt;;</span>
-
-        <span class="c1">// Add each parameter</span>
-        <span class="n">param</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;OrderId&quot;</span><span class="p">,</span> <span class="m">1002</span><span class="p">);</span>
-        <span class="n">param</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;Quantity&quot;</span><span class="p">,</span> <span class="m">5</span><span class="p">);</span>
-        <span class="n">param</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;LastUpdatedUtc&quot;</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">);</span>
-
-        <span class="c1">// Pass the parameters</span>
-        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_update_order_quantity]&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Via Dictionary&lt;string, object&gt;.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="c1">// Create the parameters</span>
-        <span class="kt">var</span> <span class="n">parameters</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">object</span><span class="p">&gt;</span>
-        <span class="p">{</span>
-                <span class="p">{</span> <span class="s">&quot;OrderId&quot;</span><span class="p">,</span> <span class="m">1002</span> <span class="p">},</span>
-                <span class="p">{</span> <span class="s">&quot;Quantity&quot;</span><span class="p">,</span> <span class="m">5</span> <span class="p">},</span>
-                <span class="p">{</span> <span class="s">&quot;LastUpdatedUtc&quot;</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span> <span class="p">}</span>
-        <span class="p">};</span>
-
-        <span class="c1">// Pass the parameters</span>
-        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_update_order_quantity]&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p><strong>Note</strong>: The passing of the <cite>ExpandoObject</cite> and <cite>IDictionary&lt;string, object&gt;</cite> parameter is also supported in <cite>ExecuteQuery</cite>, <cite>ExecuteScalar</cite> and <cite>ExecuteReader</cite> methods.</p>
 </div>
 <div class="section" id="executequery">
 <h2>ExecuteQuery<a class="headerlink" href="#executequery" title="Permalink to this headline">¶</a></h2>
@@ -976,6 +927,25 @@
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>With ordering.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">orderBy</span> <span class="p">=</span> <span class="k">new</span>
+        <span class="p">{</span>
+                <span class="n">Id</span> <span class="p">=</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span>
+        <span class="p">};</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">orderBy</span><span class="p">:</span> <span class="n">orderBy</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>With hint.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: By setting the <cite>where</cite> argument to blank would query all the records. Exactly the same as <cite>QueryAll</cite> operation.</p>
 </div>
 <div class="section" id="queryall">
 <h2>QueryAll<a class="headerlink" href="#queryall" title="Permalink to this headline">¶</a></h2>
@@ -1198,7 +1168,7 @@ The result is an instance of a <cite>Tuple</cite> object.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="hints.html" class="btn btn-neutral float-right" title="Hints" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="rawsql.html" class="btn btn-neutral float-right" title="Raw SQL" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="orderfield.html" class="btn btn-neutral float-left" title="OrderField" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
