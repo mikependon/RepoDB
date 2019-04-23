@@ -6188,21 +6188,31 @@
             Contains the extension methods for <see cref="T:System.Object"/>.
             </summary>
         </member>
+        <member name="M:RepoDb.Extensions.ObjectExtension.Merge``1(``0,RepoDb.QueryGroup)">
+            <summary>
+            Merges an object into an instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <typeparam name="TEntity">The type of the object.</typeparam>
+            <param name="obj">The object to be merged.</param>
+            <param name="queryGroup">The <see cref="T:RepoDb.QueryGroup"/> object to be merged.</param>
+            <returns>An instance of converted dynamic object.</returns>
+        </member>
         <member name="M:RepoDb.Extensions.ObjectExtension.Merge(System.Object,RepoDb.QueryGroup)">
             <summary>
             Merge the <see cref="T:RepoDb.QueryGroup"/> object into the current object.
             </summary>
             <param name="obj">The object where the <see cref="T:RepoDb.QueryGroup"/> object will be merged.</param>
             <param name="queryGroup">The <see cref="T:RepoDb.QueryGroup"/> object to merged.</param>
-            <returns>The object instance itself with the merged values.</returns>
+            <returns>A dynamic object with the merged fields from <see cref="T:RepoDb.QueryGroup"/>.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.ObjectExtension.AsMergedObject(System.Object,RepoDb.QueryGroup)">
+        <member name="M:RepoDb.Extensions.ObjectExtension.Merge(System.Object,System.Collections.Generic.IEnumerable{System.Reflection.PropertyInfo},RepoDb.QueryGroup)">
             <summary>
-            Merges an object into an instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            Merge the <see cref="T:RepoDb.QueryGroup"/> object into the current object.
             </summary>
-            <param name="obj">The object to be merged.</param>
-            <param name="queryGroup">The <see cref="T:RepoDb.QueryGroup"/> object to be merged.</param>
-            <returns>An instance of converted dynamic object.</returns>
+            <param name="obj">The object where the <see cref="T:RepoDb.QueryGroup"/> object will be merged.</param>
+            <param name="properties">The list of <see cref="T:System.Reflection.PropertyInfo"/> objects.</param>
+            <param name="queryGroup">The <see cref="T:RepoDb.QueryGroup"/> object to merged.</param>
+            <returns>The object instance itself with the merged values.</returns>
         </member>
         <member name="M:RepoDb.Extensions.ObjectExtension.AsObject(System.Object)">
             <summary>
@@ -8105,7 +8115,7 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>The value of the primary key of the newly inserted data.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineInsertAsync``1(System.String,System.Object,System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InsertAsync``1(System.String,System.Object,System.Data.IDbTransaction)">
             <summary>
             Inserts a new data in the database in an asynchronous way.
             </summary>
@@ -10726,9 +10736,9 @@
             Gets the value of the parameter.
             </summary>
         </member>
-        <member name="M:RepoDb.Parameter.AppendUnderscore">
+        <member name="M:RepoDb.Parameter.PrependAnUnderscore">
             <summary>
-            Force to append prefix on the current parameter object.
+            Prepend an underscore on the current parameter object.
             </summary>
         </member>
         <member name="M:RepoDb.Parameter.SetName(System.String)">
@@ -11491,9 +11501,9 @@
             Gets the value whether the grouping is in opposite field-value state.
             </summary>
         </member>
-        <member name="M:RepoDb.QueryGroup.AppendParametersPrefix">
+        <member name="M:RepoDb.QueryGroup.PrependAnUnderscoreAtTheParameters">
             <summary>
-            Force to append prefixes on the bound parameter objects.
+            Prepend an underscore on every parameter object.
             </summary>
         </member>
         <member name="M:RepoDb.QueryGroup.SetIsNot(System.Boolean)">
@@ -11648,9 +11658,9 @@
             Gets the associated parameter object.
             </summary>
         </member>
-        <member name="M:RepoDb.QueryField.AppendParameterPrefix">
+        <member name="M:RepoDb.QueryField.PrependAnUnderscoreAtParameter">
             <summary>
-            Force to append prefix on the bound parameter object.
+            Prepend an underscore on the bound parameter object.
             </summary>
         </member>
         <member name="M:RepoDb.QueryField.Reset">

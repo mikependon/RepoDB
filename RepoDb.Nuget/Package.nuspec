@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.9.0-beta2</version>
+    <version>1.9.0</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -11,40 +11,28 @@
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
-      RepoDb v1.9.0-beta2:
-      - [Core] Make the DbHelper Pluggable by Provider. #137
-      - [Core] [NTH]: Support InlineDelete(string tableName, object where ...) #113 -- Moved to Delete
-      - [Core] Add table based operations for Count, Delete, DeleteAll, Insert, Merge, Truncate, Update. #159
-      - [Core] Organize the ordering of the arguments in all operations. #160
-      - [Core] Introduce CountAll operation. #161
-      - [Enhancement] Revisits the NET Framework custom method for GetCustomAttributes&lt;T&gt;. #133
-      - [Enhancement] Support passing of QueryGroup, QueryField, IEnumerable&lt;QueryField&gt; in the Execution&lt;Method&gt; Operations #140
-      - [Enhancement] Remove the 'StatementBuilderMapItem' class if possible. #139
-      - [Enhancement] Remove the 'Provider' Enumeration. #138
-      - [Enhancement] Reorder the parameter of for target table to BulkInsert(TableName, DbDataReader). #145
-      - [Enhancement] Properly parse the type of the passed parameters when parsing the RawSql Array Parameters. #147
-      - [Enhancement] [NTH]: Support InlineInsert(string tableName, object param ...) #114 -- Moved to Insert
-      - [Enhancement] Implement the 'prefix' as a passable argument when during conversion. #148
-      - [Enhancement] Add additional argument in the DataReaderConverter.ToEnumerable&lt;T&gt; method to support the calls to DbHelper.Get&lt;T&gt; method. #142
-      - [Enhancement] Add a caching mechanism for type 'Field' objects. #157
-      - [Enhancement] Merge all inline operations into main operations (InlineMerge should be Merge). #156
-      - [Adhoc] Created a new cache class named 'DbIdentityCache'.
-      - [Adhoc] Renamed the 'FieldDefinition' into 'DbField'.
-      - [Adhoc] Renamed the 'FieldDefinitionCache' to 'DbFieldCache'.
-      - [Adhoc] Renamed the 'SqlHelper' to 'SqlDbHelper'.
-      - [Adhoc] Renamed the 'PrimaryKeyCache' to 'PrimaryCache'.
-      - [Adhoc] Renamed the 'PrimaryKeyIdentityCache' to 'PrimaryIdentityCache'.
-      - [Adhoc] Moved the 'DbHelpers' into 'RepoDb.DbHelpers'.
-      - [Adhoc, Optimization] Made the 'DbFieldCache' object more dynamic to any DB providers.
-      - [Test] Add additional logic in the Integration Tests of the IStatementBuilder, verify that the second call is not hitting the method. #141
-      - [Test] Add an extensive Unit/Integration Test for InlineInsert that targets a table name. #146
-      - [Test] Create UnitTests for CountAll. #163
-      - [Test] Add separate 'IntegrationTests' for the RawSql ArrayValues #168
-      - [Test] Add separate 'IntegrationTests' for different Execute&lt;Method&gt; parameters. #169
-      - [Test] Create IntegrationTests for QueryAll. #167
-      - [Test] Create IntegrationTests for CountAll. #164
-      - [Documentation] Document the CountAll operation. #162
-      - [Documentation] Add a separate documentation entry for Execute&lt;Method&gt; with Array parameters argument. #143
+      RepoDb v1.9.0
+      - [Core] Introduced table-based operations for 'Count', 'CountAll', 'Delete', 'DeleteAll', 'Insert', 'Merge', 'Truncate' and 'Update'.
+      - [Core] Introduced 'CountAll' and 'QueryAll' operations.
+      - [Core] Introduced pluggable interface 'DbHelpers'.
+      - [Core] Updated the 'QueryBuilder' to remove the 'TEntity' at class level (moved it to method level).
+      - [Core] Updated the 'StatementBuilder' SQL Text generation via TableName.
+      - [Core] Supported 'Dynamic', 'ExpandoObject', 'IDictionary&lt;string, object&gt;', 'QueryField', 'IEnumerable&lt;QueryField&gt;' and 'QueryGroup' objects in the 'Execute&lt;Method&gt;' calls.
+      - [Added] ExecuteScalar&lt;T&gt; and ExecuteScalarAsync&lt;T&gt;
+      - [Added] DbField
+      - [Added] DbFieldCache
+      - [Removed] AsyncResultExtractor
+      - [Removed] StatementBuilderMapItem
+      - [Removed] FieldDefinition
+      - [Removed] FieldDefinitionCache
+      - [Renamed] SqlHelper to SqlDbHelper
+      - [Renamed] PrimaryKeyCache to PrimaryCache'.
+      - [Renamed] PrimaryKeyIdentityCache to PrimaryIdentityCache
+      - [Optimization] CountAsync operation is now returning the 'Task&lt;int&gt;' type instead of 'Task&lt;object&gt;'.
+      - [Optimization] Allow passing of cache expiration time during 'Query' and 'QueryAll' calls.
+      - [Optimization, Pull-Request] Enumerations 'Order', 'Conjunction' and 'Operation' is now a pre-generated 'int' values.
+      - Introduced complete sets of IntegrationTests and UnitTests in all of the changes mentioned above.
+      - See v1.9.0-beta1 and v1.9.0-beta2 for complete set of changes.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
