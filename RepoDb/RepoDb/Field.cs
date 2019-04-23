@@ -10,6 +10,8 @@ namespace RepoDb
     /// </summary>
     public class Field : IEquatable<Field>
     {
+        private int m_hashCode = 0;
+
         /// <summary>
         /// Creates a new instance of <see cref="Field"/> object.
         /// </summary>
@@ -25,6 +27,9 @@ namespace RepoDb
             // Set the name
             Name = name.AsQuoted(true);
             UnquotedName = name.AsUnquoted(true);
+
+            // Set the hashcode here
+            m_hashCode = name.GetHashCode();
         }
 
         /// <summary>
@@ -100,7 +105,7 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            return Name.GetHashCode();
+            return m_hashCode;
         }
 
         /// <summary>

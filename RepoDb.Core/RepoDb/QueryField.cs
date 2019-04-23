@@ -51,9 +51,9 @@ namespace RepoDb
         /// The value to identify whether the underscore prefix will be appended to the parameter name.
         /// </param>
         internal QueryField(string fieldName,
-			Operation operation,
-			object value,
-			bool appendUnderscore)
+            Operation operation,
+            object value,
+            bool appendUnderscore)
         {
             Field = new Field(fieldName);
             Operation = operation;
@@ -80,11 +80,11 @@ namespace RepoDb
         // Methods
 
         /// <summary>
-        /// Force to append prefix on the bound parameter object.
+        /// Prepend an underscore on the bound parameter object.
         /// </summary>
-        internal void AppendParameterPrefix()
+        internal void PrependAnUnderscoreAtParameter()
         {
-            Parameter?.AppendUnderscore();
+            Parameter?.PrependAnUnderscore();
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace RepoDb
 
             // Name
             var fieldName = expression.GetName();
-            if (PropertyCache.Get<TEntity>().Any(property => property.PropertyInfo.GetMappedName() == fieldName) == false)
+            if (PropertyCache.Get<TEntity>().Any(property => PropertyMappedNameCache.Get(property.PropertyInfo, false) == fieldName) == false)
             {
                 throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }

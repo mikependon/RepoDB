@@ -226,8 +226,12 @@ namespace RepoDb
                 where,
                 entity.AsFields(),
                 statementBuilder);
-            var commandText = CommandTextCache.GetUpdateText(request);
-            var param = entity?.AsMergedObject(where);
+
+            // Append the prefixes
+            where?.PrependAnUnderscoreAtTheParameters();
+
+            // Get the params
+            var param = entity?.Merge(where);
 
             // Return the result
             return UpdateInternalBase(connection: connection,
@@ -451,8 +455,12 @@ namespace RepoDb
                 where,
                 entity.AsFields(),
                 statementBuilder);
-            var commandText = CommandTextCache.GetUpdateText(request);
-            var param = entity?.AsMergedObject(where);
+
+            // Append the prefixes
+            where?.PrependAnUnderscoreAtTheParameters();
+
+            // Get the params
+            var param = entity?.Merge(where);
 
             // Return the result
             return UpdateAsyncInternalBase(connection: connection,
@@ -618,6 +626,11 @@ namespace RepoDb
                 where,
                 entity?.AsFields(),
                 statementBuilder);
+
+            // Append the prefixes
+            where?.PrependAnUnderscoreAtTheParameters();
+
+            // Get the params
             var param = entity?.Merge(where);
 
             // Return the result
@@ -784,6 +797,11 @@ namespace RepoDb
                 where,
                 entity?.AsFields(),
                 statementBuilder);
+
+            // Append the prefixes
+            where?.PrependAnUnderscoreAtTheParameters();
+
+            // Get the params
             var param = entity?.Merge(where);
 
             // Return the result

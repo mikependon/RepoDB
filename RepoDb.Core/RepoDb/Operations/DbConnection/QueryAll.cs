@@ -111,9 +111,6 @@ namespace RepoDb
             var commandText = CommandTextCache.GetQueryAllText<TEntity>(request);
             var param = (object)null;
 
-            // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
-
             // Before Execution
             if (trace != null)
             {

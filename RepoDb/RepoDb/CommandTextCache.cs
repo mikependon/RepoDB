@@ -308,10 +308,6 @@ namespace RepoDb
                     GetPrimaryField(request));
                 m_cache.TryAdd(request, commandText);
             }
-            else
-            {
-                request.Where?.AppendParametersPrefix();
-            }
             return commandText;
         }
 

@@ -295,7 +295,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the primary key of the newly inserted data.</returns>
-        public async Task<TResult> InlineInsertAsync<TResult>(string tableName,
+        public async Task<TResult> InsertAsync<TResult>(string tableName,
             object entity,
             IDbTransaction transaction = null)
         {

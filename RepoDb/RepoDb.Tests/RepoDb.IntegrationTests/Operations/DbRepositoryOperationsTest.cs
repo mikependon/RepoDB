@@ -35,8 +35,10 @@ namespace RepoDb.IntegrationTests.Operations
 
         #region BatchQuery
 
+        #region BatchQuery<TEntity>
+
         [TestMethod]
-        public void TestDbRepositoryBatchQueryFirstBatchInAscendingOrder()
+        public void TestSqlConnectionBatchQueryFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -61,7 +63,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryFirstBatchInDescendingOrder()
+        public void TestSqlConnectionBatchQueryFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -86,7 +88,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQuerySecondBatchInAscendingOrder()
+        public void TestSqlConnectionBatchQuerySecondBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -111,7 +113,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQuerySecondBatchInDescendingOrder()
+        public void TestSqlConnectionBatchQuerySecondBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -136,7 +138,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryWithWhereForFirstBatchInAscendingOrder()
+        public void TestSqlConnectionBatchQueryWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -148,10 +150,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery<IdentityTable>(
-                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     transaction: null);
 
                 // Assert (10, 13)
@@ -161,7 +163,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryWithWhereForFirstBatchInDescendingOrder()
+        public void TestSqlConnectionBatchQueryWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -173,10 +175,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery<IdentityTable>(
-                    where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
                     transaction: null);
 
                 // Assert (9, 6)
@@ -186,7 +188,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryWithWhereForSecondBatchInAscendingOrder()
+        public void TestSqlConnectionBatchQueryWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -198,10 +200,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery<IdentityTable>(
-                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     transaction: null);
 
                 // Assert (14, 17)
@@ -211,7 +213,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryWithWhereForSecondBatchInDescendingOrder()
+        public void TestSqlConnectionBatchQueryWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -223,10 +225,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery<IdentityTable>(
-                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     transaction: null);
 
                 // Assert (15, 12)
@@ -236,11 +238,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryForDynamic()
+        public void TestSqlConnectionBatchQueryViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -249,10 +250,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery<IdentityTable>(
-                    where: new { ColumnInt = 3 },
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
                     transaction: null);
 
                 // Assert (2)
@@ -261,7 +262,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryForQueryField()
+        public void TestSqlConnectionBatchQueryViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -274,10 +275,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery<IdentityTable>(
-                    where: field,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: field,
                     transaction: null);
 
                 // Assert (3, 6)
@@ -287,7 +288,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryForQueryFields()
+        public void TestSqlConnectionBatchQueryViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -304,10 +305,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery<IdentityTable>(
-                    where: fields,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: fields,
                     transaction: null);
 
                 // Assert (10, 13)
@@ -317,7 +318,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryForQueryGroup()
+        public void TestSqlConnectionBatchQueryViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -335,10 +336,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery<IdentityTable>(
-                    where: queryGroup,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: queryGroup,
                     transaction: null);
 
                 // Assert (10, 13)
@@ -349,10 +350,10 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region BatchQueryAsync
+        #region BatchQueryAsync<TEntity>
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncFirstBatchInAscendingOrder()
+        public void TestSqlConnectionBatchQueryAsyncFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -377,7 +378,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncFirstBatchInDescendingOrder()
+        public void TestSqlConnectionBatchQueryAsyncFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -402,7 +403,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncSecondBatchInAscendingOrder()
+        public void TestSqlConnectionBatchQueryAsyncSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -427,7 +428,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncSecondBatchInDescendingOrder()
+        public void TestSqlConnectionBatchQueryAsyncSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -452,7 +453,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncWithWhereForFirstBatchInAscendingOrder()
+        public void TestSqlConnectionBatchQueryAsyncWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -464,10 +465,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync<IdentityTable>(
-                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     transaction: null).Result;
 
                 // Assert (10, 13)
@@ -477,7 +478,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncWithWhereForFirstBatchInDescendingOrder()
+        public void TestSqlConnectionBatchQueryAsyncWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -489,10 +490,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync<IdentityTable>(
-                    where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
                     transaction: null).Result;
 
                 // Assert (9, 6)
@@ -502,7 +503,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncWithWhereForSecondBatchInAscendingOrder()
+        public void TestSqlConnectionBatchQueryAsyncWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -514,10 +515,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync<IdentityTable>(
-                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     transaction: null).Result;
 
                 // Assert (14, 17)
@@ -527,7 +528,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncWithWhereForSecondBatchInDescendingOrder()
+        public void TestSqlConnectionBatchQueryAsyncWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -539,10 +540,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync<IdentityTable>(
-                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     transaction: null).Result;
 
                 // Assert (15, 12)
@@ -552,11 +553,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncForDynamic()
+        public void TestSqlConnectionBatchQueryAsyncViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -565,19 +565,19 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync<IdentityTable>(
-                    where: new { ColumnInt = 3 },
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
                     transaction: null).Result;
 
-                // Assert (2)
+                // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncForQueryField()
+        public void TestSqlConnectionBatchQueryAsyncViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -590,10 +590,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync<IdentityTable>(
-                    where: field,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: field,
                     transaction: null).Result;
 
                 // Assert (3, 6)
@@ -603,7 +603,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncForQueryFields()
+        public void TestSqlConnectionBatchQueryAsyncViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -620,10 +620,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync<IdentityTable>(
-                    where: fields,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: fields,
                     transaction: null).Result;
 
                 // Assert (10, 13)
@@ -633,7 +633,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncForQueryGroup()
+        public void TestSqlConnectionBatchQueryAsyncViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -651,10 +651,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync<IdentityTable>(
-                    where: queryGroup,
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: queryGroup,
                     transaction: null).Result;
 
                 // Assert (10, 13)
@@ -664,6 +664,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         #endregion
+
+        #endregion
+
+        #region BulkInsert
 
         #region BulkInsert
 
@@ -762,20 +766,20 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(t => repository.Insert(t));
             }
 
-            // Open the source repository
+            // Open the source connection
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Read the data from source repository
+                // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
-                    // Open the destination repository
-                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        repository.BulkInsert<IdentityTable>((DbDataReader)reader);
+                        destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader);
 
                         // Act
-                        var result = repository.QueryAll<IdentityTable>();
+                        var result = destinationConnection.QueryAll<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, result.Count());
@@ -807,20 +811,20 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(t => repository.Insert(t));
             }
 
-            // Open the source repository
+            // Open the source connection
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Read the data from source repository
+                // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
-                    // Open the destination repository
-                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        repository.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
+                        destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
 
                         // Act
-                        var result = repository.QueryAll<IdentityTable>();
+                        var result = destinationConnection.QueryAll<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(tables.Count * 2, result.Count());
@@ -853,17 +857,192 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(t => repository.Insert(t));
             }
 
-            // Open the source repository
+            // Open the source connection
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Read the data from source repository
+                // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
-                    // Open the destination repository
-                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        repository.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
+                        destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryBulkInsertForTableNameDbDataReader()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                tables.ForEach(t => repository.Insert(t));
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader);
+
+                        // Act
+                        var result = destinationConnection.QueryAll<IdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, result.Count());
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryBulkInsertForTableNameDbDataReaderWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                tables.ForEach(t => repository.Insert(t));
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader, mappings);
+
+                        // Act
+                        var result = destinationConnection.QueryAll<IdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, result.Count());
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheMappingsAreInvalid()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add invalid mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+
+            // Switched
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                tables.ForEach(t => repository.Insert(t));
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader, mappings);
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                tables.ForEach(t => repository.Insert(t));
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        destinationConnection.BulkInsert("CompleteTable", (DbDataReader)reader);
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                tables.ForEach(t => repository.Insert(t));
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        destinationConnection.BulkInsert("MissingTable", (DbDataReader)reader);
                     }
                 }
             }
@@ -885,13 +1064,11 @@ namespace RepoDb.IntegrationTests.Operations
                 var bulkInsertResult = repository.BulkInsertAsync(tables);
                 bulkInsertResult.Wait();
 
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult.Result);
-
                 // Act
                 var queryResult = repository.QueryAll<IdentityTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult.Result);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -922,13 +1099,11 @@ namespace RepoDb.IntegrationTests.Operations
                 var bulkInsertResult = repository.BulkInsertAsync(tables);
                 bulkInsertResult.Wait();
 
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult.Result);
-
                 // Act
                 var queryResult = repository.QueryAll<IdentityTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult.Result);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -978,24 +1153,24 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(t => repository.Insert(t));
             }
 
-            // Open the source repository
+            // Open the source connection
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Read the data from source repository
+                // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
-                    // Open the destination repository
-                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = repository.BulkInsertAsync<IdentityTable>((DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader);
                         bulkInsertResult.Wait();
 
                         // Act
-                        var queryResult = repository.QueryAll<IdentityTable>();
+                        var queryResult = destinationConnection.QueryAllAsync<IdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                        Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
                     }
                 }
             }
@@ -1024,24 +1199,24 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(t => repository.Insert(t));
             }
 
-            // Open the source repository
+            // Open the source connection
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Read the data from source repository
+                // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
-                    // Open the destination repository
-                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = repository.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
                         bulkInsertResult.Wait();
 
                         // Act
-                        var queryResult = repository.QueryAll<IdentityTable>();
+                        var queryResult = destinationConnection.QueryAllAsync<IdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                        Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
                     }
                 }
             }
@@ -1071,17 +1246,206 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(t => repository.Insert(t));
             }
 
-            // Open the source repository
+            // Open the source connection
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Read the data from source repository
+                // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
                 {
-                    // Open the destination repository
-                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = repository.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
+                        bulkInsertResult.Wait();
+
+                        // Trigger
+                        var result = bulkInsertResult.Result;
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryBulkInsertAsyncForTableNameDbDataReader()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                tables.ForEach(t => repository.Insert(t));
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(nameof(IdentityTable), (DbDataReader)reader);
+                        bulkInsertResult.Wait();
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAllAsync<IdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryBulkInsertAsyncForTableNameDbDataReaderWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                tables.ForEach(t => repository.Insert(t));
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(nameof(IdentityTable), (DbDataReader)reader, mappings);
+                        bulkInsertResult.Wait();
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAllAsync<IdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add invalid mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+
+            // Switched
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                tables.ForEach(t => repository.Insert(t));
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(nameof(IdentityTable), (DbDataReader)reader, mappings);
+                        bulkInsertResult.Wait();
+
+                        // Trigger
+                        var result = bulkInsertResult.Result;
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                tables.ForEach(t => repository.Insert(t));
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync("CompleteTable", (DbDataReader)reader);
+                        bulkInsertResult.Wait();
+
+                        // Trigger
+                        var result = bulkInsertResult.Result;
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                tables.ForEach(t => repository.Insert(t));
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync("MissingTable", (DbDataReader)reader);
                         bulkInsertResult.Wait();
 
                         // Trigger
@@ -1093,7 +1457,11 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #endregion
+
         #region Count
+
+        #region Count<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryCountWithoutCondition()
@@ -1223,7 +1591,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region CountAsync
+        #region CountAsync<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryCountAsyncWithoutCondition()
@@ -1353,7 +1721,242 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region Count(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryCountViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryCountViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                    new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryCountViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                    field);
+
+                // Assert
+                Assert.AreEqual(5, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryCountViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(3, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryCountViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(3, result);
+            }
+        }
+
+        #endregion
+
+        #region CountAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryCountViaTableNameAsyncWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryCountViaTableNameAsyncViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAsync<IdentityTable>(new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryCountViaTableNameAsyncViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    field).Result;
+
+                // Assert
+                Assert.AreEqual(5, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryCountViaTableNameAsyncViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(3, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryCountViaTableNameAsyncViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(3, result);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region CountAll
+
+        #region CountAll<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryCountAll()
@@ -1395,7 +1998,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region CountAllAsync
+        #region CountAllAsync<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryCountAllAsync()
@@ -1437,7 +2040,97 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region CountAll(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryCountViaAllTaleName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAll(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryCountAllViaTaleNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    hints: SqlTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        #endregion
+
+        #region CountAllAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryCountAllTaleNameAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAllAsync(ClassMappedNameCache.Get<IdentityTable>()).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryCountAllTaleNameAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    hints: SqlTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region Delete
+
+        #region Delete<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryDeleteWithoutCondition()
@@ -1481,11 +2174,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryDeleteViaDelete()
+        public void TestDbRepositoryDeleteViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1493,7 +2185,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Delete<IdentityTable>(new { last.Id });
+                var result = repository.Delete<IdentityTable>(new { ColumnInt = 6 });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1514,7 +2206,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.Delete<IdentityTable>(c => c.ColumnInt == last.Id);
+                var result = repository.Delete<IdentityTable>(c => c.Id == last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1595,7 +2287,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region DeleteAsync
+        #region DeleteAsync<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryDeleteAsyncWithoutCondition()
@@ -1609,7 +2301,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<IdentityTable>((object)null).Result;
+                var result = repository.Delete<IdentityTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -1631,6 +2323,26 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.DeleteAsync<IdentityTable>(last.Id).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAsyncViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.DeleteAsync<IdentityTable>(new { ColumnInt = 6 }).Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1733,7 +2445,252 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region Delete(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Delete(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Delete(ClassMappedNameCache.Get<IdentityTable>(),
+                    new { ColumnInt = 6 });
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Delete(ClassMappedNameCache.Get<IdentityTable>(),
+                    new QueryField(nameof(IdentityTable.ColumnInt), 6));
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Delete(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(4, result);
+                Assert.AreEqual(6, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Delete(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(4, result);
+                Assert.AreEqual(6, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        #endregion
+
+        #region DeleteAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAsyncViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Delete(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAsyncViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new { ColumnInt = 6 }).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAsyncViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 6);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    field).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAsyncViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(4, result);
+                Assert.AreEqual(6, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAsyncViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(4, result);
+                Assert.AreEqual(6, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region DeleteAll
+
+        #region DeleteAll<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryDeleteAll()
@@ -1750,13 +2707,14 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.DeleteAll<IdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, result);
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<IdentityTable>());
             }
         }
 
         #endregion
 
-        #region DeleteAllAsync
+        #region DeleteAllAsync<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryDeleteAllAsync()
@@ -1773,13 +2731,66 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.DeleteAllAsync<IdentityTable>().Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, result);
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<IdentityTable>());
             }
         }
 
         #endregion
 
+        #region DeleteAll(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAllViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.DeleteAll(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        #endregion
+
+        #region DeleteAllAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAllViaTableNameAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>()).Result;
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region Insert
+
+        #region Insert<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryInsert()
@@ -1847,7 +2858,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region InsertAsync
+        #region InsertAsync<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryInsertAsync()
@@ -1915,7 +2926,159 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region Insert(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryInsertViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item =>
+                {
+                    item.Id = repository.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                        item);
+                });
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInsertViaTableNameForIdentityTable()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = Helper.CreateIdentityTable();
+
+                // Act
+                item.Id = repository.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    item);
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(item, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInsertViaTableNameForNonIdentityTable()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = Helper.CreateNonIdentityTable();
+
+                // Act
+                var value = repository.Insert<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item);
+
+                // Act
+                var result = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(item.Id, value);
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(item, result.First());
+            }
+        }
+
+        #endregion
+
+        #region InsertAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryInsertAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item =>
+                {
+                    item.Id = repository.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                        item).Result;
+                });
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInsertAsyncViaTableNameForIdentityTable()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = Helper.CreateIdentityTable();
+
+                // Act
+                item.Id = repository.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    item).Result;
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(item, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInsertAsyncViaTableNameForNonIdentityTable()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var item = Helper.CreateNonIdentityTable();
+
+                // Act
+                var value = repository.InsertAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item).Result;
+
+                // Act
+                var result = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(item.Id, value);
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(item, result.First());
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region Merge
+
+        #region Merge<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryMerge()
@@ -1962,7 +3125,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeWithPrimaryField()
+        public void TestDbRepositoryMergeViaPrimaryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1986,7 +3149,8 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.Merge(queryResult, new Field(nameof(IdentityTable.Id)));
+                var mergeResult = repository.Merge(queryResult,
+                    new Field(nameof(IdentityTable.Id)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
@@ -2006,7 +3170,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeWithNonPrimaryFieldViaInstantiation()
+        public void TestDbRepositoryMergeViaQualifier()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2028,7 +3192,8 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.Merge(queryResult, new Field(nameof(IdentityTable.ColumnInt)));
+                var mergeResult = repository.Merge(queryResult,
+                    new Field(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
@@ -2047,48 +3212,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeWithNonPrimaryFieldViaFromMethod()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.Merge(queryResult, Field.From(nameof(IdentityTable.ColumnInt)));
-
-                // Assert
-                Assert.AreEqual(1, mergeResult);
-
-                // Act
-                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
-
-                // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestDbRepositoryMergeWithMultipleFieldsViaInstantiation()
+        public void TestDbRepositoryMergeViaQualifiers()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2130,48 +3254,9 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod]
-        public void TestDbRepositoryMergeWithMultipleFieldsViaFromMethod()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.Merge(queryResult, Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnBit)));
-
-                // Assert
-                Assert.AreEqual(1, mergeResult);
-
-                // Act
-                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Assert
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
-            }
-        }
-
         #endregion
 
-        #region MergeAsync
+        #region MergeAsync<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryMergeAsync()
@@ -2218,7 +3303,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeAsyncWithPrimaryField()
+        public void TestDbRepositoryMergeAsyncViaPrimaryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2242,7 +3327,8 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.MergeAsync(queryResult, new Field(nameof(IdentityTable.Id))).Result;
+                var mergeResult = repository.MergeAsync(queryResult,
+                    new Field(nameof(IdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
@@ -2262,7 +3348,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeAsyncWithNonPrimaryFieldViaInstantiation()
+        public void TestDbRepositoryMergeAsyncViaQualifier()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2284,7 +3370,8 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.MergeAsync(queryResult, new Field(nameof(IdentityTable.ColumnInt))).Result;
+                var mergeResult = repository.MergeAsync(queryResult,
+                    new Field(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
@@ -2303,48 +3390,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeAsyncWithNonPrimaryFieldViaFromMethod()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.MergeAsync(queryResult, Field.From(nameof(IdentityTable.ColumnInt))).Result;
-
-                // Assert
-                Assert.AreEqual(1, mergeResult);
-
-                // Act
-                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
-
-                // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestDbRepositoryMergeAsyncWithMultipleFieldsViaInstantiation()
+        public void TestDbRepositoryMergeAsyncViaQualifiers()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2386,8 +3432,146 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        #endregion
+
+        #region Merge(TableName)
+
         [TestMethod]
-        public void TestDbRepositoryMergeAsyncWithMultipleFieldsViaFromMethod()
+        public void TestDbRepositoryMergeViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Act
+                queryResult.ColumnBit = false;
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
+                queryResult.ColumnDecimal = 0;
+                queryResult.ColumnFloat = 0;
+                queryResult.ColumnInt = 0;
+                queryResult.ColumnNVarChar = "Merged";
+
+                // Act
+                var mergeResult = repository.Merge(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryResult);
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual(0, queryResult.ColumnInt);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeViaTableNameViaPrimaryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Act
+                queryResult.ColumnBit = false;
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
+                queryResult.ColumnDecimal = 0;
+                queryResult.ColumnFloat = 0;
+                queryResult.ColumnInt = 0;
+                queryResult.ColumnNVarChar = "Merged";
+
+                // Act
+                var mergeResult = repository.Merge(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryResult,
+                    new Field(nameof(IdentityTable.Id)));
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual(0, queryResult.ColumnInt);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeViaTableNameViaQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+
+                // Act
+                queryResult.ColumnBit = false;
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
+                queryResult.ColumnDecimal = 0;
+                queryResult.ColumnFloat = 0;
+                queryResult.ColumnNVarChar = "Merged";
+
+                // Act
+                var mergeResult = repository.Merge(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryResult,
+                    new Field(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeViaTableNameViaQualifiers()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2408,7 +3592,13 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = repository.MergeAsync(queryResult, Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnBit))).Result;
+                var mergeResult = repository.Merge(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryResult,
+                    new[]
+                    {
+                        new Field(nameof(IdentityTable.ColumnInt)),
+                        new Field(nameof(IdentityTable.ColumnBit))
+                    });
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
@@ -2427,7 +3617,218 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region MergeAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryMergeViaTableNameAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Act
+                queryResult.ColumnBit = false;
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
+                queryResult.ColumnDecimal = 0;
+                queryResult.ColumnFloat = 0;
+                queryResult.ColumnInt = 0;
+                queryResult.ColumnNVarChar = "Merged";
+
+                // Act
+                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryResult).Result;
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual(0, queryResult.ColumnInt);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeViaTableNameAsyncViaPrimaryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Act
+                queryResult.ColumnBit = false;
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
+                queryResult.ColumnDecimal = 0;
+                queryResult.ColumnFloat = 0;
+                queryResult.ColumnInt = 0;
+                queryResult.ColumnNVarChar = "Merged";
+
+                // Act
+                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryResult,
+                    new Field(nameof(IdentityTable.Id))).Result;
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual(0, queryResult.ColumnInt);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeViaTableNameAsyncViaQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+
+                // Act
+                queryResult.ColumnBit = false;
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
+                queryResult.ColumnDecimal = 0;
+                queryResult.ColumnFloat = 0;
+                queryResult.ColumnNVarChar = "Merged";
+
+                // Act
+                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryResult,
+                    new Field(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeViaTableNameAsyncViaQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+
+                // Act
+                queryResult.ColumnDateTime = Helper.EpocDate;
+                queryResult.ColumnDateTime2 = Helper.EpocDate;
+                queryResult.ColumnDecimal = 0;
+                queryResult.ColumnFloat = 0;
+                queryResult.ColumnNVarChar = "Merged";
+
+                // Act
+                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryResult,
+                    new[]
+                    {
+                        new Field(nameof(IdentityTable.ColumnInt)),
+                        new Field(nameof(IdentityTable.ColumnBit))
+                    }).Result;
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+
+                // Assert
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region Query
+
+        #region Query<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryQueryWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query<IdentityTable>((object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
 
         [TestMethod]
         public void TestDbRepositoryQueryWithTop()
@@ -3330,7 +4731,31 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region QueryAsync
+        #region QueryAsync<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryQueryAsyncWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync<IdentityTable>((object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
 
         [TestMethod]
         public void TestDbRepositoryQueryAsyncWithTop()
@@ -3427,27 +4852,6 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncViaExpression()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
-
-                // Act
-                var result = repository.QueryAsync<IdentityTable>(c => c.Id == last.Id).Result;
-
-                // Assert
-                Assert.AreEqual(1, result.Count());
-                Helper.AssertPropertiesEquality(last, result.First());
-            }
-        }
-
-        [TestMethod]
         public void TestDbRepositoryQueryAsyncViaDynamic()
         {
             // Setup
@@ -3461,6 +4865,27 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.QueryAsync<IdentityTable>(new { last.Id }).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryQueryAsyncViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync<IdentityTable>(c => c.Id == last.Id).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -4233,10 +5658,14 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #endregion
+
         #region QueryAll
 
+        #region QueryAll<TEntity>
+
         [TestMethod]
-        public void TestDbRepositoryQuery()
+        public void TestDbRepositoryQueryAll()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4259,7 +5688,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllWithOrderBy()
+        public void TestDbRepositoryQueryAllWithOrderBy()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4286,7 +5715,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllWithHints()
+        public void TestDbRepositoryQueryAllWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4309,7 +5738,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllWithOrderByAndWithHints()
+        public void TestDbRepositoryQueryAllWithOrderByAndWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4338,7 +5767,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region QueryAllAsync
+        #region QueryAllAsync<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryQueryAllAsync()
@@ -4364,7 +5793,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllAsyncWithOrderBy()
+        public void TestDbRepositoryQueryAllAsyncWithOrderBy()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4391,7 +5820,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllAsyncWithHints()
+        public void TestDbRepositoryQueryAllAsyncWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4414,7 +5843,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllAsyncWithOrderByAndWithHints()
+        public void TestDbRepositoryQueryAllAsyncWithOrderByAndWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4443,7 +5872,11 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #endregion
+
         #region QueryMultiple
+
+        #region QueryMultiple<TEntity>
 
         #region QueryMultiple<T1, T2>
 
@@ -4633,7 +6066,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region QueryMultipleAsync
+        #region QueryMultipleAsync<TEntity>
 
         #region QueryMultipleAsync<T1, T2>
 
@@ -4823,7 +6256,11 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #endregion
+
         #region Truncate
+
+        #region Truncate<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryTruncate()
@@ -4849,7 +6286,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region TruncateAsync
+        #region TruncateAsync<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryTruncateAsync()
@@ -4876,7 +6313,64 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region Truncate(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryTruncateViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                repository.Truncate(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Act
+                var result = repository.CountAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, result);
+            }
+        }
+
+        #endregion
+
+        #region TruncateAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryTruncateAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var task = repository.TruncateAsync(ClassMappedNameCache.Get<IdentityTable>());
+                task.Wait();
+
+                // Act
+                var result = repository.CountAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, result);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region Update
+
+        #region Update<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryUpdateViaPrimaryKey()
@@ -5095,7 +6589,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region UpdateAsync
+        #region UpdateAsync<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryUpdateAsyncViaPrimaryKey()
@@ -5311,6 +6805,322 @@ namespace RepoDb.IntegrationTests.Operations
                 Helper.AssertPropertiesEquality(last, result.First());
             }
         }
+
+        #endregion
+
+        #region Update(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.Update(ClassMappedNameCache.Get<IdentityTable>(),
+                        item,
+                        new { item.Id });
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+                last.ColumnBit = false;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = repository.Update(ClassMappedNameCache.Get<IdentityTable>(),
+                    last,
+                    field);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                field.Reset();
+                var result = repository.Query<IdentityTable>(field);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+                last.ColumnFloat = last.ColumnFloat * 100;
+                last.ColumnDateTime2 = DateTime.UtcNow;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = repository.Update(ClassMappedNameCache.Get<IdentityTable>(),
+                    last,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                fields.ResetAll();
+                var result = repository.Query<IdentityTable>(fields);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+                last.ColumnFloat = last.ColumnFloat * 100;
+                last.ColumnDateTime2 = DateTime.UtcNow;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = repository.Update(ClassMappedNameCache.Get<IdentityTable>(),
+                    last,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                queryGroup.Reset();
+                var result = repository.Query<IdentityTable>(queryGroup);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        #endregion
+
+        #region UpdateAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateViaTableNameAsyncViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                        item,
+                        new { item.Id }).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateViaTableNameAsyncViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+                last.ColumnBit = false;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = repository.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    last,
+                    field).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                field.Reset();
+                var result = repository.Query<IdentityTable>(field);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateViaTableNameAsyncViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+                last.ColumnFloat = last.ColumnFloat * 100;
+                last.ColumnDateTime2 = DateTime.UtcNow;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = repository.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    last,
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                fields.ResetAll();
+                var result = repository.Query<IdentityTable>(fields);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateViaTableNameAsyncViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+                last.ColumnFloat = last.ColumnFloat * 100;
+                last.ColumnDateTime2 = DateTime.UtcNow;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = repository.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    last,
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                queryGroup.Reset();
+                var result = repository.Query<IdentityTable>(queryGroup);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        #endregion
 
         #endregion
 

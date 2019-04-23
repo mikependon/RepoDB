@@ -640,7 +640,7 @@ namespace RepoDb
             var primaryName = primaryField?.Name;
 
             // Append the proper prefix
-            where?.AppendParametersPrefix();
+            where?.PrependAnUnderscoreAtTheParameters();
 
             // Gets the updatable fields
             var updatableFields = fields

@@ -152,9 +152,9 @@ namespace RepoDb
         #region Methods (Internal)
 
         /// <summary>
-        /// Force to append prefixes on the bound parameter objects.
+        /// Prepend an underscore on every parameter object.
         /// </summary>
-        internal void AppendParametersPrefix()
+        internal void PrependAnUnderscoreAtTheParameters()
         {
             if (ReferenceEquals(null, QueryFields))
             {
@@ -162,7 +162,7 @@ namespace RepoDb
             }
             foreach (var queryField in QueryFields)
             {
-                queryField.AppendParameterPrefix();
+                queryField.PrependAnUnderscoreAtParameter();
             }
         }
 
@@ -571,7 +571,7 @@ namespace RepoDb
                 // Extractable
                 if (expression.IsExtractable())
                 {
-                    leftQueryGroup = new QueryGroup(QueryField.Parse<TEntity>(expression).AsEnumerable());
+                    leftQueryGroup = new QueryGroup(QueryField.Parse<TEntity>(expression));
                     skipRight = true;
                 }
             }

@@ -12,42 +12,46 @@ namespace RepoDb.Extensions
     internal static class ObjectExtension
     {
         /// <summary>
+        /// Merges an object into an instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the object.</typeparam>
+        /// <param name="obj">The object to be merged.</param>
+        /// <param name="queryGroup">The <see cref="QueryGroup"/> object to be merged.</param>
+        /// <returns>An instance of converted dynamic object.</returns>
+        internal static object Merge<TEntity>(this TEntity obj, QueryGroup queryGroup)
+            where TEntity : class
+        {
+            return Merge(obj, PropertyCache.Get<TEntity>().Select(p => p.PropertyInfo), queryGroup);
+        }
+
+        /// <summary>
         /// Merge the <see cref="QueryGroup"/> object into the current object.
         /// </summary>
         /// <param name="obj">The object where the <see cref="QueryGroup"/> object will be merged.</param>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
-        /// <returns>The object instance itself with the merged values.</returns>
+        /// <returns>A dynamic object with the merged fields from <see cref="QueryGroup"/>.</returns>
         public static object Merge(this object obj, QueryGroup queryGroup)
         {
-            var expandObject = new ExpandoObject() as IDictionary<string, object>;
-            foreach (var property in obj?.GetType().GetTypeInfo().GetProperties())
-            {
-                expandObject[property.Name] = property.GetValue(obj);
-            }
-            foreach (var queryField in queryGroup?.Fix().GetFields())
-            {
-                expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
-            }
-            return (ExpandoObject)expandObject;
+            return Merge(obj, obj?.GetType().GetTypeInfo().GetProperties(), queryGroup);
         }
 
         /// <summary>
-        /// Merges an object into an instance of <see cref="QueryGroup"/> object.
+        /// Merge the <see cref="QueryGroup"/> object into the current object.
         /// </summary>
-        /// <param name="obj">The object to be merged.</param>
-        /// <param name="queryGroup">The <see cref="QueryGroup"/> object to be merged.</param>
-        /// <returns>An instance of converted dynamic object.</returns>
-        internal static object AsMergedObject(this object obj, QueryGroup queryGroup)
+        /// <param name="obj">The object where the <see cref="QueryGroup"/> object will be merged.</param>
+        /// <param name="properties">The list of <see cref="PropertyInfo"/> objects.</param>
+        /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
+        /// <returns>The object instance itself with the merged values.</returns>
+        private static object Merge(this object obj, IEnumerable<PropertyInfo> properties, QueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
-            var properties = DataEntityExtension.GetProperties(obj.GetType());
             foreach (var property in properties)
             {
-                expandObject[property.GetUnquotedMappedName()] = property.PropertyInfo.GetValue(obj);
+                expandObject[PropertyMappedNameCache.Get(property, false)] = property.GetValue(obj);
             }
             if (queryGroup != null)
             {
-                foreach (var queryField in queryGroup.Fix().GetFields())
+                foreach (var queryField in queryGroup?.Fix().GetFields())
                 {
                     expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
                 }
@@ -62,7 +66,7 @@ namespace RepoDb.Extensions
         /// <returns>An instance of converted dynamic object.</returns>
         internal static object AsObject(this object obj)
         {
-            return AsMergedObject(obj, null);
+            return Merge(obj, null);
         }
 
         /// <summary>

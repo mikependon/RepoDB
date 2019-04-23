@@ -351,7 +351,7 @@ namespace RepoDb
                 hints3,
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
-
+            
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
             var maps = new[]

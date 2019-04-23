@@ -869,7 +869,7 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region QueryMultple
+        #region CreateQuery(Multple)
 
         [TestMethod]
         public void TestDbRepositoryStatementBuilderForQueryMultiple()

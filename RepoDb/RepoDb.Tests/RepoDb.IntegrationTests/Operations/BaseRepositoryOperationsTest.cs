@@ -260,7 +260,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBatchQueryForDynamic()
+        public void TestBaseRepositoryBatchQueryViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -284,7 +284,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBatchQueryForQueryField()
+        public void TestBaseRepositoryBatchQueryViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -310,7 +310,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBatchQueryForQueryFields()
+        public void TestBaseRepositoryBatchQueryViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -340,7 +340,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBatchQueryForQueryGroup()
+        public void TestBaseRepositoryBatchQueryViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -575,7 +575,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBatchQueryAsyncForDynamic()
+        public void TestBaseRepositoryBatchQueryAsyncViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -599,7 +599,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBatchQueryAsyncForQueryField()
+        public void TestBaseRepositoryBatchQueryAsyncViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -625,7 +625,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBatchQueryAsyncForQueryFields()
+        public void TestBaseRepositoryBatchQueryAsyncViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -655,7 +655,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBatchQueryAsyncForQueryGroup()
+        public void TestBaseRepositoryBatchQueryAsyncViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);

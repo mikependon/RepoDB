@@ -8,6 +8,8 @@ namespace RepoDb
     /// </summary>
     public sealed class Parameter : IEquatable<Parameter>
     {
+        private int m_hashCode = 0;
+
         /// <summary>
         /// Creates a new instance of <see cref="Parameter"/> object.
         /// </summary>
@@ -37,8 +39,11 @@ namespace RepoDb
             Value = value;
             if (appendedUnderscore)
             {
-                AppendUnderscore();
+                PrependAnUnderscore();
             }
+
+            // Set the hashcode
+            m_hashCode = name.GetHashCode();
         }
 
         /// <summary>
@@ -52,9 +57,9 @@ namespace RepoDb
         public object Value { get; }
 
         /// <summary>
-        /// Force to append prefix on the current parameter object.
+        /// Prepend an underscore on the current parameter object.
         /// </summary>
-        internal void AppendUnderscore()
+        internal void PrependAnUnderscore()
         {
             if (!Name.StartsWith("_"))
             {
@@ -88,7 +93,7 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            return Name.GetHashCode();
+            return m_hashCode;
         }
 
         /// <summary>
