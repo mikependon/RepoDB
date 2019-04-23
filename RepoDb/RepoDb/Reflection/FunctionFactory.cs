@@ -220,10 +220,8 @@ namespace RepoDb.Reflection
                 // Identify if the target type is 'Guid'
                 if (propertyType == typeof(Guid) && readerField.Type == typeof(string))
                 {
-                    // This is Guid.Parse()
-                    targetMethod = typeof(Guid).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
-                    targetInstance = null;
-                    targetParameter = expression;
+                    // This is (new Guid(string))
+                    expression = Expression.New(typeof(Guid).GetTypeInfo().GetConstructor(new[] { typeof(string) }), expression);
                 }
                 else if (propertyType == typeof(string) && readerField.Type == typeof(Guid))
                 {
