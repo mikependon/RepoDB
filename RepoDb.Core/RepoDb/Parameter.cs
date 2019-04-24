@@ -25,8 +25,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
-        /// <param name="appendedUnderscore">The value to identify whether the underscope prefix will be appended.</param>
-        internal Parameter(string name, object value, bool appendedUnderscore)
+        /// <param name="prependUnderscore">The value to identify whether the underscope prefix will be prepended.</param>
+        internal Parameter(string name, object value, bool prependUnderscore)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -37,7 +37,7 @@ namespace RepoDb
             // Set the properties
             Name = name.AsUnquoted(true);
             Value = value;
-            if (appendedUnderscore)
+            if (prependUnderscore)
             {
                 PrependAnUnderscore();
             }
