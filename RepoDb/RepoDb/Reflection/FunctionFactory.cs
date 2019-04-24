@@ -78,7 +78,7 @@ namespace RepoDb.Reflection
             var memberAssignments = new List<MemberAssignment>();
             var dataReaderType = typeof(DbDataReader);
             var tableFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
-            var strict = TypeMapper.ConversionType == ConversionType.Default;
+            var isDefaultConversion = TypeMapper.ConversionType == ConversionType.Default;
 
             // Iterate each properties
             foreach (var property in PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite))
@@ -104,7 +104,7 @@ namespace RepoDb.Reflection
                     if (readerGetValueMethod == null)
                     {
                         // Single value is throwing an exception in GetString(), skip it and use the GetValue() instead
-                        if (strict == false && readerField.Type != typeof(Single))
+                        if (isDefaultConversion == false && readerField.Type != typeof(Single))
                         {
                             readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod(string.Concat("Get", propertyType.Name));
                         }
@@ -150,13 +150,13 @@ namespace RepoDb.Reflection
                         // Only if there are conversions, execute the logics inside
                         if (isConversionNeeded == true)
                         {
-                            if (strict == true)
+                            if (isDefaultConversion == true)
                             {
                                 falseExpression = Expression.Convert(falseExpression, propertyType);
                             }
                             else
                             {
-                                falseExpression = Convert(falseExpression, readerField, propertyType, convertType, strict);
+                                falseExpression = Convert(falseExpression, readerField, propertyType, convertType);
                             }
                         }
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
@@ -178,7 +178,7 @@ namespace RepoDb.Reflection
                         // Convert to correct type if necessary
                         if (isConversionNeeded == true)
                         {
-                            valueExpression = Convert(valueExpression, readerField, propertyType, convertType, strict);
+                            valueExpression = Convert(valueExpression, readerField, propertyType, convertType);
                         }
 
                         // Set for the 'Nullable' property
@@ -201,10 +201,9 @@ namespace RepoDb.Reflection
         private static Expression Convert(Expression expression,
             DataReaderFieldDefinition readerField,
             Type propertyType,
-            Type convertType,
-            bool strict)
+            Type convertType)
         {
-            if (strict == true)
+            if (TypeMapper.ConversionType == ConversionType.Default)
             {
                 return Expression.Convert(expression, propertyType);
             }
