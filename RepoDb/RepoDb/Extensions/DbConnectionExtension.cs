@@ -764,13 +764,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteScalar<T>
+        #region ExecuteScalar<TResult>
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
-        /// <typeparam name="T">The target return type.</typeparam>
+        /// <typeparam name="TResult">The target return type.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -781,14 +781,14 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
-        public static T ExecuteScalar<T>(this IDbConnection connection,
+        public static TResult ExecuteScalar<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return ExecuteScalarInternal<T>(connection: connection,
+            return ExecuteScalarInternal<TResult>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -810,7 +810,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
-        internal static T ExecuteScalarInternal<T>(this IDbConnection connection,
+        internal static TResult ExecuteScalarInternal<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -819,19 +819,19 @@ namespace RepoDb
         {
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
-                return ObjectConverter.ToType<T>(command.ExecuteScalar());
+                return ObjectConverter.ToType<TResult>(command.ExecuteScalar());
             }
         }
 
         #endregion
 
-        #region ExecuteScalarAsync<T>
+        #region ExecuteScalarAsync<TResult>
 
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
-        /// <typeparam name="T">The target return type.</typeparam>
+        /// <typeparam name="TResult">The target return type.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -842,14 +842,14 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
-        public static Task<T> ExecuteScalarAsync<T>(this IDbConnection connection,
+        public static Task<TResult> ExecuteScalarAsync<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return ExecuteScalarAsyncInternal<T>(connection: connection,
+            return ExecuteScalarAsyncInternal<TResult>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -871,7 +871,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
-        internal static async Task<T> ExecuteScalarAsyncInternal<T>(this IDbConnection connection,
+        internal static async Task<TResult> ExecuteScalarAsyncInternal<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -880,7 +880,7 @@ namespace RepoDb
         {
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
-                return ObjectConverter.ToType<T>(await command.ExecuteScalarAsync());
+                return ObjectConverter.ToType<TResult>(await command.ExecuteScalarAsync());
             }
         }
 

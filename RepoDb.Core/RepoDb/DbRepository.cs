@@ -626,13 +626,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteScalar<T>
+        #region ExecuteScalar<TResult>
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
-        /// <typeparam name="T">The target return type.</typeparam>
+        /// <typeparam name="TResult">The target return type.</typeparam>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
         /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
@@ -641,7 +641,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
-        public T ExecuteScalar<T>(string commandText,
+        public TResult ExecuteScalar<TResult>(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
@@ -652,7 +652,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.ExecuteScalar<T>(commandText: commandText,
+                return connection.ExecuteScalar<TResult>(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
@@ -672,13 +672,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteScalarAsync<T>
+        #region ExecuteScalarAsync<TResult>
 
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
-        /// <typeparam name="T">The target return type.</typeparam>
+        /// <typeparam name="TResult">The target return type.</typeparam>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
         /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
@@ -687,7 +687,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
-        public async Task<T> ExecuteScalarAsync<T>(string commandText,
+        public async Task<TResult> ExecuteScalarAsync<TResult>(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
@@ -698,7 +698,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.ExecuteScalarAsync<T>(commandText: commandText,
+                return await connection.ExecuteScalarAsync<TResult>(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
