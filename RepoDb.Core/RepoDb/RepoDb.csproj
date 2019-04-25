@@ -4,35 +4,16 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.9.0</Version>
+    <Version>1.9.1</Version>
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>RepoDb v1.9.0
-- [Core] Introduced table-based operations for 'Count', 'CountAll', 'Delete', 'DeleteAll', 'Insert', 'Merge', 'Truncate' and 'Update'.
-- [Core] Introduced 'CountAll' and 'QueryAll' operations.
-- [Core] Introduced pluggable interface 'DbHelpers'.
-- [Core] Updated the 'QueryBuilder' to remove the 'TEntity' at class level (moved it to method level).
-- [Core] Updated the 'StatementBuilder' SQL Text generation via TableName.
-- [Core] Supported 'Dynamic', 'ExpandoObject', 'IDictionary&lt;string, object&gt;', 'QueryField', 'IEnumerable&lt;QueryField&gt;' and 'QueryGroup' objects in the 'Execute&lt;Method&gt;' calls.
-- [Added] ExecuteScalar&lt;T&gt; and ExecuteScalarAsync&lt;T&gt;
-- [Added] DbField
-- [Added] DbFieldCache
-- [Removed] AsyncResultExtractor
-- [Removed] StatementBuilderMapItem
-- [Removed] FieldDefinition
-- [Removed] FieldDefinitionCache
-- [Renamed] SqlHelper to SqlDbHelper
-- [Renamed] PrimaryKeyCache to PrimaryCache'.
-- [Renamed] PrimaryKeyIdentityCache to PrimaryIdentityCache
-- [Optimization] CountAsync operation is now returning the 'Task&lt;int&gt;' type instead of 'Task&lt;object&gt;'.
-- [Optimization] Allow passing of cache expiration time during 'Query' and 'QueryAll' calls.
-- [Optimization, Pull-Request] Enumerations 'Order', 'Conjunction' and 'Operation' is now a pre-generated 'int' values.
-- Introduced complete sets of IntegrationTests and UnitTests in all of the changes mentioned above.
-- See v1.9.0-beta1 and v1.9.0-beta2 for complete set of changes.</PackageReleaseNotes>
+    <PackageReleaseNotes>RepoDb v1.9.1:
+- Stable Release of RepoDb.
+- [Update] Exposed BulkCopyOptions and Transaction to BulkInsert Operation.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb</RepositoryUrl>
@@ -40,8 +21,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.9.0.3</AssemblyVersion>
-    <FileVersion>1.9.0.3</FileVersion>
+    <AssemblyVersion>1.9.1.0</AssemblyVersion>
+    <FileVersion>1.9.1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
