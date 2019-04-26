@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Attributes\IdentityAttribute.cs" />
     <Compile Include="BulkInsertMapItem.cs" />
+    <Compile Include="ClassExpressions\ClassPropertyValuesExpression.cs" />
     <Compile Include="CommandArrayParameter.cs" />
     <Compile Include="CommandParameter.cs" />
     <Compile Include="DbHelperMapper.cs" />
@@ -144,7 +145,6 @@
     <Compile Include="Requests\QueryRequest.cs" />
     <Compile Include="QueryMultipleExtractor.cs" />
     <Compile Include="DbHelpers\SqlDbHelper.cs" />
-    <Compile Include="ClassExpressions\ClassPropertyValuesExpression.cs" />
     <Compile Include="CacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />
     <Compile Include="Extensions\ArrayExtension.cs" />

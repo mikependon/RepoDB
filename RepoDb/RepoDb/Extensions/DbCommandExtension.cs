@@ -14,6 +14,9 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class DbCommandExtension
     {
+        private static Type m_bytesType = typeof(byte[]);
+        private static Type m_dictionaryType = typeof(Dictionary<,>);
+
         /// <summary>
         /// Creates a parameter for a command object.
         /// </summary>
@@ -88,14 +91,8 @@ namespace RepoDb.Extensions
                 return;
             }
 
-            // Supporting the IEnumerable<PropertyValue>
-            if (param is IEnumerable<PropertyValue>)
-            {
-                CreateParameters(command, (IEnumerable<PropertyValue>)param);
-            }
-
             // Supporting the IDictionary<string, object>
-            else if (param is ExpandoObject || param is IDictionary<string, object>)
+            if (param is ExpandoObject || param is IDictionary<string, object>)
             {
                 CreateParameters(command, (IDictionary<string, object>)param, skip);
             }
@@ -122,32 +119,39 @@ namespace RepoDb.Extensions
             else
             {
                 var type = param.GetType();
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == m_dictionaryType)
                 {
                     throw new InvalidOperationException("Invalid parameters passed. The supported type of dictionary object must be typeof(IDictionary<string, object>).");
                 }
 
-                var properties = (IEnumerable<PropertyInfo>)null;
+                var properties = (IEnumerable<ClassProperty>)null;
 
                 // Add this check for performance
                 if (skip == null)
                 {
-                    properties = type.GetProperties();
+                    properties = PropertyCache.Get(type);
                 }
                 else
                 {
-                    properties = type
-                        .GetProperties()
-                        .Where(p => skip?.Contains(p.Name, StringComparer.CurrentCultureIgnoreCase) == false);
+                    properties = PropertyCache.Get(type)
+                        .Where(p => skip?.Contains(p.PropertyInfo.Name,
+                            StringComparer.CurrentCultureIgnoreCase) == false);
                 }
 
                 // Iterate the properties
                 foreach (var property in properties)
                 {
-                    var dbType = property.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                        TypeMapper.Get(GetUnderlyingType(property.PropertyType))?.DbType;
-                    command.Parameters.Add(command.CreateParameter(
-                        PropertyMappedNameCache.Get(property, false), property.GetValue(param), dbType));
+                    var name = property.GetUnquotedMappedName();
+                    var value = property.PropertyInfo.GetValue(param);
+                    var dbType = property.GetDbType() ?? TypeMapper.Get(GetUnderlyingType(property.PropertyInfo.PropertyType))?.DbType;
+                    if (dbType == null)
+                    {
+                        if (value == null && property.PropertyInfo.PropertyType == m_bytesType)
+                        {
+                            dbType = DbType.Binary;
+                        }
+                    }
+                    command.Parameters.Add(command.CreateParameter(name, value, dbType));
                 }
             }
         }
@@ -190,28 +194,6 @@ namespace RepoDb.Extensions
 
                 // Add the parameter
                 command.Parameters.Add(command.CreateParameter(item.Key, value, dbType));
-            }
-        }
-
-        /// <summary>
-        /// Create the command parameters from the list of <see cref="PropertyValue"/> objects.
-        /// </summary>
-        /// <param name="command">The command object to be used.</param>
-        /// <param name="propertyValues">The list <see cref="PropertyValue"/> to be added.</param>
-        private static void CreateParameters(this IDbCommand command,
-            IEnumerable<PropertyValue> propertyValues)
-        {
-            foreach (var propertyValue in propertyValues)
-            {
-                var dbType = propertyValue.Property.GetDbType();
-                if (dbType == null)
-                {
-                    if (propertyValue.Value == null && propertyValue.Property.PropertyInfo.PropertyType == typeof(byte[]))
-                    {
-                        dbType = DbType.Binary;
-                    }
-                }
-                command.Parameters.Add(command.CreateParameter(propertyValue.Name, propertyValue.Value, dbType));
             }
         }
 

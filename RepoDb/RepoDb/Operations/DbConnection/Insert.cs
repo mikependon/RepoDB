@@ -3,7 +3,6 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -105,12 +104,11 @@ namespace RepoDb
                 connection,
                 FieldCache.Get<TEntity>(),
                 statementBuilder);
-            var param = ClassExpression.Extract(entity);
 
             // Return the result
             return InsertInternalBase<TResult>(connection: connection,
                 request: request,
-                param: param,
+                param: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -209,12 +207,11 @@ namespace RepoDb
                 connection,
                 FieldCache.Get<TEntity>(),
                 statementBuilder);
-            var param = ClassExpression.Extract(entity);
 
             // Return the result
             return InsertAsyncInternalBase<TResult>(connection: connection,
                 request: request,
-                param: param,
+                param: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);

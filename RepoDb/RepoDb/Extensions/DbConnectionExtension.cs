@@ -1141,6 +1141,12 @@ namespace RepoDb
                         continue;
                     }
 
+                    // Skip if it is an array
+                    if (property.DeclaringType.IsGenericType == false && property.PropertyType == typeof(byte[]))
+                    {
+                        continue;
+                    }
+
                     // Initialize the array if it not yet initialized
                     if (commandArrayParameters == null)
                     {

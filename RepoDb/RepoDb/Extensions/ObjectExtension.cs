@@ -42,7 +42,7 @@ namespace RepoDb.Extensions
         /// <param name="properties">The list of <see cref="PropertyInfo"/> objects.</param>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
         /// <returns>The object instance itself with the merged values.</returns>
-        private static object Merge(this object obj, IEnumerable<PropertyInfo> properties, QueryGroup queryGroup)
+        public static object Merge(this object obj, IEnumerable<PropertyInfo> properties, QueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             foreach (var property in properties)
@@ -149,36 +149,6 @@ namespace RepoDb.Extensions
             return value is float ||
                 value is double ||
                 value is decimal;
-        }
-
-        /// <summary>
-        /// Identify whether an object is a number.
-        /// </summary>
-        /// <param name="value">The value to be identified.</param>
-        /// <returns>True if the value is a number.</returns>
-        public static bool IsNumber(this object value)
-        {
-            return value is sbyte ||
-                value is byte ||
-                value is short ||
-                value is ushort ||
-                value is int ||
-                value is uint ||
-                value is long ||
-                value is ulong ||
-                value is float ||
-                value is double ||
-                value is decimal;
-        }
-
-        /// <summary>
-        /// Converts an object to a <see cref="decimal"/>.
-        /// </summary>
-        /// <param name="value">The value to be converted.</param>
-        /// <returns>A <see cref="decimal"/> value of the object.</returns>
-        public static double ToDecimal(this object value)
-        {
-            return Convert.ToDouble(value);
         }
 
         /// <summary>
