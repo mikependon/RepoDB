@@ -220,7 +220,16 @@ namespace RepoDb
                         fieldValue.SetName(string.Concat(cQueryField.Parameter.Name, "_", c));
                     }
                 }
-                secondList.RemoveAll(qf => qf.Field.Equals(qf.Field));
+                secondList.RemoveAll(qf => qf.Field.Equals(queryField.Field));
+            }
+
+            // Set all flags of the child groups
+            if (QueryGroups?.Any() == true)
+            {
+                foreach (var queryGroup in QueryGroups)
+                {
+                    queryGroup.m_isFixed = true;
+                }
             }
 
             // Set the flag
@@ -236,13 +245,26 @@ namespace RepoDb
         public void Reset()
         {
             // Rest all fields
-            foreach (var field in GetFields())
+            if (QueryFields?.Any() == true)
             {
-                field.Reset();
+                foreach (var field in QueryFields)
+                {
+                    field.Reset();
+                }
+            }
+
+            // Rest all groups
+            if (QueryGroups?.Any() == true)
+            {
+                foreach (var group in QueryGroups)
+                {
+                    group.Reset();
+                }
             }
 
             // Reset the attribute
             m_conjuctionTextAttribute = null;
+            m_isFixed = false;
 
             // Reset the hash code
             m_hashCode = null;
@@ -428,27 +450,29 @@ namespace RepoDb
         /// <returns>A stringified formatted-text of the current instance.</returns>
         public string GetString()
         {
+            // Fix first the parameters
+            Fix();
+
+            // Variables
             var groupList = new List<string>();
             var conjunction = GetConjunctionText();
-            var separator = string.Concat(" ", conjunction, " ");
+            var separator = string.Concat(" ", GetConjunctionText(), " ");
+
+            // Check the instance fields
             if (QueryFields?.Count() > 0)
             {
-                var fieldList = new List<string>();
-                foreach (var queryField in QueryFields)
-                {
-                    fieldList.Add(queryField.AsFieldAndParameter());
-                }
-                groupList.Add(fieldList.Join(separator));
+                var fields = QueryFields.Select(qf => qf.AsFieldAndParameter()).Join(separator);
+                groupList.Add(fields);
             }
+
+            // Check the instance groups
             if (QueryGroups?.Count() > 0)
             {
-                var fieldList = new List<string>();
-                foreach (var queryGroup in QueryGroups)
-                {
-                    fieldList.Add(queryGroup.GetString());
-                }
-                groupList.Add(fieldList.Join(separator));
+                var groups = QueryGroups.Select(qg => qg.GetString()).Join(separator);
+                groupList.Add(groups);
             }
+
+            // Return the value
             return IsNot ? string.Concat("NOT (", groupList.Join(conjunction), ")") : string.Concat("(", groupList.Join(separator), ")");
         }
 
@@ -459,14 +483,20 @@ namespace RepoDb
         /// <returns>An enumerable list of <see cref="QueryField"/> objects.</returns>
         public IEnumerable<QueryField> GetFields(bool traverse = true)
         {
+            // Variables
             var explore = (Action<QueryGroup>)null;
             var queryFields = new List<QueryField>();
+
+            // Logic for traverse
             explore = new Action<QueryGroup>(queryGroup =>
             {
+                // Check child fields
                 if (queryGroup.QueryFields?.Count() > 0)
                 {
                     queryFields.AddRange(queryGroup.QueryFields);
                 }
+
+                // Check child groups
                 if (traverse == true && queryGroup.QueryGroups?.Count() > 0)
                 {
                     foreach (var qg in queryGroup.QueryGroups)
@@ -475,7 +505,11 @@ namespace RepoDb
                     }
                 }
             });
+
+            // Explore
             explore(this);
+
+            // Return the value
             return queryFields;
         }
 

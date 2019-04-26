@@ -43,7 +43,7 @@ namespace RepoDb.Extensions
         // AsBetweenParameter
         internal static string AsBetweenParameter(this QueryField queryField, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Format(queryField.Parameter.Name.AsParameter(prefix), "_Left AND ", queryField.Parameter.Name.AsParameter(prefix), "_Right");
+            return string.Concat(queryField.Parameter.Name.AsParameter(prefix), "_Left AND ", queryField.Parameter.Name.AsParameter(prefix), "_Right");
         }
 
         // AsInParameter

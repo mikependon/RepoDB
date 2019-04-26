@@ -526,7 +526,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder WhereFrom(QueryGroup queryGroup)
         {
-            return (queryGroup != null) ? Append(string.Concat("WHERE ", queryGroup.Fix().GetString())) : this;
+            return (queryGroup != null) ? Append(string.Concat("WHERE ", queryGroup.GetString())) : this;
         }
 
         /// <summary>
