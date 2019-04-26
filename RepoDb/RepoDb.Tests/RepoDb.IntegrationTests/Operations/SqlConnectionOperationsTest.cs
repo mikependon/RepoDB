@@ -385,6 +385,133 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region BatchQuery<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryWithExtraFieldsViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => connection.Insert(entity));
+
+                // Act
+                var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (2)
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryWithExtraFieldsViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => connection.Insert(entity));
+
+                // Act
+                var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: field,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (3, 6)
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryWithExtraFieldsViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => connection.Insert(entity));
+
+                // Act
+                var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: fields,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryWithExtraFieldsViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => connection.Insert(entity));
+
+                // Act
+                var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: queryGroup,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        #endregion
+
         #region BatchQueryAsync<TEntity>
 
         [TestMethod]
@@ -735,11 +862,138 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region BatchQueryAsync<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => connection.Insert(entity));
+
+                // Act
+                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (2)
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => connection.Insert(entity));
+
+                // Act
+                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: field,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (3, 6)
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => connection.Insert(entity));
+
+                // Act
+                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: fields,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(entity => connection.Insert(entity));
+
+                // Act
+                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: queryGroup,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region BulkInsert
 
-        #region BulkInsert
+        #region BulkInsert<TEntity>
 
         [TestMethod]
         public void TestSqlConnectionBulkInsertForEntities()
@@ -943,6 +1197,72 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        #endregion
+
+        #region BulkInsert<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertForEntitiesWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(tables);
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ToList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertForEntitiesWithExtraFieldsWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(tables);
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ToList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        #endregion
+
+        #region BulkInsert(TableName)
+
         [TestMethod]
         public void TestSqlConnectionBulkInsertForTableNameDbDataReader()
         {
@@ -1120,7 +1440,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region BulkInsertAsync
+        #region BulkInsertAsync<TEntity>
 
         [TestMethod]
         public void TestSqlConnectionBulkInsertAsyncForEntities()
@@ -1335,6 +1655,72 @@ namespace RepoDb.IntegrationTests.Operations
                 }
             }
         }
+
+        #endregion
+
+        #region BulkInsertAsync<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertAsyncForEntitiesWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ToList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertAsyncForEntitiesWithExtraFieldsWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ToList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        #endregion
+
+        #region BulkInsertAsync(TableName)
 
         [TestMethod]
         public void TestSqlConnectionBulkInsertAsyncForTableNameDbDataReader()
@@ -2928,6 +3314,33 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region Insert<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionInsertWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        #endregion
+
         #region InsertAsync<TEntity>
 
         [TestMethod]
@@ -2939,7 +3352,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.InsertAsync(item).Result));
+                tables.ForEach(item => item.Id = connection.InsertAsync<IdentityTable, int>(item).Result);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -2991,6 +3404,33 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(item.Id, value);
                 Assert.AreEqual(1, result.Count());
                 Helper.AssertPropertiesEquality(item, result.First());
+            }
+        }
+
+        #endregion
+
+        #region InsertAsync<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAsyncWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = connection.InsertAsync<WithExtraFieldsIdentityTable, int>(item).Result);
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
             }
         }
 
@@ -3326,6 +3766,57 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region Merge<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionMergeWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(last.Id).First();
+
+                // Set
+                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(queryResult);
+
+                // Act
+                entity.ColumnBit = false;
+                entity.ColumnDateTime = Helper.EpocDate;
+                entity.ColumnDateTime2 = Helper.EpocDate;
+                entity.ColumnDecimal = 0;
+                entity.ColumnFloat = 0;
+                entity.ColumnInt = 0;
+                entity.ColumnNVarChar = "Merged";
+
+                // Act
+                var mergeResult = connection.Merge(entity);
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = connection.Query<IdentityTable>(last.Id).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual(0, queryResult.ColumnInt);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        #endregion
+
         #region MergeAsync<TEntity>
 
         [TestMethod]
@@ -3498,6 +3989,57 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        #endregion
+
+        #region MergeAsync<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(last.Id).First();
+
+                // Set
+                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(queryResult);
+
+                // Act
+                entity.ColumnBit = false;
+                entity.ColumnDateTime = Helper.EpocDate;
+                entity.ColumnDateTime2 = Helper.EpocDate;
+                entity.ColumnDecimal = 0;
+                entity.ColumnFloat = 0;
+                entity.ColumnInt = 0;
+                entity.ColumnNVarChar = "Merged";
+
+                // Act
+                var mergeResult = connection.MergeAsync(entity).Result;
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = connection.Query<IdentityTable>(last.Id).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual(0, queryResult.ColumnInt);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
             }
         }
@@ -4288,7 +4830,37 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        #region Array.Contains, String.Contains, String.StartsWith, String.EndsWith
+        #endregion
+
+        #region Query<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionQueryWithExtraFieldsWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<WithExtraFieldsIdentityTable>((object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #region Query<TEntity>(Array.Contains, String.Contains, String.StartsWith, String.EndsWith)
 
         [TestMethod]
         public void TestSqlConnectionQueryViaExpressionWithArrayContains()
@@ -4799,8 +5371,6 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #endregion
-
         #region QueryAsync<TEntity>
 
         [TestMethod]
@@ -5215,7 +5785,37 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        #region Array.Contains, String.Contains, String.StartsWith, String.EndsWith
+        #endregion
+
+        #region QueryAsync<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithExtraFieldsWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<WithExtraFieldsIdentityTable>((object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #region QueryAsync<TEntity>(Array.Contains, String.Contains, String.StartsWith, String.EndsWith)
 
         [TestMethod]
         public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContains()
@@ -5728,8 +6328,6 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #endregion
-
         #region QueryAll
 
         #region QueryAll<TEntity>
@@ -5837,6 +6435,33 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region QueryAll<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAll<WithExtraFieldsIdentityTable>();
+
+                // Assert
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        #endregion
+
         #region QueryAllAsync<TEntity>
 
         [TestMethod]
@@ -5936,6 +6561,33 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(table =>
                 {
                     Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        #endregion
+
+        #region QueryAllAsync<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAllAsync<WithExtraFieldsIdentityTable>().Result;
+
+                // Assert
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
                 });
             }
         }
@@ -6113,6 +6765,196 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryMultiple<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2,
+                    where3: item => item.ColumnInt == 3,
+                    where4: item => item.ColumnInt == 4,
+                    where5: item => item.ColumnInt == 5,
+                    where6: item => item.ColumnInt == 6,
+                    where7: item => item.ColumnInt == 7);
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.Item3.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.Item4.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Item5.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Item6.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.Item7.First());
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region QueryMultiple<T>(With Extra Fields)
+
+        #region QueryMultiple<T1, T2>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleWithExtraFieldsT2()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(2);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultiple<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2);
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+            }
+        }
+
+        #endregion
+
+        #region QueryMultiple<T1, T2, T3>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleWithExtraFieldsT3()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(3);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultiple<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2,
+                    where3: item => item.ColumnInt == 3);
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.Item3.First());
+            }
+        }
+
+        #endregion
+
+        #region QueryMultiple<T1, T2, T3, T4>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleWithExtraFieldsT4()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(4);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultiple<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2,
+                    where3: item => item.ColumnInt == 3,
+                    where4: item => item.ColumnInt == 4);
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.Item3.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.Item4.First());
+            }
+        }
+
+        #endregion
+
+        #region QueryMultiple<T1, T2, T3, T4, T5>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleWithExtraFieldsT5()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(5);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultiple<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2,
+                    where3: item => item.ColumnInt == 3,
+                    where4: item => item.ColumnInt == 4,
+                    where5: item => item.ColumnInt == 5);
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.Item3.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.Item4.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Item5.First());
+            }
+        }
+
+        #endregion
+
+        #region QueryMultiple<T1, T2, T3, T4, T5, T6>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleWithExtraFieldsT6()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(6);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultiple<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2,
+                    where3: item => item.ColumnInt == 3,
+                    where4: item => item.ColumnInt == 4,
+                    where5: item => item.ColumnInt == 5,
+                    where6: item => item.ColumnInt == 6);
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.Item3.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.Item4.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Item5.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Item6.First());
+            }
+        }
+
+        #endregion
+
+        #region QueryMultiple<T1, T2, T3, T4, T5, T6, T7>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleWithExtraFieldsT7()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(7);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultiple<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
@@ -6326,6 +7168,196 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region QueryMultipleAsync<T>(With Extra Fields)
+
+        #region QueryMultipleAsync<T1, T2>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT2()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(2);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+            }
+        }
+
+        #endregion
+
+        #region QueryMultipleAsync<T1, T2, T3>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT3()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(3);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2,
+                    where3: item => item.ColumnInt == 3).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.Item3.First());
+            }
+        }
+
+        #endregion
+
+        #region QueryMultipleAsync<T1, T2, T3, T4>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT4()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(4);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2,
+                    where3: item => item.ColumnInt == 3,
+                    where4: item => item.ColumnInt == 4).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.Item3.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.Item4.First());
+            }
+        }
+
+        #endregion
+
+        #region QueryMultipleAsync<T1, T2, T3, T4, T5>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT5()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(5);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2,
+                    where3: item => item.ColumnInt == 3,
+                    where4: item => item.ColumnInt == 4,
+                    where5: item => item.ColumnInt == 5).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.Item3.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.Item4.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Item5.First());
+            }
+        }
+
+        #endregion
+
+        #region QueryMultipleAsync<T1, T2, T3, T4, T5, T6>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT6()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(6);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2,
+                    where3: item => item.ColumnInt == 3,
+                    where4: item => item.ColumnInt == 4,
+                    where5: item => item.ColumnInt == 5,
+                    where6: item => item.ColumnInt == 6).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.Item3.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.Item4.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Item5.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Item6.First());
+            }
+        }
+
+        #endregion
+
+        #region QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT7()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(7);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                    where1: item => item.ColumnInt == 1,
+                    where2: item => item.ColumnInt == 2,
+                    where3: item => item.ColumnInt == 3,
+                    where4: item => item.ColumnInt == 4,
+                    where5: item => item.ColumnInt == 5,
+                    where6: item => item.ColumnInt == 6,
+                    where7: item => item.ColumnInt == 7).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.Item2.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.Item3.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.Item4.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Item5.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Item6.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.Item7.First());
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #endregion
 
         #region Truncate
@@ -6441,7 +7473,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region Update
 
         #region Update<TEntity>
-        
+
         [TestMethod]
         public void TestSqlConnectionUpdateViaPrimaryKey()
         {
@@ -6659,8 +7691,239 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region Update<TEntity>(With Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateWithExtraFieldViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(item);
+                    var affectedRows = connection.Update(entity, entity.Id);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateWithExtraFieldViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(item);
+                    var affectedRows = connection.Update(entity, new { entity.Id });
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateWithExtraFieldViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(item);
+                    var affectedRows = connection.Update(entity, c => c.Id == entity.Id);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateWithExtraFieldViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+
+                // Setup
+                last.ColumnBit = false;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(last);
+                var affectedRows = connection.Update(entity, field);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                field.Reset();
+                var result = connection.Query<IdentityTable>(field);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateWithExtraFieldViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+
+                // Setup
+                last.ColumnFloat = last.ColumnFloat * 100;
+                last.ColumnDateTime2 = DateTime.UtcNow;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(last);
+                var affectedRows = connection.Update(entity, fields);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                fields.ResetAll();
+                var result = connection.Query<IdentityTable>(fields);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateWithExtraFieldViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+
+                // Setup
+                last.ColumnFloat = last.ColumnFloat * 100;
+                last.ColumnDateTime2 = DateTime.UtcNow;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(last);
+                var affectedRows = connection.Update(entity, queryGroup);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                queryGroup.Reset();
+                var result = connection.Query<IdentityTable>(queryGroup);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        #endregion
+
         #region UpdateAsync<TEntity>
-        
+
         [TestMethod]
         public void TestSqlConnectionUpdateAsyncViaPrimaryKey()
         {
@@ -6878,8 +8141,239 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region UpdateAsync<TEntity(With Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncWithExtraFieldViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(item);
+                    var affectedRows = connection.UpdateAsync(entity, entity.Id).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncWithExtraFieldViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(item);
+                    var affectedRows = connection.UpdateAsync(entity, new { entity.Id }).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncWithExtraFieldViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(item);
+                    var affectedRows = connection.UpdateAsync(entity, c => c.Id == entity.Id).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncWithExtraFieldViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+
+                // Setup
+                last.ColumnBit = false;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(last);
+                var affectedRows = connection.UpdateAsync(entity, field).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                field.Reset();
+                var result = connection.Query<IdentityTable>(field);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncWithExtraFieldViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+
+                // Setup
+                last.ColumnFloat = last.ColumnFloat * 100;
+                last.ColumnDateTime2 = DateTime.UtcNow;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(last);
+                var affectedRows = connection.UpdateAsync(entity, fields).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                fields.ResetAll();
+                var result = connection.Query<IdentityTable>(fields);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncWithExtraFieldViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Setup
+                var last = tables.Last();
+
+                // Setup
+                last.ColumnFloat = last.ColumnFloat * 100;
+                last.ColumnDateTime2 = DateTime.UtcNow;
+                last.ColumnDecimal = last.ColumnDecimal * 100;
+
+                // Act
+                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(last);
+                var affectedRows = connection.UpdateAsync(entity, queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                queryGroup.Reset();
+                var result = connection.Query<IdentityTable>(queryGroup);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        #endregion
+
         #region Update(TableName)
-        
+
         [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameViaDynamic()
         {
@@ -6916,7 +8410,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
-        
+
         [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameViaQueryField()
         {
@@ -7036,7 +8530,7 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region UpdateAsync(TableName)
-        
+
         [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameAsyncViaDynamic()
         {
@@ -7073,7 +8567,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
             }
         }
-        
+
         [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameAsyncViaQueryField()
         {

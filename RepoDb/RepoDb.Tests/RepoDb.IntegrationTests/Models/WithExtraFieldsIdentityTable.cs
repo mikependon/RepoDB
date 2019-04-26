@@ -1,8 +1,10 @@
-﻿using System;
+﻿using RepoDb.Attributes;
+using System;
 
 namespace RepoDb.IntegrationTests.Models
 {
-    public class IdentityTable
+    [Map("[dbo].[IdentityTable]")]
+    public class WithExtraFieldsIdentityTable
     {
         public long Id { get; set; }
         public Guid RowGuid { get; set; }

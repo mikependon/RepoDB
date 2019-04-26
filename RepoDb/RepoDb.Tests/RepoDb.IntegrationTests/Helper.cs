@@ -56,6 +56,41 @@ namespace RepoDb.IntegrationTests
         }
 
         /// <summary>
+        /// Converts the object into a type.
+        /// </summary>
+        /// <typeparam name="T">The target type to convert to.</typeparam>
+        /// <param name="obj">The object instance.</param>
+        /// <param name="strict">True if to be strict on the conversion.</param>
+        /// <returns>The instance of the converted object.</returns>
+        public static T ConverToType<T>(object obj, bool strict = true)
+        {
+            var fromType = obj.GetType();
+            var toTypeProperties = typeof(T).GetProperties();
+            var result = default(T);
+            fromType.GetProperties().ToList().ForEach(property =>
+            {
+                var toProperty = toTypeProperties.FirstOrDefault(p => p.Name == property.Name);
+                if (strict)
+                {
+                    if (toProperty == null)
+                    {
+                        throw new NullReferenceException(property.Name);
+                    }
+                }
+                if (toProperty == null)
+                {
+                    return;
+                }
+                if (result == null)
+                {
+                    result = Activator.CreateInstance<T>();
+                }
+                toProperty.SetValue(result, property.GetValue(obj));
+            });
+            return result;
+        }
+
+        /// <summary>
         /// Creates a list of <see cref="IdentityTable"/> objects.
         /// </summary>
         /// <param name="count">The number of rows.</param>
@@ -69,6 +104,58 @@ namespace RepoDb.IntegrationTests
                 tables.Add(new IdentityTable
                 {
                     RowGuid = Guid.NewGuid(),
+                    ColumnBit = true,
+                    ColumnDateTime = EpocDate.AddDays(index),
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = index,
+                    ColumnFloat = index,
+                    ColumnInt = index,
+                    ColumnNVarChar = $"NVARCHAR{index}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates a list of <see cref="WithExtraFieldsIdentityTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="IdentityTable"/> objects.</returns>
+        public static List<WithExtraFieldsIdentityTable> CreateWithExtraFieldsIdentityTables(int count)
+        {
+            var tables = new List<WithExtraFieldsIdentityTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new WithExtraFieldsIdentityTable
+                {
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = true,
+                    ColumnDateTime = EpocDate.AddDays(index),
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = index,
+                    ColumnFloat = index,
+                    ColumnInt = index,
+                    ColumnNVarChar = $"NVARCHAR{index}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates a list of <see cref="NonIdentityTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="IdentityTable"/> objects.</returns>
+        public static List<NonIdentityTable> CreateNonIdentityTables(int count)
+        {
+            var tables = new List<NonIdentityTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new NonIdentityTable
+                {
+                    Id = Guid.NewGuid(),
                     ColumnBit = true,
                     ColumnDateTime = EpocDate.AddDays(index),
                     ColumnDateTime2 = DateTime.UtcNow,
@@ -122,24 +209,47 @@ namespace RepoDb.IntegrationTests
         }
 
         /// <summary>
+        /// Creates an instance of <see cref="WithExtraFieldsIdentityTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="NonIdentityTable"/> object.</returns>
+        public static WithExtraFieldsIdentityTable CreateWithExtraFieldsIdentityTable()
+        {
+            var random = new Random();
+            return new WithExtraFieldsIdentityTable
+            {
+                RowGuid = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        /// <summary>
         /// Asserts the equalify of 2 types.
         /// </summary>
-        /// <typeparam name="T">The type of the objects.</typeparam>
+        /// <typeparam name="T1">The type of first object.</typeparam>
+        /// <typeparam name="T2">The type of second object.</typeparam>
         /// <param name="t1">The instance of first object.</param>
         /// <param name="t2">The instance of second object.</param>
-        public static void AssertPropertiesEquality<T>(T t1, T t2)
+        public static void AssertPropertiesEquality<T1, T2>(T1 t1, T2 t2)
         {
-            typeof(T).GetProperties().ToList().ForEach(p =>
+            var propertiesOfType1 = typeof(T1).GetProperties();
+            var propertiesOfType2 = typeof(T2).GetProperties();
+            propertiesOfType1.ToList().ForEach(propertyOfType1 =>
             {
-                if (p.Name == "Id")
+                if (propertyOfType1.Name == "Id")
                 {
                     return;
                 }
-                var value1 = p.GetValue(t1);
-                var value2 = p.GetValue(t2);
-                Assert.AreEqual(value1, value2, $"Assert failed for '{p.Name}'. The values are '{value1}' and '{value2}'.");
+                var propertyOfType2 = propertiesOfType2.First(p => p.Name == propertyOfType1.Name);
+                var value1 = propertyOfType1.GetValue(t1);
+                var value2 = propertyOfType2.GetValue(t2);
+                Assert.AreEqual(value1, value2, $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1}' and '{value2}'.");
             });
         }
-
     }
 }

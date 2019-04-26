@@ -59,6 +59,8 @@
     <Compile Include="Caches\SqlConnectionCachesTest.cs" />
     <Compile Include="ExecuteParameterTest.cs" />
     <Compile Include="Models\IdentityTable.cs" />
+    <Compile Include="Models\WithExtraFieldsIdentityTable.cs" />
+    <Compile Include="Models\LiteIdentityTable.cs" />
     <Compile Include="Models\NonIdentityTable.cs" />
     <Compile Include="Models\TypeClasses.cs" />
     <Compile Include="Models\TypeMappableClasses.cs" />
