@@ -176,7 +176,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Fix the names of the <see cref="Parameter"/> on every <see cref="QueryField"/> of the current <see cref="QueryGroup"/>.
+        /// Fix the names of the <see cref="Parameter"/> on every <see cref="QueryField"/> (and on every child <see cref="QueryGroup"/>) of the current <see cref="QueryGroup"/>.
         /// </summary>
         /// <returns>The current instance.</returns>
         internal QueryGroup Fix()
