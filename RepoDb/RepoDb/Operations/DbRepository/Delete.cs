@@ -18,7 +18,7 @@ namespace RepoDb
         /// Deletes an existing data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The entity to be deleted.</param>
+        /// <param name="entity">The data entity object to be deleted.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Delete<TEntity>(TEntity entity,
@@ -232,7 +232,7 @@ namespace RepoDb
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The entity to be deleted.</param>
+        /// <param name="entity">The data entity object to be deleted.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> DeleteAsync<TEntity>(TEntity entity,
