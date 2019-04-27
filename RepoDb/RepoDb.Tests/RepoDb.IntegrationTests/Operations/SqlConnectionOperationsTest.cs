@@ -2589,6 +2589,31 @@ namespace RepoDb.IntegrationTests.Operations
         #region Delete<TEntity>
 
         [TestMethod]
+        public void TestSqlConnectionDeleteViaDataEntity()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                tables.ForEach(item =>
+                {
+                    // Act
+                    var result = connection.Delete(item);
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionDeleteWithoutCondition()
         {
             // Setup
@@ -2744,6 +2769,32 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region DeleteAsync<TEntity>
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAsyncViaDataEntity()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Act
+                    var result = connection.DeleteAsync(item).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionDeleteAsyncWithoutCondition()

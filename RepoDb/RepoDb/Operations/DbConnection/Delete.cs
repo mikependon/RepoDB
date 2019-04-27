@@ -22,6 +22,34 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The entity to be deleted.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int Delete<TEntity>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            var primary = GetAndGuardPrimaryKey<TEntity>();
+            return Delete<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(primary, entity),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -197,6 +225,34 @@ namespace RepoDb
         #endregion
 
         #region DeleteAsync<TEntity>
+
+        /// <summary>
+        /// Deletes an existing data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The entity to be deleted.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            var primary = GetAndGuardPrimaryKey<TEntity>();
+            return DeleteAsync<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(primary, entity),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.

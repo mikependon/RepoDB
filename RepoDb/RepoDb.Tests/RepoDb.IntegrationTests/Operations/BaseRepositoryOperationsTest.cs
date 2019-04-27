@@ -1641,6 +1641,30 @@ namespace RepoDb.IntegrationTests.Operations
         #region Delete
 
         [TestMethod]
+        public void TestBaseRepositoryDeleteViaDataEntity()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                tables.ForEach(item =>
+                {
+                    var result = repository.Delete(item);
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, repository.CountAll());
+            }
+        }
+
+        [TestMethod]
         public void TestBaseRepositoryDeleteWithoutCondition()
         {
             // Setup
@@ -1776,6 +1800,30 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region DeleteAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryDeleteAsyncViaDataEntity()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                tables.ForEach(item =>
+                {
+                    var result = repository.DeleteAsync(item).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, repository.CountAll());
+            }
+        }
 
         [TestMethod]
         public void TestBaseRepositoryDeleteAsyncWithoutCondition()
