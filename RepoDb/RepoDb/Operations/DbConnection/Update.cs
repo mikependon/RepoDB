@@ -17,13 +17,12 @@ namespace RepoDb
     {
         #region Update<TEntity>
 
-        /*
         /// <summary>
         /// Updates an existing data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The entity object to be used for update.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -37,23 +36,22 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var property = GetAndGuardPrimaryKey<TEntity>();
+            var primary = GetAndGuardPrimaryKey<TEntity>();
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup(property, entity),
+                where: ToQueryGroup<TEntity>(primary, entity),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
-        */
 
         /// <summary>
         /// Updates an existing data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -62,7 +60,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            object whereOrPrimaryKey = null,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -84,7 +82,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -93,7 +91,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            Expression<Func<TEntity, bool>> where = null,
+            Expression<Func<TEntity, bool>> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -114,7 +112,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -123,7 +121,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryField where = null,
+            QueryField where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -144,7 +142,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -153,7 +151,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -174,7 +172,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -183,7 +181,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -204,7 +202,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -213,7 +211,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         internal static int UpdateInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -246,13 +244,12 @@ namespace RepoDb
 
         #region UpdateAsync<TEntity>
 
-        /*
         /// <summary>
         /// Updates an existing data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -266,23 +263,22 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var property = GetAndGuardPrimaryKey<TEntity>();
+            var primary = GetAndGuardPrimaryKey<TEntity>();
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: new QueryGroup(property.PropertyInfo.AsQueryField(entity, true).AsEnumerable()),
+                where: ToQueryGroup<TEntity>(primary, entity),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
-        */
 
         /// <summary>
         /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -291,7 +287,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            object whereOrPrimaryKey = null,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -313,7 +309,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -322,7 +318,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            Expression<Func<TEntity, bool>> where = null,
+            Expression<Func<TEntity, bool>> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -343,7 +339,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -352,7 +348,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryField where = null,
+            QueryField where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -373,7 +369,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -382,7 +378,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -403,7 +399,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -412,7 +408,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -433,7 +429,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -442,7 +438,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         internal static Task<int> UpdateAsyncInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -490,7 +486,7 @@ namespace RepoDb
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
-            object where = null,
+            object where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -521,7 +517,7 @@ namespace RepoDb
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryField where = null,
+            QueryField where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -552,7 +548,7 @@ namespace RepoDb
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -583,7 +579,7 @@ namespace RepoDb
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -614,7 +610,7 @@ namespace RepoDb
         internal static int UpdateInternal(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -661,7 +657,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
-            object where = null,
+            object where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -692,7 +688,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryField where = null,
+            QueryField where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -723,7 +719,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -754,7 +750,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -785,7 +781,7 @@ namespace RepoDb
         internal static Task<int> UpdateAsyncInternal(this IDbConnection connection,
             string tableName,
             object entity,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,

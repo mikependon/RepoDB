@@ -6844,6 +6844,41 @@ namespace RepoDb.IntegrationTests.Operations
         #region Update<TEntity>
 
         [TestMethod]
+        public void TestDbRepositoryUpdateViaDataEntity()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.Update(item);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryUpdateViaPrimaryKey()
         {
             // Setup
@@ -7292,6 +7327,41 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region UpdateAsync<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateAsyncViaDataEntity()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.UpdateAsync(item).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
 
         [TestMethod]
         public void TestDbRepositoryUpdateAsyncViaPrimaryKey()

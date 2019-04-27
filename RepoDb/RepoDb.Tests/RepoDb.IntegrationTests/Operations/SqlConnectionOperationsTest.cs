@@ -7526,6 +7526,41 @@ namespace RepoDb.IntegrationTests.Operations
         #region Update<TEntity>
 
         [TestMethod]
+        public void TestSqlConnectionUpdateViaDataEntity()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = connection.Update(item);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionUpdateViaPrimaryKey()
         {
             // Setup
@@ -7974,6 +8009,41 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region UpdateAsync<TEntity>
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncViaDataEntity()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = connection.UpdateAsync(item).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionUpdateAsyncViaPrimaryKey()
