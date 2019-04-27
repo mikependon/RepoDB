@@ -12,7 +12,7 @@ using System.Dynamic;
 namespace RepoDb
 {
     /// <summary>
-    /// A widely-used object for defining the groupings for the query expressions. This object is used by most of the repository operations
+    /// A widely-used object for defining the groupings for the query expression. This object is used by most of the repository operations
     /// to define the filtering and query expressions for the actual execution.
     /// </summary>
     public class QueryGroup : IEquatable<QueryGroup>
@@ -26,77 +26,135 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryField">The field to be grouped for the query expressions.</param>
+        /// <param name="queryField">The field to be grouped for the query expression.</param>
         public QueryGroup(QueryField queryField) :
-            this(queryField.AsEnumerable(), null, Conjunction.And, false)
+            this(queryField?.AsEnumerable(),
+                null,
+                Conjunction.And,
+                false)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="queryGroup">The child query group to be grouped for the query expression.</param>
+        public QueryGroup(QueryGroup queryGroup) :
+            this(null,
+                queryGroup?.AsEnumerable(),
+                Conjunction.And,
+                false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryField">The field to be grouped for the query expression.</param>
+        /// <param name="queryGroup">The child query group to be grouped for the query expression.</param>
+        public QueryGroup(QueryField queryField,
+            QueryGroup queryGroup) :
+            this(queryField?.AsEnumerable(),
+                queryGroup?.AsEnumerable(),
+                Conjunction.And,
+                false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryField">The field to be grouped for the query expression.</param>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
+        public QueryGroup(QueryField queryField,
+            IEnumerable<QueryGroup> queryGroups) :
+            this(queryField?.AsEnumerable(),
+                queryGroups,
+                Conjunction.And,
+                false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields) :
-            this(queryFields, null, Conjunction.And, false)
+            this(queryFields,
+                null,
+                Conjunction.And,
+                false)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-        /// /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+        /// /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             IEnumerable<QueryGroup> queryGroups = null) :
-            this(queryFields, queryGroups, Conjunction.And, false)
+            this(queryFields,
+                queryGroups,
+                Conjunction.And,
+                false)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             Conjunction conjunction = Conjunction.And) :
-            this(queryFields, null, conjunction, false)
+            this(queryFields,
+                null,
+                conjunction,
+                false)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             bool isNot = false) :
-            this(queryFields, null, Conjunction.And, isNot)
+            this(queryFields,
+                null,
+                Conjunction.And,
+                isNot)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-        /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             IEnumerable<QueryGroup> queryGroups = null,
             Conjunction conjunction = Conjunction.And) :
-            this(queryFields, queryGroups, conjunction, false)
+            this(queryFields,
+                queryGroups,
+                conjunction,
+                false)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-        /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             IEnumerable<QueryGroup> queryGroups = null,
             bool isNot = false) :
-            this(queryFields, queryGroups, Conjunction.And, isNot)
+            this(queryFields,
+                queryGroups,
+                Conjunction.And,
+                isNot)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
@@ -108,8 +166,8 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-        /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,

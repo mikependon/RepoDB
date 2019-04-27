@@ -349,7 +349,7 @@ namespace RepoDb.UnitTests
                 new QueryField("Field1", Operation.Equal, 1),
                 new QueryField("Field2", Operation.Equal, 2)
             });
-            var queryGroup = new QueryGroup(null, childQueryGroup.AsEnumerable());
+            var queryGroup = new QueryGroup(null, childQueryGroup);
 
             // Act
             var actual = queryGroup.GetString();
@@ -368,7 +368,7 @@ namespace RepoDb.UnitTests
                 new QueryField("Field1", Operation.Equal, 1),
                 new QueryField("Field1", Operation.Equal, 2)
             });
-            var queryGroup = new QueryGroup(null, childQueryGroup.AsEnumerable());
+            var queryGroup = new QueryGroup(null, childQueryGroup);
 
             // Act
             var actual = queryGroup.GetString();
