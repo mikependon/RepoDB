@@ -196,7 +196,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
+            using (var reader = new DataEntityDataReader<TEntity>(entities, connection))
             {
                 using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, copyOptions, (SqlTransaction)transaction))
                 {
@@ -509,7 +509,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
+            using (var reader = new DataEntityDataReader<TEntity>(entities, connection))
             {
                 using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, copyOptions, (SqlTransaction)transaction))
                 {

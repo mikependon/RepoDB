@@ -245,7 +245,11 @@ namespace RepoDb.IntegrationTests
                 {
                     return;
                 }
-                var propertyOfType2 = propertiesOfType2.First(p => p.Name == propertyOfType1.Name);
+                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => p.Name == propertyOfType1.Name);
+                if (propertyOfType2 == null)
+                {
+                    return;
+                }
                 var value1 = propertyOfType1.GetValue(t1);
                 var value2 = propertyOfType2.GetValue(t2);
                 Assert.AreEqual(value1, value2, $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1}' and '{value2}'.");

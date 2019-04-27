@@ -241,6 +241,15 @@ namespace RepoDb
             return type != null ? Nullable.GetUnderlyingType(type) ?? type : null;
         }
 
+        /// <summary>
+        /// Returns the string that represent the current <see cref="ClassProperty"/> object.
+        /// </summary>
+        /// <returns>The unquoted name.</returns>
+        public override string ToString()
+        {
+            return m_quotedMappedName ?? base.ToString();
+        }
+
         #endregion
 
         #region Comparers

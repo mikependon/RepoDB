@@ -1186,7 +1186,7 @@ namespace RepoDb
                 var type = kvp.Value?.GetType();
 
                 // Skip if it is not an array
-                if (type.IsArray == false)
+                if (type?.IsArray == false)
                 {
                     continue;
                 }

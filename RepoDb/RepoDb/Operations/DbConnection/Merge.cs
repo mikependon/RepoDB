@@ -134,12 +134,11 @@ namespace RepoDb
                 entity?.AsFields<TEntity>(),
                 qualifiers,
                 statementBuilder);
-            var param = entity?.AsObject();
 
             // Return the result
             return MergeInternalBase(connection: connection,
                 request: request,
-                param: param,
+                param: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -267,12 +266,11 @@ namespace RepoDb
                 entity?.AsFields<TEntity>(),
                 qualifiers,
                 statementBuilder);
-            var param = entity?.AsObject();
 
             // Return the result
             return MergeAsyncInternalBase(connection: connection,
                 request: request,
-                param: param,
+                param: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);

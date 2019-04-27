@@ -27,7 +27,16 @@ namespace RepoDb
         /// Creates a new instance of <see cref="DataEntityDataReader{TEntity}"/> object.
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
-        public DataEntityDataReader(IEnumerable<TEntity> entities)
+        public DataEntityDataReader(IEnumerable<TEntity> entities) :
+            this(entities, null)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DataEntityDataReader{TEntity}"/> object.
+        /// </summary>
+        /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
+        /// <param name="connection">The actual <see cref="IDbConnection"/> object used.</param>
+        public DataEntityDataReader(IEnumerable<TEntity> entities, IDbConnection connection)
         {
             if (entities == null)
             {
@@ -41,7 +50,20 @@ namespace RepoDb
             m_recordsAffected = -1;
 
             // Properties
-            Properties = PropertyCache.Get<TEntity>().ToList();
+            if (connection != null)
+            {
+                var fields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+                if (fields?.Any() == true)
+                {
+                    Properties = PropertyCache.Get<TEntity>()
+                        .Where(p => fields.FirstOrDefault(f => f.UnquotedName.ToLower() == p.GetUnquotedMappedName().ToLower()) != null)
+                        .ToList();
+                }
+            }
+            if (Properties == null)
+            {
+                Properties = PropertyCache.Get<TEntity>().ToList();
+            }
             Enumerator = entities.GetEnumerator();
             Entities = entities;
             FieldCount = Properties.Count;

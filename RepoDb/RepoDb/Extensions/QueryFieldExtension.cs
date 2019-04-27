@@ -106,17 +106,6 @@ namespace RepoDb.Extensions
             return queryFields.Select(field => field.AsFieldAndParameter());
         }
 
-        // Has
-        internal static bool Has(this IEnumerable<QueryField> queryFields, string name, StringComparison comparisonType)
-        {
-            return queryFields.FirstOrDefault(queryField => string.Equals(queryField.Field.Name, name, comparisonType)) != null;
-        }
-
-        internal static bool Has(this IEnumerable<QueryField> queryFields, string name)
-        {
-            return Has(queryFields, name, StringComparison.CurrentCultureIgnoreCase);
-        }
-
         // AsObject
         internal static object AsObject(this IEnumerable<QueryField> queryFields)
         {
