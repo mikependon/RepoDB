@@ -1006,11 +1006,13 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
                 // Act
                 var queryResult = connection.QueryAll<IdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -1040,11 +1042,13 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
                 // Act
                 var queryResult = connection.QueryAll<IdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -1100,7 +1104,10 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader);
+
+                        // Assert
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
                         var result = destinationConnection.QueryAll<IdentityTable>();
@@ -1145,7 +1152,10 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
+
+                        // Assert
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
                         var result = destinationConnection.QueryAll<IdentityTable>();
@@ -1212,11 +1222,13 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
                 // Act
                 var queryResult = connection.QueryAll<IdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -1246,11 +1258,13 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
                 // Act
                 var queryResult = connection.QueryAll<IdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -1285,7 +1299,10 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader);
+
+                        // Assert
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
                         var result = destinationConnection.QueryAll<IdentityTable>();
@@ -1330,7 +1347,10 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader, mappings);
+
+                        // Assert
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
                         var result = destinationConnection.QueryAll<IdentityTable>();
@@ -1376,7 +1396,10 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader, mappings);
+
+                        // Assert
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
                     }
                 }
             }
@@ -1451,14 +1474,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var bulkInsertResult = connection.BulkInsertAsync(tables);
-                bulkInsertResult.Wait();
+                var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<IdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult.Result);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -1486,14 +1510,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var bulkInsertResult = connection.BulkInsertAsync(tables);
-                bulkInsertResult.Wait();
+                var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<IdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult.Result);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -1553,14 +1578,16 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader);
-                        bulkInsertResult.Wait();
-
-                        // Act
-                        var queryResult = destinationConnection.QueryAllAsync<IdentityTable>();
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<IdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
@@ -1599,14 +1626,16 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
-                        bulkInsertResult.Wait();
-
-                        // Act
-                        var queryResult = destinationConnection.QueryAllAsync<IdentityTable>();
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<IdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
@@ -1671,11 +1700,13 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
                 // Act
                 var queryResult = connection.QueryAll<IdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -1705,11 +1736,13 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
                 // Act
                 var queryResult = connection.QueryAll<IdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -1744,14 +1777,16 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync(nameof(IdentityTable), (DbDataReader)reader);
-                        bulkInsertResult.Wait();
-
-                        // Act
-                        var queryResult = destinationConnection.QueryAllAsync<IdentityTable>();
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(nameof(IdentityTable), (DbDataReader)reader).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<IdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
@@ -1790,14 +1825,16 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync(nameof(IdentityTable), (DbDataReader)reader, mappings);
-                        bulkInsertResult.Wait();
-
-                        // Act
-                        var queryResult = destinationConnection.QueryAllAsync<IdentityTable>();
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(nameof(IdentityTable), (DbDataReader)reader, mappings).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, queryResult.Result.Count());
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<IdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }

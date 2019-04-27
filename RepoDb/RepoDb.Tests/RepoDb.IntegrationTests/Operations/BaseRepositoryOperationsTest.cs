@@ -975,11 +975,13 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var bulkInsertResult = repository.BulkInsert(tables);
 
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
                 // Act
                 var queryResult = repository.QueryAll();
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -1009,11 +1011,13 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var bulkInsertResult = repository.BulkInsert(tables);
 
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
                 // Act
                 var queryResult = repository.QueryAll();
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
                 {
@@ -1128,11 +1132,10 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                var bulkInsertResult = repository.BulkInsertAsync(tables);
-                bulkInsertResult.Wait();
+                var bulkInsertResult = repository.BulkInsertAsync(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult.Result);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = repository.QueryAll();
@@ -1165,11 +1168,10 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                var bulkInsertResult = repository.BulkInsertAsync(tables);
-                bulkInsertResult.Wait();
+                var bulkInsertResult = repository.BulkInsertAsync(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult.Result);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = repository.QueryAll();
