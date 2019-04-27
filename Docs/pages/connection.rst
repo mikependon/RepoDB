@@ -82,8 +82,6 @@ Call the `BulkInsert` operation to insert the data.
 
 The result would be the number of rows affected by the `BulkInsert` in the database.
 
-This operation also support the `DbDataReader` object. However, by using this, the result would always be `-1`.
-
 .. highlight:: c#
 
 Initiate a `DbDataReader` object from the source connection.
