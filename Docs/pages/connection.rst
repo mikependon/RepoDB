@@ -239,6 +239,17 @@ Deletes an existing data from the database.
 
 .. highlight:: c#
 
+Via DataEntity:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customer = connection.Query<Customer>(10045);
+		...
+		var affectedRows = connection.Delete(customer);
+	}
+
 Via PrimaryKey:
 
 ::
@@ -769,6 +780,54 @@ A dynamic typed-based call is also provided when calling this method, see below.
 
 **Note**: Use the table name based if the scenario is to only insert targetted columns.
 
+InsertAll
+---------
+
+Inserts multiple data in the database.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var orders = new List<Order>();
+		for (var i = 0; i < 100; i++)
+		{
+			orders.Add(new Order()
+			{
+				CustomerId = 10045,
+				ProductId = 12
+				Quantity = 2,
+				CreatedDate = DateTime.UtcNow
+			});
+		}
+		connection.InsertAll(orders);
+	}
+
+**Certain** columns can also be inserted via table name calls.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Instantiate a dynamic object (not really an "Order" object)
+		var orders = new List<dynamic>();
+		for (var i = 0; i < 100; i++)
+		{
+			orders.Add(new
+			{
+				CustomerId = 10045,
+				ProductId = 12
+				Quantity = 2,
+				CreatedDate = DateTime.UtcNow
+			});
+		}
+		var id = connection.Insert<long>("Order", orders);
+	}
+
+**Note**: Use the table name based if the scenario is to only insert targetted columns.
+
 Merge
 -----
 
@@ -1082,6 +1141,15 @@ Let us say an `Order` object was queried from the database.
 	// Set the target properties
 	order.Quantity = 5;
 	order.UpdateDate = DateTime.UtcNow;
+
+Via DataEntity:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Update<Order>(order);
+	}
 
 Via PrimaryKey:
 
