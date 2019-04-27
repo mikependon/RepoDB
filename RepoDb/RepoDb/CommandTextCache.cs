@@ -159,6 +159,31 @@ namespace RepoDb
 
         #endregion
 
+        #region GetInsertAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the insert-all operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetInsertAllText(InsertAllRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                commandText = statementBuilder.CreateInsert(new QueryBuilder(),
+                    request.Name,
+                    fields,
+                    GetPrimaryField(request));
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
         #region GetMergeText
 
         /// <summary>
@@ -332,7 +357,7 @@ namespace RepoDb
         /// <returns>The list of actual <see cref="Field"/> objects of the table.</returns>
         private static IEnumerable<Field> GetActualFields(IDbConnection connection, string tableName, IEnumerable<Field> fields)
         {
-            if (fields?.Any() == false)
+            if (fields?.Any() != true)
             {
                 return null;
             }

@@ -3,7 +3,9 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -18,9 +20,9 @@ namespace RepoDb
         /// <summary>
         /// Inserts multiple data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -29,16 +31,16 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public static object InsertAll<TEntity>(this IDbConnection connection,
-            TEntity entity,
+        public static void InsertAll<TEntity>(this IDbConnection connection,
+            IEnumerable<TEntity> entities,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertAllInternal<TEntity, object>(connection: connection,
-                entity: entity,
+            InsertAllInternal<TEntity>(connection: connection,
+                entities: entities,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -49,9 +51,8 @@ namespace RepoDb
         /// Inserts multiple data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -60,39 +61,8 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public static TResult InsertAll<TEntity, TResult>(this IDbConnection connection,
-            TEntity entity,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return InsertAllInternal<TEntity, TResult>(connection: connection,
-                entity: entity,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Inserts multiple data in the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
-        internal static TResult InsertAllInternal<TEntity, TResult>(this IDbConnection connection,
-            TEntity entity,
+        internal static void InsertAllInternal<TEntity>(this IDbConnection connection,
+            IEnumerable<TEntity> entities,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -106,9 +76,9 @@ namespace RepoDb
                 statementBuilder);
 
             // Return the result
-            return InsertAllInternalBase<TResult>(connection: connection,
+            InsertAllInternalBase(connection: connection,
                 request: request,
-                param: entity,
+                entities: entities,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -123,7 +93,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -132,16 +102,16 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public static Task<object> InsertAllAsync<TEntity>(this IDbConnection connection,
-            TEntity entity,
+        public static Task InsertAllAsync<TEntity>(this IDbConnection connection,
+            IEnumerable<TEntity> entities,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertAllAsyncInternal<TEntity, object>(connection: connection,
-                entity: entity,
+            return InsertAllAsyncInternal<TEntity>(connection: connection,
+                entities: entities,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -152,9 +122,8 @@ namespace RepoDb
         /// Inserts multiple data in the database in asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -163,39 +132,8 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public static Task<TResult> InsertAllAsync<TEntity, TResult>(this IDbConnection connection,
-            TEntity entity,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return InsertAllAsyncInternal<TEntity, TResult>(connection: connection,
-                entity: entity,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Inserts multiple data in the database in asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The data entity object to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
-        internal static Task<TResult> InsertAllAsyncInternal<TEntity, TResult>(this IDbConnection connection,
-            TEntity entity,
+        internal static Task InsertAllAsyncInternal<TEntity>(this IDbConnection connection,
+            IEnumerable<TEntity> entities,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -209,9 +147,9 @@ namespace RepoDb
                 statementBuilder);
 
             // Return the result
-            return InsertAllAsyncInternalBase<TResult>(connection: connection,
+            return InsertAllAsyncInternalBase(connection: connection,
                 request: request,
-                param: entity,
+                entities: entities,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -226,23 +164,26 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used. Defaulted to database table fields.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the primary key of the newly inserted data.</returns>
-        public static object InsertAll(this IDbConnection connection,
+        public static void InsertAll(this IDbConnection connection,
             string tableName,
-            object entity,
+            IEnumerable<object> entities,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertAllInternal<object>(connection: connection,
+            InsertAllInternal(connection: connection,
                 tableName: tableName,
-                entity: entity,
+                entities: entities,
+                fields: fields,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -252,62 +193,40 @@ namespace RepoDb
         /// <summary>
         /// Inserts multiple data in the database (certain fields only).
         /// </summary>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the primary key of the newly inserted data.</returns>
-        public static TResult InsertAll<TResult>(this IDbConnection connection,
+        internal static void InsertAllInternal(this IDbConnection connection,
             string tableName,
-            object entity,
+            IEnumerable<object> entities,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertAllInternal<TResult>(connection: connection,
-                tableName: tableName,
-                entity: entity,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
+            // Check the fields
+            if (fields == null)
+            {
+                fields = DbFieldCache.Get(connection, tableName)?.AsFields();
+            }
 
-        /// <summary>
-        /// Inserts multiple data in the database (certain fields only).
-        /// </summary>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary key of the newly inserted data.</returns>
-        internal static TResult InsertAllInternal<TResult>(this IDbConnection connection,
-            string tableName,
-            object entity,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
             // Variables
             var request = new InsertAllRequest(tableName,
                 connection,
-                entity?.AsFields(),
+                fields,
                 statementBuilder);
 
             // Return the result
-            return InsertAllInternalBase<TResult>(connection: connection,
+            InsertAllInternalBase(connection: connection,
                 request: request,
-                param: entity,
+                entities: entities,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -322,23 +241,26 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used. Defaulted to database table fields.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the primary key of the newly inserted data.</returns>
-        public static Task<object> InsertAllAsync(this IDbConnection connection,
+        public static Task InsertAllAsync(this IDbConnection connection,
             string tableName,
-            object entity,
+            IEnumerable<object> entities,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertAllAsyncInternal<object>(connection: connection,
+            return InsertAllAsyncInternal(connection: connection,
                 tableName: tableName,
-                entity: entity,
+                entities: entities,
+                fields: fields,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -348,62 +270,40 @@ namespace RepoDb
         /// <summary>
         /// Inserts multiple data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the primary key of the newly inserted data.</returns>
-        public static Task<TResult> InsertAllAsync<TResult>(this IDbConnection connection,
+        internal static Task InsertAllAsyncInternal(this IDbConnection connection,
             string tableName,
-            object entity,
+            IEnumerable<object> entities,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertAllAsyncInternal<TResult>(connection: connection,
-                tableName: tableName,
-                entity: entity,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
+            // Check the fields
+            if (fields == null)
+            {
+                fields = DbFieldCache.Get(connection, tableName)?.AsFields();
+            }
 
-        /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary key of the newly inserted data.</returns>
-        internal static Task<TResult> InsertAllAsyncInternal<TResult>(this IDbConnection connection,
-            string tableName,
-            object entity,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
             // Variables
             var request = new InsertAllRequest(tableName,
                 connection,
-                entity?.AsFields(),
+                fields,
                 statementBuilder);
 
             // Return the result
-            return InsertAllAsyncInternalBase<TResult>(connection: connection,
+            return InsertAllAsyncInternalBase(connection: connection,
                 request: request,
-                param: entity,
+                entities: entities,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -416,10 +316,10 @@ namespace RepoDb
         /// <summary>
         /// Inserts multiple data in the database.
         /// </summary>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <typeparam name="TEntity">The type of the objects to be enumerated.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="InsertAllRequest"/> object.</param>
-        /// <param name="param">The data entity object to be inserted.</param>
+        /// <param name="entities">The data entity object to be inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -427,12 +327,13 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        internal static TResult InsertAllInternalBase<TResult>(this IDbConnection connection,
+        internal static void InsertAllInternalBase<TEntity>(this IDbConnection connection,
             InsertAllRequest request,
-            object param,
+            IEnumerable<TEntity> entities,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
+            where TEntity : class
         {
             // Variables
             var commandType = CommandType.Text;
@@ -441,7 +342,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, entities, null);
                 trace.BeforeInsertAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -449,32 +350,56 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return default(TResult);
+                    return;
                 }
                 commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
+                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
             }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
-            // Actual Execution
-            var result = ExecuteScalarInternal<TResult>(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction);
+            // Variables needed
+            var primary = PrimaryCache.Get<TEntity>();
+            var dbField = DbFieldCache.Get(connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
+            var isIdentity = false;
+
+            // Set the identify value
+            if (primary != null && dbField != null)
+            {
+                isIdentity = primary.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower();
+            }
+
+            // Result set
+            var results = new List<object>();
+
+            // Iterate and insert every entity
+            foreach (var entity in entities)
+            {
+                // Actual Execution
+                var result = ExecuteScalarInternal(connection: connection,
+                    commandText: commandText,
+                    param: entity,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction);
+
+                // Set the primary value
+                if (primary != null && isIdentity == true)
+                {
+                    primary.PropertyInfo.SetValue(entity, result);
+                }
+
+                // Add to the list
+                results.Add(result);
+            }
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsertAll(new TraceLog(commandText, param, result,
+                trace.AfterInsertAll(new TraceLog(commandText, entities, results,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
-            
-            // Return with conversion
-            return result;
         }
 
         #endregion
@@ -484,10 +409,10 @@ namespace RepoDb
         /// <summary>
         /// Inserts multiple data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <typeparam name="TEntity">The type of the objects to be enumerated.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="InsertAllRequest"/> object.</param>
-        /// <param name="param">The data entity object to be inserted.</param>
+        /// <param name="entities">The data entity object to be inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -495,12 +420,13 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        internal static async Task<TResult> InsertAllAsyncInternalBase<TResult>(this IDbConnection connection,
+        internal static async Task InsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             InsertAllRequest request,
-            object param,
+            IEnumerable<TEntity> entities,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
+            where TEntity : class
         {
             // Variables
             var commandType = CommandType.Text;
@@ -509,7 +435,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, entities, null);
                 trace.BeforeInsertAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -517,32 +443,56 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return default(TResult);
+                    return;
                 }
                 commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
+                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
             }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
-            // Actual Execution
-            var result = await ExecuteScalarAsyncInternal<TResult>(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction);
+            // Variables needed
+            var primary = PrimaryCache.Get<TEntity>();
+            var dbField = DbFieldCache.Get(connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
+            var isIdentity = false;
+
+            // Set the identify value
+            if (primary != null && dbField != null)
+            {
+                isIdentity = primary.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower();
+            }
+
+            // Result set
+            var results = new List<object>();
+
+            // Iterate and insert every entity
+            foreach (var entity in entities)
+            {
+                // Actual Execution
+                var result = await ExecuteScalarAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: entity,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction);
+
+                // Set the primary value
+                if (primary != null && isIdentity == true)
+                {
+                    primary.PropertyInfo.SetValue(entity, result);
+                }
+
+                // Add to the list
+                results.Add(result);
+            }
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsertAll(new TraceLog(commandText, param, result,
+                trace.AfterInsertAll(new TraceLog(commandText, entities, results,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
-
-            // Return with conversion
-            return result;
         }
 
         #endregion

@@ -66,7 +66,9 @@
     <Compile Include="ClassProperty.cs" />
     <Compile Include="DataReaderFieldDefinition.cs" />
     <Compile Include="Exceptions\InvalidQualiferFieldsException.cs" />
+    <Compile Include="Extensions\DbFieldExtension.cs" />
     <Compile Include="Operations\BaseRepository\CountAll.cs" />
+    <Compile Include="Operations\BaseRepository\InsertAll.cs" />
     <Compile Include="Operations\BaseRepository\QueryAll.cs" />
     <Compile Include="Operations\BaseRepository\Update.cs" />
     <Compile Include="Operations\BaseRepository\Truncate.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Operations\DbConnection\BatchQuery.cs" />
     <Compile Include="Operations\DbConnection\BulkInsert.cs" />
     <Compile Include="Operations\DbConnection\CountAll.cs" />
+    <Compile Include="Operations\DbConnection\InsertAll.cs" />
     <Compile Include="Operations\DbConnection\QueryAll.cs" />
     <Compile Include="Operations\DbConnection\Update.cs" />
     <Compile Include="Operations\DbConnection\Truncate.cs" />
@@ -102,6 +105,7 @@
     <Compile Include="Interfaces\IDbHelper.cs" />
     <Compile Include="Operations\DbRepository\BulkInsert.cs" />
     <Compile Include="Operations\DbRepository\CountAll.cs" />
+    <Compile Include="Operations\DbRepository\InsertAll.cs" />
     <Compile Include="Operations\DbRepository\QueryAll.cs" />
     <Compile Include="Operations\DbRepository\QueryMultiple.cs" />
     <Compile Include="Operations\DbRepository\Update.cs" />
@@ -134,6 +138,7 @@
     <Compile Include="Requests\CountRequest.cs" />
     <Compile Include="Requests\BatchQueryRequest.cs" />
     <Compile Include="Requests\CountAllRequest.cs" />
+    <Compile Include="Requests\InsertAllRequest.cs" />
     <Compile Include="Requests\MergeRequest.cs" />
     <Compile Include="Requests\QueryMultipleRequest.cs" />
     <Compile Include="Requests\QueryAllRequest.cs" />

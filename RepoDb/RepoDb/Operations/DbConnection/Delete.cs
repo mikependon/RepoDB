@@ -277,7 +277,9 @@ namespace RepoDb
             return DeleteAsync<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         /// <summary>

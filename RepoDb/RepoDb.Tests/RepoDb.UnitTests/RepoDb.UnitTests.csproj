@@ -127,6 +127,7 @@
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateCountTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateDeleteAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateDeleteTest.cs" />
+    <Compile Include="StatementBuilders\SqlStatementBuilder\CreateInsertAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateInsertTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateMergeTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateQueryAllTest.cs" />

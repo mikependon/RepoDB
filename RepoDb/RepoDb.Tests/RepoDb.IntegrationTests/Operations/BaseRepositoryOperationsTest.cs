@@ -2229,6 +2229,124 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region InsertAll
+
+        #region InsertAll<TEntity>
+
+        [TestMethod]
+        public void TestBaseRepositoryInsertAllForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.QueryAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryInsertAllForNonIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                using (var identityTableRepository = new NonIdentityTableRepository())
+                {
+                    // Act
+                    var result = identityTableRepository.QueryAll();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, result.Count());
+                    tables.ForEach(table =>
+                    {
+                        var item = result.FirstOrDefault(r => r.Id == table.Id);
+                        Assert.IsNotNull(item);
+                        Helper.AssertPropertiesEquality(table, item);
+                    });
+                }
+            }
+        }
+
+        #endregion
+
+        #region InsertAllAsync<TEntity>
+
+        [TestMethod]
+        public void TestBaseRepositoryInsertAllAsyncForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAllAsync(tables).Wait();
+
+                // Act
+                var result = repository.QueryAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryInsertAllAsyncForNonIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.InsertAllAsync(tables).Wait();
+
+                using (var identityTableRepository = new NonIdentityTableRepository())
+                {
+                    // Act
+                    var result = identityTableRepository.QueryAll();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, result.Count());
+                    tables.ForEach(table =>
+                    {
+                        var item = result.FirstOrDefault(r => r.Id == table.Id);
+                        Assert.IsNotNull(item);
+                        Helper.AssertPropertiesEquality(table, item);
+                    });
+                }
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region Merge
 
         #region Merge
