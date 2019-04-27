@@ -1,11 +1,130 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
+using System.Linq;
 
 namespace RepoDb.UnitTests
 {
     public partial class QueryGroupTest
     {
+        #region Constructor
+
+        [TestMethod]
+        public void TestQueryGroupConstructorForQueryField()
+        {
+            // Setup
+            var queryField = new QueryField("Field1", Operation.Equal, 1);
+
+            // Act
+            var queryGroup = new QueryGroup(queryField);
+
+            // Assert
+            Assert.AreEqual(1, queryGroup.QueryFields.Count());
+        }
+
+        [TestMethod]
+        public void TestQueryGroupConstructorForQueryGroup()
+        {
+            // Setup
+            var queryField = new QueryField("Field1", Operation.Equal, 1);
+
+            // Act
+            var queryGroup = new QueryGroup(new QueryGroup(queryField));
+
+            // Assert
+            Assert.AreEqual(null, queryGroup.QueryFields);
+            Assert.AreEqual(1, queryGroup.QueryGroups.Count());
+        }
+
+        [TestMethod]
+        public void TestQueryGroupConstructorForQueryFields()
+        {
+            // Setup
+            var queryField = new QueryField("Field1", Operation.Equal, 1);
+
+            // Act
+            var queryGroup = new QueryGroup(queryField.AsEnumerable());
+
+            // Assert
+            Assert.AreEqual(1, queryGroup.QueryFields.Count());
+        }
+
+        [TestMethod]
+        public void TestQueryGroupConstructorForQueryGroups()
+        {
+            // Setup
+            var queryField = new QueryField("Field1", Operation.Equal, 1);
+
+            // Act
+            var queryGroup = new QueryGroup(new QueryGroup(queryField).AsEnumerable());
+
+            // Assert
+            Assert.AreEqual(null, queryGroup.QueryFields);
+            Assert.AreEqual(1, queryGroup.QueryGroups.Count());
+        }
+
+        [TestMethod]
+        public void TestQueryGroupConstructorForQueryFieldAndQueryGroup()
+        {
+            // Setup
+            var queryFieldA = new QueryField("Field1", Operation.Equal, 1);
+            var queryFieldB = new QueryField("Field2", Operation.Equal, 2);
+
+            // Act
+            var queryGroup = new QueryGroup(queryFieldA, new QueryGroup(queryFieldB));
+
+            // Assert
+            Assert.AreEqual(1, queryGroup.QueryFields.Count());
+            Assert.AreEqual(1, queryGroup.QueryGroups.Count());
+        }
+
+        [TestMethod]
+        public void TestQueryGroupConstructorForQueryFieldsAndQueryGroup()
+        {
+            // Setup
+            var queryFieldA = new QueryField("Field1", Operation.Equal, 1);
+            var queryFieldB = new QueryField("Field2", Operation.Equal, 2);
+
+            // Act
+            var queryGroup = new QueryGroup(queryFieldA.AsEnumerable(), new QueryGroup(queryFieldB));
+
+            // Assert
+            Assert.AreEqual(1, queryGroup.QueryFields.Count());
+            Assert.AreEqual(1, queryGroup.QueryGroups.Count());
+        }
+
+        [TestMethod]
+        public void TestQueryGroupConstructorForQueryFieldAndQueryGroups()
+        {
+            // Setup
+            var queryFieldA = new QueryField("Field1", Operation.Equal, 1);
+            var queryFieldB = new QueryField("Field2", Operation.Equal, 2);
+
+            // Act
+            var queryGroup = new QueryGroup(queryFieldA, new QueryGroup(queryFieldB).AsEnumerable());
+
+            // Assert
+            Assert.AreEqual(1, queryGroup.QueryFields.Count());
+            Assert.AreEqual(1, queryGroup.QueryGroups.Count());
+        }
+
+        [TestMethod]
+        public void TestQueryGroupConstructorForQueryFieldsAndQueryGroups()
+        {
+            // Setup
+            var queryFieldA = new QueryField("Field1", Operation.Equal, 1);
+            var queryFieldB = new QueryField("Field2", Operation.Equal, 2);
+
+            // Act
+            var queryGroup = new QueryGroup(queryFieldA.AsEnumerable(), new QueryGroup(queryFieldB).AsEnumerable());
+
+            // Assert
+            Assert.AreEqual(1, queryGroup.QueryFields.Count());
+            Assert.AreEqual(1, queryGroup.QueryGroups.Count());
+        }
+
+        #endregion
+
         #region Operations
 
         [TestMethod]
@@ -349,7 +468,7 @@ namespace RepoDb.UnitTests
                 new QueryField("Field1", Operation.Equal, 1),
                 new QueryField("Field2", Operation.Equal, 2)
             });
-            var queryGroup = new QueryGroup(null, childQueryGroup);
+            var queryGroup = new QueryGroup(childQueryGroup);
 
             // Act
             var actual = queryGroup.GetString();
@@ -368,7 +487,7 @@ namespace RepoDb.UnitTests
                 new QueryField("Field1", Operation.Equal, 1),
                 new QueryField("Field1", Operation.Equal, 2)
             });
-            var queryGroup = new QueryGroup(null, childQueryGroup);
+            var queryGroup = new QueryGroup(childQueryGroup);
 
             // Act
             var actual = queryGroup.GetString();

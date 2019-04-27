@@ -20,12 +20,24 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            using (var connection = CreateConnection())
+            var connection = CreateConnection();
+
+            try
             {
                 // Call the method
                 return connection.Truncate<TEntity>(commandTimeout: CommandTimeout,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection);
             }
         }
 
@@ -75,13 +87,25 @@ namespace RepoDb
         public int Truncate(string tableName)
         {
             // Create a connection
-            using (var connection = CreateConnection())
+            var connection = CreateConnection();
+
+            try
             {
                 // Call the method
                 return connection.Truncate(tableName: tableName,
                     commandTimeout: CommandTimeout,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection);
             }
         }
 

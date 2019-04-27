@@ -30,7 +30,9 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            using (var connection = CreateConnection())
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
             {
                 // Call the method
                 return connection.BulkInsert<TEntity>(entities: entities,
@@ -39,6 +41,16 @@ namespace RepoDb
                     bulkCopyTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -58,9 +70,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            using (var connection = CreateConnection())
-            {
+            var connection = (transaction?.Connection ?? CreateConnection());
 
+            try
+            {
                 // Call the method
                 return connection.BulkInsert<TEntity>(reader: reader,
                     mappings: mappings,
@@ -68,6 +81,16 @@ namespace RepoDb
                     bulkCopyTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -91,7 +114,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = CreateConnection();
+            var connection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
@@ -131,7 +154,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = CreateConnection();
+            var connection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
