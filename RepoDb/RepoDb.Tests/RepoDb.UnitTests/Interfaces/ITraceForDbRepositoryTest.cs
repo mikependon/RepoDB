@@ -4,6 +4,7 @@ using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
+using System.Collections.Generic;
 
 namespace RepoDb.UnitTests.Interfaces
 {
@@ -12,13 +13,35 @@ namespace RepoDb.UnitTests.Interfaces
     {
         private readonly IStatementBuilder m_statementBuilder = new SqlStatementBuilder();
 
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            DbHelperMapper.Add(typeof(CustomDbConnection), new DbRepositoryCustomDbHelper(), true);
+        }
+
         #region SubClasses
 
-        public class TraceEntity
+        private class TraceEntity
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
+        }
+
+        private class DbRepositoryCustomDbHelper : IDbHelper
+        {
+            public IEnumerable<DbField> GetFields(string connectionString, string tableName)
+            {
+                if (tableName == ClassMappedNameCache.Get<TraceEntity>())
+                {
+                    return new[]
+                    {
+                        new DbField("Id", true, true, false),
+                        new DbField("Name", false, false, true)
+                    };
+                }
+                return null;
+            }
         }
 
         #endregion

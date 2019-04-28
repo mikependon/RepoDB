@@ -8,6 +8,7 @@ using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -399,7 +400,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteQueryMultiple
+        #region ExecuteQueryMultiple(Results)
 
         /// <summary>
         /// Executes a multiple query statement from the database.

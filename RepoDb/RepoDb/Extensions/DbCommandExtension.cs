@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -23,6 +24,51 @@ namespace RepoDb.Extensions
         #endregion
 
         #region CreateParameters
+
+        /// <summary>
+        /// Creates the command object list of parameters based on type.
+        /// </summary>
+        /// <param name="command">The command object instance to be used.</param>
+        /// <param name="properties">The target list of properties.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        internal static void CreateParametersFromClassProperties(this IDbCommand command,
+            IEnumerable<ClassProperty> properties,
+            IEnumerable<string> propertiesToSkip)
+        {
+            // Filter the target properties
+            if (propertiesToSkip?.Any() == true)
+            {
+                properties = properties?.Where(p =>
+                    propertiesToSkip.Contains(PropertyMappedNameCache.Get(p.PropertyInfo, false), StringComparer.CurrentCultureIgnoreCase) == false);
+            }
+
+            // Check if there are properties
+            if (properties?.Any() == true)
+            {
+                // Iterate the properties
+                foreach (var property in properties)
+                {
+                    // Get the database type
+                    var dbType = property.GetDbType() ??
+                        TypeMapper.Get(property.PropertyInfo.PropertyType.GetUnderlyingType())?.DbType;
+
+                    // Ensure the type mapping
+                    if (dbType == null)
+                    {
+                        if (property.PropertyInfo.PropertyType == m_bytesType)
+                        {
+                            dbType = DbType.Binary;
+                        }
+                    }
+
+                    // Create the parameter
+                    var parameter = CreateParameter(command, PropertyMappedNameCache.Get(property.PropertyInfo, false), null, dbType);
+
+                    // Add the parameter
+                    command.Parameters.Add(parameter);
+                }
+            }
+        }
 
         /// <summary>
         /// Creates a parameter for a command object.
@@ -324,11 +370,17 @@ namespace RepoDb.Extensions
         /// <param name="param">The instance of where the parameter values will be set.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
         /// <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
-        public static void SetParameters(this IDbCommand command,
+        internal static void SetParameters(this IDbCommand command,
             object param,
             IEnumerable<string> propertiesToSkip = null,
             bool resetOthers = true)
         {
+            // Do nothing if there is no parameter
+            if (command.Parameters.Count == 0)
+            {
+                return;
+            }
+
             // Check for presence
             if (param == null)
             {

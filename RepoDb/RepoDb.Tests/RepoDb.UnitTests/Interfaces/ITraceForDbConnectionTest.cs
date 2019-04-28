@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
@@ -12,13 +13,35 @@ namespace RepoDb.UnitTests.Interfaces
     {
         private readonly IStatementBuilder m_statementBuilder = new SqlStatementBuilder();
 
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            DbHelperMapper.Add(typeof(CustomDbConnection), new DbConnectionCustomerDbHelper(), true);
+        }
+
         #region SubClasses
 
-        public class TraceEntity
+        private class TraceEntity
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
+        }
+
+        private class DbConnectionCustomerDbHelper : IDbHelper
+        {
+            public IEnumerable<DbField> GetFields(string connectionString, string tableName)
+            {
+                if (tableName == ClassMappedNameCache.Get<TraceEntity>())
+                {
+                    return new[]
+                    {
+                        new DbField("Id", true, true, false),
+                        new DbField("Name", false, false, true)
+                    };
+                }
+                return null;
+            }
         }
 
         #endregion

@@ -63,6 +63,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Guard the parameters
+            GuardInsertAll(entities);
+
             // Variables
             var request = new InsertAllRequest(typeof(TEntity),
                 connection,
@@ -128,6 +131,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Guard the parameters
+            GuardInsertAll(entities);
+
             // Variables
             var request = new InsertAllRequest(typeof(TEntity),
                 connection,
@@ -199,6 +205,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
+            // Guard the parameters
+            GuardInsertAll(entities);
+
             // Check the fields
             if (fields == null)
             {
@@ -276,6 +285,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
+            // Guard the parameters
+            GuardInsertAll(entities);
+
             // Check the fields
             if (fields == null)
             {
@@ -390,6 +402,119 @@ namespace RepoDb
             // Return the result
             return result;
         }
+
+        #endregion
+
+        #region InsertAllInternalBase(Optimal)
+
+        ///// <summary>
+        ///// Inserts multiple data in the database.
+        ///// </summary>
+        ///// <typeparam name="TEntity">The type of the objects to be enumerated.</typeparam>
+        ///// <param name="connection">The connection object to be used.</param>
+        ///// <param name="request">The actual <see cref="InsertAllRequest"/> object.</param>
+        ///// <param name="entities">The data entity object to be inserted.</param>
+        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <param name="trace">The trace object to be used.</param>
+        ///// <returns>The number of inserted rows.</returns>
+        //internal static int InsertAllInternalBase<TEntity>(this IDbConnection connection,
+        //    InsertAllRequest request,
+        //    IEnumerable<TEntity> entities,
+        //    int? commandTimeout = null,
+        //    IDbTransaction transaction = null,
+        //    ITrace trace = null)
+        //    where TEntity : class
+        //{
+        //    // Variables
+        //    var commandType = CommandType.Text;
+        //    var commandText = CommandTextCache.GetInsertAllText(request);
+
+        //    // Before Execution
+        //    if (trace != null)
+        //    {
+        //        var cancellableTraceLog = new CancellableTraceLog(commandText, entities, null);
+        //        trace.BeforeInsertAll(cancellableTraceLog);
+        //        if (cancellableTraceLog.IsCancelled)
+        //        {
+        //            if (cancellableTraceLog.IsThrowException)
+        //            {
+        //                throw new CancelledExecutionException(commandText);
+        //            }
+        //            return 0;
+        //        }
+        //        commandText = (cancellableTraceLog.Statement ?? commandText);
+        //        entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
+        //    }
+
+        //    // Before Execution Time
+        //    var beforeExecutionTime = DateTime.UtcNow;
+
+        //    // Variables needed
+        //    var primary = PrimaryCache.Get<TEntity>();
+        //    var dbFields = DbFieldCache.Get(connection, request.Name);
+        //    var primaryDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+        //    var isIdentity = false;
+
+        //    // Set the identify value
+        //    if (primary != null && primaryDbField != null)
+        //    {
+        //        isIdentity = primary.GetUnquotedMappedName().ToLower() == primaryDbField.UnquotedName.ToLower();
+        //    }
+
+        //    // The actua result
+        //    var result = 0;
+
+        //    // Get the properties
+        //    var properties = PropertyCache.Get(request.Type);
+
+        //    // Get the first item properties if needed
+        //    if (properties == null)
+        //    {
+        //        properties = PropertyCache.Get(entities.First().GetType());
+        //    }
+
+        //    // Set the proper fields
+        //    var fields = request.Fields?.Select(f => f.UnquotedName);
+        //    var propertiesToSkip = fields?
+        //        .Where(field => dbFields?.FirstOrDefault(dbField => dbField.UnquotedName.ToLower() == field.ToLower()) == null);
+
+        //    // Create a command object
+        //    using (var command = connection.EnsureOpen().CreateCommand(commandText: commandText,
+        //        commandType: commandType,
+        //        commandTimeout: commandTimeout,
+        //        transaction: transaction))
+        //    {
+        //        // Create the parameters
+        //        command.CreateParametersFromClassProperties(properties, propertiesToSkip);
+
+        //        // Iterate the params
+        //        foreach (var obj in entities)
+        //        {
+        //            // Set the parameters
+        //            command.SetParameters(obj, propertiesToSkip, true);
+
+        //            // Execute the command
+        //            var value = ObjectConverter.DbNullToNull(command.ExecuteScalar());
+
+        //            // Set the property value
+        //            primary?.PropertyInfo.SetValue(obj, value);
+
+        //            // Iterate the counters
+        //            result++;
+        //        }
+        //    }
+
+        //    // After Execution
+        //    if (trace != null)
+        //    {
+        //        trace.AfterInsertAll(new TraceLog(commandText, entities, result,
+        //            DateTime.UtcNow.Subtract(beforeExecutionTime)));
+        //    }
+
+        //    // Return the result
+        //    return result;
+        //}
 
         #endregion
 
@@ -537,7 +662,13 @@ namespace RepoDb
 
         #region Helpers
 
-        /* TODO: Add a guard here */
+        private static void GuardInsertAll<TEntity>(IEnumerable<TEntity> entities)
+        {
+            if (entities?.Any() != true)
+            {
+                throw new InvalidOperationException("The entities must not be empty or null.");
+            }
+        }
 
         #endregion
     }
