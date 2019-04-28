@@ -1,12 +1,9 @@
 ﻿using RepoDb.Exceptions;
 using RepoDb.Interfaces;
-using RepoDb.Reflection;
 using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -132,16 +129,14 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (IEnumerable<TEntity>)null;
-            using (var reader = ExecuteReaderInternal(connection: connection,
+            var result = ExecuteQueryInternal<TEntity>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
-            {
-                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader, connection)?.ToList();
-            }
+                transaction: transaction,
+                basedOnFields: false,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)
@@ -286,7 +281,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                basedOnFields: false,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)

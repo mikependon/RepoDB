@@ -289,9 +289,11 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQueryInternal(connection: connection,
                 commandText: commandText,
+                param: null,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)
@@ -349,9 +351,11 @@ namespace RepoDb
             // Actual Execution
             var result = await ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
+                param: null,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)

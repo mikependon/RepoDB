@@ -15,8 +15,14 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        private static bool m_rowsCopiedFieldHasSet = false;
-        private static FieldInfo m_rowsCopiedField = null;
+        #region Privates
+
+        private static bool m_bulkInsertRowsCopiedFieldHasSet = false;
+        private static FieldInfo m_bulkInsertRowsCopiedField = null;
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Gets the <see cref="SqlBulkCopy"/> private variable reflected field.
@@ -25,21 +31,23 @@ namespace RepoDb
         public static FieldInfo GetRowsCopiedField()
         {
             // Check if the call has made earlier
-            if (m_rowsCopiedFieldHasSet == true)
+            if (m_bulkInsertRowsCopiedFieldHasSet == true)
             {
-                return m_rowsCopiedField;
+                return m_bulkInsertRowsCopiedField;
             }
             
             // Set the flag
-            m_rowsCopiedFieldHasSet = true;
+            m_bulkInsertRowsCopiedFieldHasSet = true;
 
             // Get the field (whether null or not)
-            m_rowsCopiedField = typeof(SqlBulkCopy)
+            m_bulkInsertRowsCopiedField = typeof(SqlBulkCopy)
                 .GetField("_rowsCopied", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
 
             // Return the value
-            return m_rowsCopiedField;
+            return m_bulkInsertRowsCopiedField;
         }
+
+        #endregion
 
         #region BulkInsert
 

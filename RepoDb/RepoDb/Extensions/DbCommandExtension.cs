@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
-using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -80,10 +79,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
-        /// <param name="skip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
         public static void CreateParameters(this IDbCommand command,
             object param,
-            IEnumerable<string> skip)
+            IEnumerable<string> propertiesToSkip)
         {
             // Check for presence
             if (param == null)
@@ -94,25 +93,25 @@ namespace RepoDb.Extensions
             // Supporting the IDictionary<string, object>
             if (param is ExpandoObject || param is IDictionary<string, object>)
             {
-                CreateParameters(command, (IDictionary<string, object>)param, skip);
+                CreateParameters(command, (IDictionary<string, object>)param, propertiesToSkip);
             }
 
             // Supporting the QueryField
             else if (param is QueryField)
             {
-                CreateParameters(command, (QueryField)param, skip);
+                CreateParameters(command, (QueryField)param, propertiesToSkip);
             }
 
             // Supporting the IEnumerable<QueryField>
             else if (param is IEnumerable<QueryField>)
             {
-                CreateParameters(command, (IEnumerable<QueryField>)param, skip);
+                CreateParameters(command, (IEnumerable<QueryField>)param, propertiesToSkip);
             }
 
             // Supporting the QueryGroup
             else if (param is QueryGroup)
             {
-                CreateParameters(command, (QueryGroup)param, skip);
+                CreateParameters(command, (QueryGroup)param, propertiesToSkip);
             }
 
             // Otherwise, iterate the properties
@@ -127,14 +126,14 @@ namespace RepoDb.Extensions
                 var properties = (IEnumerable<ClassProperty>)null;
 
                 // Add this check for performance
-                if (skip == null)
+                if (propertiesToSkip == null)
                 {
                     properties = PropertyCache.Get(type);
                 }
                 else
                 {
                     properties = PropertyCache.Get(type)
-                        .Where(p => skip?.Contains(p.PropertyInfo.Name,
+                        .Where(p => propertiesToSkip?.Contains(p.PropertyInfo.Name,
                             StringComparer.CurrentCultureIgnoreCase) == false);
                 }
 
@@ -161,17 +160,17 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
-        /// <param name="skip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
         private static void CreateParameters(this IDbCommand command,
             IDictionary<string, object> dictionary,
-            IEnumerable<string> skip)
+            IEnumerable<string> propertiesToSkip)
         {
             var dbType = (DbType?)null;
 
             foreach (var item in dictionary)
             {
                 // Exclude those to be skipped
-                if (skip?.Contains(item.Key, StringComparer.CurrentCultureIgnoreCase) == true)
+                if (propertiesToSkip?.Contains(item.Key, StringComparer.CurrentCultureIgnoreCase) == true)
                 {
                     continue;
                 }
@@ -202,12 +201,12 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
-        /// <param name="skip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
         private static void CreateParameters(this IDbCommand command,
             QueryGroup queryGroup,
-            IEnumerable<string> skip)
+            IEnumerable<string> propertiesToSkip)
         {
-            CreateParameters(command, queryGroup?.GetFields(true), skip);
+            CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip);
         }
 
         /// <summary>
@@ -215,14 +214,14 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
-        /// <param name="skip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
         private static void CreateParameters(this IDbCommand command,
             IEnumerable<QueryField> queryFields,
-            IEnumerable<string> skip)
+            IEnumerable<string> propertiesToSkip)
         {
             foreach (var queryField in queryFields)
             {
-                CreateParameters(command, queryField, skip);
+                CreateParameters(command, queryField, propertiesToSkip);
             }
         }
 
@@ -231,13 +230,13 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
-        /// <param name="skip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
         private static void CreateParameters(this IDbCommand command,
             QueryField queryField,
-            IEnumerable<string> skip)
+            IEnumerable<string> propertiesToSkip)
         {
             // Exclude those to be skipped
-            if (skip?.Contains(queryField.Field.UnquotedName, StringComparer.CurrentCultureIgnoreCase) == true)
+            if (propertiesToSkip?.Contains(queryField.Field.UnquotedName, StringComparer.CurrentCultureIgnoreCase) == true)
             {
                 return;
             }

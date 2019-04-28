@@ -478,7 +478,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true);
 
             // Set the primary value
             if (primary != null && isIdentity == true)
@@ -565,7 +566,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true);
 
             // Set the primary value
             if (primary != null && isIdentity == true)
