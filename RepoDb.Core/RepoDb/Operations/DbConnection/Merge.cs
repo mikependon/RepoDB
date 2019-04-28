@@ -134,12 +134,11 @@ namespace RepoDb
                 entity?.AsFields<TEntity>(),
                 qualifiers,
                 statementBuilder);
-            var param = entity?.AsObject();
 
             // Return the result
             return MergeInternalBase(connection: connection,
                 request: request,
-                param: param,
+                param: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -267,12 +266,11 @@ namespace RepoDb
                 entity?.AsFields<TEntity>(),
                 qualifiers,
                 statementBuilder);
-            var param = entity?.AsObject();
 
             // Return the result
             return MergeAsyncInternalBase(connection: connection,
                 request: request,
-                param: param,
+                param: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -595,7 +593,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)
@@ -659,7 +658,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)

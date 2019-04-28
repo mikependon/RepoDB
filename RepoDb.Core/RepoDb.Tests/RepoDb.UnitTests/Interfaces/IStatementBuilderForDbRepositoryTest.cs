@@ -682,6 +682,12 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region CreateInsertAll
+
+        /* Note: InsertAll is using the CreateInsert operation */
+
+        #endregion
+
         #region CreateMerge
 
         [TestMethod]

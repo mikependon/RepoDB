@@ -480,6 +480,7 @@ namespace RepoDb
         /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
+        /// <typeparam name="TResult">The target return type.</typeparam>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
         /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
@@ -507,6 +508,7 @@ namespace RepoDb
         /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
+        /// <typeparam name="TResult">The target return type.</typeparam>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
         /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,

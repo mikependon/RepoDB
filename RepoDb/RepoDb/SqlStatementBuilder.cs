@@ -44,13 +44,13 @@ namespace RepoDb
             Guard(tableName);
 
             // There should be fields
-            if (fields == null || fields?.Any() == false)
+            if (fields == null || fields?.Any() != true)
             {
                 throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
             // Validate order by
-            if (orderBy == null || orderBy?.Any() == false)
+            if (orderBy == null || orderBy?.Any() != true)
             {
                 throw new InvalidOperationException("The argument 'orderBy' is required.");
             }
@@ -280,7 +280,7 @@ namespace RepoDb
             Guard(tableName);
 
             // Verify the fields
-            if (fields == null || fields?.Any() == false)
+            if (fields == null || fields?.Any() != true)
             {
                 throw new NullReferenceException($"The list of insertable fields must not be null for '{tableName}'.");
             }
@@ -340,7 +340,7 @@ namespace RepoDb
             Guard(tableName);
 
             // Verify the fields
-            if (fields == null || fields?.Any() == false)
+            if (fields == null || fields?.Any() != true)
             {
                 throw new NullReferenceException($"The list of insertable fields must not be null for '{tableName}'.");
             }

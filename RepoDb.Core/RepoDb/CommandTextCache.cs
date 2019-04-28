@@ -2,6 +2,7 @@
 using RepoDb.Requests;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -28,9 +29,10 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
                 commandText = statementBuilder.CreateBatchQuery(new QueryBuilder(),
                     request.Name,
-                    request.Fields,
+                    fields,
                     request.Page,
                     request.RowsPerBatch,
                     request.OrderBy,
@@ -145,9 +147,35 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
                 commandText = statementBuilder.CreateInsert(new QueryBuilder(),
                     request.Name,
-                    request.Fields,
+                    fields,
+                    GetPrimaryField(request));
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
+        #region GetInsertAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the insert-all operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetInsertAllText(InsertAllRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                commandText = statementBuilder.CreateInsert(new QueryBuilder(),
+                    request.Name,
+                    fields,
                     GetPrimaryField(request));
                 m_cache.TryAdd(request, commandText);
             }
@@ -169,9 +197,10 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
                 commandText = statementBuilder.CreateMerge(new QueryBuilder(),
                     request.Name,
-                    request.Fields,
+                    fields,
                     request.Qualifiers,
                     GetPrimaryField(request));
                 m_cache.TryAdd(request, commandText);
@@ -196,9 +225,10 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
                 commandText = statementBuilder.CreateQuery(new QueryBuilder(),
                     request.Name,
-                    request.Fields,
+                    fields,
                     request.Where,
                     request.OrderBy,
                     request.Top,
@@ -225,9 +255,10 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
                 commandText = statementBuilder.CreateQueryAll(new QueryBuilder(),
                     request.Name,
-                    request.Fields,
+                    fields,
                     request.OrderBy,
                     request.Hints);
                 m_cache.TryAdd(request, commandText);
@@ -252,9 +283,10 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
                 commandText = statementBuilder.CreateQuery(new QueryBuilder(),
                     request.Name,
-                    request.Fields,
+                    fields,
                     request.Where,
                     request.OrderBy,
                     request.Top,
@@ -301,9 +333,10 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
                 commandText = statementBuilder.CreateUpdate(new QueryBuilder(),
                     request.Name,
-                    request.Fields,
+                    fields,
                     request.Where,
                     GetPrimaryField(request));
                 m_cache.TryAdd(request, commandText);
@@ -314,6 +347,29 @@ namespace RepoDb
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Gets the list of <see cref="Field"/> objects based on the actual list of <see cref="DbField"/> objects.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="fields">The target name of the table.</param>
+        /// <param name="tableName">The list of fields from the data entity object.</param>
+        /// <returns>The list of actual <see cref="Field"/> objects of the table.</returns>
+        private static IEnumerable<Field> GetActualFields(IDbConnection connection, string tableName, IEnumerable<Field> fields)
+        {
+            if (fields?.Any() != true)
+            {
+                return null;
+            }
+
+            // Get all the fields from the database
+            var dbFields = DbFieldCache.Get(connection, tableName);
+
+            // Return the filtered one
+            return dbFields?.Any() == true ?
+                fields.Where(f => dbFields.FirstOrDefault(df => df.UnquotedName.ToLower() == f.UnquotedName.ToLower()) != null) :
+                fields;
+        }
 
         /// <summary>
         /// Gets the primary <see cref="DbField"/> object.

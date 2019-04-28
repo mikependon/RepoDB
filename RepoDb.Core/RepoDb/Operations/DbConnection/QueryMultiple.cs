@@ -173,7 +173,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
@@ -389,7 +390,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
@@ -648,7 +650,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
@@ -948,7 +951,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
@@ -1289,7 +1293,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
@@ -1672,7 +1677,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
@@ -1876,7 +1882,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
@@ -2092,7 +2099,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
@@ -2351,7 +2359,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
@@ -2651,7 +2660,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
@@ -2992,7 +3002,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
@@ -3375,7 +3386,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction))
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();

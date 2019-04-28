@@ -45,7 +45,7 @@ namespace RepoDb.Reflection
             var memberAssignments = GetMemberAssignments<TEntity>(newEntityExpression, readerParameterExpression, readerFields, connection);
 
             // Throw an error if there are no matching atleast one
-            if (memberAssignments.Any() == false)
+            if (memberAssignments.Any() != true)
             {
                 throw new NoMatchedFieldsException($"There are no matching fields between the result set of the data reader and the type '{typeof(TEntity).FullName}'.");
             }
@@ -284,7 +284,7 @@ namespace RepoDb.Reflection
             var elementInits = GetElementInits(readerParameterExpression, readerFields?.ToList());
 
             // Throw an error if there are no matching atleast one
-            if (elementInits.Any() == false)
+            if (elementInits.Any() != true)
             {
                 throw new NoMatchedFieldsException($"There are no elements initialization found.");
             }

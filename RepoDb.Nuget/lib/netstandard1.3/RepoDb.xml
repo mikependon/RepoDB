@@ -114,6 +114,9 @@
             <summary>
             A base object for all entity-based repositories.
             </summary>
+            <summary>
+            A base object for all entity-based repositories.
+            </summary>
         </member>
         <member name="M:RepoDb.BaseRepository`2.#ctor(System.String)">
             <summary>
@@ -361,6 +364,7 @@
             Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
             </summary>
+            <typeparam name="TResult">The target return type.</typeparam>
             <param name="commandText">The command text to be used.</param>
             <param name="param">
             The parameters/values defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="T:System.Collections.Generic.IDictionary`2"/>,
@@ -375,6 +379,7 @@
             Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
             </summary>
+            <typeparam name="TResult">The target return type.</typeparam>
             <param name="commandText">The command text to be used.</param>
             <param name="param">
             The parameters/values defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="T:System.Collections.Generic.IDictionary`2"/>,
@@ -641,6 +646,14 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.BaseRepository`2.Delete(`0,System.Data.IDbTransaction)">
+            <summary>
+            Deletes an existing data from the database.
+            </summary>
+            <param name="entity">The data entity object to be deleted.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.BaseRepository`2.Delete(System.Object,System.Data.IDbTransaction)">
             <summary>
             Deletes an existing data from the database.
@@ -678,6 +691,14 @@
             Deletes an existing data from the database.
             </summary>
             <param name="where">The query expression to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.DeleteAsync(`0,System.Data.IDbTransaction)">
+            <summary>
+            Deletes an existing data from the database in an asynchronous way.
+            </summary>
+            <param name="entity">The data entity object to be deleted.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
@@ -775,6 +796,28 @@
             </summary>
             <typeparam name="TResult">The type of the primary key result.</typeparam>
             <param name="entity">The data entity object to be inserted.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>
+            The value of the primary key of the newly inserted data. Returns null if the 
+            primary key property is not present.
+            </returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.InsertAll(System.Collections.Generic.IEnumerable{`0},System.Data.IDbTransaction)">
+            <summary>
+            Inserts multiple data in the database.
+            </summary>
+            <param name="entities">The data entity objects to be inserted.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>
+            The value of the primary key of the newly inserted data. Returns null if the 
+            primary key property is not present.
+            </returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.InsertAllAsync(System.Collections.Generic.IEnumerable{`0},System.Data.IDbTransaction)">
+            <summary>
+            Inserts multiple data in the database in an asynchronous way.
+            </summary>
+            <param name="entities">The data entity objects to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>
             The value of the primary key of the newly inserted data. Returns null if the 
@@ -1015,17 +1058,39 @@
             </summary>
             <returns>The number of rows affected.</returns>
         </member>
+        <member name="M:RepoDb.BaseRepository`2.Truncate(System.Data.IDbTransaction)">
+            <summary>
+            Truncates a table from the database.
+            </summary>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected.</returns>
+        </member>
         <member name="M:RepoDb.BaseRepository`2.TruncateAsync">
             <summary>
             Truncates a table from the database in an asynchronous way.
             </summary>
             <returns>The number of rows affected.</returns>
         </member>
+        <member name="M:RepoDb.BaseRepository`2.TruncateAsync(System.Data.IDbTransaction)">
+            <summary>
+            Truncates a table from the database in an asynchronous way.
+            </summary>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.Update(`0,System.Data.IDbTransaction)">
+            <summary>
+            Updates an existing data in the database.
+            </summary>
+            <param name="entity">The data entity object to be updated.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.BaseRepository`2.Update(`0,System.Object,System.Data.IDbTransaction)">
             <summary>
             Updates an existing data in the database based on the given query expression.
             </summary>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -1034,7 +1099,7 @@
             <summary>
             Updates an existing data in the database based on the given query expression.
             </summary>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -1043,7 +1108,7 @@
             <summary>
             Updates an existing data in the database based on the given query expression.
             </summary>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -1052,7 +1117,7 @@
             <summary>
             Updates an existing data in the database based on the given query expression.
             </summary>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -1061,8 +1126,16 @@
             <summary>
             Updates an existing data in the database based on the given query expression.
             </summary>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.UpdateAsync(`0,System.Data.IDbTransaction)">
+            <summary>
+            Updates an existing data in the database in an asynchronous way.
+            </summary>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
@@ -1070,7 +1143,7 @@
             <summary>
             Updates an existing data in the database based on the given query expression in an asynchronous way.
             </summary>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -1079,7 +1152,7 @@
             <summary>
             Updates an existing data in the database based on the given query expression in an asynchronous way.
             </summary>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -1088,7 +1161,7 @@
             <summary>
             Updates an existing data in the database based on the given query expression in an asynchronous way.
             </summary>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -1097,7 +1170,7 @@
             <summary>
             Updates an existing data in the database based on the given query expression in an asynchronous way.
             </summary>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -1106,7 +1179,7 @@
             <summary>
             Updates an existing data in the database based on the given query expression in an asynchronous way.
             </summary>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -1352,12 +1425,11 @@
             </summary>
             <returns>The unquoted mapped-name value.</returns>
         </member>
-        <member name="M:RepoDb.ClassProperty.GetUnderlyingType(System.Type)">
+        <member name="M:RepoDb.ClassProperty.ToString">
             <summary>
-            Gets the underlying type if present.
+            Returns the string that represent the current <see cref="T:RepoDb.ClassProperty"/> object.
             </summary>
-            <param name="type">The type where to get the underlying type.</param>
-            <returns>The underlying type.</returns>
+            <returns>The unquoted name.</returns>
         </member>
         <member name="M:RepoDb.ClassProperty.GetHashCode">
             <summary>
@@ -1492,6 +1564,13 @@
             <param name="request">The request object.</param>
             <returns>The cached command text.</returns>
         </member>
+        <member name="M:RepoDb.CommandTextCache.GetInsertAllText(RepoDb.Requests.InsertAllRequest)">
+            <summary>
+            Gets a command text from the cache for the insert-all operation.
+            </summary>
+            <param name="request">The request object.</param>
+            <returns>The cached command text.</returns>
+        </member>
         <member name="M:RepoDb.CommandTextCache.GetMergeText(RepoDb.Requests.MergeRequest)">
             <summary>
             Gets a command text from the cache for the merge operation.
@@ -1537,6 +1616,15 @@
             <param name="request">The request object.</param>
             <returns>The cached command text.</returns>
         </member>
+        <member name="M:RepoDb.CommandTextCache.GetActualFields(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field})">
+            <summary>
+            Gets the list of <see cref="T:RepoDb.Field"/> objects based on the actual list of <see cref="T:RepoDb.DbField"/> objects.
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="fields">The target name of the table.</param>
+            <param name="tableName">The list of fields from the data entity object.</param>
+            <returns>The list of actual <see cref="T:RepoDb.Field"/> objects of the table.</returns>
+        </member>
         <member name="M:RepoDb.CommandTextCache.GetPrimaryField(RepoDb.Requests.BaseRequest)">
             <summary>
             Gets the primary <see cref="T:RepoDb.DbField"/> object.
@@ -1578,6 +1666,13 @@
             Creates a new instance of <see cref="T:RepoDb.DataEntityDataReader`1"/> object.
             </summary>
             <param name="entities">The list of the data entity object to be used for manipulation.</param>
+        </member>
+        <member name="M:RepoDb.DataEntityDataReader`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Data.IDbConnection)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.DataEntityDataReader`1"/> object.
+            </summary>
+            <param name="entities">The list of the data entity object to be used for manipulation.</param>
+            <param name="connection">The actual <see cref="T:System.Data.IDbConnection"/> object used.</param>
         </member>
         <member name="M:RepoDb.DataEntityDataReader`1.GetEnumerator">
             <summary>
@@ -2072,6 +2167,9 @@
             <summary>
             A base object for all shared-based repositories.
             </summary>
+            <summary>
+            A base object for all shared-based repositories.
+            </summary>
         </member>
         <member name="M:RepoDb.DbRepository`1.#ctor(System.String)">
             <summary>
@@ -2325,7 +2423,7 @@
             Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
             </summary>
-            <typeparam name="T">The target return type.</typeparam>
+            <typeparam name="TResult">The target return type.</typeparam>
             <param name="commandText">The command text to be used.</param>
             <param name="param">
             The parameters/values defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="T:System.Collections.Generic.IDictionary`2"/>,
@@ -2340,7 +2438,7 @@
             Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
             </summary>
-            <typeparam name="T">The target return type.</typeparam>
+            <typeparam name="TResult">The target return type.</typeparam>
             <param name="commandText">The command text to be used.</param>
             <param name="param">
             The parameters/values defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="T:System.Collections.Generic.IDictionary`2"/>,
@@ -2764,6 +2862,15 @@
             <param name="hints">The table hints to be used. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.Delete``1(``0,System.Data.IDbTransaction)">
+            <summary>
+            Deletes an existing data from the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The data entity object to be deleted.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbRepository`1.Delete``1(System.Object,System.Data.IDbTransaction)">
             <summary>
             Deletes an existing data from the database.
@@ -2806,6 +2913,15 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="where">The query expression to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.DeleteAsync``1(``0,System.Data.IDbTransaction)">
+            <summary>
+            Deletes an existing data from the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The data entity object to be deleted.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
@@ -3045,6 +3161,44 @@
             <param name="entity">The dynamic object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>The value of the primary key of the newly inserted data.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.InsertAll``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+            <summary>
+            Inserts multiple data in the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entities">The data entity objects to be inserted.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.InsertAllAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+            <summary>
+            Inserts multiple data in the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entities">The data entity objects to be inserted.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.InsertAll(System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Data.IDbTransaction)">
+            <summary>
+            Inserts multiple data in the database.
+            </summary>
+            <param name="tableName">The name of the target table to be used.</param>
+            <param name="entities">The dynamic objects to be inserted.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used. Defaulted to database table fields.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.InsertAllAsync(System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Data.IDbTransaction)">
+            <summary>
+            Inserts multiple data in the database in an asynchronous way.
+            </summary>
+            <param name="tableName">The name of the target table to be used.</param>
+            <param name="entities">The dynamic objects to be inserted.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used. Defaulted to database table fields.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of inserted rows.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.Merge``1(``0,System.Data.IDbTransaction)">
             <summary>
@@ -3711,11 +3865,27 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <returns>The number of rows affected.</returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.Truncate``1(System.Data.IDbTransaction)">
+            <summary>
+            Truncates a table from the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected.</returns>
+        </member>
         <member name="M:RepoDb.DbRepository`1.TruncateAsync``1">
             <summary>
             Truncates a table from the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <returns>The number of rows affected.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.TruncateAsync``1(System.Data.IDbTransaction)">
+            <summary>
+            Truncates a table from the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="transaction">The transaction to be used.</param>
             <returns>The number of rows affected.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.Truncate(System.String)">
@@ -3725,6 +3895,14 @@
             <param name="tableName">The name of the target table.</param>
             <returns>The number of rows affected.</returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.Truncate(System.String,System.Data.IDbTransaction)">
+            <summary>
+            Truncates a table from the database.
+            </summary>
+            <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected.</returns>
+        </member>
         <member name="M:RepoDb.DbRepository`1.TruncateAsync(System.String)">
             <summary>
             Truncates a table from the database in an asynchronous way.
@@ -3732,12 +3910,29 @@
             <param name="tableName">The name of the target table.</param>
             <returns>The number of rows affected.</returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.TruncateAsync(System.String,System.Data.IDbTransaction)">
+            <summary>
+            Truncates a table from the database in an asynchronous way.
+            </summary>
+            <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.Update``1(``0,System.Data.IDbTransaction)">
+            <summary>
+            Updates an existing data in the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The data entity object to be updated.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbRepository`1.Update``1(``0,System.Object,System.Data.IDbTransaction)">
             <summary>
             Updates an existing data in the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -3747,7 +3942,7 @@
             Updates an existing data in the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -3757,7 +3952,7 @@
             Updates an existing data in the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -3767,7 +3962,7 @@
             Updates an existing data in the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -3777,8 +3972,17 @@
             Updates an existing data in the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.UpdateAsync``1(``0,System.Data.IDbTransaction)">
+            <summary>
+            Updates an existing data in the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
@@ -3787,7 +3991,7 @@
             Updates an existing data in the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -3797,7 +4001,7 @@
             Updates an existing data in the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -3807,7 +4011,7 @@
             Updates an existing data in the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -3817,7 +4021,7 @@
             Updates an existing data in the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -3827,7 +4031,7 @@
             Updates an existing data in the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -4095,6 +4299,17 @@
             </summary>
             <param name="message">The exception message.</param>
         </member>
+        <member name="T:RepoDb.Exceptions.ParameterNotFoundException">
+            <summary>
+            An exception that is being thrown when the parameter object is not found.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.ParameterNotFoundException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.Exceptions.ParameterNotFoundException"/> class.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
         <member name="T:RepoDb.Exceptions.PrimaryFieldNotFoundException">
             <summary>
             An exception that is being thrown of the validation for primary key has been called and the primary key is not
@@ -4185,6 +4400,14 @@
             Contains the extension methods for <see cref="T:System.Data.IDbCommand"/> object.
             </summary>
         </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParametersFromClassProperties(System.Data.IDbCommand,System.Collections.Generic.IEnumerable{RepoDb.ClassProperty},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates the command object list of parameters based on type.
+            </summary>
+            <param name="command">The command object instance to be used.</param>
+            <param name="properties">The target list of properties.</param>
+            <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        </member>
         <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameter(System.Data.IDbCommand,System.String,System.Object,System.Nullable{System.Data.DbType})">
             <summary>
             Creates a parameter for a command object.
@@ -4215,7 +4438,7 @@
             </summary>
             <param name="command">The command object to be used.</param>
             <param name="param">The object to be used when creating the parameters.</param>
-            <param name="skip">The list of the properties to be skpped.</param>
+            <param name="propertiesToSkip">The list of the properties to be skpped.</param>
         </member>
         <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
@@ -4223,14 +4446,7 @@
             </summary>
             <param name="command">The command object to be used.</param>
             <param name="dictionary">The parameters from the <see cref="T:System.Collections.Generic.Dictionary`2"/> object.</param>
-            <param name="skip">The list of the properties to be skpped.</param>
-        </member>
-        <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,System.Collections.Generic.IEnumerable{RepoDb.PropertyValue})">
-            <summary>
-            Create the command parameters from the list of <see cref="T:RepoDb.PropertyValue"/> objects.
-            </summary>
-            <param name="command">The command object to be used.</param>
-            <param name="propertyValues">The list <see cref="T:RepoDb.PropertyValue"/> to be added.</param>
+            <param name="propertiesToSkip">The list of the properties to be skpped.</param>
         </member>
         <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
@@ -4238,7 +4454,7 @@
             </summary>
             <param name="command">The command object to be used.</param>
             <param name="queryGroup">The value of the <see cref="T:RepoDb.QueryGroup"/> object.</param>
-            <param name="skip">The list of the properties to be skpped.</param>
+            <param name="propertiesToSkip">The list of the properties to be skpped.</param>
         </member>
         <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
@@ -4246,7 +4462,7 @@
             </summary>
             <param name="command">The command object to be used.</param>
             <param name="queryFields">The list of <see cref="T:RepoDb.QueryField"/> objects.</param>
-            <param name="skip">The list of the properties to be skpped.</param>
+            <param name="propertiesToSkip">The list of the properties to be skpped.</param>
         </member>
         <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,RepoDb.QueryField,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
@@ -4254,14 +4470,88 @@
             </summary>
             <param name="command">The command object to be used.</param>
             <param name="queryField">The value of <see cref="T:RepoDb.QueryField"/> object.</param>
-            <param name="skip">The list of the properties to be skpped.</param>
+            <param name="propertiesToSkip">The list of the properties to be skpped.</param>
         </member>
-        <member name="M:RepoDb.Extensions.DbCommandExtension.GetUnderlyingType(System.Type)">
+        <member name="M:RepoDb.Extensions.DbCommandExtension.SetParameter(System.Data.IDbCommand,System.String,System.Object,System.Nullable{System.Data.DbType})">
             <summary>
-            Gets the underlying type if present.
+            Set the <see cref="T:System.Data.IDbCommand"/> exist <see cref="T:System.Data.IDbDataParameter"/> object value and type.
             </summary>
-            <param name="type">The type where to get the underlying type.</param>
-            <returns>The underlying type.</returns>
+            <param name="command">The command object instance to be used.</param>
+            <param name="name">The name of the parameter.</param>
+            <param name="value">The value of the parameter.</param>
+            <param name="dbType">The database type of the parameter.</param>
+            <returns>The instance of updated parameter.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.SetParameters(System.Data.IDbCommand,System.Object,System.Collections.Generic.IEnumerable{System.String},System.Boolean)">
+            <summary>
+            Set the <see cref="T:System.Data.IDbCommand"/> object existing <see cref="T:System.Data.IDbDataParameter"/> values.
+            </summary>
+            <param name="command">The command object to be used.</param>
+            <param name="param">The instance of where the parameter values will be set.</param>
+            <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+            <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
+        </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.SetParameters(System.Data.IDbCommand,System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IEnumerable{System.String},System.Boolean)">
+            <summary>
+            Create the command parameters from the <see cref="T:System.Collections.Generic.IDictionary`2"/> object.
+            </summary>
+            <param name="command">The command object to be used.</param>
+            <param name="dictionary">The parameters from the <see cref="T:System.Collections.Generic.Dictionary`2"/> object.</param>
+            <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+            <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
+        </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.SetParameters(System.Data.IDbCommand,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{System.String},System.Boolean)">
+            <summary>
+            Create the command parameters from the <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="command">The command object to be used.</param>
+            <param name="queryGroup">The value of the <see cref="T:RepoDb.QueryGroup"/> object.</param>
+            <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+            <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
+        </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.SetParameters(System.Data.IDbCommand,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{System.String},System.Boolean)">
+            <summary>
+            Create the command parameters from the list of <see cref="T:RepoDb.QueryField"/> objects.
+            </summary>
+            <param name="command">The command object to be used.</param>
+            <param name="queryFields">The list of <see cref="T:RepoDb.QueryField"/> objects.</param>
+            <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+            <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
+        </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.SetParameters(System.Data.IDbCommand,RepoDb.QueryField,System.Collections.Generic.IEnumerable{System.String},System.Boolean)">
+            <summary>
+            Creates a command parameter from the <see cref="T:RepoDb.QueryField"/> object.
+            </summary>
+            <param name="command">The command object to be used.</param>
+            <param name="queryField">The value of <see cref="T:RepoDb.QueryField"/> object.</param>
+            <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+            <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
+        </member>
+        <member name="T:RepoDb.Extensions.DbFieldExtension">
+            <summary>
+            Contains the extension methods for <see cref="T:RepoDb.Field"/> object.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Extensions.DbFieldExtension.AsEnumerable(RepoDb.DbField)">
+            <summary>
+            Converts an instance of a <see cref="T:RepoDb.DbField"/> into an <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:RepoDb.DbField"/> object.
+            </summary>
+            <param name="dbField">The <see cref="T:RepoDb.DbField"/> to be converted.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> list of <see cref="T:RepoDb.DbField"/> object.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.DbFieldExtension.AsField(RepoDb.DbField)">
+            <summary>
+            Converts an instance of a <see cref="T:RepoDb.DbField"/> into <see cref="T:RepoDb.Field"/> object.
+            </summary>
+            <param name="dbField">The <see cref="T:RepoDb.DbField"/> to be converted.</param>
+            <returns>An instance of <see cref="T:RepoDb.Field"/> object.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.DbFieldExtension.AsFields(System.Collections.Generic.IEnumerable{RepoDb.DbField})">
+            <summary>
+            Converts the list of <see cref="T:RepoDb.DbField"/> objects into an <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:RepoDb.Field"/> objects.
+            </summary>
+            <param name="dbFields">The <see cref="T:RepoDb.DbField"/> to be converted.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> list of <see cref="T:RepoDb.Field"/> object.</returns>
         </member>
         <member name="T:RepoDb.Extensions.ExpressionExtension">
             Though we know that throwing an exception in the extension is not advisable, but I tend to do it to ensure that the
@@ -4764,20 +5054,6 @@
             <param name="value">The value to be identified.</param>
             <returns>True if the value is a decimal.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.ObjectExtension.IsNumber(System.Object)">
-            <summary>
-            Identify whether an object is a number.
-            </summary>
-            <param name="value">The value to be identified.</param>
-            <returns>True if the value is a number.</returns>
-        </member>
-        <member name="M:RepoDb.Extensions.ObjectExtension.ToDecimal(System.Object)">
-            <summary>
-            Converts an object to a <see cref="T:System.Decimal"/>.
-            </summary>
-            <param name="value">The value to be converted.</param>
-            <returns>A <see cref="T:System.Decimal"/> value of the object.</returns>
-        </member>
         <member name="M:RepoDb.Extensions.ObjectExtension.ToNumber(System.Object)">
             <summary>
             Converts an object to a <see cref="T:System.Int64"/>.
@@ -5066,7 +5342,17 @@
             <param name="type">The current type.</param>
             <returns>A list of <see cref="T:System.String"/> objects.</returns>
         </member>
+        <member name="M:RepoDb.Extensions.TypeExtension.GetUnderlyingType(System.Type)">
+            <summary>
+            Gets the underlying type of the current type. If there is no underlying type, this will return the current type.
+            </summary>
+            <param name="type">The current type to check.</param>
+            <returns>The underlying type or the current type.</returns>
+        </member>
         <member name="T:RepoDb.DbConnectionExtension">
+            <summary>
+            Contains the extension methods for <see cref="T:System.Data.IDbConnection"/> object.
+            </summary>
             <summary>
             Contains the extension methods for <see cref="T:System.Data.IDbConnection"/> object.
             </summary>
@@ -5128,6 +5414,13 @@
             <param name="connection">The connection to be opened.</param>
             <returns>The instance of the current connection object.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.EnsureOpenAsync(System.Data.IDbConnection)">
+            <summary>
+            Ensures the connection object is open in an asynchronous way.
+            </summary>
+            <param name="connection">The connection to be opened.</param>
+            <returns>The instance of the current connection object.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteQuery(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteReader(System.Data.CommandBehavior)"/> and
@@ -5146,7 +5439,7 @@
             An enumerable list of dynamic objects containing the converted results of the underlying <see cref="T:System.Data.IDataReader"/> object.
             </returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteReader(System.Data.CommandBehavior)"/> and
             converts the result back to an enumerable list of dynamic objects.
@@ -5160,6 +5453,7 @@
             <param name="commandType">The command type to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>
             An enumerable list of dynamic objects containing the converted results of the underlying <see cref="T:System.Data.IDataReader"/> object.
             </returns>
@@ -5182,7 +5476,7 @@
             An enumerable list of dynamic objects containing the converted results of the underlying <see cref="T:System.Data.IDataReader"/> object.
             </returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryAsyncInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryAsyncInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteReader(System.Data.CommandBehavior)"/> and
             converts the result back to an enumerable list of dynamic objects.
@@ -5196,6 +5490,7 @@
             <param name="commandType">The command type to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>
             An enumerable list of dynamic objects containing the converted results of the underlying <see cref="T:System.Data.IDataReader"/> object.
             </returns>
@@ -5219,7 +5514,7 @@
             An enumerable list of data entity object containing the converted results of the underlying <see cref="T:System.Data.IDataReader"/> object.
             </returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryInternal``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryInternal``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean,System.Boolean)">
             <summary>
             Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteReader(System.Data.CommandBehavior)"/> and
             converts the result back to an enumerable list of data entity object.
@@ -5235,6 +5530,7 @@
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="basedOnFields">True if the conversion will be based on the data reader fields.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>
             An enumerable list of data entity object containing the converted results of the underlying <see cref="T:System.Data.IDataReader"/> object.
             </returns>
@@ -5258,7 +5554,7 @@
             An enumerable list of data entity object containing the converted results of the underlying <see cref="T:System.Data.IDataReader"/> object.
             </returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryAsyncInternal``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryAsyncInternal``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean,System.Boolean)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteReader(System.Data.CommandBehavior)"/> and
             converts the result back to an enumerable list of data entity object.
@@ -5274,6 +5570,7 @@
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="basedOnFields">True if the conversion will be based on the data reader fields.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>
             An enumerable list of data entity object containing the converted results of the underlying <see cref="T:System.Data.IDataReader"/> object.
             </returns>
@@ -5324,7 +5621,7 @@
             <param name="transaction">The transaction to be used.</param>
             <returns><returns>The instance of the <see cref="T:System.Data.IDataReader"/> object.</returns></returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteReader(System.Data.CommandBehavior)"/> and
             returns the instance of the data reader.
@@ -5338,6 +5635,7 @@
             <param name="commandType">The command type to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns><returns>The instance of the <see cref="T:System.Data.IDataReader"/> object.</returns></returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -5356,7 +5654,7 @@
             <param name="transaction">The transaction to be used.</param>
             <returns><returns>The instance of the <see cref="T:System.Data.IDataReader"/> object.</returns></returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderAsyncInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderAsyncInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteReader(System.Data.CommandBehavior)"/> and
             returns the instance of the data reader.
@@ -5370,6 +5668,7 @@
             <param name="commandType">The command type to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns><returns>The instance of the <see cref="T:System.Data.IDataReader"/> object.</returns></returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQuery(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -5388,7 +5687,7 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteNonQuery"/> and
             returns the number of affected data during the execution.
@@ -5402,6 +5701,7 @@
             <param name="commandType">The command type to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -5420,7 +5720,7 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryAsyncInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryAsyncInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Executes a query from the database in asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteNonQuery"/> and
             returns the number of affected data during the execution.
@@ -5434,6 +5734,7 @@
             <param name="commandType">The command type to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteScalar(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -5452,7 +5753,7 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
@@ -5466,6 +5767,7 @@
             <param name="commandType">The command type to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -5484,7 +5786,7 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarAsyncInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarAsyncInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
@@ -5498,6 +5800,7 @@
             <param name="commandType">The command type to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteScalar``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -5505,7 +5808,7 @@
             Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
             </summary>
-            <typeparam name="T">The target return type.</typeparam>
+            <typeparam name="TResult">The target return type.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="commandText">The command text to be used.</param>
             <param name="param">
@@ -5517,7 +5820,7 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>A first occurence value (first column of first row) of the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarInternal``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarInternal``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Executes a query from the database. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
@@ -5531,6 +5834,7 @@
             <param name="commandType">The command type to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>A first occurence value (first column of first row) of the execution.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarAsync``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -5538,7 +5842,7 @@
             Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
             </summary>
-            <typeparam name="T">The target return type.</typeparam>
+            <typeparam name="TResult">The target return type.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="commandText">The command text to be used.</param>
             <param name="param">
@@ -5550,7 +5854,7 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>A first occurence value (first column of first row) of the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarAsyncInternal``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarAsyncInternal``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
@@ -5564,7 +5868,15 @@
             <param name="commandType">The command type to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>A first occurence value (first column of first row) of the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.GetAndGuardPrimaryKey``1">
+            <summary>
+            Throws an exception if there is no defined primary key on the data entity type.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <returns>The primary <see cref="T:RepoDb.ClassProperty"/> of the type.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ValidateTransactionConnectionObject(System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
@@ -5619,7 +5931,7 @@
             <param name="fields">The list of <see cref="T:RepoDb.QueryField"/> objects to be converted.</param>
             <returns>An instance of <see cref="T:RepoDb.QueryGroup"/> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.CreateDbCommandForExecution(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbConnectionExtension.CreateDbCommandForExecution(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Create a new instance of <see cref="T:System.Data.Common.DbCommand"/> object to be used for execution.
             </summary>
@@ -5629,6 +5941,7 @@
             <param name="commandType">The command type to be used.</param>
             <param name="commandTimeout">The command timeout to be used.</param>
             <param name="transaction">The transaction object to be used.</param>
+            <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>An instance of <see cref="T:System.Data.Common.DbCommand"/> object.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ToRawSqlWithArrayParams(System.String,System.String,System.Collections.Generic.IEnumerable{System.Object})">
@@ -5924,6 +6237,12 @@
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>An enumerable list of data entity objects.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.GetRowsCopiedField">
+            <summary>
+            Gets the <see cref="T:System.Data.SqlClient.SqlBulkCopy"/> private variable reflected field.
+            </summary>
+            <returns>The actual field.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.BulkInsert``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
             <summary>
@@ -6579,6 +6898,19 @@
             <param name="trace">The trace object to be used.</param>
             <returns>An integer value that holds the number of data from the database.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.Delete``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Deletes an existing data from the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="entity">The data entity object to be deleted.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.Delete``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Deletes an existing data from the database.
@@ -6651,6 +6983,19 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="where">The query expression to be used.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.DeleteAsync``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Deletes an existing data from the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="entity">The data entity object to be deleted.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
@@ -7189,10 +7534,11 @@
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The value of the primary key of the newly inserted data.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertInternalBase``1(System.Data.IDbConnection,RepoDb.Requests.InsertRequest,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertInternalBase``2(System.Data.IDbConnection,RepoDb.Requests.InsertRequest,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
             <summary>
             Inserts a new data in the database.
             </summary>
+            <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
             <typeparam name="TResult">The type of the primary key result.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="request">The actual <see cref="T:RepoDb.Requests.InsertRequest"/> object.</param>
@@ -7205,14 +7551,15 @@
             primary key property is not present.
             </returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAsyncInternalBase``1(System.Data.IDbConnection,RepoDb.Requests.InsertRequest,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAsyncInternalBase``2(System.Data.IDbConnection,RepoDb.Requests.InsertRequest,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
             <summary>
             Inserts a new data in the database in an asynchronous way.
             </summary>
+            <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
             <typeparam name="TResult">The type of the primary key result.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="request">The actual <see cref="T:RepoDb.Requests.InsertRequest"/> object.</param>
-            <param name="param">The data entity object to be inserted.</param>
+            <param name="param">The dynamic object or the data entity object to be inserted.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
@@ -7220,6 +7567,140 @@
             The value of the primary key of the newly inserted data. Returns null if the 
             primary key property is not present.
             </returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertAll``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts multiple data in the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity objects.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="entities">The data entity objects to be inserted.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllInternal``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts multiple data in the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="entities">The data entity objects to be inserted.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts multiple data in the database in asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="entities">The data entity objects to be inserted.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsyncInternal``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts multiple data in the database in asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="entities">The data entity objects to be inserted.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertAll(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts multiple data in the database.
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="tableName">The name of the target table to be used.</param>
+            <param name="entities">The dynamic objects to be inserted.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used. Defaulted to database table fields.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllInternal(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts multiple data in the database (certain fields only).
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="tableName">The name of the target table to be used.</param>
+            <param name="entities">The dynamic objects to be inserted.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsync(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts multiple data in the database in an asynchronous way.
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="tableName">The name of the target table to be used.</param>
+            <param name="entities">The dynamic objects to be inserted.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used. Defaulted to database table fields.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsyncInternal(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts multiple data in the database in an asynchronous way.
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="tableName">The name of the target table to be used.</param>
+            <param name="entities">The dynamic objects to be inserted.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllInternalBase``1(System.Data.IDbConnection,RepoDb.Requests.InsertAllRequest,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+            <summary>
+            Inserts multiple data in the database.
+            </summary>
+            <typeparam name="TEntity">The type of the objects to be enumerated.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="request">The actual <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.</param>
+            <param name="entities">The data entity object to be inserted.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsyncInternalBase``1(System.Data.IDbConnection,RepoDb.Requests.InsertAllRequest,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+            <summary>
+            Inserts multiple data in the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the objects to be enumerated.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="request">The actual <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.</param>
+            <param name="entities">The data entity object to be inserted.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <returns>The number of inserted rows.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.Merge``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -8613,113 +9094,136 @@
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>A tuple of 7 enumerable target data entity types.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Truncate``1(System.Data.IDbConnection,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.Truncate``1(System.Data.IDbConnection,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,System.Data.IDbTransaction,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Truncates a table from the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of rows affected.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.TruncateInternal``1(System.Data.IDbConnection,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.TruncateInternal``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Truncates a table from the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of rows affected.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.TruncateAsync``1(System.Data.IDbConnection,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.TruncateAsync``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Truncates a table from the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of rows affected.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.TruncateAsyncInternal``1(System.Data.IDbConnection,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.TruncateAsyncInternal``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Truncates a table from the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of rows affected.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Truncate(System.Data.IDbConnection,System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.Truncate(System.Data.IDbConnection,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Truncates a table from the database.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of rows affected.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.TruncateInternal(System.Data.IDbConnection,System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.TruncateInternal(System.Data.IDbConnection,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Truncates a table from the database.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of rows affected.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.TruncateAsync(System.Data.IDbConnection,System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.TruncateAsync(System.Data.IDbConnection,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Truncates a table from the database in an asynchronous way.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of rows affected.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.TruncateAsyncInternal(System.Data.IDbConnection,System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.TruncateAsyncInternal(System.Data.IDbConnection,System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Truncates a table from the database in an asynchronous way.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of rows affected.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.TruncateInternalBase(System.Data.IDbConnection,RepoDb.Requests.TruncateRequest,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.DbConnectionExtension.TruncateInternalBase(System.Data.IDbConnection,RepoDb.Requests.TruncateRequest,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
             <summary>
             Truncates a table from the database.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="request">The actual <see cref="T:RepoDb.Requests.TruncateRequest"/> object.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <returns>The number of rows affected.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.TruncateAsyncInternalBase(System.Data.IDbConnection,RepoDb.Requests.TruncateRequest,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.DbConnectionExtension.TruncateAsyncInternalBase(System.Data.IDbConnection,RepoDb.Requests.TruncateRequest,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
             <summary>
             Truncates a table from the database in an asychronous way.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="request">The actual <see cref="T:RepoDb.Requests.TruncateRequest"/> object.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <returns>The number of rows affected.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.Update``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Updates an existing data in the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="entity">The entity object to be used for update.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.Update``1(System.Data.IDbConnection,``0,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -8727,7 +9231,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="whereOrPrimaryKey">The dynamic expression to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -8741,7 +9245,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -8755,7 +9259,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -8769,7 +9273,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -8783,7 +9287,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -8797,8 +9301,21 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.UpdateAsync``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Updates an existing data in the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
@@ -8811,7 +9328,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="whereOrPrimaryKey">The dynamic expression to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -8825,7 +9342,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -8839,7 +9356,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -8853,7 +9370,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -8867,7 +9384,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -8881,7 +9398,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="entity">The data entity object to be used for update.</param>
+            <param name="entity">The data entity object to be updated.</param>
             <param name="where">The query expression to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -9431,6 +9948,12 @@
             </summary>
             <param name="log">The cancellable log object referenced by the insert execution.</param>
         </member>
+        <member name="M:RepoDb.Interfaces.ITrace.BeforeInsertAll(RepoDb.CancellableTraceLog)">
+            <summary>
+            A method being raised before the actual insert-all operation execution.
+            </summary>
+            <param name="log">The cancellable log object referenced by the insert-all execution.</param>
+        </member>
         <member name="M:RepoDb.Interfaces.ITrace.BeforeMerge(RepoDb.CancellableTraceLog)">
             <summary>
             A method being raised before the actual merge operation execution.
@@ -9532,6 +10055,12 @@
             A method being raised after the actual insert operation execution.
             </summary>
             <param name="log">The log object referenced by the insert execution.</param>
+        </member>
+        <member name="M:RepoDb.Interfaces.ITrace.AfterInsertAll(RepoDb.TraceLog)">
+            <summary>
+            A method being raised after the actual insert-all operation execution.
+            </summary>
+            <param name="log">The log object referenced by the insert-all execution.</param>
         </member>
         <member name="M:RepoDb.Interfaces.ITrace.AfterMerge(RepoDb.TraceLog)">
             <summary>
@@ -10380,14 +10909,14 @@
         </member>
         <member name="M:RepoDb.QueryField.#ctor(System.String,System.Object)">
             <summary>
-            Creates a new instance of <see cref="T:RepoDb.QueryField"/> object./
+            Creates a new instance of <see cref="T:RepoDb.QueryField"/> object.
             </summary>
             <param name="fieldName">The name of the field for the query expression.</param>
             <param name="value">The value to be used for the query expression.</param>
         </member>
         <member name="M:RepoDb.QueryField.#ctor(System.String,RepoDb.Enumerations.Operation,System.Object)">
             <summary>
-            Creates a new instance of <see cref="T:RepoDb.QueryField"/> object./
+            Creates a new instance of <see cref="T:RepoDb.QueryField"/> object.
             </summary>
             <param name="fieldName">The name of the field for the query expression.</param>
             <param name="operation">The operation to be used for the query expression.</param>
@@ -10395,7 +10924,7 @@
         </member>
         <member name="M:RepoDb.QueryField.#ctor(System.String,RepoDb.Enumerations.Operation,System.Object,System.Boolean)">
             <summary>
-            Creates a new instance of <see cref="T:RepoDb.QueryField"/> object./
+            Creates a new instance of <see cref="T:RepoDb.QueryField"/> object.
             </summary>
             <param name="fieldName">The name of the field for the query expression.</param>
             <param name="operation">The operation to be used for the query expression.</param>
@@ -10487,7 +11016,7 @@
         </member>
         <member name="T:RepoDb.QueryGroup">
             <summary>
-            A widely-used object for defining the groupings for the query expressions. This object is used by most of the repository operations
+            A widely-used object for defining the groupings for the query expression. This object is used by most of the repository operations
             to define the filtering and query expressions for the actual execution.
             </summary>
         </member>
@@ -10495,65 +11024,98 @@
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
-            <param name="queryField">The field to be grouped for the query expressions.</param>
+            <param name="queryField">The field to be grouped for the query expression.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(RepoDb.QueryGroup)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryGroup">The child query group to be grouped for the query expression.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(RepoDb.QueryField,RepoDb.QueryGroup)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryField">The field to be grouped for the query expression.</param>
+            <param name="queryGroup">The child query group to be grouped for the query expression.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(RepoDb.QueryField,System.Collections.Generic.IEnumerable{RepoDb.QueryGroup})">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryField">The field to be grouped for the query expression.</param>
+            <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         </member>
         <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField})">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
-            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+            <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},RepoDb.QueryGroup)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+            <param name="queryGroup">The child query groups to be grouped for the query expression.</param>
         </member>
         <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.QueryGroup})">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
-            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-            /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+            <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+            /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         </member>
         <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},RepoDb.Enumerations.Conjunction)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
-            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+            <param name="queryFields">The list of fields to be grouped for the query expression.</param>
             <param name="conjunction">The conjunction to be used for every group seperation.</param>
         </member>
         <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Boolean)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
-            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+            <param name="queryFields">The list of fields to be grouped for the query expression.</param>
             <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         </member>
         <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.QueryGroup},RepoDb.Enumerations.Conjunction)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
-            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-            <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+            <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+            <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
             <param name="conjunction">The conjunction to be used for every group seperation.</param>
         </member>
         <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.QueryGroup},System.Boolean)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
-            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-            <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+            <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+            <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
             <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         </member>
         <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},RepoDb.Enumerations.Conjunction,System.Boolean)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
-            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+            <param name="queryFields">The list of fields to be grouped for the query expression.</param>
             <param name="conjunction">The conjunction to be used for every group seperation.</param>
             <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryGroup})">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         </member>
         <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.QueryGroup},RepoDb.Enumerations.Conjunction,System.Boolean)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
-            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-            <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+            <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+            <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
             <param name="conjunction">The conjunction to be used for every group seperation.</param>
             <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         </member>
@@ -10590,7 +11152,7 @@
         </member>
         <member name="M:RepoDb.QueryGroup.Fix">
             <summary>
-            Fix the names of the <see cref="T:RepoDb.Parameter"/> on every <see cref="T:RepoDb.QueryField"/> of the current <see cref="T:RepoDb.QueryGroup"/>.
+            Fix the names of the <see cref="T:RepoDb.Parameter"/> on every <see cref="T:RepoDb.QueryField"/> (and on every child <see cref="T:RepoDb.QueryGroup"/>) of the current <see cref="T:RepoDb.QueryGroup"/>.
             </summary>
             <returns>The current instance.</returns>
         </member>
@@ -11275,6 +11837,70 @@
             </summary>
             <param name="objA">The first <see cref="T:RepoDb.Requests.DeleteRequest"/> object.</param>
             <param name="objB">The second <see cref="T:RepoDb.Requests.DeleteRequest"/> object.</param>
+            <returns>True if the instances are not equal.</returns>
+        </member>
+        <member name="T:RepoDb.Requests.InsertAllRequest">
+            <summary>
+            A class that holds the value of the insert operation arguments.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Requests.InsertAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.
+            </summary>
+            <param name="type">The target type.</param>
+            <param name="connection">The connection object.</param>
+            <param name="fields">The list of the target fields.</param>
+            <param name="statementBuilder">The statement builder.</param>
+        </member>
+        <member name="M:RepoDb.Requests.InsertAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.
+            </summary>
+            <param name="name">The name of the request.</param>
+            <param name="connection">The connection object.</param>
+            <param name="fields">The list of the target fields.</param>
+            <param name="statementBuilder">The statement builder.</param>
+        </member>
+        <member name="P:RepoDb.Requests.InsertAllRequest.Fields">
+            <summary>
+            Gets the target fields.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Requests.InsertAllRequest.GetHashCode">
+            <summary>
+            Returns the hashcode for this <see cref="T:RepoDb.Requests.InsertAllRequest"/>.
+            </summary>
+            <returns>The hashcode value.</returns>
+        </member>
+        <member name="M:RepoDb.Requests.InsertAllRequest.Equals(System.Object)">
+            <summary>
+            Compares the <see cref="T:RepoDb.Requests.InsertAllRequest"/> object equality against the given target object.
+            </summary>
+            <param name="obj">The object to be compared to the current object.</param>
+            <returns>True if the instances are equals.</returns>
+        </member>
+        <member name="M:RepoDb.Requests.InsertAllRequest.Equals(RepoDb.Requests.InsertAllRequest)">
+            <summary>
+            Compares the <see cref="T:RepoDb.Requests.InsertAllRequest"/> object equality against the given target object.
+            </summary>
+            <param name="other">The object to be compared to the current object.</param>
+            <returns>True if the instances are equal.</returns>
+        </member>
+        <member name="M:RepoDb.Requests.InsertAllRequest.op_Equality(RepoDb.Requests.InsertAllRequest,RepoDb.Requests.InsertAllRequest)">
+            <summary>
+            Compares the equality of the two <see cref="T:RepoDb.Requests.InsertAllRequest"/> objects.
+            </summary>
+            <param name="objA">The first <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.</param>
+            <param name="objB">The second <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.</param>
+            <returns>True if the instances are equal.</returns>
+        </member>
+        <member name="M:RepoDb.Requests.InsertAllRequest.op_Inequality(RepoDb.Requests.InsertAllRequest,RepoDb.Requests.InsertAllRequest)">
+            <summary>
+            Compares the inequality of the two <see cref="T:RepoDb.Requests.InsertAllRequest"/> objects.
+            </summary>
+            <param name="objA">The first <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.</param>
+            <param name="objB">The second <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.</param>
             <returns>True if the instances are not equal.</returns>
         </member>
         <member name="T:RepoDb.Requests.InsertRequest">

@@ -340,9 +340,12 @@ namespace RepoDb
         /// <param name="transaction">The instance of <see cref="IDbTransaction"/> object.</param>
         private void DisposeConnectionForPerCall(IDbConnection connection, IDbTransaction transaction = null)
         {
-            if (ConnectionPersistency == ConnectionPersistency.PerCall || transaction == null)
+            if (ConnectionPersistency == ConnectionPersistency.PerCall)
             {
-                connection.Dispose();
+                if (transaction == null)
+                {
+                    connection.Dispose();
+                }
             }
         }
 

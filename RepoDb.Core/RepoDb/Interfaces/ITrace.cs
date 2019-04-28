@@ -78,6 +78,12 @@
         void BeforeInsert(CancellableTraceLog log);
 
         /// <summary>
+        /// A method being raised before the actual insert-all operation execution.
+        /// </summary>
+        /// <param name="log">The cancellable log object referenced by the insert-all execution.</param>
+        void BeforeInsertAll(CancellableTraceLog log);
+
+        /// <summary>
         /// A method being raised before the actual merge operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the merge execution.</param>
@@ -183,6 +189,12 @@
         /// </summary>
         /// <param name="log">The log object referenced by the insert execution.</param>
         void AfterInsert(TraceLog log);
+
+        /// <summary>
+        /// A method being raised after the actual insert-all operation execution.
+        /// </summary>
+        /// <param name="log">The log object referenced by the insert-all execution.</param>
+        void AfterInsertAll(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual merge operation execution.

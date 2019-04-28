@@ -326,7 +326,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                basedOnFields: false);
+                basedOnFields: false,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)
@@ -652,7 +653,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                basedOnFields: false);
+                basedOnFields: false,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)

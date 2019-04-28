@@ -17,5 +17,15 @@ namespace RepoDb.Extensions
         {
             return PropertyCache.Get(type).AsFields();
         }
+
+        /// <summary>
+        /// Gets the underlying type of the current type. If there is no underlying type, this will return the current type.
+        /// </summary>
+        /// <param name="type">The current type to check.</param>
+        /// <returns>The underlying type or the current type.</returns>
+        public static Type GetUnderlyingType(this Type type)
+        {
+            return type != null ? Nullable.GetUnderlyingType(type) ?? type : null;
+        }
     }
 }

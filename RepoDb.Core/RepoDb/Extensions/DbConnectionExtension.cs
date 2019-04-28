@@ -66,6 +66,20 @@ namespace RepoDb
             return connection;
         }
 
+        /// <summary>
+        /// Ensures the connection object is open in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection to be opened.</param>
+        /// <returns>The instance of the current connection object.</returns>
+        public static async Task<IDbConnection> EnsureOpenAsync(this IDbConnection connection)
+        {
+            if (connection.State != ConnectionState.Open)
+            {
+                await ((DbConnection)connection).OpenAsync();
+            }
+            return connection;
+        }
+
         #endregion
 
         #region ExecuteQuery (Dynamics)
@@ -98,7 +112,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -114,17 +129,25 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         internal static IEnumerable<dynamic> ExecuteQueryInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 using (var reader = command.ExecuteReader())
                 {
@@ -165,7 +188,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -181,17 +205,25 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         internal static async Task<IEnumerable<object>> ExecuteQueryAsyncInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -234,7 +266,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                basedOnFields: true,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -252,19 +286,27 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="basedOnFields">True if the conversion will be based on the data reader fields.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         internal static IEnumerable<TEntity> ExecuteQueryInternal<TEntity>(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            bool basedOnFields = true)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool basedOnFields,
+            bool skipCommandArrayParametersCheck)
             where TEntity : class
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 using (var reader = command.ExecuteReader())
                 {
@@ -307,7 +349,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                basedOnFields: true,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -325,19 +369,27 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="basedOnFields">True if the conversion will be based on the data reader fields.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         internal static async Task<IEnumerable<TEntity>> ExecuteQueryAsyncInternal<TEntity>(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            bool basedOnFields = true)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool basedOnFields,
+            bool skipCommandArrayParametersCheck)
             where TEntity : class
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -348,7 +400,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteQueryMultiple
+        #region ExecuteQueryMultiple(Results)
 
         /// <summary>
         /// Executes a multiple query statement from the database.
@@ -370,12 +422,13 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            var reader = ExecuteReaderInternal(connection,
-                commandText,
-                param,
-                commandType,
-                commandTimeout,
-                transaction);
+            var reader = ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
             return new QueryMultipleExtractor((DbDataReader)reader, connection);
         }
 
@@ -399,12 +452,13 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            var reader = await ExecuteReaderAsyncInternal(connection,
-                commandText,
-                param,
-                commandType,
-                commandTimeout,
-                transaction);
+            var reader = await ExecuteReaderAsyncInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
             return new QueryMultipleExtractor((DbDataReader)reader, connection);
         }
 
@@ -433,7 +487,13 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return ExecuteReaderInternal(connection, commandText, param, commandType, commandTimeout, transaction);
+            return ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -449,15 +509,23 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns><returns>The instance of the <see cref="IDataReader"/> object.</returns></returns>
         internal static IDataReader ExecuteReaderInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return command.ExecuteReader();
             }
@@ -493,7 +561,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -509,15 +578,23 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns><returns>The instance of the <see cref="IDataReader"/> object.</returns></returns>
         internal static async Task<IDataReader> ExecuteReaderAsyncInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return await command.ExecuteReaderAsync();
             }
@@ -553,7 +630,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -569,15 +647,23 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         internal static int ExecuteNonQueryInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return command.ExecuteNonQuery();
             }
@@ -613,7 +699,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -629,15 +716,23 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         internal static async Task<int> ExecuteNonQueryAsyncInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return await command.ExecuteNonQueryAsync();
             }
@@ -673,7 +768,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -689,15 +785,23 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         internal static object ExecuteScalarInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return ObjectConverter.DbNullToNull(command.ExecuteScalar());
             }
@@ -733,7 +837,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -749,15 +854,23 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         internal static async Task<object> ExecuteScalarAsyncInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
             }
@@ -794,7 +907,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -810,15 +924,23 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
         internal static TResult ExecuteScalarInternal<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return ObjectConverter.ToType<TResult>(command.ExecuteScalar());
             }
@@ -855,7 +977,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
@@ -871,15 +994,23 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
         internal static async Task<TResult> ExecuteScalarAsyncInternal<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            object param,
+            CommandType? commandType,
+            int? commandTimeout,
+            IDbTransaction transaction,
+            bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return ObjectConverter.ToType<TResult>(await command.ExecuteScalarAsync());
             }
@@ -891,6 +1022,11 @@ namespace RepoDb
 
         // GuardPrimaryKey
 
+        /// <summary>
+        /// Throws an exception if there is no defined primary key on the data entity type.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <returns>The primary <see cref="ClassProperty"/> of the type.</returns>
         private static ClassProperty GetAndGuardPrimaryKey<TEntity>()
             where TEntity : class
         {
@@ -1037,19 +1173,27 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout to be used.</param>
         /// <param name="transaction">The transaction object to be used.</param>
+        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>An instance of <see cref="DbCommand"/> object.</returns>
         private static DbCommand CreateDbCommandForExecution(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            bool skipCommandArrayParametersCheck = true)
         {
             // Check Transaction
             ValidateTransactionConnectionObject(connection, transaction);
 
             // Process the array parameters
-            var commandArrayParameters = AsCommandArrayParameters(param, ref commandText);
+            var commandArrayParameters = (IEnumerable<CommandArrayParameter>)null;
+
+            // Check the array parameters
+            if (skipCommandArrayParametersCheck == false)
+            {
+                commandArrayParameters = AsCommandArrayParameters(param, ref commandText);
+            }
 
             // Command object initialization
             var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction);
@@ -1063,7 +1207,7 @@ namespace RepoDb
                 command.CreateParametersFromArray(commandArrayParameters);
             }
 
-            // Execute the scalar
+            // Return the command
             return (DbCommand)command;
         }
 
@@ -1142,6 +1286,12 @@ namespace RepoDb
                         continue;
                     }
 
+                    // Skip if it is an array
+                    if (property.DeclaringType.GetTypeInfo().IsGenericType == false && property.PropertyType == typeof(byte[]))
+                    {
+                        continue;
+                    }
+
                     // Initialize the array if it not yet initialized
                     if (commandArrayParameters == null)
                     {
@@ -1181,7 +1331,7 @@ namespace RepoDb
                 var type = kvp.Value?.GetType();
 
                 // Skip if it is not an array
-                if (type.IsArray == false)
+                if (type?.IsArray == false)
                 {
                     continue;
                 }

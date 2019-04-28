@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -14,6 +15,41 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
+        #region Privates
+
+        private static bool m_bulkInsertRowsCopiedFieldHasSet = false;
+        private static FieldInfo m_bulkInsertRowsCopiedField = null;
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Gets the <see cref="SqlBulkCopy"/> private variable reflected field.
+        /// </summary>
+        /// <returns>The actual field.</returns>
+        public static FieldInfo GetRowsCopiedField()
+        {
+            // Check if the call has made earlier
+            if (m_bulkInsertRowsCopiedFieldHasSet == true)
+            {
+                return m_bulkInsertRowsCopiedField;
+            }
+            
+            // Set the flag
+            m_bulkInsertRowsCopiedFieldHasSet = true;
+
+            // Get the field (whether null or not)
+            m_bulkInsertRowsCopiedField = typeof(SqlBulkCopy)
+                .GetTypeInfo()
+                .GetField("_rowsCopied", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+
+            // Return the value
+            return m_bulkInsertRowsCopiedField;
+        }
+
+        #endregion
+
         #region BulkInsert
 
         /// <summary>
@@ -196,15 +232,20 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
+            using (var reader = new DataEntityDataReader<TEntity>(entities, connection))
             {
                 using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, copyOptions, (SqlTransaction)transaction))
                 {
+                    // Set the destinationtable
                     sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
+
+                    // Set the timeout
                     if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
                     {
                         sqlBulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
                     }
+
+                    // Add the mappings
                     if (mappings == null)
                     {
                         foreach (var property in reader.Properties)
@@ -220,9 +261,24 @@ namespace RepoDb
                             sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
                         }
                     }
+
+                    // Open the connection and do the operation
                     connection.EnsureOpen();
                     sqlBulkCopy.WriteToServer(reader);
-                    result = reader.RecordsAffected;
+
+                    // Hack the 'SqlBulkCopy' object
+                    var field = GetRowsCopiedField();
+
+                    // Identify if we found the field
+                    if (field != null)
+                    {
+                        result = (int)field.GetValue(sqlBulkCopy);
+                    }
+                    else
+                    {
+                        // Return the record
+                        result = reader.RecordsAffected;
+                    }
                 }
             }
 
@@ -297,11 +353,16 @@ namespace RepoDb
             // Actual Execution
             using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, copyOptions, (SqlTransaction)transaction))
             {
+                // Set the destinationtable
                 sqlBulkCopy.DestinationTableName = tableName;
+
+                // Set the timeout
                 if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
                 {
                     sqlBulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
                 }
+
+                // Add the mappings
                 if (mappings != null)
                 {
                     foreach (var mapItem in mappings)
@@ -309,9 +370,24 @@ namespace RepoDb
                         sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
                     }
                 }
+
+                // Open the connection and do the operation
                 connection.EnsureOpen();
                 sqlBulkCopy.WriteToServer(reader);
-                result = reader.RecordsAffected;
+
+                // Hack the 'SqlBulkCopy' object
+                var field = GetRowsCopiedField();
+
+                // Identify if we found the field
+                if (field != null)
+                {
+                    result = (int)field.GetValue(sqlBulkCopy);
+                }
+                else
+                {
+                    // Return the record
+                    result = reader.RecordsAffected;
+                }
             }
 
             // After Execution
@@ -509,15 +585,20 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
+            using (var reader = new DataEntityDataReader<TEntity>(entities, connection))
             {
                 using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, copyOptions, (SqlTransaction)transaction))
                 {
+                    // Set the destinationtable
                     sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
+
+                    // Set the timeout
                     if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
                     {
                         sqlBulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
                     }
+
+                    // Add the mappings
                     if (mappings == null)
                     {
                         foreach (var property in reader.Properties)
@@ -533,9 +614,24 @@ namespace RepoDb
                             sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
                         }
                     }
+
+                    // Open the connection and do the operation
                     connection.EnsureOpen();
                     await sqlBulkCopy.WriteToServerAsync(reader);
-                    result = reader.RecordsAffected;
+
+                    // Hack the 'SqlBulkCopy' object
+                    var field = GetRowsCopiedField();
+
+                    // Identify if we found the field
+                    if (field != null)
+                    {
+                        result = (int)field.GetValue(sqlBulkCopy);
+                    }
+                    else
+                    {
+                        // Return the record
+                        result = reader.RecordsAffected;
+                    }
                 }
             }
 
@@ -610,11 +706,16 @@ namespace RepoDb
             // Actual Execution
             using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, copyOptions, (SqlTransaction)transaction))
             {
+                // Set the destinationtable
                 sqlBulkCopy.DestinationTableName = tableName;
+
+                // Set the timeout
                 if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
                 {
                     sqlBulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
                 }
+
+                // Add the mappings
                 if (mappings != null)
                 {
                     foreach (var mapItem in mappings)
@@ -622,9 +723,24 @@ namespace RepoDb
                         sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
                     }
                 }
+
+                // Open the connection and do the operation
                 connection.EnsureOpen();
                 await sqlBulkCopy.WriteToServerAsync(reader);
-                result = reader.RecordsAffected;
+
+                // Hack the 'SqlBulkCopy' object
+                var field = GetRowsCopiedField();
+
+                // Identify if we found the field
+                if (field != null)
+                {
+                    result = (int)field.GetValue(sqlBulkCopy);
+                }
+                else
+                {
+                    // Return the record
+                    result = reader.RecordsAffected;
+                }
             }
 
             // After Execution

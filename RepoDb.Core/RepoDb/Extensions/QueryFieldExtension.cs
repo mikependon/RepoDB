@@ -43,7 +43,7 @@ namespace RepoDb.Extensions
         // AsBetweenParameter
         internal static string AsBetweenParameter(this QueryField queryField, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Format(queryField.Parameter.Name.AsParameter(prefix), "_Left AND ", queryField.Parameter.Name.AsParameter(prefix), "_Right");
+            return string.Concat(queryField.Parameter.Name.AsParameter(prefix), "_Left AND ", queryField.Parameter.Name.AsParameter(prefix), "_Right");
         }
 
         // AsInParameter
@@ -104,17 +104,6 @@ namespace RepoDb.Extensions
         internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<QueryField> queryFields)
         {
             return queryFields.Select(field => field.AsFieldAndParameter());
-        }
-
-        // Has
-        internal static bool Has(this IEnumerable<QueryField> queryFields, string name, StringComparison comparisonType)
-        {
-            return queryFields.FirstOrDefault(queryField => string.Equals(queryField.Field.Name, name, comparisonType)) != null;
-        }
-
-        internal static bool Has(this IEnumerable<QueryField> queryFields, string name)
-        {
-            return Has(queryFields, name, StringComparison.CurrentCultureIgnoreCase);
         }
 
         // AsObject

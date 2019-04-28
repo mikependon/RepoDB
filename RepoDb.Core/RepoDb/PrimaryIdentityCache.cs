@@ -33,7 +33,7 @@ namespace RepoDb
                     {
                         var field = fields
                             .FirstOrDefault(fd =>
-                                string.Equals(fd.Name, primary.GetUnquotedMappedName(), StringComparison.CurrentCultureIgnoreCase));
+                                fd.Name.ToLower() == primary.GetUnquotedMappedName().ToLower());
                         value = field?.IsIdentity == true;
                     }
                 }

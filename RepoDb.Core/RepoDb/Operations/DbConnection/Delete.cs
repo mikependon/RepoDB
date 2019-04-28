@@ -22,6 +22,34 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The data entity object to be deleted.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int Delete<TEntity>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            var primary = GetAndGuardPrimaryKey<TEntity>();
+            return Delete<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(primary, entity),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -29,7 +57,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
-            object whereOrPrimaryKey = null,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -57,7 +85,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
-            Expression<Func<TEntity, bool>> where = null,
+            Expression<Func<TEntity, bool>> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -84,7 +112,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
-            QueryField where = null,
+            QueryField where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -111,7 +139,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -138,7 +166,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -165,7 +193,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         internal static int DeleteInternal<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -203,6 +231,34 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The data entity object to be deleted.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            var primary = GetAndGuardPrimaryKey<TEntity>();
+            return DeleteAsync<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(primary, entity),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -210,7 +266,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            object whereOrPrimaryKey = null,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -221,7 +277,9 @@ namespace RepoDb
             return DeleteAsync<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         /// <summary>
@@ -236,7 +294,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            Expression<Func<TEntity, bool>> where = null,
+            Expression<Func<TEntity, bool>> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -263,7 +321,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            QueryField where = null,
+            QueryField where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -290,7 +348,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -317,7 +375,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -344,7 +402,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         internal static Task<int> DeleteAsyncInternal<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -390,7 +448,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Delete(this IDbConnection connection,
             string tableName,
-            object where = null,
+            object where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -418,7 +476,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Delete(this IDbConnection connection,
             string tableName,
-            QueryField where = null,
+            QueryField where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -446,7 +504,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Delete(this IDbConnection connection,
             string tableName,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -474,7 +532,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Delete(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -502,7 +560,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         internal static int DeleteInternal(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -547,7 +605,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
-            object where = null,
+            object where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -575,7 +633,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
-            QueryField where = null,
+            QueryField where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -603,7 +661,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -631,7 +689,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -659,7 +717,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         internal static Task<int> DeleteAsyncInternal(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -738,7 +796,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)
@@ -802,7 +861,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)

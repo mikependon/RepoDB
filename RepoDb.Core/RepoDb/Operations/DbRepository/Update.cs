@@ -14,12 +14,11 @@ namespace RepoDb
     {
         #region Update<TEntity>
 
-        /*
         /// <summary>
         /// Updates an existing data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
@@ -49,18 +48,17 @@ namespace RepoDb
                 DisposeConnectionForPerCall(connection, transaction);
             }
         }
-        */
 
         /// <summary>
         /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            object whereOrPrimaryKey = null,
+            object whereOrPrimaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -93,12 +91,12 @@ namespace RepoDb
         /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            Expression<Func<TEntity, bool>> where = null,
+            Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -131,12 +129,12 @@ namespace RepoDb
         /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            QueryField where = null,
+            QueryField where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -169,12 +167,12 @@ namespace RepoDb
         /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -207,12 +205,12 @@ namespace RepoDb
         /// Updates an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            QueryGroup where = null,
+            QueryGroup where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -245,15 +243,15 @@ namespace RepoDb
 
         #region UpdateAsync<TEntity>
 
-        /*
         /// <summary>
         /// Updates an existing data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -279,18 +277,17 @@ namespace RepoDb
                 DisposeConnectionForPerCall(connection, transaction);
             }
         }
-        */
 
         /// <summary>
         /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
-            object whereOrPrimaryKey = null,
+            object whereOrPrimaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -323,12 +320,12 @@ namespace RepoDb
         /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
-            Expression<Func<TEntity, bool>> where = null,
+            Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -361,12 +358,12 @@ namespace RepoDb
         /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
-            QueryField where = null,
+            QueryField where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -399,12 +396,12 @@ namespace RepoDb
         /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -437,12 +434,12 @@ namespace RepoDb
         /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
-            QueryGroup where = null,
+            QueryGroup where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -485,7 +482,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
-            object where = null,
+            object where,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -524,7 +521,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
-            QueryField where = null,
+            QueryField where,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -563,7 +560,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -602,7 +599,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
-            QueryGroup where = null,
+            QueryGroup where,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -645,7 +642,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
-            object where = null,
+            object where,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -684,7 +681,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
-            QueryField where = null,
+            QueryField where,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -723,7 +720,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -762,7 +759,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
-            QueryGroup where = null,
+            QueryGroup where,
             IDbTransaction transaction = null)
         {
             // Create a connection

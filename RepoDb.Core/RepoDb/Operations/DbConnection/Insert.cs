@@ -3,8 +3,8 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
-using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -105,12 +105,11 @@ namespace RepoDb
                 connection,
                 FieldCache.Get<TEntity>(),
                 statementBuilder);
-            var param = ClassExpression.Extract(entity);
 
             // Return the result
-            return InsertInternalBase<TResult>(connection: connection,
+            return InsertInternalBase<TEntity, TResult>(connection: connection,
                 request: request,
-                param: param,
+                param: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -209,12 +208,11 @@ namespace RepoDb
                 connection,
                 FieldCache.Get<TEntity>(),
                 statementBuilder);
-            var param = ClassExpression.Extract(entity);
 
             // Return the result
-            return InsertAsyncInternalBase<TResult>(connection: connection,
+            return InsertAsyncInternalBase<TEntity, TResult>(connection: connection,
                 request: request,
-                param: param,
+                param: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -308,7 +306,7 @@ namespace RepoDb
                 statementBuilder);
 
             // Return the result
-            return InsertInternalBase<TResult>(connection: connection,
+            return InsertInternalBase<object, TResult>(connection: connection,
                 request: request,
                 param: entity,
                 commandTimeout: commandTimeout,
@@ -404,7 +402,7 @@ namespace RepoDb
                 statementBuilder);
 
             // Return the result
-            return InsertAsyncInternalBase<TResult>(connection: connection,
+            return InsertAsyncInternalBase<object, TResult>(connection: connection,
                 request: request,
                 param: entity,
                 commandTimeout: commandTimeout,
@@ -419,6 +417,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new data in the database.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="InsertRequest"/> object.</param>
@@ -430,12 +429,13 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        internal static TResult InsertInternalBase<TResult>(this IDbConnection connection,
+        internal static TResult InsertInternalBase<TEntity, TResult>(this IDbConnection connection,
             InsertRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
+            where TEntity : class
         {
             // Variables
             var commandType = CommandType.Text;
@@ -461,13 +461,31 @@ namespace RepoDb
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
+            // Variables needed
+            var primary = PrimaryCache.Get<TEntity>();
+            var dbField = DbFieldCache.Get(connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
+            var isIdentity = false;
+
+            // Set the identify value
+            if (primary != null && dbField != null)
+            {
+                isIdentity = primary.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower();
+            }
+
             // Actual Execution
             var result = ExecuteScalarInternal<TResult>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true);
+
+            // Set the primary value
+            if (primary != null && isIdentity == true)
+            {
+                primary.PropertyInfo.SetValue(param, result);
+            }
 
             // After Execution
             if (trace != null)
@@ -475,7 +493,7 @@ namespace RepoDb
                 trace.AfterInsert(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
-            
+
             // Return with conversion
             return result;
         }
@@ -487,10 +505,11 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new data in the database in an asynchronous way.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="InsertRequest"/> object.</param>
-        /// <param name="param">The data entity object to be inserted.</param>
+        /// <param name="param">The dynamic object or the data entity object to be inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -498,12 +517,13 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        internal static async Task<TResult> InsertAsyncInternalBase<TResult>(this IDbConnection connection,
+        internal static async Task<TResult> InsertAsyncInternalBase<TEntity, TResult>(this IDbConnection connection,
             InsertRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
+            where TEntity : class
         {
             // Variables
             var commandType = CommandType.Text;
@@ -529,13 +549,31 @@ namespace RepoDb
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
+            // Variables needed
+            var primary = PrimaryCache.Get<TEntity>();
+            var dbField = DbFieldCache.Get(connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
+            var isIdentity = false;
+
+            // Set the identify value
+            if (primary != null && dbField != null)
+            {
+                isIdentity = primary.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower();
+            }
+
             // Actual Execution
             var result = await ExecuteScalarAsyncInternal<TResult>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                skipCommandArrayParametersCheck: true);
+
+            // Set the primary value
+            if (primary != null && isIdentity == true)
+            {
+                primary.PropertyInfo.SetValue(param, result);
+            }
 
             // After Execution
             if (trace != null)

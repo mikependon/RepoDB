@@ -4,16 +4,31 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.9.1</Version>
+    <Version>1.9.2</Version>
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>RepoDb v1.9.1:
-- Stable Release of RepoDb.
-- [Update] Exposed BulkCopyOptions and Transaction to BulkInsert Operation.</PackageReleaseNotes>
+    <PackageReleaseNotes>RepoDb v1.9.2:
+- [Core] Introduce the 'InsertAll', different from 'InsertMultiple'. #91
+- [Core] Return the number of affected rows during 'BulkInsert' for DbDataReader. #192
+- [Core] Add a 'SetParameters' extended methods for 'DbCommand' object. #196
+- [Core, Requested] Re-enable the operation for DELETE via DataEntity object. #185
+- [Core, Requested] Re-enable the operation for UPDATE via DataEntity object. #188
+- [Core, Requested] Add support to exclude non-table Class Properties in all Operations. #189
+- [Adhoc, Requested] Expose the DataEntityDataReader Class. #172
+- [Adhoc, Requested] Expose the QueryGroup.Fix() method. #179
+- [Adhoc] Revisit the 'async Task' in all 'DbRepository' methods. #190
+- [Adhoc] Add a new repository method named ‘EnsureOpenAsync’. #111
+- [Test] Add an extensive IntegrationTests for the Entity with Extra Fields. #183
+- [Test] Add all UnitTests for Trace call for all Async operations. #193
+- [Test] Add UnitTest for InsertAll. #194
+- [Test] Add IntegrationTests for InsertAll. #195
+- [Test] Add more extensive UnitTest for IN, NOT IN, BETWEEN, NOT BETWEEN, LIKE and NOT LIKE operations. #186
+- [Test] Add extensive IntegrationTests for ConnectionPersistency. #191
+- [Enhancement] Auto-set the 'PrimaryField' value of the object after calling the 'Insert&lt;T&gt;' operation. #187</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb</RepositoryUrl>
@@ -21,8 +36,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.9.1.0</AssemblyVersion>
-    <FileVersion>1.9.1.0</FileVersion>
+    <AssemblyVersion>1.9.2.0</AssemblyVersion>
+    <FileVersion>1.9.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

@@ -12,7 +12,7 @@ using System.Dynamic;
 namespace RepoDb
 {
     /// <summary>
-    /// A widely-used object for defining the groupings for the query expressions. This object is used by most of the repository operations
+    /// A widely-used object for defining the groupings for the query expression. This object is used by most of the repository operations
     /// to define the filtering and query expressions for the actual execution.
     /// </summary>
     public class QueryGroup : IEquatable<QueryGroup>
@@ -26,77 +26,148 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryField">The field to be grouped for the query expressions.</param>
+        /// <param name="queryField">The field to be grouped for the query expression.</param>
         public QueryGroup(QueryField queryField) :
-            this(queryField.AsEnumerable(), null, Conjunction.And, false)
+            this(queryField?.AsEnumerable(),
+                null,
+                Conjunction.And,
+                false)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="queryGroup">The child query group to be grouped for the query expression.</param>
+        public QueryGroup(QueryGroup queryGroup) :
+            this(null,
+                queryGroup?.AsEnumerable(),
+                Conjunction.And,
+                false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryField">The field to be grouped for the query expression.</param>
+        /// <param name="queryGroup">The child query group to be grouped for the query expression.</param>
+        public QueryGroup(QueryField queryField,
+            QueryGroup queryGroup) :
+            this(queryField?.AsEnumerable(),
+                queryGroup?.AsEnumerable(),
+                Conjunction.And,
+                false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryField">The field to be grouped for the query expression.</param>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
+        public QueryGroup(QueryField queryField,
+            IEnumerable<QueryGroup> queryGroups) :
+            this(queryField?.AsEnumerable(),
+                queryGroups,
+                Conjunction.And,
+                false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields) :
-            this(queryFields, null, Conjunction.And, false)
+            this(queryFields,
+                null,
+                Conjunction.And,
+                false)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-        /// /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+        /// <param name="queryGroup">The child query groups to be grouped for the query expression.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
-            IEnumerable<QueryGroup> queryGroups = null) :
-            this(queryFields, queryGroups, Conjunction.And, false)
+            QueryGroup queryGroup) :
+            this(queryFields,
+                queryGroup?.AsEnumerable(),
+                Conjunction.And,
+                false)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+        /// /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
+        public QueryGroup(IEnumerable<QueryField> queryFields,
+            IEnumerable<QueryGroup> queryGroups) :
+            this(queryFields,
+                queryGroups,
+                Conjunction.And,
+                false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             Conjunction conjunction = Conjunction.And) :
-            this(queryFields, null, conjunction, false)
+            this(queryFields,
+                null,
+                conjunction,
+                false)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             bool isNot = false) :
-            this(queryFields, null, Conjunction.And, isNot)
+            this(queryFields,
+                null,
+                Conjunction.And,
+                isNot)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-        /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
-            IEnumerable<QueryGroup> queryGroups = null,
+            IEnumerable<QueryGroup> queryGroups,
             Conjunction conjunction = Conjunction.And) :
-            this(queryFields, queryGroups, conjunction, false)
+            this(queryFields,
+                queryGroups,
+                conjunction,
+                false)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-        /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
-            IEnumerable<QueryGroup> queryGroups = null,
+            IEnumerable<QueryGroup> queryGroups,
             bool isNot = false) :
-            this(queryFields, queryGroups, Conjunction.And, isNot)
+            this(queryFields,
+                queryGroups,
+                Conjunction.And,
+                isNot)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
@@ -108,12 +179,23 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
-        /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
+        public QueryGroup(IEnumerable<QueryGroup> queryGroups) :
+            this(null,
+                queryGroups,
+                Conjunction.And,
+                false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
-            IEnumerable<QueryGroup> queryGroups = null,
+            IEnumerable<QueryGroup> queryGroups,
             Conjunction conjunction = Conjunction.And,
             bool isNot = false)
         {
@@ -176,10 +258,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Fix the names of the <see cref="Parameter"/> on every <see cref="QueryField"/> of the current <see cref="QueryGroup"/>.
+        /// Fix the names of the <see cref="Parameter"/> on every <see cref="QueryField"/> (and on every child <see cref="QueryGroup"/>) of the current <see cref="QueryGroup"/>.
         /// </summary>
         /// <returns>The current instance.</returns>
-        internal QueryGroup Fix()
+        public QueryGroup Fix()
         {
             if (m_isFixed)
             {
@@ -194,7 +276,7 @@ namespace RepoDb
             }
 
             // Check any item
-            if (fields.Any() == false)
+            if (fields.Any() != true)
             {
                 return this;
             }
@@ -220,7 +302,16 @@ namespace RepoDb
                         fieldValue.SetName(string.Concat(cQueryField.Parameter.Name, "_", c));
                     }
                 }
-                secondList.RemoveAll(qf => qf.Field.Equals(qf.Field));
+                secondList.RemoveAll(qf => qf.Field.Equals(queryField.Field));
+            }
+
+            // Set all flags of the child groups
+            if (QueryGroups?.Any() == true)
+            {
+                foreach (var queryGroup in QueryGroups)
+                {
+                    queryGroup.m_isFixed = true;
+                }
             }
 
             // Set the flag
@@ -236,13 +327,26 @@ namespace RepoDb
         public void Reset()
         {
             // Rest all fields
-            foreach (var field in GetFields())
+            if (QueryFields?.Any() == true)
             {
-                field.Reset();
+                foreach (var field in QueryFields)
+                {
+                    field.Reset();
+                }
+            }
+
+            // Rest all groups
+            if (QueryGroups?.Any() == true)
+            {
+                foreach (var group in QueryGroups)
+                {
+                    group.Reset();
+                }
             }
 
             // Reset the attribute
             m_conjuctionTextAttribute = null;
+            m_isFixed = false;
 
             // Reset the hash code
             m_hashCode = null;
@@ -429,27 +533,29 @@ namespace RepoDb
         /// <returns>A stringified formatted-text of the current instance.</returns>
         public string GetString()
         {
+            // Fix first the parameters
+            Fix();
+
+            // Variables
             var groupList = new List<string>();
             var conjunction = GetConjunctionText();
-            var separator = string.Concat(" ", conjunction, " ");
+            var separator = string.Concat(" ", GetConjunctionText(), " ");
+
+            // Check the instance fields
             if (QueryFields?.Count() > 0)
             {
-                var fieldList = new List<string>();
-                foreach (var queryField in QueryFields)
-                {
-                    fieldList.Add(queryField.AsFieldAndParameter());
-                }
-                groupList.Add(fieldList.Join(separator));
+                var fields = QueryFields.Select(qf => qf.AsFieldAndParameter()).Join(separator);
+                groupList.Add(fields);
             }
+
+            // Check the instance groups
             if (QueryGroups?.Count() > 0)
             {
-                var fieldList = new List<string>();
-                foreach (var queryGroup in QueryGroups)
-                {
-                    fieldList.Add(queryGroup.GetString());
-                }
-                groupList.Add(fieldList.Join(separator));
+                var groups = QueryGroups.Select(qg => qg.GetString()).Join(separator);
+                groupList.Add(groups);
             }
+
+            // Return the value
             return IsNot ? string.Concat("NOT (", groupList.Join(conjunction), ")") : string.Concat("(", groupList.Join(separator), ")");
         }
 
@@ -460,14 +566,20 @@ namespace RepoDb
         /// <returns>An enumerable list of <see cref="QueryField"/> objects.</returns>
         public IEnumerable<QueryField> GetFields(bool traverse = true)
         {
+            // Variables
             var explore = (Action<QueryGroup>)null;
             var queryFields = new List<QueryField>();
+
+            // Logic for traverse
             explore = new Action<QueryGroup>(queryGroup =>
             {
+                // Check child fields
                 if (queryGroup.QueryFields?.Count() > 0)
                 {
                     queryFields.AddRange(queryGroup.QueryFields);
                 }
+
+                // Check child groups
                 if (traverse == true && queryGroup.QueryGroups?.Count() > 0)
                 {
                     foreach (var qg in queryGroup.QueryGroups)
@@ -476,7 +588,11 @@ namespace RepoDb
                     }
                 }
             });
+
+            // Explore
             explore(this);
+
+            // Return the value
             return queryFields;
         }
 
@@ -544,7 +660,7 @@ namespace RepoDb
              */
 
             // Get the value in the right
-            if ((Nullable.GetUnderlyingType(expression.Right.Type) ?? expression.Right.Type) == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
+            if (expression.Right.Type.GetUnderlyingType() == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
             {
                 var value = expression.Right.GetValue();
                 isEqualsTo = value is bool && Equals(value, false) == false;
@@ -688,7 +804,7 @@ namespace RepoDb
         private static QueryGroup ParseAllOrAnyForArray<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
-            if (expression.Arguments?.Any() == false)
+            if (expression.Arguments?.Any() != true)
             {
                 return null;
             }
@@ -777,7 +893,7 @@ namespace RepoDb
         private static QueryGroup ParseContainsForArray<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
-            if (expression.Arguments?.Any() == false)
+            if (expression.Arguments?.Any() != true)
             {
                 return null;
             }
@@ -825,7 +941,7 @@ namespace RepoDb
         private static QueryGroup ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
-            if (expression.Arguments?.Any() == false)
+            if (expression.Arguments?.Any() != true)
             {
                 return null;
             }

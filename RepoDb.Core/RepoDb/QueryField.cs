@@ -21,7 +21,7 @@ namespace RepoDb
         private TextAttribute m_operationTextAttribute = null;
 
         /// <summary>
-        /// Creates a new instance of <see cref="QueryField"/> object./
+        /// Creates a new instance of <see cref="QueryField"/> object.
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
@@ -31,7 +31,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="QueryField"/> object./
+        /// Creates a new instance of <see cref="QueryField"/> object.
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
@@ -42,7 +42,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="QueryField"/> object./
+        /// Creates a new instance of <see cref="QueryField"/> object.
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>

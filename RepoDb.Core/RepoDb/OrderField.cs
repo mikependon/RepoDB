@@ -16,6 +16,7 @@ namespace RepoDb
     public class OrderField
     {
         private TextAttribute m_orderTextAttribute = null;
+        private int m_hashCode = 0;
 
         /// <summary>
         /// Creates a new instance of <see cref="OrderField"/> object.
@@ -34,6 +35,9 @@ namespace RepoDb
             Name = name.AsQuoted(true);
             UnquotedName = name.AsUnquoted(true);
             Order = order;
+
+            // Set the hashcode here
+            m_hashCode = name.GetHashCode() + (int)order;
         }
 
         /// <summary>
@@ -160,7 +164,7 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            return Name.GetHashCode() + (int)Order;
+            return m_hashCode;
         }
 
         /// <summary>

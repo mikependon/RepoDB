@@ -276,7 +276,7 @@ namespace RepoDb
             }
 
             // Check any item
-            if (fields.Any() == false)
+            if (fields.Any() != true)
             {
                 return this;
             }
@@ -803,7 +803,7 @@ namespace RepoDb
         private static QueryGroup ParseAllOrAnyForArray<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
-            if (expression.Arguments?.Any() == false)
+            if (expression.Arguments?.Any() != true)
             {
                 return null;
             }
@@ -892,7 +892,7 @@ namespace RepoDb
         private static QueryGroup ParseContainsForArray<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
-            if (expression.Arguments?.Any() == false)
+            if (expression.Arguments?.Any() != true)
             {
                 return null;
             }
@@ -940,7 +940,7 @@ namespace RepoDb
         private static QueryGroup ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
-            if (expression.Arguments?.Any() == false)
+            if (expression.Arguments?.Any() != true)
             {
                 return null;
             }
