@@ -27,11 +27,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
-        public static void InsertAll<TEntity>(this IDbConnection connection,
+        /// <returns>The number of inserted rows.</returns>
+        public static int InsertAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -39,7 +36,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            InsertAllInternal<TEntity>(connection: connection,
+            return InsertAllInternal<TEntity>(connection: connection,
                 entities: entities,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -57,11 +54,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
-        internal static void InsertAllInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The number of inserted rows.</returns>
+        internal static int InsertAllInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -76,7 +70,7 @@ namespace RepoDb
                 statementBuilder);
 
             // Return the result
-            InsertAllInternalBase(connection: connection,
+            return InsertAllInternalBase(connection: connection,
                 request: request,
                 entities: entities,
                 commandTimeout: commandTimeout,
@@ -98,11 +92,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
-        public static Task InsertAllAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The number of inserted rows.</returns>
+        public static Task<int> InsertAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -128,11 +119,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
-        internal static Task InsertAllAsyncInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The number of inserted rows.</returns>
+        internal static Task<int> InsertAllAsyncInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -170,8 +158,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary key of the newly inserted data.</returns>
-        public static void InsertAll(this IDbConnection connection,
+        /// <returns>The number of inserted rows.</returns>
+        public static int InsertAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> fields = null,
@@ -180,7 +168,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            InsertAllInternal(connection: connection,
+            return InsertAllInternal(connection: connection,
                 tableName: tableName,
                 entities: entities,
                 fields: fields,
@@ -201,8 +189,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary key of the newly inserted data.</returns>
-        internal static void InsertAllInternal(this IDbConnection connection,
+        /// <returns>The number of inserted rows.</returns>
+        internal static int InsertAllInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> fields = null,
@@ -224,7 +212,7 @@ namespace RepoDb
                 statementBuilder);
 
             // Return the result
-            InsertAllInternalBase(connection: connection,
+            return InsertAllInternalBase(connection: connection,
                 request: request,
                 entities: entities,
                 commandTimeout: commandTimeout,
@@ -247,8 +235,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary key of the newly inserted data.</returns>
-        public static Task InsertAllAsync(this IDbConnection connection,
+        /// <returns>The number of inserted rows.</returns>
+        public static Task<int> InsertAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> fields = null,
@@ -278,8 +266,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary key of the newly inserted data.</returns>
-        internal static Task InsertAllAsyncInternal(this IDbConnection connection,
+        /// <returns>The number of inserted rows.</returns>
+        internal static Task<int> InsertAllAsyncInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> fields = null,
@@ -323,11 +311,8 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
-        internal static void InsertAllInternalBase<TEntity>(this IDbConnection connection,
+        /// <returns>The number of inserted rows.</returns>
+        internal static int InsertAllInternalBase<TEntity>(this IDbConnection connection,
             InsertAllRequest request,
             IEnumerable<TEntity> entities,
             int? commandTimeout = null,
@@ -350,7 +335,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return;
+                    return 0;
                 }
                 commandText = (cancellableTraceLog.Statement ?? commandText);
                 entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
@@ -371,13 +356,13 @@ namespace RepoDb
             }
 
             // Result set
-            var results = new List<object>();
+            var result = 0;
 
             // Iterate and insert every entity
             foreach (var entity in entities)
             {
                 // Actual Execution
-                var result = ExecuteScalarInternal(connection: connection,
+                var executeResult = ExecuteScalarInternal(connection: connection,
                     commandText: commandText,
                     param: entity,
                     commandType: commandType,
@@ -387,19 +372,22 @@ namespace RepoDb
                 // Set the primary value
                 if (primary != null && isIdentity == true)
                 {
-                    primary.PropertyInfo.SetValue(entity, result);
+                    primary.PropertyInfo.SetValue(entity, executeResult);
                 }
 
                 // Add to the list
-                results.Add(result);
+                result++;
             }
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsertAll(new TraceLog(commandText, entities, results,
+                trace.AfterInsertAll(new TraceLog(commandText, entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
+
+            // Return the result
+            return result;
         }
 
         #endregion
@@ -416,11 +404,8 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
-        internal static async Task InsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
+        /// <returns>The number of inserted rows.</returns>
+        internal static async Task<int> InsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             InsertAllRequest request,
             IEnumerable<TEntity> entities,
             int? commandTimeout = null,
@@ -443,7 +428,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return;
+                    return 0;
                 }
                 commandText = (cancellableTraceLog.Statement ?? commandText);
                 entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
@@ -463,14 +448,62 @@ namespace RepoDb
                 isIdentity = primary.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower();
             }
 
+            #region 
+
+            // Note: This code is commented as it is vigorously intensive in a CPU by creating a task
+            // based on the number of data entity to be inserted
+
             // Result set
-            var results = new List<object>();
+            //var result = 0;
+            //var tasks = new List<Task<Tuple<TEntity, object>>>();
+
+            //// Iterate and insert every entity
+            //foreach (var entity in entities)
+            //{
+            //    /* TODO : Can we do an 'await' here at 'ExecuteScalarAsyncInternal', but it would sure affect the CPU */
+            //    var executeResult = await ExecuteScalarAsyncInternal(connection: connection,
+            //        commandText: commandText,
+            //        param: entity,
+            //        commandType: commandType,
+            //        commandTimeout: commandTimeout,
+            //        transaction: transaction);
+
+            //    // Create a new tuple
+            //    var tuple = Tuple.Create(entity, executeResult);
+
+            //    // Add to the tasks list
+            //    tasks.Add(Task.FromResult(tuple));
+
+            //    // Increase the result
+            //    result++;
+            //}
+
+            //// Await all here
+            //await Task.WhenAll(tasks);
+
+            //// Iterate after all has completed
+            //foreach (var task in tasks)
+            //{
+            //    // Get the result
+            //    var result = task.Result;
+
+            //    // Set the primary value
+            //    if (primary != null && isIdentity == true)
+            //    {
+            //        primary.PropertyInfo.SetValue(result.Item1, result.Item2);
+            //    }
+            //}
+
+            #endregion
+
+            // Result set
+            var result = 0;
 
             // Iterate and insert every entity
             foreach (var entity in entities)
             {
                 // Actual Execution
-                var result = await ExecuteScalarAsyncInternal(connection: connection,
+                var executeResult = await ExecuteScalarAsyncInternal(connection: connection,
                     commandText: commandText,
                     param: entity,
                     commandType: commandType,
@@ -480,20 +513,29 @@ namespace RepoDb
                 // Set the primary value
                 if (primary != null && isIdentity == true)
                 {
-                    primary.PropertyInfo.SetValue(entity, result);
+                    primary.PropertyInfo.SetValue(entity, executeResult);
                 }
 
                 // Add to the list
-                results.Add(result);
+                result++;
             }
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsertAll(new TraceLog(commandText, entities, results,
+                trace.AfterInsertAll(new TraceLog(commandText, entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
+
+            // Return the result
+            return result;
         }
+
+        #endregion
+
+        #region Helpers
+
+        /* TODO: Add a guard here */
 
         #endregion
     }

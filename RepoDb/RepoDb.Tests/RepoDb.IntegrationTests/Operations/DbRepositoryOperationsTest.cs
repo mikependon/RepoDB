@@ -3305,7 +3305,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InsertAllAsync(tables).Wait();
+                var value = repository.InsertAllAsync(tables).Result;
 
                 // Act
                 var result = repository.QueryAll<IdentityTable>();

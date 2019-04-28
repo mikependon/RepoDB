@@ -29,8 +29,7 @@ namespace RepoDb
             {
                 return (T)value;
             }
-            return ReferenceEquals(DBNull.Value, value) || ReferenceEquals(null, value) ? default(T) :
-                (T)Convert.ChangeType(value, typeof(T));
+            return DbNullToNull(value) == null ? default(T) : (T)Convert.ChangeType(value, typeof(T));
         }
     }
 }

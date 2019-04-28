@@ -19,11 +19,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
-        public void InsertAll<TEntity>(IEnumerable<TEntity> entities,
+        /// <returns>The number of inserted rows.</returns>
+        public int InsertAll<TEntity>(IEnumerable<TEntity> entities,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -33,7 +30,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                connection.InsertAll<TEntity>(entities: entities,
+                return connection.InsertAll<TEntity>(entities: entities,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -61,11 +58,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
-        public Task InsertAllAsync<TEntity>(IEnumerable<TEntity> entities,
+        /// <returns>The number of inserted rows.</returns>
+        public async Task<int> InsertAllAsync<TEntity>(IEnumerable<TEntity> entities,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -75,7 +69,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.InsertAllAsync<TEntity>(entities: entities,
+                return await connection.InsertAllAsync<TEntity>(entities: entities,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -104,8 +98,8 @@ namespace RepoDb
         /// <param name="entities">The dynamic objects to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/>s to be used. Defaulted to database table fields.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the primary key of the newly inserted data.</returns>
-        public void InsertAll(string tableName,
+        /// <returns>The number of inserted rows.</returns>
+        public int InsertAll(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> fields = null,
             IDbTransaction transaction = null)
@@ -116,7 +110,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                connection.InsertAll(tableName: tableName,
+                return connection.InsertAll(tableName: tableName,
                     entities: entities,
                     fields: fields,
                     commandTimeout: CommandTimeout,
@@ -147,8 +141,8 @@ namespace RepoDb
         /// <param name="entities">The dynamic objects to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/>s to be used. Defaulted to database table fields.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the primary key of the newly inserted data.</returns>
-        public Task InsertAllAsync(string tableName,
+        /// <returns>The number of inserted rows.</returns>
+        public async Task<int> InsertAllAsync(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> fields = null,
             IDbTransaction transaction = null)
@@ -159,7 +153,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.InsertAllAsync(tableName: tableName,
+                return await connection.InsertAllAsync(tableName: tableName,
                     entities: entities,
                     fields: fields,
                     commandTimeout: CommandTimeout,
