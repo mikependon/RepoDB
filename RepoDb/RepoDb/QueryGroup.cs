@@ -659,7 +659,7 @@ namespace RepoDb
              */
 
             // Get the value in the right
-            if ((Nullable.GetUnderlyingType(expression.Right.Type) ?? expression.Right.Type) == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
+            if (expression.Right.Type.GetUnderlyingType() == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
             {
                 var value = expression.Right.GetValue();
                 isEqualsTo = value is bool && Equals(value, false) == false;

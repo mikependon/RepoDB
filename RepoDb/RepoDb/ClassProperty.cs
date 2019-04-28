@@ -186,7 +186,7 @@ namespace RepoDb
             }
             m_isDbTypeWasSet = true;
             return m_dbType = PropertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                TypeMapper.Get(GetUnderlyingType(PropertyInfo.PropertyType))?.DbType;
+                TypeMapper.Get(PropertyInfo.PropertyType.GetUnderlyingType())?.DbType;
         }
 
         /*
@@ -225,20 +225,6 @@ namespace RepoDb
                 return m_unquotedMappedName;
             }
             return m_unquotedMappedName = PropertyMappedNameCache.Get(PropertyInfo, false);
-        }
-
-        /*
-         * GetUnderlyingType
-         */
-
-        /// <summary>
-        /// Gets the underlying type if present.
-        /// </summary>
-        /// <param name="type">The type where to get the underlying type.</param>
-        /// <returns>The underlying type.</returns>
-        private static Type GetUnderlyingType(Type type)
-        {
-            return type != null ? Nullable.GetUnderlyingType(type) ?? type : null;
         }
 
         /// <summary>
