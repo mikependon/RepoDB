@@ -55,13 +55,12 @@
   <ItemGroup>
     <Compile Include="Attributes\IdentityAttribute.cs" />
     <Compile Include="BulkInsertMapItem.cs" />
-    <Compile Include="ClassExpressions\ClassPropertyValuesExpression.cs" />
     <Compile Include="CommandArrayParameter.cs" />
     <Compile Include="CommandParameter.cs" />
     <Compile Include="DbHelperMapper.cs" />
     <Compile Include="Enumerations\ConversionType.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
-    <Compile Include="ClassExpressions\ClassPropertiesExpression.cs" />
+    <Compile Include="Expressions\ClassExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
     <Compile Include="ClassProperty.cs" />
     <Compile Include="DataReaderFieldDefinition.cs" />
@@ -132,6 +131,8 @@
     <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyValue.cs" />
     <Compile Include="QueryGroupTypeMap.cs" />
+    <Compile Include="Reflection\DataCommand.cs" />
+    <Compile Include="Reflection\DataReader.cs" />
     <Compile Include="Reflection\FunctionCache.cs" />
     <Compile Include="Reflection\Functions.cs" />
     <Compile Include="Reflection\FunctionFactory.cs" />

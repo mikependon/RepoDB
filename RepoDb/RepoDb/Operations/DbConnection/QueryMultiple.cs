@@ -177,11 +177,11 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
@@ -394,15 +394,15 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
@@ -654,19 +654,19 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
@@ -955,23 +955,23 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
@@ -1297,27 +1297,27 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
@@ -1681,31 +1681,31 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the seventh result
                 reader?.NextResult();
-                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader, connection)?.ToList();
+                var item7 = DataReader.ToEnumerable<T7>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
@@ -1886,11 +1886,11 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
@@ -2103,15 +2103,15 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
@@ -2363,19 +2363,19 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
@@ -2664,23 +2664,23 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
@@ -3006,27 +3006,27 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
@@ -3390,31 +3390,31 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection)?.ToList();
 
                 // Extract the seventh result
                 reader?.NextResult();
-                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader, connection)?.ToList();
+                var item7 = DataReader.ToEnumerable<T7>((DbDataReader)reader, connection)?.ToList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(

@@ -753,7 +753,7 @@ namespace RepoDb.IntegrationTests
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -782,7 +782,7 @@ namespace RepoDb.IntegrationTests
                     (object)param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -811,7 +811,7 @@ namespace RepoDb.IntegrationTests
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -840,7 +840,7 @@ namespace RepoDb.IntegrationTests
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -865,7 +865,7 @@ namespace RepoDb.IntegrationTests
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -894,7 +894,7 @@ namespace RepoDb.IntegrationTests
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -923,7 +923,7 @@ namespace RepoDb.IntegrationTests
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -956,7 +956,7 @@ namespace RepoDb.IntegrationTests
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -985,7 +985,7 @@ namespace RepoDb.IntegrationTests
                     (object)param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -1014,7 +1014,7 @@ namespace RepoDb.IntegrationTests
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -1043,7 +1043,7 @@ namespace RepoDb.IntegrationTests
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -1068,7 +1068,7 @@ namespace RepoDb.IntegrationTests
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -1097,7 +1097,7 @@ namespace RepoDb.IntegrationTests
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -1126,7 +1126,7 @@ namespace RepoDb.IntegrationTests
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
