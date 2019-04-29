@@ -50,7 +50,7 @@ namespace RepoDb.DbHelpers
                 using (var dbCommand = connection.EnsureOpen().CreateCommand(commandText))
                 {
                     // Create parameters
-                    dbCommand.CreateParameters(new { TableName = tableName.AsUnquoted() });
+                    dbCommand.CreateParameters(new { TableName = tableName });
 
                     // Execute and set the result
                     using (var reader = dbCommand.ExecuteReader())

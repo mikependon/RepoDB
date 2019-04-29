@@ -573,6 +573,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
@@ -592,6 +593,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
 
@@ -615,6 +617,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
@@ -634,6 +637,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
 
@@ -657,6 +661,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
@@ -677,6 +682,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
 
@@ -712,6 +718,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
@@ -733,6 +740,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
 
@@ -758,6 +766,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
@@ -779,6 +788,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
 
@@ -804,6 +814,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
@@ -826,6 +837,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
 
@@ -1169,6 +1181,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
@@ -1190,6 +1203,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
 
@@ -1215,6 +1229,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
@@ -1236,6 +1251,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
 
@@ -1261,6 +1277,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
 
             // Prepare
@@ -1283,6 +1300,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
 

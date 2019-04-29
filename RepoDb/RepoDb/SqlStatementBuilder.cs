@@ -40,8 +40,8 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null)
         {
-            // Guard the target table
-            Guard(tableName);
+            // Ensure with guards
+            GuardTableName(tableName);
 
             // There should be fields
             if (fields == null || fields?.Any() != true)
@@ -68,8 +68,7 @@ namespace RepoDb
             }
 
             // Build the query
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
+            (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .With()
                 .WriteText("CTE")
@@ -84,17 +83,8 @@ namespace RepoDb
                 .As("[RowNumber],")
                 .FieldsFrom(fields)
                 .From()
-                .TableNameFrom(tableName);
-
-            // Build the query optimizers
-            if (hints != null)
-            {
-                queryBuilder
-                    .WriteText(hints);
-            }
-
-            // Build the filter and ordering
-            queryBuilder
+                .TableNameFrom(tableName)
+                .HintsFrom(hints)
                 .WhereFrom(where)
                 .CloseParen()
                 .Select()
@@ -126,28 +116,18 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null)
         {
-            // Guard the target table
-            Guard(tableName);
+            // Ensure with guards
+            GuardTableName(tableName);
 
             // Build the query
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
+            (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
                 .CountBig()
                 .WriteText("(1) AS [Counted]")
                 .From()
-                .TableNameFrom(tableName);
-
-            // Build the query optimizers
-            if (hints != null)
-            {
-                queryBuilder
-                    .WriteText(hints);
-            }
-
-            // Build the filter and ordering
-            queryBuilder
+                .TableNameFrom(tableName)
+                .HintsFrom(hints)
                 .WhereFrom(where)
                 .End();
 
@@ -170,28 +150,18 @@ namespace RepoDb
             string tableName,
             string hints = null)
         {
-            // Guard the target table
-            Guard(tableName);
+            // Ensure with guards
+            GuardTableName(tableName);
 
             // Build the query
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
+            (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
                 .CountBig()
                 .WriteText("(1) AS [Counted]")
                 .From()
-                .TableNameFrom(tableName);
-
-            // Build the query optimizers
-            if (hints != null)
-            {
-                queryBuilder
-                    .WriteText(hints);
-            }
-
-            // End the builder
-            queryBuilder
+                .TableNameFrom(tableName)
+                .HintsFrom(hints)
                 .End();
 
             // Return the query
@@ -213,12 +183,11 @@ namespace RepoDb
             string tableName,
             QueryGroup where = null)
         {
-            // Guard the target table
-            Guard(tableName);
+            // Ensure with guards
+            GuardTableName(tableName);
 
             // Build the query
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
+            (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Delete()
                 .From()
@@ -243,12 +212,11 @@ namespace RepoDb
         public string CreateDeleteAll(QueryBuilder queryBuilder,
             string tableName)
         {
-            // Guard the target table
-            Guard(tableName);
+            // Ensure with guards
+            GuardTableName(tableName);
 
             // Build the query
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
+            (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Delete()
                 .From()
@@ -271,13 +239,38 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A sql statement for insert operation.</returns>
+        [Obsolete("Please use the overloaded method.")]
         public string CreateInsert(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields = null,
             DbField primaryField = null)
         {
-            // Guard the target table
-            Guard(tableName);
+            return CreateInsert(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                primaryField: primaryField,
+                identityField: null);
+        }
+
+        /// <summary>
+        /// Creates a SQL Statement for insert operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        public string CreateInsert(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
+            DbField primaryField = null,
+            DbField identityField = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
 
             // Verify the fields
             if (fields == null || fields?.Any() != true)
@@ -285,15 +278,25 @@ namespace RepoDb
                 throw new NullReferenceException($"The list of insertable fields must not be null for '{tableName}'.");
             }
 
+            // Ensure the primary is on the list if it is not an identity
+            if (primaryField != null)
+            {
+                if (primaryField != identityField)
+                {
+                    var isPresent = fields.FirstOrDefault(f => f.Name.ToLower() == primaryField.Name.ToLower()) != null;
+                    if (isPresent == false)
+                    {
+                        throw new InvalidOperationException("The non-identity primary field must be present during insert operation.");
+                    }
+                }
+            }
+
             // Variables needed
-            var primaryName = primaryField?.Name;
-            var isIdentity = primaryField?.IsIdentity == true;
             var insertableFields = fields
-                .Where(f => !(isIdentity == true && f.Name.ToLower() == primaryName?.ToLower()));
+                .Where(f => f.Name.ToLower() != identityField?.Name.ToLower());
 
             // Build the query
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
+            (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Insert()
                 .Into()
@@ -306,7 +309,7 @@ namespace RepoDb
                 .ParametersFrom(insertableFields)
                 .CloseParen()
                 .End();
-            var result = isIdentity == true ? "CONVERT(BIGINT, SCOPE_IDENTITY())" : string.IsNullOrEmpty(primaryName) == false ? primaryName.AsParameter() : "NULL";
+            var result = identityField != null ? "CONVERT(BIGINT, SCOPE_IDENTITY())" : primaryField != null ? primaryField.Name.AsParameter() : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -330,14 +333,42 @@ namespace RepoDb
         /// <param name="qualifiers">The list of the qualifier fields.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A sql statement for merge operation.</returns>
+        [Obsolete("Please use the overloaded method.")]
         public string CreateMerge(QueryBuilder queryBuilder,
              string tableName,
              IEnumerable<Field> fields,
              IEnumerable<Field> qualifiers = null,
              DbField primaryField = null)
         {
-            // Guard the target table
-            Guard(tableName);
+            return CreateMerge(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                qualifiers: qualifiers,
+                primaryField: primaryField,
+                identityField: null);
+        }
+
+        /// <summary>
+        /// Creates a SQL Statement for merge operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be merged.</param>
+        /// <param name="qualifiers">The list of the qualifier fields.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for merge operation.</returns>
+        public string CreateMerge(QueryBuilder queryBuilder,
+             string tableName,
+             IEnumerable<Field> fields,
+             IEnumerable<Field> qualifiers = null,
+             DbField primaryField = null,
+             DbField identityField = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
 
             // Verify the fields
             if (fields == null || fields?.Any() != true)
@@ -345,10 +376,7 @@ namespace RepoDb
                 throw new NullReferenceException($"The list of insertable fields must not be null for '{tableName}'.");
             }
 
-            // Get the needed properties
-            var primaryName = primaryField?.Name;
-            var isIdentity = primaryField?.IsIdentity == true;
-
+            // Check the qualifiers
             if (qualifiers != null)
             {
                 // Check if the qualifiers are present in the given fields
@@ -359,28 +387,26 @@ namespace RepoDb
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
                 {
-                    throw new InvalidQualiferFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
+                    throw new InvalidQualiferFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
+                        $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
             else
             {
-                if (string.IsNullOrEmpty(primaryName) == false)
+                if (primaryField != null)
                 {
-                    // The primary is present, use it as a default if there are not qualifiers given
-                    qualifiers = Field.From(primaryName);
+                    // Make sure that primary is present in the list of fields before qualifying to become a qualifier
+                    var isPresent = fields?.FirstOrDefault(f => f.Name.ToLower() == primaryField.Name.ToLower()) != null;
 
-                    // Check if the qualifiers are present in the given fields
-                    var unmatchesQualifiers = qualifiers?.Where(field =>
-                        fields?.FirstOrDefault(f =>
-                            field.Name.ToLower() == f.Name.ToLower()) == null);
-
-                    // Throw an error we found any unmatches
-                    if (unmatchesQualifiers?.Any() == true)
+                    // Throw if not present
+                    if (isPresent == false)
                     {
-                        throw new InvalidQualiferFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
-                            $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
+                        throw new InvalidQualiferFieldsException($"There are no qualifier fields found for '{tableName}'. Ensure that the " +
+                            $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                     }
+
+                    // The primary is present, use it as a default if there are no qualifiers given
+                    qualifiers = Field.From(primaryField.UnquotedName);
                 }
                 else
                 {
@@ -391,13 +417,12 @@ namespace RepoDb
 
             // Get the insertable and updateable fields
             var insertableFields = fields
-                .Where(field => (field.Name.ToLower() == primaryName?.ToLower() && isIdentity) == false);
+                .Where(field => field.Name.ToLower() != identityField?.Name.ToLower());
             var updateableFields = fields
-                .Where(field => (field.Name.ToLower() == primaryName?.ToLower()) == false);
+                .Where(field => field.Name.ToLower() != primaryField?.Name.ToLower() && field.Name.ToLower() != identityField?.Name.ToLower());
 
             // Build the query
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
+            (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 // MERGE T USING S
                 .Merge()
@@ -466,11 +491,11 @@ namespace RepoDb
             int? top = null,
             string hints = null)
         {
-            // Guard the target table
-            Guard(tableName);
+            // Ensure with guards
+            GuardTableName(tableName);
 
             // There should be fields
-            if (fields == null || fields.Any() == false)
+            if (fields?.Any() != true)
             {
                 throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
@@ -486,29 +511,19 @@ namespace RepoDb
                 if (unmatchesOrderFields?.Any() == true)
                 {
                     throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.Name).Join(", ")}' are not " +
-                        $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
+                        $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
 
             // Build the query
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
+            (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
                 .TopFrom(top)
                 .FieldsFrom(fields)
                 .From()
-                .TableNameFrom(tableName);
-
-            // Build the query optimizers
-            if (hints != null)
-            {
-                queryBuilder
-                    .WriteText(hints);
-            }
-
-            // Build the filter and ordering
-            queryBuilder
+                .TableNameFrom(tableName)
+                .HintsFrom(hints)
                 .WhereFrom(where)
                 .OrderByFrom(orderBy)
                 .End();
@@ -537,10 +552,10 @@ namespace RepoDb
             string hints = null)
         {
             // Guard the target table
-            Guard(tableName);
+            GuardTableName(tableName);
 
             // There should be fields
-            if (fields == null || fields.Any() == false)
+            if (fields?.Any() != true)
             {
                 throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
@@ -556,28 +571,18 @@ namespace RepoDb
                 if (unmatchesOrderFields?.Any() == true)
                 {
                     throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"present at the given fields '{fields.Select(field => field.AsField()).Join(", ")}'.");
+                        $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
 
             // Build the query
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
+            (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
                 .FieldsFrom(fields)
                 .From()
-                .TableNameFrom(tableName);
-
-            // Build the query optimizers
-            if (hints != null)
-            {
-                queryBuilder
-                    .WriteText(hints);
-            }
-
-            // Build the ordering
-            queryBuilder
+                .TableNameFrom(tableName)
+                .HintsFrom(hints)
                 .OrderByFrom(orderBy)
                 .End();
 
@@ -599,11 +604,10 @@ namespace RepoDb
             string tableName)
         {
             // Guard the target table
-            Guard(tableName);
+            GuardTableName(tableName);
 
             // Build the query
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
+            (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Truncate()
                 .Table()
@@ -627,28 +631,58 @@ namespace RepoDb
         /// <param name="where">The query expression.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A sql statement for update operation.</returns>
+        [Obsolete("Please use the overloaded method.")]
         public string CreateUpdate(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             QueryGroup where = null,
             DbField primaryField = null)
         {
-            // Guard the target table
-            Guard(tableName);
+            return CreateUpdate(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: where,
+                primaryField: primaryField,
+                identityField: null);
+        }
 
-            // Variables needed
-            var primaryName = primaryField?.Name;
+        /// <summary>
+        /// Creates a SQL Statement for inline-update operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be updated.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for update operation.</returns>
+        public string CreateUpdate(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            QueryGroup where = null,
+            DbField primaryField = null,
+            DbField identityField = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
 
             // Append the proper prefix
             where?.PrependAnUnderscoreAtTheParameters();
 
             // Gets the updatable fields
             var updatableFields = fields
-                .Where(f => (f.Name.ToLower() == primaryName?.ToLower()) == false);
+                .Where(f => (f.Name.ToLower() != primaryField?.Name.ToLower() && f.Name.ToLower() != identityField?.Name.ToLower()));
+
+            // Check if there are updatable fields
+            if (updatableFields?.Any() != true)
+            {
+                throw new InvalidOperationException($"There are no updatable fields found for '{tableName}'.");
+            }
 
             // Build the query
-            queryBuilder = queryBuilder ?? new QueryBuilder();
-            queryBuilder
+            (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Update()
                 .TableNameFrom(tableName)
@@ -666,14 +700,38 @@ namespace RepoDb
         #region Helper
 
         /// <summary>
-        /// Throws an exception of the table name is null or empty.
+        /// Throws an exception if the table name is null or empty.
         /// </summary>
         /// <param name="tableName">The name of the table.</param>
-        private void Guard(string tableName)
+        private void GuardTableName(string tableName)
         {
             if (string.IsNullOrEmpty(tableName?.Trim()))
             {
                 throw new NullReferenceException("The name of the table could be null.");
+            }
+        }
+
+        /// <summary>
+        /// Throws an exception if the primary field is not really a primary field.
+        /// </summary>
+        /// <param name="field">The instance of the primary field.</param>
+        private void GuardPrimary(DbField field)
+        {
+            if (field?.IsPrimary == false)
+            {
+                throw new InvalidOperationException("The field is not defined as primary.");
+            }
+        }
+
+        /// <summary>
+        /// Throws an exception if the identity field is not really an identity field.
+        /// </summary>
+        /// <param name="field">The instance of the identity field.</param>
+        private void GuardIdentity(DbField field)
+        {
+            if (field?.IsIdentity == false)
+            {
+                throw new InvalidOperationException("The field is not defined as primary.");
             }
         }
 

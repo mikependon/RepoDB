@@ -19,45 +19,45 @@ namespace RepoDb.Extensions
         }
 
         // AsField
-        internal static string AsField(this Field field)
+        private static string AsField(this Field field)
         {
             return field.Name;
         }
 
         // AsParameter
-        internal static string AsParameter(this Field field, string prefix = Constant.DefaultParameterPrefix)
+        private static string AsParameter(this Field field, string prefix = Constant.DefaultParameterPrefix)
         {
             return field.Name.AsQuotedParameter(true, prefix);
         }
 
         // AsAliasField
-        internal static string AsAliasField(this Field field, string alias)
+        private static string AsAliasField(this Field field, string alias)
         {
             return string.Concat(alias, ".", field.Name);
         }
 
         // AsParameterAsField
-        internal static string AsParameterAsField(this Field field, string prefix = Constant.DefaultParameterPrefix)
+        private static string AsParameterAsField(this Field field, string prefix = Constant.DefaultParameterPrefix)
         {
             return string.Concat(AsParameter(field, prefix), " AS ", AsField(field));
         }
 
         // AsFieldAndParameter
-        internal static string AsFieldAndParameter(this Field field, string prefix = Constant.DefaultParameterPrefix)
+        private static string AsFieldAndParameter(this Field field, string prefix = Constant.DefaultParameterPrefix)
         {
             return string.Concat(AsField(field), " = ", AsParameter(field, prefix));
+        }
+
+        // AsFieldAndAliasField
+        private static string AsFieldAndAliasField(this Field field, string alias)
+        {
+            return string.Concat(AsField(field), " = ", alias, ".", AsField(field));
         }
 
         // AsJoinQualifier
         internal static string AsJoinQualifier(this Field field, string leftAlias, string rightAlias)
         {
             return string.Concat(leftAlias, ".", field.Name, " = ", rightAlias, ".", field.Name);
-        }
-
-        // AsFieldAndAliasField
-        internal static string AsFieldAndAliasField(this Field field, string alias)
-        {
-            return string.Concat(AsField(field), " = ", alias, ".", AsField(field));
         }
 
         /* IEnumerable<PropertyInfo> */

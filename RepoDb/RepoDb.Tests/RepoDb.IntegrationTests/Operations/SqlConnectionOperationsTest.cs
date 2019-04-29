@@ -1098,7 +1098,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1146,7 +1146,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1195,7 +1195,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1293,13 +1293,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -1341,13 +1341,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -1390,13 +1390,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsert(nameof(IdentityTable), (DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -1421,7 +1421,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1449,7 +1449,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1572,7 +1572,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1620,7 +1620,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1669,7 +1669,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1771,13 +1771,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync(nameof(IdentityTable), (DbDataReader)reader).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader).Result;
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -1819,13 +1819,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync(nameof(IdentityTable), (DbDataReader)reader, mappings).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings).Result;
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -1868,13 +1868,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync(nameof(IdentityTable), (DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings);
                         bulkInsertResult.Wait();
 
                         // Trigger
@@ -1900,7 +1900,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1932,7 +1932,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [IdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -9144,7 +9144,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[IdentityTable];");
+                var result = connection.ExecuteQuery("SELECT * FROM [sc].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -9177,7 +9177,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                var result = connection.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 });
 
                 // Assert
@@ -9211,7 +9211,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
+                var result = connection.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } });
 
                 // Assert
@@ -9245,7 +9245,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];",
+                var result = connection.ExecuteQuery("SELECT TOP (@Top) * FROM [sc].[IdentityTable];",
                     new { Top = 2 });
 
                 // Assert
@@ -9365,7 +9365,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -9375,7 +9375,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -9395,7 +9395,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[IdentityTable];").Result;
+                var result = connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable];").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -9428,7 +9428,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                var result = connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 }).Result;
 
                 // Assert
@@ -9462,7 +9462,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
+                var result = connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } }).Result;
 
                 // Assert
@@ -9496,7 +9496,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];",
+                var result = connection.ExecuteQueryAsync("SELECT TOP (@Top) * FROM [sc].[IdentityTable];",
                     new { Top = 2 }).Result;
 
                 // Assert
@@ -9616,7 +9616,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -9626,7 +9626,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -9646,7 +9646,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable];");
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -9666,7 +9666,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 });
 
                 // Assert
@@ -9687,7 +9687,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } });
 
                 // Assert
@@ -9708,7 +9708,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT TOP (@Top) * FROM [sc].[IdentityTable];",
                     new { Top = 2 });
 
                 // Assert
@@ -9772,7 +9772,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery<LiteIdentityTable>("SELECT * FROM [dbo].[IdentityTable];");
+                var result = connection.ExecuteQuery<LiteIdentityTable>("SELECT * FROM [sc].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -9804,7 +9804,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -9830,7 +9830,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -9856,7 +9856,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param);
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -9882,7 +9882,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -9908,7 +9908,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -9930,7 +9930,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat;", param);
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat;", param);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -9947,7 +9947,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param);
+                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
             }
         }
 
@@ -9960,7 +9960,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param);
+                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
             }
         }
 
@@ -9970,7 +9970,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -9980,7 +9980,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -10000,7 +10000,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable];").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable];").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -10020,7 +10020,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 }).Result;
 
                 // Assert
@@ -10041,7 +10041,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } }).Result;
 
                 // Assert
@@ -10062,7 +10062,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT TOP (@Top) * FROM [sc].[IdentityTable];",
                     new { Top = 2 }).Result;
 
                 // Assert
@@ -10126,7 +10126,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<LiteIdentityTable>("SELECT * FROM [dbo].[IdentityTable];").Result;
+                var result = connection.ExecuteQueryAsync<LiteIdentityTable>("SELECT * FROM [sc].[IdentityTable];").Result;
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -10158,7 +10158,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -10184,7 +10184,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -10210,7 +10210,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -10236,7 +10236,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -10262,7 +10262,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -10284,7 +10284,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnFloat = @ColumnFloat;", param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat;", param).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -10301,7 +10301,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
             }
         }
 
@@ -10311,7 +10311,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -10324,7 +10324,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);", param).Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
             }
         }
 
@@ -10334,7 +10334,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -10354,11 +10354,11 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP 1 * FROM [dbo].[IdentityTable];
-                    SELECT TOP 2 * FROM [dbo].[IdentityTable];
-                    SELECT TOP 3 * FROM [dbo].[IdentityTable];
-                    SELECT TOP 4 * FROM [dbo].[IdentityTable];
-                    SELECT TOP 5 * FROM [dbo].[IdentityTable];"))
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
+                    SELECT TOP 2 * FROM [sc].[IdentityTable];
+                    SELECT TOP 3 * FROM [sc].[IdentityTable];
+                    SELECT TOP 4 * FROM [sc].[IdentityTable];
+                    SELECT TOP 5 * FROM [sc].[IdentityTable];"))
                 {
                     while (result.Position >= 0)
                     {
@@ -10393,11 +10393,11 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top2) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top3) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top4) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top5) * FROM [dbo].[IdentityTable];",
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [sc].[IdentityTable];",
                     new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }))
                 {
                     while (result.Position >= 0)
@@ -10433,11 +10433,11 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top2) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top3) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top4) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top5) * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }))
                 {
                     while (result.Position >= 0)
@@ -10473,7 +10473,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
                     EXEC [dbo].[sp_get_identity_tables];
                     EXEC [dbo].[sp_get_identity_table_by_id] @Id",
                     new { Top1 = 1, tables.Last().Id }, CommandType.Text))
@@ -10509,7 +10509,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQueryMultiple("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteQueryMultiple("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -10519,7 +10519,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQueryMultiple("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteQueryMultiple("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -10539,11 +10539,11 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [dbo].[IdentityTable];
-                    SELECT TOP 2 * FROM [dbo].[IdentityTable];
-                    SELECT TOP 3 * FROM [dbo].[IdentityTable];
-                    SELECT TOP 4 * FROM [dbo].[IdentityTable];
-                    SELECT TOP 5 * FROM [dbo].[IdentityTable];").Result)
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
+                    SELECT TOP 2 * FROM [sc].[IdentityTable];
+                    SELECT TOP 3 * FROM [sc].[IdentityTable];
+                    SELECT TOP 4 * FROM [sc].[IdentityTable];
+                    SELECT TOP 5 * FROM [sc].[IdentityTable];").Result)
                 {
                     while (result.Position >= 0)
                     {
@@ -10578,11 +10578,11 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top2) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top3) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top4) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top5) * FROM [dbo].[IdentityTable];",
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [sc].[IdentityTable];",
                     new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }).Result)
                 {
                     while (result.Position >= 0)
@@ -10618,11 +10618,11 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top2) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top3) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top4) * FROM [dbo].[IdentityTable];
-                    SELECT TOP (@Top5) * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }).Result)
                 {
                     while (result.Position >= 0)
@@ -10658,7 +10658,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[IdentityTable];
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
                     EXEC [dbo].[sp_get_identity_tables];
                     EXEC [dbo].[sp_get_identity_table_by_id] @Id",
                     new { Top1 = 1, tables.Last().Id }, CommandType.Text).Result)
@@ -10694,7 +10694,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryMultipleAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryMultipleAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -10704,7 +10704,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryMultipleAsync("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryMultipleAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -11176,7 +11176,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable];"))
+                using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Act
                     var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
@@ -11200,7 +11200,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 }))
                 {
                     // Act
@@ -11225,7 +11225,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
+                using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } }))
                 {
                     // Act
@@ -11250,7 +11250,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];", new { Top = 2 }))
+                using (var reader = connection.ExecuteReader("SELECT TOP (@Top) * FROM [sc].[IdentityTable];", new { Top = 2 }))
                 {
                     // Act
                     var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
@@ -11318,7 +11318,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -11328,7 +11328,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -11348,7 +11348,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable];").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable];").Result)
                 {
                     // Act
                     var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
@@ -11372,7 +11372,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 }).Result)
                 {
                     // Act
@@ -11397,7 +11397,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
                     new { ColumnInt = new[] { 5, 6, 7 } }).Result)
                 {
                     // Act
@@ -11422,7 +11422,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT TOP (@Top) * FROM [dbo].[IdentityTable];", new { Top = 2 }).Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT TOP (@Top) * FROM [sc].[IdentityTable];", new { Top = 2 }).Result)
                 {
                     // Act
                     var result = Reflection.DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
@@ -11490,7 +11490,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -11500,7 +11500,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -11533,7 +11533,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 10;");
+                var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = 10;");
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -11552,7 +11552,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt;",
+                var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 });
 
                 // Assert
@@ -11572,7 +11572,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true });
 
                 // Assert
@@ -11592,7 +11592,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable];");
+                var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, 10);
@@ -11611,7 +11611,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;");
+                var result = connection.ExecuteNonQuery("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;");
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -11630,7 +11630,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
+                var result = connection.ExecuteNonQuery("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 });
 
                 // Assert
@@ -11650,7 +11650,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = connection.ExecuteNonQuery("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true });
 
                 // Assert
@@ -11670,7 +11670,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100;");
+                var result = connection.ExecuteNonQuery("UPDATE [sc].[IdentityTable] SET ColumnInt = 100;");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -11689,9 +11689,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
-                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
-                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 1;");
+                var result = connection.ExecuteNonQuery("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
+                    "UPDATE [sc].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
+                    "DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = 1;");
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -11710,9 +11710,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQuery("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
-                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
-                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @Value3;",
+                var result = connection.ExecuteNonQuery("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
+                    "UPDATE [sc].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
+                    "DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = @Value3;",
                     new { Value1 = 10, Value2 = 9, Value3 = 1 });
 
                 // Assert
@@ -11762,7 +11762,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -11772,7 +11772,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -11805,7 +11805,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 10;").Result;
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = 10;").Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -11824,7 +11824,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt;",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 }).Result;
 
                 // Assert
@@ -11844,7 +11844,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true }).Result;
 
                 // Assert
@@ -11864,7 +11864,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable];").Result;
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable];").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, 10);
@@ -11883,7 +11883,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;").Result;
+                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;").Result;
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -11902,7 +11902,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
+                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
                     new { ColumnInt = 10 }).Result;
 
                 // Assert
@@ -11922,7 +11922,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
                     new { ColumnInt = 10, ColumnBit = true }).Result;
 
                 // Assert
@@ -11942,7 +11942,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100;").Result;
+                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100;").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -11961,9 +11961,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
-                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
-                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = 1;").Result;
+                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
+                    "UPDATE [sc].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
+                    "DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = 1;").Result;
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -11982,9 +11982,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [dbo].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
-                    "UPDATE [dbo].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
-                    "DELETE FROM [dbo].[IdentityTable] WHERE ColumnInt = @Value3;",
+                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
+                    "UPDATE [sc].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
+                    "DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = @Value3;",
                     new { Value1 = 10, Value2 = 9, Value3 = 1 }).Result;
 
                 // Assert
@@ -12034,7 +12034,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -12044,7 +12044,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -12205,7 +12205,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteScalar("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -12215,7 +12215,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteScalar("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -12376,7 +12376,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteScalarAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -12386,7 +12386,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteScalarAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -12547,7 +12547,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar<object>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteScalar<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -12557,7 +12557,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar<object>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);");
+                connection.ExecuteScalar<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
@@ -12718,7 +12718,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync<object>("SELECT * FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteScalarAsync<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 
@@ -12728,7 +12728,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync<object>("SELECT FROM [dbo].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = connection.ExecuteScalarAsync<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
             }
         }
 

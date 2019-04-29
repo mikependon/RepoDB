@@ -132,9 +132,9 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Field(Field field)
+        public QueryBuilder FieldFrom(Field field)
         {
-            return Append(field?.AsField());
+            return Append(field?.Name);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder FieldsFrom(IEnumerable<Field> fields)
         {
-            return Append(fields?.Select(f => f.AsField()).Join(", "));
+            return Append(fields?.Select(f => f.Name).Join(", "));
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder HavingCountFrom(QueryField queryField, string prefix = Constant.DefaultParameterPrefix)
         {
-            return Append(string.Concat("HAVING COUNT(", queryField.Field.AsField(), ") ", queryField.GetOperationText(), ", ", queryField.AsParameter(prefix)));
+            return Append(string.Concat("HAVING COUNT(", queryField.Field.Name, ") ", queryField.GetOperationText(), ", ", queryField.AsParameter(prefix)));
         }
 
         /// <summary>
@@ -662,6 +662,73 @@ namespace RepoDb
         public QueryBuilder Truncate()
         {
             return Append("TRUNCATE");
+        }
+
+        /// <summary>
+        /// Appends the hints to the SQL Query Statement.
+        /// </summary>
+        /// <param name="hints">The hints to be appended.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder HintsFrom(string hints)
+        {
+            return string.IsNullOrEmpty(hints) == false ? Append(hints) : this;
+        }
+
+        /// <summary>
+        /// Appends a word MAX to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Max()
+        {
+            return Append("MAX");
+        }
+
+        /// <summary>
+        /// Appends a word MAX and the field to the SQL Query Statement, otherwise an empty string.
+        /// </summary>
+        /// <param name="field">The target field.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder MaxFrom(Field field)
+        {
+            return field != null ? Append(string.Concat("MAX(", field.Name, ")")) : this;
+        }
+
+        /// <summary>
+        /// Appends a word MIN to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Min()
+        {
+            return Append("MIN");
+        }
+
+        /// <summary>
+        /// Appends a word MIN and the field to the SQL Query Statement, otherwise an empty string.
+        /// </summary>
+        /// <param name="field">The target field.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder MinFrom(Field field)
+        {
+            return field != null ? Append(string.Concat("MIN(", field.Name, ")")) : this;
+        }
+
+        /// <summary>
+        /// Appends a word AVG to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Avg()
+        {
+            return Append("AVG");
+        }
+
+        /// <summary>
+        /// Appends a word AVG and the field to the SQL Query Statement, otherwise an empty string.
+        /// </summary>
+        /// <param name="field">The target field.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder AvgFrom(Field field)
+        {
+            return field != null ? Append(string.Concat("AVG(", field.Name, ")")) : this;
         }
 
     }

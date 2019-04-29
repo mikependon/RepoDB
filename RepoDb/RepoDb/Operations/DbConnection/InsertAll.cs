@@ -357,14 +357,17 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Variables needed
-            var primary = PrimaryCache.Get<TEntity>();
-            var dbField = DbFieldCache.Get(connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
-            var isIdentity = false;
+            var identity = IdentityCache.Get<TEntity>();
 
             // Set the identify value
-            if (primary != null && dbField != null)
+            if (identity == null)
             {
-                isIdentity = primary.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower();
+                var dbField = DbFieldCache.Get(connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
+                if (dbField != null)
+                {
+                    var properties = PropertyCache.Get<TEntity>();
+                    identity = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
+                }
             }
 
             // Result set
@@ -383,9 +386,9 @@ namespace RepoDb
                     skipCommandArrayParametersCheck: true);
 
                 // Set the primary value
-                if (primary != null && isIdentity == true)
+                if (identity != null)
                 {
-                    primary.PropertyInfo.SetValue(entity, executeResult);
+                    identity.PropertyInfo.SetValue(entity, executeResult);
                 }
 
                 // Add to the list
@@ -564,14 +567,17 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Variables needed
-            var primary = PrimaryCache.Get<TEntity>();
-            var dbField = DbFieldCache.Get(connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
-            var isIdentity = false;
+            var identity = IdentityCache.Get<TEntity>();
 
             // Set the identify value
-            if (primary != null && dbField != null)
+            if (identity == null)
             {
-                isIdentity = primary.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower();
+                var dbField = DbFieldCache.Get(connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
+                if (dbField != null)
+                {
+                    var properties = PropertyCache.Get<TEntity>();
+                    identity = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
+                }
             }
 
             #region 
@@ -638,9 +644,9 @@ namespace RepoDb
                     skipCommandArrayParametersCheck: true);
 
                 // Set the primary value
-                if (primary != null && isIdentity == true)
+                if (identity != null)
                 {
-                    primary.PropertyInfo.SetValue(entity, executeResult);
+                    identity.PropertyInfo.SetValue(entity, executeResult);
                 }
 
                 // Add to the list

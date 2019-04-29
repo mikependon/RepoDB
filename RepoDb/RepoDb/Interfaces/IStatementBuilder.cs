@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RepoDb.Interfaces
 {
@@ -104,10 +105,26 @@ namespace RepoDb.Interfaces
         /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A sql statement for insert operation.</returns>
+        [Obsolete("Please use the overloaded method.")]
         string CreateInsert(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields = null,
             DbField primaryField = null);
+
+        /// <summary>
+        /// Creates a SQL Statement for insert operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        string CreateInsert(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
+            DbField primaryField = null,
+            DbField identityField = null);
 
         #endregion
 
@@ -122,11 +139,29 @@ namespace RepoDb.Interfaces
         /// <param name="qualifiers">The list of the qualifier fields.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A sql statement for merge operation.</returns>
+        [Obsolete("Please use the overloaded method.")]
         string CreateMerge(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers = null,
             DbField primaryField = null);
+
+        /// <summary>
+        /// Creates a SQL Statement for merge operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be merged.</param>
+        /// <param name="qualifiers">The list of the qualifier fields.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for merge operation.</returns>
+        string CreateMerge(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers = null,
+            DbField primaryField = null,
+            DbField identityField = null);
 
         #endregion
 
@@ -196,11 +231,29 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <returns>A sql statement for update operation.</returns>
+        [Obsolete("Please use the overloaded method.")]
         string CreateUpdate(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             QueryGroup where = null,
             DbField primaryField = null);
+
+        /// <summary>
+        /// Creates a SQL Statement for inline-update operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be updated.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for update operation.</returns>
+        string CreateUpdate(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            QueryGroup where = null,
+            DbField primaryField = null,
+            DbField identityField = null);
 
         #endregion
     }

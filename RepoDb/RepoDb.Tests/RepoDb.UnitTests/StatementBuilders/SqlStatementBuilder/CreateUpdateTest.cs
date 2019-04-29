@@ -20,7 +20,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: where);
+                where: where,
+                primaryField: null,
+                identityField: null);
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 ;";
@@ -43,7 +45,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: where);
+                where: where,
+                primaryField: null,
+                identityField: null);
             var expected = $"" +
                 $"UPDATE [dbo].[Table] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 ;";
@@ -66,7 +70,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: where);
+                where: where,
+                primaryField: null,
+                identityField: null);
             var expected = $"" +
                 $"UPDATE [dbo].[Table] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 ;";
@@ -89,7 +95,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: where);
+                where: where,
+                primaryField: null,
+                identityField: null);
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 " +
@@ -100,7 +108,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateUpdateWithCoveredWhereExpressionAsIdentityPrimary()
+        public void TestSqlStatementBuilderCreateUpdateWithCoveredPrimaryField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -108,14 +116,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Field1", 1));
-            var primaryField = new DbField("Field1", true, true, false);
+            var field = new DbField("Field1", true, true, false);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 where: where,
-                primaryField: primaryField);
+                primaryField: field,
+                identityField: null);
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 " +
@@ -126,7 +135,61 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionAsIdentityPrimary()
+        public void TestSqlStatementBuilderCreateUpdateWithCoveredIdentityField()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2", "Field3");
+            var where = new QueryGroup(new QueryField("Field1", 1));
+            var field = new DbField("Field1", true, true, false);
+
+            // Act
+            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: where,
+                primaryField: null,
+                identityField: field);
+            var expected = $"" +
+                $"UPDATE [Table] " +
+                $"SET [Field2] = @Field2, [Field3] = @Field3 " +
+                $"WHERE ([Field1] = @_Field1) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlStatementBuilderCreateUpdateWithCoveredPrimaryAsIdentity()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2", "Field3");
+            var where = new QueryGroup(new QueryField("Field1", 1));
+            var field = new DbField("Field1", true, true, false);
+
+            // Act
+            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: where,
+                primaryField: field,
+                identityField: field);
+            var expected = $"" +
+                $"UPDATE [Table] " +
+                $"SET [Field2] = @Field2, [Field3] = @Field3 " +
+                $"WHERE ([Field1] = @_Field1) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionAndWithUncoveredPrimary()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -134,14 +197,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Id", 1));
-            var primaryField = new DbField("Id", true, true, false);
+            var field = new DbField("Id", true, true, false);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 where: where,
-                primaryField: primaryField);
+                primaryField: field,
+                identityField: null);
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 " +
@@ -152,7 +216,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionButCoveredIdentityPrimary()
+        public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionAndWithUncoveredIdentity()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -160,14 +224,69 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Id", 1));
-            var primaryField = new DbField("Field1", true, true, false);
+            var field = new DbField("Id", true, true, false);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 where: where,
-                primaryField: primaryField);
+                primaryField: null,
+                identityField: field);
+            var expected = $"" +
+                $"UPDATE [Table] " +
+                $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 " +
+                $"WHERE ([Id] = @_Id) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionAndWithUncoveredPrimaryAsIdentity()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2", "Field3");
+            var where = new QueryGroup(new QueryField("Id", 1));
+            var field = new DbField("Id", true, true, false);
+
+            // Act
+            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: where,
+                primaryField: field,
+                identityField: field);
+            var expected = $"" +
+                $"UPDATE [Table] " +
+                $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 " +
+                $"WHERE ([Id] = @_Id) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionButWithCoveredPrimary()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2", "Field3");
+            var where = new QueryGroup(new QueryField("Id", 1));
+            var field = new DbField("Field1", true, true, false);
+
+            // Act
+            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: where,
+                primaryField: field,
+                identityField: null);
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 " +
@@ -178,7 +297,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionButCoveredNonIdentityPrimary()
+        public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionButWithCoveredIdentity()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -186,14 +305,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Id", 1));
-            var primaryField = new DbField("Field1", true, false, false);
+            var field = new DbField("Field1", true, true, false);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 where: where,
-                primaryField: primaryField);
+                primaryField: null,
+                identityField: field);
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 " +
@@ -216,7 +336,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: null);
+                where: null,
+                primaryField: null,
+                identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -232,7 +354,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: null);
+                where: null,
+                primaryField: null,
+                identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -248,7 +372,48 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: null);
+                where: null,
+                primaryField: null,
+                identityField: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateUpdateIfThePrimaryIsNotReallyAPrimary()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2", "Field3");
+            var primaryField = new DbField("Field1", false, false, false);
+
+            // Act
+            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: null,
+                primaryField: primaryField,
+                identityField: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateUpdateIfTheIdentityIsNotReallyAnIdentity()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2", "Field3");
+            var qualifiers = Field.From("Field1");
+            var identifyField = new DbField("Field2", false, false, false);
+
+            // Act
+            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: null,
+                primaryField: null,
+                identityField: identifyField);
         }
     }
 }

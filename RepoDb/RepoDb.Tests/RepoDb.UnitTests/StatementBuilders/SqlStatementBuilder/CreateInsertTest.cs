@@ -18,7 +18,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                primaryField: null);
+                identityField: null);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -42,7 +42,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                primaryField: null);
+                identityField: null);
             var expected = $"" +
                 $"INSERT INTO [dbo].[Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -66,7 +66,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                primaryField: null);
+                identityField: null);
             var expected = $"" +
                 $"INSERT INTO [dbo].[Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -79,25 +79,53 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertWithIdentityPrimaryField()
+        public void TestSqlStatementBuilderCreateInsertWithPrimary()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
-            var primaryField = new DbField("Id", true, true, false);
+            var primaryField = new DbField("Field1", true, false, false);
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                primaryField: primaryField);
+                primaryField: primaryField,
+                identityField: null);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field2, @Field3 ) ; " +
+                $"SELECT @Field1 AS [Result] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlStatementBuilderCreateInsertWithIdentity()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2", "Field3");
+            var identityField = new DbField("Field1", false, true, false);
+
+            // Act
+            var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                primaryField: null,
+                identityField: identityField);
+            var expected = $"" +
+                $"INSERT INTO [Table] " +
+                $"( [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field2, @Field3 ) ; " +
                 $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result] ;";
 
             // Assert
@@ -105,7 +133,35 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertWithNonIdentityPrimaryField()
+        public void TestSqlStatementBuilderCreateInsertWithPrimaryAndIdentity()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2", "Field3");
+            var primaryField = new DbField("Field1", true, false, false);
+            var identityField = new DbField("Field2", false, true, false);
+
+            // Act
+            var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                primaryField: null,
+                identityField: identityField);
+            var expected = $"" +
+                $"INSERT INTO [Table] " +
+                $"( [Field1], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field1, @Field3 ) ; " +
+                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfTheNonIdentityPrimaryIsNotCovered()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -115,19 +171,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Id", true, false, false);
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+            statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                primaryField: primaryField);
-            var expected = $"" +
-                $"INSERT INTO [Table] " +
-                $"( [Field1], [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field1, @Field2, @Field3 ) ; " +
-                $"SELECT @Id AS [Result] ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
+                primaryField: primaryField,
+                identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -136,13 +184,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Setup
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder();
-            var tableName = (string)null;
+            var tableName = "Table";
 
             // Act
             statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: null,
-                primaryField: null);
+                primaryField: null,
+                identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -157,7 +206,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: null,
-                primaryField: null);
+                primaryField: null,
+                identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -172,7 +222,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: null,
-                primaryField: null);
+                primaryField: null,
+                identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -187,7 +238,45 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: null,
-                primaryField: null);
+                primaryField: null,
+                identityField: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfThePrimaryIsNotReallyAPrimary()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2", "Field3");
+            var primaryField = new DbField("Field1", false, false, false);
+
+            // Act
+            statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                primaryField: primaryField,
+                identityField: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfTheIdentityIsNotReallyAnIdentity()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2", "Field3");
+            var qualifiers = Field.From("Field1");
+            var identifyField = new DbField("Field2", false, false, false);
+
+            // Act
+            statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                primaryField: null,
+                identityField: identifyField);
         }
     }
 }

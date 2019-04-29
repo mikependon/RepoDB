@@ -28,7 +28,7 @@ namespace RepoDb
             Name = name.AsQuoted(true);
             UnquotedName = name.AsUnquoted(true);
 
-            // Set the hashcode here
+            // Set the hashcode
             m_hashCode = name.GetHashCode();
         }
 
@@ -66,7 +66,10 @@ namespace RepoDb
             {
                 throw new NullReferenceException($"Field name must not be null.");
             }
-            return fields.Select(field => new Field(field));
+            foreach (var field in fields)
+            {
+                yield return new Field(field);
+            }
         }
 
         /// <summary>
