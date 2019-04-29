@@ -1,5 +1,4 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
+﻿using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -22,6 +21,8 @@ namespace RepoDb
             return ClassPropertiesExtractor<TEntity>.Extract();
         }
 
+        #region GetProperties<TEntity> Functions
+
         /// <summary>
         /// Gets a function used to extract the properties of a class.
         /// </summary>
@@ -42,7 +43,7 @@ namespace RepoDb
                 .Compile();
         }
 
-        #region ClassPropertiesExtractor
+        #region ClassPropertiesExtractor<T>
 
         private static class ClassPropertiesExtractor<T>
             where T : class
@@ -59,6 +60,8 @@ namespace RepoDb
                 return m_func();
             }
         }
+
+        #endregion
 
         #endregion
     }

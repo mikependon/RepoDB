@@ -8,7 +8,6 @@ using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -82,7 +81,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteQuery (Dynamics)
+        #region ExecuteQuery(Dynamics)
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
@@ -158,7 +157,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteQueryAsync (Dynamics)
+        #region ExecuteQueryAsync(Dynamics)
 
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and

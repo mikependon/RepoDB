@@ -428,7 +428,7 @@ namespace RepoDb
             {
                 throw new InvalidOperationException($"The length of the array must be equals to the number of fields of the data entity (it should be {FieldCount}).");
             }
-            var extracted = ClassExpression.Extract(Enumerator.Current).ToArray();
+            var extracted = ClassExpression.GetPropertiesAndValues(Enumerator.Current).ToArray();
             for (var i = 0; i < Properties.Count; i++)
             {
                 values[i] = extracted[i].Value;
