@@ -11,7 +11,7 @@ namespace RepoDb
     public static partial class ClassExpression
     {
         /// <summary>
-        /// Extract the class properties and values and returns an enumerable of <see cref="PropertyValue"/> object.
+        /// Extracts the class properties and values and returns an enumerable of <see cref="PropertyValue"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The target type of the class.</typeparam>
         /// <param name="obj">The object to be extracted.</param>
@@ -23,7 +23,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extract the class properties and values and returns an enumerable of <see cref="PropertyValue"/> object.
+        /// Extracts the class properties and values and returns an enumerable of <see cref="PropertyValue"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The target type of the class.</typeparam>
         /// <param name="obj">The object to be extracted.</param>
