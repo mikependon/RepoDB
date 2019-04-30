@@ -17,10 +17,13 @@ namespace RepoDb.Reflection
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>An array of data entity objects.</returns>
-        public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader, IDbConnection connection)
+        public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader,
+            IDbConnection connection)
             where TEntity : class
         {
-            return ToEnumerable<TEntity>(reader, connection, false);
+            return ToEnumerable<TEntity>(reader,
+                connection,
+                false);
         }
 
         /// <summary>
@@ -31,12 +34,16 @@ namespace RepoDb.Reflection
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
         /// <returns>An array of data entity objects.</returns>
-        internal static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader, IDbConnection connection, bool basedOnFields)
+        internal static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader,
+            IDbConnection connection,
+            bool basedOnFields)
             where TEntity : class
         {
             if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
-                var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader, connection, basedOnFields);
+                var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader,
+                    connection,
+                    basedOnFields);
                 while (reader.Read())
                 {
                     yield return func(reader);

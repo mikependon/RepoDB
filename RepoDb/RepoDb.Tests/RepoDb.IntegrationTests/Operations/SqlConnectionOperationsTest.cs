@@ -3345,7 +3345,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                tables.ForEach(item => item.Id = connection.Insert<IdentityTable, int>(item));
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();

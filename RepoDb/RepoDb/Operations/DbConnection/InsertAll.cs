@@ -1,10 +1,12 @@
 ﻿using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Reflection;
 using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -311,7 +313,7 @@ namespace RepoDb
 
         #endregion
 
-        #region InsertAllInternalBase
+        #region InsertAllInternalBase<TEntity>
 
         /// <summary>
         /// Inserts multiple data in the database.
@@ -372,6 +374,93 @@ namespace RepoDb
 
             // Result set
             var result = 0;
+            var recreate = true;
+
+            // Create a command
+            using (var command = (DbCommand)connection.EnsureOpen().CreateCommand(commandText: commandText,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction))
+            {
+                foreach (var entity in entities)
+                {
+                    // Set the values
+                    DataCommand.SetParameters<TEntity>(command: command,
+                        entity: entity,
+                        connection: connection,
+                        recreate: recreate);
+
+                    // Set the flag so the next run will not recreate it
+                    recreate = false;
+
+                    // Actual Execution
+                    var executeResult = ObjectConverter.DbNullToNull(command.ExecuteScalar());
+
+                    // Set the primary value
+                    if (identity != null)
+                    {
+                        identity.PropertyInfo.SetValue(entity, executeResult);
+                    }
+
+                    // Add to the list
+                    result++;
+                }
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterInsertAll(new TraceLog(commandText, entities, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Return the result
+            return result;
+        }
+
+        /// <summary>
+        /// Inserts multiple data in the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="request">The actual <see cref="InsertAllRequest"/> object.</param>
+        /// <param name="entities">The data entity object to be inserted.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <returns>The number of inserted rows.</returns>
+        internal static int InsertAllInternalBase(this IDbConnection connection,
+            InsertAllRequest request,
+            IEnumerable<object> entities,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null)
+        {
+            // Variables
+            var commandType = CommandType.Text;
+            var commandText = CommandTextCache.GetInsertAllText(request);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, entities, null);
+                trace.BeforeInsertAll(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return 0;
+                }
+                commandText = (cancellableTraceLog.Statement ?? commandText);
+                entities = (IEnumerable<object>)(cancellableTraceLog.Parameter ?? entities);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Result set
+            var result = 0;
 
             // Iterate and insert every entity
             foreach (var entity in entities)
@@ -385,11 +474,6 @@ namespace RepoDb
                     transaction: transaction,
                     skipCommandArrayParametersCheck: true);
 
-                // Set the primary value
-                if (identity != null)
-                {
-                    identity.PropertyInfo.SetValue(entity, executeResult);
-                }
 
                 // Add to the list
                 result++;
@@ -405,119 +489,6 @@ namespace RepoDb
             // Return the result
             return result;
         }
-
-        #endregion
-
-        #region InsertAllInternalBase(Optimal)
-
-        ///// <summary>
-        ///// Inserts multiple data in the database.
-        ///// </summary>
-        ///// <typeparam name="TEntity">The type of the objects to be enumerated.</typeparam>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="request">The actual <see cref="InsertAllRequest"/> object.</param>
-        ///// <param name="entities">The data entity object to be inserted.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <returns>The number of inserted rows.</returns>
-        //internal static int InsertAllInternalBase<TEntity>(this IDbConnection connection,
-        //    InsertAllRequest request,
-        //    IEnumerable<TEntity> entities,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null)
-        //    where TEntity : class
-        //{
-        //    // Variables
-        //    var commandType = CommandType.Text;
-        //    var commandText = CommandTextCache.GetInsertAllText(request);
-
-        //    // Before Execution
-        //    if (trace != null)
-        //    {
-        //        var cancellableTraceLog = new CancellableTraceLog(commandText, entities, null);
-        //        trace.BeforeInsertAll(cancellableTraceLog);
-        //        if (cancellableTraceLog.IsCancelled)
-        //        {
-        //            if (cancellableTraceLog.IsThrowException)
-        //            {
-        //                throw new CancelledExecutionException(commandText);
-        //            }
-        //            return 0;
-        //        }
-        //        commandText = (cancellableTraceLog.Statement ?? commandText);
-        //        entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
-        //    }
-
-        //    // Before Execution Time
-        //    var beforeExecutionTime = DateTime.UtcNow;
-
-        //    // Variables needed
-        //    var primary = PrimaryCache.Get<TEntity>();
-        //    var dbFields = DbFieldCache.Get(connection, request.Name);
-        //    var primaryDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-        //    var isIdentity = false;
-
-        //    // Set the identify value
-        //    if (primary != null && primaryDbField != null)
-        //    {
-        //        isIdentity = primary.GetUnquotedMappedName().ToLower() == primaryDbField.UnquotedName.ToLower();
-        //    }
-
-        //    // The actua result
-        //    var result = 0;
-
-        //    // Get the properties
-        //    var properties = PropertyCache.Get(request.Type);
-
-        //    // Get the first item properties if needed
-        //    if (properties == null)
-        //    {
-        //        properties = PropertyCache.Get(entities.First().GetType());
-        //    }
-
-        //    // Set the proper fields
-        //    var fields = request.Fields?.Select(f => f.UnquotedName);
-        //    var propertiesToSkip = fields?
-        //        .Where(field => dbFields?.FirstOrDefault(dbField => dbField.UnquotedName.ToLower() == field.ToLower()) == null);
-
-        //    // Create a command object
-        //    using (var command = connection.EnsureOpen().CreateCommand(commandText: commandText,
-        //        commandType: commandType,
-        //        commandTimeout: commandTimeout,
-        //        transaction: transaction))
-        //    {
-        //        // Create the parameters
-        //        command.CreateParametersFromClassProperties(properties, propertiesToSkip);
-
-        //        // Iterate the params
-        //        foreach (var obj in entities)
-        //        {
-        //            // Set the parameters
-        //            command.SetParameters(obj, propertiesToSkip, true);
-
-        //            // Execute the command
-        //            var value = ObjectConverter.DbNullToNull(command.ExecuteScalar());
-
-        //            // Set the property value
-        //            primary?.PropertyInfo.SetValue(obj, value);
-
-        //            // Iterate the counters
-        //            result++;
-        //        }
-        //    }
-
-        //    // After Execution
-        //    if (trace != null)
-        //    {
-        //        trace.AfterInsertAll(new TraceLog(commandText, entities, result,
-        //            DateTime.UtcNow.Subtract(beforeExecutionTime)));
-        //    }
-
-        //    // Return the result
-        //    return result;
-        //}
 
         #endregion
 

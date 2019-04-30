@@ -361,12 +361,12 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Gets the list of <see cref="Field"/> objects based on the actual list of <see cref="DbField"/> objects.
+        /// Get the actual list of <see cref="Field"/> objects of the table based on the actual list of <see cref="DbField"/> objects.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="fields">The target name of the table.</param>
         /// <param name="tableName">The list of fields from the data entity object.</param>
-        /// <returns>The list of actual <see cref="Field"/> objects of the table.</returns>
+        /// <returns>The actual list of <see cref="Field"/> objects of the table.</returns>
         private static IEnumerable<Field> GetActualFields(IDbConnection connection, string tableName, IEnumerable<Field> fields)
         {
             if (fields?.Any() != true)
