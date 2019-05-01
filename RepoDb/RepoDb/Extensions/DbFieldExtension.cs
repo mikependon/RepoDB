@@ -24,7 +24,7 @@ namespace RepoDb.Extensions
         /// <returns>An instance of <see cref="Field"/> object.</returns>
         public static Field AsField(this DbField dbField)
         {
-            return new Field(dbField.UnquotedName);
+            return new Field(dbField.UnquotedName, dbField.Type);
         }
 
         /// <summary>

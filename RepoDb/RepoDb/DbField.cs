@@ -14,9 +14,10 @@ namespace RepoDb
         /// Creates a new instance of <see cref="DbField"/> object.
         /// </summary>
         public DbField(string name,
-            bool isPrimary,
-            bool isIdentity,
-            bool isNullable)
+            bool isPrimary = false,
+            bool isIdentity = false,
+            bool isNullable = true,
+            Type type = null)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -30,9 +31,14 @@ namespace RepoDb
             IsPrimary = isPrimary;
             IsIdentity = isIdentity;
             IsNullable = isNullable;
+            Type = type;
 
             // Set the hashcode
             m_hashCode = name.GetHashCode() + isPrimary.GetHashCode() + isIdentity.GetHashCode() + isNullable.GetHashCode();
+            if (type != null)
+            {
+                m_hashCode += type.GetHashCode();
+            }
         }
 
         /// <summary>
@@ -59,6 +65,11 @@ namespace RepoDb
         /// Gets the value whether the column is nullable.
         /// </summary>
         public bool IsNullable { get; }
+
+        /// <summary>
+        /// Gets the .NET type of the column.
+        /// </summary>
+        public Type Type { get; }
 
         // Equality and comparers
 

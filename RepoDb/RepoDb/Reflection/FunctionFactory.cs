@@ -15,9 +15,9 @@ namespace RepoDb.Reflection
     /// <summary>
     /// A static factory class used to create a custom function.
     /// </summary>
-    public static class FunctionFactory
+    internal static class FunctionFactory
     {
-        #region GetDataReaderToDataEntityFunction
+        #region GetDataReaderToDataEntityFunction<TEntity>
 
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.
@@ -362,7 +362,7 @@ namespace RepoDb.Reflection
 
         #endregion
 
-        #region GetDataCommandParameterSetterFunction
+        #region GetDataCommandParameterSetterFunction<TEntity>
 
         /// <summary>
         /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
@@ -422,6 +422,66 @@ namespace RepoDb.Reflection
             // Set the function value
             return Expression
                 .Lambda<Action<DbCommand, TEntity>>(body, commandParameterExpression, entityParameterExpression)
+                .Compile();
+        }
+
+        #endregion
+
+        #region GetDataCommandParameterSetterFunction(TableName)
+
+        /// <summary>
+        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
+        /// </summary>
+        /// <param name="command">The <see cref="DbCommand"/> object where to set the parameters.</param>
+        /// <param name="actualFields">The list of actual <see cref="Field"/> objects.</param>
+        /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.</returns>
+        public static Action<DbCommand, object> GetDataCommandParameterSetterFunction(DbCommand command,
+            IEnumerable<Field> actualFields)
+        {
+            // Expression arguments
+            var commandParameterExpression = Expression.Parameter(typeof(DbCommand), "command");
+            var entityParameterExpression = Expression.Parameter(typeof(object), "entity");
+
+            // Expression variables
+            var parametersProperty = typeof(DbCommand).GetProperty("Parameters");
+            var indexerProperty = typeof(DbParameterCollection).GetProperty("Item", new[] { typeof(int) });
+            var valueProperty = typeof(DbParameter).GetProperty("Value").SetMethod;
+            var getTypeMethod = typeof(object).GetMethod("GetType");
+            var getPropertyMethod = typeof(Type).GetMethod("GetProperty", new[] { typeof(string) });
+            var getPropertyValueMethod = typeof(PropertyInfo).GetMethod("GetValue", new[] { typeof(object) });
+
+            // Get the parameter collection
+            var parameterCollection = Expression.Property(commandParameterExpression, parametersProperty);
+
+            // Set the body
+            var body = (Expression)null;
+
+            // Iterate the properties
+            foreach (var field in actualFields)
+            {
+                var indexOf = command.Parameters.IndexOf(field.UnquotedName);
+
+                // Set the values
+                var getTypeExpression = Expression.Call(entityParameterExpression, getTypeMethod);
+                var getPropertyExpression = Expression.Call(getTypeExpression, getPropertyMethod, Expression.Constant(field.UnquotedName));
+                var valueExpression = Expression.Call(getPropertyExpression, getPropertyValueMethod, entityParameterExpression);
+                var convertedValueExpression = Expression.Convert(valueExpression, typeof(object));
+                var parameterExpression = Expression.Property(parameterCollection, indexerProperty, Expression.Constant(indexOf));
+
+                // Set the value
+                if (body == null)
+                {
+                    body = Expression.Call(parameterExpression, valueProperty, valueExpression);
+                }
+                else
+                {
+                    body = Expression.Block(body, Expression.Call(parameterExpression, valueProperty, valueExpression));
+                }
+            }
+
+            // Set the function value
+            return Expression
+                .Lambda<Action<DbCommand, object>>(body, commandParameterExpression, entityParameterExpression)
                 .Compile();
         }
 

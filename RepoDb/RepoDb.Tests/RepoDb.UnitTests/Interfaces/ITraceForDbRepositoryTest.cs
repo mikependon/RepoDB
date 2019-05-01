@@ -4,6 +4,7 @@ using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
+using System;
 using System.Collections.Generic;
 
 namespace RepoDb.UnitTests.Interfaces
@@ -30,6 +31,8 @@ namespace RepoDb.UnitTests.Interfaces
 
         private class DbRepositoryCustomDbHelper : IDbHelper
         {
+            public IResolver<string, Type> DbTypeResolver => throw new NotImplementedException();
+
             public IEnumerable<DbField> GetFields(string connectionString, string tableName)
             {
                 if (tableName == ClassMappedNameCache.Get<TraceEntity>())

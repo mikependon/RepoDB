@@ -16,7 +16,17 @@ namespace RepoDb
         /// Creates a new instance of <see cref="Field"/> object.
         /// </summary>
         /// <param name="name">The name of the field.</param>
-        public Field(string name)
+        public Field(string name) :
+            this(name, null)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="Field"/> object.
+        /// </summary>
+        /// <param name="name">The name of the field.</param>
+        /// <param name="type">The type of the field.</param>
+        public Field(string name,
+            Type type)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -28,8 +38,15 @@ namespace RepoDb
             Name = name.AsQuoted(true);
             UnquotedName = name.AsUnquoted(true);
 
+            // Set the type
+            Type = type;
+
             // Set the hashcode
             m_hashCode = name.GetHashCode();
+            if (type != null)
+            {
+                m_hashCode += type.GetHashCode();
+            }
         }
 
         /// <summary>
@@ -41,6 +58,11 @@ namespace RepoDb
         /// Gets the unquoted name of the field.
         /// </summary>
         public string UnquotedName { get; }
+
+        /// <summary>
+        /// Gets the type of the field.
+        /// </summary>
+        public Type Type { get; }
 
         /// <summary>
         /// Stringify the current field object.

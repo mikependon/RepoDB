@@ -13,9 +13,11 @@ namespace RepoDb
     /// <summary>
     /// A class used to cache the compiled functions.
     /// </summary>
-    public static class FunctionCache
+    internal static class FunctionCache
     {
-        #region GetDataReaderToDataEntityFunction
+        private static ConcurrentDictionary<string, Action<DbCommand, object>> m_cache = new ConcurrentDictionary<string, Action<DbCommand, object>>();
+
+        #region GetDataReaderToDataEntityFunction<TEntity>
 
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.
@@ -176,7 +178,7 @@ namespace RepoDb
 
         #endregion
 
-        #region GetDataCommandParameterSetterFunction
+        #region GetDataCommandParameterSetterFunction<TEntity>
 
         /// <summary>
         /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
@@ -184,13 +186,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="command">The <see cref="DbCommand"/> object where to set the parameters.</param>
         /// <param name="entity">The data entity object where the properties (and/or values) will be retrieved.</param>
-        /// <param name="actualProperties">The list of actual <see cref="ClassProperty"/> objects.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.</returns>
         public static Action<DbCommand, TEntity> GetDataCommandParameterSetterFunction<TEntity>(DbCommand command,
             TEntity entity,
-            IEnumerable<ClassProperty> actualProperties,
-            IDbConnection connection)
+            IEnumerable<ClassProperty> actualProperties)
             where TEntity : class
         {
             return DataCommandParameterSetterCache<TEntity>.Get(command,
@@ -217,6 +216,31 @@ namespace RepoDb
         }
 
         #endregion
+
+        #endregion
+
+        #region GetDataCommandParameterSetterFunction(TableName)
+
+        /// <summary>
+        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
+        /// </summary>
+        /// <param name="command">The <see cref="DbCommand"/> object where to set the parameters.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="actualFields">The list of the actual <see cref="Field"/> objects to be retrived from the dynamic object.</param>
+        public static Action<DbCommand, object> GetDataCommandParameterSetterFunction(DbCommand command,
+            string tableName,
+            IEnumerable<Field> actualFields)
+        {
+            var key = string.Concat(command.Connection.ConnectionString, ".", tableName, ".", actualFields.Select(f => f.UnquotedName).Join("."));
+            var func = (Action<DbCommand, object>)null;
+            if (m_cache.TryGetValue(key, out func) == false)
+            {
+                func = FunctionFactory.GetDataCommandParameterSetterFunction(command,
+                    actualFields);
+                m_cache.TryAdd(key, func);
+            }
+            return func;
+        }
 
         #endregion
     }

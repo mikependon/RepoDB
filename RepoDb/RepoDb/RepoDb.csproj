@@ -67,6 +67,7 @@
     <Compile Include="Exceptions\InvalidQualiferFieldsException.cs" />
     <Compile Include="Exceptions\ParameterNotFoundException.cs" />
     <Compile Include="Extensions\DbFieldExtension.cs" />
+    <Compile Include="Interfaces\IResolver.cs" />
     <Compile Include="Operations\BaseRepository\CountAll.cs" />
     <Compile Include="Operations\BaseRepository\InsertAll.cs" />
     <Compile Include="Operations\BaseRepository\QueryAll.cs" />
@@ -190,6 +191,8 @@
     <Compile Include="CancellableTraceLog.cs" />
     <Compile Include="ObjectConverter.cs" />
     <Compile Include="Reflection\DataReaderConverter.cs" />
+    <Compile Include="Resolvers\ClientTypeToSqlDbTypeResolver.cs" />
+    <Compile Include="Resolvers\SqlDbTypeToClientTypeResolver.cs" />
     <Compile Include="SqlStatementBuilder.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="SqlTableHints.cs" />

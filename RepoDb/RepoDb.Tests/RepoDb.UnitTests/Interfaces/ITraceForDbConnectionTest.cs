@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Attributes;
@@ -30,6 +31,8 @@ namespace RepoDb.UnitTests.Interfaces
 
         private class DbConnectionCustomerDbHelper : IDbHelper
         {
+            public IResolver<string, Type> DbTypeResolver => throw new NotImplementedException();
+
             public IEnumerable<DbField> GetFields(string connectionString, string tableName)
             {
                 if (tableName == ClassMappedNameCache.Get<TraceEntity>())
