@@ -361,23 +361,22 @@ namespace RepoDb
             // Variables needed
             var identity = IdentityCache.Get<TEntity>();
             var properties = PropertyCache.Get<TEntity>();
-
-            // Set the identify value
-            if (identity == null)
-            {
-                var dbField = DbFieldCache.Get(connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
-                if (dbField != null)
-                {
-                    identity = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
-                }
-            }
-
-            // Get the necessary values
             var dbFields = DbFieldCache.Get(connection, request.Name);
 
             // Filter the actual fields
             if (dbFields != null)
             {
+                // Set the identify value
+                if (identity == null)
+                {
+                    var dbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                    if (dbField != null)
+                    {
+                        identity = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
+                    }
+                }
+
+                // Filter the actual properties
                 properties = properties
                     .Where(property =>
                         property.IsIdentity() != true)
@@ -479,23 +478,22 @@ namespace RepoDb
             // Variables needed
             var identity = IdentityCache.Get<TEntity>();
             var properties = PropertyCache.Get<TEntity>();
-
-            // Set the identify value
-            if (identity == null)
-            {
-                var dbField = DbFieldCache.Get(connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
-                if (dbField != null)
-                {
-                    identity = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
-                }
-            }
-
-            // Get the necessary values
             var dbFields = DbFieldCache.Get(connection, request.Name);
 
             // Filter the actual fields
             if (dbFields != null)
             {
+                // Set the identify value
+                if (identity == null)
+                {
+                    var dbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                    if (dbField != null)
+                    {
+                        identity = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
+                    }
+                }
+
+                // Filter the actual properties
                 properties = properties
                     .Where(property =>
                         property.IsIdentity() != true)
