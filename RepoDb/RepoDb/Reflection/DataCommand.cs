@@ -57,7 +57,6 @@ namespace RepoDb.Reflection
         {
             // Get the actual function
             var func = FunctionCache.GetDataCommandParameterSetterFunction<TEntity>(command,
-                entity,
                 actualProperties);
 
             // Execute the function

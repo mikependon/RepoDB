@@ -3694,7 +3694,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionInsertAllForIdentityTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateIdentityTables(1000);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {

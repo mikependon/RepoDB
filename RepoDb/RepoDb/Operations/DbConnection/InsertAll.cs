@@ -355,10 +355,8 @@ namespace RepoDb
                 entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
             }
 
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
             // Variables needed
+            var primary = PrimaryCache.Get<TEntity>();
             var identity = IdentityCache.Get<TEntity>();
             var properties = PropertyCache.Get<TEntity>();
             var dbFields = DbFieldCache.Get(connection, request.Name);
@@ -366,7 +364,16 @@ namespace RepoDb
             // Filter the actual fields
             if (dbFields != null)
             {
-                // Set the identify value
+                // Set the primary value
+                if (primary == null)
+                {
+                    var dbField = dbFields?.FirstOrDefault(f => f.IsPrimary);
+                    if (dbField != null)
+                    {
+                        primary = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
+                    }
+                }
+                // Set the identity value
                 if (identity == null)
                 {
                     var dbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
@@ -385,6 +392,9 @@ namespace RepoDb
                     .ToList();
             }
 
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
             // Result set
             var result = 0;
 
@@ -397,19 +407,24 @@ namespace RepoDb
                 // Create all the parameters
                 DataCommand.CreateParameters(command, properties);
 
+                // Get the function
+                var func = FunctionCache.GetDataCommandParameterSetterFunction<TEntity>(command,
+                    properties);
+
                 // Iterate each entity
                 foreach (var entity in entities)
                 {
                     // Set the values
-                    DataCommand.SetParameters<TEntity>(command, entity, properties);
+                    func(command, entity);
 
                     // Actual Execution
-                    var executeResult = ObjectConverter.DbNullToNull(command.ExecuteScalar());
-
-                    // Set the primary value
                     if (identity != null)
                     {
-                        identity.PropertyInfo.SetValue(entity, executeResult);
+                        identity.PropertyInfo.SetValue(entity, command.ExecuteScalar());
+                    }
+                    else
+                    {
+                        command.ExecuteScalar();
                     }
 
                     // Add to the list
@@ -472,9 +487,6 @@ namespace RepoDb
                 entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
             }
 
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
             // Variables needed
             var identity = IdentityCache.Get<TEntity>();
             var properties = PropertyCache.Get<TEntity>();
@@ -502,6 +514,9 @@ namespace RepoDb
                     .ToList();
             }
 
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
             // Result set
             var result = 0;
 
@@ -514,19 +529,24 @@ namespace RepoDb
                 // Create all the parameters
                 DataCommand.CreateParameters(command, properties);
 
+                // Get the function
+                var func = FunctionCache.GetDataCommandParameterSetterFunction<TEntity>(command,
+                    properties);
+
                 // Iterate each entity
                 foreach (var entity in entities)
                 {
                     // Set the values
-                    DataCommand.SetParameters<TEntity>(command, entity, properties);
+                    func(command, entity);
 
                     // Actual Execution
-                    var executeResult = ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
-
-                    // Set the primary value
                     if (identity != null)
                     {
-                        identity.PropertyInfo.SetValue(entity, executeResult);
+                        identity.PropertyInfo.SetValue(entity, await command.ExecuteScalarAsync());
+                    }
+                    else
+                    {
+                        command.ExecuteScalar();
                     }
 
                     // Add to the list
@@ -619,17 +639,19 @@ namespace RepoDb
                 // Create all the parameters
                 DataCommand.CreateParameters(command, fields);
 
+                // Get the function
+                var func = FunctionCache.GetDataCommandParameterSetterFunction(command,
+                    request.Name,
+                    fields);
+
                 // Iterate each entity
                 foreach (var entity in entities)
                 {
                     // Set the values
-                    DataCommand.SetParameters(command,
-                        request.Name,
-                        entity,
-                        fields);
+                    func(command, entity);
 
                     // Actual Execution
-                    var executeResult = ObjectConverter.DbNullToNull(command.ExecuteScalar());
+                    command.ExecuteScalar();
 
                     // Add to the list
                     result++;
@@ -721,17 +743,19 @@ namespace RepoDb
                 // Create all the parameters
                 DataCommand.CreateParameters(command, fields);
 
+                // Get the function
+                var func = FunctionCache.GetDataCommandParameterSetterFunction(command,
+                    request.Name,
+                    fields);
+
                 // Iterate each entity
                 foreach (var entity in entities)
                 {
                     // Set the values
-                    DataCommand.SetParameters(command,
-                        request.Name,
-                        entity,
-                        fields);
+                    func(command, entity);
 
                     // Actual Execution
-                    var executeResult = ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
+                    await command.ExecuteScalarAsync();
 
                     // Add to the list
                     result++;

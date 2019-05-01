@@ -185,10 +185,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="command">The <see cref="DbCommand"/> object where to set the parameters.</param>
-        /// <param name="entity">The data entity object where the properties (and/or values) will be retrieved.</param>
+        /// <param name="actualProperties">The list of the actual <see cref="ClassProperty"/> objects to be retrived from the data entiy object.</param>
         /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.</returns>
         public static Action<DbCommand, TEntity> GetDataCommandParameterSetterFunction<TEntity>(DbCommand command,
-            TEntity entity,
             IEnumerable<ClassProperty> actualProperties)
             where TEntity : class
         {
