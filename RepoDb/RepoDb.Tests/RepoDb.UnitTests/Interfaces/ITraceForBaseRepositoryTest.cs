@@ -41,7 +41,7 @@ namespace RepoDb.UnitTests.Interfaces
 
         private class BaseRepositoryCustomDbHelper : IDbHelper
         {
-            public IResolver<string, Type> DbTypeResolver => throw new NotImplementedException();
+            public IResolver<string, Type> DbTypeResolver { get; set; }
 
             public IEnumerable<DbField> GetFields(string connectionString, string tableName)
             {

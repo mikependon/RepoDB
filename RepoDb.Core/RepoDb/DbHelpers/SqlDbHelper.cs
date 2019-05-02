@@ -46,6 +46,7 @@ namespace RepoDb.DbHelpers
                     FROM INFORMATION_SCHEMA.COLUMNS C
                     LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU
 	                    ON KCU.TABLE_SCHEMA = C.TABLE_SCHEMA
+	                    AND KCU.TABLE_NAME = C.TABLE_NAME
 	                    AND KCU.COLUMN_NAME = C.COLUMN_NAME
                     LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC
 	                    ON TC.TABLE_SCHEMA = C.TABLE_SCHEMA

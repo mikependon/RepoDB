@@ -358,7 +358,7 @@ namespace RepoDb
 
         #endregion
 
-        #region Helpers
+        #region Helper Methods
 
         /// <summary>
         /// Get the actual list of <see cref="Field"/> objects of the table based on the actual list of <see cref="DbField"/> objects.
@@ -401,7 +401,8 @@ namespace RepoDb
                     {
                         isIdentity = identityProperty.GetUnquotedMappedName().ToLower() == primaryPropery.GetUnquotedMappedName().ToLower();
                     }
-                    return new DbField(primaryPropery.GetUnquotedMappedName(), true, isIdentity, false);
+                    return new DbField(primaryPropery.GetUnquotedMappedName(), true, isIdentity, false,
+                        primaryPropery.PropertyInfo.PropertyType);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
@@ -425,7 +426,8 @@ namespace RepoDb
                     {
                         isPrimary = primaryPropery.GetUnquotedMappedName().ToLower() == identityProperty.GetUnquotedMappedName().ToLower();
                     }
-                    return new DbField(identityProperty.GetUnquotedMappedName(), isPrimary, true, false);
+                    return new DbField(identityProperty.GetUnquotedMappedName(), isPrimary, true, false,
+                        identityProperty.PropertyInfo.PropertyType);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
