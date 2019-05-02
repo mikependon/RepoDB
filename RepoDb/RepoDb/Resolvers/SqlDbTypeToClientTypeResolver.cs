@@ -6,7 +6,7 @@ namespace RepoDb
     /// <summary>
     /// A class used to resolve the SQL Database Types into .NET CLR Types.
     /// </summary>
-    internal class SqlDbTypeToClientTypeResolver : IResolver<string, Type>
+    public class SqlDbTypeToClientTypeResolver : IResolver<string, Type>
     {
         /*
          * Taken:

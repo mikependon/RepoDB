@@ -1,7 +1,7 @@
 ﻿namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// An interfaced used to mark a class to become a resolver.
+    /// An interfaced used to mark a class to become a conversion resolver.
     /// </summary>
     /// <typeparamref name="TInput">The type of the input value.</typeparamref>
     /// <typeparamref name="TResult">The type of the result value.</typeparamref>
