@@ -292,8 +292,16 @@ namespace RepoDb
             }
 
             // Variables needed
+            var databaseType = "BIGINT";
             var insertableFields = fields
                 .Where(f => f.Name.ToLower() != identityField?.Name.ToLower());
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
+                databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType);
+            }
 
             // Build the query
             (queryBuilder ?? new QueryBuilder())
@@ -309,7 +317,7 @@ namespace RepoDb
                 .ParametersFrom(insertableFields)
                 .CloseParen()
                 .End();
-            var result = identityField != null ? "CONVERT(BIGINT, SCOPE_IDENTITY())" : primaryField != null ? primaryField.Name.AsParameter() : "NULL";
+            var result = identityField != null ? string.Concat("CONVERT(", databaseType, ", SCOPE_IDENTITY())") : primaryField != null ? primaryField.Name.AsParameter() : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)

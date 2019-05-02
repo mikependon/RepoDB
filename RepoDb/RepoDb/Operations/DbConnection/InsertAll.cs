@@ -1,4 +1,5 @@
-﻿using RepoDb.Exceptions;
+﻿using RepoDb.Contexts.Execution;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection;
@@ -17,6 +18,25 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
+        #region SubClasses
+
+        private static class InsertAllCommandExecutionContextCache<TEntity>
+            where TEntity : class
+        {
+            private static InsertAllCommandExecutionContext<TEntity> m_context;
+
+            public static InsertAllCommandExecutionContext<TEntity> Get(Func<InsertAllCommandExecutionContext<TEntity>> callback)
+            {
+                if (m_context != null)
+                {
+                    return m_context;
+                }
+                return m_context = callback();
+            }
+        }
+        
+        #endregion
+
         #region InsertAll<TEntity>
 
         /// <summary>
@@ -334,93 +354,92 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            // Variables
-            var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetInsertAllText(request);
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, entities, null);
-                trace.BeforeInsertAll(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
+                // Get the function
+                var callback = new Func<InsertAllCommandExecutionContext<TEntity>>(() =>
                 {
-                    if (cancellableTraceLog.IsThrowException)
+                    // Variables needed
+                    var commandText = CommandTextCache.GetInsertAllText(request);
+                    var fields = FieldCache.Get<TEntity>();
+                    var identity = IdentityCache.Get<TEntity>();
+                    var dbFields = DbFieldCache.Get(connection, request.Name);
+
+                    // Filter the actual fields
+                    if (dbFields != null)
                     {
-                        throw new CancelledExecutionException(commandText);
+                        // Set the identity value
+                        if (identity == null)
+                        {
+                            var dbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                            if (dbField != null)
+                            {
+                                identity = PropertyCache.Get<TEntity>().FirstOrDefault(property =>
+                                    property.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
+                            }
+                        }
+
+                        // Filter the actual properties
+                        fields = fields
+                            .Where(field =>
+                                identity?.GetUnquotedMappedName().ToLower() != field.UnquotedName.ToLower())
+                            .Where(field =>
+                                dbFields.FirstOrDefault(df => df.UnquotedName.ToLower() == field.UnquotedName.ToLower()) != null)
+                            .ToList();
                     }
-                    return 0;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
-            }
 
-            // Variables needed
-            var primary = PrimaryCache.Get<TEntity>();
-            var identity = IdentityCache.Get<TEntity>();
-            var properties = PropertyCache.Get<TEntity>();
-            var dbFields = DbFieldCache.Get(connection, request.Name);
-
-            // Filter the actual fields
-            if (dbFields != null)
-            {
-                // Set the primary value
-                if (primary == null)
-                {
-                    var dbField = dbFields?.FirstOrDefault(f => f.IsPrimary);
-                    if (dbField != null)
+                    // Return the value
+                    return new InsertAllCommandExecutionContext<TEntity>
                     {
-                        primary = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
-                    }
-                }
-                // Set the identity value
-                if (identity == null)
-                {
-                    var dbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-                    if (dbField != null)
-                    {
-                        identity = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
-                    }
-                }
-
-                // Filter the actual properties
-                properties = properties
-                    .Where(property =>
-                        property.IsIdentity() != true)
-                    .Where(property =>
-                        dbFields.FirstOrDefault(df => df.UnquotedName.ToLower() == property.GetUnquotedMappedName().ToLower()) != null)
-                    .ToList();
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Result set
-            var result = 0;
+                        CommandText = commandText,
+                        Identity = identity,
+                        Fields = fields,
+                        Executor = FunctionCache.GetDataCommandParameterSetterFunction<TEntity>(fields)
+                    };
+                });
 
             // Create a command
-            using (var command = (DbCommand)connection.EnsureOpen().CreateCommand(commandText: commandText,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction))
+            using (var command = (DbCommand)connection.EnsureOpen().CreateCommand())
             {
-                // Create all the parameters
-                DataCommand.CreateParameters(command, properties);
+                // Get the context
+                var context = InsertAllCommandExecutionContextCache<TEntity>.Get(callback);
 
-                // Get the function
-                var func = FunctionCache.GetDataCommandParameterSetterFunction<TEntity>(command,
-                    properties);
+                // Set the command properties
+                command.CommandText = context.CommandText;
+                command.CommandType = CommandType.Text;
+                command.Transaction = (DbTransaction)transaction;
+
+                // Before Execution
+                if (trace != null)
+                {
+                    var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
+                    trace.BeforeInsertAll(cancellableTraceLog);
+                    if (cancellableTraceLog.IsCancelled)
+                    {
+                        if (cancellableTraceLog.IsThrowException)
+                        {
+                            throw new CancelledExecutionException(context.CommandText);
+                        }
+                        return 0;
+                    }
+                    context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
+                    entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
+                }
+
+                // Before Execution Time
+                var beforeExecutionTime = DateTime.UtcNow;
+
+                // Result set
+                var result = 0;
 
                 // Iterate each entity
                 foreach (var entity in entities)
                 {
                     // Set the values
-                    func(command, entity);
+                    context.Executor(command, entity);
 
                     // Actual Execution
-                    if (identity != null)
+                    if (context.Identity != null)
                     {
-                        identity.PropertyInfo.SetValue(entity, command.ExecuteScalar());
+                        context.Identity.PropertyInfo.SetValue(entity, command.ExecuteScalar());
                     }
                     else
                     {
@@ -430,17 +449,17 @@ namespace RepoDb
                     // Add to the list
                     result++;
                 }
-            }
 
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterInsertAll(new TraceLog(commandText, entities, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+                // After Execution
+                if (trace != null)
+                {
+                    trace.AfterInsertAll(new TraceLog(context.CommandText, entities, result,
+                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
+                }
 
-            // Return the result
-            return result;
+                // Return the result
+                return result;
+            }
         }
 
         #endregion
@@ -466,83 +485,92 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            // Variables
-            var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetInsertAllText(request);
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, entities, null);
-                trace.BeforeInsertAll(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return 0;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
-            }
-
-            // Variables needed
-            var identity = IdentityCache.Get<TEntity>();
-            var properties = PropertyCache.Get<TEntity>();
-            var dbFields = DbFieldCache.Get(connection, request.Name);
-
-            // Filter the actual fields
-            if (dbFields != null)
-            {
-                // Set the identify value
-                if (identity == null)
-                {
-                    var dbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-                    if (dbField != null)
-                    {
-                        identity = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
-                    }
-                }
-
-                // Filter the actual properties
-                properties = properties
-                    .Where(property =>
-                        property.IsIdentity() != true)
-                    .Where(property =>
-                        dbFields.FirstOrDefault(df => df.UnquotedName.ToLower() == property.GetUnquotedMappedName().ToLower()) != null)
-                    .ToList();
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Result set
-            var result = 0;
-
             // Create a command
-            using (var command = (DbCommand)connection.EnsureOpen().CreateCommand(commandText: commandText,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction))
+            using (var command = (DbCommand)connection.EnsureOpen().CreateCommand())
             {
-                // Create all the parameters
-                DataCommand.CreateParameters(command, properties);
-
                 // Get the function
-                var func = FunctionCache.GetDataCommandParameterSetterFunction<TEntity>(command,
-                    properties);
+                var callback = new Func<InsertAllCommandExecutionContext<TEntity>>(() =>
+                {
+                    // Variables needed
+                    var commandText = CommandTextCache.GetInsertAllText(request);
+                    var fields = FieldCache.Get<TEntity>();
+                    var identity = IdentityCache.Get<TEntity>();
+                    var dbFields = DbFieldCache.Get(connection, request.Name);
+
+                    // Filter the actual fields
+                    if (dbFields != null)
+                    {
+                        // Set the identity value
+                        if (identity == null)
+                        {
+                            var dbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                            if (dbField != null)
+                            {
+                                identity = PropertyCache.Get<TEntity>().FirstOrDefault(property =>
+                                    property.GetUnquotedMappedName().ToLower() == dbField.UnquotedName.ToLower());
+                            }
+                        }
+
+                        // Filter the actual properties
+                        fields = fields
+                            .Where(field =>
+                                identity?.GetUnquotedMappedName().ToLower() != field.UnquotedName.ToLower())
+                            .Where(field =>
+                                dbFields.FirstOrDefault(df => df.UnquotedName.ToLower() == field.UnquotedName.ToLower()) != null)
+                            .ToList();
+                    }
+
+                    // Return the value
+                    return new InsertAllCommandExecutionContext<TEntity>
+                    {
+                        CommandText = commandText,
+                        Identity = identity,
+                        Fields = fields,
+                        Executor = FunctionCache.GetDataCommandParameterSetterFunction<TEntity>(fields)
+                    };
+                });
+
+                // Get the context
+                var context = InsertAllCommandExecutionContextCache<TEntity>.Get(callback);
+
+                // Set the command properties
+                command.CommandText = context.CommandText;
+                command.CommandType = CommandType.Text;
+                command.Transaction = (DbTransaction)transaction;
+
+                // Before Execution
+                if (trace != null)
+                {
+                    var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
+                    trace.BeforeInsertAll(cancellableTraceLog);
+                    if (cancellableTraceLog.IsCancelled)
+                    {
+                        if (cancellableTraceLog.IsThrowException)
+                        {
+                            throw new CancelledExecutionException(context.CommandText);
+                        }
+                        return 0;
+                    }
+                    context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
+                    entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
+                }
+
+                // Before Execution Time
+                var beforeExecutionTime = DateTime.UtcNow;
+
+                // Result set
+                var result = 0;
 
                 // Iterate each entity
                 foreach (var entity in entities)
                 {
                     // Set the values
-                    func(command, entity);
+                    context.Executor(command, entity);
 
                     // Actual Execution
-                    if (identity != null)
+                    if (context.Identity != null)
                     {
-                        identity.PropertyInfo.SetValue(entity, await command.ExecuteScalarAsync());
+                        context.Identity.PropertyInfo.SetValue(entity, await command.ExecuteScalarAsync());
                     }
                     else
                     {
@@ -552,17 +580,17 @@ namespace RepoDb
                     // Add to the list
                     result++;
                 }
-            }
 
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterInsertAll(new TraceLog(commandText, entities, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+                // After Execution
+                if (trace != null)
+                {
+                    trace.AfterInsertAll(new TraceLog(context.CommandText, entities, result,
+                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
+                }
 
-            // Return the result
-            return result;
+                // Return the result
+                return result;
+            }
         }
 
         #endregion
@@ -640,8 +668,7 @@ namespace RepoDb
                 DataCommand.CreateParameters(command, fields);
 
                 // Get the function
-                var func = FunctionCache.GetDataCommandParameterSetterFunction(command,
-                    request.Name,
+                var func = FunctionCache.GetDataCommandParameterSetterFunction(request.Name,
                     fields);
 
                 // Iterate each entity
@@ -744,8 +771,7 @@ namespace RepoDb
                 DataCommand.CreateParameters(command, fields);
 
                 // Get the function
-                var func = FunctionCache.GetDataCommandParameterSetterFunction(command,
-                    request.Name,
+                var func = FunctionCache.GetDataCommandParameterSetterFunction(request.Name,
                     fields);
 
                 // Iterate each entity
@@ -776,7 +802,7 @@ namespace RepoDb
         #endregion
 
         #region Helpers
-
+        
         private static void GuardInsertAll<TEntity>(IEnumerable<TEntity> entities)
         {
             if (entities?.Any() != true)

@@ -184,15 +184,12 @@ namespace RepoDb
         /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="command">The <see cref="DbCommand"/> object where to set the parameters.</param>
-        /// <param name="actualProperties">The list of the actual <see cref="ClassProperty"/> objects to be retrived from the data entiy object.</param>
+        /// <param name="fields">The list of the <see cref="Field"/> objects to be used.</param>
         /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.</returns>
-        public static Action<DbCommand, TEntity> GetDataCommandParameterSetterFunction<TEntity>(DbCommand command,
-            IEnumerable<ClassProperty> actualProperties)
+        public static Action<DbCommand, TEntity> GetDataCommandParameterSetterFunction<TEntity>(IEnumerable<Field> fields)
             where TEntity : class
         {
-            return DataCommandParameterSetterCache<TEntity>.Get(command,
-                actualProperties);
+            return DataCommandParameterSetterCache<TEntity>.Get(fields);
         }
 
         #region DataCommandParameterSetterCache
@@ -202,13 +199,11 @@ namespace RepoDb
         {
             private static Action<DbCommand, TEntity> m_func;
 
-            public static Action<DbCommand, TEntity> Get(DbCommand command,
-                IEnumerable<ClassProperty> actualProperties)
+            public static Action<DbCommand, TEntity> Get(IEnumerable<Field> fields)
             {
                 if (m_func == null)
                 {
-                    m_func = FunctionFactory.GetDataCommandParameterSetterFunction<TEntity>(command,
-                        actualProperties);
+                    m_func = FunctionFactory.GetDataCommandParameterSetterFunction<TEntity>(fields);
                 }
                 return m_func;
             }
@@ -223,19 +218,16 @@ namespace RepoDb
         /// <summary>
         /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
         /// </summary>
-        /// <param name="command">The <see cref="DbCommand"/> object where to set the parameters.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="actualFields">The list of the actual <see cref="Field"/> objects to be retrived from the dynamic object.</param>
-        public static Action<DbCommand, object> GetDataCommandParameterSetterFunction(DbCommand command,
-            string tableName,
+        public static Action<DbCommand, object> GetDataCommandParameterSetterFunction(string tableName,
             IEnumerable<Field> actualFields)
         {
-            var key = string.Concat(command.Connection.ConnectionString, ".", tableName, ".", actualFields.Select(f => f.UnquotedName).Join("."));
+            var key = string.Concat(tableName, ".", actualFields.Select(f => f.UnquotedName).Join("."));
             var func = (Action<DbCommand, object>)null;
             if (m_cache.TryGetValue(key, out func) == false)
             {
-                func = FunctionFactory.GetDataCommandParameterSetterFunction(command,
-                    actualFields);
+                func = FunctionFactory.GetDataCommandParameterSetterFunction(actualFields);
                 m_cache.TryAdd(key, func);
             }
             return func;
