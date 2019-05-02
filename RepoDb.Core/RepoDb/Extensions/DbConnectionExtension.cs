@@ -82,7 +82,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteQuery (Dynamics)
+        #region ExecuteQuery(Dynamics)
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
@@ -151,14 +151,14 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReaderConverter.ToEnumerable(reader, true).ToList();
+                    return DataReader.ToEnumerable(reader, true).ToList();
                 }
             }
         }
 
         #endregion
 
-        #region ExecuteQueryAsync (Dynamics)
+        #region ExecuteQueryAsync(Dynamics)
 
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
@@ -227,7 +227,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return DataReaderConverter.ToEnumerable(reader, true).ToList();
+                    return DataReader.ToEnumerable(reader, true).ToList();
                 }
             }
         }
@@ -310,7 +310,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReaderConverter.ToEnumerable<TEntity>(reader, connection, basedOnFields).ToList();
+                    return DataReader.ToEnumerable<TEntity>(reader, connection, basedOnFields).ToList();
                 }
             }
         }
@@ -393,7 +393,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return DataReaderConverter.ToEnumerable<TEntity>(reader, connection, basedOnFields).ToList();
+                    return DataReader.ToEnumerable<TEntity>(reader, connection, basedOnFields).ToList();
                 }
             }
         }

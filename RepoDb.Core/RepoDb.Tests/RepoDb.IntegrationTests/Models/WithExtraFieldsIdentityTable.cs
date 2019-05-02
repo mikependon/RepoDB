@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace RepoDb.IntegrationTests.Models
 {
-    [Map("[dbo].[IdentityTable]")]
+    [Map("[sc].[IdentityTable]")]
     public class WithExtraFieldsIdentityTable
     {
         /* Normal Fields */

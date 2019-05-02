@@ -2,6 +2,7 @@
 using RepoDb.Reflection;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Dynamic;
@@ -12,30 +13,37 @@ namespace RepoDb
     /// <summary>
     /// A class used to cache the compiled functions.
     /// </summary>
-    public static class FunctionCache
+    internal static class FunctionCache
     {
+        private static ConcurrentDictionary<string, Action<DbCommand, object>> m_cache = new ConcurrentDictionary<string, Action<DbCommand, object>>();
+
+        #region GetDataReaderToDataEntityFunction<TEntity>
+
         /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.
         /// </summary>
         /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <returns>An instance of data entity object.</returns>
-        public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader, IDbConnection connection)
+        /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
+        public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader,
+            IDbConnection connection)
             where TEntity : class
         {
             return GetDataReaderToDataEntityFunction<TEntity>(reader, connection);
         }
 
         /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.
         /// </summary>
         /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
-        /// <returns>An compiled function that is used to cover the <see cref="DbDataReader"/> object into data entity object.</returns>
-        internal static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader, IDbConnection connection, bool basedOnFields = false)
+        /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
+        internal static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader,
+            IDbConnection connection,
+            bool basedOnFields = false)
             where TEntity : class
         {
             if (basedOnFields == false)
@@ -45,34 +53,6 @@ namespace RepoDb
             else
             {
                 return FieldBasedDataReaderToDataEntityFunctionCache<TEntity>.Get(reader, connection);
-            }
-        }
-
-        /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
-        /// </summary>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <returns>An instance of data entity object via dynamics.</returns>
-        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectFunction(DbDataReader reader)
-        {
-            return DataReaderToExpandoObjectFunctionCache.Get(reader);
-        }
-
-        /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
-        /// </summary>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
-        /// <returns>An instance of data entity object via dynamics.</returns>
-        internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectFunction(DbDataReader reader, bool basedOnFields = false)
-        {
-            if (basedOnFields == false)
-            {
-                return DataReaderToExpandoObjectFunctionCache.Get(reader);
-            }
-            else
-            {
-                return FieldBasedDataReaderToExpandoObjectFunctionCache.Get(reader);
             }
         }
 
@@ -122,6 +102,39 @@ namespace RepoDb
 
         #endregion
 
+        #endregion
+
+        #region GetDataReaderToExpandoObjectFunction
+
+        /// <summary>
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
+        /// </summary>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
+        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectFunction(DbDataReader reader)
+        {
+            return DataReaderToExpandoObjectFunctionCache.Get(reader);
+        }
+
+        /// <summary>
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
+        /// </summary>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
+        /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
+        internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectFunction(DbDataReader reader,
+            bool basedOnFields = false)
+        {
+            if (basedOnFields == false)
+            {
+                return DataReaderToExpandoObjectFunctionCache.Get(reader);
+            }
+            else
+            {
+                return FieldBasedDataReaderToExpandoObjectFunctionCache.Get(reader);
+            }
+        }
+
         #region DataReaderToExpandoObjectDelegateCache
 
         private static class DataReaderToExpandoObjectFunctionCache
@@ -159,6 +172,65 @@ namespace RepoDb
                 }
                 return result;
             }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetDataCommandParameterSetterFunction<TEntity>
+
+        /// <summary>
+        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="fields">The list of the <see cref="Field"/> objects to be used.</param>
+        /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.</returns>
+        public static Action<DbCommand, TEntity> GetDataCommandParameterSetterFunction<TEntity>(IEnumerable<Field> fields)
+            where TEntity : class
+        {
+            return DataCommandParameterSetterCache<TEntity>.Get(fields);
+        }
+
+        #region DataCommandParameterSetterCache
+
+        private static class DataCommandParameterSetterCache<TEntity>
+            where TEntity : class
+        {
+            private static Action<DbCommand, TEntity> m_func;
+
+            public static Action<DbCommand, TEntity> Get(IEnumerable<Field> fields)
+            {
+                if (m_func == null)
+                {
+                    m_func = FunctionFactory.GetDataCommandParameterSetterFunction<TEntity>(fields);
+                }
+                return m_func;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetDataCommandParameterSetterFunction(TableName)
+
+        /// <summary>
+        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="actualFields">The list of the actual <see cref="Field"/> objects to be retrived from the dynamic object.</param>
+        public static Action<DbCommand, object> GetDataCommandParameterSetterFunction(string tableName,
+            IEnumerable<Field> actualFields)
+        {
+            var key = string.Concat(tableName, ".", actualFields.Select(f => f.UnquotedName).Join("."));
+            var func = (Action<DbCommand, object>)null;
+            if (m_cache.TryGetValue(key, out func) == false)
+            {
+                func = FunctionFactory.GetDataCommandParameterSetterFunction(actualFields);
+                m_cache.TryAdd(key, func);
+            }
+            return func;
         }
 
         #endregion

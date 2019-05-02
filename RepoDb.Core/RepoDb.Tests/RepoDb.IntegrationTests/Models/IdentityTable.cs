@@ -1,7 +1,9 @@
-﻿using System;
+﻿using RepoDb.Attributes;
+using System;
 
 namespace RepoDb.IntegrationTests.Models
 {
+    [Map("[sc].[IdentityTable]")]
     public class IdentityTable
     {
         public long Id { get; set; }

@@ -273,7 +273,7 @@ namespace RepoDb.IntegrationTests
         #region IdentityTable
 
         /// <summary>
-        /// Creates a list of dynamic objects for [dbo].[IdentityTable].
+        /// Creates a list of dynamic objects for [sc].[IdentityTable].
         /// </summary>
         /// <param name="count">The number of rows.</param>
         /// <returns>A list of dynamic objects.</returns>
@@ -299,7 +299,7 @@ namespace RepoDb.IntegrationTests
         }
 
         /// <summary>
-        /// Creates a list of dynamic objects for [dbo].[IdentityTable] with limited columns.
+        /// Creates a list of dynamic objects for [sc].[IdentityTable] with limited columns.
         /// </summary>
         /// <param name="count">The number of rows.</param>
         /// <returns>A list of dynamic objects.</returns>

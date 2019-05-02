@@ -3,7 +3,7 @@ using System;
 
 namespace RepoDb.IntegrationTests.Models
 {
-    [Map("[dbo].[IdentityTable]")]
+    [Map("[sc].[IdentityTable]")]
     public class LiteIdentityTable
     {
         public long Id { get; set; }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace RepoDb.Interfaces
@@ -14,5 +15,10 @@ namespace RepoDb.Interfaces
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
         IEnumerable<DbField> GetFields(string connectionString, string tableName);
+
+        /// <summary>
+        /// Gets the type resolver used by this <see cref="IDbHelper"/> instance.
+        /// </summary>
+        IResolver<string, Type> DbTypeResolver { get; }
     }
 }

@@ -42,7 +42,7 @@ namespace RepoDb.Extensions
         /// <param name="properties">The list of <see cref="PropertyInfo"/> objects.</param>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
         /// <returns>The object instance itself with the merged values.</returns>
-        private static object Merge(this object obj, IEnumerable<PropertyInfo> properties, QueryGroup queryGroup)
+        public static object Merge(this object obj, IEnumerable<PropertyInfo> properties, QueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             foreach (var property in properties)

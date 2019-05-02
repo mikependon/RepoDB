@@ -52,7 +52,7 @@ namespace RepoDb
             }
 
             // Set the properties
-            m_field = new Field(PropertyInfo.AsField(false));
+            m_field = new Field(PropertyInfo.AsField(false), PropertyInfo.PropertyType);
 
             // Return the value
             return m_field;
@@ -169,6 +169,7 @@ namespace RepoDb
         /*
          * GetDbType
          */
+        private ClientTypeToSqlDbTypeResolver m_clientTypeToSqlDbTypeResolver = new ClientTypeToSqlDbTypeResolver();
         private bool m_isDbTypeWasSet;
         private DbType? m_dbType;
 
@@ -186,7 +187,8 @@ namespace RepoDb
             }
             m_isDbTypeWasSet = true;
             return m_dbType = PropertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                TypeMapper.Get(PropertyInfo.PropertyType.GetUnderlyingType())?.DbType;
+                TypeMapper.Get(PropertyInfo.PropertyType.GetUnderlyingType())?.DbType ??
+                m_clientTypeToSqlDbTypeResolver.Resolve(PropertyInfo.PropertyType);
         }
 
         /*

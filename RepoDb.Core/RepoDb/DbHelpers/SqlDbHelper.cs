@@ -1,5 +1,6 @@
 ﻿using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
@@ -10,6 +11,14 @@ namespace RepoDb.DbHelpers
     /// </summary>
     public class SqlDbHelper : IDbHelper
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="SqlDbHelper"/> class.
+        /// </summary>
+        public SqlDbHelper()
+        {
+            DbTypeResolver = new SqlDbTypeToClientTypeResolver();
+        }
+
         /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table.
         /// </summary>
@@ -25,32 +34,55 @@ namespace RepoDb.DbHelpers
             {
                 // Check for the command type
                 var commandText = @"
-                    WITH Primary_CTE AS
-                    (
-	                    SELECT KCU.COLUMN_NAME AS [ColumnName]
-	                    FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU
-	                    INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC ON TC.CONSTRAINT_NAME = KCU.CONSTRAINT_NAME
-	                    WHERE KCU.TABLE_NAME = @TableName
-		                    AND TC.CONSTRAINT_TYPE = 'PRIMARY KEY'
-                    )
-                    SELECT C.[name]
-	                    , COALESCE(P.is_primary, 0) AS is_primary
-	                    , C.is_identity
-	                    , C.is_nullable
-                    FROM [sys].[columns] C
+                    SELECT C.COLUMN_NAME AS ColumnName
+	                    , CASE WHEN TC.CONSTRAINT_TYPE = 'PRIMARY KEY' THEN
+		                    CONVERT(BIT, 1)
+	                      ELSE
+		                    CONVERT(BIT, 0)
+	                      END AS IsPrimary
+	                    , TMP.is_identity AS IsIdentity
+	                    , TMP.is_nullable AS IsNullable
+	                    , C.DATA_TYPE AS DataType
+                    FROM INFORMATION_SCHEMA.COLUMNS C
+                    LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU
+	                    ON KCU.TABLE_SCHEMA = C.TABLE_SCHEMA
+	                    AND KCU.COLUMN_NAME = C.COLUMN_NAME
+                    LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC
+	                    ON TC.TABLE_SCHEMA = C.TABLE_SCHEMA
+	                    AND TC.TABLE_NAME = C.TABLE_NAME
+	                    AND TC.CONSTRAINT_NAME = KCU.CONSTRAINT_NAME
                     OUTER APPLY
                     (
-	                    SELECT 1 AS is_primary
-	                    FROM Primary_CTE
-	                    WHERE [ColumnName] = C.[name]
-                    ) P
-                    WHERE (C.object_id = OBJECT_ID(@TableName));";
+	                    SELECT SC.name
+		                    , SC.is_identity
+		                    , SC.is_nullable
+	                    FROM [sys].[columns] SC
+	                    INNER JOIN [sys].[tables] ST ON ST.object_id = SC.object_id
+	                    WHERE SC.name = C.COLUMN_NAME
+		                    AND ST.name = C.TABLE_NAME
+                    ) TMP
+                    WHERE
+	                    C.TABLE_SCHEMA = @Schema
+	                    AND C.TABLE_NAME = @TableName;";
+                var schema = "dbo";
+
+                // Get the schema and table name
+                if (tableName.IndexOf(".") > 0)
+                {
+                    var splitted = tableName.Split(".".ToCharArray());
+                    schema = splitted[0].AsUnquoted(true);
+                    tableName = splitted[1].AsUnquoted(true);
+                }
+                else
+                {
+                    tableName = tableName.AsUnquoted();
+                }
 
                 // Open a command
                 using (var dbCommand = connection.EnsureOpen().CreateCommand(commandText))
                 {
                     // Create parameters
-                    dbCommand.CreateParameters(new { TableName = tableName.AsUnquoted() });
+                    dbCommand.CreateParameters(new { Schema = schema, TableName = tableName });
 
                     // Execute and set the result
                     using (var reader = dbCommand.ExecuteReader())
@@ -58,13 +90,19 @@ namespace RepoDb.DbHelpers
                         while (reader.Read())
                         {
                             yield return new DbField(reader.GetString(0),
-                                reader.GetInt32(1) > 0,
+                                reader.GetBoolean(1),
                                 reader.GetBoolean(2),
-                                reader.GetBoolean(3));
+                                reader.GetBoolean(3),
+                                DbTypeResolver.Resolve(reader.GetString(4)));
                         }
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// Gets the type resolver used by this <see cref="SqlDbHelper"/> instance.
+        /// </summary>
+        public IResolver<string, Type> DbTypeResolver { get; }
     }
 }

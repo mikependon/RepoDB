@@ -42,7 +42,7 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public IEnumerable<TEntity> Extract<TEntity>() where TEntity : class
         {
-            var result = DataReaderConverter.ToEnumerable<TEntity>(m_reader, m_connection, false).ToList();
+            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, false).ToList();
 
             // Move to next result
             NextResult();

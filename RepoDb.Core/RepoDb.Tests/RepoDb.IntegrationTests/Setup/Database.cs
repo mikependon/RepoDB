@@ -32,6 +32,9 @@ namespace RepoDb.IntegrationTests.Setup
             // Create the database first
             CreateDatabase();
 
+            // Create the schemas
+            CreateSchemas();
+
             // Create the tables
             CreateTables();
 
@@ -49,6 +52,8 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static string ConnectionStringForRepoDb { get; private set; }
 
+        #region Methods
+
         /// <summary>
         /// Creates a test database for RepoDb.
         /// </summary>
@@ -65,6 +70,14 @@ namespace RepoDb.IntegrationTests.Setup
         }
 
         /// <summary>
+        /// Create the necessary schemas for testing.
+        /// </summary>
+        public static void CreateSchemas()
+        {
+            CreateScSchema();
+        }
+
+        /// <summary>
         /// Create the necessary tables for testing.
         /// </summary>
         public static void CreateTables()
@@ -75,7 +88,7 @@ namespace RepoDb.IntegrationTests.Setup
         }
 
         /// <summary>
-        /// Create the necessary stored procedure for testing.
+        /// Create the necessary stored procedures for testing.
         /// </summary>
         public static void CreateStoredProcedures()
         {
@@ -86,16 +99,39 @@ namespace RepoDb.IntegrationTests.Setup
         }
 
         /// <summary>
-        /// Clean up the target table.
+        /// Clean up all the table.
         /// </summary>
         public static void Cleanup()
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb))
             {
-                var commandText = "DELETE FROM [dbo].[CompleteTable]; DELETE FROM [dbo].[IdentityTable]; DELETE FROM [dbo].[NonIdentityTable];";
-                connection.ExecuteNonQuery(commandText);
+                connection.Truncate("[dbo].[CompleteTable]");
+                connection.Truncate("[sc].[IdentityTable]");
+                connection.Truncate("[dbo].[NonIdentityTable]");
             }
         }
+
+        #endregion
+
+        #region CreateSchemas
+
+        /// <summary>
+        /// Creates the 'sc' schema.
+        /// </summary>
+        public static void CreateScSchema()
+        {
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[schemas] WHERE name = 'sc';");
+                if (exists == null)
+                {
+                    connection.ExecuteNonQuery("CREATE SCHEMA [sc];");
+                }
+            }
+
+        }
+
+        #endregion
 
         #region CreateTables
 
@@ -106,7 +142,7 @@ namespace RepoDb.IntegrationTests.Setup
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'IdentityTable'))
                 BEGIN
-	                CREATE TABLE [dbo].[IdentityTable]
+	                CREATE TABLE [sc].[IdentityTable]
 	                (
 		                [Id] BIGINT NOT NULL IDENTITY(1, 1),
                         [RowGuid] UNIQUEIDENTIFIER NOT NULL,
@@ -117,10 +153,6 @@ namespace RepoDb.IntegrationTests.Setup
 		                [ColumnFloat] FLOAT NULL,
 		                [ColumnInt] INT NULL,
 		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
-		                CONSTRAINT [IdentityTable_$Id] PRIMARY KEY 
-		                (
-			                [Id] ASC
-		                )
 	                ) ON [PRIMARY];
                 END";
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
@@ -231,7 +263,7 @@ namespace RepoDb.IntegrationTests.Setup
                     var commandText = @"CREATE PROCEDURE [dbo].[sp_get_identity_tables]
 	                    AS
                         BEGIN
-                            SELECT * FROM [dbo].[IdentityTable];
+                            SELECT * FROM [sc].[IdentityTable];
                         END";
                     connection.ExecuteNonQuery(commandText);
                 }
@@ -254,7 +286,7 @@ namespace RepoDb.IntegrationTests.Setup
                         )
 	                    AS
                         BEGIN
-                            SELECT * FROM [dbo].[IdentityTable] WHERE Id = @Id;
+                            SELECT * FROM [sc].[IdentityTable] WHERE Id = @Id;
                         END";
                     connection.ExecuteNonQuery(commandText);
                 }

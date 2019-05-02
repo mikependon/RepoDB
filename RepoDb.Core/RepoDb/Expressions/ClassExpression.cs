@@ -1,4 +1,4 @@
-﻿using RepoDb.Enumerations;
+﻿using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,28 +12,82 @@ namespace RepoDb
     /// </summary>
     public static partial class ClassExpression
     {
+        #region GetProperties
+
         /// <summary>
-        /// Extracts the class properties to become an enumerable of property values.
+        /// Gets the properties of the class.
         /// </summary>
-        /// <typeparam name="TEntity">The target type of the class.</typeparam>
-        /// <param name="obj">The object to be extracted.</param>
-        /// <returns>The extracted values.</returns>
-        public static IEnumerable<PropertyValue> GetPropertiesAndValues<TEntity>(TEntity obj)
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <returns>The properties of the class.</returns>
+        public static IEnumerable<ClassProperty> GetProperties<TEntity>()
             where TEntity : class
         {
-            return ClassPropertyValuesExtractor<TEntity>.Extract(obj);
+            return GetPropertiesExtractor<TEntity>.Extract();
         }
 
         /// <summary>
-        /// Extracts the class properties to become an enumerable of property values.
+        /// Gets a function used to extract the properties of a class.
+        /// </summary>
+        /// <typeparam name="T">The target type.</typeparam>
+        /// <returns>The properties of the class.</returns>
+        private static Func<IEnumerable<ClassProperty>> GetCompiledFunctionForGetProperties<T>()
+            where T : class
+        {
+            // Variables type (Command.None is preloaded everywhere)
+            var properties = DataEntityExtension.GetProperties<T>();
+
+            // Set the body
+            var body = Expression.Constant(properties);
+
+            // Set the function value
+            return Expression
+                .Lambda<Func<IEnumerable<ClassProperty>>>(body)
+                .Compile();
+        }
+
+        private static class GetPropertiesExtractor<T>
+            where T : class
+        {
+            private static readonly Func<IEnumerable<ClassProperty>> m_func;
+
+            static GetPropertiesExtractor()
+            {
+                m_func = GetCompiledFunctionForGetProperties<T>();
+            }
+
+            public static IEnumerable<ClassProperty> Extract()
+            {
+                return m_func();
+            }
+        }
+
+        #endregion
+
+        #region GetPropertiesAndValues
+
+        /// <summary>
+        /// Extract the class properties and values and returns an enumerable of <see cref="PropertyValue"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The target type of the class.</typeparam>
         /// <param name="obj">The object to be extracted.</param>
-        /// <returns>The extracted values.</returns>
+        /// <returns>A list of <see cref="PropertyValue"/> object with extracted values.</returns>
+        public static IEnumerable<PropertyValue> GetPropertiesAndValues<TEntity>(TEntity obj)
+            where TEntity : class
+        {
+            return ClassPropertiesValuesExtractor<TEntity>.Extract(obj);
+        }
+
+        /// <summary>
+        /// Extract the class properties and values and returns an enumerable of <see cref="PropertyValue"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The target type of the class.</typeparam>
+        /// <param name="obj">The object to be extracted.</param>
+        /// <returns>A list of <see cref="PropertyValue"/> object with extracted values.</returns>
+        [Obsolete("Use the 'GetPropertiesAndValues' method.")]
         public static IEnumerable<PropertyValue> Extract<TEntity>(TEntity obj)
             where TEntity : class
         {
-            return ClassPropertyValuesExtractor<TEntity>.Extract(obj);
+            return ClassPropertiesValuesExtractor<TEntity>.Extract(obj);
         }
 
         /// <summary>
@@ -41,7 +95,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="properties">The list of properties.</param>
         /// <returns>The enumerable value of class property values.</returns>
-        private static Func<T, IEnumerable<PropertyValue>> GetCompiledFunctionForClassPropertyValuesExtractor<T>(IEnumerable<ClassProperty> properties)
+        private static Func<T, IEnumerable<PropertyValue>> GetCompiledFunctionForClassPropertiesValuesExtractor<T>(IEnumerable<ClassProperty> properties)
             where T : class
         {
             // Expressions
@@ -74,15 +128,13 @@ namespace RepoDb
                 .Compile();
         }
 
-        #region Extractor
-
-        private static class ClassPropertyValuesExtractor<T> where T : class
+        private static class ClassPropertiesValuesExtractor<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ClassPropertyValuesExtractor()
+            static ClassPropertiesValuesExtractor()
             {
-                m_func = GetCompiledFunctionForClassPropertyValuesExtractor<T>(PropertyCache.Get<T>());
+                m_func = GetCompiledFunctionForClassPropertiesValuesExtractor<T>(PropertyCache.Get<T>());
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)

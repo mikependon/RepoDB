@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.9.2</version>
+    <version>1.9.3</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -11,24 +11,15 @@
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
-      RepoDb v1.9.2:
-      - [Core] Introduce the 'InsertAll', different from 'InsertMultiple'. #91
-      - [Core] Return the number of affected rows during 'BulkInsert' for DbDataReader. #192
-      - [Core] Add a 'SetParameters' extended methods for 'DbCommand' object. #196
-      - [Core, Requested] Re-enable the operation for DELETE via DataEntity object. #185
-      - [Core, Requested] Re-enable the operation for UPDATE via DataEntity object. #188
-      - [Core, Requested] Add support to exclude non-table Class Properties in all Operations. #189
-      - [Adhoc, Requested] Expose the DataEntityDataReader Class. #172
-      - [Adhoc, Requested] Expose the QueryGroup.Fix() method. #179
-      - [Adhoc] Revisit the 'async Task' in all 'DbRepository' methods. #190
-      - [Adhoc] Add a new repository method named ‘EnsureOpenAsync’. #111
-      - [Test] Add an extensive IntegrationTests for the Entity with Extra Fields. #183
-      - [Test] Add all UnitTests for Trace call for all Async operations. #193
-      - [Test] Add UnitTest for InsertAll. #194
-      - [Test] Add IntegrationTests for InsertAll. #195
-      - [Test] Add more extensive UnitTest for IN, NOT IN, BETWEEN, NOT BETWEEN, LIKE and NOT LIKE operations. #186
-      - [Test] Add extensive IntegrationTests for ConnectionPersistency. #191
-      - [Enhancement] Auto-set the 'PrimaryField' value of the object after calling the 'Insert&lt;T&gt;' operation. #187
+      RepoDb v1.9.3:
+      - [Enhancement, Performance] InsertAll Compiled Expressions
+      - [Enhancement] Revisits the DbField for Primary and Identity Columns. #182
+      - [Enhancement] Add the IdentityDbField in both Merge and Update SqlStatementBuilder. #198
+      - [Enhancement] Rename the DataReaderConverter to DataReader. #200
+      - [Added] IConversionResolver
+      - [Added] ClientTypeToSqlDbTypeResolver
+      - [Added] SqlDbTypeToClientTypeResolver
+      - [Added] SqlDbTypeToStringNameResolver
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

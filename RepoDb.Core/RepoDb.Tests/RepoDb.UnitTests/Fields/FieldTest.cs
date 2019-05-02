@@ -44,7 +44,7 @@ namespace RepoDb.UnitTests.Fields
             var fields = (string)null;
 
             // Act/Assert
-            Field.From(fields);
+            Field.From(fields).ToList();
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -54,7 +54,7 @@ namespace RepoDb.UnitTests.Fields
             var fields = new[] { "" };
 
             // Act/Assert
-            Field.From(fields);
+            Field.From(fields).ToList();
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -64,7 +64,7 @@ namespace RepoDb.UnitTests.Fields
             var fields = new[] { " " };
 
             // Act/Assert
-            Field.From(fields);
+            Field.From(fields).ToList();
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -74,17 +74,17 @@ namespace RepoDb.UnitTests.Fields
             var fields = new[] { "Field1", null, "Field3" };
 
             // Act/Assert
-            Field.From(fields);
+            Field.From(fields).ToList();
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterHasEmpty()
+        public void ThrowExceptionOnFieldFromIfAnyOfTheParameterIsEmpty()
         {
             // Prepare
             var fields = new[] { "Field1", "", "Field3" };
 
             // Act/Assert
-            Field.From(fields);
+            Field.From(fields).ToList();
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -94,7 +94,7 @@ namespace RepoDb.UnitTests.Fields
             var fields = new[] { "Field1", " ", "Field3" };
 
             // Act/Assert
-            Field.From(fields);
+            Field.From(fields).ToList();
         }
     }
 }

@@ -46,7 +46,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -76,7 +76,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param);
 
                 // Assert
@@ -106,7 +106,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -136,7 +136,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -163,7 +163,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -190,7 +190,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -217,7 +217,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -248,7 +248,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -278,7 +278,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param).Result;
 
                 // Assert
@@ -308,7 +308,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -338,7 +338,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -365,7 +365,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -392,7 +392,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -419,7 +419,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -450,7 +450,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -475,7 +475,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param);
 
                 // Assert
@@ -500,7 +500,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -525,7 +525,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -547,7 +547,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -569,7 +569,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -591,7 +591,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -617,7 +617,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -642,7 +642,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param).Result;
 
                 // Assert
@@ -667,7 +667,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -692,7 +692,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -714,7 +714,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -736,7 +736,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -758,7 +758,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -784,11 +784,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -818,11 +818,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -852,11 +852,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -886,11 +886,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -917,11 +917,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -948,11 +948,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -979,11 +979,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param))
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -1014,11 +1014,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -1048,11 +1048,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -1082,11 +1082,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -1116,11 +1116,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -1147,11 +1147,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -1178,11 +1178,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -1209,11 +1209,11 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result)
                 {
                     // Extract the reader
-                    var result = DataReaderConverter.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
+                    var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection);
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
@@ -1244,7 +1244,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -1269,7 +1269,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     (object)param);
 
                 // Assert
@@ -1294,7 +1294,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -1319,7 +1319,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -1341,7 +1341,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -1363,7 +1363,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -1385,7 +1385,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -1411,7 +1411,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert
@@ -1436,7 +1436,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     (object)param).Result;
 
                 // Assert
@@ -1461,7 +1461,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert
@@ -1486,7 +1486,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert
@@ -1508,7 +1508,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert
@@ -1530,7 +1530,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert
@@ -1552,7 +1552,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert
@@ -1582,7 +1582,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -1612,7 +1612,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param);
 
                 // Assert
@@ -1642,7 +1642,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -1672,7 +1672,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -1699,7 +1699,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -1726,7 +1726,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -1753,7 +1753,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -1784,7 +1784,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -1814,7 +1814,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param).Result;
 
                 // Assert
@@ -1844,7 +1844,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -1874,7 +1874,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -1901,7 +1901,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -1928,7 +1928,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -1955,7 +1955,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -1986,7 +1986,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -2011,7 +2011,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param);
 
                 // Assert
@@ -2036,7 +2036,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -2061,7 +2061,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -2083,7 +2083,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -2105,7 +2105,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -2127,7 +2127,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQuery("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -2153,7 +2153,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -2178,7 +2178,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param).Result;
 
                 // Assert
@@ -2203,7 +2203,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -2228,7 +2228,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -2250,7 +2250,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -2272,7 +2272,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -2294,7 +2294,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteNonQueryAsync("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                var result = repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param).Result;
 
                 // Assert
@@ -2320,7 +2320,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -2345,7 +2345,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     (object)param);
 
                 // Assert
@@ -2370,7 +2370,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -2395,7 +2395,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -2417,7 +2417,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -2439,7 +2439,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -2461,7 +2461,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalar<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param);
 
                 // Assert
@@ -2487,7 +2487,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert
@@ -2512,7 +2512,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     (object)param).Result;
 
                 // Assert
@@ -2537,7 +2537,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert
@@ -2562,7 +2562,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert
@@ -2584,7 +2584,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert
@@ -2606,7 +2606,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert
@@ -2628,7 +2628,7 @@ namespace RepoDb.IntegrationTests
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [dbo].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
+                var result = repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
                     param).Result;
 
                 // Assert

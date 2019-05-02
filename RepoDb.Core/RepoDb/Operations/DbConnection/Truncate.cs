@@ -26,8 +26,8 @@ namespace RepoDb
         /// <returns>The number of rows affected.</returns>
         public static int Truncate<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
-            ITrace trace = null,
             IDbTransaction transaction = null,
+            ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {

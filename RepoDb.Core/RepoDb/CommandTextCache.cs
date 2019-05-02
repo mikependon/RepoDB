@@ -148,10 +148,13 @@ namespace RepoDb
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
                 commandText = statementBuilder.CreateInsert(new QueryBuilder(),
                     request.Name,
                     fields,
-                    GetPrimaryField(request));
+                    primaryField,
+                    identityField);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -173,10 +176,13 @@ namespace RepoDb
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
                 commandText = statementBuilder.CreateInsert(new QueryBuilder(),
                     request.Name,
                     fields,
-                    GetPrimaryField(request));
+                    primaryField,
+                    identityField);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -198,11 +204,14 @@ namespace RepoDb
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
                 commandText = statementBuilder.CreateMerge(new QueryBuilder(),
                     request.Name,
                     fields,
                     request.Qualifiers,
-                    GetPrimaryField(request));
+                    primaryField,
+                    identityField);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -334,11 +343,14 @@ namespace RepoDb
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
                 commandText = statementBuilder.CreateUpdate(new QueryBuilder(),
                     request.Name,
                     fields,
                     request.Where,
-                    GetPrimaryField(request));
+                    primaryField,
+                    identityField);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -349,12 +361,12 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Gets the list of <see cref="Field"/> objects based on the actual list of <see cref="DbField"/> objects.
+        /// Get the actual list of <see cref="Field"/> objects of the table based on the actual list of <see cref="DbField"/> objects.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="fields">The target name of the table.</param>
         /// <param name="tableName">The list of fields from the data entity object.</param>
-        /// <returns>The list of actual <see cref="Field"/> objects of the table.</returns>
+        /// <returns>The actual list of <see cref="Field"/> objects of the table.</returns>
         private static IEnumerable<Field> GetActualFields(IDbConnection connection, string tableName, IEnumerable<Field> fields)
         {
             if (fields?.Any() != true)
@@ -381,21 +393,42 @@ namespace RepoDb
             if (request.Type != null)
             {
                 var primaryPropery = PrimaryCache.Get(request.Type);
-                var isIdentity = false;
                 if (primaryPropery != null)
                 {
-                    isIdentity = IdentityCache.Get(request.Type) != null;
-                    if (isIdentity == false)
+                    var identityProperty = IdentityCache.Get(request.Type);
+                    var isIdentity = false;
+                    if (identityProperty != null)
                     {
-                        isIdentity = DbFieldCache
-                            .Get(request.Connection, request.Name)?
-                            .FirstOrDefault(f => f.IsPrimary)?
-                            .IsIdentity == true;
+                        isIdentity = identityProperty.GetUnquotedMappedName().ToLower() == primaryPropery.GetUnquotedMappedName().ToLower();
                     }
                     return new DbField(primaryPropery.GetUnquotedMappedName(), true, isIdentity, false);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
+        }
+
+        /// <summary>
+        /// Gets the identity <see cref="DbField"/> object.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The identity <see cref="DbField"/> object.</returns>
+        private static DbField GetIdentityField(BaseRequest request)
+        {
+            if (request.Type != null)
+            {
+                var identityProperty = IdentityCache.Get(request.Type);
+                if (identityProperty != null)
+                {
+                    var primaryPropery = PrimaryCache.Get(request.Type);
+                    var isPrimary = false;
+                    if (primaryPropery != null)
+                    {
+                        isPrimary = primaryPropery.GetUnquotedMappedName().ToLower() == identityProperty.GetUnquotedMappedName().ToLower();
+                    }
+                    return new DbField(identityProperty.GetUnquotedMappedName(), isPrimary, true, false);
+                }
+            }
+            return DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
         }
 
         /// <summary>
