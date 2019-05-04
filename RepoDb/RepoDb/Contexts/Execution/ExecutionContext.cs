@@ -3,7 +3,7 @@
     /// <summary>
     /// A base class for all execution context.
     /// </summary>
-    internal abstract class CommandExecutionContext
+    internal abstract class ExecutionContext
     {
         /// <summary>
         /// The execution command text.

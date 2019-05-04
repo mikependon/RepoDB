@@ -105,7 +105,8 @@ namespace RepoDb
         {
             foreach (var property in PropertyCache.Get<TEntity>())
             {
-                yield return new Field(PropertyMappedNameCache.Get(property.PropertyInfo, false));
+                yield return new Field(PropertyMappedNameCache.Get(property.PropertyInfo, false),
+                    property.PropertyInfo.PropertyType);
             }
         }
 
@@ -118,7 +119,8 @@ namespace RepoDb
         {
             foreach (var property in obj.GetType().GetProperties())
             {
-                yield return new Field(PropertyMappedNameCache.Get(property, false));
+                yield return new Field(PropertyMappedNameCache.Get(property, false),
+                    property.PropertyType);
             }
         }
 

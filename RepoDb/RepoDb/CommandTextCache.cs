@@ -178,9 +178,10 @@ namespace RepoDb
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields);
                 var primaryField = GetPrimaryField(request);
                 var identityField = GetIdentityField(request);
-                commandText = statementBuilder.CreateInsert(new QueryBuilder(),
+                commandText = statementBuilder.CreateInsertAll(new QueryBuilder(),
                     request.Name,
                     fields,
+                    request.BatchSize,
                     primaryField,
                     identityField);
                 m_cache.TryAdd(request, commandText);

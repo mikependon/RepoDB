@@ -163,24 +163,25 @@ namespace RepoDb
         /// Appends a stringified fields and parameters to the SQL Query Statement.
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
+        /// <param name="index">The parameter index.</param>
         /// <param name="prefix">The prefix to the parameters.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndParametersFrom<TEntity>(string prefix)
+        public QueryBuilder FieldsAndParametersFrom<TEntity>(int index = 0, string prefix = Constant.DefaultParameterPrefix)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
-            return Append(fields?.AsFieldsAndParameters(prefix).Join(", "));
+            return Append(FieldCache.Get<TEntity>()?.AsFieldsAndParameters(index, prefix).Join(", "));
         }
 
         /// <summary>
         /// Appends a stringified fields and parameters to the SQL Query Statement.
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
+        /// <param name="index">The parameter index.</param>
         /// <param name="prefix">The prefix to the parameters.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndParametersFrom(IEnumerable<Field> fields, string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder FieldsAndParametersFrom(IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return Append(fields?.AsFieldsAndParameters(prefix).Join(", "));
+            return Append(fields?.AsFieldsAndParameters(index, prefix).Join(", "));
         }
 
         /// <summary>
@@ -254,11 +255,12 @@ namespace RepoDb
         /// Appends a word HAVING COUNT and a conditional field to the SQL Query Statement.
         /// </summary>
         /// <param name="queryField">The conditional field object used for composition.</param>
+        /// <param name="index">The parameter index.</param>
         /// <param name="prefix">The prefix to the parameters.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder HavingCountFrom(QueryField queryField, string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder HavingCountFrom(QueryField queryField, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return Append(string.Concat("HAVING COUNT(", queryField.Field.Name, ") ", queryField.GetOperationText(), ", ", queryField.AsParameter(prefix)));
+            return Append(string.Concat("HAVING COUNT(", queryField.Field.Name, ") ", queryField.GetOperationText(), ", ", queryField.AsParameter(index, prefix)));
         }
 
         /// <summary>
@@ -411,48 +413,51 @@ namespace RepoDb
         /// Append the mapped properpties name to the SQL Query Statement.
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
+        /// <param name="index">The parameter index.</param>
         /// <param name="prefix">The prefix to the parameters.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersFrom<TEntity>(string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder ParametersFrom<TEntity>(int index = 0, string prefix = Constant.DefaultParameterPrefix)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
-            return Append(fields?.AsParameters(prefix).Join(", "));
+            return ParametersFrom(FieldCache.Get<TEntity>(), index, prefix);
         }
 
         /// <summary>
         /// Append the stringified field parameters to the SQL Query Statement.
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
+        /// <param name="index">The parameter index.</param>
         /// <param name="prefix">The prefix to the parameters.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersFrom(IEnumerable<Field> fields, string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder ParametersFrom(IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return Append(fields?.AsParameters(prefix).Join(", "));
+            return Append(fields?.AsParameters(index, prefix).Join(", "));
         }
 
         /// <summary>
         /// Append the stringified parameter as fields to the SQL Query Statement.
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
+        /// <param name="index">The parameter index.</param>
         /// <param name="prefix">The prefix to the parameters.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersAsFieldsFrom<TEntity>(string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder ParametersAsFieldsFrom<TEntity>(int index = 0, string prefix = Constant.DefaultParameterPrefix)
             where TEntity : class
         {
             var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
-            return Append(fields?.AsParametersAsFields(prefix).Join(", "));
+            return Append(fields?.AsParametersAsFields(index, prefix).Join(", "));
         }
 
         /// <summary>
         /// Append the stringified parameter as fields to the SQL Query Statement.
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
+        /// <param name="index">The parameter index.</param>
         /// <param name="prefix">The prefix to the parameters.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersAsFieldsFrom(IEnumerable<Field> fields, string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder ParametersAsFieldsFrom(IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return Append(fields?.AsParametersAsFields(prefix).Join(", "));
+            return Append(fields?.AsParametersAsFields(index, prefix).Join(", "));
         }
 
         /// <summary>

@@ -57,11 +57,12 @@
     <Compile Include="BulkInsertMapItem.cs" />
     <Compile Include="CommandArrayParameter.cs" />
     <Compile Include="CommandParameter.cs" />
-    <Compile Include="Contexts\Execution\CommandExecutionContext.cs" />
-    <Compile Include="Contexts\Execution\InsertAllCommandExecutionContext.cs" />
+    <Compile Include="Contexts\Execution\ExecutionContext.cs" />
+    <Compile Include="Contexts\Execution\InsertAllExecutionContext.cs" />
     <Compile Include="DbHelperMapper.cs" />
     <Compile Include="Enumerations\ConversionType.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
+    <Compile Include="Contexts\Execution\InsertAllExecutionContextCache.cs" />
     <Compile Include="Expressions\ClassExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
     <Compile Include="ClassProperty.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Exceptions\InvalidQualiferFieldsException.cs" />
     <Compile Include="Exceptions\ParameterNotFoundException.cs" />
     <Compile Include="Extensions\DbFieldExtension.cs" />
+    <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Interfaces\IConversionResolver.cs" />
     <Compile Include="Operations\BaseRepository\CountAll.cs" />
     <Compile Include="Operations\BaseRepository\InsertAll.cs" />
