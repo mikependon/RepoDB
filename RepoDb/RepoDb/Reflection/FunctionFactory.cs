@@ -429,9 +429,10 @@ namespace RepoDb.Reflection
             body.Add(Expression.Call(parameterCollection, dbParameterCollectionClearMethod));
 
             // Reusable function for input/output fields
-            var func = new Func<int, Expression, Expression, Field, bool, ParameterDirection, Expression>((int index,
+            var func = new Func<int, Expression, Expression, Expression, Field, bool, ParameterDirection, Expression>((int index,
                 Expression instance,
                 Expression instanceType,
+                Expression property,
                 Field field,
                 bool skipValueAssignment,
                 ParameterDirection direction) =>
@@ -464,13 +465,8 @@ namespace RepoDb.Reflection
                     // If the property is missing directly, then it could be a dynamic object
                     if (instanceProperty == null)
                     {
-                        var instanceVariable = Expression.Variable(typeOfObject,
-                           string.Concat("objectValue", field.UnquotedName, index > 0 ? index.ToString() : string.Empty));
-                        var objectType = Expression.Call(instanceVariable, objectGetTypeMethod);
-                        var objectProperty = Expression.Call(objectType, typeGetPropertyMethod, Expression.Constant(field.UnquotedName));
-                        value = Expression.Block(new[] { instanceVariable },
-                            Expression.Assign(instanceVariable, instance),
-                            Expression.Call(objectProperty, propertyInfoGetValueMethod, instanceVariable));
+                        //var objectProperty = Expression.Call(instanceType, typeGetPropertyMethod, Expression.Constant(field.UnquotedName));
+                        value = Expression.Call(property, propertyInfoGetValueMethod, instance);
                     }
                     else
                     {
@@ -539,15 +535,38 @@ namespace RepoDb.Reflection
             {
                 // Get the current instance
                 var instance = Expression.Call(entitiesParameter, listIndexerMethod, Expression.Constant(index));
-                var objectType = Expression.Call(instance, objectGetTypeMethod);
+                var instanceVariable = Expression.Variable(typeOfEntity, string.Concat("instance", index));
+                var instanceType = Expression.Call(instanceVariable, objectGetTypeMethod);
+                var instanceExpressions = new List<Expression>();
+
+                // Add the assignment
+                instanceExpressions.Add(Expression.Assign(instanceVariable, instance));
 
                 // Iterate the input fields
                 if (inputFields != null)
                 {
                     foreach (var field in inputFields)
                     {
-                        var inputFieldsExpression = func(index, instance, objectType, field, false, ParameterDirection.Input);
-                        body.Add(inputFieldsExpression);
+                        // Declare the proper field property accessor
+                        var propertyVariable = Expression.Variable(typeOfPropertyInfo, string.Concat("property", field.UnquotedName, index > 0 ? index.ToString() : string.Empty));
+                        var instanceProperty = Expression.Call(instanceType, typeGetPropertyMethod, Expression.Constant(field.UnquotedName));
+
+                        // Execute the function
+                        var inputFieldsExpression = func(index /* index */,
+                            instanceVariable /* instance */,
+                            instanceType /* instanceType */,
+                            instanceProperty /* property */,
+                            field /* field */,
+                            false /* skipValueAssignment */,
+                            ParameterDirection.Input /* direction */);
+
+                        // Add the property block
+                        var propertyBlock = Expression.Block(new[] { propertyVariable },
+                            Expression.Assign(propertyVariable, instanceProperty),
+                            inputFieldsExpression);
+
+                        // Add to instance expression
+                        instanceExpressions.Add(propertyBlock);
                     }
                 }
 
@@ -556,10 +575,35 @@ namespace RepoDb.Reflection
                 {
                     foreach (var field in outputFields)
                     {
-                        var outputFieldsExpression = func(index, instance, objectType, field, true, ParameterDirection.Output);
-                        body.Add(outputFieldsExpression);
+                        // Declare the proper field property accessor
+                        var propertyVariable = Expression.Variable(typeOfPropertyInfo, string.Concat("property", field.UnquotedName, index > 0 ? index.ToString() : string.Empty));
+                        var instanceProperty = Expression.Call(instanceType, typeGetPropertyMethod, Expression.Constant(field.UnquotedName));
+
+                        // Execute the function
+                        var outputFieldsExpression = func(index /* index */,
+                            instanceVariable /* instance */,
+                            instanceType /* instanceType */,
+                            propertyVariable /* property */,
+                            field /* field */,
+                            true /* skipValueAssignment */,
+                            ParameterDirection.Output /* direction */);
+
+                        // Add the property block
+                        var propertyBlock = Expression.Block(new[] { propertyVariable },
+                            Expression.Assign(propertyVariable, instanceProperty),
+                            outputFieldsExpression);
+
+                        // Add to instance expression
+                        instanceExpressions.Add(propertyBlock);
                     }
                 }
+
+                // Add to the instance block
+                var instanceBlock = Expression.Block(new[] { instanceVariable },
+                    instanceExpressions);
+
+                // Add to the body
+                body.Add(instanceBlock);
             }
 
             // Set the function value
