@@ -57,7 +57,6 @@
     <Compile Include="BulkInsertMapItem.cs" />
     <Compile Include="CommandArrayParameter.cs" />
     <Compile Include="CommandParameter.cs" />
-    <Compile Include="Contexts\Execution\ExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertAllExecutionContext.cs" />
     <Compile Include="DbHelperMapper.cs" />
     <Compile Include="Enumerations\ConversionType.cs" />

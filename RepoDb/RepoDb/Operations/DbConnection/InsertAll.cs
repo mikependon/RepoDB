@@ -19,24 +19,6 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region SubClasses
-
-        //private static class InsertAllCommandExecutionContextCache
-        //{
-        //    private static ConcurrentDictionary<string, >
-
-        //    public static InsertAllCommandExecutionContext<TEntity> Get<TEntity>(Func<InsertAllCommandExecutionContext<TEntity>> callback)
-        //    {
-        //        if (m_context != null)
-        //        {
-        //            return m_context;
-        //        }
-        //        return m_context = callback();
-        //    }
-        //}
-
-        #endregion
-
         #region InsertAll<TEntity>
 
         /// <summary>
@@ -844,10 +826,10 @@ namespace RepoDb
 
         #endregion
 
-        #region InsertAllInternalBase(TableName)
+        #region InsertAllAsyncInternalBase(TableName)
 
         /// <summary>
-        /// Inserts multiple data in the database.
+        /// Inserts multiple data in the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="InsertAllRequest"/> object.</param>

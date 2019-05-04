@@ -8,9 +8,14 @@ namespace RepoDb.Contexts.Execution
     /// An execution context class used by insert-all operation.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-    internal class InsertAllExecutionContext<TEntity> : ExecutionContext
+    internal class InsertAllExecutionContext<TEntity>
         where TEntity : class
     {
+        /// <summary>
+        /// The execution command text.
+        /// </summary>
+        public string CommandText { get; set; }
+
         /// <summary>
         /// The identity class property.
         /// </summary>
