@@ -178,22 +178,23 @@ namespace RepoDb
 
         #endregion
 
-        #region GetDataCommandParameterSetterFunction<TEntity>
+        #region GetDataCommandParameterSetterFunction
 
         /// <summary>
         /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="key">The key to the cache.</param>
         /// <param name="inputFields">The list of the input <see cref="Field"/> objects to be used.</param>
         /// <param name="outputFields">The list of the output <see cref="Field"/> objects to be used.</param>
         /// <param name="batchSize">The batch size of the entity to be passed.</param>
         /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.</returns>
-        public static Action<DbCommand, IList<TEntity>> GetDataCommandParameterSetterFunction<TEntity>(IEnumerable<Field> inputFields,
+        public static Action<DbCommand, IList<TEntity>> GetDataCommandParameterSetterFunction<TEntity>(string key,
+            IEnumerable<Field> inputFields,
             IEnumerable<Field> outputFields,
             int batchSize)
             where TEntity : class
         {
-            return DataCommandParameterSetterCache<TEntity>.Get(inputFields, outputFields, batchSize);
+            return DataCommandParameterSetterCache<TEntity>.Get(key, inputFields, outputFields, batchSize);
         }
 
         #region DataCommandParameterSetterCache
@@ -204,12 +205,13 @@ namespace RepoDb
             private static ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>> m_cache =
                 new ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>>();
 
-            public static Action<DbCommand, IList<TEntity>> Get(IEnumerable<Field> inputFields, IEnumerable<Field> outputFields, int batchSize)
+            public static Action<DbCommand, IList<TEntity>> Get(string key,
+                IEnumerable<Field> inputFields,
+                IEnumerable<Field> outputFields,
+                int batchSize)
             {
-                var key = string.Concat(typeof(TEntity).FullName, ".",
-                    inputFields.Select(field => field.UnquotedName).Join("."), ".",
-                    outputFields?.Select(field => field.UnquotedName).Join("."), ".",
-                    batchSize);
+                key = string.Concat(key, ".", inputFields.Select(field => field.UnquotedName).Join("."), ".",
+                   outputFields?.Select(field => field.UnquotedName).Join("."), ".", batchSize);
                 var func = (Action<DbCommand, IList<TEntity>>)null;
                 if (m_cache.TryGetValue(key, out func) == false)
                 {
