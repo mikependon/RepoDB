@@ -16,7 +16,7 @@ namespace SqlDbParameterPerformanceNetFramework
         static void Main(string[] args)
         {
             TypeMapper.Map(typeof(DateTime), DbType.DateTime2);
-            var iterations = 20;
+            var iterations = 10;
             var rows = 100;
             Excercise();
             //InsertViaRepoDb(1, 10);
@@ -71,7 +71,7 @@ namespace SqlDbParameterPerformanceNetFramework
                 for (var i = 0; i < iterations; i++)
                 {
                     stopwatch.Start();
-                    connection.InsertAll(identityTables);
+                    connection.InsertAll(identityTables, 1);
                     stopwatch.Stop();
                     milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
                     stopwatch.Reset();

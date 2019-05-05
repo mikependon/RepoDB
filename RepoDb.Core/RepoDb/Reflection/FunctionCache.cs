@@ -178,18 +178,23 @@ namespace RepoDb
 
         #endregion
 
-        #region GetDataCommandParameterSetterFunction<TEntity>
+        #region GetDataCommandParameterSetterFunction
 
         /// <summary>
         /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="fields">The list of the <see cref="Field"/> objects to be used.</param>
+        /// <param name="key">The key to the cache.</param>
+        /// <param name="inputFields">The list of the input <see cref="Field"/> objects to be used.</param>
+        /// <param name="outputFields">The list of the output <see cref="Field"/> objects to be used.</param>
+        /// <param name="batchSize">The batch size of the entity to be passed.</param>
         /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.</returns>
-        public static Action<DbCommand, TEntity> GetDataCommandParameterSetterFunction<TEntity>(IEnumerable<Field> fields)
+        public static Action<DbCommand, IList<TEntity>> GetDataCommandParameterSetterFunction<TEntity>(string key,
+            IEnumerable<Field> inputFields,
+            IEnumerable<Field> outputFields,
+            int batchSize)
             where TEntity : class
         {
-            return DataCommandParameterSetterCache<TEntity>.Get(fields);
+            return DataCommandParameterSetterCache<TEntity>.Get(key, inputFields, outputFields, batchSize);
         }
 
         #region DataCommandParameterSetterCache
@@ -197,41 +202,27 @@ namespace RepoDb
         private static class DataCommandParameterSetterCache<TEntity>
             where TEntity : class
         {
-            private static Action<DbCommand, TEntity> m_func;
+            private static ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>> m_cache =
+                new ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>>();
 
-            public static Action<DbCommand, TEntity> Get(IEnumerable<Field> fields)
+            public static Action<DbCommand, IList<TEntity>> Get(string key,
+                IEnumerable<Field> inputFields,
+                IEnumerable<Field> outputFields,
+                int batchSize)
             {
-                if (m_func == null)
+                key = string.Concat(key, ".", inputFields.Select(field => field.UnquotedName).Join("."), ".",
+                   outputFields?.Select(field => field.UnquotedName).Join("."), ".", batchSize);
+                var func = (Action<DbCommand, IList<TEntity>>)null;
+                if (m_cache.TryGetValue(key, out func) == false)
                 {
-                    m_func = FunctionFactory.GetDataCommandParameterSetterFunction<TEntity>(fields);
+                    func = FunctionFactory.GetDataCommandParameterSetterFunction<TEntity>(inputFields, outputFields, batchSize);
+                    m_cache.TryAdd(key, func);
                 }
-                return m_func;
+                return func;
             }
         }
 
         #endregion
-
-        #endregion
-
-        #region GetDataCommandParameterSetterFunction(TableName)
-
-        /// <summary>
-        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
-        /// </summary>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="actualFields">The list of the actual <see cref="Field"/> objects to be retrived from the dynamic object.</param>
-        public static Action<DbCommand, object> GetDataCommandParameterSetterFunction(string tableName,
-            IEnumerable<Field> actualFields)
-        {
-            var key = string.Concat(tableName, ".", actualFields.Select(f => f.UnquotedName).Join("."));
-            var func = (Action<DbCommand, object>)null;
-            if (m_cache.TryGetValue(key, out func) == false)
-            {
-                func = FunctionFactory.GetDataCommandParameterSetterFunction(actualFields);
-                m_cache.TryAdd(key, func);
-            }
-            return func;
-        }
 
         #endregion
     }

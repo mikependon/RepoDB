@@ -390,7 +390,7 @@ namespace RepoDb
                 .Clear();
 
             // Iterate the indexes
-            for (var i = 0; i < batchSize; i++)
+            for (var index = 0; index < batchSize; index++)
             {
                 queryBuilder.Insert()
                     .Into()
@@ -400,14 +400,14 @@ namespace RepoDb
                     .CloseParen()
                     .Values()
                     .OpenParen()
-                    .ParametersFrom(insertableFields, i)
+                    .ParametersFrom(insertableFields, index)
                     .CloseParen()
                     .End();
 
                 // Set the return field
                 if (identityField != null)
                 {
-                    var returnValue = string.Concat(identityField.UnquotedName.AsParameter(i), " = ",
+                    var returnValue = string.Concat(identityField.UnquotedName.AsParameter(index), " = ",
                         "CONVERT(", databaseType, ", SCOPE_IDENTITY())");
                     queryBuilder
                         .Set()

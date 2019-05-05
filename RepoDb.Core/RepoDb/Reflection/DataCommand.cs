@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using RepoDb.Extensions;
+using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 
 namespace RepoDb.Reflection
 {
@@ -31,42 +33,25 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="command">The <see cref="DbCommand"/> object where to set the parameters.</param>
-        /// <param name="entity">The data entity object where the properties (and/or values) will be retrieved.</param>
-        /// <param name="fields">The list of the <see cref="ClassProperty"/> objects to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of the data entity objects.</param>
+        /// <param name="inputFields">The list of the input <see cref="Field"/> objects to be used.</param>
+        /// <param name="outputFields">The list of the output <see cref="Field"/> objects to be used.</param>
         public static void SetParameters<TEntity>(DbCommand command,
-            TEntity entity,
-            IEnumerable<Field> fields)
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field> inputFields,
+            IEnumerable<Field> outputFields)
             where TEntity : class
         {
             // Get the actual function
-            var func = FunctionCache.GetDataCommandParameterSetterFunction<TEntity>(fields);
+            var func = FunctionCache.GetDataCommandParameterSetterFunction<TEntity>(tableName,
+                inputFields,
+                outputFields,
+                entities.Count());
 
             // Execute the function
-            func(command, entity);
-        }
-
-        #endregion
-
-        #region SetParameters(TableName)
-
-        /// <summary>
-        /// Set the parameters (and/or values) of the <see cref="DbCommand"/> object based on the passed dynamic object.
-        /// </summary>
-        /// <param name="command">The <see cref="DbCommand"/> object where to set the parameters.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="entity">The dynamic object where the properties (and/or values) will be retrieved.</param>
-        /// <param name="fields">The list of the <see cref="Field"/> objects to be retrived from the dynamic object.</param>
-        public static void SetParameters(DbCommand command,
-            string tableName,
-            object entity,
-            IEnumerable<Field> fields)
-        {
-            // Get the actual function
-            var func = FunctionCache.GetDataCommandParameterSetterFunction(tableName,
-                fields);
-
-            // Execute the function
-            func(command, entity);
+            func(command, entities.AsList());
         }
 
         #endregion

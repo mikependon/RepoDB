@@ -18,9 +18,11 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public int InsertAll<TEntity>(IEnumerable<TEntity> entities,
+            int batchSize = Constant.DefaultBatchInsertSize,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -31,6 +33,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.InsertAll<TEntity>(entities: entities,
+                    batchSize: batchSize,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -57,9 +60,11 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public async Task<int> InsertAllAsync<TEntity>(IEnumerable<TEntity> entities,
+            int batchSize = Constant.DefaultBatchInsertSize,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -70,6 +75,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.InsertAllAsync<TEntity>(entities: entities,
+                    batchSize: batchSize,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -96,12 +102,14 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The dynamic objects to be inserted.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used. Defaulted to database table fields.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public int InsertAll(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> fields = null,
+            int batchSize = Constant.DefaultBatchInsertSize,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -113,6 +121,7 @@ namespace RepoDb
                 return connection.InsertAll(tableName: tableName,
                     entities: entities,
                     fields: fields,
+                    batchSize: batchSize,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -140,11 +149,13 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The dynamic objects to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/>s to be used. Defaulted to database table fields.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public async Task<int> InsertAllAsync(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> fields = null,
+            int batchSize = Constant.DefaultBatchInsertSize,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -156,6 +167,7 @@ namespace RepoDb
                 return await connection.InsertAllAsync(tableName: tableName,
                     entities: entities,
                     fields: fields,
+                    batchSize: batchSize,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,

@@ -25,9 +25,10 @@ namespace RepoDb.Extensions
         }
 
         // AsParameter
-        private static string AsParameter(this Field field, string prefix = Constant.DefaultParameterPrefix)
+        private static string AsParameter(this Field field, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return field.Name.AsQuotedParameter(true, prefix);
+            return index > 0 ? string.Concat(prefix, field.UnquotedName, "_", index) :
+                string.Concat(prefix, field.UnquotedName);
         }
 
         // AsAliasField
@@ -37,15 +38,15 @@ namespace RepoDb.Extensions
         }
 
         // AsParameterAsField
-        private static string AsParameterAsField(this Field field, string prefix = Constant.DefaultParameterPrefix)
+        private static string AsParameterAsField(this Field field, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Concat(AsParameter(field, prefix), " AS ", AsField(field));
+            return string.Concat(AsParameter(field, index, prefix), " AS ", AsField(field));
         }
 
         // AsFieldAndParameter
-        private static string AsFieldAndParameter(this Field field, string prefix = Constant.DefaultParameterPrefix)
+        private static string AsFieldAndParameter(this Field field, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Concat(AsField(field), " = ", AsParameter(field, prefix));
+            return string.Concat(AsField(field), " = ", AsParameter(field, index, prefix));
         }
 
         // AsFieldAndAliasField
@@ -69,9 +70,9 @@ namespace RepoDb.Extensions
         }
 
         // AsParameters
-        internal static IEnumerable<string> AsParameters(this IEnumerable<Field> fields, string prefix = Constant.DefaultParameterPrefix)
+        internal static IEnumerable<string> AsParameters(this IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return fields?.Select(field => field.AsParameter(prefix));
+            return fields?.Select(field => field.AsParameter(index, prefix));
         }
 
         // AsAliasFields
@@ -81,15 +82,15 @@ namespace RepoDb.Extensions
         }
 
         // AsParametersAsFields
-        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<Field> fields, string prefix = Constant.DefaultParameterPrefix)
+        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return fields?.Select(field => field.AsParameterAsField(prefix));
+            return fields?.Select(field => field.AsParameterAsField(index, prefix));
         }
 
         // AsFieldsAndParameters
-        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<Field> fields, string prefix = Constant.DefaultParameterPrefix)
+        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return fields?.Select(field => field.AsFieldAndParameter(prefix));
+            return fields?.Select(field => field.AsFieldAndParameter(index, prefix));
         }
 
         // AsFieldsAndAliasFields

@@ -24,7 +24,7 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             DbRepository.InsertAll<TEntity>(entities: entities,
-                    batchSize: batchSize,
+                batchSize: batchSize,
                 transaction: transaction);
         }
 

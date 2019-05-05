@@ -1,3 +1,4 @@
+using RepoDb.Extensions;
 using RepoDb.Reflection;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public IEnumerable<TEntity> Extract<TEntity>() where TEntity : class
         {
-            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, false).ToList();
+            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, false).AsList();
 
             // Move to next result
             NextResult();

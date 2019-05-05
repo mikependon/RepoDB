@@ -330,6 +330,98 @@ namespace RepoDb
 
         #endregion
 
+        #region CreateInsertAll
+
+        /// <summary>
+        /// Creates a SQL Statement for insert-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        public string CreateInsertAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
+            int batchSize = Constant.DefaultBatchInsertSize,
+            DbField primaryField = null,
+            DbField identityField = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
+
+            // Verify the fields
+            if (fields == null || fields?.Any() != true)
+            {
+                throw new NullReferenceException($"The list of insertable fields must not be null for '{tableName}'.");
+            }
+
+            // Ensure the primary is on the list if it is not an identity
+            if (primaryField != null)
+            {
+                if (primaryField != identityField)
+                {
+                    var isPresent = fields.FirstOrDefault(f => f.Name.ToLower() == primaryField.Name.ToLower()) != null;
+                    if (isPresent == false)
+                    {
+                        throw new InvalidOperationException("The non-identity primary field must be present during insert operation.");
+                    }
+                }
+            }
+
+            // Variables needed
+            var databaseType = "BIGINT";
+            var insertableFields = fields
+                .Where(f => f.Name.ToLower() != identityField?.Name.ToLower());
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
+                databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType);
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear();
+
+            // Iterate the indexes
+            for (var index = 0; index < batchSize; index++)
+            {
+                queryBuilder.Insert()
+                    .Into()
+                    .TableNameFrom(tableName)
+                    .OpenParen()
+                    .FieldsFrom(insertableFields)
+                    .CloseParen()
+                    .Values()
+                    .OpenParen()
+                    .ParametersFrom(insertableFields, index)
+                    .CloseParen()
+                    .End();
+
+                // Set the return field
+                if (identityField != null)
+                {
+                    var returnValue = string.Concat(identityField.UnquotedName.AsParameter(index), " = ",
+                        "CONVERT(", databaseType, ", SCOPE_IDENTITY())");
+                    queryBuilder
+                        .Set()
+                        .WriteText(returnValue)
+                        .End();
+                }
+            }
+
+            // Return the query
+            return queryBuilder.GetString();
+        }
+
+        #endregion
+
         #region CreateMerge
 
         /// <summary>

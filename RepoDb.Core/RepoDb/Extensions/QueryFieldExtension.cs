@@ -29,9 +29,9 @@ namespace RepoDb.Extensions
         }
 
         // AsParameter
-        internal static string AsParameter(this QueryField queryField, string prefix = Constant.DefaultParameterPrefix)
+        internal static string AsParameter(this QueryField queryField, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return queryField.Parameter.Name.AsParameter(prefix);
+            return queryField.Parameter.Name.AsParameter(index, prefix);
         }
 
         // AsParameterAsField
@@ -41,20 +41,21 @@ namespace RepoDb.Extensions
         }
 
         // AsBetweenParameter
-        internal static string AsBetweenParameter(this QueryField queryField, string prefix = Constant.DefaultParameterPrefix)
+        internal static string AsBetweenParameter(this QueryField queryField, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Concat(queryField.Parameter.Name.AsParameter(prefix), "_Left AND ", queryField.Parameter.Name.AsParameter(prefix), "_Right");
+            return string.Concat(queryField.Parameter.Name.AsParameter(index, prefix), "_Left AND ", queryField.Parameter.Name.AsParameter(index, prefix), "_Right");
         }
 
         // AsInParameter
-        internal static string AsInParameter(this QueryField queryField, string prefix = Constant.DefaultParameterPrefix)
+        internal static string AsInParameter(this QueryField queryField, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
             var array = ((Array)queryField.Parameter.Value);
-            var value = array
+            var values = array
                 .OfType<object>()
-                .Select((qf, i) => string.Concat(queryField.Parameter.Name.AsParameter(prefix), "_In_", i))
+                .Select((value, valueIndex) =>
+                    string.Concat(queryField.Parameter.Name.AsParameter(index, prefix), "_In_", valueIndex))
                 .Join(", ");
-            return string.Concat("(", value, ")");
+            return string.Concat("(", values, ")");
         }
 
         // AsFieldAndParameter

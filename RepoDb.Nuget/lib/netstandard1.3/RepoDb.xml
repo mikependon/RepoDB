@@ -802,27 +802,23 @@
             primary key property is not present.
             </returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InsertAll(System.Collections.Generic.IEnumerable{`0},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InsertAll(System.Collections.Generic.IEnumerable{`0},System.Int32,System.Data.IDbTransaction)">
             <summary>
             Inserts multiple data in the database.
             </summary>
             <param name="entities">The data entity objects to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <param name="batchSize">The batch size of the insertion.</param>
+            <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InsertAllAsync(System.Collections.Generic.IEnumerable{`0},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InsertAllAsync(System.Collections.Generic.IEnumerable{`0},System.Int32,System.Data.IDbTransaction)">
             <summary>
             Inserts multiple data in the database in an asynchronous way.
             </summary>
             <param name="entities">The data entity objects to be inserted.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The number of inserted rows.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.Merge(`0,System.Data.IDbTransaction)">
             <summary>
@@ -1288,51 +1284,6 @@
             </summary>
             <param name="throwException">If true, an exception will be thrown.</param>
         </member>
-        <member name="T:RepoDb.ClassExpression">
-            <summary>
-            A class used for manipulating class objects via expressions.
-            </summary>
-            <summary>
-            A class used for manipulating class objects via expressions.
-            </summary>
-        </member>
-        <member name="M:RepoDb.ClassExpression.GetProperties``1">
-            <summary>
-            Gets the properties of the class.
-            </summary>
-            <typeparam name="TEntity">The target type.</typeparam>
-            <returns>The properties of the class.</returns>
-        </member>
-        <member name="M:RepoDb.ClassExpression.GetCompiledFunctionForClassPropertiesExtractor``1">
-            <summary>
-            Gets a function used to extract the properties of a class.
-            </summary>
-            <typeparam name="T">The target type.</typeparam>
-            <returns>The properties of the class.</returns>
-        </member>
-        <member name="M:RepoDb.ClassExpression.GetPropertiesAndValues``1(``0)">
-            <summary>
-            Extracts the class properties to become an enumerable of property values.
-            </summary>
-            <typeparam name="TEntity">The target type of the class.</typeparam>
-            <param name="obj">The object to be extracted.</param>
-            <returns>The extracted values.</returns>
-        </member>
-        <member name="M:RepoDb.ClassExpression.Extract``1(``0)">
-            <summary>
-            Extracts the class properties to become an enumerable of property values.
-            </summary>
-            <typeparam name="TEntity">The target type of the class.</typeparam>
-            <param name="obj">The object to be extracted.</param>
-            <returns>The extracted values.</returns>
-        </member>
-        <member name="M:RepoDb.ClassExpression.GetCompiledFunctionForClassPropertyValuesExtractor``1(System.Collections.Generic.IEnumerable{RepoDb.ClassProperty})">
-            <summary>
-            Gets a function that returns the list of property values of the class.
-            </summary>
-            <param name="properties">The list of properties.</param>
-            <returns>The enumerable value of class property values.</returns>
-        </member>
         <member name="T:RepoDb.ClassMappedNameCache">
             <summary>
             A class used to cache the mapped-name for the entity.
@@ -1618,12 +1569,12 @@
         </member>
         <member name="M:RepoDb.CommandTextCache.GetActualFields(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
-            Gets the list of <see cref="T:RepoDb.Field"/> objects based on the actual list of <see cref="T:RepoDb.DbField"/> objects.
+            Get the actual list of <see cref="T:RepoDb.Field"/> objects of the table based on the actual list of <see cref="T:RepoDb.DbField"/> objects.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="fields">The target name of the table.</param>
             <param name="tableName">The list of fields from the data entity object.</param>
-            <returns>The list of actual <see cref="T:RepoDb.Field"/> objects of the table.</returns>
+            <returns>The actual list of <see cref="T:RepoDb.Field"/> objects of the table.</returns>
         </member>
         <member name="M:RepoDb.CommandTextCache.GetPrimaryField(RepoDb.Requests.BaseRequest)">
             <summary>
@@ -1631,6 +1582,13 @@
             </summary>
             <param name="request">The request object.</param>
             <returns>The primary <see cref="T:RepoDb.DbField"/> object.</returns>
+        </member>
+        <member name="M:RepoDb.CommandTextCache.GetIdentityField(RepoDb.Requests.BaseRequest)">
+            <summary>
+            Gets the identity <see cref="T:RepoDb.DbField"/> object.
+            </summary>
+            <param name="request">The request object.</param>
+            <returns>The identity <see cref="T:RepoDb.DbField"/> object.</returns>
         </member>
         <member name="M:RepoDb.CommandTextCache.EnsureStatementBuilder(System.Data.IDbConnection,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1645,6 +1603,11 @@
             A class that holds the constant values for <see cref="N:RepoDb"/> library.
             </summary>
         </member>
+        <member name="F:RepoDb.Constant.DefaultBatchInsertSize">
+            <summary>
+            The default value of the batch insert size.
+            </summary>
+        </member>
         <member name="F:RepoDb.Constant.DefaultCacheItemExpirationInMinutes">
             <summary>
             The default value of the cache expiration in minutes.
@@ -1654,6 +1617,56 @@
             <summary>
             The default prefix to the parameters.
             </summary>
+        </member>
+        <member name="T:RepoDb.Contexts.Execution.InsertAllExecutionContext`1">
+            <summary>
+            An execution context class used by insert-all operation.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity.</typeparam>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.CommandText">
+            <summary>
+            The execution command text.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.Identity">
+            <summary>
+            The identity class property.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.InputFields">
+            <summary>
+            The list of the input <see cref="T:RepoDb.Field"/> objects to be included in the execution.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.OutputFields">
+            <summary>
+            The list of the output <see cref="T:RepoDb.Field"/> objects to be included in the execution.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.BatchSize">
+            <summary>
+            The batch size of the execution.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.Execute">
+            <summary>
+            The actual compiled function.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Contexts.Execution.InsertAllExecutionContextCache`1">
+            <summary>
+            A class used to cache the context of the insert-all executions.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity.</typeparam>
+        </member>
+        <member name="M:RepoDb.Contexts.Execution.InsertAllExecutionContextCache`1.Get(System.Int32,System.Func{System.Int32,RepoDb.Contexts.Execution.InsertAllExecutionContext{`0}})">
+            <summary>
+            Gets the cached execution context.
+            </summary>
+            <param name="batchSize">The batch size of the operation.</param>
+            <param name="callback">The callback function to be invoked.</param>
+            <returns>The instance of the cached execution context.</returns>
         </member>
         <member name="T:RepoDb.DataEntityDataReader`1">
             <summary>
@@ -1969,7 +1982,7 @@
             A class the holds the column definition of the database table columns.
             </summary>
         </member>
-        <member name="M:RepoDb.DbField.#ctor(System.String,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:RepoDb.DbField.#ctor(System.String,System.Boolean,System.Boolean,System.Boolean,System.Type)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.DbField"/> object.
             </summary>
@@ -1998,6 +2011,47 @@
             <summary>
             Gets the value whether the column is nullable.
             </summary>
+        </member>
+        <member name="P:RepoDb.DbField.Type">
+            <summary>
+            Gets the .NET type of the column.
+            </summary>
+        </member>
+        <member name="M:RepoDb.DbField.GetHashCode">
+            <summary>
+            Returns the hashcode for this <see cref="T:RepoDb.DbField"/>.
+            </summary>
+            <returns>The hashcode value.</returns>
+        </member>
+        <member name="M:RepoDb.DbField.Equals(System.Object)">
+            <summary>
+            Compares the <see cref="T:RepoDb.DbField"/> object equality against the given target object.
+            </summary>
+            <param name="obj">The object to be compared to the current object.</param>
+            <returns>True if the instances are equals.</returns>
+        </member>
+        <member name="M:RepoDb.DbField.Equals(RepoDb.DbField)">
+            <summary>
+            Compares the <see cref="T:RepoDb.DbField"/> object equality against the given target object.
+            </summary>
+            <param name="other">The object to be compared to the current object.</param>
+            <returns>True if the instances are equal.</returns>
+        </member>
+        <member name="M:RepoDb.DbField.op_Equality(RepoDb.DbField,RepoDb.DbField)">
+            <summary>
+            Compares the equality of the two <see cref="T:RepoDb.DbField"/> objects.
+            </summary>
+            <param name="objA">The first <see cref="T:RepoDb.DbField"/> object.</param>
+            <param name="objB">The second <see cref="T:RepoDb.DbField"/> object.</param>
+            <returns>True if the instances are equal.</returns>
+        </member>
+        <member name="M:RepoDb.DbField.op_Inequality(RepoDb.DbField,RepoDb.DbField)">
+            <summary>
+            Compares the inequality of the two <see cref="T:RepoDb.DbField"/> objects.
+            </summary>
+            <param name="objA">The first <see cref="T:RepoDb.DbField"/> object.</param>
+            <param name="objB">The second <see cref="T:RepoDb.DbField"/> object.</param>
+            <returns>True if the instances are not equal.</returns>
         </member>
         <member name="T:RepoDb.DbFieldCache">
             <summary>
@@ -2067,6 +2121,11 @@
             A helper class for database specially for the direct access. This class is only meant for SQL Server.
             </summary>
         </member>
+        <member name="M:RepoDb.DbHelpers.SqlDbHelper.#ctor">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.DbHelpers.SqlDbHelper"/> class.
+            </summary>
+        </member>
         <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFields(System.String,System.String)">
             <summary>
             Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
@@ -2074,6 +2133,11 @@
             <param name="connectionString">The connection string to connect to.</param>
             <param name="tableName">The name of the target table.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
+        </member>
+        <member name="P:RepoDb.DbHelpers.SqlDbHelper.DbTypeResolver">
+            <summary>
+            Gets the type resolver used by this <see cref="T:RepoDb.DbHelpers.SqlDbHelper"/> instance.
+            </summary>
         </member>
         <member name="T:RepoDb.DbIdentityCache">
             <summary>
@@ -3162,41 +3226,45 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>The value of the primary key of the newly inserted data.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InsertAll``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InsertAll``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Data.IDbTransaction)">
             <summary>
             Inserts multiple data in the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entities">The data entity objects to be inserted.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InsertAllAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InsertAllAsync``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Data.IDbTransaction)">
             <summary>
             Inserts multiple data in the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entities">The data entity objects to be inserted.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InsertAll(System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InsertAll(System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Data.IDbTransaction)">
             <summary>
             Inserts multiple data in the database.
             </summary>
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entities">The dynamic objects to be inserted.</param>
-            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used. Defaulted to database table fields.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InsertAllAsync(System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InsertAllAsync(System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Data.IDbTransaction)">
             <summary>
             Inserts multiple data in the database in an asynchronous way.
             </summary>
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entities">The dynamic objects to be inserted.</param>
             <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used. Defaulted to database table fields.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="transaction">The transaction to be used.</param>
             <returns>The number of inserted rows.</returns>
         </member>
@@ -4322,6 +4390,48 @@
             </summary>
             <param name="message">The exception message.</param>
         </member>
+        <member name="T:RepoDb.ClassExpression">
+            <summary>
+            A class used for manipulating class objects via expressions.
+            </summary>
+        </member>
+        <member name="M:RepoDb.ClassExpression.GetProperties``1">
+            <summary>
+            Gets the properties of the class.
+            </summary>
+            <typeparam name="TEntity">The target type.</typeparam>
+            <returns>The properties of the class.</returns>
+        </member>
+        <member name="M:RepoDb.ClassExpression.GetCompiledFunctionForGetProperties``1">
+            <summary>
+            Gets a function used to extract the properties of a class.
+            </summary>
+            <typeparam name="T">The target type.</typeparam>
+            <returns>The properties of the class.</returns>
+        </member>
+        <member name="M:RepoDb.ClassExpression.GetPropertiesAndValues``1(``0)">
+            <summary>
+            Extract the class properties and values and returns an enumerable of <see cref="T:RepoDb.PropertyValue"/> object.
+            </summary>
+            <typeparam name="TEntity">The target type of the class.</typeparam>
+            <param name="obj">The object to be extracted.</param>
+            <returns>A list of <see cref="T:RepoDb.PropertyValue"/> object with extracted values.</returns>
+        </member>
+        <member name="M:RepoDb.ClassExpression.Extract``1(``0)">
+            <summary>
+            Extract the class properties and values and returns an enumerable of <see cref="T:RepoDb.PropertyValue"/> object.
+            </summary>
+            <typeparam name="TEntity">The target type of the class.</typeparam>
+            <param name="obj">The object to be extracted.</param>
+            <returns>A list of <see cref="T:RepoDb.PropertyValue"/> object with extracted values.</returns>
+        </member>
+        <member name="M:RepoDb.ClassExpression.GetCompiledFunctionForClassPropertiesValuesExtractor``1(System.Collections.Generic.IEnumerable{RepoDb.ClassProperty})">
+            <summary>
+            Gets a function that returns the list of property values of the class.
+            </summary>
+            <param name="properties">The list of properties.</param>
+            <returns>The enumerable value of class property values.</returns>
+        </member>
         <member name="T:RepoDb.Extensions.ArrayExtension">
             <summary>
             Contains the extension methods for <see cref="T:System.Array"/> object.
@@ -4552,6 +4662,36 @@
             </summary>
             <param name="dbFields">The <see cref="T:RepoDb.DbField"/> to be converted.</param>
             <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> list of <see cref="T:RepoDb.Field"/> object.</returns>
+        </member>
+        <member name="T:RepoDb.Extensions.EnumerableExtension">
+            <summary>
+            An extension class for <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Extensions.EnumerableExtension.Split``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Split the enumerable into multiple enumerables.
+            </summary>
+            <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
+            <param name="value">The actual enumerable instance.</param>
+            <param name="sizePerSplit">The sizes of the items per split.</param>
+            <returns>An enumerable of enumerables.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.EnumerableExtension.AsList``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Converts the <see cref="T:System.Collections.Generic.IEnumerable`1"/> object into a <see cref="T:System.Collections.Generic.IList`1"/> of objects.
+            </summary>
+            <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
+            <param name="value">The actual enumerable instance.</param>
+            <returns>The converted <see cref="T:System.Collections.Generic.IList`1"/> object.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.EnumerableExtension.AsArray``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Converts the <see cref="T:System.Collections.Generic.IEnumerable`1"/> object into an array of objects.
+            </summary>
+            <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
+            <param name="value">The actual enumerable instance.</param>
+            <returns>The converted <see cref="T:System.Collections.Generic.IList`1"/> object.</returns>
         </member>
         <member name="T:RepoDb.Extensions.ExpressionExtension">
             Though we know that throwing an exception in the extension is not advisable, but I tend to do it to ensure that the
@@ -5047,12 +5187,14 @@
             <param name="parameters">The list of parameters.</param>
             <returns>The first non-null object.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.ObjectExtension.IsDecimal(System.Object)">
+        <member name="M:RepoDb.Extensions.ObjectExtension.Coalesce``1(System.Object,``0[])">
             <summary>
-            Identify whether an object is a decimal.
+            Returns the first non-defaulted occurence.
             </summary>
-            <param name="value">The value to be identified.</param>
-            <returns>True if the value is a decimal.</returns>
+            <typeparam name="T">The target type of the object.</typeparam>
+            <param name="obj">The current object.</param>
+            <param name="parameters">The list of parameters.</param>
+            <returns>The first non-defaulted object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.ObjectExtension.ToNumber(System.Object)">
             <summary>
@@ -5320,15 +5462,6 @@
             </summary>
             <param name="value">The string value where the database quotes will be added.</param>
             <returns></returns>
-        </member>
-        <member name="M:RepoDb.Extensions.StringExtension.AsQuotedParameter(System.String,System.Boolean,System.String)">
-            <summary>
-            Set the string to be a database parameterized string.
-            </summary>
-            <param name="value">The target string to be quoted.</param>
-            <param name="trim">True if to trim the string first.</param>
-            <param name="prefix">The prefix to the parameter.</param>
-            <returns>A parameterized quoted string.</returns>
         </member>
         <member name="T:RepoDb.Extensions.TypeExtension">
             <summary>
@@ -7568,73 +7701,78 @@
             primary key property is not present.
             </returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAll``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAll``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts multiple data in the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity objects.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="entities">The data entity objects to be inserted.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAllInternal``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllInternal``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts multiple data in the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="entities">The data entity objects to be inserted.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts multiple data in the database in asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="entities">The data entity objects to be inserted.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsyncInternal``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsyncInternal``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts multiple data in the database in asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="entities">The data entity objects to be inserted.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAll(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAll(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts multiple data in the database.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entities">The dynamic objects to be inserted.</param>
-            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used. Defaulted to database table fields.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAllInternal(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllInternal(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts multiple data in the database (certain fields only).
             </summary>
@@ -7642,27 +7780,14 @@
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entities">The dynamic objects to be inserted.</param>
             <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsync(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Inserts multiple data in the database in an asynchronous way.
-            </summary>
-            <param name="connection">The connection object to be used.</param>
-            <param name="tableName">The name of the target table to be used.</param>
-            <param name="entities">The dynamic objects to be inserted.</param>
-            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used. Defaulted to database table fields.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used.</param>
-            <param name="transaction">The transaction to be used.</param>
-            <param name="trace">The trace object to be used.</param>
-            <param name="statementBuilder">The statement builder object to be used.</param>
-            <returns>The number of inserted rows.</returns>
-        </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsyncInternal(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsync(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts multiple data in the database in an asynchronous way.
             </summary>
@@ -7670,36 +7795,60 @@
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entities">The dynamic objects to be inserted.</param>
             <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAllInternalBase``1(System.Data.IDbConnection,RepoDb.Requests.InsertAllRequest,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsyncInternal(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Inserts multiple data in the database in an asynchronous way.
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="tableName">The name of the target table to be used.</param>
+            <param name="entities">The dynamic objects to be inserted.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <returns>The number of inserted rows.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllInternalBase``1(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
             <summary>
             Inserts multiple data in the database.
             </summary>
             <typeparam name="TEntity">The type of the objects to be enumerated.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="request">The actual <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.</param>
+            <param name="tableName">The name of the target table to be used.</param>
             <param name="entities">The data entity object to be inserted.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <param name="skipIdentityCheck">True to skip the identity check.</param>
             <returns>The number of inserted rows.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsyncInternalBase``1(System.Data.IDbConnection,RepoDb.Requests.InsertAllRequest,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAllAsyncInternalBase``1(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
             <summary>
             Inserts multiple data in the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the objects to be enumerated.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="request">The actual <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.</param>
+            <param name="tableName">The name of the target table to be used.</param>
             <param name="entities">The data entity object to be inserted.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <param name="skipIdentityCheck">True to skip the identity check.</param>
             <returns>The number of inserted rows.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.Merge``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
@@ -9094,7 +9243,7 @@
             <param name="statementBuilder">The statement builder object to be used.</param>
             <returns>A tuple of 7 enumerable target data entity types.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Truncate``1(System.Data.IDbConnection,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,System.Data.IDbTransaction,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.Truncate``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Truncates a table from the database.
             </summary>
@@ -9581,6 +9730,13 @@
             </summary>
             <param name="name">The name of the field.</param>
         </member>
+        <member name="M:RepoDb.Field.#ctor(System.String,System.Type)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.Field"/> object.
+            </summary>
+            <param name="name">The name of the field.</param>
+            <param name="type">The type of the field.</param>
+        </member>
         <member name="P:RepoDb.Field.Name">
             <summary>
             Gets the quoted name of the field.
@@ -9589,6 +9745,11 @@
         <member name="P:RepoDb.Field.UnquotedName">
             <summary>
             Gets the unquoted name of the field.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Field.Type">
+            <summary>
+            Gets the type of the field.
             </summary>
         </member>
         <member name="M:RepoDb.Field.ToString">
@@ -9741,6 +9902,20 @@
             <param name="key">The key of the item to be removed from the cache collection.</param>
             <param name="throwException">Throws an exception if the operation has failed to remove an item.</param>
         </member>
+        <member name="T:RepoDb.Interfaces.IResolver`2">
+            <summary>
+            An interfaced used to mark a class to become a conversion resolver.
+            </summary>
+            <typeparamref name="TInput">The type of the input value.</typeparamref>
+            <typeparamref name="TResult">The type of the result value.</typeparamref>
+        </member>
+        <member name="M:RepoDb.Interfaces.IResolver`2.Resolve(`0)">
+            <summary>
+            Resolves an input value to a target result type.
+            </summary>
+            <param name="input">The input value.</param>
+            <returns>The resolved value.</returns>
+        </member>
         <member name="T:RepoDb.Interfaces.IDbHelper">
             <summary>
             An interface used to be a helper class on some database related activity.
@@ -9753,6 +9928,11 @@
             <param name="connectionString">The connection string to connect to.</param>
             <param name="tableName">The name of the target table.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
+        </member>
+        <member name="P:RepoDb.Interfaces.IDbHelper.DbTypeResolver">
+            <summary>
+            Gets the type resolver used by this <see cref="T:RepoDb.Interfaces.IDbHelper"/> instance.
+            </summary>
         </member>
         <member name="T:RepoDb.Interfaces.IStatementBuilder">
             <summary>
@@ -9821,6 +10001,29 @@
             <param name="primaryField">The primary field from the database.</param>
             <returns>A sql statement for insert operation.</returns>
         </member>
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInsert(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.DbField,RepoDb.DbField)">
+            <summary>
+            Creates a SQL Statement for insert operation.
+            </summary>
+            <param name="queryBuilder">The query builder to be used.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="fields">The list of fields to be inserted.</param>
+            <param name="primaryField">The primary field from the database.</param>
+            <param name="identityField">The identity field from the database.</param>
+            <returns>A sql statement for insert operation.</returns>
+        </member>
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInsertAll(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.DbField,RepoDb.DbField)">
+            <summary>
+            Creates a SQL Statement for insert-all operation.
+            </summary>
+            <param name="queryBuilder">The query builder to be used.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="fields">The list of fields to be inserted.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
+            <param name="primaryField">The primary field from the database.</param>
+            <param name="identityField">The identity field from the database.</param>
+            <returns>A sql statement for insert operation.</returns>
+        </member>
         <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateMerge(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.DbField)">
             <summary>
             Creates a SQL Statement for merge operation.
@@ -9830,6 +10033,18 @@
             <param name="fields">The list of fields to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields.</param>
             <param name="primaryField">The primary field from the database.</param>
+            <returns>A sql statement for merge operation.</returns>
+        </member>
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateMerge(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.DbField,RepoDb.DbField)">
+            <summary>
+            Creates a SQL Statement for merge operation.
+            </summary>
+            <param name="queryBuilder">The query builder to be used.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="fields">The list of fields to be merged.</param>
+            <param name="qualifiers">The list of the qualifier fields.</param>
+            <param name="primaryField">The primary field from the database.</param>
+            <param name="identityField">The identity field from the database.</param>
             <returns>A sql statement for merge operation.</returns>
         </member>
         <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateQuery(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String)">
@@ -9873,6 +10088,18 @@
             <param name="fields">The list of fields to be updated.</param>
             <param name="where">The query expression.</param>
             <param name="primaryField">The primary field from the database.</param>
+            <returns>A sql statement for update operation.</returns>
+        </member>
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateUpdate(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,RepoDb.DbField,RepoDb.DbField)">
+            <summary>
+            Creates a SQL Statement for inline-update operation.
+            </summary>
+            <param name="queryBuilder">The query builder to be used.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="fields">The list of fields to be updated.</param>
+            <param name="where">The query expression.</param>
+            <param name="primaryField">The primary field from the database.</param>
+            <param name="identityField">The identity field from the database.</param>
             <returns>A sql statement for update operation.</returns>
         </member>
         <member name="T:RepoDb.Interfaces.ITrace">
@@ -10541,7 +10768,7 @@
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder.Field(RepoDb.Field)">
+        <member name="M:RepoDb.QueryBuilder.FieldFrom(RepoDb.Field)">
             <summary>
             Appends a stringified fields to the SQL Query Statement.
             </summary>
@@ -10562,19 +10789,21 @@
             <param name="fields">The list fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder.FieldsAndParametersFrom``1(System.String)">
+        <member name="M:RepoDb.QueryBuilder.FieldsAndParametersFrom``1(System.Int32,System.String)">
             <summary>
             Appends a stringified fields and parameters to the SQL Query Statement.
             </summary>
             <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
+            <param name="index">The parameter index.</param>
             <param name="prefix">The prefix to the parameters.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder.FieldsAndParametersFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.String)">
+        <member name="M:RepoDb.QueryBuilder.FieldsAndParametersFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.String)">
             <summary>
             Appends a stringified fields and parameters to the SQL Query Statement.
             </summary>
             <param name="fields">The list fields to be stringified.</param>
+            <param name="index">The parameter index.</param>
             <param name="prefix">The prefix to the parameters.</param>
             <returns>The current instance.</returns>
         </member>
@@ -10623,11 +10852,12 @@
             <param name="fields">The fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder.HavingCountFrom(RepoDb.QueryField,System.String)">
+        <member name="M:RepoDb.QueryBuilder.HavingCountFrom(RepoDb.QueryField,System.Int32,System.String)">
             <summary>
             Appends a word HAVING COUNT and a conditional field to the SQL Query Statement.
             </summary>
             <param name="queryField">The conditional field object used for composition.</param>
+            <param name="index">The parameter index.</param>
             <param name="prefix">The prefix to the parameters.</param>
             <returns>The current instance.</returns>
         </member>
@@ -10729,35 +10959,39 @@
             <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder.ParametersFrom``1(System.String)">
+        <member name="M:RepoDb.QueryBuilder.ParametersFrom``1(System.Int32,System.String)">
             <summary>
             Append the mapped properpties name to the SQL Query Statement.
             </summary>
             <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
+            <param name="index">The parameter index.</param>
             <param name="prefix">The prefix to the parameters.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder.ParametersFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.String)">
+        <member name="M:RepoDb.QueryBuilder.ParametersFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.String)">
             <summary>
             Append the stringified field parameters to the SQL Query Statement.
             </summary>
             <param name="fields">The list of fields to be stringified.</param>
+            <param name="index">The parameter index.</param>
             <param name="prefix">The prefix to the parameters.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder.ParametersAsFieldsFrom``1(System.String)">
+        <member name="M:RepoDb.QueryBuilder.ParametersAsFieldsFrom``1(System.Int32,System.String)">
             <summary>
             Append the stringified parameter as fields to the SQL Query Statement.
             </summary>
             <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
+            <param name="index">The parameter index.</param>
             <param name="prefix">The prefix to the parameters.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder.ParametersAsFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.String)">
+        <member name="M:RepoDb.QueryBuilder.ParametersAsFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.String)">
             <summary>
             Append the stringified parameter as fields to the SQL Query Statement.
             </summary>
             <param name="fields">The list of fields to be stringified.</param>
+            <param name="index">The parameter index.</param>
             <param name="prefix">The prefix to the parameters.</param>
             <returns>The current instance.</returns>
         </member>
@@ -10899,6 +11133,52 @@
             <summary>
             Appends a word TRUNCATE to the SQL Query Statement.
             </summary>
+            <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryBuilder.HintsFrom(System.String)">
+            <summary>
+            Appends the hints to the SQL Query Statement.
+            </summary>
+            <param name="hints">The hints to be appended.</param>
+            <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryBuilder.Max">
+            <summary>
+            Appends a word MAX to the SQL Query Statement.
+            </summary>
+            <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryBuilder.MaxFrom(RepoDb.Field)">
+            <summary>
+            Appends a word MAX and the field to the SQL Query Statement, otherwise an empty string.
+            </summary>
+            <param name="field">The target field.</param>
+            <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryBuilder.Min">
+            <summary>
+            Appends a word MIN to the SQL Query Statement.
+            </summary>
+            <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryBuilder.MinFrom(RepoDb.Field)">
+            <summary>
+            Appends a word MIN and the field to the SQL Query Statement, otherwise an empty string.
+            </summary>
+            <param name="field">The target field.</param>
+            <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryBuilder.Avg">
+            <summary>
+            Appends a word AVG to the SQL Query Statement.
+            </summary>
+            <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryBuilder.AvgFrom(RepoDb.Field)">
+            <summary>
+            Appends a word AVG and the field to the SQL Query Statement, otherwise an empty string.
+            </summary>
+            <param name="field">The target field.</param>
             <returns>The current instance.</returns>
         </member>
         <member name="T:RepoDb.QueryField">
@@ -11320,9 +11600,71 @@
             <returns>True if there are more result sets; otherwise false.</returns>
             </summary>
         </member>
+        <member name="T:RepoDb.Reflection.DataCommand">
+            <summary>
+            A static classed used to convert the <see cref="T:System.Data.Common.DbCommand"/> object.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Reflection.DataCommand.CreateParameters(System.Data.Common.DbCommand,System.Collections.Generic.IEnumerable{RepoDb.Field})">
+            <summary>
+            Create a parameters for the <see cref="T:System.Data.Common.DbCommand"/>.
+            </summary>
+            <param name="command">The <see cref="T:System.Data.Common.DbCommand"/> object where to set the parameters.</param>
+            <param name="fields">The list of <see cref="T:RepoDb.Field"/> objects where the parameters will be based.</param>
+        </member>
+        <member name="M:RepoDb.Reflection.DataCommand.SetParameters``1(System.Data.Common.DbCommand,System.String,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field})">
+            <summary>
+            Set the parameters (and/or values) of the <see cref="T:System.Data.Common.DbCommand"/> object based on the passed data entity object.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="command">The <see cref="T:System.Data.Common.DbCommand"/> object where to set the parameters.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="entities">The list of the data entity objects.</param>
+            <param name="inputFields">The list of the input <see cref="T:RepoDb.Field"/> objects to be used.</param>
+            <param name="outputFields">The list of the output <see cref="T:RepoDb.Field"/> objects to be used.</param>
+        </member>
+        <member name="T:RepoDb.Reflection.DataReader">
+            <summary>
+            A static classed used to manipulate the <see cref="T:System.Data.Common.DbDataReader"/> object.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Reflection.DataReader.ToEnumerable``1(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
+            <summary>
+            Converts the <see cref="T:System.Data.Common.DbDataReader"/> into an enumerable of data entity object.
+            </summary>
+            <typeparam name="TEntity">The data entity type to convert.</typeparam>
+            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
+            <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <returns>An array of data entity objects.</returns>
+        </member>
+        <member name="M:RepoDb.Reflection.DataReader.ToEnumerable``1(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Boolean)">
+            <summary>
+            Converts the <see cref="T:System.Data.Common.DbDataReader"/> into an enumerable of data entity object.
+            </summary>
+            <typeparam name="TEntity">The data entity type to convert.</typeparam>
+            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
+            <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
+            <returns>An array of data entity objects.</returns>
+        </member>
+        <member name="M:RepoDb.Reflection.DataReader.ToEnumerable(System.Data.Common.DbDataReader)">
+            <summary>
+            Converts the <see cref="T:System.Data.Common.DbDataReader"/> into an enumerable of <see cref="T:System.Dynamic.ExpandoObject"/> object.
+            </summary>
+            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
+            <returns>An array of <see cref="T:System.Dynamic.ExpandoObject"/> objects.</returns>
+        </member>
+        <member name="M:RepoDb.Reflection.DataReader.ToEnumerable(System.Data.Common.DbDataReader,System.Boolean)">
+            <summary>
+            Converts the <see cref="T:System.Data.Common.DbDataReader"/> into an enumerable of <see cref="T:System.Dynamic.ExpandoObject"/> object.
+            </summary>
+            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
+            <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
+            <returns>An array of <see cref="T:System.Dynamic.ExpandoObject"/> objects.</returns>
+        </member>
         <member name="T:RepoDb.Reflection.DataReaderConverter">
             <summary>
-            A static classed used to convert the <see cref="T:System.Data.Common.DbDataReader"/> into data entity object.
+            A static classed used to convert the <see cref="T:System.Data.Common.DbDataReader"/> into data entity or dynamic objects.
             </summary>
         </member>
         <member name="M:RepoDb.Reflection.DataReaderConverter.ToEnumerable``1(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
@@ -11366,14 +11708,14 @@
         </member>
         <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToDataEntityFunction``1(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
             <summary>
-            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
+            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.
             </summary>
-            <typeparam name="TEntity">The target entity type.</typeparam>
+            <typeparam name="TEntity">The data entity object to convert to.</typeparam>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
-            <returns>The entity instance with the converted values from the data reader.</returns>
+            <returns>A compiled function that is used to cover the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.</returns>
         </member>
-        <member name="M:RepoDb.Reflection.FunctionFactory.GetMemberAssignments``1(System.Linq.Expressions.Expression,System.Linq.Expressions.ParameterExpression,System.Collections.Generic.IEnumerable{RepoDb.DataReaderFieldDefinition},System.Data.IDbConnection)">
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetMemberAssignmentsForDataEntity``1(System.Linq.Expressions.Expression,System.Linq.Expressions.ParameterExpression,System.Collections.Generic.IEnumerable{RepoDb.DataReaderFieldDefinition},System.Data.IDbConnection)">
             <summary>
             Returns the list of the bindings for the entity.
             </summary>
@@ -11386,18 +11728,35 @@
         </member>
         <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToExpandoObjectFunction(System.Data.Common.DbDataReader)">
             <summary>
-            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into dynamic object (<see cref="T:System.Dynamic.ExpandoObject"/>).
+            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
-            <returns>An instance of data entity object.</returns>
+            <returns>A compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.</returns>
         </member>
-        <member name="M:RepoDb.Reflection.FunctionFactory.GetElementInits(System.Linq.Expressions.ParameterExpression,System.Collections.Generic.List{RepoDb.DataReaderFieldDefinition})">
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetElementInitsForDictionary(System.Linq.Expressions.ParameterExpression,System.Collections.Generic.IList{RepoDb.DataReaderFieldDefinition})">
             <summary>
             Returns the list of the bindings for the object.
             </summary>
             <param name="readerParameterExpression">The data reader parameter.</param>
             <param name="readerFields">The list of fields to be bound from the data reader.</param>
             <returns>The enumerable list of child elements initializations.</returns>
+        </member>
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataCommandParameterSetterFunction``1(System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32)">
+            <summary>
+            Gets a compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="inputFields">The list of the input <see cref="T:RepoDb.Field"/> objects.</param>
+            <param name="outputFields">The list of the input <see cref="T:RepoDb.Field"/> objects.</param>
+            <param name="batchSize">The batch size of the entity to be passed.</param>
+            <returns>A compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object.</returns>
+        </member>
+        <member name="M:RepoDb.Reflection.FunctionFactory.CreateDbCommandParametersFromFields(System.Data.Common.DbCommand,System.Collections.Generic.IEnumerable{RepoDb.Field})">
+            <summary>
+            Create the <see cref="T:System.Data.Common.DbCommand"/> parameters based on the list of <see cref="T:RepoDb.Field"/> objects.
+            </summary>
+            <param name="command">The target <see cref="T:System.Data.Common.DbCommand"/> object.</param>
+            <param name="fields">The list of <see cref="T:RepoDb.Field"/> objects.</param>
         </member>
         <member name="T:RepoDb.Reflection.Delegates.DataReaderToDataEntityFunction`1">
             <summary>
@@ -11419,37 +11778,47 @@
         </member>
         <member name="M:RepoDb.FunctionCache.GetDataReaderToDataEntityFunction``1(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
             <summary>
-            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
+            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.
             </summary>
             <typeparam name="TEntity">The data entity object to convert to.</typeparam>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
-            <returns>An instance of data entity object.</returns>
+            <returns>A compiled function that is used to cover the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.</returns>
         </member>
         <member name="M:RepoDb.FunctionCache.GetDataReaderToDataEntityFunction``1(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Boolean)">
             <summary>
-            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
+            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.
             </summary>
             <typeparam name="TEntity">The data entity object to convert to.</typeparam>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
             <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
-            <returns>An compiled function that is used to cover the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.</returns>
+            <returns>A compiled function that is used to cover the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.</returns>
         </member>
         <member name="M:RepoDb.FunctionCache.GetDataReaderToExpandoObjectFunction(System.Data.Common.DbDataReader)">
             <summary>
-            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
+            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
-            <returns>An instance of data entity object via dynamics.</returns>
+            <returns>A compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.</returns>
         </member>
         <member name="M:RepoDb.FunctionCache.GetDataReaderToExpandoObjectFunction(System.Data.Common.DbDataReader,System.Boolean)">
             <summary>
-            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
+            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
-            <returns>An instance of data entity object via dynamics.</returns>
+            <returns>A compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.</returns>
+        </member>
+        <member name="M:RepoDb.FunctionCache.GetDataCommandParameterSetterFunction``1(System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32)">
+            <summary>
+            Gets a compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object.
+            </summary>
+            <param name="key">The key to the cache.</param>
+            <param name="inputFields">The list of the input <see cref="T:RepoDb.Field"/> objects to be used.</param>
+            <param name="outputFields">The list of the output <see cref="T:RepoDb.Field"/> objects to be used.</param>
+            <param name="batchSize">The batch size of the entity to be passed.</param>
+            <returns>A compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object.</returns>
         </member>
         <member name="T:RepoDb.Requests.BaseRequest">
             <summary>
@@ -11844,27 +12213,34 @@
             A class that holds the value of the insert operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.InsertAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.InsertAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
             <param name="fields">The list of the target fields.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.InsertAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.InsertAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
             <param name="fields">The list of the target fields.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
         <member name="P:RepoDb.Requests.InsertAllRequest.Fields">
             <summary>
             Gets the target fields.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Requests.InsertAllRequest.BatchSize">
+            <summary>
+            Gets the size batch of the insertion.
             </summary>
         </member>
         <member name="M:RepoDb.Requests.InsertAllRequest.GetHashCode">
@@ -12435,6 +12811,42 @@
             <param name="objB">The second <see cref="T:RepoDb.Requests.UpdateRequest"/> object.</param>
             <returns>True if the instances are not equal.</returns>
         </member>
+        <member name="T:RepoDb.ClientTypeToSqlDbTypeResolver">
+            <summary>
+            A class used to resolve the .NET CLR Types into SQL Database Types.
+            </summary>
+        </member>
+        <member name="M:RepoDb.ClientTypeToSqlDbTypeResolver.Resolve(System.Type)">
+            <summary>
+            Returns the equivalent <see cref="T:System.Data.DbType"/> of the .NET CLR Types.
+            </summary>
+            <param name="type">The .NET CLR Type.</param>
+            <returns>The equivalent <see cref="T:System.Data.DbType"/> Type.</returns>
+        </member>
+        <member name="T:RepoDb.SqlDbTypeToClientTypeResolver">
+            <summary>
+            A class used to resolve the SQL Database Types into .NET CLR Types.
+            </summary>
+        </member>
+        <member name="M:RepoDb.SqlDbTypeToClientTypeResolver.Resolve(System.String)">
+            <summary>
+            Returns the equivalent .NET CLR Types of the Database Type.
+            </summary>
+            <param name="dbType">The name of the database type.</param>
+            <returns>The equivalent .NET CLR type.</returns>
+        </member>
+        <member name="T:RepoDb.SqlDbTypeToStringNameResolver">
+            <summary>
+            A class used to resolve the .NET CLR Types into its equivalent database string name.
+            </summary>
+        </member>
+        <member name="M:RepoDb.SqlDbTypeToStringNameResolver.Resolve(System.Data.DbType)">
+            <summary>
+            Returns the equivalent <see cref="T:System.Data.DbType"/> of the .NET CLR Types.
+            </summary>
+            <param name="dbType">The type of the database.</param>
+            <returns>The equivalent string name.</returns>
+        </member>
         <member name="T:RepoDb.SqlStatementBuilder">
             <summary>
             A class used to build a SQL Statement for SQL Server. This is the default statement builder used by the library.
@@ -12505,6 +12917,29 @@
             <param name="primaryField">The primary field from the database.</param>
             <returns>A sql statement for insert operation.</returns>
         </member>
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInsert(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.DbField,RepoDb.DbField)">
+            <summary>
+            Creates a SQL Statement for insert operation.
+            </summary>
+            <param name="queryBuilder">The query builder to be used.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="fields">The list of fields to be inserted.</param>
+            <param name="primaryField">The primary field from the database.</param>
+            <param name="identityField">The identity field from the database.</param>
+            <returns>A sql statement for insert operation.</returns>
+        </member>
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInsertAll(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.DbField,RepoDb.DbField)">
+            <summary>
+            Creates a SQL Statement for insert-all operation.
+            </summary>
+            <param name="queryBuilder">The query builder to be used.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="fields">The list of fields to be inserted.</param>
+            <param name="batchSize">The batch size of the insertion.</param>
+            <param name="primaryField">The primary field from the database.</param>
+            <param name="identityField">The identity field from the database.</param>
+            <returns>A sql statement for insert operation.</returns>
+        </member>
         <member name="M:RepoDb.SqlStatementBuilder.CreateMerge(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.DbField)">
             <summary>
             Creates a SQL Statement for merge operation.
@@ -12514,6 +12949,18 @@
             <param name="fields">The list of fields to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields.</param>
             <param name="primaryField">The primary field from the database.</param>
+            <returns>A sql statement for merge operation.</returns>
+        </member>
+        <member name="M:RepoDb.SqlStatementBuilder.CreateMerge(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.DbField,RepoDb.DbField)">
+            <summary>
+            Creates a SQL Statement for merge operation.
+            </summary>
+            <param name="queryBuilder">The query builder to be used.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="fields">The list of fields to be merged.</param>
+            <param name="qualifiers">The list of the qualifier fields.</param>
+            <param name="primaryField">The primary field from the database.</param>
+            <param name="identityField">The identity field from the database.</param>
             <returns>A sql statement for merge operation.</returns>
         </member>
         <member name="M:RepoDb.SqlStatementBuilder.CreateQuery(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String)">
@@ -12559,11 +13006,35 @@
             <param name="primaryField">The primary field from the database.</param>
             <returns>A sql statement for update operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.Guard(System.String)">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateUpdate(RepoDb.QueryBuilder,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,RepoDb.DbField,RepoDb.DbField)">
             <summary>
-            Throws an exception of the table name is null or empty.
+            Creates a SQL Statement for inline-update operation.
+            </summary>
+            <param name="queryBuilder">The query builder to be used.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="fields">The list of fields to be updated.</param>
+            <param name="where">The query expression.</param>
+            <param name="primaryField">The primary field from the database.</param>
+            <param name="identityField">The identity field from the database.</param>
+            <returns>A sql statement for update operation.</returns>
+        </member>
+        <member name="M:RepoDb.SqlStatementBuilder.GuardTableName(System.String)">
+            <summary>
+            Throws an exception if the table name is null or empty.
             </summary>
             <param name="tableName">The name of the table.</param>
+        </member>
+        <member name="M:RepoDb.SqlStatementBuilder.GuardPrimary(RepoDb.DbField)">
+            <summary>
+            Throws an exception if the primary field is not really a primary field.
+            </summary>
+            <param name="field">The instance of the primary field.</param>
+        </member>
+        <member name="M:RepoDb.SqlStatementBuilder.GuardIdentity(RepoDb.DbField)">
+            <summary>
+            Throws an exception if the identity field is not really an identity field.
+            </summary>
+            <param name="field">The instance of the identity field.</param>
         </member>
         <member name="T:RepoDb.SqlTableHints">
             <summary>

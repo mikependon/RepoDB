@@ -9,7 +9,7 @@ namespace RepoDb.Extensions
     /// <summary>
     /// Contains the extension methods for <see cref="Object"/>.
     /// </summary>
-    internal static class ObjectExtension
+    public static class ObjectExtension
     {
         /// <summary>
         /// Merges an object into an instance of <see cref="QueryGroup"/> object.
@@ -30,7 +30,7 @@ namespace RepoDb.Extensions
         /// <param name="obj">The object where the <see cref="QueryGroup"/> object will be merged.</param>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
         /// <returns>A dynamic object with the merged fields from <see cref="QueryGroup"/>.</returns>
-        public static object Merge(this object obj, QueryGroup queryGroup)
+        internal static object Merge(this object obj, QueryGroup queryGroup)
         {
             return Merge(obj, obj?.GetType().GetTypeInfo().GetProperties(), queryGroup);
         }
@@ -42,7 +42,7 @@ namespace RepoDb.Extensions
         /// <param name="properties">The list of <see cref="PropertyInfo"/> objects.</param>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
         /// <returns>The object instance itself with the merged values.</returns>
-        public static object Merge(this object obj, IEnumerable<PropertyInfo> properties, QueryGroup queryGroup)
+        internal static object Merge(this object obj, IEnumerable<PropertyInfo> properties, QueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             foreach (var property in properties)
@@ -74,7 +74,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="obj">The instance of the object to be converted.</param>
         /// <returns>An enumerable list of query fields.</returns>
-        public static IEnumerable<QueryField> AsQueryFields(this object obj)
+        internal static IEnumerable<QueryField> AsQueryFields(this object obj)
         {
             var expandoObject = obj as ExpandoObject;
             if (expandoObject != null)
@@ -136,19 +136,19 @@ namespace RepoDb.Extensions
         /// <returns>The first non-null object.</returns>
         public static object Coalesce(this object obj, params object[] parameters)
         {
-            return parameters?.First(param => param != null);
+            return parameters.First(param => param != null);
         }
 
         /// <summary>
-        /// Identify whether an object is a decimal.
+        /// Returns the first non-defaulted occurence.
         /// </summary>
-        /// <param name="value">The value to be identified.</param>
-        /// <returns>True if the value is a decimal.</returns>
-        public static bool IsDecimal(this object value)
+        /// <typeparam name="T">The target type of the object.</typeparam>
+        /// <param name="obj">The current object.</param>
+        /// <param name="parameters">The list of parameters.</param>
+        /// <returns>The first non-defaulted object.</returns>
+        public static T Coalesce<T>(this object obj, params T[] parameters)
         {
-            return value is float ||
-                value is double ||
-                value is decimal;
+            return parameters.First(param => Equals(param, default(T)) == false);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value">The value to be converted.</param>
         /// <returns>A <see cref="long"/> value of the object.</returns>
-        public static long ToNumber(this object value)
+        internal static long ToNumber(this object value)
         {
             return Convert.ToInt64(value);
         }

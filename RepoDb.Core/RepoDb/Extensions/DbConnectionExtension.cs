@@ -151,7 +151,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReader.ToEnumerable(reader, true).ToList();
+                    return DataReader.ToEnumerable(reader, true).AsList();
                 }
             }
         }
@@ -227,7 +227,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return DataReader.ToEnumerable(reader, true).ToList();
+                    return DataReader.ToEnumerable(reader, true).AsList();
                 }
             }
         }
@@ -310,7 +310,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReader.ToEnumerable<TEntity>(reader, connection, basedOnFields).ToList();
+                    return DataReader.ToEnumerable<TEntity>(reader, connection, basedOnFields).AsList();
                 }
             }
         }
@@ -393,7 +393,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return DataReader.ToEnumerable<TEntity>(reader, connection, basedOnFields).ToList();
+                    return DataReader.ToEnumerable<TEntity>(reader, connection, basedOnFields).AsList();
                 }
             }
         }

@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Collections;
+using RepoDb.Extensions;
 
 namespace RepoDb
 {
@@ -57,12 +58,12 @@ namespace RepoDb
                 {
                     Properties = PropertyCache.Get<TEntity>()
                         .Where(p => fields.FirstOrDefault(f => f.UnquotedName.ToLower() == p.GetUnquotedMappedName().ToLower()) != null)
-                        .ToList();
+                        .AsList();
                 }
             }
             if (Properties == null)
             {
-                Properties = PropertyCache.Get<TEntity>().ToList();
+                Properties = PropertyCache.Get<TEntity>().AsList();
             }
             Enumerator = entities.GetEnumerator();
             Entities = entities;

@@ -18,14 +18,17 @@ namespace RepoDb.Requests
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="fields">The list of the target fields.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public InsertAllRequest(Type type,
             IDbConnection connection,
             IEnumerable<Field> fields = null,
+            int batchSize = Constant.DefaultBatchInsertSize,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
                   fields,
+                  batchSize,
                   statementBuilder)
         {
             Type = type;
@@ -37,22 +40,30 @@ namespace RepoDb.Requests
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="fields">The list of the target fields.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public InsertAllRequest(string name,
             IDbConnection connection,
             IEnumerable<Field> fields = null,
+            int batchSize = Constant.DefaultBatchInsertSize,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
                   statementBuilder)
         {
             Fields = fields;
+            BatchSize = batchSize;
         }
 
         /// <summary>
         /// Gets the target fields.
         /// </summary>
         public IEnumerable<Field> Fields { get; set; }
+
+        /// <summary>
+        /// Gets the size batch of the insertion.
+        /// </summary>
+        public int BatchSize { get; set; }
 
         // Equality and comparers
 
@@ -78,6 +89,12 @@ namespace RepoDb.Requests
                 {
                     hashCode += field.GetHashCode();
                 }
+            }
+
+            // Get the batch size
+            if (BatchSize > 0)
+            {
+                hashCode += BatchSize.GetHashCode();
             }
 
             // Set back the hash code value

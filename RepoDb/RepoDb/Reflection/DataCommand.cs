@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RepoDb.Extensions;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 
@@ -50,7 +51,7 @@ namespace RepoDb.Reflection
                 entities.Count());
 
             // Execute the function
-            func(command, entities.ToList());
+            func(command, entities.AsList());
         }
 
         #endregion

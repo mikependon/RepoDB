@@ -128,6 +128,27 @@ namespace RepoDb.Interfaces
 
         #endregion
 
+        #region CreateInsertAll
+
+        /// <summary>
+        /// Creates a SQL Statement for insert-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        string CreateInsertAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
+            int batchSize = Constant.DefaultBatchInsertSize,
+            DbField primaryField = null,
+            DbField identityField = null);
+
+        #endregion
+
         #region CreateMerge
 
         /// <summary>

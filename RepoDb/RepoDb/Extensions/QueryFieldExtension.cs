@@ -50,11 +50,12 @@ namespace RepoDb.Extensions
         internal static string AsInParameter(this QueryField queryField, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
             var array = ((Array)queryField.Parameter.Value);
-            var value = array
+            var values = array
                 .OfType<object>()
-                .Select((qf, i) => string.Concat(queryField.Parameter.Name.AsParameter(index, prefix), "_In_", i))
+                .Select((value, valueIndex) =>
+                    string.Concat(queryField.Parameter.Name.AsParameter(index, prefix), "_In_", valueIndex))
                 .Join(", ");
-            return string.Concat("(", value, ")");
+            return string.Concat("(", values, ")");
         }
 
         // AsFieldAndParameter

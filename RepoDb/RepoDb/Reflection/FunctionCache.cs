@@ -225,27 +225,5 @@ namespace RepoDb
         #endregion
 
         #endregion
-
-        #region GetDataCommandParameterSetterFunction(TableName)
-
-        /// <summary>
-        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
-        /// </summary>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="actualFields">The list of the actual <see cref="Field"/> objects to be retrived from the dynamic object.</param>
-        public static Action<DbCommand, object> GetDataCommandParameterSetterFunction(string tableName,
-            IEnumerable<Field> actualFields)
-        {
-            var key = string.Concat(tableName, ".", actualFields.Select(f => f.UnquotedName).Join("."));
-            var func = (Action<DbCommand, object>)null;
-            if (m_cache.TryGetValue(key, out func) == false)
-            {
-                func = FunctionFactory.GetDataCommandParameterSetterFunction(actualFields);
-                m_cache.TryAdd(key, func);
-            }
-            return func;
-        }
-
-        #endregion
     }
 }

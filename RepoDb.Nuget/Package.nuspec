@@ -12,6 +12,7 @@
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
       RepoDb v1.9.3:
+      - [Core] Introduce ExecutionContext to hold the caching of the execution for 'InsertAll'. #204
       - [Enhancement, Performance] InsertAll Compiled Expressions
       - [Enhancement] Revisits the DbField for Primary and Identity Columns. #182
       - [Enhancement] Add the IdentityDbField in both Merge and Update SqlStatementBuilder. #198
@@ -20,6 +21,7 @@
       - [Added] ClientTypeToSqlDbTypeResolver
       - [Added] SqlDbTypeToClientTypeResolver
       - [Added] SqlDbTypeToStringNameResolver
+      - [Fixed] Remove the Insert and InsertAll identity conversion from SQL. #203 - Fixed by introducing the 'ConversionResolver' classes.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

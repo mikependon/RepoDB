@@ -359,7 +359,7 @@ namespace RepoDb
 
         #endregion
 
-        #region Helpers
+        #region Helper Methods
 
         /// <summary>
         /// Get the actual list of <see cref="Field"/> objects of the table based on the actual list of <see cref="DbField"/> objects.

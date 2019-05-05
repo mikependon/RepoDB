@@ -78,22 +78,6 @@ namespace RepoDb.Extensions
             return value;
         }
 
-        /// <summary>
-        /// Set the string to be a database parameterized string.
-        /// </summary>
-        /// <param name="value">The target string to be quoted.</param>
-        /// <param name="trim">True if to trim the string first.</param>
-        /// <param name="prefix">The prefix to the parameter.</param>
-        /// <returns>A parameterized quoted string.</returns>
-        public static string AsQuotedParameter(this string value, bool trim = false, string prefix = Constant.DefaultParameterPrefix)
-        {
-            if (trim)
-            {
-                value = value.Trim();
-            }
-            return string.Concat(prefix, value.AsUnquoted().Replace(" ", "_"));
-        }
-
         // AsEnumerable
         internal static IEnumerable<string> AsEnumerable(this string value)
         {
@@ -113,9 +97,10 @@ namespace RepoDb.Extensions
         }
 
         // AsParameter
-        internal static string AsParameter(this string value, string prefix = Constant.DefaultParameterPrefix)
+        internal static string AsParameter(this string value, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Concat(prefix, value.AsUnquoted());
+            return index > 0 ? string.Concat(prefix, value.AsUnquoted(), "_", index) :
+                string.Concat(prefix, value.AsUnquoted());
         }
 
         // AsAliasField
@@ -125,15 +110,15 @@ namespace RepoDb.Extensions
         }
 
         // AsParameterAsField
-        internal static string AsParameterAsField(this string value, string prefix = Constant.DefaultParameterPrefix)
+        internal static string AsParameterAsField(this string value, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Concat(AsParameter(value, prefix), " AS ", AsField(value));
+            return string.Concat(AsParameter(value, index, prefix), " AS ", AsField(value));
         }
 
         // AsFieldAndParameter
-        internal static string AsFieldAndParameter(this string value, string prefix = Constant.DefaultParameterPrefix)
+        internal static string AsFieldAndParameter(this string value, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return string.Concat(AsField(value), " = ", AsParameter(value, prefix));
+            return string.Concat(AsField(value), " = ", AsParameter(value, index, prefix));
         }
 
         // AsFieldAndAliasField
@@ -151,9 +136,9 @@ namespace RepoDb.Extensions
         }
 
         // AsParameters
-        internal static IEnumerable<string> AsParameters(this IEnumerable<string> values, string prefix = Constant.DefaultParameterPrefix)
+        internal static IEnumerable<string> AsParameters(this IEnumerable<string> values, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return values?.Select(value => value.AsParameter(prefix));
+            return values?.Select(value => value.AsParameter(index, prefix));
         }
 
         // AsAliasFields
@@ -163,15 +148,15 @@ namespace RepoDb.Extensions
         }
 
         // AsParametersAsFields
-        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<string> values, string prefix = Constant.DefaultParameterPrefix)
+        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<string> values, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return values?.Select(value => value.AsParameterAsField(prefix));
+            return values?.Select(value => value.AsParameterAsField(index, prefix));
         }
 
         // AsFieldsAndParameters
-        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<string> values, string prefix = Constant.DefaultParameterPrefix)
+        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<string> values, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return values?.Select(value => value.AsFieldAndParameter(prefix));
+            return values?.Select(value => value.AsFieldAndParameter(index, prefix));
         }
 
         // AsFieldsAndAliasFields

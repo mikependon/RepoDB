@@ -6,6 +6,11 @@
     public static class Constant
     {
         /// <summary>
+        /// The default value of the batch insert size.
+        /// </summary>
+        public const int DefaultBatchInsertSize = 10;
+
+        /// <summary>
         /// The default value of the cache expiration in minutes.
         /// </summary>
         public const int DefaultCacheItemExpirationInMinutes = 180;
