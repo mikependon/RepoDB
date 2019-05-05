@@ -184,13 +184,13 @@ namespace RepoDb
         /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
         /// </summary>
         /// <param name="key">The key to the cache.</param>
-        /// <param name="inputFields">The list of the input <see cref="Field"/> objects to be used.</param>
-        /// <param name="outputFields">The list of the output <see cref="Field"/> objects to be used.</param>
-        /// <param name="batchSize">The batch size of the entity to be passed.</param>
+        /// <param name="inputFields">The list of the input <see cref="DbField"/> objects to be used.</param>
+        /// <param name="outputFields">The list of the output <see cref="DbField"/> objects to be used.</param>
+        /// <param name="batchSize">The batch size of the entities to be passed.</param>
         /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.</returns>
         public static Action<DbCommand, IList<TEntity>> GetDataCommandParameterSetterFunction<TEntity>(string key,
-            IEnumerable<Field> inputFields,
-            IEnumerable<Field> outputFields,
+            IEnumerable<DbField> inputFields,
+            IEnumerable<DbField> outputFields,
             int batchSize)
             where TEntity : class
         {
@@ -206,8 +206,8 @@ namespace RepoDb
                 new ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>>();
 
             public static Action<DbCommand, IList<TEntity>> Get(string key,
-                IEnumerable<Field> inputFields,
-                IEnumerable<Field> outputFields,
+                IEnumerable<DbField> inputFields,
+                IEnumerable<DbField> outputFields,
                 int batchSize)
             {
                 key = string.Concat(key, ".", inputFields.Select(field => field.UnquotedName).Join("."), ".",

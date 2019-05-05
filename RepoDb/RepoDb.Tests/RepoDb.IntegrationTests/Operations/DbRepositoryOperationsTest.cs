@@ -3376,7 +3376,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, tables.Item2);
+                repository.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2);
 
                 // Act
                 var result = repository.CountAll<IdentityTable>();
@@ -3414,7 +3414,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, tables.Item2);
+                repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2);
 
                 // Act
                 var result = repository.CountAll<NonIdentityTable>();
@@ -3456,7 +3456,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, tables.Item2).Wait();
+                repository.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2).Wait();
 
                 // Act
                 var result = repository.CountAll<IdentityTable>();
@@ -3494,7 +3494,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, tables.Item2).Wait();
+                repository.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2).Wait();
 
                 // Act
                 var result = repository.CountAll<NonIdentityTable>();

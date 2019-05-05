@@ -5,7 +5,6 @@ using RepoDb.Interfaces;
 using RepoDb.Reflection;
 using RepoDb.Requests;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -76,8 +75,8 @@ namespace RepoDb
             return InsertAllInternalBase<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
-                fields: FieldCache.Get<TEntity>(),
                 batchSize: batchSize,
+                fields: FieldCache.Get<TEntity>(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -144,8 +143,8 @@ namespace RepoDb
             return InsertAllAsyncInternalBase<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
-                fields: FieldCache.Get<TEntity>(),
                 batchSize: batchSize,
+                fields: FieldCache.Get<TEntity>(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -163,8 +162,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The dynamic objects to be inserted.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -173,8 +172,8 @@ namespace RepoDb
         public static int InsertAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
-            IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchInsertSize,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -197,8 +196,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The dynamic objects to be inserted.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -207,8 +206,8 @@ namespace RepoDb
         internal static int InsertAllInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
-            IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchInsertSize,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -224,8 +223,8 @@ namespace RepoDb
             return InsertAllInternalBase<object>(connection: connection,
                 tableName: tableName,
                 entities: entities,
-                fields: fields,
                 batchSize: batchSize,
+                fields: fields,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -243,8 +242,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The dynamic objects to be inserted.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -253,8 +252,8 @@ namespace RepoDb
         public static Task<int> InsertAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
-            IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchInsertSize,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -263,8 +262,8 @@ namespace RepoDb
             return InsertAllAsyncInternal(connection: connection,
                 tableName: tableName,
                 entities: entities,
-                fields: fields,
                 batchSize: batchSize,
+                fields: fields,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -277,8 +276,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The dynamic objects to be inserted.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -287,8 +286,8 @@ namespace RepoDb
         internal static Task<int> InsertAllAsyncInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
-            IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchInsertSize,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -304,8 +303,8 @@ namespace RepoDb
             return InsertAllAsyncInternalBase<object>(connection: connection,
                 tableName: tableName,
                 entities: entities,
-                fields: fields,
                 batchSize: batchSize,
+                fields: fields,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -324,8 +323,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The data entity object to be inserted.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -335,8 +334,8 @@ namespace RepoDb
         internal static int InsertAllInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchInsertSize,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -361,11 +360,10 @@ namespace RepoDb
                     statementBuilder);
 
                 // Variables needed
-                var commandText = CommandTextCache.GetInsertAllText(request);
                 var identity = (ClassProperty)null;
                 var dbFields = DbFieldCache.Get(connection, request.Name);
-                var inputFields = (IEnumerable<Field>)null;
-                var outputFields = (IEnumerable<Field>)null;
+                var inputFields = (IEnumerable<DbField>)null;
+                var outputFields = (IEnumerable<DbField>)null;
 
                 // Actual identity
                 var identityDbField = dbFields.FirstOrDefault(f => f.IsIdentity);
@@ -382,27 +380,26 @@ namespace RepoDb
                 }
 
                 // Filter the actual properties for input fields
-                inputFields = fields
-                    .Where(field =>
-                        field.UnquotedName.ToLower() != identityDbField?.UnquotedName.ToLower())
-                    .Where(field =>
-                        dbFields.FirstOrDefault(df => df.UnquotedName.ToLower() == field.UnquotedName.ToLower()) != null)
+                inputFields = dbFields
+                    .Where(dbField => dbField.IsIdentity == false)
+                    .Where(dbField =>
+                        fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
                     .AsList();
 
                 // Set the output fields
-                if (identity != null)
-                {
-                    outputFields = identity.AsField().AsEnumerable();
-                }
-                else
-                {
-                    outputFields = identityDbField?.AsField().AsEnumerable();
-                }
+                outputFields = identityDbField?.AsEnumerable();
+
+                // Create the command
+                var command = (DbCommand)connection.CreateCommand(CommandTextCache.GetInsertAllText(request),
+                    CommandType.Text, commandTimeout, transaction);
+
+                // Add the parameters
+                DataCommand.CreateParameters(command, inputFields, outputFields, batchSizeValue);
 
                 // Return the value
                 return new InsertAllExecutionContext<TEntity>
                 {
-                    CommandText = commandText,
+                    Command = command,
                     Identity = identity,
                     InputFields = inputFields,
                     OutputFields = outputFields,
@@ -415,118 +412,129 @@ namespace RepoDb
                 };
             });
 
-            // Create a command
-            using (var command = (DbCommand)connection.EnsureOpen().CreateCommand())
+            // Get the context
+            var context = (InsertAllExecutionContext<TEntity>)null;
+
+            // Identify the number of entities (performance)
+            context = count == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
+                InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
+
+            // Declare the command variable
+            var commandText = context.Command.CommandText;
+
+            // Set the command properties
+            context.Command.Connection = (DbConnection)connection;
+            context.Command.Transaction = (DbTransaction)transaction;
+
+            // Open the connection
+            connection.EnsureOpen();
+
+            // Prepare the command
+            context.Command.Prepare();
+
+            // Before Execution
+            if (trace != null)
             {
-                // Get the context
-                var context = (InsertAllExecutionContext<TEntity>)null;
-
-                // Identify the number of entities (performance)
-                context = count == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
-                    InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
-
-                // Set the command properties
-                command.CommandText = context.CommandText;
-                command.CommandType = CommandType.Text;
-                command.Transaction = (DbTransaction)transaction;
-
-                // Before Execution
-                if (trace != null)
+                var cancellableTraceLog = new CancellableTraceLog(commandText, entities, null);
+                trace.BeforeInsertAll(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
                 {
-                    var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
-                    trace.BeforeInsertAll(cancellableTraceLog);
-                    if (cancellableTraceLog.IsCancelled)
+                    if (cancellableTraceLog.IsThrowException)
                     {
-                        if (cancellableTraceLog.IsThrowException)
-                        {
-                            throw new CancelledExecutionException(context.CommandText);
-                        }
-                        return 0;
+                        throw new CancelledExecutionException(commandText);
                     }
-                    context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                    entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
+                    return 0;
                 }
-
-                // Before Execution Time
-                var beforeExecutionTime = DateTime.UtcNow;
-
-                // Execution variables
-                var result = 0;
-
-                // Directly execute if the entities is only 1 (performance)
-                if (context.BatchSize == 1)
-                {
-                    foreach (var entity in entities)
-                    {
-                        // Set the values
-                        context.Execute(command, new[] { entity });
-
-                        // Actual Execution
-                        result += command.ExecuteNonQuery();
-
-                        // Set the identities
-                        if (context.Identity != null)
-                        {
-                            var parameterName = context.Identity.GetUnquotedMappedName();
-                            if (command.Parameters.Contains(parameterName))
-                            {
-                                var parameter = command.Parameters[parameterName];
-                                context.Identity.PropertyInfo.SetValue(entity, parameter.Value);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var batchEntities in entities.Split(batchSize))
-                    {
-                        var batchItems = batchEntities.AsList();
-
-                        // Break if there is no more records
-                        if (batchItems.Count <= 0)
-                        {
-                            break;
-                        }
-
-                        // Check if the batch size has changed (probably the last batch on the enumerables)
-                        if (batchItems.Count != batchSize)
-                        {
-                            context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
-                            command.CommandText = context.CommandText;
-                        }
-
-                        // Set the values
-                        context.Execute(command, batchItems);
-
-                        // Actual Execution
-                        result += command.ExecuteNonQuery();
-
-                        // Set the identities
-                        if (context.Identity != null)
-                        {
-                            for (var i = 0; i < batchItems.Count; i++)
-                            {
-                                var parameterName = context.Identity.GetUnquotedMappedName().AsParameter(i, null);
-                                if (command.Parameters.Contains(parameterName))
-                                {
-                                    var parameter = command.Parameters[parameterName];
-                                    context.Identity.PropertyInfo.SetValue(batchItems.ElementAt(i), parameter.Value);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // After Execution
-                if (trace != null)
-                {
-                    trace.AfterInsertAll(new TraceLog(context.CommandText, entities, result,
-                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                }
-
-                // Return the result
-                return result;
+                context.Command.CommandText = (cancellableTraceLog.Statement ?? context.Command.CommandText);
+                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
             }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Execution variables
+            var result = 0;
+
+            // Directly execute if the entities is only 1 (performance)
+            if (context.BatchSize == 1)
+            {
+                foreach (var entity in entities)
+                {
+                    // Set the values
+                    context.Execute(context.Command, new[] { entity });
+
+                    // Actual Execution
+                    result += context.Command.ExecuteNonQuery();
+
+                    // Set the identities
+                    if (context.Identity != null)
+                    {
+                        var parameterName = context.Identity.GetUnquotedMappedName();
+                        if (context.Command.Parameters.Contains(parameterName))
+                        {
+                            var parameter = context.Command.Parameters[parameterName];
+                            context.Identity.PropertyInfo.SetValue(entity, parameter.Value);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var batchEntities in entities.Split(batchSize))
+                {
+                    var batchItems = batchEntities.AsList();
+
+                    // Break if there is no more records
+                    if (batchItems.Count <= 0)
+                    {
+                        break;
+                    }
+
+                    // Check if the batch size has changed (probably the last batch on the enumerables)
+                    if (batchItems.Count != batchSize)
+                    {
+                        // Get a new execution context
+                        context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
+
+                        // Set the command properties
+                        context.Command.Connection = (DbConnection)connection;
+                        context.Command.Transaction = (DbTransaction)transaction;
+
+                        // Prepare the command
+                        context.Command.Prepare();
+                    }
+
+                    // Set the values
+                    context.Execute(context.Command, batchItems);
+
+                    // Actual Execution
+                    result += context.Command.ExecuteNonQuery();
+
+                    // Set the identities
+                    if (context.Identity != null)
+                    {
+                        for (var i = 0; i < batchItems.Count; i++)
+                        {
+                            var parameterName = context.Identity.GetUnquotedMappedName().AsParameter(i, null);
+                            if (context.Command.Parameters.Contains(parameterName))
+                            {
+                                var parameter = context.Command.Parameters[parameterName];
+                                context.Identity.PropertyInfo.SetValue(batchItems.ElementAt(i), parameter.Value);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterInsertAll(new TraceLog(commandText, entities, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Return the result
+            return result;
         }
 
         #endregion
@@ -540,8 +548,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The data entity object to be inserted.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -551,8 +559,8 @@ namespace RepoDb
         internal static async Task<int> InsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchInsertSize,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -577,11 +585,10 @@ namespace RepoDb
                     statementBuilder);
 
                 // Variables needed
-                var commandText = CommandTextCache.GetInsertAllText(request);
                 var identity = (ClassProperty)null;
                 var dbFields = DbFieldCache.Get(connection, request.Name);
-                var inputFields = (IEnumerable<Field>)null;
-                var outputFields = (IEnumerable<Field>)null;
+                var inputFields = (IEnumerable<DbField>)null;
+                var outputFields = (IEnumerable<DbField>)null;
 
                 // Actual identity
                 var identityDbField = dbFields.FirstOrDefault(f => f.IsIdentity);
@@ -590,38 +597,34 @@ namespace RepoDb
                 if (skipIdentityCheck == false)
                 {
                     identity = IdentityCache.Get<TEntity>();
-                    if (identity == null)
+                    if (identityDbField != null)
                     {
-                        if (identityDbField != null)
-                        {
-                            identity = PropertyCache.Get<TEntity>().FirstOrDefault(property =>
-                                property.GetUnquotedMappedName().ToLower() == identityDbField.UnquotedName.ToLower());
-                        }
+                        identity = PropertyCache.Get<TEntity>().FirstOrDefault(property =>
+                            property.GetUnquotedMappedName().ToLower() == identityDbField.UnquotedName.ToLower());
                     }
                 }
 
                 // Filter the actual properties for input fields
-                inputFields = fields
-                    .Where(field =>
-                        field.UnquotedName.ToLower() != identityDbField?.UnquotedName.ToLower())
-                    .Where(field =>
-                        dbFields.FirstOrDefault(df => df.UnquotedName.ToLower() == field.UnquotedName.ToLower()) != null)
+                inputFields = dbFields
+                    .Where(dbField => dbField.IsIdentity == false)
+                    .Where(dbField =>
+                        fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
                     .AsList();
 
                 // Set the output fields
-                if (identity != null)
-                {
-                    outputFields = identity.AsField().AsEnumerable();
-                }
-                else
-                {
-                    outputFields = identityDbField?.AsField().AsEnumerable();
-                }
+                outputFields = identityDbField?.AsEnumerable();
+
+                // Create the command
+                var command = (DbCommand)connection.CreateCommand(CommandTextCache.GetInsertAllText(request),
+                    CommandType.Text, commandTimeout, transaction);
+
+                // Add the parameters
+                DataCommand.CreateParameters(command, inputFields, outputFields, batchSizeValue);
 
                 // Return the value
                 return new InsertAllExecutionContext<TEntity>
                 {
-                    CommandText = commandText,
+                    Command = command,
                     Identity = identity,
                     InputFields = inputFields,
                     OutputFields = outputFields,
@@ -634,118 +637,129 @@ namespace RepoDb
                 };
             });
 
-            // Create a command
-            using (var command = (DbCommand)(await connection.EnsureOpenAsync()).CreateCommand())
+            // Get the context
+            var context = (InsertAllExecutionContext<TEntity>)null;
+
+            // Identify the number of entities (performance)
+            context = count == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
+                InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
+
+            // Declare the command variable
+            var commandText = context.Command.CommandText;
+
+            // Set the command properties
+            context.Command.Connection = (DbConnection)connection;
+            context.Command.Transaction = (DbTransaction)transaction;
+
+            // Open the connection
+            await connection.EnsureOpenAsync();
+
+            // Prepare the command
+            context.Command.Prepare();
+
+            // Before Execution
+            if (trace != null)
             {
-                // Get the context
-                var context = (InsertAllExecutionContext<TEntity>)null;
-
-                // Identify the number of entities (performance)
-                context = count == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
-                    InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
-
-                // Set the command properties
-                command.CommandText = context.CommandText;
-                command.CommandType = CommandType.Text;
-                command.Transaction = (DbTransaction)transaction;
-
-                // Before Execution
-                if (trace != null)
+                var cancellableTraceLog = new CancellableTraceLog(commandText, entities, null);
+                trace.BeforeInsertAll(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
                 {
-                    var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
-                    trace.BeforeInsertAll(cancellableTraceLog);
-                    if (cancellableTraceLog.IsCancelled)
+                    if (cancellableTraceLog.IsThrowException)
                     {
-                        if (cancellableTraceLog.IsThrowException)
-                        {
-                            throw new CancelledExecutionException(context.CommandText);
-                        }
-                        return 0;
+                        throw new CancelledExecutionException(commandText);
                     }
-                    context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                    entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
+                    return 0;
                 }
-
-                // Before Execution Time
-                var beforeExecutionTime = DateTime.UtcNow;
-
-                // Execution variables
-                var result = 0;
-
-                // Directly execute if the entities is only 1 (performance)
-                if (context.BatchSize == 1)
-                {
-                    foreach (var entity in entities)
-                    {
-                        // Set the values
-                        context.Execute(command, new[] { entity });
-
-                        // Actual Execution
-                        result += await command.ExecuteNonQueryAsync();
-
-                        // Set the identities
-                        if (context.Identity != null)
-                        {
-                            var parameterName = context.Identity.GetUnquotedMappedName();
-                            if (command.Parameters.Contains(parameterName))
-                            {
-                                var parameter = command.Parameters[parameterName];
-                                context.Identity.PropertyInfo.SetValue(entity, parameter.Value);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var batchEntities in entities.Split(batchSize))
-                    {
-                        var batchItems = batchEntities.AsList();
-
-                        // Break if there is no more records
-                        if (batchItems.Count <= 0)
-                        {
-                            break;
-                        }
-
-                        // Check if the batch size has changed (probably the last batch on the enumerables)
-                        if (batchItems.Count != batchSize)
-                        {
-                            context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
-                            command.CommandText = context.CommandText;
-                        }
-
-                        // Set the values
-                        context.Execute(command, batchItems);
-
-                        // Actual Execution
-                        result += await command.ExecuteNonQueryAsync();
-
-                        // Set the identities
-                        if (context.Identity != null)
-                        {
-                            for (var i = 0; i < batchItems.Count; i++)
-                            {
-                                var parameterName = context.Identity.GetUnquotedMappedName().AsParameter(i, null);
-                                if (command.Parameters.Contains(parameterName))
-                                {
-                                    var parameter = command.Parameters[parameterName];
-                                    context.Identity.PropertyInfo.SetValue(batchItems.ElementAt(i), parameter.Value);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // After Execution
-                if (trace != null)
-                {
-                    trace.AfterInsertAll(new TraceLog(context.CommandText, entities, result,
-                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                }
-
-                // Return the result
-                return result;
+                context.Command.CommandText = (cancellableTraceLog.Statement ?? context.Command.CommandText);
+                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
             }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Execution variables
+            var result = 0;
+
+            // Directly execute if the entities is only 1 (performance)
+            if (context.BatchSize == 1)
+            {
+                foreach (var entity in entities)
+                {
+                    // Set the values
+                    context.Execute(context.Command, new[] { entity });
+
+                    // Actual Execution
+                    result += await context.Command.ExecuteNonQueryAsync();
+
+                    // Set the identities
+                    if (context.Identity != null)
+                    {
+                        var parameterName = context.Identity.GetUnquotedMappedName();
+                        if (context.Command.Parameters.Contains(parameterName))
+                        {
+                            var parameter = context.Command.Parameters[parameterName];
+                            context.Identity.PropertyInfo.SetValue(entity, parameter.Value);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var batchEntities in entities.Split(batchSize))
+                {
+                    var batchItems = batchEntities.AsList();
+
+                    // Break if there is no more records
+                    if (batchItems.Count <= 0)
+                    {
+                        break;
+                    }
+
+                    // Check if the batch size has changed (probably the last batch on the enumerables)
+                    if (batchItems.Count != batchSize)
+                    {
+                        // Get a new execution context
+                        context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
+
+                        // Set the command properties
+                        context.Command.Connection = (DbConnection)connection;
+                        context.Command.Transaction = (DbTransaction)transaction;
+
+                        // Prepare the command
+                        context.Command.Prepare();
+                    }
+
+                    // Set the values
+                    context.Execute(context.Command, batchItems);
+
+                    // Actual Execution
+                    result += await context.Command.ExecuteNonQueryAsync();
+
+                    // Set the identities
+                    if (context.Identity != null)
+                    {
+                        for (var i = 0; i < batchItems.Count; i++)
+                        {
+                            var parameterName = context.Identity.GetUnquotedMappedName().AsParameter(i, null);
+                            if (context.Command.Parameters.Contains(parameterName))
+                            {
+                                var parameter = context.Command.Parameters[parameterName];
+                                context.Identity.PropertyInfo.SetValue(batchItems.ElementAt(i), parameter.Value);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterInsertAll(new TraceLog(commandText, entities, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Return the result
+            return result;
         }
 
         #endregion

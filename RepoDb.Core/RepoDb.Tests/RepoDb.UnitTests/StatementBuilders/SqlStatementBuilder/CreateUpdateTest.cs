@@ -116,7 +116,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Field1", 1));
-            var field = new DbField("Field1", true, true, false);
+            var field = new DbField("Field1", true, true, false, typeof(int), null, null, null);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -143,7 +143,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Field1", 1));
-            var field = new DbField("Field1", true, true, false);
+            var field = new DbField("Field1", true, true, false, typeof(int), null, null, null);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -170,7 +170,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Field1", 1));
-            var field = new DbField("Field1", true, true, false);
+            var field = new DbField("Field1", true, true, false, typeof(int), null, null, null);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -197,7 +197,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Id", 1));
-            var field = new DbField("Id", true, true, false);
+            var field = new DbField("Id", true, true, false, typeof(int), null, null, null);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -224,7 +224,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Id", 1));
-            var field = new DbField("Id", true, true, false);
+            var field = new DbField("Id", true, true, false, typeof(int), null, null, null);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -251,7 +251,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Id", 1));
-            var field = new DbField("Id", true, true, false);
+            var field = new DbField("Id", true, true, false, typeof(int), null, null, null);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -278,7 +278,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Id", 1));
-            var field = new DbField("Field1", true, true, false);
+            var field = new DbField("Field1", true, true, false, typeof(int), null, null, null);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -305,7 +305,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var where = new QueryGroup(new QueryField("Id", 1));
-            var field = new DbField("Field1", true, true, false);
+            var field = new DbField("Field1", true, true, false, typeof(int), null, null, null);
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -385,7 +385,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
-            var primaryField = new DbField("Field1", false, false, false);
+            var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null);
 
             // Act
             statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -405,7 +405,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
             var qualifiers = Field.From("Field1");
-            var identifyField = new DbField("Field2", false, false, false);
+            var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null);
 
             // Act
             statementBuilder.CreateUpdate(queryBuilder: queryBuilder,

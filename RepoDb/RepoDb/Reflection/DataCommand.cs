@@ -16,12 +16,16 @@ namespace RepoDb.Reflection
         /// Create a parameters for the <see cref="DbCommand"/>.
         /// </summary>
         /// <param name="command">The <see cref="DbCommand"/> object where to set the parameters.</param>
-        /// <param name="fields">The list of <see cref="Field"/> objects where the parameters will be based.</param>
+        /// <param name="inputFields">The list of <see cref="DbField"/> objects where the parameters will be based.</param>
+        /// <param name="outputFields">The list of the output <see cref="DbField"/> objects to be used.</param>
+        /// <param name="batchSize">The batch size of the entities to be passed.</param>
         public static void CreateParameters(DbCommand command,
-            IEnumerable<Field> fields)
+            IEnumerable<DbField> inputFields,
+            IEnumerable<DbField> outputFields,
+            int batchSize)
         {
             // Set the parameters
-            FunctionFactory.CreateDbCommandParametersFromFields(command, fields);
+            FunctionFactory.CreateDbCommandParametersFromFields(command, inputFields, outputFields, batchSize);
         }
 
         #endregion
@@ -35,13 +39,13 @@ namespace RepoDb.Reflection
         /// <param name="command">The <see cref="DbCommand"/> object where to set the parameters.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of the data entity objects.</param>
-        /// <param name="inputFields">The list of the input <see cref="Field"/> objects to be used.</param>
-        /// <param name="outputFields">The list of the output <see cref="Field"/> objects to be used.</param>
+        /// <param name="inputFields">The list of the input <see cref="DbField"/> objects to be used.</param>
+        /// <param name="outputFields">The list of the output <see cref="DbField"/> objects to be used.</param>
         public static void SetParameters<TEntity>(DbCommand command,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> inputFields,
-            IEnumerable<Field> outputFields)
+            IEnumerable<DbField> inputFields,
+            IEnumerable<DbField> outputFields)
             where TEntity : class
         {
             // Get the actual function

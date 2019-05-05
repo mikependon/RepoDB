@@ -49,8 +49,8 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     return new[]
                     {
-                        new DbField("Id", true, true, false),
-                        new DbField("Name", false, false, true)
+                        new DbField("Id", true, true, false, typeof(int), null, null, null),
+                        new DbField("Name", false, false, true, typeof(string), null, null, null)
                     };
                 }
                 return null;

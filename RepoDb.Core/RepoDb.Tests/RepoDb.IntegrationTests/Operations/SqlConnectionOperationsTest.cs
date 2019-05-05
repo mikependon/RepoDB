@@ -3826,7 +3826,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, tables.Item2);
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2);
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -3864,7 +3864,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, tables.Item2);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2);
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -3906,7 +3906,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, tables.Item2).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2).Wait();
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -3944,7 +3944,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, tables.Item2).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2).Wait();
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();

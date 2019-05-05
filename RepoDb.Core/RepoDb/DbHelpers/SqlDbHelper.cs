@@ -43,6 +43,9 @@ namespace RepoDb.DbHelpers
 	                    , TMP.is_identity AS IsIdentity
 	                    , TMP.is_nullable AS IsNullable
 	                    , C.DATA_TYPE AS DataType
+						, TMP.max_length AS Size
+						, TMP.precision AS Precision
+						, TMP.scale AS Scale
                     FROM INFORMATION_SCHEMA.COLUMNS C
                     LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU
 	                    ON KCU.TABLE_SCHEMA = C.TABLE_SCHEMA
@@ -57,6 +60,9 @@ namespace RepoDb.DbHelpers
 	                    SELECT SC.name
 		                    , SC.is_identity
 		                    , SC.is_nullable
+							, SC.max_length
+							, SC.scale
+							, SC.precision
 	                    FROM [sys].[columns] SC
 	                    INNER JOIN [sys].[tables] ST ON ST.object_id = SC.object_id
 	                    WHERE SC.name = C.COLUMN_NAME
@@ -93,19 +99,25 @@ namespace RepoDb.DbHelpers
                     {
                         while (reader.Read())
                         {
-                            // Yields affect the performance on multiple batch insert
-                            //yield return new DbField(reader.GetString(0),
-                            //    reader.GetBoolean(1),
-                            //    reader.GetBoolean(2),
-                            //    reader.GetBoolean(3),
-                            //    DbTypeResolver.Resolve(reader.GetString(4)));
-
-                            // Add the result directly to the list
-                            list.Add(new DbField(reader.GetString(0),
+                            // Yields affect the performance of multiple batch insert
+                            /*
+                            yield return new DbField(reader.GetString(0),
                                 reader.GetBoolean(1),
                                 reader.GetBoolean(2),
                                 reader.GetBoolean(3),
-                                DbTypeResolver.Resolve(reader.GetString(4))));
+                                DbTypeResolver.Resolve(reader.GetString(4)));*/
+
+                            var dbField = new DbField(reader.GetString(0),
+                                reader.GetBoolean(1),
+                                reader.GetBoolean(2),
+                                reader.GetBoolean(3),
+                                DbTypeResolver.Resolve(reader.GetString(4)),
+                                reader.GetInt16(5),
+                                reader.GetByte(6),
+                                reader.GetByte(7));
+
+                            // Add the result directly to the list
+                            list.Add(dbField);
                         }
                     }
 

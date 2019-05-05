@@ -14,7 +14,7 @@ namespace RepoDb.Contexts.Execution
         /// <summary>
         /// The execution command text.
         /// </summary>
-        public string CommandText { get; set; }
+        public DbCommand Command { get; set; }
 
         /// <summary>
         /// The identity class property.
@@ -22,14 +22,14 @@ namespace RepoDb.Contexts.Execution
         public ClassProperty Identity { get; set; }
 
         /// <summary>
-        /// The list of the input <see cref="Field"/> objects to be included in the execution.
+        /// The list of the input <see cref="DbField"/> objects to be included in the execution.
         /// </summary>
-        public IEnumerable<Field> InputFields { get; set; }
+        public IEnumerable<DbField> InputFields { get; set; }
 
         /// <summary>
-        /// The list of the output <see cref="Field"/> objects to be included in the execution.
+        /// The list of the output <see cref="DbField"/> objects to be included in the execution.
         /// </summary>
-        public IEnumerable<Field> OutputFields { get; set; }
+        public IEnumerable<DbField> OutputFields { get; set; }
 
         /// <summary>
         /// The batch size of the execution.

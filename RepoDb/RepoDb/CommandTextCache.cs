@@ -403,7 +403,7 @@ namespace RepoDb
                         isIdentity = identityProperty.GetUnquotedMappedName().ToLower() == primaryPropery.GetUnquotedMappedName().ToLower();
                     }
                     return new DbField(primaryPropery.GetUnquotedMappedName(), true, isIdentity, false,
-                        primaryPropery.PropertyInfo.PropertyType);
+                        primaryPropery.PropertyInfo.PropertyType, null, null, null);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
@@ -428,7 +428,7 @@ namespace RepoDb
                         isPrimary = primaryPropery.GetUnquotedMappedName().ToLower() == identityProperty.GetUnquotedMappedName().ToLower();
                     }
                     return new DbField(identityProperty.GetUnquotedMappedName(), isPrimary, true, false,
-                        identityProperty.PropertyInfo.PropertyType);
+                        identityProperty.PropertyInfo.PropertyType, null, null, null);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);

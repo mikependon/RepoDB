@@ -14,10 +14,13 @@ namespace RepoDb
         /// Creates a new instance of <see cref="DbField"/> object.
         /// </summary>
         public DbField(string name,
-            bool isPrimary = false,
-            bool isIdentity = false,
-            bool isNullable = true,
-            Type type = null)
+            bool isPrimary,
+            bool isIdentity,
+            bool isNullable,
+            Type type,
+            int? size,
+            byte? precision,
+            byte? scale)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -32,12 +35,27 @@ namespace RepoDb
             IsIdentity = isIdentity;
             IsNullable = isNullable;
             Type = type;
+            Size = size;
+            Precision = precision;
+            Scale = scale;
 
             // Set the hashcode
             m_hashCode = name.GetHashCode() + isPrimary.GetHashCode() + isIdentity.GetHashCode() + isNullable.GetHashCode();
             if (type != null)
             {
                 m_hashCode += type.GetHashCode();
+            }
+            if (size != null)
+            {
+                m_hashCode += size.GetHashCode();
+            }
+            if (precision != null)
+            {
+                m_hashCode += precision.GetHashCode();
+            }
+            if (scale != null)
+            {
+                m_hashCode += scale.GetHashCode();
             }
         }
 
@@ -70,6 +88,32 @@ namespace RepoDb
         /// Gets the .NET type of the column.
         /// </summary>
         public Type Type { get; }
+
+        /// <summary>
+        /// Gets the size of the column.
+        /// </summary>
+        public int? Size { get; }
+
+        /// <summary>
+        /// Gets the precision of the column.
+        /// </summary>
+        public byte? Precision { get; }
+
+        /// <summary>
+        /// Gets the scale of the column.
+        /// </summary>
+        public byte? Scale { get; }
+
+        // Methods
+
+        /// <summary>
+        /// Gets the string that represents the instance of this <see cref="DbField"/> object.
+        /// </summary>
+        /// <returns>The string that represents the instance of this <see cref="DbField"/> object.</returns>
+        public override string ToString()
+        {
+            return string.Concat(Name, " (", m_hashCode, ")");
+        }
 
         // Equality and comparers
 

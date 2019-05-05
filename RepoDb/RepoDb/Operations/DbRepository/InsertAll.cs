@@ -102,14 +102,14 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The dynamic objects to be inserted.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public int InsertAll(string tableName,
             IEnumerable<object> entities,
-            IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchInsertSize,
+            IEnumerable<Field> fields = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -148,14 +148,14 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The dynamic objects to be inserted.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used. Defaulted to database table fields.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public async Task<int> InsertAllAsync(string tableName,
             IEnumerable<object> entities,
-            IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchInsertSize,
+            IEnumerable<Field> fields = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -166,8 +166,8 @@ namespace RepoDb
                 // Call the method
                 return await connection.InsertAllAsync(tableName: tableName,
                     entities: entities,
-                    fields: fields,
                     batchSize: batchSize,
+                    fields: fields,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
