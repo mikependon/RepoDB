@@ -14,7 +14,7 @@ namespace RepoDb.Contexts.Execution
         /// <summary>
         /// The execution command text.
         /// </summary>
-        public DbCommand Command { get; set; }
+        public string CommandText { get; set; }
 
         /// <summary>
         /// The identity class property.
