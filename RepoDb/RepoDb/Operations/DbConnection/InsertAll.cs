@@ -419,9 +419,6 @@ namespace RepoDb
                 // Add the parameters
                 DataCommand.CreateParameters(command, context.InputFields, context.OutputFields, batchSize);
 
-                // Open the connection
-                connection.EnsureOpen();
-
                 // Prepare the command
                 command.Prepare();
 
@@ -491,6 +488,9 @@ namespace RepoDb
 
                             // Set the command properties
                             command.CommandText = context.CommandText;
+
+                            // Add the parameters
+                            DataCommand.CreateParameters(command, context.InputFields, context.OutputFields, batchItems.Count);
 
                             // Prepare the command
                             command.Prepare();
@@ -637,9 +637,6 @@ namespace RepoDb
                 // Add the parameters
                 DataCommand.CreateParameters(command, context.InputFields, context.OutputFields, batchSize);
 
-                // Open the connection
-                connection.EnsureOpen();
-
                 // Prepare the command
                 command.Prepare();
 
@@ -709,6 +706,9 @@ namespace RepoDb
 
                             // Set the command properties
                             command.CommandText = context.CommandText;
+
+                            // Add the parameters
+                            DataCommand.CreateParameters(command, context.InputFields, context.OutputFields, batchItems.Count);
 
                             // Prepare the command
                             command.Prepare();
