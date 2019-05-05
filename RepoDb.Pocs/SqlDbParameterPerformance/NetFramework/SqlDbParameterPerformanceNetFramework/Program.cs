@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SqlDbParameterPerformanceNetFramework
 {
@@ -16,10 +17,9 @@ namespace SqlDbParameterPerformanceNetFramework
         static void Main(string[] args)
         {
             TypeMapper.Map(typeof(DateTime), DbType.DateTime2);
-            var iterations = 10;
+            var iterations = 20;
             var rows = 100;
-            Excercise();
-            //InsertViaRepoDb(1, 10);
+            Excercise(iterations, rows);
             InsertViaClearAndCreate(iterations, rows);
             InsertAllViaRepoDb(iterations, rows);
             InsertViaParameterAssignmentByName(iterations, rows);
@@ -27,40 +27,18 @@ namespace SqlDbParameterPerformanceNetFramework
             Console.ReadLine();
         }
 
-        private static void Excercise()
+        private static void Excercise(int iterations, int rows)
         {
-            using (var connection = new SqlConnection(m_connectionString).EnsureOpen())
-            {
-                var identityTables = CreateIdentityTables(10);
-                connection.InsertAll(identityTables);
-                connection.Truncate<IdentityTable>();
-            }
+            Console.WriteLine("Exercising, please wait...");
+            InsertViaParameterAssignmentByName(iterations, rows, false);
+            InsertViaParameterAssignmentByIndex(iterations, rows, false);
+            InsertViaClearAndCreate(iterations, rows, false);
+            InsertAllViaRepoDb(iterations, rows, false);
+            Console.WriteLine("Exercise completed.");
+            Task.Delay(2000);
         }
 
-        private static void InsertViaRepoDb(int iterations, int rows)
-        {
-            using (var connection = new SqlConnection(m_connectionString).EnsureOpen())
-            {
-                var identityTables = CreateIdentityTables(rows);
-                connection.Truncate<IdentityTable>();
-                var stopwatch = new Stopwatch();
-                var milliseconds = new List<double>();
-                for (var i = 0; i < iterations; i++)
-                {
-                    stopwatch.Start();
-                    foreach (var item in identityTables)
-                    {
-                        connection.Insert(item);
-                    }
-                    stopwatch.Stop();
-                    milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
-                    stopwatch.Reset();
-                }
-                Console.WriteLine($"RepoDb Insert: {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
-            }
-        }
-
-        private static void InsertAllViaRepoDb(int iterations, int rows)
+        private static void InsertAllViaRepoDb(int iterations, int rows, bool log = true)
         {
             using (var connection = new SqlConnection(m_connectionString))
             {
@@ -76,11 +54,14 @@ namespace SqlDbParameterPerformanceNetFramework
                     milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
                     stopwatch.Reset();
                 }
-                Console.WriteLine($"RepoDb InsertAll: {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+                if (log)
+                {
+                    Console.WriteLine($"RepoDb InsertAll: {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+                }
             }
         }
 
-        private static void InsertViaClearAndCreate(int iterations, int rows)
+        private static void InsertViaClearAndCreate(int iterations, int rows, bool log = true)
         {
             using (var connection = new SqlConnection(m_connectionString).EnsureOpen())
             {
@@ -88,10 +69,9 @@ namespace SqlDbParameterPerformanceNetFramework
                 connection.Truncate<IdentityTable>();
                 var stopwatch = new Stopwatch();
                 var milliseconds = new List<double>();
-                for (var i = 0; i < iterations; i++)
-                {
-                    // Variables
-                    var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
+
+                // Variables
+                var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
                         RowGuid
                         , ColumnBit
                         , ColumnDateTime
@@ -114,6 +94,9 @@ namespace SqlDbParameterPerformanceNetFramework
                     );
                     SELECT SCOPE_IDENTITY() AS RESULT;");
 
+
+                for (var i = 0; i < iterations; i++)
+                {
                     // Execution
                     stopwatch.Start();
                     foreach (var item in identityTables)
@@ -122,14 +105,17 @@ namespace SqlDbParameterPerformanceNetFramework
                         command.Parameters.Clear();
 
                         // Parameters
-                        CreateParameterWithValue(command, "RowGuid", item.RowGuid);
-                        CreateParameterWithValue(command, "ColumnBit", item.ColumnBit);
-                        CreateParameterWithValue(command, "ColumnDateTime", item.ColumnDateTime);
-                        CreateParameterWithValue(command, "ColumnDateTime2", item.ColumnDateTime2);
-                        CreateParameterWithValue(command, "ColumnDecimal", item.ColumnDecimal);
-                        CreateParameterWithValue(command, "ColumnFloat", item.ColumnFloat);
-                        CreateParameterWithValue(command, "ColumnInt", item.ColumnInt);
-                        CreateParameterWithValue(command, "ColumnNVarChar", item.ColumnNVarChar);
+                        CreateParameterWithValue(command, "RowGuid", item.RowGuid, DbType.Guid, 16, 0, 0);
+                        CreateParameterWithValue(command, "ColumnBit", item.ColumnBit, DbType.Boolean, 1, 1, 0);
+                        CreateParameterWithValue(command, "ColumnDateTime", item.ColumnDateTime, DbType.DateTime, 8, 23, 3);
+                        CreateParameterWithValue(command, "ColumnDateTime2", item.ColumnDateTime2, DbType.DateTime2, 8, 27, 7);
+                        CreateParameterWithValue(command, "ColumnDecimal", item.ColumnDecimal, DbType.Decimal, 9, 18, 2);
+                        CreateParameterWithValue(command, "ColumnFloat", item.ColumnFloat, DbType.Single, 8, 53, 0);
+                        CreateParameterWithValue(command, "ColumnInt", item.ColumnInt, DbType.Int32, 4, 10, 0);
+                        CreateParameterWithValue(command, "ColumnNVarChar", item.ColumnNVarChar, DbType.String, -1, 0, 0);
+
+                        // Prepare
+                        command.Prepare();
 
                         // Execute
                         var result = command.ExecuteScalar();
@@ -138,11 +124,19 @@ namespace SqlDbParameterPerformanceNetFramework
                     milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
                     stopwatch.Reset();
                 }
-                Console.WriteLine($"HandCoded ClearAndCreate: {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+
+                // Dispose
+                command.Dispose();
+
+                // Log
+                if (log)
+                {
+                    Console.WriteLine($"HandCoded ClearAndCreate: {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+                }
             }
         }
 
-        private static void InsertViaParameterAssignmentByName(int iterations, int rows)
+        private static void InsertViaParameterAssignmentByName(int iterations, int rows, bool log = true)
         {
             using (var connection = new SqlConnection(m_connectionString).EnsureOpen())
             {
@@ -150,10 +144,9 @@ namespace SqlDbParameterPerformanceNetFramework
                 connection.Truncate<IdentityTable>();
                 var stopwatch = new Stopwatch();
                 var milliseconds = new List<double>();
-                for (var i = 0; i < iterations; i++)
-                {
-                    // Variables
-                    var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
+
+                // Variables
+                var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
                         RowGuid
                         , ColumnBit
                         , ColumnDateTime
@@ -176,16 +169,21 @@ namespace SqlDbParameterPerformanceNetFramework
                     );
                     SELECT SCOPE_IDENTITY() AS RESULT;");
 
-                    // Add the parameters
-                    CreateParameter(command, "RowGuid");
-                    CreateParameter(command, "ColumnBit");
-                    CreateParameter(command, "ColumnDateTime");
-                    CreateParameter(command, "ColumnDateTime2");
-                    CreateParameter(command, "ColumnDecimal");
-                    CreateParameter(command, "ColumnFloat");
-                    CreateParameter(command, "ColumnInt");
-                    CreateParameter(command, "ColumnNVarChar");
+                // Add the parameters
+                CreateParameter(command, "RowGuid", DbType.Guid, 16, 0, 0);
+                CreateParameter(command, "ColumnBit", DbType.Boolean, 1, 1, 0);
+                CreateParameter(command, "ColumnDateTime", DbType.DateTime, 8, 23, 3);
+                CreateParameter(command, "ColumnDateTime2", DbType.DateTime2, 8, 27, 7);
+                CreateParameter(command, "ColumnDecimal", DbType.Decimal, 9, 18, 2);
+                CreateParameter(command, "ColumnFloat", DbType.Single, 8, 53, 0);
+                CreateParameter(command, "ColumnInt", DbType.Int32, 4, 10, 0);
+                CreateParameter(command, "ColumnNVarChar", DbType.String, -1, 0, 0);
 
+                // Prepare
+                command.Prepare();
+
+                for (var i = 0; i < iterations; i++)
+                {
                     // Execution
                     stopwatch.Start();
                     foreach (var item in identityTables)
@@ -207,11 +205,19 @@ namespace SqlDbParameterPerformanceNetFramework
                     milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
                     stopwatch.Reset();
                 }
-                Console.WriteLine($"HandCoded ParameterAssignment (By Name): {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+
+                // Dispose
+                command.Dispose();
+
+                // Log
+                if (log)
+                {
+                    Console.WriteLine($"HandCoded ParameterAssignment (By Name): {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+                }
             }
         }
 
-        private static void InsertViaParameterAssignmentByIndex(int iterations, int rows)
+        private static void InsertViaParameterAssignmentByIndex(int iterations, int rows, bool log = true)
         {
             using (var connection = new SqlConnection(m_connectionString).EnsureOpen())
             {
@@ -219,10 +225,9 @@ namespace SqlDbParameterPerformanceNetFramework
                 connection.Truncate<IdentityTable>();
                 var stopwatch = new Stopwatch();
                 var milliseconds = new List<double>();
-                for (var i = 0; i < iterations; i++)
-                {
-                    // Variables
-                    var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
+
+                // Variables
+                var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
                         RowGuid
                         , ColumnBit
                         , ColumnDateTime
@@ -245,16 +250,21 @@ namespace SqlDbParameterPerformanceNetFramework
                     );
                     SELECT SCOPE_IDENTITY() AS RESULT;");
 
-                    // Add the parameters
-                    CreateParameter(command, "RowGuid");
-                    CreateParameter(command, "ColumnBit");
-                    CreateParameter(command, "ColumnDateTime");
-                    CreateParameter(command, "ColumnDateTime2");
-                    CreateParameter(command, "ColumnDecimal");
-                    CreateParameter(command, "ColumnFloat");
-                    CreateParameter(command, "ColumnInt");
-                    CreateParameter(command, "ColumnNVarChar");
+                // Add the parameters
+                CreateParameter(command, "RowGuid", DbType.Guid, 16, 0, 0);
+                CreateParameter(command, "ColumnBit", DbType.Boolean, 1, 1, 0);
+                CreateParameter(command, "ColumnDateTime", DbType.DateTime, 8, 23, 3);
+                CreateParameter(command, "ColumnDateTime2", DbType.DateTime2, 8, 27, 7);
+                CreateParameter(command, "ColumnDecimal", DbType.Decimal, 9, 18, 2);
+                CreateParameter(command, "ColumnFloat", DbType.Single, 8, 53, 0);
+                CreateParameter(command, "ColumnInt", DbType.Int32, 4, 10, 0);
+                CreateParameter(command, "ColumnNVarChar", DbType.String, -1, 0, 0);
 
+                // Prepare
+                command.Prepare();
+
+                for (var i = 0; i < iterations; i++)
+                {
                     // Execution
                     stopwatch.Start();
                     foreach (var item in identityTables)
@@ -276,10 +286,17 @@ namespace SqlDbParameterPerformanceNetFramework
                     milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
                     stopwatch.Reset();
                 }
-                Console.WriteLine($"HandCoded ParameterAssignment (By Index): {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+
+                // Dispose
+                command.Dispose();
+
+                // Log
+                if (log)
+                {
+                    Console.WriteLine($"HandCoded ParameterAssignment (By Index): {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+                }
             }
         }
-
 
         private static IEnumerable<IdentityTable> CreateIdentityTables(int count)
         {
@@ -292,28 +309,45 @@ namespace SqlDbParameterPerformanceNetFramework
                     ColumnBit = true,
                     ColumnDateTime = DateTime.UtcNow.Date,
                     ColumnDateTime2 = DateTime.UtcNow,
-                    ColumnDecimal = index,
-                    ColumnFloat = index,
-                    ColumnInt = index,
+                    ColumnDecimal = 100.00M, // Convert.ToDecimal(i),
+                    ColumnFloat = Convert.ToSingle(i),
+                    ColumnInt = i,
                     ColumnNVarChar = $"NVARCHAR{index}"
                 };
             }
         }
 
-
-        private static IDbDataParameter CreateParameter(IDbCommand command, string name)
+        private static IDbDataParameter CreateParameter(IDbCommand command,
+            string name,
+            DbType dbType,
+            int size,
+            byte precision,
+            byte scale)
         {
             var parameter = command.CreateParameter();
             parameter.ParameterName = name;
+            parameter.DbType = dbType;
+            parameter.Size = size;
+            parameter.Scale = scale;
             command.Parameters.Add(parameter);
             return parameter;
         }
 
-        private static IDbDataParameter CreateParameterWithValue(IDbCommand command, string name, object value)
+        private static IDbDataParameter CreateParameterWithValue(IDbCommand command,
+            string name,
+            object value,
+            DbType dbType,
+            int size,
+            byte precision,
+            byte scale)
         {
             var parameter = command.CreateParameter();
             parameter.ParameterName = name;
+            parameter.DbType = dbType;
+            parameter.Size = size;
             parameter.Value = value;
+            parameter.Precision = precision;
+            parameter.Scale = scale;
             command.Parameters.Add(parameter);
             return parameter;
         }
