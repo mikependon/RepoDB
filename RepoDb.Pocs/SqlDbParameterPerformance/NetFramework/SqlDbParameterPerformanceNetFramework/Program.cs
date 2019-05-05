@@ -1,4 +1,5 @@
 ﻿using RepoDb;
+using RepoDb.Extensions;
 using SqlDbParameterPerformanceNetFramework.Models;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,11 @@ namespace SqlDbParameterPerformanceNetFramework
         static void Main(string[] args)
         {
             TypeMapper.Map(typeof(DateTime), DbType.DateTime2);
-            var iterations = 30;
-            var rows = 199;
+            var iterations = 20;
+            var rows = 100;
             Excercise(iterations, rows);
             InsertAllViaRepoDb(iterations, rows);
+            InsertViaRepoDb(iterations, rows);
             InsertViaClearAndCreate(iterations, rows);
             InsertViaParameterAssignmentByName(iterations, rows);
             InsertViaParameterAssignmentByIndex(iterations, rows);
@@ -30,10 +32,11 @@ namespace SqlDbParameterPerformanceNetFramework
         private static void Excercise(int iterations, int rows)
         {
             Console.WriteLine("Exercising, please wait...");
+            InsertAllViaRepoDb(iterations, rows, false);
+            InsertViaRepoDb(iterations, rows, false);
+            InsertViaClearAndCreate(iterations, rows, false);
             InsertViaParameterAssignmentByName(iterations, rows, false);
             InsertViaParameterAssignmentByIndex(iterations, rows, false);
-            InsertViaClearAndCreate(iterations, rows, false);
-            InsertAllViaRepoDb(iterations, rows, false);
             Console.WriteLine("Exercise completed.");
             Task.Delay(2000);
         }
@@ -57,6 +60,29 @@ namespace SqlDbParameterPerformanceNetFramework
                 if (log)
                 {
                     Console.WriteLine($"RepoDb InsertAll: {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+                }
+            }
+        }
+
+        private static void InsertViaRepoDb(int iterations, int rows, bool log = true)
+        {
+            using (var connection = new SqlConnection(m_connectionString))
+            {
+                var identityTables = CreateIdentityTables(rows);
+                connection.Truncate<IdentityTable>();
+                var stopwatch = new Stopwatch();
+                var milliseconds = new List<double>();
+                for (var i = 0; i < iterations; i++)
+                {
+                    stopwatch.Start();
+                    identityTables.AsList().ForEach(item => connection.Insert(item));
+                    stopwatch.Stop();
+                    milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
+                    stopwatch.Reset();
+                }
+                if (log)
+                {
+                    Console.WriteLine($"RepoDb Insert: {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
                 }
             }
         }
