@@ -37,9 +37,9 @@ namespace RepoDb.Extensions
         /// <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The converted <see cref="IList{T}"/> object.</returns>
-        public static IList<T> AsList<T>(this IEnumerable<T> value)
+        public static List<T> AsList<T>(this IEnumerable<T> value)
         {
-            return value is IList<T> ? (IList<T>)value : value.ToList();
+            return value is List<T> ? (List<T>)value : value.ToList();
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The converted <see cref="IList{T}"/> object.</returns>
-        public static IList<T> AsArray<T>(this IEnumerable<T> value)
+        public static T[] AsArray<T>(this IEnumerable<T> value)
         {
             return value is T[] ? (T[])value : value.ToArray();
         }
