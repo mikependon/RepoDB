@@ -85,18 +85,32 @@ namespace RepoDb.DbHelpers
                     // Create parameters
                     dbCommand.CreateParameters(new { Schema = schema, TableName = tableName });
 
+                    // List of the DBField
+                    var list = new List<DbField>();
+
                     // Execute and set the result
                     using (var reader = dbCommand.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            yield return new DbField(reader.GetString(0),
+                            // Yields affect the performance on multiple batch insert
+                            //yield return new DbField(reader.GetString(0),
+                            //    reader.GetBoolean(1),
+                            //    reader.GetBoolean(2),
+                            //    reader.GetBoolean(3),
+                            //    DbTypeResolver.Resolve(reader.GetString(4)));
+
+                            // Add the result directly to the list
+                            list.Add(new DbField(reader.GetString(0),
                                 reader.GetBoolean(1),
                                 reader.GetBoolean(2),
                                 reader.GetBoolean(3),
-                                DbTypeResolver.Resolve(reader.GetString(4)));
+                                DbTypeResolver.Resolve(reader.GetString(4))));
                         }
                     }
+
+                    // Return the list
+                    return list;
                 }
             }
         }
