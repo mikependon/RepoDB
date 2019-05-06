@@ -52,7 +52,7 @@ namespace SqlDbParameterPerformanceNetFramework
                 for (var i = 0; i < iterations; i++)
                 {
                     stopwatch.Start();
-                    connection.InsertAll(identityTables, 1);
+                    connection.InsertAll(identityTables, 10);
                     stopwatch.Stop();
                     milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
                     stopwatch.Reset();
@@ -96,8 +96,9 @@ namespace SqlDbParameterPerformanceNetFramework
                 var stopwatch = new Stopwatch();
                 var milliseconds = new List<double>();
 
-                // Variables
-                var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
+                for (var i = 0; i < iterations; i++)
+                {
+                    using (var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
                         RowGuid
                         , ColumnBit
                         , ColumnDateTime
@@ -118,41 +119,39 @@ namespace SqlDbParameterPerformanceNetFramework
                         , @ColumnInt
                         , @ColumnNVarChar
                     );
-                    SELECT SCOPE_IDENTITY() AS RESULT;");
-
-
-                for (var i = 0; i < iterations; i++)
-                {
-                    // Execution
-                    stopwatch.Start();
-                    foreach (var item in identityTables)
+                    SELECT SCOPE_IDENTITY() AS RESULT;"))
                     {
-                        // Clear the parameters
-                        command.Parameters.Clear();
+                        // Execution
+                        stopwatch.Start();
+                        foreach (var item in identityTables)
+                        {
+                            // Clear the parameters
+                            command.Parameters.Clear();
 
-                        // Parameters
-                        CreateParameterWithValue(command, "RowGuid", item.RowGuid, DbType.Guid, 16, 0, 0);
-                        CreateParameterWithValue(command, "ColumnBit", item.ColumnBit, DbType.Boolean, 1, 1, 0);
-                        CreateParameterWithValue(command, "ColumnDateTime", item.ColumnDateTime, DbType.DateTime, 8, 23, 3);
-                        CreateParameterWithValue(command, "ColumnDateTime2", item.ColumnDateTime2, DbType.DateTime2, 8, 27, 7);
-                        CreateParameterWithValue(command, "ColumnDecimal", item.ColumnDecimal, DbType.Decimal, 9, 18, 2);
-                        CreateParameterWithValue(command, "ColumnFloat", item.ColumnFloat, DbType.Single, 8, 53, 0);
-                        CreateParameterWithValue(command, "ColumnInt", item.ColumnInt, DbType.Int32, 4, 10, 0);
-                        CreateParameterWithValue(command, "ColumnNVarChar", item.ColumnNVarChar, DbType.String, -1, 0, 0);
+                            // Parameters
+                            CreateParameterWithValue(command, "RowGuid", item.RowGuid, DbType.Guid, 16, 0, 0);
+                            CreateParameterWithValue(command, "ColumnBit", item.ColumnBit, DbType.Boolean, 1, 1, 0);
+                            CreateParameterWithValue(command, "ColumnDateTime", item.ColumnDateTime, DbType.DateTime, 8, 23, 3);
+                            CreateParameterWithValue(command, "ColumnDateTime2", item.ColumnDateTime2, DbType.DateTime2, 8, 27, 7);
+                            CreateParameterWithValue(command, "ColumnDecimal", item.ColumnDecimal, DbType.Decimal, 9, 18, 2);
+                            CreateParameterWithValue(command, "ColumnFloat", item.ColumnFloat, DbType.Single, 8, 53, 0);
+                            CreateParameterWithValue(command, "ColumnInt", item.ColumnInt, DbType.Int32, 4, 10, 0);
+                            CreateParameterWithValue(command, "ColumnNVarChar", item.ColumnNVarChar, DbType.String, -1, 0, 0);
 
-                        // Prepare
-                        command.Prepare();
+                            // Prepare
+                            command.Prepare();
 
-                        // Execute
-                        var result = command.ExecuteScalar();
+                            // Execute
+                            var result = command.ExecuteScalar();
+                        }
+                        stopwatch.Stop();
+                        milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
+                        stopwatch.Reset();
+
+                        // Dispose
+                        command.Dispose();
                     }
-                    stopwatch.Stop();
-                    milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
-                    stopwatch.Reset();
                 }
-
-                // Dispose
-                command.Dispose();
 
                 // Log
                 if (log)
@@ -171,8 +170,9 @@ namespace SqlDbParameterPerformanceNetFramework
                 var stopwatch = new Stopwatch();
                 var milliseconds = new List<double>();
 
-                // Variables
-                var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
+                for (var i = 0; i < iterations; i++)
+                {
+                    using (var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
                         RowGuid
                         , ColumnBit
                         , ColumnDateTime
@@ -193,47 +193,43 @@ namespace SqlDbParameterPerformanceNetFramework
                         , @ColumnInt
                         , @ColumnNVarChar
                     );
-                    SELECT SCOPE_IDENTITY() AS RESULT;");
-
-                // Add the parameters
-                CreateParameter(command, "RowGuid", DbType.Guid, 16, 0, 0);
-                CreateParameter(command, "ColumnBit", DbType.Boolean, 1, 1, 0);
-                CreateParameter(command, "ColumnDateTime", DbType.DateTime, 8, 23, 3);
-                CreateParameter(command, "ColumnDateTime2", DbType.DateTime2, 8, 27, 7);
-                CreateParameter(command, "ColumnDecimal", DbType.Decimal, 9, 18, 2);
-                CreateParameter(command, "ColumnFloat", DbType.Single, 8, 53, 0);
-                CreateParameter(command, "ColumnInt", DbType.Int32, 4, 10, 0);
-                CreateParameter(command, "ColumnNVarChar", DbType.String, -1, 0, 0);
-
-                // Prepare
-                command.Prepare();
-
-                for (var i = 0; i < iterations; i++)
-                {
-                    // Execution
-                    stopwatch.Start();
-                    foreach (var item in identityTables)
+                    SELECT SCOPE_IDENTITY() AS RESULT;"))
                     {
-                        // Parameters
-                        ((IDbDataParameter)command.Parameters["RowGuid"]).Value = item.RowGuid;
-                        ((IDbDataParameter)command.Parameters["ColumnBit"]).Value = item.ColumnBit;
-                        ((IDbDataParameter)command.Parameters["ColumnDateTime"]).Value = item.ColumnDateTime;
-                        ((IDbDataParameter)command.Parameters["ColumnDateTime2"]).Value = item.ColumnDateTime2;
-                        ((IDbDataParameter)command.Parameters["ColumnDecimal"]).Value = item.ColumnDecimal;
-                        ((IDbDataParameter)command.Parameters["ColumnFloat"]).Value = item.ColumnFloat;
-                        ((IDbDataParameter)command.Parameters["ColumnInt"]).Value = item.ColumnInt;
-                        ((IDbDataParameter)command.Parameters["ColumnNVarChar"]).Value = item.ColumnNVarChar;
+                        // Add the parameters
+                        CreateParameter(command, "RowGuid", DbType.Guid, 16, 0, 0);
+                        CreateParameter(command, "ColumnBit", DbType.Boolean, 1, 1, 0);
+                        CreateParameter(command, "ColumnDateTime", DbType.DateTime, 8, 23, 3);
+                        CreateParameter(command, "ColumnDateTime2", DbType.DateTime2, 8, 27, 7);
+                        CreateParameter(command, "ColumnDecimal", DbType.Decimal, 9, 18, 2);
+                        CreateParameter(command, "ColumnFloat", DbType.Single, 8, 53, 0);
+                        CreateParameter(command, "ColumnInt", DbType.Int32, 4, 10, 0);
+                        CreateParameter(command, "ColumnNVarChar", DbType.String, -1, 0, 0);
 
-                        // Execute
-                        var result = command.ExecuteScalar();
+                        // Prepare
+                        command.Prepare();
+
+                        // Execution
+                        stopwatch.Start();
+                        foreach (var item in identityTables)
+                        {
+                            // Parameters
+                            ((IDbDataParameter)command.Parameters["RowGuid"]).Value = item.RowGuid;
+                            ((IDbDataParameter)command.Parameters["ColumnBit"]).Value = item.ColumnBit;
+                            ((IDbDataParameter)command.Parameters["ColumnDateTime"]).Value = item.ColumnDateTime;
+                            ((IDbDataParameter)command.Parameters["ColumnDateTime2"]).Value = item.ColumnDateTime2;
+                            ((IDbDataParameter)command.Parameters["ColumnDecimal"]).Value = item.ColumnDecimal;
+                            ((IDbDataParameter)command.Parameters["ColumnFloat"]).Value = item.ColumnFloat;
+                            ((IDbDataParameter)command.Parameters["ColumnInt"]).Value = item.ColumnInt;
+                            ((IDbDataParameter)command.Parameters["ColumnNVarChar"]).Value = item.ColumnNVarChar;
+
+                            // Execute
+                            var result = command.ExecuteScalar();
+                        }
+                        stopwatch.Stop();
+                        milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
+                        stopwatch.Reset();
                     }
-                    stopwatch.Stop();
-                    milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
-                    stopwatch.Reset();
                 }
-
-                // Dispose
-                command.Dispose();
 
                 // Log
                 if (log)
@@ -252,8 +248,9 @@ namespace SqlDbParameterPerformanceNetFramework
                 var stopwatch = new Stopwatch();
                 var milliseconds = new List<double>();
 
-                // Variables
-                var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
+                for (var i = 0; i < iterations; i++)
+                {
+                    using (var command = connection.CreateCommand(@"INSERT INTO [sc].[IdentityTable] (
                         RowGuid
                         , ColumnBit
                         , ColumnDateTime
@@ -274,47 +271,43 @@ namespace SqlDbParameterPerformanceNetFramework
                         , @ColumnInt
                         , @ColumnNVarChar
                     );
-                    SELECT SCOPE_IDENTITY() AS RESULT;");
-
-                // Add the parameters
-                CreateParameter(command, "RowGuid", DbType.Guid, 16, 0, 0);
-                CreateParameter(command, "ColumnBit", DbType.Boolean, 1, 1, 0);
-                CreateParameter(command, "ColumnDateTime", DbType.DateTime, 8, 23, 3);
-                CreateParameter(command, "ColumnDateTime2", DbType.DateTime2, 8, 27, 7);
-                CreateParameter(command, "ColumnDecimal", DbType.Decimal, 9, 18, 2);
-                CreateParameter(command, "ColumnFloat", DbType.Single, 8, 53, 0);
-                CreateParameter(command, "ColumnInt", DbType.Int32, 4, 10, 0);
-                CreateParameter(command, "ColumnNVarChar", DbType.String, -1, 0, 0);
-
-                // Prepare
-                command.Prepare();
-
-                for (var i = 0; i < iterations; i++)
-                {
-                    // Execution
-                    stopwatch.Start();
-                    foreach (var item in identityTables)
+                    SELECT SCOPE_IDENTITY() AS RESULT;"))
                     {
-                        // Parameters
-                        ((IDbDataParameter)command.Parameters[0]).Value = item.RowGuid;
-                        ((IDbDataParameter)command.Parameters[1]).Value = item.ColumnBit;
-                        ((IDbDataParameter)command.Parameters[2]).Value = item.ColumnDateTime;
-                        ((IDbDataParameter)command.Parameters[3]).Value = item.ColumnDateTime2;
-                        ((IDbDataParameter)command.Parameters[4]).Value = item.ColumnDecimal;
-                        ((IDbDataParameter)command.Parameters[5]).Value = item.ColumnFloat;
-                        ((IDbDataParameter)command.Parameters[6]).Value = item.ColumnInt;
-                        ((IDbDataParameter)command.Parameters[7]).Value = item.ColumnNVarChar;
+                        // Add the parameters
+                        CreateParameter(command, "RowGuid", DbType.Guid, 16, 0, 0);
+                        CreateParameter(command, "ColumnBit", DbType.Boolean, 1, 1, 0);
+                        CreateParameter(command, "ColumnDateTime", DbType.DateTime, 8, 23, 3);
+                        CreateParameter(command, "ColumnDateTime2", DbType.DateTime2, 8, 27, 7);
+                        CreateParameter(command, "ColumnDecimal", DbType.Decimal, 9, 18, 2);
+                        CreateParameter(command, "ColumnFloat", DbType.Single, 8, 53, 0);
+                        CreateParameter(command, "ColumnInt", DbType.Int32, 4, 10, 0);
+                        CreateParameter(command, "ColumnNVarChar", DbType.String, -1, 0, 0);
 
-                        // Execute
-                        var result = command.ExecuteScalar();
+                        // Prepare
+                        command.Prepare();
+
+                        // Execution
+                        stopwatch.Start();
+                        foreach (var item in identityTables)
+                        {
+                            // Parameters
+                            ((IDbDataParameter)command.Parameters[0]).Value = item.RowGuid;
+                            ((IDbDataParameter)command.Parameters[1]).Value = item.ColumnBit;
+                            ((IDbDataParameter)command.Parameters[2]).Value = item.ColumnDateTime;
+                            ((IDbDataParameter)command.Parameters[3]).Value = item.ColumnDateTime2;
+                            ((IDbDataParameter)command.Parameters[4]).Value = item.ColumnDecimal;
+                            ((IDbDataParameter)command.Parameters[5]).Value = item.ColumnFloat;
+                            ((IDbDataParameter)command.Parameters[6]).Value = item.ColumnInt;
+                            ((IDbDataParameter)command.Parameters[7]).Value = item.ColumnNVarChar;
+
+                            // Execute
+                            var result = command.ExecuteScalar();
+                        }
+                        stopwatch.Stop();
+                        milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
+                        stopwatch.Reset();
                     }
-                    stopwatch.Stop();
-                    milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
-                    stopwatch.Reset();
                 }
-
-                // Dispose
-                command.Dispose();
 
                 // Log
                 if (log)

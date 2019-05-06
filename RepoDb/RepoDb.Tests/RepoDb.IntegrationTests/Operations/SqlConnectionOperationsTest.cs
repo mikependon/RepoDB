@@ -3802,12 +3802,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionInsertAllForIdentityTableViaTableName()
         {
             // Setup
-            var tables = Helper.CreateDynamicIdentityTables(99);
+            var tables = Helper.CreateDynamicIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables, batchSize: 30);
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();

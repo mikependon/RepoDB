@@ -409,19 +409,13 @@ namespace RepoDb
             var context = (InsertAllExecutionContext<TEntity>)null;
 
             // Identify the number of entities (performance)
-            context = count == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
+            context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
                 InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
 
             // Create the command
             using (var command = (DbCommand)connection.EnsureOpen().CreateCommand(context.CommandText,
                 CommandType.Text, commandTimeout, transaction))
             {
-                // Add the parameters
-                DataCommand.CreateParameters(command, context.InputFields, context.OutputFields, batchSize);
-
-                // Prepare the command
-                command.Prepare();
-
                 // Before Execution
                 if (trace != null)
                 {
@@ -488,12 +482,6 @@ namespace RepoDb
 
                             // Set the command properties
                             command.CommandText = context.CommandText;
-
-                            // Add the parameters
-                            DataCommand.CreateParameters(command, context.InputFields, context.OutputFields, batchItems.Count);
-
-                            // Prepare the command
-                            command.Prepare();
                         }
 
                         // Set the values
@@ -627,19 +615,13 @@ namespace RepoDb
             var context = (InsertAllExecutionContext<TEntity>)null;
 
             // Identify the number of entities (performance)
-            context = count == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
+            context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
                 InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
 
             // Create the command
-            using (var command = (DbCommand)(await connection.EnsureOpenAsync()).CreateCommand(context.CommandText,
+            using (var command = (DbCommand)(connection.EnsureOpenAsync()).CreateCommand(context.CommandText,
                 CommandType.Text, commandTimeout, transaction))
             {
-                // Add the parameters
-                DataCommand.CreateParameters(command, context.InputFields, context.OutputFields, batchSize);
-
-                // Prepare the command
-                command.Prepare();
-
                 // Before Execution
                 if (trace != null)
                 {
@@ -706,12 +688,6 @@ namespace RepoDb
 
                             // Set the command properties
                             command.CommandText = context.CommandText;
-
-                            // Add the parameters
-                            DataCommand.CreateParameters(command, context.InputFields, context.OutputFields, batchItems.Count);
-
-                            // Prepare the command
-                            command.Prepare();
                         }
 
                         // Set the values
