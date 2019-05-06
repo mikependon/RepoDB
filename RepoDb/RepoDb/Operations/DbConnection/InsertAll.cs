@@ -619,7 +619,7 @@ namespace RepoDb
                 InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
 
             // Create the command
-            using (var command = (DbCommand)(connection.EnsureOpenAsync()).CreateCommand(context.CommandText,
+            using (var command = (DbCommand)(await connection.EnsureOpenAsync()).CreateCommand(context.CommandText,
                 CommandType.Text, commandTimeout, transaction))
             {
                 // Before Execution

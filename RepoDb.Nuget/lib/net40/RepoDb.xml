@@ -150,7 +150,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity.</typeparam>
         </member>
-        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.Command">
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.CommandText">
             <summary>
             The execution command text.
             </summary>
