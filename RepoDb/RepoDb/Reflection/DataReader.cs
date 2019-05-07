@@ -71,7 +71,7 @@ namespace RepoDb.Reflection
         {
             if (reader != null && reader.HasRows)
             {
-                var func = FunctionCache.GetDataReaderToExpandoObjectFunction(reader, basedOnFields);
+                var func = FunctionCache.GetDataReaderToExpandoObjectConverterFunction(reader, basedOnFields);
                 while (reader.Read())
                 {
                     yield return func(reader);

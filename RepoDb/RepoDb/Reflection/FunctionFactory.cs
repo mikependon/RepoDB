@@ -17,7 +17,7 @@ namespace RepoDb.Reflection
     /// </summary>
     internal static class FunctionFactory
     {
-        #region GetDataReaderToDataEntityFunction
+        #region GetDataReaderToDataEntityConverterFunction
 
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.
@@ -26,7 +26,7 @@ namespace RepoDb.Reflection
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
-        public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader,
+        public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityConverterFunction<TEntity>(DbDataReader reader,
             IDbConnection connection)
             where TEntity : class
         {
@@ -264,14 +264,14 @@ namespace RepoDb.Reflection
 
         #endregion
 
-        #region GetDataReaderToExpandoObjectFunction
+        #region GetDataReaderToExpandoObjectConverterFunction
 
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectFunction(DbDataReader reader)
+        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader)
         {
             // Expression variables
             var readerParameterExpression = Expression.Parameter(typeof(DbDataReader), "reader");
@@ -362,17 +362,17 @@ namespace RepoDb.Reflection
 
         #endregion
 
-        #region GetDataCommandParameterSetterFunction
+        #region GetDbCommandParameterSetterFunction
 
         /// <summary>
-        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
+        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="inputFields">The list of the input <see cref="DbField"/> objects.</param>
         /// <param name="outputFields">The list of the input <see cref="DbField"/> objects.</param>
         /// <param name="batchSize">The batch size of the entity to be passed.</param>
-        /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.</returns>
-        public static Action<DbCommand, IList<TEntity>> GetDataCommandParameterSetterFunction<TEntity>(IEnumerable<DbField> inputFields,
+        /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic object.</returns>
+        public static Action<DbCommand, IList<TEntity>> GetDbCommandParameterSetterFunction<TEntity>(IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize)
             where TEntity : class
@@ -390,8 +390,8 @@ namespace RepoDb.Reflection
             var typeOfPropertyInfo = typeof(PropertyInfo);
 
             // Variables for arguments
-            var commandParameter = Expression.Parameter(typeOfDbCommand, "command");
-            var entitiesParameter = Expression.Parameter(typeOfListEntity, "entities");
+            var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
+            var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
 
             // Variables for types
             var entityProperties = PropertyCache.Get<TEntity>();
@@ -408,7 +408,7 @@ namespace RepoDb.Reflection
             var dbParameterScaleSetMethod = typeOfDbParameter.GetProperty("Scale").SetMethod;
 
             // Variables for DbParameterCollection
-            var dbParameterCollection = Expression.Property(commandParameter, dbCommandParametersProperty);
+            var dbParameterCollection = Expression.Property(commandParameterExpression, dbCommandParametersProperty);
             var dbParameterCollectionAddMethod = typeOfDbParameterCollection.GetMethod("Add", new[] { typeOfObject });
             var dbParameterCollectionClearMethod = typeOfDbParameterCollection.GetMethod("Clear");
 
@@ -586,7 +586,7 @@ namespace RepoDb.Reflection
             for (var entityIndex = 0; entityIndex < batchSize; entityIndex++)
             {
                 // Get the current instance
-                var instance = Expression.Call(entitiesParameter, listIndexerMethod, Expression.Constant(entityIndex));
+                var instance = Expression.Call(entitiesParameterExpression, listIndexerMethod, Expression.Constant(entityIndex));
                 var instanceExpressions = new List<Expression>();
                 var instanceVariables = new List<ParameterExpression>();
 
@@ -606,7 +606,7 @@ namespace RepoDb.Reflection
                     var propertyVariable = (ParameterExpression)null;
                     var propertyInstance = (Expression)null;
                     var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", field.UnquotedName));
-                    var parameterInstance = Expression.Call(commandParameter, dbCommandCreateParameterMethod);
+                    var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
 
                     // Set the proper assignments (property)
                     if (typeOfEntity == typeOfObject)
@@ -656,8 +656,54 @@ namespace RepoDb.Reflection
 
             // Set the function value
             return Expression
-                .Lambda<Action<DbCommand, IList<TEntity>>>(Expression.Block(bodyExpressions), commandParameter, entitiesParameter)
+                .Lambda<Action<DbCommand, IList<TEntity>>>(Expression.Block(bodyExpressions), commandParameterExpression, entitiesParameterExpression)
                 .Compile();
+        }
+
+        #endregion
+
+        #region GetDataEntityPropertySetterFromDbCommandParameterFunction
+
+        public static Action<TEntity, DbCommand> GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(Field field,
+            int index)
+            where TEntity : class
+        {
+            // Variables for type
+            var typeOfEntity = typeof(TEntity);
+            var typeOfDbCommand = typeof(DbCommand);
+            var typeOfDbParameterCollection = typeof(DbParameterCollection);
+            var typeOfString = typeof(string);
+            var typeOfDbParameter = typeof(DbParameter);
+
+            // Variables for argument
+            var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
+            var dbCommandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
+
+            // Variables for DbCommand
+            var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
+
+            // Variables for DbParameterCollection
+            var dbParameterCollectionIndexerMethod = typeOfDbParameterCollection.GetMethod("get_Item", new[] { typeOfString });
+
+            // Variables for DbParameter
+            var dbParameterValueProperty = typeOfDbParameter.GetProperty("Value");
+
+            // Get the entity property
+            var property = typeOfEntity.GetProperty(field.UnquotedName).SetMethod;
+
+            // Get the command parameter
+            var parameters = Expression.Property(dbCommandParameterExpression, dbCommandParametersProperty);
+            var parameter = Expression.Call(parameters, dbParameterCollectionIndexerMethod,
+                Expression.Constant(index > 0 ? string.Concat(field.UnquotedName, "_", index) : field.UnquotedName));
+
+            // Assign the Parameter.Value into DataEntity.Property
+            var value = Expression.Property(parameter, dbParameterValueProperty);
+            var propertyAssignment = Expression.Call(entityParameterExpression, property,
+                Expression.Convert(value, field.Type?.GetUnderlyingType()));
+
+            // Return function
+            return Expression.Lambda<Action<TEntity, DbCommand>>(
+                propertyAssignment, entityParameterExpression, dbCommandParameterExpression).Compile();
         }
 
         #endregion

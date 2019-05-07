@@ -17,7 +17,7 @@ namespace RepoDb
     {
         private static ConcurrentDictionary<string, Action<DbCommand, object>> m_cache = new ConcurrentDictionary<string, Action<DbCommand, object>>();
 
-        #region GetDataReaderToDataEntityFunction<TEntity>
+        #region GetDataReaderToDataEntityConverterFunction<TEntity>
 
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.
@@ -26,11 +26,11 @@ namespace RepoDb
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
-        public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader,
+        public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityConverterFunction<TEntity>(DbDataReader reader,
             IDbConnection connection)
             where TEntity : class
         {
-            return GetDataReaderToDataEntityFunction<TEntity>(reader, connection);
+            return GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection);
         }
 
         /// <summary>
@@ -48,17 +48,17 @@ namespace RepoDb
         {
             if (basedOnFields == false)
             {
-                return DataReaderToDataEntityFunctionCache<TEntity>.Get(reader, connection);
+                return DataReaderToDataEntityConverterFunctionCache<TEntity>.Get(reader, connection);
             }
             else
             {
-                return FieldBasedDataReaderToDataEntityFunctionCache<TEntity>.Get(reader, connection);
+                return FieldBasedDataReaderToDataEntityConverterFunctionCache<TEntity>.Get(reader, connection);
             }
         }
 
-        #region DataReaderToDataEntityFunctionCache
+        #region DataReaderToDataEntityConverterFunctionCache
 
-        private static class DataReaderToDataEntityFunctionCache<TEntity>
+        private static class DataReaderToDataEntityConverterFunctionCache<TEntity>
             where TEntity : class
         {
             private static Func<DbDataReader, TEntity> m_func;
@@ -67,7 +67,7 @@ namespace RepoDb
             {
                 if (m_func == null)
                 {
-                    m_func = FunctionFactory.GetDataReaderToDataEntityFunction<TEntity>(reader, connection);
+                    m_func = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection);
                 }
                 return m_func;
             }
@@ -75,9 +75,9 @@ namespace RepoDb
 
         #endregion
 
-        #region FieldBasedDataReaderToDataEntityFunctionCache
+        #region FieldBasedDataReaderToDataEntityConverterFunctionCache
 
-        private static class FieldBasedDataReaderToDataEntityFunctionCache<TEntity>
+        private static class FieldBasedDataReaderToDataEntityConverterFunctionCache<TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<string, Func<DbDataReader, TEntity>> m_cache = new ConcurrentDictionary<string, Func<DbDataReader, TEntity>>();
@@ -93,7 +93,7 @@ namespace RepoDb
                     fields);
                 if (m_cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.GetDataReaderToDataEntityFunction<TEntity>(reader, connection);
+                    result = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection);
                     m_cache.TryAdd(key, result);
                 }
                 return result;
@@ -104,16 +104,16 @@ namespace RepoDb
 
         #endregion
 
-        #region GetDataReaderToExpandoObjectFunction
+        #region GetDataReaderToExpandoObjectConverterFunction
 
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectFunction(DbDataReader reader)
+        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader)
         {
-            return DataReaderToExpandoObjectFunctionCache.Get(reader);
+            return DataReaderToExpandoObjectConverterFunctionCache.Get(reader);
         }
 
         /// <summary>
@@ -122,22 +122,22 @@ namespace RepoDb
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectFunction(DbDataReader reader,
+        internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader,
             bool basedOnFields = false)
         {
             if (basedOnFields == false)
             {
-                return DataReaderToExpandoObjectFunctionCache.Get(reader);
+                return DataReaderToExpandoObjectConverterFunctionCache.Get(reader);
             }
             else
             {
-                return FieldBasedDataReaderToExpandoObjectFunctionCache.Get(reader);
+                return FieldBasedDataReaderToExpandoObjectConverterFunctionCache.Get(reader);
             }
         }
 
-        #region DataReaderToExpandoObjectDelegateCache
+        #region DataReaderToExpandoObjectConverterFunctionCache
 
-        private static class DataReaderToExpandoObjectFunctionCache
+        private static class DataReaderToExpandoObjectConverterFunctionCache
         {
             private static Func<DbDataReader, ExpandoObject> m_func;
 
@@ -145,7 +145,7 @@ namespace RepoDb
             {
                 if (m_func == null)
                 {
-                    m_func = FunctionFactory.GetDataReaderToExpandoObjectFunction(reader);
+                    m_func = FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(reader);
                 }
                 return m_func;
             }
@@ -153,9 +153,9 @@ namespace RepoDb
 
         #endregion
 
-        #region FieldBasedDataReaderToExpandoObjectFunctionCache
+        #region FieldBasedDataReaderToExpandoObjectConverterFunctionCache
 
-        private static class FieldBasedDataReaderToExpandoObjectFunctionCache
+        private static class FieldBasedDataReaderToExpandoObjectConverterFunctionCache
         {
             private static ConcurrentDictionary<string, Func<DbDataReader, ExpandoObject>> m_cache = new ConcurrentDictionary<string, Func<DbDataReader, ExpandoObject>>();
 
@@ -167,7 +167,7 @@ namespace RepoDb
                     .Join(".");
                 if (m_cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.GetDataReaderToExpandoObjectFunction(reader);
+                    result = FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(reader);
                     m_cache.TryAdd(key, result);
                 }
                 return result;
@@ -178,17 +178,18 @@ namespace RepoDb
 
         #endregion
 
-        #region GetDataCommandParameterSetterFunction
+        #region GetDbCommandParameterSetterFunction<TEntity>
 
         /// <summary>
-        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.
+        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic object.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity/dynamic object.</typeparam>
         /// <param name="key">The key to the cache.</param>
         /// <param name="inputFields">The list of the input <see cref="DbField"/> objects to be used.</param>
         /// <param name="outputFields">The list of the output <see cref="DbField"/> objects to be used.</param>
         /// <param name="batchSize">The batch size of the entities to be passed.</param>
         /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.</returns>
-        public static Action<DbCommand, IList<TEntity>> GetDataCommandParameterSetterFunction<TEntity>(string key,
+        public static Action<DbCommand, IList<TEntity>> GetDbCommandParameterSetterFunction<TEntity>(string key,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize)
@@ -202,8 +203,7 @@ namespace RepoDb
         private static class DataCommandParameterSetterCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>> m_cache =
-                new ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>>();
+            private static ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>> m_cache = new ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>>();
 
             public static Action<DbCommand, IList<TEntity>> Get(string key,
                 IEnumerable<DbField> inputFields,
@@ -215,7 +215,48 @@ namespace RepoDb
                 var func = (Action<DbCommand, IList<TEntity>>)null;
                 if (m_cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.GetDataCommandParameterSetterFunction<TEntity>(inputFields, outputFields, batchSize);
+                    func = FunctionFactory.GetDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, batchSize);
+                    m_cache.TryAdd(key, func);
+                }
+                return func;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>
+
+        /// <summary>
+        /// Gets a compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="field">The target <see cref="Field"/>.</param>
+        /// <param name="index">The index of the batches.</param>
+        /// <returns>A compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.</returns>
+        public static Action<TEntity, DbCommand> GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(Field field,
+            int index = 0)
+            where TEntity : class
+        {
+            return GetDataEntityPropertySetterFromDbCommandParameterFunctionCache<TEntity>.Get(field, index);
+        }
+
+        #region GetDataEntityPropertySetterFromDbCommandParameterFunctionCache
+
+        private static class GetDataEntityPropertySetterFromDbCommandParameterFunctionCache<TEntity>
+            where TEntity : class
+        {
+            private static ConcurrentDictionary<int, Action<TEntity, DbCommand>> m_cache = new ConcurrentDictionary<int, Action<TEntity, DbCommand>>();
+
+            public static Action<TEntity, DbCommand> Get(Field field,
+                int index)
+            {
+                var key = typeof(TEntity).GetHashCode() + field.GetHashCode() + index.GetHashCode();
+                var func = (Action<TEntity, DbCommand>)null;
+                if (m_cache.TryGetValue(key, out func) == false)
+                {
+                    func = FunctionFactory.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(field, index);
                     m_cache.TryAdd(key, func);
                 }
                 return func;

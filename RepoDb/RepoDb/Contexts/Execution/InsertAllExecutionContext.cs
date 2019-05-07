@@ -17,11 +17,6 @@ namespace RepoDb.Contexts.Execution
         public string CommandText { get; set; }
 
         /// <summary>
-        /// The identity class property.
-        /// </summary>
-        public ClassProperty Identity { get; set; }
-
-        /// <summary>
         /// The list of the input <see cref="DbField"/> objects to be included in the execution.
         /// </summary>
         public IEnumerable<DbField> InputFields { get; set; }
@@ -39,6 +34,11 @@ namespace RepoDb.Contexts.Execution
         /// <summary>
         /// The actual compiled function.
         /// </summary>
-        public Action<DbCommand, IList<TEntity>> Execute { get; set; }
+        public Action<DbCommand, IList<TEntity>> Func { get; set; }
+
+        /// <summary>
+        /// The actual setters of the identity function.
+        /// </summary>
+        public IEnumerable<Action<TEntity, DbCommand>> IdentitySetters { get; set; }
     }
 }

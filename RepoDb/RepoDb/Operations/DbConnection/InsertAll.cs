@@ -360,7 +360,7 @@ namespace RepoDb
                     statementBuilder);
 
                 // Variables needed
-                var identity = (ClassProperty)null;
+                var identity = (Field)null;
                 var dbFields = DbFieldCache.Get(connection, request.Name);
                 var inputFields = (IEnumerable<DbField>)null;
                 var outputFields = (IEnumerable<DbField>)null;
@@ -371,11 +371,11 @@ namespace RepoDb
                 // Set the identity value
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>();
+                    identity = IdentityCache.Get<TEntity>()?.AsField();
                     if (identityDbField != null)
                     {
-                        identity = PropertyCache.Get<TEntity>().FirstOrDefault(property =>
-                            property.GetUnquotedMappedName().ToLower() == identityDbField.UnquotedName.ToLower());
+                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
+                            field.UnquotedName.ToLower() == identityDbField.UnquotedName.ToLower());
                     }
                 }
 
@@ -389,26 +389,39 @@ namespace RepoDb
                 // Set the output fields
                 outputFields = identityDbField?.AsEnumerable();
 
+                // Get the identity setters
+                var identitySetters = (List<Action<TEntity, DbCommand>>)null;
+
+                // Get if we have not skipped it
+                if (skipIdentityCheck == false)
+                {
+                    identitySetters = new List<Action<TEntity, DbCommand>>();
+                    for (var index = 0; index < batchSizeValue; index++)
+                    {
+                        identitySetters.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, index));
+                    }
+                }
+
                 // Return the value
                 return new InsertAllExecutionContext<TEntity>
                 {
                     CommandText = CommandTextCache.GetInsertAllText(request),
-                    Identity = identity,
                     InputFields = inputFields,
                     OutputFields = outputFields,
                     BatchSize = batchSizeValue,
-                    Execute = FunctionCache.GetDataCommandParameterSetterFunction<TEntity>(
+                    Func = FunctionCache.GetDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", request.Name),
                         inputFields.AsList(),
                         outputFields,
-                        batchSizeValue)
+                        batchSizeValue),
+                    IdentitySetters = identitySetters
                 };
             });
 
             // Get the context
             var context = (InsertAllExecutionContext<TEntity>)null;
 
-            // Identify the number of entities (performance)
+            // Identify the number of entities (performance), get an execution context from cache
             context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
                 InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
 
@@ -436,6 +449,9 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
+                // Prepare the command
+                command.Prepare();
+
                 // Execution variables
                 var result = 0;
 
@@ -445,20 +461,15 @@ namespace RepoDb
                     foreach (var entity in entities)
                     {
                         // Set the values
-                        context.Execute(command, new[] { entity });
+                        context.Func(command, new[] { entity });
 
                         // Actual Execution
                         result += command.ExecuteNonQuery();
 
                         // Set the identities
-                        if (context.Identity != null)
+                        if (context.IdentitySetters != null)
                         {
-                            var parameterName = context.Identity.GetUnquotedMappedName();
-                            if (command.Parameters.Contains(parameterName))
-                            {
-                                var parameter = command.Parameters[parameterName];
-                                context.Identity.PropertyInfo.SetValue(entity, parameter.Value);
-                            }
+                            context.IdentitySetters.ElementAt(0)(entity, command);
                         }
                     }
                 }
@@ -477,30 +488,28 @@ namespace RepoDb
                         // Check if the batch size has changed (probably the last batch on the enumerables)
                         if (batchItems.Count != batchSize)
                         {
-                            // Get a new execution context
+                            // Get a new execution context from cache
                             context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
 
                             // Set the command properties
                             command.CommandText = context.CommandText;
+
+                            // Prepare the command
+                            command.Prepare();
                         }
 
                         // Set the values
-                        context.Execute(command, batchItems);
+                        context.Func(command, batchItems);
 
                         // Actual Execution
                         result += command.ExecuteNonQuery();
 
                         // Set the identities
-                        if (context.Identity != null)
+                        if (context.IdentitySetters != null)
                         {
-                            for (var i = 0; i < batchItems.Count; i++)
+                            for (var index = 0; index < batchItems.Count; index++)
                             {
-                                var parameterName = context.Identity.GetUnquotedMappedName().AsParameter(i, null);
-                                if (command.Parameters.Contains(parameterName))
-                                {
-                                    var parameter = command.Parameters[parameterName];
-                                    context.Identity.PropertyInfo.SetValue(batchItems.ElementAt(i), parameter.Value);
-                                }
+                                context.IdentitySetters.ElementAt(index)(batchItems[index], command);
                             }
                         }
                     }
@@ -566,7 +575,7 @@ namespace RepoDb
                     statementBuilder);
 
                 // Variables needed
-                var identity = (ClassProperty)null;
+                var identity = (Field)null;
                 var dbFields = DbFieldCache.Get(connection, request.Name);
                 var inputFields = (IEnumerable<DbField>)null;
                 var outputFields = (IEnumerable<DbField>)null;
@@ -577,11 +586,11 @@ namespace RepoDb
                 // Set the identity value
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>();
+                    identity = IdentityCache.Get<TEntity>()?.AsField();
                     if (identityDbField != null)
                     {
-                        identity = PropertyCache.Get<TEntity>().FirstOrDefault(property =>
-                            property.GetUnquotedMappedName().ToLower() == identityDbField.UnquotedName.ToLower());
+                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
+                            field.UnquotedName.ToLower() == identityDbField.UnquotedName.ToLower());
                     }
                 }
 
@@ -595,26 +604,39 @@ namespace RepoDb
                 // Set the output fields
                 outputFields = identityDbField?.AsEnumerable();
 
+                // Get the identity setters
+                var identitySetters = (List<Action<TEntity, DbCommand>>)null;
+
+                // Get if we have not skipped it
+                if (skipIdentityCheck == false)
+                {
+                    for (var index = 0; index < batchSizeValue; index++)
+                    {
+                        var identitySetter = FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, index);
+                        identitySetters.Add(identitySetter);
+                    }
+                }
+
                 // Return the value
                 return new InsertAllExecutionContext<TEntity>
                 {
                     CommandText = CommandTextCache.GetInsertAllText(request),
-                    Identity = identity,
                     InputFields = inputFields,
                     OutputFields = outputFields,
                     BatchSize = batchSizeValue,
-                    Execute = FunctionCache.GetDataCommandParameterSetterFunction<TEntity>(
+                    Func = FunctionCache.GetDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", request.Name),
                         inputFields.AsList(),
                         outputFields,
-                        batchSizeValue)
+                        batchSizeValue),
+                    IdentitySetters = identitySetters
                 };
             });
 
             // Get the context
             var context = (InsertAllExecutionContext<TEntity>)null;
 
-            // Identify the number of entities (performance)
+            // Identify the number of entities (performance), get an execution context from cache
             context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
                 InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
 
@@ -642,6 +664,9 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
+                // Prepare the command
+                command.Prepare();
+
                 // Execution variables
                 var result = 0;
 
@@ -651,20 +676,15 @@ namespace RepoDb
                     foreach (var entity in entities)
                     {
                         // Set the values
-                        context.Execute(command, new[] { entity });
+                        context.Func(command, new[] { entity });
 
                         // Actual Execution
                         result += await command.ExecuteNonQueryAsync();
 
                         // Set the identities
-                        if (context.Identity != null)
+                        if (context.IdentitySetters != null)
                         {
-                            var parameterName = context.Identity.GetUnquotedMappedName();
-                            if (command.Parameters.Contains(parameterName))
-                            {
-                                var parameter = command.Parameters[parameterName];
-                                context.Identity.PropertyInfo.SetValue(entity, parameter.Value);
-                            }
+                            context.IdentitySetters.ElementAt(0)(entity, command);
                         }
                     }
                 }
@@ -683,30 +703,28 @@ namespace RepoDb
                         // Check if the batch size has changed (probably the last batch on the enumerables)
                         if (batchItems.Count != batchSize)
                         {
-                            // Get a new execution context
+                            // Get a new execution context from cache
                             context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
 
                             // Set the command properties
                             command.CommandText = context.CommandText;
+
+                            // Prepare the command
+                            command.Prepare();
                         }
 
                         // Set the values
-                        context.Execute(command, batchItems);
+                        context.Func(command, batchItems);
 
                         // Actual Execution
                         result += await command.ExecuteNonQueryAsync();
 
                         // Set the identities
-                        if (context.Identity != null)
+                        if (context.IdentitySetters != null)
                         {
-                            for (var i = 0; i < batchItems.Count; i++)
+                            for (var index = 0; index < batchItems.Count; index++)
                             {
-                                var parameterName = context.Identity.GetUnquotedMappedName().AsParameter(i, null);
-                                if (command.Parameters.Contains(parameterName))
-                                {
-                                    var parameter = command.Parameters[parameterName];
-                                    context.Identity.PropertyInfo.SetValue(batchItems.ElementAt(i), parameter.Value);
-                                }
+                                context.IdentitySetters.ElementAt(index)(batchItems[index], command);
                             }
                         }
                     }
