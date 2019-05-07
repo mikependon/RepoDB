@@ -19,7 +19,7 @@ namespace SqlDbParameterPerformanceNetFramework
         {
             TypeMapper.Map(typeof(DateTime), DbType.DateTime2);
             var iterations = 10;
-            var rows = 100;
+            var rows = 1000;
             Excercise(iterations, rows);
             InsertAllViaRepoDb(iterations, rows);
             InsertViaRepoDb(iterations, rows);
@@ -59,7 +59,7 @@ namespace SqlDbParameterPerformanceNetFramework
                 }
                 if (log)
                 {
-                    Console.WriteLine($"RepoDb InsertAll: {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+                    Console.WriteLine($"RepoDb InsertAll: {milliseconds.Average() / 1000} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
                 }
             }
         }
@@ -82,7 +82,7 @@ namespace SqlDbParameterPerformanceNetFramework
                 }
                 if (log)
                 {
-                    Console.WriteLine($"RepoDb Insert: {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+                    Console.WriteLine($"RepoDb Insert: {milliseconds.Average() / 1000} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace SqlDbParameterPerformanceNetFramework
                         , @ColumnInt
                         , @ColumnNVarChar
                     );
-                    SELECT SCOPE_IDENTITY() AS RESULT;"))
+                    SET @Result = SCOPE_IDENTITY();"))
                     {
                         // Execution
                         stopwatch.Start();
@@ -137,12 +137,16 @@ namespace SqlDbParameterPerformanceNetFramework
                             CreateParameterWithValue(command, "ColumnFloat", item.ColumnFloat, DbType.Single, 8, 53, 0);
                             CreateParameterWithValue(command, "ColumnInt", item.ColumnInt, DbType.Int32, 4, 10, 0);
                             CreateParameterWithValue(command, "ColumnNVarChar", item.ColumnNVarChar, DbType.String, -1, 0, 0);
+                            CreateParameterWithValue(command, "Result", null, DbType.Int64, 8, 19, 0, ParameterDirection.Output);
 
                             // Prepare
                             command.Prepare();
 
                             // Execute
-                            var result = command.ExecuteScalar();
+                            command.ExecuteNonQuery();
+
+                            // Set the result back
+                            item.Id = (long)((IDbDataParameter)command.Parameters["Result"]).Value;
                         }
                         stopwatch.Stop();
                         milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
@@ -156,7 +160,7 @@ namespace SqlDbParameterPerformanceNetFramework
                 // Log
                 if (log)
                 {
-                    Console.WriteLine($"HandCoded ClearAndCreate: {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+                    Console.WriteLine($"HandCoded ClearAndCreate: {milliseconds.Average() / 1000} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
                 }
             }
         }
@@ -193,7 +197,7 @@ namespace SqlDbParameterPerformanceNetFramework
                         , @ColumnInt
                         , @ColumnNVarChar
                     );
-                    SELECT SCOPE_IDENTITY() AS RESULT;"))
+                    SET @Result = SCOPE_IDENTITY();"))
                     {
                         // Add the parameters
                         CreateParameter(command, "RowGuid", DbType.Guid, 16, 0, 0);
@@ -204,6 +208,7 @@ namespace SqlDbParameterPerformanceNetFramework
                         CreateParameter(command, "ColumnFloat", DbType.Single, 8, 53, 0);
                         CreateParameter(command, "ColumnInt", DbType.Int32, 4, 10, 0);
                         CreateParameter(command, "ColumnNVarChar", DbType.String, -1, 0, 0);
+                        CreateParameter(command, "Result", DbType.Int64, 8, 19, 0, ParameterDirection.Output);
 
                         // Prepare
                         command.Prepare();
@@ -223,7 +228,10 @@ namespace SqlDbParameterPerformanceNetFramework
                             ((IDbDataParameter)command.Parameters["ColumnNVarChar"]).Value = item.ColumnNVarChar;
 
                             // Execute
-                            var result = command.ExecuteScalar();
+                            command.ExecuteNonQuery();
+
+                            // Set the result back
+                            item.Id = (long)((IDbDataParameter)command.Parameters["Result"]).Value;
                         }
                         stopwatch.Stop();
                         milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
@@ -234,7 +242,7 @@ namespace SqlDbParameterPerformanceNetFramework
                 // Log
                 if (log)
                 {
-                    Console.WriteLine($"HandCoded ParameterAssignment (By Name): {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+                    Console.WriteLine($"HandCoded ParameterAssignment (By Name): {milliseconds.Average() / 1000} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
                 }
             }
         }
@@ -271,7 +279,7 @@ namespace SqlDbParameterPerformanceNetFramework
                         , @ColumnInt
                         , @ColumnNVarChar
                     );
-                    SELECT SCOPE_IDENTITY() AS RESULT;"))
+                    SET @Result = SCOPE_IDENTITY();"))
                     {
                         // Add the parameters
                         CreateParameter(command, "RowGuid", DbType.Guid, 16, 0, 0);
@@ -282,6 +290,7 @@ namespace SqlDbParameterPerformanceNetFramework
                         CreateParameter(command, "ColumnFloat", DbType.Single, 8, 53, 0);
                         CreateParameter(command, "ColumnInt", DbType.Int32, 4, 10, 0);
                         CreateParameter(command, "ColumnNVarChar", DbType.String, -1, 0, 0);
+                        CreateParameter(command, "Result", DbType.Int64, 8, 19, 0, ParameterDirection.Output);
 
                         // Prepare
                         command.Prepare();
@@ -301,7 +310,10 @@ namespace SqlDbParameterPerformanceNetFramework
                             ((IDbDataParameter)command.Parameters[7]).Value = item.ColumnNVarChar;
 
                             // Execute
-                            var result = command.ExecuteScalar();
+                            command.ExecuteNonQuery();
+
+                            // Set the result back
+                            item.Id = (long)((IDbDataParameter)command.Parameters[8]).Value;
                         }
                         stopwatch.Stop();
                         milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
@@ -312,7 +324,7 @@ namespace SqlDbParameterPerformanceNetFramework
                 // Log
                 if (log)
                 {
-                    Console.WriteLine($"HandCoded ParameterAssignment (By Index): {milliseconds.Average() / 100} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
+                    Console.WriteLine($"HandCoded ParameterAssignment (By Index): {milliseconds.Average() / 1000} millisecond(s) for {iterations} iteration(s) with {rows} row(s) each.");
                 }
             }
         }
@@ -341,13 +353,15 @@ namespace SqlDbParameterPerformanceNetFramework
             DbType dbType,
             int size,
             byte precision,
-            byte scale)
+            byte scale,
+            ParameterDirection direction = ParameterDirection.Input)
         {
             var parameter = command.CreateParameter();
             parameter.ParameterName = name;
             parameter.DbType = dbType;
             parameter.Size = size;
             parameter.Scale = scale;
+            parameter.Direction = direction;
             command.Parameters.Add(parameter);
             return parameter;
         }
@@ -358,7 +372,8 @@ namespace SqlDbParameterPerformanceNetFramework
             DbType dbType,
             int size,
             byte precision,
-            byte scale)
+            byte scale,
+            ParameterDirection direction = ParameterDirection.Input)
         {
             var parameter = command.CreateParameter();
             parameter.ParameterName = name;
@@ -367,6 +382,7 @@ namespace SqlDbParameterPerformanceNetFramework
             parameter.Value = value;
             parameter.Precision = precision;
             parameter.Scale = scale;
+            parameter.Direction = direction;
             command.Parameters.Add(parameter);
             return parameter;
         }

@@ -425,106 +425,134 @@ namespace RepoDb
             context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
                 InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
 
-            // Create the command
-            using (var command = (DbCommand)connection.EnsureOpen().CreateCommand(context.CommandText,
-                CommandType.Text, commandTimeout, transaction))
+            // Before Execution
+            if (trace != null)
             {
-                // Before Execution
-                if (trace != null)
+                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
+                trace.BeforeInsertAll(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
                 {
-                    var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
-                    trace.BeforeInsertAll(cancellableTraceLog);
-                    if (cancellableTraceLog.IsCancelled)
+                    if (cancellableTraceLog.IsThrowException)
                     {
-                        if (cancellableTraceLog.IsThrowException)
-                        {
-                            throw new CancelledExecutionException(context.CommandText);
-                        }
-                        return 0;
+                        throw new CancelledExecutionException(context.CommandText);
                     }
-                    command.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                    entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
+                    return 0;
                 }
+                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
+                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
+            }
 
-                // Before Execution Time
-                var beforeExecutionTime = DateTime.UtcNow;
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
 
-                // Prepare the command
-                command.Prepare();
+            // Execution variables
+            var result = 0;
 
-                // Execution variables
-                var result = 0;
+            // Make sure to create transaction if there is no passed one
+            var hasTransaction = (transaction != null);
 
-                // Directly execute if the entities is only 1 (performance)
-                if (context.BatchSize == 1)
+            try
+            {
+                // Ensure the connection is open
+                connection.EnsureOpen();
+
+                // Create a transaction
+                transaction = (transaction ?? connection.BeginTransaction());
+
+                // Create the command
+                using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
+                    CommandType.Text, commandTimeout, transaction))
                 {
-                    foreach (var entity in entities)
+                    // Directly execute if the entities is only 1 (performance)
+                    if (context.BatchSize == 1)
                     {
-                        // Set the values
-                        context.Func(command, new[] { entity });
-
-                        // Actual Execution
-                        result += command.ExecuteNonQuery();
-
-                        // Set the identities
-                        if (context.IdentitySetters != null)
+                        foreach (var entity in entities)
                         {
-                            context.IdentitySetters.ElementAt(0)(entity, command);
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var batchEntities in entities.Split(batchSize))
-                    {
-                        var batchItems = batchEntities.AsList();
+                            // Set the values
+                            context.Func(command, new[] { entity });
 
-                        // Break if there is no more records
-                        if (batchItems.Count <= 0)
-                        {
-                            break;
-                        }
+                            // Actual Execution
+                            result += command.ExecuteNonQuery();
 
-                        // Check if the batch size has changed (probably the last batch on the enumerables)
-                        if (batchItems.Count != batchSize)
-                        {
-                            // Get a new execution context from cache
-                            context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
-
-                            // Set the command properties
-                            command.CommandText = context.CommandText;
-
-                            // Prepare the command
-                            command.Prepare();
-                        }
-
-                        // Set the values
-                        context.Func(command, batchItems);
-
-                        // Actual Execution
-                        result += command.ExecuteNonQuery();
-
-                        // Set the identities
-                        if (context.IdentitySetters != null)
-                        {
-                            for (var index = 0; index < batchItems.Count; index++)
+                            // Set the identities
+                            if (context.IdentitySetters != null)
                             {
-                                context.IdentitySetters.ElementAt(index)(batchItems[index], command);
+                                var func = context.IdentitySetters.ElementAt(0);
+                                func(entity, command);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var batchEntities in entities.Split(batchSize))
+                        {
+                            var batchItems = batchEntities.AsList();
+
+                            // Break if there is no more records
+                            if (batchItems.Count <= 0)
+                            {
+                                break;
+                            }
+
+                            // Check if the batch size has changed (probably the last batch on the enumerables)
+                            if (batchItems.Count != batchSize)
+                            {
+                                // Get a new execution context from cache
+                                context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
+
+                                // Set the command properties
+                                command.CommandText = context.CommandText;
+
+                                // Prepare the command
+                                command.Prepare();
+                            }
+
+                            // Set the values
+                            context.Func(command, batchItems);
+
+                            // Actual Execution
+                            result += command.ExecuteNonQuery();
+
+                            // Set the identities
+                            if (context.IdentitySetters != null)
+                            {
+                                for (var index = 0; index < batchItems.Count; index++)
+                                {
+                                    var func = context.IdentitySetters.ElementAt(index);
+                                    func(batchItems[index], command);
+                                }
                             }
                         }
                     }
                 }
 
-                // After Execution
-                if (trace != null)
-                {
-                    trace.AfterInsertAll(new TraceLog(command.CommandText, entities, result,
-                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                }
-
-                // Return the result
-                return result;
+                // Commit the transaction
+                transaction.Commit();
             }
+            catch
+            {
+                // Rollback for any exception
+                transaction.Rollback();
+                throw;
+            }
+            finally
+            {
+                if (hasTransaction == false)
+                {
+                    // Rollback and dispose the transaction
+                    transaction.Dispose();
+                }
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterInsertAll(new TraceLog(context.CommandText, entities, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Return the result
+            return result;
         }
 
         #endregion
@@ -610,10 +638,10 @@ namespace RepoDb
                 // Get if we have not skipped it
                 if (skipIdentityCheck == false)
                 {
+                    identitySetters = new List<Action<TEntity, DbCommand>>();
                     for (var index = 0; index < batchSizeValue; index++)
                     {
-                        var identitySetter = FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, index);
-                        identitySetters.Add(identitySetter);
+                        identitySetters.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, index));
                     }
                 }
 
@@ -640,106 +668,134 @@ namespace RepoDb
             context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
                 InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
 
-            // Create the command
-            using (var command = (DbCommand)(await connection.EnsureOpenAsync()).CreateCommand(context.CommandText,
-                CommandType.Text, commandTimeout, transaction))
+            // Before Execution
+            if (trace != null)
             {
-                // Before Execution
-                if (trace != null)
+                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
+                trace.BeforeInsertAll(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
                 {
-                    var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
-                    trace.BeforeInsertAll(cancellableTraceLog);
-                    if (cancellableTraceLog.IsCancelled)
+                    if (cancellableTraceLog.IsThrowException)
                     {
-                        if (cancellableTraceLog.IsThrowException)
-                        {
-                            throw new CancelledExecutionException(context.CommandText);
-                        }
-                        return 0;
+                        throw new CancelledExecutionException(context.CommandText);
                     }
-                    command.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                    entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
+                    return 0;
                 }
+                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
+                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
+            }
 
-                // Before Execution Time
-                var beforeExecutionTime = DateTime.UtcNow;
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
 
-                // Prepare the command
-                command.Prepare();
+            // Execution variables
+            var result = 0;
 
-                // Execution variables
-                var result = 0;
+            // Make sure to create transaction if there is no passed one
+            var hasTransaction = (transaction != null);
 
-                // Directly execute if the entities is only 1 (performance)
-                if (context.BatchSize == 1)
+            try
+            {
+                // Ensure the connection is open
+                await connection.EnsureOpenAsync();
+
+                // Create a transaction
+                transaction = (transaction ?? connection.BeginTransaction());
+
+                // Create the command
+                using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
+                    CommandType.Text, commandTimeout, transaction))
                 {
-                    foreach (var entity in entities)
+                    // Directly execute if the entities is only 1 (performance)
+                    if (context.BatchSize == 1)
                     {
-                        // Set the values
-                        context.Func(command, new[] { entity });
-
-                        // Actual Execution
-                        result += await command.ExecuteNonQueryAsync();
-
-                        // Set the identities
-                        if (context.IdentitySetters != null)
+                        foreach (var entity in entities)
                         {
-                            context.IdentitySetters.ElementAt(0)(entity, command);
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var batchEntities in entities.Split(batchSize))
-                    {
-                        var batchItems = batchEntities.AsList();
+                            // Set the values
+                            context.Func(command, new[] { entity });
 
-                        // Break if there is no more records
-                        if (batchItems.Count <= 0)
-                        {
-                            break;
-                        }
+                            // Actual Execution
+                            result += await command.ExecuteNonQueryAsync();
 
-                        // Check if the batch size has changed (probably the last batch on the enumerables)
-                        if (batchItems.Count != batchSize)
-                        {
-                            // Get a new execution context from cache
-                            context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
-
-                            // Set the command properties
-                            command.CommandText = context.CommandText;
-
-                            // Prepare the command
-                            command.Prepare();
-                        }
-
-                        // Set the values
-                        context.Func(command, batchItems);
-
-                        // Actual Execution
-                        result += await command.ExecuteNonQueryAsync();
-
-                        // Set the identities
-                        if (context.IdentitySetters != null)
-                        {
-                            for (var index = 0; index < batchItems.Count; index++)
+                            // Set the identities
+                            if (context.IdentitySetters != null)
                             {
-                                context.IdentitySetters.ElementAt(index)(batchItems[index], command);
+                                var func = context.IdentitySetters.ElementAt(0);
+                                func(entity, command);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var batchEntities in entities.Split(batchSize))
+                        {
+                            var batchItems = batchEntities.AsList();
+
+                            // Break if there is no more records
+                            if (batchItems.Count <= 0)
+                            {
+                                break;
+                            }
+
+                            // Check if the batch size has changed (probably the last batch on the enumerables)
+                            if (batchItems.Count != batchSize)
+                            {
+                                // Get a new execution context from cache
+                                context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
+
+                                // Set the command properties
+                                command.CommandText = context.CommandText;
+
+                                // Prepare the command
+                                command.Prepare();
+                            }
+
+                            // Set the values
+                            context.Func(command, batchItems);
+
+                            // Actual Execution
+                            result += await command.ExecuteNonQueryAsync();
+
+                            // Set the identities
+                            if (context.IdentitySetters != null)
+                            {
+                                for (var index = 0; index < batchItems.Count; index++)
+                                {
+                                    var func = context.IdentitySetters.ElementAt(index);
+                                    func(batchItems[index], command);
+                                }
                             }
                         }
                     }
                 }
 
-                // After Execution
-                if (trace != null)
-                {
-                    trace.AfterInsertAll(new TraceLog(command.CommandText, entities, result,
-                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                }
-
-                // Return the result
-                return result;
+                // Commit the transaction
+                transaction.Commit();
             }
+            catch
+            {
+                // Rollback for any exception
+                transaction.Rollback();
+                throw;
+            }
+            finally
+            {
+                if (hasTransaction == false)
+                {
+                    // Rollback and dispose the transaction
+                    transaction.Dispose();
+                }
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterInsertAll(new TraceLog(context.CommandText, entities, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Return the result
+            return result;
         }
 
         #endregion
