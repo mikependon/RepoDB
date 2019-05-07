@@ -52,7 +52,7 @@ namespace SqlDbParameterPerformanceNetFramework
                 for (var i = 0; i < iterations; i++)
                 {
                     stopwatch.Start();
-                    connection.InsertAll(identityTables, 10);
+                    connection.InsertAll(identityTables, 1);
                     stopwatch.Stop();
                     milliseconds.Add(stopwatch.Elapsed.TotalMilliseconds);
                     stopwatch.Reset();

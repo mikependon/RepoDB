@@ -31,7 +31,6 @@ namespace RepoDb.Extensions
             }
         }
 
-
         /// <summary>
         /// Converts the <see cref="IEnumerable{T}"/> object into a <see cref="IList{T}"/> of objects.
         /// </summary>
