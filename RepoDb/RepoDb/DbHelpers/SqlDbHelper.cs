@@ -91,23 +91,12 @@ namespace RepoDb.DbHelpers
                     // Create parameters
                     dbCommand.CreateParameters(new { Schema = schema, TableName = tableName });
 
-                    // List of the DBField
-                    var list = new List<DbField>();
-
                     // Execute and set the result
                     using (var reader = dbCommand.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            // Yields affect the performance of multiple batch insert
-                            /*
                             yield return new DbField(reader.GetString(0),
-                                reader.GetBoolean(1),
-                                reader.GetBoolean(2),
-                                reader.GetBoolean(3),
-                                DbTypeResolver.Resolve(reader.GetString(4)));*/
-
-                            var dbField = new DbField(reader.GetString(0),
                                 reader.GetBoolean(1),
                                 reader.GetBoolean(2),
                                 reader.GetBoolean(3),
@@ -115,14 +104,8 @@ namespace RepoDb.DbHelpers
                                 reader.GetInt16(5),
                                 reader.GetByte(6),
                                 reader.GetByte(7));
-
-                            // Add the result directly to the list
-                            list.Add(dbField);
                         }
                     }
-
-                    // Return the list
-                    return list;
                 }
             }
         }

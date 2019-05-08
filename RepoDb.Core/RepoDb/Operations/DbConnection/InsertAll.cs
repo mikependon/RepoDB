@@ -393,7 +393,7 @@ namespace RepoDb
                 var identitySetters = (List<Action<TEntity, DbCommand>>)null;
 
                 // Get if we have not skipped it
-                if (skipIdentityCheck == false)
+                if (skipIdentityCheck == false && identity != null)
                 {
                     identitySetters = new List<Action<TEntity, DbCommand>>();
                     for (var index = 0; index < batchSizeValue; index++)
@@ -422,8 +422,8 @@ namespace RepoDb
             var context = (InsertAllExecutionContext<TEntity>)null;
 
             // Identify the number of entities (performance), get an execution context from cache
-            context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
-                InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
+            context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, 1, callback) :
+                InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
 
             // Before Execution
             if (trace != null)
@@ -475,7 +475,7 @@ namespace RepoDb
                             result += command.ExecuteNonQuery();
 
                             // Set the identities
-                            if (context.IdentitySetters != null)
+                            if (context.IdentitySetters != null && command.Parameters.Count > 0)
                             {
                                 var func = context.IdentitySetters.ElementAt(0);
                                 func(entity, command);
@@ -498,7 +498,7 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
+                                context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchItems.Count, callback);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
@@ -514,7 +514,7 @@ namespace RepoDb
                             result += command.ExecuteNonQuery();
 
                             // Set the identities
-                            if (context.IdentitySetters != null)
+                            if (context.IdentitySetters != null && command.Parameters.Count > 0)
                             {
                                 for (var index = 0; index < batchItems.Count; index++)
                                 {
@@ -526,13 +526,19 @@ namespace RepoDb
                     }
                 }
 
-                // Commit the transaction
-                transaction.Commit();
+                if (hasTransaction == false)
+                {
+                    // Commit the transaction
+                    transaction.Commit();
+                }
             }
             catch
             {
-                // Rollback for any exception
-                transaction.Rollback();
+                if (hasTransaction == false)
+                {
+                    // Rollback for any exception
+                    transaction.Rollback();
+                }
                 throw;
             }
             finally
@@ -636,7 +642,7 @@ namespace RepoDb
                 var identitySetters = (List<Action<TEntity, DbCommand>>)null;
 
                 // Get if we have not skipped it
-                if (skipIdentityCheck == false)
+                if (skipIdentityCheck == false && identity != null)
                 {
                     identitySetters = new List<Action<TEntity, DbCommand>>();
                     for (var index = 0; index < batchSizeValue; index++)
@@ -665,8 +671,8 @@ namespace RepoDb
             var context = (InsertAllExecutionContext<TEntity>)null;
 
             // Identify the number of entities (performance), get an execution context from cache
-            context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(1, callback) :
-                InsertAllExecutionContextCache<TEntity>.Get(batchSize, callback);
+            context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, 1, callback) :
+                InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
 
             // Before Execution
             if (trace != null)
@@ -718,7 +724,7 @@ namespace RepoDb
                             result += await command.ExecuteNonQueryAsync();
 
                             // Set the identities
-                            if (context.IdentitySetters != null)
+                            if (context.IdentitySetters != null && command.Parameters.Count > 0)
                             {
                                 var func = context.IdentitySetters.ElementAt(0);
                                 func(entity, command);
@@ -741,7 +747,7 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = InsertAllExecutionContextCache<TEntity>.Get(batchItems.Count, callback);
+                                context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchItems.Count, callback);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
@@ -757,7 +763,7 @@ namespace RepoDb
                             result += await command.ExecuteNonQueryAsync();
 
                             // Set the identities
-                            if (context.IdentitySetters != null)
+                            if (context.IdentitySetters != null && command.Parameters.Count > 0)
                             {
                                 for (var index = 0; index < batchItems.Count; index++)
                                 {
@@ -769,13 +775,19 @@ namespace RepoDb
                     }
                 }
 
-                // Commit the transaction
-                transaction.Commit();
+                if (hasTransaction == false)
+                {
+                    // Commit the transaction
+                    transaction.Commit();
+                }
             }
             catch
             {
-                // Rollback for any exception
-                transaction.Rollback();
+                if (hasTransaction == false)
+                {
+                    // Rollback for any exception
+                    transaction.Rollback();
+                }
                 throw;
             }
             finally

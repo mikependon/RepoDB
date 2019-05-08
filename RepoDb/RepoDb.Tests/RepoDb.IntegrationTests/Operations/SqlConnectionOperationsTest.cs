@@ -4446,7 +4446,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = connection.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult);
+                    queryResult,
+                    new Field("Id"));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);

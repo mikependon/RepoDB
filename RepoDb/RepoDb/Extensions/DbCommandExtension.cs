@@ -83,13 +83,20 @@ namespace RepoDb.Extensions
             object value,
             DbType? dbType = null)
         {
+            // Create the parameter
             var parameter = command.CreateParameter();
+
+            // Set the values
             parameter.ParameterName = name;
             parameter.Value = value ?? DBNull.Value;
-            if (dbType != null)
+
+            // The DB Type is auto set when setting the values (so check properly Time/DateTime problem)
+            if (dbType != null && parameter.DbType != dbType.Value)
             {
                 parameter.DbType = dbType.Value;
             }
+
+            // Return the parameter
             return parameter;
         }
 

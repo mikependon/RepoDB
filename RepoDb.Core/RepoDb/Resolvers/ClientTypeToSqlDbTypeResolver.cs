@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Data;
 
@@ -21,6 +22,8 @@ namespace RepoDb
         /// <returns>The equivalent <see cref="DbType"/> Type.</returns>
         public DbType Resolve(Type type)
         {
+            type = type?.GetUnderlyingType();
+
             if (type == typeof(long))
             {
                 return DbType.Int64;

@@ -32,8 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RepoDb, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="RepoDb">
       <HintPath>..\..\..\..\RepoDb\RepoDb\bin\Debug\RepoDb.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -46,7 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomTrace.cs" />
     <Compile Include="Models\IdentityTable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

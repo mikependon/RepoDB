@@ -21,7 +21,7 @@ namespace RepoDb.UnitTests.CustomObjects
         }
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
-            return null;
+            return new CustomDbTransaction();
         }
         protected override DbCommand CreateDbCommand()
         {

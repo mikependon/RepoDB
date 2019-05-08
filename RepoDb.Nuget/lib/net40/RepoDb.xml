@@ -155,11 +155,6 @@
             The execution command text.
             </summary>
         </member>
-        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.Identity">
-            <summary>
-            The identity class property.
-            </summary>
-        </member>
         <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.InputFields">
             <summary>
             The list of the input <see cref="T:RepoDb.DbField"/> objects to be included in the execution.
@@ -175,9 +170,14 @@
             The batch size of the execution.
             </summary>
         </member>
-        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.Execute">
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.Func">
             <summary>
             The actual compiled function.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.IdentitySetters">
+            <summary>
+            The actual setters of the identity function.
             </summary>
         </member>
         <member name="T:RepoDb.Contexts.Execution.InsertAllExecutionContextCache`1">
@@ -365,13 +365,6 @@
             <typeparam name="TEntity">The target type.</typeparam>
             <returns>The properties of the class.</returns>
         </member>
-        <member name="M:RepoDb.ClassExpression.GetCompiledFunctionForGetProperties``1">
-            <summary>
-            Gets a function used to extract the properties of a class.
-            </summary>
-            <typeparam name="T">The target type.</typeparam>
-            <returns>The properties of the class.</returns>
-        </member>
         <member name="M:RepoDb.ClassExpression.GetPropertiesAndValues``1(``0)">
             <summary>
             Extract the class properties and values and returns an enumerable of <see cref="T:RepoDb.PropertyValue"/> object.
@@ -387,13 +380,6 @@
             <typeparam name="TEntity">The target type of the class.</typeparam>
             <param name="obj">The object to be extracted.</param>
             <returns>A list of <see cref="T:RepoDb.PropertyValue"/> object with extracted values.</returns>
-        </member>
-        <member name="M:RepoDb.ClassExpression.GetCompiledFunctionForClassPropertiesValuesExtractor``1(System.Collections.Generic.IEnumerable{RepoDb.ClassProperty})">
-            <summary>
-            Gets a function that returns the list of property values of the class.
-            </summary>
-            <param name="properties">The list of properties.</param>
-            <returns>The enumerable value of class property values.</returns>
         </member>
         <member name="T:RepoDb.ClassMappedNameCache">
             <summary>
@@ -10341,7 +10327,7 @@
             A static factory class used to create a custom function.
             </summary>
         </member>
-        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToDataEntityFunction``1(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToDataEntityConverterFunction``1(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
             <summary>
             Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.
             </summary>
@@ -10361,7 +10347,7 @@
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
             <returns>The enumerable list of member assignment and bindings.</returns>
         </member>
-        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToExpandoObjectFunction(System.Data.Common.DbDataReader)">
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(System.Data.Common.DbDataReader)">
             <summary>
             Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.
             </summary>
@@ -10376,15 +10362,15 @@
             <param name="readerFields">The list of fields to be bound from the data reader.</param>
             <returns>The enumerable list of child elements initializations.</returns>
         </member>
-        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataCommandParameterSetterFunction``1(System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Int32)">
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetDbCommandParameterSetterFunction``1(System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Int32)">
             <summary>
-            Gets a compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object.
+            Gets a compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object based from the values of the data entity/dynamic object.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="inputFields">The list of the input <see cref="T:RepoDb.DbField"/> objects.</param>
             <param name="outputFields">The list of the input <see cref="T:RepoDb.DbField"/> objects.</param>
             <param name="batchSize">The batch size of the entity to be passed.</param>
-            <returns>A compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object.</returns>
+            <returns>A compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object based from the values of the data entity/dynamic object.</returns>
         </member>
         <member name="M:RepoDb.Reflection.FunctionFactory.CreateDbCommandParametersFromFields(System.Data.Common.DbCommand,System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Int32)">
             <summary>
@@ -10439,7 +10425,7 @@
             A class used to cache the compiled functions.
             </summary>
         </member>
-        <member name="M:RepoDb.FunctionCache.GetDataReaderToDataEntityFunction``1(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
+        <member name="M:RepoDb.FunctionCache.GetDataReaderToDataEntityConverterFunction``1(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
             <summary>
             Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.
             </summary>
@@ -10458,14 +10444,14 @@
             <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
             <returns>A compiled function that is used to cover the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.</returns>
         </member>
-        <member name="M:RepoDb.FunctionCache.GetDataReaderToExpandoObjectFunction(System.Data.Common.DbDataReader)">
+        <member name="M:RepoDb.FunctionCache.GetDataReaderToExpandoObjectConverterFunction(System.Data.Common.DbDataReader)">
             <summary>
             Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <returns>A compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.</returns>
         </member>
-        <member name="M:RepoDb.FunctionCache.GetDataReaderToExpandoObjectFunction(System.Data.Common.DbDataReader,System.Boolean)">
+        <member name="M:RepoDb.FunctionCache.GetDataReaderToExpandoObjectConverterFunction(System.Data.Common.DbDataReader,System.Boolean)">
             <summary>
             Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.
             </summary>
@@ -10473,15 +10459,25 @@
             <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
             <returns>A compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.</returns>
         </member>
-        <member name="M:RepoDb.FunctionCache.GetDataCommandParameterSetterFunction``1(System.String,System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Int32)">
+        <member name="M:RepoDb.FunctionCache.GetDbCommandParameterSetterFunction``1(System.String,System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Int32)">
             <summary>
-            Gets a compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object.
+            Gets a compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object based from the values of the data entity/dynamic object.
             </summary>
+            <typeparam name="TEntity">The type of the data entity/dynamic object.</typeparam>
             <param name="key">The key to the cache.</param>
             <param name="inputFields">The list of the input <see cref="T:RepoDb.DbField"/> objects to be used.</param>
             <param name="outputFields">The list of the output <see cref="T:RepoDb.DbField"/> objects to be used.</param>
             <param name="batchSize">The batch size of the entities to be passed.</param>
             <returns>A compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object.</returns>
+        </member>
+        <member name="M:RepoDb.FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction``1(RepoDb.Field,System.Int32)">
+            <summary>
+            Gets a compiled function that is used to set the data entity object property value based from the value of <see cref="T:System.Data.Common.DbCommand"/> parameter object.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="field">The target <see cref="T:RepoDb.Field"/>.</param>
+            <param name="index">The index of the batches.</param>
+            <returns>A compiled function that is used to set the data entity object property value based from the value of <see cref="T:System.Data.Common.DbCommand"/> parameter object.</returns>
         </member>
         <member name="T:RepoDb.Requests.BaseRequest">
             <summary>

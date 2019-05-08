@@ -20,6 +20,10 @@ namespace RepoDb.UnitTests.CustomObjects
         public override void Cancel()
         {
         }
+        public new CustomDbParameterCollection Parameters
+        {
+            get { return (CustomDbParameterCollection)DbParameterCollection; }
+        }
         public override int ExecuteNonQuery()
         {
             return default(int);

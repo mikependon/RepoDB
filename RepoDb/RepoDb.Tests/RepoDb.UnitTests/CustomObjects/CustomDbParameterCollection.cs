@@ -1,16 +1,27 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 
 namespace RepoDb.UnitTests.CustomObjects
 {
     public class CustomDbParameterCollection : DbParameterCollection
     {
+        private List<object> m_parameters = new List<object>();
         public override int Count { get; }
         public override object SyncRoot { get; }
         public override int Add(object value)
         {
+            m_parameters.Add(value);
             return default(int);
+        }
+        public new CustomDbParameter this[string name]
+        {
+            get
+            {
+                return m_parameters.OfType<CustomDbParameter>().First();
+            }
         }
         public override void AddRange(Array values)
         {
