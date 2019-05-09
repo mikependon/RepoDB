@@ -103,7 +103,8 @@ namespace RepoDb.DbHelpers
                                 DbTypeResolver.Resolve(reader.GetString(4)),
                                 reader.GetInt16(5),
                                 reader.GetByte(6),
-                                reader.GetByte(7));
+                                reader.GetByte(7),
+                                reader.GetString(4));
                         }
                     }
                 }

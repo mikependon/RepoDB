@@ -9,7 +9,7 @@ namespace RepoDb
     /// </summary>
     public static class PropertyMappedNameCache
     {
-        private static readonly ConcurrentDictionary<string, string> m_cache = new ConcurrentDictionary<string, string>();
+        private static readonly ConcurrentDictionary<int, string> m_cache = new ConcurrentDictionary<int, string>();
 
         /// <summary>
         /// Gets the cached mapped-name of the property.
@@ -19,7 +19,9 @@ namespace RepoDb
         /// <returns>The cached mapped-name of the property.</returns>
         public static string Get(PropertyInfo property, bool quoted = true)
         {
-            var key = string.Concat(property.DeclaringType.FullName, ".", property.Name, ".", quoted.ToString());
+            var key = property.DeclaringType.FullName.GetHashCode() +
+                property.Name.GetHashCode() +
+                quoted.GetHashCode();
             var result = (string)null;
             if (m_cache.TryGetValue(key, out result) == false)
             {

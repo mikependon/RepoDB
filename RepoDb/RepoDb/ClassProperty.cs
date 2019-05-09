@@ -52,7 +52,7 @@ namespace RepoDb
             }
 
             // Set the properties
-            m_field = new Field(PropertyInfo.AsField(false), PropertyInfo.PropertyType);
+            m_field = new Field(GetUnquotedMappedName(), PropertyInfo.PropertyType);
 
             // Return the value
             return m_field;

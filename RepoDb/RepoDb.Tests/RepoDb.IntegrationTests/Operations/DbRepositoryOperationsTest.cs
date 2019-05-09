@@ -2970,7 +2970,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InsertAll(tables);
+                tables.ForEach(item => item.Id = repository.Insert<WithExtraFieldsIdentityTable, long>(item));
 
                 // Act
                 var result = repository.QueryAll<IdentityTable>();
@@ -2997,7 +2997,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                tables.ForEach(item => item.Id = repository.InsertAsync<IdentityTable, int>(item).Result);
+                tables.ForEach(item => item.Id = repository.InsertAsync<IdentityTable, long>(item).Result);
 
                 // Act
                 var result = repository.QueryAll<IdentityTable>();
@@ -3072,7 +3072,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                tables.ForEach(item => item.Id = repository.InsertAsync<WithExtraFieldsIdentityTable, int>(item).Result);
+                tables.ForEach(item => item.Id = repository.InsertAsync<WithExtraFieldsIdentityTable, long>(item).Result);
 
                 // Act
                 var result = repository.QueryAll<IdentityTable>();
@@ -3292,7 +3292,34 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region InsertAll<TEntity>
+        #region InsertAll<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestDbRepositoryInsertAllWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<WithExtraFieldsIdentityTable>(tables);
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
+        #endregion
+
+        #region InsertAllAsync<TEntity>
 
         [TestMethod]
         public void TestDbRepositoryInsertAllAsyncForIdentityTable()
@@ -3340,6 +3367,33 @@ namespace RepoDb.IntegrationTests.Operations
                     var item = result.FirstOrDefault(r => r.Id == table.Id);
                     Assert.IsNotNull(item);
                     Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #region InsertAllAsync<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestDbRepositoryInsertAllAsyncWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAllAsync<WithExtraFieldsIdentityTable>(tables).Wait();
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
                 });
             }
         }
@@ -4180,7 +4234,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult).Result;
+                    queryResult,
+                    new Field(nameof(IdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);

@@ -56,8 +56,11 @@
     <Compile Include="Attributes\IdentityAttribute.cs" />
     <Compile Include="BulkInsertMapItem.cs" />
     <Compile Include="CommandArrayParameter.cs" />
+    <Compile Include="ParameterField.cs" />
     <Compile Include="CommandParameter.cs" />
+    <Compile Include="Contexts\Execution\InsertExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertAllExecutionContext.cs" />
+    <Compile Include="Contexts\Execution\InsertExecutionContextCache.cs" />
     <Compile Include="DbHelperMapper.cs" />
     <Compile Include="Enumerations\ConversionType.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
@@ -203,6 +206,7 @@
     <Compile Include="TraceLog.cs" />
     <Compile Include="TypeMapItem.cs" />
     <Compile Include="TypeMapper.cs" />
+    <Compile Include="Types\SqlVariant.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

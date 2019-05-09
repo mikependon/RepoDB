@@ -21,6 +21,29 @@ namespace RepoDb
             int? size,
             byte? precision,
             byte? scale)
+            : this(name,
+                  isPrimary,
+                  isIdentity,
+                  isNullable,
+                  type,
+                  size,
+                  precision,
+                  scale,
+                  null)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DbField"/> object.
+        /// </summary>
+        public DbField(string name,
+            bool isPrimary,
+            bool isIdentity,
+            bool isNullable,
+            Type type,
+            int? size,
+            byte? precision,
+            byte? scale,
+            string databaseType)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -38,6 +61,7 @@ namespace RepoDb
             Size = size;
             Precision = precision;
             Scale = scale;
+            DatabaseType = databaseType;
 
             // Set the hashcode
             m_hashCode = name.GetHashCode() + isPrimary.GetHashCode() + isIdentity.GetHashCode() + isNullable.GetHashCode();
@@ -56,6 +80,10 @@ namespace RepoDb
             if (scale != null)
             {
                 m_hashCode += scale.GetHashCode();
+            }
+            if (databaseType != null)
+            {
+                m_hashCode += databaseType.GetHashCode();
             }
         }
 
@@ -103,6 +131,11 @@ namespace RepoDb
         /// Gets the scale of the column.
         /// </summary>
         public byte? Scale { get; }
+
+        /// <summary>
+        /// Gets the database type of the column.
+        /// </summary>
+        public string DatabaseType { get; }
 
         // Methods
 

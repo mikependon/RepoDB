@@ -19,7 +19,7 @@ namespace SqlDbParameterPerformanceNetFramework
         {
             TypeMapper.Map(typeof(DateTime), DbType.DateTime2);
             var iterations = 20;
-            var rows = 300;
+            var rows = 200;
             Excercise(iterations, rows);
             InsertAllViaRepoDb(iterations, rows);
             InsertViaRepoDb(iterations, rows);

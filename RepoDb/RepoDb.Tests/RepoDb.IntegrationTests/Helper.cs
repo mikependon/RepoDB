@@ -240,7 +240,13 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = index,
                     ColumnFloat = index,
                     ColumnInt = index,
-                    ColumnNVarChar = $"NVARCHAR{index}"
+                    ColumnNVarChar = $"NVARCHAR{index}",
+                    ExtraField = $"ExtraField{index}",
+                    IdentityTables = new[]
+                    {
+                        CreateIdentityTable(),
+                        CreateIdentityTable()
+                    }
                 });
             }
             return tables;

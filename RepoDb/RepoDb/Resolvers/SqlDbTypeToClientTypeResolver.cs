@@ -1,4 +1,5 @@
 ﻿using RepoDb.Interfaces;
+using RepoDb.Types;
 using System;
 
 namespace RepoDb
@@ -65,7 +66,7 @@ namespace RepoDb
                 case "smallint":
                     return typeof(short);
                 case "sql_variant":
-                    return typeof(object);
+                    return typeof(SqlVariant);
                 case "time":
                     return typeof(TimeSpan);
                 case "tinyint":

@@ -1476,7 +1476,7 @@ namespace RepoDb.IntegrationTests
         #region DecimalToFloatIntClass
 
         [Map("CompleteTable")]
-        private class DecimalToFloatIntClass
+        private class DecimalToFloatClass
         {
             [Primary]
             public Guid SessionId { get; set; }
@@ -1484,10 +1484,10 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToFloatInt()
+        public void TestSqlConnectionCrudConvertionFromDecimalToFloat()
         {
             // Setup
-            var entity = new DecimalToFloatIntClass
+            var entity = new DecimalToFloatClass
             {
                 SessionId = Guid.NewGuid(),
                 ColumnFloat = 12345.67M
@@ -1499,7 +1499,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Act Query
-                var data = connection.Query<DecimalToFloatIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var data = connection.Query<DecimalToFloatClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);

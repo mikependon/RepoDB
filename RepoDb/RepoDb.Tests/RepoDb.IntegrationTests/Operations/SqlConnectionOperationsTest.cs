@@ -3345,7 +3345,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                tables.ForEach(item => item.Id = connection.Insert<IdentityTable, int>(item));
+                tables.ForEach(item => item.Id = connection.Insert<IdentityTable, long>(item));
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -3420,7 +3420,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                tables.ForEach(item => item.Id = connection.Insert<WithExtraFieldsIdentityTable, long>(item));
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -3447,7 +3447,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                tables.ForEach(item => item.Id = connection.InsertAsync<IdentityTable, int>(item).Result);
+                tables.ForEach(item => item.Id = connection.InsertAsync<IdentityTable, long>(item).Result);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -3522,7 +3522,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                tables.ForEach(item => item.Id = connection.InsertAsync<WithExtraFieldsIdentityTable, int>(item).Result);
+                tables.ForEach(item => item.Id = connection.InsertAsync<WithExtraFieldsIdentityTable, long>(item).Result);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -3742,6 +3742,35 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region InsertAll<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        #endregion
+
         #region InsertAllAsync<TEntity>
 
         [TestMethod]
@@ -3782,6 +3811,35 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #region InsertAll<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllAsyncWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAllAsync(tables).Wait();
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -4630,7 +4688,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult).Result;
+                    queryResult,
+                    new Field(nameof(IdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);

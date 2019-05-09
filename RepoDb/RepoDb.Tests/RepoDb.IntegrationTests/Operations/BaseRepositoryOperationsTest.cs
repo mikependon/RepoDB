@@ -2103,7 +2103,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var withExtraFieldsRepository = new WithExtraFieldsIdentityTableRepository())
             {
                 // Act
-                tables.ForEach(item => item.Id = withExtraFieldsRepository.Insert<int>(item));
+                tables.ForEach(item => item.Id = withExtraFieldsRepository.Insert<long>(item));
 
                 using (var repository = new IdentityTableRepository())
                 {
@@ -2208,7 +2208,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var withExtraFieldsRepository = new WithExtraFieldsIdentityTableRepository())
             {
                 // Act
-                tables.ForEach(item => item.Id = withExtraFieldsRepository.InsertAsync<int>(item).Result);
+                tables.ForEach(item => item.Id = withExtraFieldsRepository.InsertAsync<long>(item).Result);
 
                 using (var repository = new IdentityTableRepository())
                 {

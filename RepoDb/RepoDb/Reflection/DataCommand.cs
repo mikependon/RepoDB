@@ -49,7 +49,7 @@ namespace RepoDb.Reflection
             where TEntity : class
         {
             // Get the actual function
-            var func = FunctionCache.GetDbCommandParameterSetterFunction<TEntity>(tableName,
+            var func = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(tableName,
                 inputFields,
                 outputFields,
                 entities.Count());

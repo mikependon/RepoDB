@@ -362,17 +362,369 @@ namespace RepoDb.Reflection
 
         #endregion
 
-        #region GetDbCommandParameterSetterFunction
+        #region GetDataEntityDbCommandParameterSetterFunction
 
         /// <summary>
         /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
+        /// <param name="inputFields">The list of the input <see cref="DbField"/> objects.</param>
+        /// <returns>The compiled function.</returns>
+        public static Action<DbCommand, TEntity> GetDataEntityDbCommandParameterSetterFunction<TEntity>(IEnumerable<DbField> inputFields)
+            where TEntity : class
+        {
+            // Get the types
+            var typeOfDbCommand = typeof(DbCommand);
+            var typeOfEntity = typeof(TEntity);
+            var typeOfObject = typeof(object);
+            var typeOfDbParameter = typeof(DbParameter);
+            var typeOfDbParameterCollection = typeof(DbParameterCollection);
+            var typeOfInt = typeof(int);
+            var typeOfString = typeof(string);
+            var typeOfType = typeof(Type);
+            var typeOfPropertyInfo = typeof(PropertyInfo);
+            var typeOfBytes = typeof(byte[]);
+            var typeOfTimeSpan = typeof(TimeSpan);
+
+            // Variables for arguments
+            var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
+            var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
+
+            // Variables for types
+            var entityProperties = PropertyCache.Get<TEntity>();
+
+            // Variables for DbCommand
+            var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
+            var dbCommandCreateParameterMethod = typeOfDbCommand.GetMethod("CreateParameter");
+            var dbParameterParameterNameSetMethod = typeOfDbParameter.GetProperty("ParameterName").SetMethod;
+            var dbParameterValueSetMethod = typeOfDbParameter.GetProperty("Value").SetMethod;
+            var dbParameterDbTypeSetMethod = typeOfDbParameter.GetProperty("DbType").SetMethod;
+            var dbParameterDirectionSetMethod = typeOfDbParameter.GetProperty("Direction").SetMethod;
+            var dbParameterSizeSetMethod = typeOfDbParameter.GetProperty("Size").SetMethod;
+            var dbParameterPrecisionSetMethod = typeOfDbParameter.GetProperty("Precision").SetMethod;
+            var dbParameterScaleSetMethod = typeOfDbParameter.GetProperty("Scale").SetMethod;
+
+            // Variables for DbParameterCollection
+            var dbParameterCollection = Expression.Property(commandParameterExpression, dbCommandParametersProperty);
+            var dbParameterCollectionAddMethod = typeOfDbParameterCollection.GetMethod("Add", new[] { typeOfObject });
+            var dbParameterCollectionClearMethod = typeOfDbParameterCollection.GetMethod("Clear");
+
+            // Variables for 'Dynamic|Object' object
+            var objectGetTypeMethod = typeOfObject.GetMethod("GetType");
+            var typeGetPropertyMethod = typeOfType.GetMethod("GetProperty", new[] { typeOfString });
+            var propertyInfoGetValueMethod = typeOfPropertyInfo.GetMethod("GetValue", new[] { typeOfObject });
+
+            // Other variables
+            var dbTypeResolver = new ClientTypeToSqlDbTypeResolver();
+
+            // Reusable function for input/output fields
+            var func = new Func<Expression, ParameterExpression, ParameterExpression, DbField, ClassProperty, Expression>((Expression instance,
+                ParameterExpression property,
+                ParameterExpression parameter,
+                DbField field,
+                ClassProperty classProperty) =>
+            {
+                // Parameters for the block
+                var parameterAssignments = new List<Expression>();
+
+                // Set the name
+                var nameAssignment = Expression.Call(parameter, dbParameterParameterNameSetMethod, Expression.Constant(field.UnquotedName));
+                parameterAssignments.Add(nameAssignment);
+
+                // Set the value
+                var instanceProperty = (PropertyInfo)null;
+
+                #region Value
+
+                // Set the value
+                var value = (Expression)null;
+
+                // Check the proper type of the entity
+                if (typeOfEntity != typeOfObject && typeOfEntity.IsGenericType == false)
+                {
+                    instanceProperty = typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
+                }
+
+                // If the property is missing directly, then it could be a dynamic object
+                if (instanceProperty == null)
+                {
+                    value = Expression.Call(property, propertyInfoGetValueMethod, instance);
+                }
+                else
+                {
+                    // Parse with Guid if necessary
+                    if (TypeMapper.ConversionType == ConversionType.Automatic)
+                    {
+                        #region StringToGuid
+
+                        var propertyType = instanceProperty?.PropertyType.GetUnderlyingType();
+                        var fieldType = field.Type?.GetUnderlyingType();
+                        var valueToConvert = Expression.Property(instance, instanceProperty);
+
+                        // Create a new guid here
+                        if (propertyType == typeof(string) && fieldType == typeof(Guid) /* StringToGuid */)
+                        {
+                            value = Expression.New(typeof(Guid).GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
+                        }
+                        else
+                        {
+                            value = valueToConvert;
+                        }
+
+                        #endregion
+                    }
+                    else
+                    {
+                        // Get the Class.Property
+                        value = Expression.Property(instance, instanceProperty);
+                    }
+
+                    // Convert to object
+                    value = Expression.Convert(value, typeOfObject);
+                }
+
+                // Declare the variable for the value assignment
+                var valueBlock = (Expression)null;
+                var isNullable = (instanceProperty != null && (instanceProperty.PropertyType.IsValueType == false ||
+                    Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null));
+
+                // Check if the property is nullable
+                if (isNullable == true)
+                {
+                    // Identification of the DBNull
+                    var valueVariable = Expression.Variable(typeOfObject, string.Concat("valueOf", field.UnquotedName));
+                    var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), typeOfObject);
+                    var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
+
+                    // Set the propert value
+                    valueBlock = Expression.Block(new[] { valueVariable },
+                        Expression.Assign(valueVariable, value),
+                        Expression.Condition(valueIsNull, dbNullValue, valueVariable));
+                }
+                else
+                {
+                    valueBlock = value;
+                }
+
+                // Add to the collection
+                var valueAssignment = Expression.Call(parameter, dbParameterValueSetMethod, valueBlock);
+                parameterAssignments.Add(valueAssignment);
+
+                #endregion
+
+                #region DbType
+
+                // Identify the DB Type
+                var fieldOrPropertyType = (Type)null;
+
+                // Identify the conversion
+                if (TypeMapper.ConversionType == ConversionType.Automatic)
+                {
+                    var propertyType = instanceProperty?.PropertyType.GetUnderlyingType();
+                    var fieldType = field.Type?.GetUnderlyingType();
+
+                    // Identity the conversion
+                    if (propertyType == typeof(DateTime) && fieldType == typeOfString /* DateTimeToString */ ||
+                        propertyType == typeof(decimal) && fieldType == typeof(float) /* DecimalToFloat */ ||
+                        propertyType == typeof(double) && fieldType == typeof(long) /* DoubleToBigint */||
+                        propertyType == typeof(double) && fieldType == typeof(int) /* DoubleToBigint */ ||
+                        propertyType == typeof(double) && fieldType == typeof(short) /* DoubleToShort */||
+                        propertyType == typeof(float) && fieldType == typeof(long) /* FloatToBigint */ ||
+                        propertyType == typeof(float) && fieldType == typeof(short) /* FloatToShort */ ||
+                        propertyType == typeof(Guid) && fieldType == typeof(string) /* UniqueIdentifierToString */)
+                    {
+                        fieldOrPropertyType = propertyType;
+                    }
+                }
+
+                // Set to normal if null
+                if (fieldOrPropertyType == null)
+                {
+                    fieldOrPropertyType = field.Type?.GetUnderlyingType() ?? instanceProperty?.PropertyType.GetUnderlyingType();
+                }
+
+                // Set for non Timestamp
+                if (fieldOrPropertyType != typeOfTimeSpan)
+                {
+                    var dbType = TypeMapper.Get(fieldOrPropertyType)?.DbType;
+                    if (dbType == null)
+                    {
+                        dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                    }
+
+                    // Set the DB Type
+                    if (dbType != null)
+                    {
+                        var dbTypeAssignment = Expression.Call(parameter, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
+                        parameterAssignments.Add(dbTypeAssignment);
+                    }
+                }
+
+                #endregion
+
+                #region Direction
+
+                // Set the Parameter Direction
+                var directionAssignment = Expression.Call(parameter, dbParameterDirectionSetMethod, Expression.Constant(ParameterDirection.Input));
+                parameterAssignments.Add(directionAssignment);
+
+                #endregion
+
+                #region Size
+
+                // Set only for non-image
+                // By default, SQL Server only put (16 size), and that would fail if the user
+                // used this type for their binary columns and assign a much longer values
+                if (field.DatabaseType?.ToLower() != "image")
+                {
+                    // Set the Size
+                    if (field.Size != null)
+                    {
+                        var sizeAssignment = Expression.Call(parameter, dbParameterSizeSetMethod, Expression.Constant(field.Size.Value));
+                        parameterAssignments.Add(sizeAssignment);
+                    }
+                }
+
+                #endregion
+
+                #region Precision
+
+                // Set the Precision
+                if (field.Precision != null)
+                {
+                    var precisionAssignment = Expression.Call(parameter, dbParameterPrecisionSetMethod, Expression.Constant(field.Precision.Value));
+                    parameterAssignments.Add(precisionAssignment);
+                }
+
+                #endregion
+
+                #region Scale
+
+                // Set the Scale
+                if (field.Scale != null)
+                {
+                    var scaleAssignment = Expression.Call(parameter, dbParameterScaleSetMethod, Expression.Constant(field.Scale.Value));
+                    parameterAssignments.Add(scaleAssignment);
+                }
+
+                #endregion
+
+                // Add the actual addition
+                parameterAssignments.Add(Expression.Call(dbParameterCollection, dbParameterCollectionAddMethod, parameter));
+
+                // Return the expression
+                return Expression.Block(parameterAssignments);
+            });
+
+            // Variables for the object instance
+            var propertyVariableList = new List<dynamic>();
+            var instanceVariable = Expression.Variable(typeOfEntity, "instance");
+            var instanceType = Expression.Constant(typeOfEntity); // Expression.Call(instanceVariable, objectGetTypeMethod);
+            var instanceTypeVariable = Expression.Variable(typeOfType, "instanceType");
+
+            // Input fields properties
+            if (inputFields?.Any() == true)
+            {
+                for (var index = 0; index < inputFields.Count(); index++)
+                {
+                    propertyVariableList.Add(new
+                    {
+                        Index = index,
+                        Field = inputFields.ElementAt(index)
+                    });
+                }
+            }
+
+            // Variables for expression body
+            var bodyExpressions = new List<Expression>();
+
+            // Clear the parameter collection first
+            bodyExpressions.Add(Expression.Call(dbParameterCollection, dbParameterCollectionClearMethod));
+
+            // Get the current instance
+            var instanceExpressions = new List<Expression>();
+            var instanceVariables = new List<ParameterExpression>();
+
+            // Entity instance
+            instanceVariables.Add(instanceVariable);
+            instanceExpressions.Add(Expression.Assign(instanceVariable, entityParameterExpression));
+
+            // Iterate the input fields
+            foreach (var item in propertyVariableList)
+            {
+                // Property variables
+                var propertyExpressions = new List<Expression>();
+                var propertyVariables = new List<ParameterExpression>();
+                var field = (DbField)item.Field;
+                var propertyIndex = (int)item.Index;
+                var propertyVariable = (ParameterExpression)null;
+                var propertyInstance = (Expression)null;
+                var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", field.UnquotedName));
+                var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
+                var classProperty = (ClassProperty)null;
+
+                // Set the proper assignments (property)
+                if (typeOfEntity == typeOfObject)
+                {
+                    propertyVariable = Expression.Variable(typeOfPropertyInfo, string.Concat("property", field.UnquotedName));
+                    propertyInstance = Expression.Call(Expression.Call(instanceVariable, objectGetTypeMethod),
+                        typeGetPropertyMethod, Expression.Constant(field.UnquotedName));
+                }
+                else
+                {
+                    classProperty = entityProperties.First(property => property.GetUnquotedMappedName().ToLower() == field.UnquotedName.ToLower());
+                    propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", field.UnquotedName));
+                    propertyInstance = Expression.Property(instanceVariable, classProperty.PropertyInfo);
+                }
+
+                // Execute the function
+                var parameterAssignment = func(instanceVariable /* instance */,
+                    propertyVariable /* property */,
+                    parameterVariable /* parameter */,
+                    field /* field */,
+                    classProperty /* classProperty */);
+
+                // Add the necessary variables
+                propertyVariables.Add(propertyVariable);
+                propertyVariables.Add(parameterVariable);
+
+                // Add the necessary expressions
+                propertyExpressions.Add(Expression.Assign(propertyVariable, propertyInstance));
+                propertyExpressions.Add(Expression.Assign(parameterVariable, parameterInstance));
+                propertyExpressions.Add(parameterAssignment);
+
+                // Add the property block
+                var propertyBlock = Expression.Block(propertyVariables, propertyExpressions);
+
+                // Add to instance expression
+                instanceExpressions.Add(propertyBlock);
+            }
+
+            // Add to the instance block
+            var instanceBlock = Expression.Block(instanceVariables, instanceExpressions);
+
+            // Add to the body
+            bodyExpressions.Add(instanceBlock);
+
+            // Set the function value
+            return Expression
+                .Lambda<Action<DbCommand, TEntity>>(Expression.Block(bodyExpressions), commandParameterExpression, entityParameterExpression)
+                .Compile();
+        }
+
+        #endregion
+
+        #region GetDataEntitiesDbCommandParameterSetterFunction
+
+        /// <summary>
+        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic objects.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
         /// <param name="inputFields">The list of the input <see cref="DbField"/> objects.</param>
         /// <param name="outputFields">The list of the input <see cref="DbField"/> objects.</param>
         /// <param name="batchSize">The batch size of the entity to be passed.</param>
-        /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic object.</returns>
-        public static Action<DbCommand, IList<TEntity>> GetDbCommandParameterSetterFunction<TEntity>(IEnumerable<DbField> inputFields,
+        /// <returns>The compiled function.</returns>
+        public static Action<DbCommand, IList<TEntity>> GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize)
             where TEntity : class
@@ -388,6 +740,7 @@ namespace RepoDb.Reflection
             var typeOfString = typeof(string);
             var typeOfType = typeof(Type);
             var typeOfPropertyInfo = typeof(PropertyInfo);
+            var typeOfTimeSpan = typeof(TimeSpan);
 
             // Variables for arguments
             var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
@@ -424,11 +777,12 @@ namespace RepoDb.Reflection
             var dbTypeResolver = new ClientTypeToSqlDbTypeResolver();
 
             // Reusable function for input/output fields
-            var func = new Func<int, Expression, ParameterExpression, ParameterExpression, DbField, bool, ParameterDirection, Expression>((int entityIndex,
+            var func = new Func<int, Expression, ParameterExpression, ParameterExpression, DbField, ClassProperty, bool, ParameterDirection, Expression>((int entityIndex,
                 Expression instance,
                 ParameterExpression property,
                 ParameterExpression parameter,
                 DbField field,
+                ClassProperty classProperty,
                 bool skipValueAssignment,
                 ParameterDirection direction) =>
             {
@@ -442,6 +796,8 @@ namespace RepoDb.Reflection
 
                 // Set the value
                 var instanceProperty = (PropertyInfo)null;
+
+                #region Value
 
                 // Set the value
                 if (skipValueAssignment == false)
@@ -462,19 +818,51 @@ namespace RepoDb.Reflection
                     }
                     else
                     {
-                        value = Expression.Convert(Expression.Property(instance, instanceProperty), typeOfObject);
+                        // Parse with Guid if necessary
+                        if (TypeMapper.ConversionType == ConversionType.Automatic)
+                        {
+                            #region StringToGuid
+
+                            var propertyType = instanceProperty?.PropertyType.GetUnderlyingType();
+                            var fieldType = field.Type?.GetUnderlyingType();
+                            var valueToConvert = Expression.Property(instance, instanceProperty);
+
+                            // Create a new guid here
+                            if (propertyType == typeof(string) && fieldType == typeof(Guid) /* StringToGuid */)
+                            {
+                                value = Expression.New(typeof(Guid).GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
+                            }
+                            else
+                            {
+                                value = valueToConvert;
+                            }
+
+                            #endregion
+                        }
+                        else
+                        {
+                            // Get the Class.Property
+                            value = Expression.Property(instance, instanceProperty);
+                        }
+
+                        // Convert to object
+                        value = Expression.Convert(value, typeOfObject);
                     }
 
                     // Declare the variable for the value assignment
                     var valueBlock = (Expression)null;
+                    var isNullable = (instanceProperty != null && (instanceProperty.PropertyType.IsValueType == false ||
+                        Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null));
 
                     // Check if the property is nullable
-                    if (instanceProperty != null && Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null)
+                    if (isNullable == true)
                     {
-                        var valueVariable = Expression.Variable(typeOfObject,
-                            string.Concat("valueOf", field.UnquotedName, entityIndex > 0 ? entityIndex.ToString() : string.Empty));
+                        // Identification of the DBNull
+                        var valueVariable = Expression.Variable(typeOfObject, string.Concat("valueOf", field.UnquotedName));
                         var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), typeOfObject);
                         var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
+
+                        // Set the propert value
                         valueBlock = Expression.Block(new[] { valueVariable },
                             Expression.Assign(valueVariable, value),
                             Expression.Condition(valueIsNull, dbNullValue, valueVariable));
@@ -489,34 +877,84 @@ namespace RepoDb.Reflection
                     parameterAssignments.Add(valueAssignment);
                 }
 
-                // Identity the DB Type
-                var fieldOrPropertyType = field.Type?.GetUnderlyingType() ?? instanceProperty?.PropertyType.GetUnderlyingType();
-                var dbType = TypeMapper.Get(fieldOrPropertyType)?.DbType;
-                if (dbType == null)
+                #endregion
+
+                #region DbType
+
+                // Identify the DB Type
+                var fieldOrPropertyType = (Type)null;
+
+                // Identify the conversion
+                if (TypeMapper.ConversionType == ConversionType.Automatic)
                 {
-                    dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                    var propertyType = instanceProperty?.PropertyType.GetUnderlyingType();
+                    var fieldType = field.Type?.GetUnderlyingType();
+
+                    // Identity the conversion
+                    if (propertyType == typeof(DateTime) && fieldType == typeOfString /* DateTimeToString */ ||
+                        propertyType == typeof(decimal) && fieldType == typeof(float) /* DecimalToFloat */ ||
+                        propertyType == typeof(double) && fieldType == typeof(long) /* DoubleToBigint */||
+                        propertyType == typeof(double) && fieldType == typeof(int) /* DoubleToBigint */ ||
+                        propertyType == typeof(double) && fieldType == typeof(short) /* DoubleToShort */||
+                        propertyType == typeof(float) && fieldType == typeof(long) /* FloatToBigint */ ||
+                        propertyType == typeof(float) && fieldType == typeof(short) /* FloatToShort */ ||
+                        propertyType == typeof(Guid) && fieldType == typeof(string) /* UniqueIdentifierToString */)
+                    {
+                        fieldOrPropertyType = propertyType;
+                    }
                 }
 
-                // Set the DB Type
-                if (dbType != null)
+                // Set to normal if null
+                if (fieldOrPropertyType == null)
                 {
-                    var dbTypeAssignment = Expression.Call(parameter, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
-                    parameterAssignments.Add(dbTypeAssignment);
+                    fieldOrPropertyType = field.Type?.GetUnderlyingType() ?? instanceProperty?.PropertyType.GetUnderlyingType();
                 }
+
+                // Set for non Timestamp
+                if (fieldOrPropertyType != typeOfTimeSpan)
+                {
+                    var dbType = TypeMapper.Get(fieldOrPropertyType)?.DbType;
+                    if (dbType == null)
+                    {
+                        dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                    }
+
+                    // Set the DB Type
+                    if (dbType != null)
+                    {
+                        var dbTypeAssignment = Expression.Call(parameter, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
+                        parameterAssignments.Add(dbTypeAssignment);
+                    }
+                }
+
+                #endregion
+
+                #region Direction
 
                 // Set the Parameter Direction
-                if (direction != ParameterDirection.Input)
+                var directionAssignment = Expression.Call(parameter, dbParameterDirectionSetMethod, Expression.Constant(direction));
+                parameterAssignments.Add(directionAssignment);
+
+                #endregion
+
+                #region Size
+
+                // Set only for non-image
+                // By default, SQL Server only put (16 size), and that would fail if the user
+                // used this type for their binary columns and assign a much longer values
+                if (field.DatabaseType?.ToLower() != "image")
                 {
-                    var directionAssignment = Expression.Call(parameter, dbParameterDirectionSetMethod, Expression.Constant(direction));
-                    parameterAssignments.Add(directionAssignment);
+                    // Set the Size
+                    if (field.Size != null)
+                    {
+                        var sizeAssignment = Expression.Call(parameter, dbParameterSizeSetMethod, Expression.Constant(field.Size.Value));
+                        parameterAssignments.Add(sizeAssignment);
+                    }
                 }
 
-                // Set the Size
-                if (field.Size != null)
-                {
-                    var sizeAssignment = Expression.Call(parameter, dbParameterSizeSetMethod, Expression.Constant(field.Size.Value));
-                    parameterAssignments.Add(sizeAssignment);
-                }
+                #endregion
+
+                #region Precision
 
                 // Set the Precision
                 if (field.Precision != null)
@@ -525,12 +963,18 @@ namespace RepoDb.Reflection
                     parameterAssignments.Add(precisionAssignment);
                 }
 
+                #endregion
+
+                #region Scale
+
                 // Set the Scale
                 if (field.Scale != null)
                 {
                     var scaleAssignment = Expression.Call(parameter, dbParameterScaleSetMethod, Expression.Constant(field.Scale.Value));
                     parameterAssignments.Add(scaleAssignment);
                 }
+
+                #endregion
 
                 // Add the actual addition
                 parameterAssignments.Add(Expression.Call(dbParameterCollection, dbParameterCollectionAddMethod, parameter));
@@ -607,6 +1051,7 @@ namespace RepoDb.Reflection
                     var propertyInstance = (Expression)null;
                     var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", field.UnquotedName));
                     var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
+                    var classProperty = (ClassProperty)null;
 
                     // Set the proper assignments (property)
                     if (typeOfEntity == typeOfObject)
@@ -617,7 +1062,7 @@ namespace RepoDb.Reflection
                     }
                     else
                     {
-                        var classProperty = entityProperties.First(property => property.GetUnquotedMappedName().ToLower() == field.UnquotedName.ToLower());
+                        classProperty = entityProperties.First(property => property.GetUnquotedMappedName().ToLower() == field.UnquotedName.ToLower());
                         propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", field.UnquotedName));
                         propertyInstance = Expression.Property(instanceVariable, classProperty.PropertyInfo);
                     }
@@ -628,6 +1073,7 @@ namespace RepoDb.Reflection
                         propertyVariable /* property */,
                         parameterVariable /* parameter */,
                         field /* field */,
+                        classProperty /* classProperty */,
                         (direction == ParameterDirection.Output) /* skipValueAssignment */,
                         direction /* direction */);
 
@@ -664,6 +1110,13 @@ namespace RepoDb.Reflection
 
         #region GetDataEntityPropertySetterFromDbCommandParameterFunction
 
+        /// <summary>
+        /// Gets a compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="field">The target <see cref="Field"/>.</param>
+        /// <param name="index">The index of the batches.</param>
+        /// <returns>A compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.</returns>
         public static Action<TEntity, DbCommand> GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(Field field,
             int index)
             where TEntity : class
@@ -704,6 +1157,39 @@ namespace RepoDb.Reflection
             // Return function
             return Expression.Lambda<Action<TEntity, DbCommand>>(
                 propertyAssignment, entityParameterExpression, dbCommandParameterExpression).Compile();
+        }
+
+        #endregion
+
+        #region GetDataEntityPropertyValueSetterFunction
+
+        /// <summary>
+        /// Gets a compiled function that is used to set the data entity object property value.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="field">The target <see cref="Field"/>.</param>
+        /// <returns>A compiled function that is used to set the data entity object property value.</returns>
+        public static Action<TEntity, object> GetDataEntityPropertyValueSetterFunction<TEntity>(Field field)
+            where TEntity : class
+        {
+            // Variables for type
+            var typeOfEntity = typeof(TEntity);
+            var typeOfObject = typeof(object);
+
+            // Variables for argument
+            var entityParameter = Expression.Parameter(typeOfEntity, "entity");
+            var valueParameter = Expression.Parameter(typeOfObject, "value");
+
+            // Get the entity property
+            var property = typeOfEntity.GetProperty(field.UnquotedName).SetMethod;
+
+            // Assign the value into DataEntity.Property
+            var propertyAssignment = Expression.Call(entityParameter, property,
+                Expression.Convert(valueParameter, field.Type));
+
+            // Return function
+            return Expression.Lambda<Action<TEntity, object>>(propertyAssignment,
+                entityParameter, valueParameter).Compile();
         }
 
         #endregion

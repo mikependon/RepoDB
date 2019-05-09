@@ -25,8 +25,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public QueryField(string fieldName, object value)
-            : this(fieldName, Operation.Equal, value)
+        public QueryField(string fieldName,
+            object value)
+            : this(fieldName,
+                  Operation.Equal,
+                  value)
         {
         }
 
@@ -36,8 +39,29 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public QueryField(string fieldName, Operation operation, object value)
-            : this(fieldName, operation, value, false)
+        public QueryField(string fieldName,
+            Operation operation,
+            object value)
+            : this(fieldName,
+                  operation,
+                  value,
+                  false)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryField"/> object.
+        /// </summary>
+        /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        public QueryField(Field field,
+            Operation operation,
+            object value)
+            : this(field,
+                  operation,
+                  value,
+                  false)
         {
         }
 
@@ -54,10 +78,30 @@ namespace RepoDb
             Operation operation,
             object value,
             bool appendUnderscore)
+            : this(new Field(fieldName),
+                  operation,
+                  value,
+                  false)
         {
-            Field = new Field(fieldName);
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryField"/> object.
+        /// </summary>
+        /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="appendUnderscore">
+        /// The value to identify whether the underscore prefix will be appended to the parameter name.
+        /// </param>
+        internal QueryField(Field field,
+            Operation operation,
+            object value,
+            bool appendUnderscore)
+        {
+            Field = field;
             Operation = operation;
-            Parameter = new Parameter(fieldName, value, appendUnderscore);
+            Parameter = new Parameter(field.UnquotedName, value, appendUnderscore);
         }
 
         // Properties

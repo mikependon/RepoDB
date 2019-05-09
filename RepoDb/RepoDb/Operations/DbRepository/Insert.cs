@@ -18,10 +18,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
+        /// <returns>The value of the primary field.</returns>
         public object Insert<TEntity>(TEntity entity,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -54,13 +51,10 @@ namespace RepoDb
         /// Inserts a new data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
+        /// <returns>The value of the primary field.</returns>
         public TResult Insert<TEntity, TResult>(TEntity entity,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -99,10 +93,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
+        /// <returns>The value of the primary field.</returns>
         public async Task<object> InsertAsync<TEntity>(TEntity entity,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -135,13 +126,10 @@ namespace RepoDb
         /// Inserts a new data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
+        /// <returns>The value of the primary field.</returns>
         public async Task<TResult> InsertAsync<TEntity, TResult>(TEntity entity,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -180,7 +168,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the primary key of the newly inserted data.</returns>
+        /// <returns>The value of the primary field.</returns>
         public object Insert(string tableName,
             object entity,
             IDbTransaction transaction = null)
@@ -213,11 +201,11 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new data in the database.
         /// </summary>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the primary key of the newly inserted data.</returns>
+        /// <returns>The value of the primary field.</returns>
         public TResult Insert<TResult>(string tableName,
             object entity,
             IDbTransaction transaction = null)
@@ -257,7 +245,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the primary key of the newly inserted data.</returns>
+        /// <returns>The value of the primary field.</returns>
         public async Task<object> InsertAsync(string tableName,
             object entity,
             IDbTransaction transaction = null)
@@ -290,7 +278,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>

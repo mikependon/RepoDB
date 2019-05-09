@@ -1,5 +1,6 @@
 ﻿using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Types;
 using System;
 using System.Data;
 
@@ -83,6 +84,10 @@ namespace RepoDb
             else if (type == typeof(Guid))
             {
                 return DbType.Guid;
+            }
+            else if (type == typeof(SqlVariant))
+            {
+                return DbType.Object;
             }
             /*else if (type == typeof(Xml))
             {
