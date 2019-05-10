@@ -432,7 +432,7 @@ namespace RepoDb
                 var identity = (Field)null;
                 var dbFields = DbFieldCache.Get(connection, request.Name);
                 var inputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields.FirstOrDefault(f => f.IsIdentity);
+                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
                 // Set the identity field
                 if (skipIdentityCheck == false)
@@ -446,7 +446,7 @@ namespace RepoDb
                 }
 
                 // Filter the actual properties for input fields
-                inputFields = dbFields
+                inputFields = dbFields?
                     .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
                         fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
@@ -468,7 +468,7 @@ namespace RepoDb
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", request.Name),
-                        inputFields.AsList()),
+                        inputFields?.AsList()),
                     IdentityPropertySetterFunc = identityPropertySetter
                 };
             });
@@ -524,7 +524,10 @@ namespace RepoDb
                     result = ObjectConverter.ToType<TResult>(command.ExecuteScalar());
 
                     // Set the return value
-                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
+                    if (Equals(result, default(TResult)) == false)
+                    {
+                        context.IdentityPropertySetterFunc?.Invoke(entity, result);
+                    }
                 }
 
                 if (hasTransaction == false)
@@ -605,7 +608,7 @@ namespace RepoDb
                 var identity = (Field)null;
                 var dbFields = DbFieldCache.Get(connection, request.Name);
                 var inputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields.FirstOrDefault(f => f.IsIdentity);
+                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
                 // Set the identity field
                 if (skipIdentityCheck == false)
@@ -619,7 +622,7 @@ namespace RepoDb
                 }
 
                 // Filter the actual properties for input fields
-                inputFields = dbFields
+                inputFields = dbFields?
                     .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
                         fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
@@ -641,7 +644,7 @@ namespace RepoDb
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", request.Name),
-                        inputFields.AsList()),
+                        inputFields?.AsList()),
                     IdentityPropertySetterFunc = identityPropertySetter
                 };
             });
@@ -697,7 +700,10 @@ namespace RepoDb
                     result = ObjectConverter.ToType<TResult>(await command.ExecuteScalarAsync());
 
                     // Set the return value
-                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
+                    if (Equals(result, default(TResult)) == false)
+                    {
+                        context.IdentityPropertySetterFunc?.Invoke(entity, result);
+                    }
                 }
 
                 if (hasTransaction == false)

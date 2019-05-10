@@ -363,7 +363,7 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, request.Name);
                 var inputFields = (IEnumerable<DbField>)null;
                 var outputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields.FirstOrDefault(f => f.IsIdentity);
+                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
                 // Set the identity value
                 if (skipIdentityCheck == false)
@@ -377,7 +377,7 @@ namespace RepoDb
                 }
 
                 // Filter the actual properties for input fields
-                inputFields = dbFields
+                inputFields = dbFields?
                     .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
                         fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
@@ -408,7 +408,7 @@ namespace RepoDb
                     BatchSize = batchSizeValue,
                     ParametersSetterFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", request.Name),
-                        inputFields.AsList(),
+                        inputFields?.AsList(),
                         outputFields,
                         batchSizeValue),
                     IdentitySettersFunc = identitySetters
@@ -613,7 +613,7 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, request.Name);
                 var inputFields = (IEnumerable<DbField>)null;
                 var outputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields.FirstOrDefault(f => f.IsIdentity);
+                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
                 // Set the identity value
                 if (skipIdentityCheck == false)
@@ -627,7 +627,7 @@ namespace RepoDb
                 }
 
                 // Filter the actual properties for input fields
-                inputFields = dbFields
+                inputFields = dbFields?
                     .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
                         fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
@@ -658,7 +658,7 @@ namespace RepoDb
                     BatchSize = batchSizeValue,
                     ParametersSetterFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", request.Name),
-                        inputFields.AsList(),
+                        inputFields?.AsList(),
                         outputFields,
                         batchSizeValue),
                     IdentitySettersFunc = identitySetters

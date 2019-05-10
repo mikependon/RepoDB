@@ -204,7 +204,7 @@ namespace RepoDb
             public static Action<DbCommand, TEntity> Get(string cacheKey,
                 IEnumerable<DbField> inputFields)
             {
-                var key = string.Concat(cacheKey, ".", inputFields.Select(f => f.UnquotedName).Join("."));
+                var key = string.Concat(cacheKey, ".", inputFields?.Select(f => f.UnquotedName).Join("."));
                 var func = (Action<DbCommand, TEntity>)null;
                 if (m_cache.TryGetValue(key, out func) == false)
                 {

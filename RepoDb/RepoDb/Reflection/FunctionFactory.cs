@@ -652,6 +652,8 @@ namespace RepoDb.Reflection
             // Iterate the input fields
             foreach (var item in propertyVariableList)
             {
+                #region Field Expressions
+
                 // Property variables
                 var propertyExpressions = new List<Expression>();
                 var propertyVariables = new List<ParameterExpression>();
@@ -698,6 +700,8 @@ namespace RepoDb.Reflection
 
                 // Add to instance expression
                 instanceExpressions.Add(propertyBlock);
+
+                #endregion
             }
 
             // Add to the instance block
@@ -1041,6 +1045,8 @@ namespace RepoDb.Reflection
                 // Iterate the input fields
                 foreach (var item in propertyVariableList)
                 {
+                    #region Field Expressions
+
                     // Property variables
                     var propertyExpressions = new List<Expression>();
                     var propertyVariables = new List<ParameterExpression>();
@@ -1091,6 +1097,8 @@ namespace RepoDb.Reflection
 
                     // Add to instance expression
                     instanceExpressions.Add(propertyBlock);
+
+                    #endregion
                 }
 
                 // Add to the instance block
