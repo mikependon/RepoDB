@@ -23,11 +23,20 @@ namespace RepoDb
         /// <returns>The equivalent <see cref="DbType"/> Type.</returns>
         public DbType Resolve(Type type)
         {
+            if (type == null)
+            {
+                throw new NullReferenceException("The type must not be null.");
+            }
+
             type = type?.GetUnderlyingType();
 
             if (type == typeof(long))
             {
                 return DbType.Int64;
+            }
+            else if (type == typeof(byte))
+            {
+                return DbType.Byte;
             }
             else if (type == typeof(byte[]))
             {
@@ -69,6 +78,7 @@ namespace RepoDb
             {
                 return DbType.Int16;
             }
+            // Object must be defaulted to String, defaulted by .NET for DbType
             /*else if (type == typeof(object))
             {
                 return DbType.Object;
@@ -89,6 +99,7 @@ namespace RepoDb
             {
                 return DbType.Object;
             }
+            // XML must be defaulted to String, defaulted by .NET for DbType
             /*else if (type == typeof(Xml))
             {
                 return DbType.Xml;

@@ -199,7 +199,7 @@
     <Compile Include="Reflection\DataReaderConverter.cs" />
     <Compile Include="Resolvers\SqlDbTypeToStringNameResolver.cs" />
     <Compile Include="Resolvers\ClientTypeToSqlDbTypeResolver.cs" />
-    <Compile Include="Resolvers\SqlDbTypeToClientTypeResolver.cs" />
+    <Compile Include="Resolvers\SqlDbTypeNameToClientTypeResolver.cs" />
     <Compile Include="SqlStatementBuilder.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="SqlTableHints.cs" />

@@ -7,7 +7,7 @@ namespace RepoDb
     /// <summary>
     /// A class used to resolve the SQL Database Types into .NET CLR Types.
     /// </summary>
-    public class SqlDbTypeToClientTypeResolver : IResolver<string, Type>
+    public class SqlDbTypeNameToClientTypeResolver : IResolver<string, Type>
     {
         /*
          * Taken:
@@ -17,15 +17,20 @@ namespace RepoDb
         /// <summary>
         /// Returns the equivalent .NET CLR Types of the Database Type.
         /// </summary>
-        /// <param name="dbType">The name of the database type.</param>
+        /// <param name="dbTypeName">The name of the database type.</param>
         /// <returns>The equivalent .NET CLR type.</returns>
-        public Type Resolve(string dbType)
+        public Type Resolve(string dbTypeName)
         {
-            switch (dbType.ToLower())
+            if (dbTypeName == null)
+            {
+                throw new NullReferenceException("The DB Type name must not be null.");
+            }
+            switch (dbTypeName.ToLower())
             {
                 case "bigint":
                     return typeof(long);
                 case "binary":
+                case "filestream":
                 case "image":
                 case "rowversion":
                 case "timestamp":

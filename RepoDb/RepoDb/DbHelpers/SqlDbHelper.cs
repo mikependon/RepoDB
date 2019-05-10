@@ -16,7 +16,7 @@ namespace RepoDb.DbHelpers
         /// </summary>
         public SqlDbHelper()
         {
-            DbTypeResolver = new SqlDbTypeToClientTypeResolver();
+            DbTypeResolver = new SqlDbTypeNameToClientTypeResolver();
         }
 
         /// <summary>

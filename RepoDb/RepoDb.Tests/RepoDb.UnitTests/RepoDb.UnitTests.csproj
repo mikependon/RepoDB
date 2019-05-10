@@ -123,6 +123,9 @@
     <Compile Include="QueryGroups\QueryGroupParseExpressionForStringTypeTest.cs" />
     <Compile Include="QueryGroups\QueryGroupParseExpressionOperationsTest.cs" />
     <Compile Include="QueryGroups\QueryGroupParseExpressionValuesTest.cs" />
+    <Compile Include="Resolvers\SqlDbTypeToStringNameResolverTest.cs" />
+    <Compile Include="Resolvers\SqlDbTypeNameToClientTypeResolverTest.cs" />
+    <Compile Include="Resolvers\ClientTypeToSqlDbTypeResolverTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateBatchQueryTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateCountAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateCountTest.cs" />
@@ -146,9 +149,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resolvers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
