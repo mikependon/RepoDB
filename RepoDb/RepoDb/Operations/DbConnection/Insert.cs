@@ -17,7 +17,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region Insert<TEntity>
+        #region Insert<TEntity, TResult>
 
         /// <summary>
         /// Inserts a new data in the database.
@@ -111,7 +111,7 @@ namespace RepoDb
 
         #endregion
 
-        #region InsertAsync<TEntity>
+        #region InsertAsync<TEntity, TResult>
 
         /// <summary>
         /// Inserts a new data in the database in asynchronous way.
@@ -205,7 +205,7 @@ namespace RepoDb
 
         #endregion
 
-        #region Insert(TableName)
+        #region Insert(TableName)<TResult>
 
         /// <summary>
         /// Inserts a new data in the database.
@@ -298,7 +298,7 @@ namespace RepoDb
 
         #endregion
 
-        #region InsertAsync(TableName)
+        #region InsertAsync(TableName)<TResult>
 
         /// <summary>
         /// Inserts a new data in the database in an asynchronous way.
@@ -391,7 +391,7 @@ namespace RepoDb
 
         #endregion
 
-        #region InsertInternalBase<TEntity>
+        #region InsertInternalBase<TEntity, TResult>
 
         /// <summary>
         /// Inserts a new data in the database.

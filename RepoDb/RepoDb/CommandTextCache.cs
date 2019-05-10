@@ -12,7 +12,7 @@ namespace RepoDb
     /// <summary>
     /// A class used to cache the already-built command texts.
     /// </summary>
-    internal static class CommandTextCache
+    public static class CommandTextCache
     {
         private static readonly ConcurrentDictionary<BaseRequest, string> m_cache = new ConcurrentDictionary<BaseRequest, string>();
 
@@ -23,7 +23,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetBatchQueryText(BatchQueryRequest request)
+        internal static string GetBatchQueryText(BatchQueryRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -51,7 +51,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetCountText(CountRequest request)
+        internal static string GetCountText(CountRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -74,7 +74,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetCountAllText(CountAllRequest request)
+        internal static string GetCountAllText(CountAllRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -96,7 +96,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetDeleteText(DeleteRequest request)
+        internal static string GetDeleteText(DeleteRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -119,7 +119,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetDeleteAllText(DeleteAllRequest request)
+        internal static string GetDeleteAllText(DeleteAllRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -141,7 +141,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetInsertText(InsertRequest request)
+        internal static string GetInsertText(InsertRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -169,7 +169,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetInsertAllText(InsertAllRequest request)
+        internal static string GetInsertAllText(InsertAllRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -198,7 +198,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetMergeText(MergeRequest request)
+        internal static string GetMergeText(MergeRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -228,7 +228,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetQueryText<TEntity>(QueryRequest request)
+        internal static string GetQueryText<TEntity>(QueryRequest request)
             where TEntity : class
         {
             var commandText = (string)null;
@@ -258,7 +258,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetQueryAllText<TEntity>(QueryAllRequest request)
+        internal static string GetQueryAllText<TEntity>(QueryAllRequest request)
             where TEntity : class
         {
             var commandText = (string)null;
@@ -286,7 +286,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetQueryMultipleText<TEntity>(QueryMultipleRequest request)
+        internal static string GetQueryMultipleText<TEntity>(QueryMultipleRequest request)
             where TEntity : class
         {
             var commandText = (string)null;
@@ -315,7 +315,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetTruncateText(TruncateRequest request)
+        internal static string GetTruncateText(TruncateRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -337,7 +337,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetUpdateText(UpdateRequest request)
+        internal static string GetUpdateText(UpdateRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -360,6 +360,14 @@ namespace RepoDb
         #endregion
 
         #region Helper Methods
+
+        /// <summary>
+        /// Flushes all the existing cached command texts.
+        /// </summary>
+        public static void Flush()
+        {
+            m_cache.Clear();
+        }
 
         /// <summary>
         /// Get the actual list of <see cref="Field"/> objects of the table based on the actual list of <see cref="DbField"/> objects.
