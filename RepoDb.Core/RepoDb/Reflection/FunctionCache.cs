@@ -17,7 +17,7 @@ namespace RepoDb
     {
         private static ConcurrentDictionary<string, Action<DbCommand, object>> m_cache = new ConcurrentDictionary<string, Action<DbCommand, object>>();
 
-        #region GetDataReaderToDataEntityConverterFunction<TEntity>
+        #region GetDataReaderToDataEntityConverterFunction
 
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.
@@ -178,44 +178,37 @@ namespace RepoDb
 
         #endregion
 
-        #region GetDbCommandParameterSetterFunction<TEntity>
+        #region GetDataEntityDbCommandParameterSetterFunction
 
         /// <summary>
         /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity/dynamic object.</typeparam>
-        /// <param name="key">The key to the cache.</param>
+        /// <typeparam name="TEntity">The type of the data entity/dynamic objects.</typeparam>
+        /// <param name="cacheKey">The key to the cache.</param>
         /// <param name="inputFields">The list of the input <see cref="DbField"/> objects to be used.</param>
-        /// <param name="outputFields">The list of the output <see cref="DbField"/> objects to be used.</param>
-        /// <param name="batchSize">The batch size of the entities to be passed.</param>
-        /// <returns>A compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object.</returns>
-        public static Action<DbCommand, IList<TEntity>> GetDbCommandParameterSetterFunction<TEntity>(string key,
-            IEnumerable<DbField> inputFields,
-            IEnumerable<DbField> outputFields,
-            int batchSize)
+        /// <returns>The compiled function.</returns>
+        public static Action<DbCommand, TEntity> GetDataEntityDbCommandParameterSetterFunction<TEntity>(string cacheKey,
+            IEnumerable<DbField> inputFields)
             where TEntity : class
         {
-            return DataCommandParameterSetterCache<TEntity>.Get(key, inputFields, outputFields, batchSize);
+            return GetDataEntityDbCommandParameterSetterFunctionCache<TEntity>.Get(cacheKey, inputFields);
         }
 
-        #region DataCommandParameterSetterCache
+        #region GetDataEntityDbCommandParameterSetterFunctionCache
 
-        private static class DataCommandParameterSetterCache<TEntity>
+        private static class GetDataEntityDbCommandParameterSetterFunctionCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>> m_cache = new ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>>();
+            private static ConcurrentDictionary<string, Action<DbCommand, TEntity>> m_cache = new ConcurrentDictionary<string, Action<DbCommand, TEntity>>();
 
-            public static Action<DbCommand, IList<TEntity>> Get(string key,
-                IEnumerable<DbField> inputFields,
-                IEnumerable<DbField> outputFields,
-                int batchSize)
+            public static Action<DbCommand, TEntity> Get(string cacheKey,
+                IEnumerable<DbField> inputFields)
             {
-                key = string.Concat(key, ".", inputFields.Select(field => field.UnquotedName).Join("."), ".",
-                   outputFields?.Select(field => field.UnquotedName).Join("."), ".", batchSize);
-                var func = (Action<DbCommand, IList<TEntity>>)null;
+                var key = string.Concat(cacheKey, ".", inputFields?.Select(f => f.UnquotedName).Join("."));
+                var func = (Action<DbCommand, TEntity>)null;
                 if (m_cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.GetDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, batchSize);
+                    func = FunctionFactory.GetDataEntityDbCommandParameterSetterFunction<TEntity>(inputFields);
                     m_cache.TryAdd(key, func);
                 }
                 return func;
@@ -226,7 +219,55 @@ namespace RepoDb
 
         #endregion
 
-        #region GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>
+        #region GetDataEntitiesDbCommandParameterSetterFunction
+
+        /// <summary>
+        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic objects.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity/dynamic objects.</typeparam>
+        /// <param name="cacheKey">The key to the cache.</param>
+        /// <param name="inputFields">The list of the input <see cref="DbField"/> objects to be used.</param>
+        /// <param name="outputFields">The list of the output <see cref="DbField"/> objects to be used.</param>
+        /// <param name="batchSize">The batch size of the entities to be passed.</param>
+        /// <returns>The compiled function.</returns>
+        public static Action<DbCommand, IList<TEntity>> GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(string cacheKey,
+            IEnumerable<DbField> inputFields,
+            IEnumerable<DbField> outputFields,
+            int batchSize)
+            where TEntity : class
+        {
+            return DataEntitiesDbCommandParameterSetterFunctionCache<TEntity>.Get(cacheKey, inputFields, outputFields, batchSize);
+        }
+
+        #region DataEntitiesDbCommandParameterSetterFunctionCache
+
+        private static class DataEntitiesDbCommandParameterSetterFunctionCache<TEntity>
+            where TEntity : class
+        {
+            private static ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>> m_cache = new ConcurrentDictionary<string, Action<DbCommand, IList<TEntity>>>();
+
+            public static Action<DbCommand, IList<TEntity>> Get(string cacheKey,
+                IEnumerable<DbField> inputFields,
+                IEnumerable<DbField> outputFields,
+                int batchSize)
+            {
+                var key = string.Concat(cacheKey, ".", inputFields?.Select(f => f.UnquotedName).Join("."),
+                    outputFields?.Select(f => f.UnquotedName).Join("."), ".", batchSize);
+                var func = (Action<DbCommand, IList<TEntity>>)null;
+                if (m_cache.TryGetValue(key, out func) == false)
+                {
+                    func = FunctionFactory.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, batchSize);
+                    m_cache.TryAdd(key, func);
+                }
+                return func;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetDataEntityPropertySetterFromDbCommandParameterFunction
 
         /// <summary>
         /// Gets a compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.
@@ -247,16 +288,54 @@ namespace RepoDb
         private static class GetDataEntityPropertySetterFromDbCommandParameterFunctionCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Action<TEntity, DbCommand>> m_cache = new ConcurrentDictionary<int, Action<TEntity, DbCommand>>();
+            private static ConcurrentDictionary<string, Action<TEntity, DbCommand>> m_cache = new ConcurrentDictionary<string, Action<TEntity, DbCommand>>();
 
             public static Action<TEntity, DbCommand> Get(Field field,
                 int index)
             {
-                var key = typeof(TEntity).GetHashCode() + field.GetHashCode() + index.GetHashCode();
+                var key = string.Concat(typeof(TEntity).FullName, ".", field.UnquotedName, ".", index);
                 var func = (Action<TEntity, DbCommand>)null;
                 if (m_cache.TryGetValue(key, out func) == false)
                 {
                     func = FunctionFactory.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(field, index);
+                    m_cache.TryAdd(key, func);
+                }
+                return func;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetDataEntityPropertyValueSetterFunction
+
+        /// <summary>
+        /// Gets a compiled function that is used to set the data entity object property value.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="field">The target <see cref="Field"/>.</param>
+        /// <returns>A compiled function that is used to set the data entity object property value.</returns>
+        public static Action<TEntity, object> GetDataEntityPropertyValueSetterFunction<TEntity>(Field field)
+            where TEntity : class
+        {
+            return GetDataEntityPropertyValueSetterFunctionCache<TEntity>.Get(field);
+        }
+
+        #region GetDataEntityPropertyValueSetterFunctionCache
+
+        private static class GetDataEntityPropertyValueSetterFunctionCache<TEntity>
+            where TEntity : class
+        {
+            private static ConcurrentDictionary<string, Action<TEntity, object>> m_cache = new ConcurrentDictionary<string, Action<TEntity, object>>();
+
+            public static Action<TEntity, object> Get(Field field)
+            {
+                var key = string.Concat(typeof(TEntity).FullName, ".", field.UnquotedName);
+                var func = (Action<TEntity, object>)null;
+                if (m_cache.TryGetValue(key, out func) == false)
+                {
+                    func = FunctionFactory.GetDataEntityPropertyValueSetterFunction<TEntity>(field);
                     m_cache.TryAdd(key, func);
                 }
                 return func;

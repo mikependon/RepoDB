@@ -106,8 +106,7 @@ namespace RepoDb
         {
             foreach (var property in PropertyCache.Get<TEntity>())
             {
-                yield return new Field(PropertyMappedNameCache.Get(property.PropertyInfo, false),
-                    property.PropertyInfo.PropertyType);
+                yield return property.AsField();
             }
         }
 
@@ -118,10 +117,9 @@ namespace RepoDb
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
         internal static IEnumerable<Field> Parse(object obj)
         {
-            foreach (var property in obj.GetType().GetTypeInfo().GetProperties())
+            foreach (var property in obj?.GetType().GetTypeInfo().GetProperties())
             {
-                yield return new Field(PropertyMappedNameCache.Get(property, false),
-                    property.PropertyType);
+                yield return property.AsField();
             }
         }
 

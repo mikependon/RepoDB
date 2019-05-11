@@ -30,13 +30,18 @@ namespace RepoDb
                     return "BIT";
                 case DbType.String:
                     return "NVARCHAR";
+                case DbType.Date:
+                    return "DATE";
                 case DbType.DateTime:
                     return "DATETIME";
+                case DbType.DateTime2:
+                    return "DATETIME2";
                 case DbType.DateTimeOffset:
                     return "DATETIMEOFFSET";
                 case DbType.Decimal:
                     return "DECIMAL(18,2)";
                 case DbType.Single:
+                    return "REAL";
                 case DbType.Double:
                     return "FLOAT";
                 case DbType.Int32:
@@ -49,6 +54,16 @@ namespace RepoDb
                     return "TINYINT";
                 case DbType.Guid:
                     return "UNIQUEIDENTIFIER";
+                case DbType.AnsiString:
+                    return "VARCHAR";
+                case DbType.AnsiStringFixedLength:
+                    return "CHAR";
+                case DbType.StringFixedLength:
+                    return "NCHAR";
+                case DbType.Object:
+                    return "OBJECT";
+                case DbType.Xml:
+                    return "XML";
                 default:
                     return "NVARCHAR";
             }

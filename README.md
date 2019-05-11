@@ -18,7 +18,7 @@ Click [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Resu
 
 ## Notes
 
-RepoDb is currently not accepting any pull-requests until the target core features has all been implemented.
+RepoDb is currently **not** accepting any pull-requests until the target core features has all been implemented.
 
 ## Build Result
 

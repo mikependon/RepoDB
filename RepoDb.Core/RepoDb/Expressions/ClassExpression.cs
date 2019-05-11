@@ -22,40 +22,28 @@ namespace RepoDb
         public static IEnumerable<ClassProperty> GetProperties<TEntity>()
             where TEntity : class
         {
-            return GetPropertiesExtractor<TEntity>.Extract();
+            return GetPropertiesCache<TEntity>.Do();
         }
 
-        /// <summary>
-        /// Gets a function used to extract the properties of a class.
-        /// </summary>
-        /// <typeparam name="T">The target type.</typeparam>
-        /// <returns>The properties of the class.</returns>
-        private static Func<IEnumerable<ClassProperty>> GetCompiledFunctionForGetProperties<T>()
-            where T : class
-        {
-            // Variables type (Command.None is preloaded everywhere)
-            var properties = DataEntityExtension.GetProperties<T>();
-
-            // Set the body
-            var body = Expression.Constant(properties);
-
-            // Set the function value
-            return Expression
-                .Lambda<Func<IEnumerable<ClassProperty>>>(body)
-                .Compile();
-        }
-
-        private static class GetPropertiesExtractor<T>
+        private static class GetPropertiesCache<T>
             where T : class
         {
             private static readonly Func<IEnumerable<ClassProperty>> m_func;
 
-            static GetPropertiesExtractor()
+            static GetPropertiesCache()
             {
-                m_func = GetCompiledFunctionForGetProperties<T>();
+                m_func = GetFunc();
             }
 
-            public static IEnumerable<ClassProperty> Extract()
+            private static Func<IEnumerable<ClassProperty>> GetFunc()
+            {
+                var body = Expression.Constant(DataEntityExtension.GetProperties<T>());
+                return Expression
+                    .Lambda<Func<IEnumerable<ClassProperty>>>(body)
+                    .Compile();
+            }
+
+            public static IEnumerable<ClassProperty> Do()
             {
                 return m_func();
             }
@@ -74,7 +62,7 @@ namespace RepoDb
         public static IEnumerable<PropertyValue> GetPropertiesAndValues<TEntity>(TEntity obj)
             where TEntity : class
         {
-            return ClassPropertiesValuesExtractor<TEntity>.Extract(obj);
+            return GetPropertiesValuesCache<TEntity>.Do(obj);
         }
 
         /// <summary>
@@ -87,57 +75,52 @@ namespace RepoDb
         public static IEnumerable<PropertyValue> Extract<TEntity>(TEntity obj)
             where TEntity : class
         {
-            return ClassPropertiesValuesExtractor<TEntity>.Extract(obj);
+            return GetPropertiesValuesCache<TEntity>.Do(obj);
         }
 
-        /// <summary>
-        /// Gets a function that returns the list of property values of the class.
-        /// </summary>
-        /// <param name="properties">The list of properties.</param>
-        /// <returns>The enumerable value of class property values.</returns>
-        private static Func<T, IEnumerable<PropertyValue>> GetCompiledFunctionForClassPropertiesValuesExtractor<T>(IEnumerable<ClassProperty> properties)
-            where T : class
+        private static class GetPropertiesValuesCache<TEntity>
+            where TEntity : class
         {
-            // Expressions
-            var addMethod = typeof(List<PropertyValue>).GetTypeInfo().GetMethod("Add", new[] { typeof(PropertyValue) });
-            var obj = Expression.Parameter(typeof(T), "obj");
-            var propertyValueConstructor = typeof(PropertyValue).GetTypeInfo().GetConstructor(new[]
+            private static readonly Func<TEntity, IEnumerable<PropertyValue>> m_func;
+
+            static GetPropertiesValuesCache()
             {
-                typeof(string),
-                typeof(object),
-                typeof(ClassProperty)
-            });
-
-            // Set the body
-            var body = Expression.ListInit(
-                Expression.New(typeof(List<PropertyValue>)),
-                properties.Select(property =>
-                {
-                    var name = Expression.Constant(property.GetUnquotedMappedName());
-                    var value = Expression.Convert(Expression.Property(obj, property.PropertyInfo), typeof(object));
-                    var propertyValue = Expression.New(propertyValueConstructor,
-                        name,
-                        value,
-                        Expression.Constant(property));
-                    return Expression.ElementInit(addMethod, propertyValue);
-                }));
-
-            // Set the function value
-            return Expression
-                .Lambda<Func<T, IEnumerable<PropertyValue>>>(body, obj)
-                .Compile();
-        }
-
-        private static class ClassPropertiesValuesExtractor<T> where T : class
-        {
-            private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
-
-            static ClassPropertiesValuesExtractor()
-            {
-                m_func = GetCompiledFunctionForClassPropertiesValuesExtractor<T>(PropertyCache.Get<T>());
+                m_func = GetFunc(PropertyCache.Get<TEntity>());
             }
 
-            public static IEnumerable<PropertyValue> Extract(T obj)
+            private static Func<TEntity, IEnumerable<PropertyValue>> GetFunc(IEnumerable<ClassProperty> properties)
+            {
+                // Expressions
+                var addMethod = typeof(List<PropertyValue>).GetTypeInfo().GetMethod("Add", new[] { typeof(PropertyValue) });
+                var obj = Expression.Parameter(typeof(TEntity), "obj");
+                var constructor = typeof(PropertyValue).GetTypeInfo().GetConstructor(new[]
+                {
+                    typeof(string),
+                    typeof(object),
+                    typeof(ClassProperty)
+                });
+
+                // Set the body
+                var body = Expression.ListInit(
+                    Expression.New(typeof(List<PropertyValue>)),
+                    properties.Select(property =>
+                    {
+                        var name = Expression.Constant(property.GetUnquotedMappedName());
+                        var value = Expression.Convert(Expression.Property(obj, property.PropertyInfo), typeof(object));
+                        var propertyValue = Expression.New(constructor,
+                            name,
+                            value,
+                            Expression.Constant(property));
+                        return Expression.ElementInit(addMethod, propertyValue);
+                    }));
+
+                // Set the function value
+                return Expression
+                    .Lambda<Func<TEntity, IEnumerable<PropertyValue>>>(body, obj)
+                    .Compile();
+            }
+
+            public static IEnumerable<PropertyValue> Do(TEntity obj)
             {
                 return m_func(obj);
             }

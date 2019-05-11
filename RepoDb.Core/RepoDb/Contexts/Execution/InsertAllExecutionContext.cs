@@ -32,13 +32,23 @@ namespace RepoDb.Contexts.Execution
         public int BatchSize { get; set; }
 
         /// <summary>
-        /// The actual compiled function.
+        /// The compiled function that is used to set the <see cref="DbCommand"/> parameters.
         /// </summary>
-        public Action<DbCommand, IList<TEntity>> Func { get; set; }
+        public Action<DbCommand, TEntity> SingleDataEntityParametersSetterFunc { get; set; }
 
         /// <summary>
-        /// The actual setters of the identity function.
+        /// The compiled function that is used to set the <see cref="DbCommand"/> parameters.
         /// </summary>
-        public IEnumerable<Action<TEntity, DbCommand>> IdentitySetters { get; set; }
+        public Action<DbCommand, IList<TEntity>> MultipleDataEntitiesParametersSetterFunc { get; set; }
+
+        /// <summary>
+        /// The compiled expression that is used to set the property value.
+        /// </summary>
+        public Action<TEntity, object> IdentityPropertySetterFunc { get; set; }
+
+        /// <summary>
+        /// The list of compiled expression that is used to set the identity value.
+        /// </summary>
+        public IEnumerable<Action<TEntity, DbCommand>> IdentityPropertySettersFunc { get; set; }
     }
 }

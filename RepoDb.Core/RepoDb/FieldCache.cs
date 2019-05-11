@@ -10,7 +10,7 @@ namespace RepoDb
     /// </summary>
     public static class FieldCache
     {
-        private static readonly ConcurrentDictionary<string, IEnumerable<Field>> m_cache = new ConcurrentDictionary<string, IEnumerable<Field>>();
+        private static readonly ConcurrentDictionary<int, IEnumerable<Field>> m_cache = new ConcurrentDictionary<int, IEnumerable<Field>>();
 
         /// <summary>
         /// Gets the cached list of <see cref="Field"/> objects of the data entity.
@@ -30,11 +30,12 @@ namespace RepoDb
         /// <returns>The cached list <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Get(Type type)
         {
+			var key = type.FullName.GetHashCode();
             var fields = (IEnumerable<Field>)null;
-            if (m_cache.TryGetValue(type.FullName, out fields) == false)
+            if (m_cache.TryGetValue(key, out fields) == false)
             {
                 fields = type.AsFields();
-                m_cache.TryAdd(type.FullName, fields);
+                m_cache.TryAdd(key, fields);
             }
             return fields;
         }

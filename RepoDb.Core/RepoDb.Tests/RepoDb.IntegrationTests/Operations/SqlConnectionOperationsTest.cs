@@ -3345,7 +3345,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                tables.ForEach(item => item.Id = connection.Insert<IdentityTable, int>(item));
+                tables.ForEach(item => item.Id = connection.Insert<IdentityTable, long>(item));
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -3420,7 +3420,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                tables.ForEach(item => item.Id = connection.Insert<WithExtraFieldsIdentityTable, long>(item));
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -3447,7 +3447,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                tables.ForEach(item => item.Id = connection.InsertAsync<IdentityTable, int>(item).Result);
+                tables.ForEach(item => item.Id = connection.InsertAsync<IdentityTable, long>(item).Result);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -3522,7 +3522,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                tables.ForEach(item => item.Id = connection.InsertAsync<WithExtraFieldsIdentityTable, int>(item).Result);
+                tables.ForEach(item => item.Id = connection.InsertAsync<WithExtraFieldsIdentityTable, long>(item).Result);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -3716,6 +3716,31 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionInsertAllWithSizePerBatchEqualsToOneForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables, 1);
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertAllForNonIdentityTable()
         {
             // Setup
@@ -3728,6 +3753,85 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllWithSizePerBatchEqualsToOneForNonIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables, 1);
+
+                // Act
+                var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #region InsertAll<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllWithSizePerBatchEqualsToOneAndWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables, 1);
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -3770,6 +3874,31 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAllAsync(tables, 1).Wait();
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertAllAsyncForNonIdentityTable()
         {
             // Setup
@@ -3782,6 +3911,84 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForNonIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAllAsync(tables, 1).Wait();
+
+                // Act
+                var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+        #endregion
+
+        #region InsertAll<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllAsyncWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAllAsync(tables).Wait();
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllWithSizePerBatchEqualsToOneAsyncWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAllAsync(tables, 1).Wait();
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -3818,6 +4025,25 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionInsertAllWithSizePerBatchEqualsToOneForIdentityTableViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables, 1);
+
+                // Act
+                var result = connection.CountAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertAllForIdentityTableViaTableNameWithLimitedColumns()
         {
             // Setup
@@ -3826,7 +4052,26 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2);
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, fields: tables.Item2);
+
+                // Act
+                var result = connection.CountAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(10, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllWithSizePerBatchEqualsToOneForIdentityTableViaTableNameWithLimitedColumns()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTablesWithLimitedColumns(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, 1, fields: tables.Item2);
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -3856,6 +4101,25 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionInsertAllWithSizePerBatchEqualsToOneForNonIdentityTableViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables, 1);
+
+                // Act
+                var result = connection.CountAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertAllForNonIdentityTableViaTableNameWithLimitedColumns()
         {
             // Setup
@@ -3864,7 +4128,26 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, fields: tables.Item2);
+
+                // Act
+                var result = connection.CountAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(10, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllWithSizePerBatchEqualsToOneForNonIdentityTableViaTableNameWithLimitedColumns()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTablesWithLimitedColumns(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, 1, fields: tables.Item2);
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -3898,6 +4181,25 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForIdentityTableViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables, 1).Wait();
+
+                // Act
+                var result = connection.CountAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertAllAsyncForIdentityTableViaTableNameWithLimitedColumns()
         {
             // Setup
@@ -3907,6 +4209,25 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2).Wait();
+
+                // Act
+                var result = connection.CountAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(10, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForIdentityTableViaTableNameWithLimitedColumns()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTablesWithLimitedColumns(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, 1, fields: tables.Item2).Wait();
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -3936,6 +4257,25 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForNonIdentityTableViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables, 1).Wait();
+
+                // Act
+                var result = connection.CountAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertAllAsyncForNonIdentityTableViaTableNameWithLimitedColumns()
         {
             // Setup
@@ -3945,6 +4285,25 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2).Wait();
+
+                // Act
+                var result = connection.CountAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(10, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForNonIdentityTableViaTableNameWithLimitedColumns()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTablesWithLimitedColumns(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, 1, fields: tables.Item2).Wait();
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -4630,7 +4989,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult).Result;
+                    queryResult,
+                    new Field(nameof(IdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);

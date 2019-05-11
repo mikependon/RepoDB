@@ -9,7 +9,7 @@ namespace RepoDb
     /// </summary>
     public static class IdentityCache
     {
-        private static readonly ConcurrentDictionary<string, ClassProperty> m_cache = new ConcurrentDictionary<string, ClassProperty>();
+        private static readonly ConcurrentDictionary<int, ClassProperty> m_cache = new ConcurrentDictionary<int, ClassProperty>();
 
         /// <summary>
         /// Gets the cached identity property of the data entity.
@@ -29,7 +29,7 @@ namespace RepoDb
         /// <returns>The cached identity property.</returns>
         public static ClassProperty Get(Type type)
         {
-            var key = type.FullName;
+            var key = type.FullName.GetHashCode();
             var property = (ClassProperty)null;
             if (m_cache.TryGetValue(key, out property) == false)
             {

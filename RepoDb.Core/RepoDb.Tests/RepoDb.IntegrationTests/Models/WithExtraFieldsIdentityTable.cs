@@ -19,6 +19,6 @@ namespace RepoDb.IntegrationTests.Models
         public string ColumnNVarChar { get; set; }
         /* Extra Fields */
         public string ExtraField { get; set; }
-        public IEnumerable<IdentityTable> IdentitableTables { get; set; }
+        public IEnumerable<IdentityTable> IdentityTables { get; set; }
     }
 }

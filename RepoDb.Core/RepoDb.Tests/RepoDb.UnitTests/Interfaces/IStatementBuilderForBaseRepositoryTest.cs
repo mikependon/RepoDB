@@ -271,7 +271,100 @@ namespace RepoDb.UnitTests.Interfaces
 
         #region CreateInsertAll
 
-        /* Note: InsertAll is using the CreateInsert operation */
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForInsertAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            repository.InsertAll(
+                new[]
+                {
+                    new DataEntityForBaseRepositoryStatementBuilder{ Name = "Name" },
+                    new DataEntityForBaseRepositoryStatementBuilder{ Name = "Name" }
+                });
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateInsertAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.Is<int>(v => v > 1),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InsertAll(
+                new[]
+                {
+                    new DataEntityForBaseRepositoryStatementBuilder{ Name = "Name" },
+                    new DataEntityForBaseRepositoryStatementBuilder{ Name = "Name" }
+                });
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsertAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.Is<int>(v => v > 1),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForInsertAllWithSizePerBatchEqualsToOne()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.InsertAll(
+                new[]
+                {
+                    new DataEntityForBaseRepositoryStatementBuilder{ Name = "Name" }
+                },
+                batchSize: 1);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InsertAll(
+                new[]
+                {
+                    new DataEntityForBaseRepositoryStatementBuilder{ Name = "Name" }
+                },
+                batchSize: 1);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
 
         #endregion
 

@@ -2103,7 +2103,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var withExtraFieldsRepository = new WithExtraFieldsIdentityTableRepository())
             {
                 // Act
-                tables.ForEach(item => item.Id = withExtraFieldsRepository.Insert<int>(item));
+                tables.ForEach(item => item.Id = withExtraFieldsRepository.Insert<long>(item));
 
                 using (var repository = new IdentityTableRepository())
                 {
@@ -2208,7 +2208,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var withExtraFieldsRepository = new WithExtraFieldsIdentityTableRepository())
             {
                 // Act
-                tables.ForEach(item => item.Id = withExtraFieldsRepository.InsertAsync<int>(item).Result);
+                tables.ForEach(item => item.Id = withExtraFieldsRepository.InsertAsync<long>(item).Result);
 
                 using (var repository = new IdentityTableRepository())
                 {
@@ -2259,6 +2259,31 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestBaseRepositoryInsertAllWithSizePerBatchEqualsToOneForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables, 1);
+
+                // Act
+                var result = repository.QueryAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestBaseRepositoryInsertAllForNonIdentityTable()
         {
             // Setup
@@ -2268,6 +2293,34 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 repository.InsertAll(tables);
+
+                using (var identityTableRepository = new NonIdentityTableRepository())
+                {
+                    // Act
+                    var result = identityTableRepository.QueryAll();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, result.Count());
+                    tables.ForEach(table =>
+                    {
+                        var item = result.FirstOrDefault(r => r.Id == table.Id);
+                        Assert.IsNotNull(item);
+                        Helper.AssertPropertiesEquality(table, item);
+                    });
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryInsertAllWithSizePerBatchEqualsToOneForNonIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables, 1);
 
                 using (var identityTableRepository = new NonIdentityTableRepository())
                 {
@@ -2316,6 +2369,31 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestBaseRepositoryInsertAllAsyncWithSizePerBatchEqualsToOneForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAllAsync(tables, 1).Wait();
+
+                // Act
+                var result = repository.QueryAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestBaseRepositoryInsertAllAsyncForNonIdentityTable()
         {
             // Setup
@@ -2325,6 +2403,34 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 repository.InsertAllAsync(tables).Wait();
+
+                using (var identityTableRepository = new NonIdentityTableRepository())
+                {
+                    // Act
+                    var result = identityTableRepository.QueryAll();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, result.Count());
+                    tables.ForEach(table =>
+                    {
+                        var item = result.FirstOrDefault(r => r.Id == table.Id);
+                        Assert.IsNotNull(item);
+                        Helper.AssertPropertiesEquality(table, item);
+                    });
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryInsertAllAsyncWithSizePerBatchEqualsToOneForNonIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.InsertAllAsync(tables, 1).Wait();
 
                 using (var identityTableRepository = new NonIdentityTableRepository())
                 {

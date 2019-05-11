@@ -17,11 +17,22 @@
       - [Enhancement] Revisits the DbField for Primary and Identity Columns. #182
       - [Enhancement] Add the IdentityDbField in both Merge and Update SqlStatementBuilder. #198
       - [Enhancement] Rename the DataReaderConverter to DataReader. #200
+      - [Enhancement] Add Flush method in the CommandTextCache, and exposed the class. #220
+      - [Performance] Create a cached Expression when setting back the PrimaryKey values in Insert and InsertAll. #211
+      - [Performance] Use the compiled function for inserting single DataEntity if the BatchSize is 1 for InsertAll. #217
+      - [Fixed] Remove the Insert and InsertAll identity conversion from SQL. #203 - Fixed by introducing the 'ConversionResolver' classes.
+      - [Test] Create UnitTests for (DbConnection, DbRepository, BaseRepository) InsertAll operation for IStatementBuilder. #216
+      - [Test] Add UnitTests for ClientTypeToSqlDbTypeResolver, SqlDbTypeNameToClientTypeResolver and SqlDbTypeToStringNameResolver #219
       - [Added] IConversionResolver
       - [Added] ClientTypeToSqlDbTypeResolver
-      - [Added] SqlDbTypeToClientTypeResolver
+      - [Added] SqlDbTypeNameToClientTypeResolver
       - [Added] SqlDbTypeToStringNameResolver
-      - [Fixed] Remove the Insert and InsertAll identity conversion from SQL. #203 - Fixed by introducing the 'ConversionResolver' classes.
+      - [Added] SqlVariant
+      - [Added] ParameterField
+      - [Added] InsertExecutionContext
+      - [Added] InsertExecutionContextCache
+      - [Added] InsertAllExecutionContext
+      - [Added] InsertAllExecutionContextCache
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
