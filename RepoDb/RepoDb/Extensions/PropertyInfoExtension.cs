@@ -236,11 +236,24 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Converts an enumerable array of <see cref="PropertyInfo"/> objects into an enumerable array of <see cref="Field"/>.
+        /// Converts an enumerable of <see cref="PropertyInfo"/> objects into an enumerable array of <see cref="Field"/>.
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
         /// <returns>An enumerable array of <see cref="Field"/>.</returns>
         public static IEnumerable<Field> AsFields(this IEnumerable<PropertyInfo> properties)
+        {
+            foreach (var property in properties)
+            {
+                yield return property.AsField();
+            }
+        }
+
+        /// <summary>
+        /// Converts an array of <see cref="PropertyInfo"/> objects into an enumerable array of <see cref="Field"/>.
+        /// </summary>
+        /// <param name="properties">The enumerable array of properties to be converted.</param>
+        /// <returns>An enumerable array of <see cref="Field"/>.</returns>
+        public static IEnumerable<Field> AsFields(this PropertyInfo[] properties)
         {
             foreach (var property in properties)
             {
