@@ -212,7 +212,7 @@ namespace RepoDb.IntegrationTests.Setup
 		                [ColumnFloat] FLOAT NULL,
 		                [ColumnGeography] GEOGRAPHY NULL,
 		                [ColumnGeometry] GEOMETRY NULL,
-		                [ColumnHierarchyid] HIERARCHYID NULL,
+		                [ColumnHierarchyId] HIERARCHYID NULL,
 		                [ColumnImage] IMAGE NULL,
 		                [ColumnInt] INT NULL,
 		                [ColumnMoney] MONEY NULL,
@@ -231,7 +231,7 @@ namespace RepoDb.IntegrationTests.Setup
 		                [ColumnTinyInt] TINYINT NULL,
 		                [ColumnUniqueIdentifier] UNIQUEIDENTIFIER NULL,
 		                [ColumnVarBinary] VARBINARY(MAX) NULL,
-		                [ColumnVarchar] VARCHAR(MAX) NULL,
+		                [ColumnVarChar] VARCHAR(MAX) NULL,
 		                [ColumnXml] XML NULL,
 		                CONSTRAINT [SessionId] PRIMARY KEY 
 		                (

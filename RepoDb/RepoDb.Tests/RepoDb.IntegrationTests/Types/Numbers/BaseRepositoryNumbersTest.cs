@@ -33,6 +33,8 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             Database.Cleanup();
         }
 
+        #region <TEntity>
+
         [TestMethod]
         public void TestBaseRepositoryNumbersCrud()
         {
@@ -376,5 +378,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 Assert.IsNull(data.ColumnSmallMoneyMapped);
             }
         }
+
+        #endregion
     }
 }

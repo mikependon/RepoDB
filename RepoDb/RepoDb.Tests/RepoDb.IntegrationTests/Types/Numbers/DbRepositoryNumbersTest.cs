@@ -23,6 +23,8 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             Database.Cleanup();
         }
 
+        #region <TEntity>
+
         [TestMethod]
         public void TestDbRepositoryNumbersCrud()
         {
@@ -366,5 +368,183 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 Assert.IsNull(data.ColumnSmallMoneyMapped);
             }
         }
+
+        #endregion
+
+        #region (TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryNumbersCrudViaTableName()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBigInt = 12345,
+                ColumnBit = true,
+                ColumnDecimal = 12345,
+                ColumnFloat = (float)12345.12,
+                ColumnInt = 12345,
+                ColumnMoney = (decimal)12345.12,
+                ColumnNumeric = 12345,
+                ColumnReal = (float)12345.12,
+                ColumnSmallInt = 12345,
+                ColumnSmallMoney = 12345
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var id = repository.Insert(ClassMappedNameCache.Get<NumbersClass>(), entity);
+
+                // Act Query
+                var data = repository.Query(ClassMappedNameCache.Get<NumbersClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigInt, data.ColumnBigInt);
+                Assert.AreEqual(entity.ColumnBit, data.ColumnBit);
+                Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
+                Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
+                Assert.AreEqual(entity.ColumnInt, data.ColumnInt);
+                Assert.AreEqual(entity.ColumnMoney, data.ColumnMoney);
+                Assert.AreEqual(entity.ColumnNumeric, data.ColumnNumeric);
+                Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
+                Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
+                Assert.AreEqual(entity.ColumnSmallMoney, data.ColumnSmallMoney);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryNumbersNullViaTableNameCrud()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBigInt = (long?)null,
+                ColumnBit = (bool?)null,
+                ColumnDecimal = (decimal?)null,
+                ColumnFloat = (double?)null,
+                ColumnInt = (int?)null,
+                ColumnMoney = (decimal?)null,
+                ColumnNumeric = (int?)null,
+                ColumnReal = (float?)null,
+                ColumnSmallInt = (short?)null,
+                ColumnSmallMoney = (decimal?)null
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var id = repository.Insert(ClassMappedNameCache.Get<NumbersClass>(), entity);
+
+                // Act Query
+                var data = repository.Query(ClassMappedNameCache.Get<NumbersClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnBigInt);
+                Assert.IsNull(data.ColumnBit);
+                Assert.IsNull(data.ColumnDecimal);
+                Assert.IsNull(data.ColumnFloat);
+                Assert.IsNull(data.ColumnInt);
+                Assert.IsNull(data.ColumnMoney);
+                Assert.IsNull(data.ColumnNumeric);
+                Assert.IsNull(data.ColumnReal);
+                Assert.IsNull(data.ColumnSmallInt);
+                Assert.IsNull(data.ColumnSmallMoney);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryNumbersCrudViaTableNameAsync()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBigInt = 12345,
+                ColumnBit = true,
+                ColumnDecimal = 12345,
+                ColumnFloat = (float)12345.12,
+                ColumnInt = 12345,
+                ColumnMoney = (decimal)12345.12,
+                ColumnNumeric = 12345,
+                ColumnReal = (float)12345.12,
+                ColumnSmallInt = 12345,
+                ColumnSmallMoney = 12345
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<NumbersClass>(), entity);
+                var id = insertResult.Result;
+
+                // Act Query
+                var queryResult = repository.QueryAsync(ClassMappedNameCache.Get<NumbersClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.Result.FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigInt, data.ColumnBigInt);
+                Assert.AreEqual(entity.ColumnBit, data.ColumnBit);
+                Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
+                Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
+                Assert.AreEqual(entity.ColumnInt, data.ColumnInt);
+                Assert.AreEqual(entity.ColumnMoney, data.ColumnMoney);
+                Assert.AreEqual(entity.ColumnNumeric, data.ColumnNumeric);
+                Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
+                Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
+                Assert.AreEqual(entity.ColumnSmallMoney, data.ColumnSmallMoney);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryNumbersNullCrudViaTableNameAsync()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBigInt = (long?)null,
+                ColumnBit = (bool?)null,
+                ColumnDecimal = (decimal?)null,
+                ColumnFloat = (double?)null,
+                ColumnInt = (int?)null,
+                ColumnMoney = (decimal?)null,
+                ColumnNumeric = (int?)null,
+                ColumnReal = (float?)null,
+                ColumnSmallInt = (short?)null,
+                ColumnSmallMoney = (decimal?)null
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<NumbersClass>(), entity);
+                var id = insertResult.Result;
+
+                // Act Query
+                var queryResult = repository.QueryAsync(ClassMappedNameCache.Get<NumbersClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.Result.FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnBigInt);
+                Assert.IsNull(data.ColumnBit);
+                Assert.IsNull(data.ColumnDecimal);
+                Assert.IsNull(data.ColumnFloat);
+                Assert.IsNull(data.ColumnInt);
+                Assert.IsNull(data.ColumnMoney);
+                Assert.IsNull(data.ColumnNumeric);
+                Assert.IsNull(data.ColumnReal);
+                Assert.IsNull(data.ColumnSmallInt);
+                Assert.IsNull(data.ColumnSmallMoney);
+            }
+        }
+
+        #endregion
     }
 }

@@ -405,6 +405,8 @@ namespace RepoDb.Reflection
             var typeOfPropertyInfo = typeof(PropertyInfo);
             var typeOfBytes = typeof(byte[]);
             var typeOfTimeSpan = typeof(TimeSpan);
+            // TODO: The binding flags are not working properly, dynamic needs to have a proper-case for now
+            var typeOfBindingFlags = typeof(BindingFlags);
 
             // Variables for arguments
             var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
@@ -431,7 +433,7 @@ namespace RepoDb.Reflection
 
             // Variables for 'Dynamic|Object' object
             var objectGetTypeMethod = typeOfObject.GetMethod("GetType");
-            var typeGetPropertyMethod = typeOfType.GetMethod("GetProperty", new[] { typeOfString });
+            var typeGetPropertyMethod = typeOfType.GetMethod("GetProperty", new[] { typeOfString /*, typeOfBindingFlags */ });
             var propertyInfoGetValueMethod = typeOfPropertyInfo.GetMethod("GetValue", new[] { typeOfObject });
 
             // Other variables
@@ -697,6 +699,7 @@ namespace RepoDb.Reflection
                     propertyVariable = Expression.Variable(typeOfPropertyInfo, string.Concat("property", field.UnquotedName));
                     propertyInstance = Expression.Call(Expression.Call(instanceVariable, objectGetTypeMethod),
                         typeGetPropertyMethod, Expression.Constant(field.UnquotedName));
+                    /* new[] { Expression.Constant(field.UnquotedName), Expression.Constant(BindingFlags.IgnoreCase) } */
                 }
                 else
                 {
@@ -707,10 +710,10 @@ namespace RepoDb.Reflection
 
                 // Execute the function
                 var parameterAssignment = func(instanceVariable /* instance */,
-                    propertyVariable /* property */,
-                    parameterVariable /* parameter */,
-                    field /* field */,
-                    classProperty /* classProperty */);
+                            propertyVariable /* property */,
+                            parameterVariable /* parameter */,
+                            field /* field */,
+                            classProperty /* classProperty */);
 
                 // Add the necessary variables
                 propertyVariables.Add(propertyVariable);
@@ -771,6 +774,8 @@ namespace RepoDb.Reflection
             var typeOfType = typeof(Type);
             var typeOfPropertyInfo = typeof(PropertyInfo);
             var typeOfTimeSpan = typeof(TimeSpan);
+            // TODO: The binding flags are not working properly, dynamic needs to have a proper-case for now
+            var typeOfBindingFlags = typeof(BindingFlags);
 
             // Variables for arguments
             var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
@@ -1097,6 +1102,7 @@ namespace RepoDb.Reflection
                         propertyVariable = Expression.Variable(typeOfPropertyInfo, string.Concat("property", field.UnquotedName));
                         propertyInstance = Expression.Call(Expression.Call(instanceVariable, objectGetTypeMethod),
                             typeGetPropertyMethod, Expression.Constant(field.UnquotedName));
+                        /* new[] { Expression.Constant(field.UnquotedName), Expression.Constant(BindingFlags.IgnoreCase) } */
                     }
                     else
                     {

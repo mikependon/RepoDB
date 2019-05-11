@@ -337,8 +337,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 var id = connection.Insert(ClassMappedNameCache.Get<BytesClass>(), entity);
 
                 // Act Query
-                var data = connection.Query(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id },
-                    fields: Field.From("SessionId", "ColumnBinary", "ColumnImage", "ColumnTinyInt", "ColumnVarBinary")).FirstOrDefault();
+                var data = connection.Query(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

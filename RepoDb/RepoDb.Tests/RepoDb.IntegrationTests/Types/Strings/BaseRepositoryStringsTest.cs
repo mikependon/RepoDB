@@ -33,6 +33,8 @@ namespace RepoDb.IntegrationTests.Types.Strings
             Database.Cleanup();
         }
 
+        #region <TEntity>
+
         [TestMethod]
         public void TestBaseRepositoryStringsCrud()
         {
@@ -316,5 +318,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.IsNull(data.ColumnVarCharMapped);
             }
         }
+
+        #endregion
     }
 }
