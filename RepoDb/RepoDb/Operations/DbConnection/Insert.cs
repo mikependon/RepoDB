@@ -499,58 +499,20 @@ namespace RepoDb
             // Execution variables
             var result = default(TResult);
 
-            // Make sure to create transaction if there is no passed one
-            var hasTransaction = (transaction != null);
-
-            try
+            // Create the command
+            using (var command = (DbCommand)connection.EnsureOpen().CreateCommand(context.CommandText,
+                CommandType.Text, commandTimeout, transaction))
             {
-                // Ensure the connection is open
-                connection.EnsureOpen();
+                // Set the values
+                context.ParametersSetterFunc(command, entity);
 
-                if (hasTransaction == false)
-                {
-                    // Create a transaction
-                    transaction = connection.BeginTransaction();
-                }
+                // Actual Execution
+                result = ObjectConverter.ToType<TResult>(command.ExecuteScalar());
 
-                // Create the command
-                using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
-                    CommandType.Text, commandTimeout, transaction))
+                // Set the return value
+                if (Equals(result, default(TResult)) == false)
                 {
-                    // Set the values
-                    context.ParametersSetterFunc(command, entity);
-
-                    // Actual Execution
-                    result = ObjectConverter.ToType<TResult>(command.ExecuteScalar());
-
-                    // Set the return value
-                    if (Equals(result, default(TResult)) == false)
-                    {
-                        context.IdentityPropertySetterFunc?.Invoke(entity, result);
-                    }
-                }
-
-                if (hasTransaction == false)
-                {
-                    // Commit the transaction
-                    transaction.Commit();
-                }
-            }
-            catch
-            {
-                if (hasTransaction == false)
-                {
-                    // Rollback for any exception
-                    transaction.Rollback();
-                }
-                throw;
-            }
-            finally
-            {
-                if (hasTransaction == false)
-                {
-                    // Rollback and dispose the transaction
-                    transaction.Dispose();
+                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
                 }
             }
 
@@ -675,58 +637,20 @@ namespace RepoDb
             // Execution variables
             var result = default(TResult);
 
-            // Make sure to create transaction if there is no passed one
-            var hasTransaction = (transaction != null);
-
-            try
+            // Create the command
+            using (var command = (DbCommand)(await connection.EnsureOpenAsync()).CreateCommand(context.CommandText,
+                CommandType.Text, commandTimeout, transaction))
             {
-                // Ensure the connection is open
-                await connection.EnsureOpenAsync();
+                // Set the values
+                context.ParametersSetterFunc(command, entity);
 
-                if (hasTransaction == false)
-                {
-                    // Create a transaction
-                    transaction = connection.BeginTransaction();
-                }
+                // Actual Execution
+                result = ObjectConverter.ToType<TResult>(await command.ExecuteScalarAsync());
 
-                // Create the command
-                using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
-                    CommandType.Text, commandTimeout, transaction))
+                // Set the return value
+                if (Equals(result, default(TResult)) == false)
                 {
-                    // Set the values
-                    context.ParametersSetterFunc(command, entity);
-
-                    // Actual Execution
-                    result = ObjectConverter.ToType<TResult>(await command.ExecuteScalarAsync());
-
-                    // Set the return value
-                    if (Equals(result, default(TResult)) == false)
-                    {
-                        context.IdentityPropertySetterFunc?.Invoke(entity, result);
-                    }
-                }
-
-                if (hasTransaction == false)
-                {
-                    // Commit the transaction
-                    transaction.Commit();
-                }
-            }
-            catch
-            {
-                if (hasTransaction == false)
-                {
-                    // Rollback for any exception
-                    transaction.Rollback();
-                }
-                throw;
-            }
-            finally
-            {
-                if (hasTransaction == false)
-                {
-                    // Rollback and dispose the transaction
-                    transaction.Dispose();
+                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
                 }
             }
 

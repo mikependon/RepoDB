@@ -48,17 +48,17 @@ namespace RepoDb
         {
             if (basedOnFields == false)
             {
-                return DataReaderToDataEntityConverterFunctionCache<TEntity>.Get(reader, connection);
+                return GetDataReaderToDataEntityConverterFunctionCache<TEntity>.Get(reader, connection);
             }
             else
             {
-                return FieldBasedDataReaderToDataEntityConverterFunctionCache<TEntity>.Get(reader, connection);
+                return GetFieldBasedDataReaderToDataEntityFunctionCache<TEntity>.Get(reader, connection);
             }
         }
 
-        #region DataReaderToDataEntityConverterFunctionCache
+        #region GetDataReaderToDataEntityConverterFunctionCache
 
-        private static class DataReaderToDataEntityConverterFunctionCache<TEntity>
+        private static class GetDataReaderToDataEntityConverterFunctionCache<TEntity>
             where TEntity : class
         {
             private static Func<DbDataReader, TEntity> m_func;
@@ -75,9 +75,9 @@ namespace RepoDb
 
         #endregion
 
-        #region FieldBasedDataReaderToDataEntityConverterFunctionCache
+        #region GetFieldBasedDataReaderToDataEntityFunctionCache
 
-        private static class FieldBasedDataReaderToDataEntityConverterFunctionCache<TEntity>
+        private static class GetFieldBasedDataReaderToDataEntityFunctionCache<TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<string, Func<DbDataReader, TEntity>> m_cache = new ConcurrentDictionary<string, Func<DbDataReader, TEntity>>();
@@ -113,61 +113,47 @@ namespace RepoDb
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
         public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader)
         {
-            return DataReaderToExpandoObjectConverterFunctionCache.Get(reader);
+            return GetDataReaderToExpandoObjectConverterFunction(reader, null, null);
         }
 
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
         internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader,
-            bool basedOnFields = false)
+            string tableName,
+            IDbConnection connection)
         {
-            if (basedOnFields == false)
-            {
-                return DataReaderToExpandoObjectConverterFunctionCache.Get(reader);
-            }
-            else
-            {
-                return FieldBasedDataReaderToExpandoObjectConverterFunctionCache.Get(reader);
-            }
+            return GetDataReaderToExpandoObjectConverterFunctionCache.Get(reader, tableName, connection);
         }
 
-        #region DataReaderToExpandoObjectConverterFunctionCache
+        #region GetDataReaderToExpandoObjectConverterFunctionCache
 
-        private static class DataReaderToExpandoObjectConverterFunctionCache
+        private static class GetDataReaderToExpandoObjectConverterFunctionCache
         {
-            private static Func<DbDataReader, ExpandoObject> m_func;
+            private static ConcurrentDictionary<int, Func<DbDataReader, ExpandoObject>> m_cache = new ConcurrentDictionary<int, Func<DbDataReader, ExpandoObject>>();
 
-            public static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader)
-            {
-                if (m_func == null)
-                {
-                    m_func = FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(reader);
-                }
-                return m_func;
-            }
-        }
-
-        #endregion
-
-        #region FieldBasedDataReaderToExpandoObjectConverterFunctionCache
-
-        private static class FieldBasedDataReaderToExpandoObjectConverterFunctionCache
-        {
-            private static ConcurrentDictionary<string, Func<DbDataReader, ExpandoObject>> m_cache = new ConcurrentDictionary<string, Func<DbDataReader, ExpandoObject>>();
-
-            public static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader)
+            public static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader, string tableName, IDbConnection connection)
             {
                 var result = (Func<DbDataReader, ExpandoObject>)null;
                 var key = Enumerable.Range(0, reader.FieldCount)
                     .Select(reader.GetName)
-                    .Join(".");
+                    .Join(".")
+                    .GetHashCode();
+                if (tableName != null)
+                {
+                    key += tableName.GetHashCode();
+                }
+                if (connection != null)
+                {
+                    key += connection.ConnectionString.GetHashCode();
+                }
                 if (m_cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(reader);
+                    result = FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(reader, tableName, connection);
                     m_cache.TryAdd(key, result);
                 }
                 return result;

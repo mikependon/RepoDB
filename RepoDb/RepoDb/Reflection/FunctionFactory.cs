@@ -103,13 +103,13 @@ namespace RepoDb.Reflection
                     var isConversionNeeded = readerField.Type != propertyType;
 
                     // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue() method
-                    var readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod(string.Concat("Get", readerField.Type.Name));
+                    var readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", readerField.Type.Name));
                     if (readerGetValueMethod == null)
                     {
                         // Single value is throwing an exception in GetString(), skip it and use the GetValue() instead
                         if (isDefaultConversion == false && readerField.Type != typeof(Single))
                         {
-                            readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod(string.Concat("Get", propertyType.Name));
+                            readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", propertyType.Name));
                         }
 
                         // If present, then use the property type, otherwise, use the object
@@ -119,7 +119,7 @@ namespace RepoDb.Reflection
                         }
                         else
                         {
-                            readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod("GetValue");
+                            readerGetValueMethod = dataReaderType.GetMethod("GetValue");
                             convertType = typeof(object);
                         }
 
@@ -134,11 +134,11 @@ namespace RepoDb.Reflection
                     // Check for nullables
                     if (isTableFieldNullable == true)
                     {
-                        var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetTypeInfo().GetMethod("IsDBNull"), ordinalExpression);
+                        var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
 
                         // True expression
                         var trueExpression = (Expression)null;
-                        if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
+                        if (underlyingType != null && underlyingType.IsValueType == true)
                         {
                             trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(propertyType));
                         }
@@ -162,9 +162,9 @@ namespace RepoDb.Reflection
                                 falseExpression = ConvertValueExpressionForDataEntity(falseExpression, readerField, propertyType, convertType);
                             }
                         }
-                        if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
+                        if (underlyingType != null && underlyingType.IsValueType == true)
                         {
-                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetTypeInfo().GetConstructor(new[] { propertyType });
+                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
                             falseExpression = Expression.New(nullableConstructorExpression, falseExpression);
                         }
 
@@ -185,9 +185,9 @@ namespace RepoDb.Reflection
                         }
 
                         // Set for the 'Nullable' property
-                        if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
+                        if (underlyingType != null && underlyingType.IsValueType == true)
                         {
-                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetTypeInfo().GetConstructor(new[] { propertyType });
+                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
                             valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
                         }
                     }
@@ -223,19 +223,19 @@ namespace RepoDb.Reflection
                 if (propertyType == typeof(Guid) && readerField.Type == typeof(string))
                 {
                     // This is (new Guid(string))
-                    expression = Expression.New(typeof(Guid).GetTypeInfo().GetConstructor(new[] { typeof(string) }), expression);
+                    expression = Expression.New(typeof(Guid).GetConstructor(new[] { typeof(string) }), expression);
                 }
                 else if (propertyType == typeof(string) && readerField.Type == typeof(Guid))
                 {
                     // This is Guid.ToString()
-                    targetMethod = typeof(Guid).GetTypeInfo().GetMethod("ToString", new Type[0]);
+                    targetMethod = typeof(Guid).GetMethod("ToString", new Type[0]);
                     targetInstance = expression;
                     targetParameter = null;
                 }
                 else
                 {
                     // This System.Convert.To<Type>()
-                    targetMethod = typeof(Convert).GetTypeInfo().GetMethod(string.Concat("To", propertyType.Name), new[] { convertType });
+                    targetMethod = typeof(Convert).GetMethod(string.Concat("To", propertyType.Name), new[] { convertType });
                     targetInstance = null;
                     targetParameter = expression;
                 }
@@ -270,12 +270,19 @@ namespace RepoDb.Reflection
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader)
+        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader,
+            string tableName,
+            IDbConnection connection)
         {
             // Expression variables
             var readerParameterExpression = Expression.Parameter(typeof(DbDataReader), "reader");
             var newObjectExpression = Expression.New(typeof(ExpandoObject));
+
+            // DB Variables
+            var dbFields = tableName != null ? DbFieldCache.Get(connection, tableName) : null;
 
             // Matching the fields
             var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -284,7 +291,8 @@ namespace RepoDb.Reflection
                 {
                     Name = name,
                     Ordinal = ordinal,
-                    Type = reader.GetFieldType(ordinal)
+                    Type = reader.GetFieldType(ordinal),
+                    IsNullable = dbFields?.FirstOrDefault(f => f.UnquotedName.ToLower() == name.ToLower())?.IsNullable == true
                 });
 
             // Initialize the elements
@@ -311,46 +319,58 @@ namespace RepoDb.Reflection
         /// <param name="readerParameterExpression">The data reader parameter.</param>
         /// <param name="readerFields">The list of fields to be bound from the data reader.</param>
         /// <returns>The enumerable list of child elements initializations.</returns>
-        private static IEnumerable<ElementInit> GetElementInitsForDictionary(ParameterExpression readerParameterExpression, IList<DataReaderFieldDefinition> readerFields)
+        private static IEnumerable<ElementInit> GetElementInitsForDictionary(ParameterExpression readerParameterExpression,
+            IList<DataReaderFieldDefinition> readerFields)
         {
             // Initialize variables
             var elementInits = new List<ElementInit>();
             var dataReaderType = typeof(DbDataReader);
-            var addMethod = typeof(IDictionary<string, object>).GetTypeInfo().GetMethod("Add", new[] { typeof(string), typeof(object) });
+            var addMethod = typeof(IDictionary<string, object>).GetMethod("Add", new[] { typeof(string), typeof(object) });
 
             // Iterate each properties
             for (var ordinal = 0; ordinal < readerFields?.Count(); ordinal++)
             {
                 // Field variable
-                var field = readerFields[ordinal];
+                var readerField = readerFields[ordinal];
                 var isConversionNeeded = false;
 
                 // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue
-                var readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod(string.Concat("Get", field?.Type.Name));
+                var readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", readerField.Type.Name));
                 if (readerGetValueMethod == null)
                 {
-                    readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod("GetValue");
+                    readerGetValueMethod = dataReaderType.GetMethod("GetValue");
                     isConversionNeeded = true;
                 }
 
                 // Expressions
                 var ordinalExpression = Expression.Constant(ordinal);
-                var valueExpression = (Expression)null;
+                var valueExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
 
                 // Check for nullables
-                var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetTypeInfo().GetMethod("IsDBNull"), ordinalExpression);
-                var trueExpression = Expression.Default(field.Type);
-                var falseExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
-                if (isConversionNeeded == true)
+                if (readerField.IsNullable == true)
                 {
-                    falseExpression = Expression.Convert(falseExpression, field?.Type);
+                    var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
+                    var trueExpression = (Expression)null;
+                    if (readerField.Type.IsValueType == true)
+                    {
+                        trueExpression = Expression.Constant(null, typeof(object));
+                        valueExpression = Expression.Convert(valueExpression, typeof(object));
+                    }
+                    else
+                    {
+                        trueExpression = Expression.Default(readerField.Type);
+                        if (isConversionNeeded == true)
+                        {
+                            valueExpression = Expression.Convert(valueExpression, readerField.Type);
+                        }
+                    }
+                    valueExpression = Expression.Condition(isDbNullExpression, trueExpression, valueExpression);
                 }
-                valueExpression = Expression.Condition(isDbNullExpression, trueExpression, falseExpression);
 
                 // Add to the bindings
                 var values = new[]
                 {
-                    Expression.Constant(field.Name),
+                    Expression.Constant(readerField.Name),
                     (Expression)Expression.Convert(valueExpression, typeof(object))
                 };
                 elementInits.Add(Expression.ElementInit(addMethod, values));
@@ -485,8 +505,14 @@ namespace RepoDb.Reflection
 
                 // Declare the variable for the value assignment
                 var valueBlock = (Expression)null;
-                var isNullable = (instanceProperty != null && (instanceProperty.PropertyType.IsValueType == false ||
-                    Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null));
+                var isNullable = instanceProperty == null ||
+                    (
+                        instanceProperty != null &&
+                        (
+                            instanceProperty.PropertyType.IsValueType == false ||
+                            Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null
+                        )
+                    );
 
                 // Check if the property is nullable
                 if (isNullable == true)
@@ -855,8 +881,14 @@ namespace RepoDb.Reflection
 
                     // Declare the variable for the value assignment
                     var valueBlock = (Expression)null;
-                    var isNullable = (instanceProperty != null && (instanceProperty.PropertyType.IsValueType == false ||
-                        Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null));
+                    var isNullable = instanceProperty == null ||
+                        (
+                            instanceProperty != null &&
+                            (
+                                instanceProperty.PropertyType.IsValueType == false ||
+                                Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null
+                            )
+                        );
 
                     // Check if the property is nullable
                     if (isNullable == true)

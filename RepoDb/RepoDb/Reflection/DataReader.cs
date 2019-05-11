@@ -58,20 +58,25 @@ namespace RepoDb.Reflection
         /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
         public static IEnumerable<dynamic> ToEnumerable(DbDataReader reader)
         {
-            return ToEnumerable(reader, false);
+            return ToEnumerable(reader, null, null);
         }
 
         /// <summary>
         /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
-        internal static IEnumerable<dynamic> ToEnumerable(DbDataReader reader, bool basedOnFields)
+        internal static IEnumerable<dynamic> ToEnumerable(DbDataReader reader,
+            string tableName,
+            IDbConnection connection)
         {
             if (reader != null && reader.HasRows)
             {
-                var func = FunctionCache.GetDataReaderToExpandoObjectConverterFunction(reader, basedOnFields);
+                var func = FunctionCache.GetDataReaderToExpandoObjectConverterFunction(reader,
+                    tableName,
+                    connection);
                 while (reader.Read())
                 {
                     yield return func(reader);

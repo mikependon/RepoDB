@@ -225,11 +225,9 @@ namespace RepoDb
         /// <summary>
         /// Gets a command text from the cache for the query operation.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        internal static string GetQueryText<TEntity>(QueryRequest request)
-            where TEntity : class
+        internal static string GetQueryText(QueryRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)

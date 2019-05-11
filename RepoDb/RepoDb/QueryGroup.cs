@@ -387,16 +387,16 @@ namespace RepoDb
 
             foreach (var queryGroupTypeMap in queryGroupTypeMaps)
             {
-                var queryFields = queryGroupTypeMap.QueryGroup.GetFields();
+                var queryFields = queryGroupTypeMap.QueryGroup.GetFields(true);
 
                 // Identify if there are fields to count
-                if (queryFields.Count() <= 0)
+                if (queryFields.Any() != true)
                 {
                     return null;
                 }
 
                 // Fix the variables for the parameters
-                if (fixParameters)
+                if (fixParameters == true)
                 {
                     queryGroupTypeMap.QueryGroup.Fix();
                 }
@@ -404,7 +404,8 @@ namespace RepoDb
                 // Iterate all the query fields
                 foreach (var queryField in queryFields)
                 {
-                    // Between/NotBetween
+                    #region Between/NotBetween
+
                     if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                     {
                         var left = string.Concat(queryField.Parameter.Name, "_Left");
@@ -449,7 +450,10 @@ namespace RepoDb
                         }
                     }
 
-                    // In/NotIn
+                    #endregion
+
+                    #region In/NotIn
+
                     else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
                     {
                         var values = new List<object>();
@@ -482,7 +486,10 @@ namespace RepoDb
                         }
                     }
 
-                    // Other
+                    #endregion
+
+                    #region Other
+
                     else
                     {
                         if (!expandObject.ContainsKey(queryField.Parameter.Name))
@@ -498,6 +505,8 @@ namespace RepoDb
                             }
                         }
                     }
+
+                    #endregion
                 }
             }
 

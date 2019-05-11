@@ -144,6 +144,32 @@
             The parent type where this parameter is mapped.
             </summary>
         </member>
+        <member name="T:RepoDb.Contexts.Execution.InsertExecutionContext`1">
+            <summary>
+            An execution context class used by insert operation.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity.</typeparam>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertExecutionContext`1.CommandText">
+            <summary>
+            The execution command text.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertExecutionContext`1.InputFields">
+            <summary>
+            The list of the input <see cref="T:RepoDb.DbField"/> objects to be included in the execution.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertExecutionContext`1.ParametersSetterFunc">
+            <summary>
+            The compiled function that is used to set the <see cref="T:System.Data.Common.DbCommand"/> parameters.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertExecutionContext`1.IdentityPropertySetterFunc">
+            <summary>
+            The compiled expression that is used to set the property value.
+            </summary>
+        </member>
         <member name="T:RepoDb.Contexts.Execution.InsertAllExecutionContext`1">
             <summary>
             An execution context class used by insert-all operation.
@@ -170,15 +196,40 @@
             The batch size of the execution.
             </summary>
         </member>
-        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.Func">
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.SingleDataEntityParametersSetterFunc">
             <summary>
-            The actual compiled function.
+            The compiled function that is used to set the <see cref="T:System.Data.Common.DbCommand"/> parameters.
             </summary>
         </member>
-        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.IdentitySetters">
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.MultipleDataEntitiesParametersSetterFunc">
             <summary>
-            The actual setters of the identity function.
+            The compiled function that is used to set the <see cref="T:System.Data.Common.DbCommand"/> parameters.
             </summary>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.IdentityPropertySetterFunc">
+            <summary>
+            The compiled expression that is used to set the property value.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Contexts.Execution.InsertAllExecutionContext`1.IdentityPropertySettersFunc">
+            <summary>
+            The list of compiled expression that is used to set the identity value.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Contexts.Execution.InsertExecutionContextCache`1">
+            <summary>
+            A class used to cache the context of the insert executions.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity.</typeparam>
+        </member>
+        <member name="M:RepoDb.Contexts.Execution.InsertExecutionContextCache`1.Get(System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Func{RepoDb.Contexts.Execution.InsertExecutionContext{`0}})">
+            <summary>
+            Gets the cached execution context.
+            </summary>
+            <param name="tableName">The name of the target table.</param>
+            <param name="fields">The list of the <see cref="T:RepoDb.Field"/> objects.</param>
+            <param name="callback">The callback function to be invoked.</param>
+            <returns>The instance of the cached execution context.</returns>
         </member>
         <member name="T:RepoDb.Contexts.Execution.InsertAllExecutionContextCache`1">
             <summary>
@@ -186,10 +237,12 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity.</typeparam>
         </member>
-        <member name="M:RepoDb.Contexts.Execution.InsertAllExecutionContextCache`1.Get(System.Int32,System.Func{System.Int32,RepoDb.Contexts.Execution.InsertAllExecutionContext{`0}})">
+        <member name="M:RepoDb.Contexts.Execution.InsertAllExecutionContextCache`1.Get(System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Func{System.Int32,RepoDb.Contexts.Execution.InsertAllExecutionContext{`0}})">
             <summary>
             Gets the cached execution context.
             </summary>
+            <param name="tableName">The name of the target table.</param>
+            <param name="fields">The list of the <see cref="T:RepoDb.Field"/> objects.</param>
             <param name="batchSize">The batch size of the operation.</param>
             <param name="callback">The callback function to be invoked.</param>
             <returns>The instance of the cached execution context.</returns>
@@ -1470,10 +1523,10 @@
         </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsEnumerable(System.Reflection.PropertyInfo)">
             <summary>
-            Converts an instance of property info into an enumerable list of property info.
+            Converts an instance of <see cref="T:System.Reflection.PropertyInfo"/> into an enumerable list of <see cref="T:System.Reflection.PropertyInfo"/>.
             </summary>
-            <param name="property">The property info instance to be converted.</param>
-            <returns>An enumerable list of property info.</returns>
+            <param name="property">The <see cref="T:System.Reflection.PropertyInfo"/> instance to be converted.</param>
+            <returns>An enumerable list of <see cref="T:System.Reflection.PropertyInfo"/>.</returns>
         </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.GetMappedName(System.Reflection.PropertyInfo,System.Boolean)">
             <summary>
@@ -1485,102 +1538,116 @@
         </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.IsPrimary(System.Reflection.PropertyInfo)">
             <summary>
-            Checks whether the property info is a primary property.
+            Checks whether the <see cref="T:System.Reflection.PropertyInfo"/> is a primary property.
             </summary>
-            <param name="property">The instance of property info to be checked.</param>
-            <returns>A boolean value that holds a value whether the property info is a primary property.</returns>
+            <param name="property">The instance of <see cref="T:System.Reflection.PropertyInfo"/> to be checked.</param>
+            <returns>A boolean value that holds a value whether the <see cref="T:System.Reflection.PropertyInfo"/> is a primary property.</returns>
         </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsQueryField(System.Reflection.PropertyInfo,System.Object)">
             <summary>
-            Converts a property info into a query field object.
+            Converts a <see cref="T:System.Reflection.PropertyInfo"/> into a query field object.
             </summary>
-            <param name="property">The instance of property info to be converted.</param>
+            <param name="property">The instance of <see cref="T:System.Reflection.PropertyInfo"/> to be converted.</param>
             <param name="entity">The entity object where the value of the property will be retrieved.</param>
             <returns>An instance of query field object that holds the converted name and values of the property.</returns>
         </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsQueryField(System.Reflection.PropertyInfo,System.Object,System.Boolean)">
             <summary>
-            Converts a property info into a query field object.
+            Converts a <see cref="T:System.Reflection.PropertyInfo"/> into a query field object.
             </summary>
-            <param name="property">The instance of property info to be converted.</param>
+            <param name="property">The instance of <see cref="T:System.Reflection.PropertyInfo"/> to be converted.</param>
             <param name="entity">The entity object where the value of the property will be retrieved.</param>
             <returns>An instance of query field object that holds the converted name and values of the property.</returns>
             <param name="appendUnderscore">
             The value to identify whether the underscope prefix will be appended to the parameter name.
             </param>
         </member>
-        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsField(System.Reflection.PropertyInfo,System.Boolean)">
+        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsFieldAsString(System.Reflection.PropertyInfo,System.Boolean)">
             <summary>
-            Converts a property info into a mapped name.
+            Converts a <see cref="T:System.Reflection.PropertyInfo"/> into a mapped name.
             </summary>
             <param name="property">The instance of the property to be converted.</param>
             <param name="quoted">True whether the string is quoted.</param>
             <returns>A instance of string containing the value of a mapped name.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsParameter(System.Reflection.PropertyInfo)">
+        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsParameterAsString(System.Reflection.PropertyInfo)">
             <summary>
-            Converts a property info into a paramertized name.
+            Converts a <see cref="T:System.Reflection.PropertyInfo"/> into a parameterized name.
             </summary>
             <param name="property">The instance of the property to be converted.</param>
             <returns>A instance of string containing the value of a parameterized name.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsParameterAsField(System.Reflection.PropertyInfo)">
+        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsParameterAsFieldAsString(System.Reflection.PropertyInfo)">
             <summary>
-            Converts a property info into a paramertized (as field) name.
+            Converts a <see cref="T:System.Reflection.PropertyInfo"/> into a parameterized (as field) name.
             </summary>
             <param name="property">The instance of the property to be converted.</param>
             <returns>A instance of string containing the value of a parameterized (as field) name.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsFieldAndParameter(System.Reflection.PropertyInfo)">
+        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsFieldAndParameterAsString(System.Reflection.PropertyInfo)">
             <summary>
-            Converts a property info into a field and parameter name.
+            Converts a <see cref="T:System.Reflection.PropertyInfo"/> into a field and parameter name.
             </summary>
             <param name="property">The instance of the property to be converted.</param>
             <returns>A instance of string containing the value of a field and parameter name.</returns>
         </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsFieldAndAliasField(System.Reflection.PropertyInfo,System.String)">
             <summary>
-            Converts a property info into a field (and its alias) name.
+            Converts a <see cref="T:System.Reflection.PropertyInfo"/> into a field (and its alias) name.
             </summary>
             <param name="property">The instance of the property to be converted.</param>
             <param name="alias">The alias to be used.</param>
             <returns>A instance of string containing the value of a field (and its alias) name.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsFields(System.Collections.Generic.IEnumerable{System.Reflection.PropertyInfo})">
+        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsFieldsAsStrings(System.Collections.Generic.IEnumerable{System.Reflection.PropertyInfo})">
             <summary>
-            Converts an enumerable array of property info objects into an enumerable array of string (as field).
+            Converts an enumerable array of <see cref="T:System.Reflection.PropertyInfo"/> objects into an enumerable array of string (as field).
             </summary>
             <param name="properties">The enumerable array of properties to be converted.</param>
             <returns>An enumerable array of strings containing the converted values of the given properties (as field).</returns>
         </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsParameters(System.Collections.Generic.IEnumerable{System.Reflection.PropertyInfo})">
             <summary>
-            Converts an enumerable array of property info objects into an enumerable array of string (as parameters).
+            Converts an enumerable array of <see cref="T:System.Reflection.PropertyInfo"/> objects into an enumerable array of string (as parameters).
             </summary>
             <param name="properties">The enumerable array of properties to be converted.</param>
             <returns>An enumerable array of strings containing the converted values of the given properties (as parameters).</returns>
         </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsParametersAsFields(System.Collections.Generic.IEnumerable{System.Reflection.PropertyInfo})">
             <summary>
-            Converts an enumerable array of property info objects into an enumerable array of string (as parameters as fields).
+            Converts an enumerable array of <see cref="T:System.Reflection.PropertyInfo"/> objects into an enumerable array of string (as parameters as fields).
             </summary>
             <param name="properties">The enumerable array of properties to be converted.</param>
             <returns>An enumerable array of strings containing the converted values of the given properties (as parameters as fields).</returns>
         </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsFieldsAndParameters(System.Collections.Generic.IEnumerable{System.Reflection.PropertyInfo})">
             <summary>
-            Converts an enumerable array of property info objects into an enumerable array of string (as field and parameters).
+            Converts an enumerable array of <see cref="T:System.Reflection.PropertyInfo"/> objects into an enumerable array of string (as field and parameters).
             </summary>
             <param name="properties">The enumerable array of properties to be converted.</param>
             <returns>An enumerable array of strings containing the converted values of the given properties (as field and parameters).</returns>
         </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsFieldsAndAliasFields(System.Collections.Generic.IEnumerable{System.Reflection.PropertyInfo},System.String)">
             <summary>
-            Converts an enumerable array of property info objects into an enumerable array of string (as field and its alias).
+            Converts an enumerable array of <see cref="T:System.Reflection.PropertyInfo"/> objects into an enumerable array of string (as field and its alias).
             </summary>
             <param name="properties">The enumerable array of properties to be converted.</param>
             <param name="alias">The alias to be used.</param>
             <returns>An enumerable array of strings containing the converted values of the given properties (as field and its alias).</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsField(System.Reflection.PropertyInfo)">
+            <summary>
+            Converts an instance of <see cref="T:System.Reflection.PropertyInfo"/> object into <see cref="T:RepoDb.Field"/> object.
+            </summary>
+            <param name="property">The instance of <see cref="T:System.Reflection.PropertyInfo"/> object to be converted.</param>
+            <returns>The converted instance of <see cref="T:RepoDb.Field"/> object.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsFields(System.Collections.Generic.IEnumerable{System.Reflection.PropertyInfo})">
+            <summary>
+            Converts an enumerable array of <see cref="T:System.Reflection.PropertyInfo"/> objects into an enumerable array of <see cref="T:RepoDb.Field"/>.
+            </summary>
+            <param name="properties">The enumerable array of properties to be converted.</param>
+            <returns>An enumerable array of <see cref="T:RepoDb.Field"/>.</returns>
         </member>
         <member name="T:RepoDb.Extensions.QueryFieldExtension">
             <summary>
@@ -2581,22 +2648,16 @@
             </summary>
             <param name="entity">The data entity object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.Insert``1(`0,System.Data.IDbTransaction)">
             <summary>
             Inserts a new data in the database.
             </summary>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="entity">The data entity object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.InsertAsync(`0,System.Data.IDbTransaction)">
             <summary>
@@ -2604,22 +2665,15 @@
             </summary>
             <param name="entity">The data entity object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.InsertAsync``1(`0,System.Data.IDbTransaction)">
             <summary>
             Inserts a new data in the database in an asynchronous way.
             </summary>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
-            <param name="entity">The data entity object to be inserted.</param>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="transaction">The transaction to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.DeleteAll(System.Data.IDbTransaction)">
             <summary>
@@ -3948,10 +4002,10 @@
             <summary>
             Inserts multiple data in the database.
             </summary>
-            <typeparam name="TEntity">The type of the objects to be enumerated.</typeparam>
+            <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table to be used.</param>
-            <param name="entities">The data entity object to be inserted.</param>
+            <param name="entities">The list of data entity objects to be inserted.</param>
             <param name="batchSize">The batch size of the insertion.</param>
             <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -3965,10 +4019,10 @@
             <summary>
             Inserts multiple data in the database in an asynchronous way.
             </summary>
-            <typeparam name="TEntity">The type of the objects to be enumerated.</typeparam>
+            <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table to be used.</param>
-            <param name="entities">The data entity object to be inserted.</param>
+            <param name="entities">The list of data entity objects to be inserted.</param>
             <param name="batchSize">The batch size of the insertion.</param>
             <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -5975,17 +6029,14 @@
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.Insert``2(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a new data in the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="entity">The data entity object to be inserted.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -6002,17 +6053,14 @@
             Inserts a new data in the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="entity">The data entity object to be inserted.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.InsertAsync``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -6025,17 +6073,14 @@
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.InsertAsync``2(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a new data in the database in asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="entity">The data entity object to be inserted.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -6052,17 +6097,14 @@
             Inserts a new data in the database in asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="entity">The data entity object to be inserted.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.Insert(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -6075,13 +6117,13 @@
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
-            <returns>The value of the primary key of the newly inserted data.</returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.Insert``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a new data in the database (certain fields only).
             </summary>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entity">The dynamic object to be inserted.</param>
@@ -6089,13 +6131,13 @@
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
-            <returns>The value of the primary key of the newly inserted data.</returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.InsertInternal``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a new data in the database (certain fields only).
             </summary>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entity">The dynamic object to be inserted.</param>
@@ -6103,7 +6145,7 @@
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
-            <returns>The value of the primary key of the newly inserted data.</returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.InsertAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -6116,13 +6158,13 @@
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
-            <returns>The value of the primary key of the newly inserted data.</returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.InsertAsync``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a new data in the database in an asynchronous way.
             </summary>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entity">The dynamic object to be inserted.</param>
@@ -6130,13 +6172,13 @@
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
-            <returns>The value of the primary key of the newly inserted data.</returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.InsertAsyncInternal``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a new data in the database in an asynchronous way.
             </summary>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entity">The dynamic object to be inserted.</param>
@@ -6144,41 +6186,41 @@
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
             <param name="statementBuilder">The statement builder object to be used.</param>
-            <returns>The value of the primary key of the newly inserted data.</returns>
+            <returns>The value of the primary field.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertInternalBase``2(System.Data.IDbConnection,RepoDb.Requests.InsertRequest,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertInternalBase``2(System.Data.IDbConnection,System.String,``0,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
             <summary>
             Inserts a new data in the database.
             </summary>
             <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="request">The actual <see cref="T:RepoDb.Requests.InsertRequest"/> object.</param>
-            <param name="param">The data entity object to be inserted.</param>
+            <param name="tableName">The name of the target table to be used.</param>
+            <param name="entity">The data entity object to be inserted.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <param name="skipIdentityCheck">True to skip the identity check.</param>
+            <returns>The value of the primary field.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InsertAsyncInternalBase``2(System.Data.IDbConnection,RepoDb.Requests.InsertRequest,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.DbConnectionExtension.InsertAsyncInternalBase``2(System.Data.IDbConnection,System.String,``0,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
             <summary>
             Inserts a new data in the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="request">The actual <see cref="T:RepoDb.Requests.InsertRequest"/> object.</param>
-            <param name="param">The dynamic object or the data entity object to be inserted.</param>
+            <param name="tableName">The name of the target table to be used.</param>
+            <param name="entity">The data entity object to be inserted.</param>
+            <param name="fields">The mapping list of <see cref="T:RepoDb.Field"/>s to be used.</param>
             <param name="commandTimeout">The command timeout in seconds to be used.</param>
             <param name="transaction">The transaction to be used.</param>
             <param name="trace">The trace object to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <param name="statementBuilder">The statement builder object to be used.</param>
+            <param name="skipIdentityCheck">True to skip the identity check.</param>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.Delete``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -7490,6 +7532,11 @@
             Creates a new instance of <see cref="T:RepoDb.DbField"/> object.
             </summary>
         </member>
+        <member name="M:RepoDb.DbField.#ctor(System.String,System.Boolean,System.Boolean,System.Boolean,System.Type,System.Nullable{System.Int32},System.Nullable{System.Byte},System.Nullable{System.Byte},System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.DbField"/> object.
+            </summary>
+        </member>
         <member name="P:RepoDb.DbField.Name">
             <summary>
             Gets the quoted name of the database field.
@@ -7533,6 +7580,11 @@
         <member name="P:RepoDb.DbField.Scale">
             <summary>
             Gets the scale of the column.
+            </summary>
+        </member>
+        <member name="P:RepoDb.DbField.DatabaseType">
+            <summary>
+            Gets the database type of the column.
             </summary>
         </member>
         <member name="M:RepoDb.DbField.ToString">
@@ -8768,23 +8820,17 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The data entity object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.Insert``2(``0,System.Data.IDbTransaction)">
             <summary>
             Inserts a new data in the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="entity">The data entity object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.InsertAsync``1(``0,System.Data.IDbTransaction)">
             <summary>
@@ -8793,23 +8839,17 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The data entity object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.InsertAsync``2(``0,System.Data.IDbTransaction)">
             <summary>
             Inserts a new data in the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="entity">The data entity object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>
-            The value of the primary key of the newly inserted data. Returns null if the 
-            primary key property is not present.
-            </returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.Insert(System.String,System.Object,System.Data.IDbTransaction)">
             <summary>
@@ -8818,17 +8858,17 @@
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entity">The dynamic object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>The value of the primary key of the newly inserted data.</returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.Insert``1(System.String,System.Object,System.Data.IDbTransaction)">
             <summary>
             Inserts a new data in the database.
             </summary>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entity">The dynamic object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>The value of the primary key of the newly inserted data.</returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.InsertAsync(System.String,System.Object,System.Data.IDbTransaction)">
             <summary>
@@ -8837,13 +8877,13 @@
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entity">The dynamic object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
-            <returns>The value of the primary key of the newly inserted data.</returns>
+            <returns>The value of the primary field.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.InsertAsync``1(System.String,System.Object,System.Data.IDbTransaction)">
             <summary>
             Inserts a new data in the database in an asynchronous way.
             </summary>
-            <typeparam name="TResult">The type of the primary key result.</typeparam>
+            <typeparam name="TResult">The target type of the result.</typeparam>
             <param name="tableName">The name of the target table to be used.</param>
             <param name="entity">The dynamic object to be inserted.</param>
             <param name="transaction">The transaction to be used.</param>
@@ -9790,6 +9830,11 @@
             <param name="request">The request object.</param>
             <returns>The cached command text.</returns>
         </member>
+        <member name="M:RepoDb.CommandTextCache.Flush">
+            <summary>
+            Flushes all the existing cached command texts.
+            </summary>
+        </member>
         <member name="M:RepoDb.CommandTextCache.GetActualFields(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Get the actual list of <see cref="T:RepoDb.Field"/> objects of the table based on the actual list of <see cref="T:RepoDb.DbField"/> objects.
@@ -10362,15 +10407,40 @@
             <param name="readerFields">The list of fields to be bound from the data reader.</param>
             <returns>The enumerable list of child elements initializations.</returns>
         </member>
-        <member name="M:RepoDb.Reflection.FunctionFactory.GetDbCommandParameterSetterFunction``1(System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Int32)">
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataEntityDbCommandParameterSetterFunction``1(System.Collections.Generic.IEnumerable{RepoDb.DbField})">
             <summary>
             Gets a compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object based from the values of the data entity/dynamic object.
             </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <typeparam name="TEntity">The type of the data entity objects.</typeparam>
+            <param name="inputFields">The list of the input <see cref="T:RepoDb.DbField"/> objects.</param>
+            <returns>The compiled function.</returns>
+        </member>
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataEntitiesDbCommandParameterSetterFunction``1(System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Int32)">
+            <summary>
+            Gets a compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object based from the values of the data entity/dynamic objects.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity objects.</typeparam>
             <param name="inputFields">The list of the input <see cref="T:RepoDb.DbField"/> objects.</param>
             <param name="outputFields">The list of the input <see cref="T:RepoDb.DbField"/> objects.</param>
             <param name="batchSize">The batch size of the entity to be passed.</param>
-            <returns>A compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object based from the values of the data entity/dynamic object.</returns>
+            <returns>The compiled function.</returns>
+        </member>
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataEntityPropertySetterFromDbCommandParameterFunction``1(RepoDb.Field,System.Int32)">
+            <summary>
+            Gets a compiled function that is used to set the data entity object property value based from the value of <see cref="T:System.Data.Common.DbCommand"/> parameter object.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="field">The target <see cref="T:RepoDb.Field"/>.</param>
+            <param name="index">The index of the batches.</param>
+            <returns>A compiled function that is used to set the data entity object property value based from the value of <see cref="T:System.Data.Common.DbCommand"/> parameter object.</returns>
+        </member>
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataEntityPropertyValueSetterFunction``1(RepoDb.Field)">
+            <summary>
+            Gets a compiled function that is used to set the data entity object property value.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="field">The target <see cref="T:RepoDb.Field"/>.</param>
+            <returns>A compiled function that is used to set the data entity object property value.</returns>
         </member>
         <member name="M:RepoDb.Reflection.FunctionFactory.CreateDbCommandParametersFromFields(System.Data.Common.DbCommand,System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Int32)">
             <summary>
@@ -10459,16 +10529,25 @@
             <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
             <returns>A compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.</returns>
         </member>
-        <member name="M:RepoDb.FunctionCache.GetDbCommandParameterSetterFunction``1(System.String,System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Int32)">
+        <member name="M:RepoDb.FunctionCache.GetDataEntityDbCommandParameterSetterFunction``1(System.String,System.Collections.Generic.IEnumerable{RepoDb.DbField})">
             <summary>
             Gets a compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object based from the values of the data entity/dynamic object.
             </summary>
-            <typeparam name="TEntity">The type of the data entity/dynamic object.</typeparam>
-            <param name="key">The key to the cache.</param>
+            <typeparam name="TEntity">The type of the data entity/dynamic objects.</typeparam>
+            <param name="cacheKey">The key to the cache.</param>
+            <param name="inputFields">The list of the input <see cref="T:RepoDb.DbField"/> objects to be used.</param>
+            <returns>The compiled function.</returns>
+        </member>
+        <member name="M:RepoDb.FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction``1(System.String,System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Int32)">
+            <summary>
+            Gets a compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object based from the values of the data entity/dynamic objects.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity/dynamic objects.</typeparam>
+            <param name="cacheKey">The key to the cache.</param>
             <param name="inputFields">The list of the input <see cref="T:RepoDb.DbField"/> objects to be used.</param>
             <param name="outputFields">The list of the output <see cref="T:RepoDb.DbField"/> objects to be used.</param>
             <param name="batchSize">The batch size of the entities to be passed.</param>
-            <returns>A compiled function that is used to set the <see cref="T:System.Data.Common.DbParameter"/> objects of the <see cref="T:System.Data.Common.DbCommand"/> object.</returns>
+            <returns>The compiled function.</returns>
         </member>
         <member name="M:RepoDb.FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction``1(RepoDb.Field,System.Int32)">
             <summary>
@@ -10478,6 +10557,14 @@
             <param name="field">The target <see cref="T:RepoDb.Field"/>.</param>
             <param name="index">The index of the batches.</param>
             <returns>A compiled function that is used to set the data entity object property value based from the value of <see cref="T:System.Data.Common.DbCommand"/> parameter object.</returns>
+        </member>
+        <member name="M:RepoDb.FunctionCache.GetDataEntityPropertyValueSetterFunction``1(RepoDb.Field)">
+            <summary>
+            Gets a compiled function that is used to set the data entity object property value.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="field">The target <see cref="T:RepoDb.Field"/>.</param>
+            <returns>A compiled function that is used to set the data entity object property value.</returns>
         </member>
         <member name="T:RepoDb.Requests.BaseRequest">
             <summary>
@@ -12691,11 +12778,30 @@
             <param name="operation">The operation to be used for the query expression.</param>
             <param name="value">The value to be used for the query expression.</param>
         </member>
+        <member name="M:RepoDb.QueryField.#ctor(RepoDb.Field,RepoDb.Enumerations.Operation,System.Object)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryField"/> object.
+            </summary>
+            <param name="field">The actual field for the query expression.</param>
+            <param name="operation">The operation to be used for the query expression.</param>
+            <param name="value">The value to be used for the query expression.</param>
+        </member>
         <member name="M:RepoDb.QueryField.#ctor(System.String,RepoDb.Enumerations.Operation,System.Object,System.Boolean)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryField"/> object.
             </summary>
             <param name="fieldName">The name of the field for the query expression.</param>
+            <param name="operation">The operation to be used for the query expression.</param>
+            <param name="value">The value to be used for the query expression.</param>
+            <param name="appendUnderscore">
+            The value to identify whether the underscore prefix will be appended to the parameter name.
+            </param>
+        </member>
+        <member name="M:RepoDb.QueryField.#ctor(RepoDb.Field,RepoDb.Enumerations.Operation,System.Object,System.Boolean)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryField"/> object.
+            </summary>
+            <param name="field">The actual field for the query expression.</param>
             <param name="operation">The operation to be used for the query expression.</param>
             <param name="value">The value to be used for the query expression.</param>
             <param name="appendUnderscore">
@@ -12856,16 +12962,16 @@
             <param name="type">The .NET CLR Type.</param>
             <returns>The equivalent <see cref="T:System.Data.DbType"/> Type.</returns>
         </member>
-        <member name="T:RepoDb.SqlDbTypeToClientTypeResolver">
+        <member name="T:RepoDb.SqlDbTypeNameToClientTypeResolver">
             <summary>
             A class used to resolve the SQL Database Types into .NET CLR Types.
             </summary>
         </member>
-        <member name="M:RepoDb.SqlDbTypeToClientTypeResolver.Resolve(System.String)">
+        <member name="M:RepoDb.SqlDbTypeNameToClientTypeResolver.Resolve(System.String)">
             <summary>
             Returns the equivalent .NET CLR Types of the Database Type.
             </summary>
-            <param name="dbType">The name of the database type.</param>
+            <param name="dbTypeName">The name of the database type.</param>
             <returns>The equivalent .NET CLR type.</returns>
         </member>
         <member name="T:RepoDb.SqlStatementBuilder">
@@ -13314,6 +13420,11 @@
             Removes a mapping of targetted .NET CLR Type from the collection.
             </summary>
             <param name="type">The .NET CLR Type mapping to be removed.</param>
+        </member>
+        <member name="T:RepoDb.Types.SqlVariant">
+            <summary>
+            A type holder for sql_variant <see cref="T:System.Data.DbType"/> value.
+            </summary>
         </member>
     </members>
 </doc>
