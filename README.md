@@ -158,7 +158,7 @@ Certain columns only.
 			LastUpdatedUtc = DateTime.UtcNow
 		};
 		// Call the method
-		var updatedCount = connection.InlineUpdate<Customer>(customer, c => c.Id == 10045);
+		var updatedCount = connection.Update(nameof(Customer), customer, new { Id = 10045 });
 	}
 
 ### Delete
