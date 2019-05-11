@@ -95,6 +95,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.BatchQuery<DataEntityForDbConnectionStatementBuilder>(page: 0,
                 rowsPerBatch: 10,
                 orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -148,6 +149,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Count<DataEntityForDbConnectionStatementBuilder>((object)null,
                 statementBuilder: statementBuilder.Object);
 
@@ -183,6 +185,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Count(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
                 (object)null,
                 statementBuilder: statementBuilder.Object);
@@ -220,6 +223,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Count<DataEntityForDbConnectionStatementBuilderForCrossCall>((object)null,
                 statementBuilder: statementBuilder.Object);
 
@@ -260,6 +264,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.CountAll<DataEntityForDbConnectionStatementBuilder>(statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -291,6 +296,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.CountAll(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
                 statementBuilder: statementBuilder.Object);
 
@@ -324,6 +330,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.CountAll<DataEntityForDbConnectionStatementBuilderForCrossCall>(statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -360,6 +367,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Delete<DataEntityForDbConnectionStatementBuilder>(e => e.Id == 1,
                 statementBuilder: statementBuilder.Object);
 
@@ -393,6 +401,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Delete(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
                 new
                 {
@@ -434,6 +443,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Delete<DataEntityForDbConnectionStatementBuilderForCrossCall>(e => e.Id == 1,
                 statementBuilder: statementBuilder.Object);
 
@@ -475,6 +485,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.DeleteAll<DataEntityForDbConnectionStatementBuilder>(statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -504,6 +515,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
                 statementBuilder: statementBuilder.Object);
 
@@ -535,6 +547,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.DeleteAll<DataEntityForDbConnectionStatementBuilderForCrossCall>(statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -569,6 +582,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Insert<DataEntityForDbConnectionStatementBuilder>(
                 new DataEntityForDbConnectionStatementBuilder
                 {
@@ -614,6 +628,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Insert(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
                 new
                 {
@@ -659,6 +674,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Insert<DataEntityForDbConnectionStatementBuilderForCrossCall>(
                 new DataEntityForDbConnectionStatementBuilderForCrossCall
                 {
@@ -709,6 +725,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.InsertAll<DataEntityForDbConnectionStatementBuilder>(new[]
             {
                 new DataEntityForDbConnectionStatementBuilder{ Name = "Name" },
@@ -802,6 +819,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.InsertAll(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
                 new[]
                 {
@@ -903,6 +921,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.InsertAll<DataEntityForDbConnectionStatementBuilderForCrossCall>(
                 new[]
                 {
@@ -1006,6 +1025,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Merge<DataEntityForDbConnectionStatementBuilder>(
                 new DataEntityForDbConnectionStatementBuilder
                 {
@@ -1055,6 +1075,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Merge(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
                 new
                 {
@@ -1104,6 +1125,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Merge<DataEntityForDbConnectionStatementBuilderForCrossCall>(
                 new DataEntityForDbConnectionStatementBuilderForCrossCall
                 {
@@ -1158,6 +1180,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Query<DataEntityForDbConnectionStatementBuilder>(e => e.Id == 1, statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -1201,6 +1224,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.QueryMultiple<DataEntityForDbConnectionStatementBuilderT1,
                 DataEntityForDbConnectionStatementBuilderT2,
                 DataEntityForDbConnectionStatementBuilderT3,
@@ -1376,6 +1400,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Truncate<DataEntityForDbConnectionStatementBuilder>(statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -1405,6 +1430,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Truncate(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
                 statementBuilder: statementBuilder.Object);
 
@@ -1436,6 +1462,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Truncate<DataEntityForDbConnectionStatementBuilderForCrossCall>(statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -1470,6 +1497,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Update<DataEntityForDbConnectionStatementBuilder>(new DataEntityForDbConnectionStatementBuilder { Name = "Update" },
                 e => e.Id == 1,
                 statementBuilder: statementBuilder.Object);
@@ -1511,6 +1539,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Update(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
                 new
                 {
@@ -1566,6 +1595,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnection();
 
             // Act
+            CommandTextCache.Flush();
             connection.Update<DataEntityForDbConnectionStatementBuilderForCrossCall>(new DataEntityForDbConnectionStatementBuilderForCrossCall { Name = "Update" },
                 e => e.Id == 1,
                 statementBuilder: statementBuilder.Object);

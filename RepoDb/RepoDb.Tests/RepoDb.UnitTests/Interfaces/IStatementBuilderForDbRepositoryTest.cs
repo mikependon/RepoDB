@@ -94,6 +94,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.BatchQuery<DataEntityForDbRepositoryStatementBuilder>(0,
                 10,
                 null,
@@ -146,6 +147,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Count<DataEntityForDbRepositoryStatementBuilder>((object)null);
 
             // Assert
@@ -180,6 +182,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 (object)null);
 
@@ -216,6 +219,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Count<DataEntityForDbRepositoryStatementBuilderForCrossCall>((object)null);
 
             // Assert
@@ -255,6 +259,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.CountAll<DataEntityForDbRepositoryStatementBuilder>();
 
             // Assert
@@ -287,6 +292,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.CountAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
 
             // Assert
@@ -319,6 +325,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.CountAll<DataEntityForDbRepositoryStatementBuilderForCrossCall>();
 
             // Assert
@@ -355,6 +362,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Delete<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1);
 
             // Assert
@@ -387,6 +395,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Delete(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new
                 {
@@ -427,6 +436,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Delete<DataEntityForDbRepositoryStatementBuilderForCrossCall>(e => e.Id == 1);
 
             // Assert
@@ -467,6 +477,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.DeleteAll<DataEntityForDbRepositoryStatementBuilder>();
 
             // Assert
@@ -497,6 +508,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
 
             // Assert
@@ -527,6 +539,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.DeleteAll<DataEntityForDbRepositoryStatementBuilderForCrossCall>();
 
             // Assert
@@ -561,6 +574,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Insert<DataEntityForDbRepositoryStatementBuilder>(
                 new DataEntityForDbRepositoryStatementBuilder
                 {
@@ -605,6 +619,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new
                 {
@@ -649,6 +664,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Insert<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
                 new DataEntityForDbRepositoryStatementBuilderForCrossCall
                 {
@@ -698,6 +714,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.InsertAll<DataEntityForDbRepositoryStatementBuilder>(
                 new[]
                 {
@@ -795,6 +812,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new[]
                 {
@@ -845,6 +863,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new[]
                 {
@@ -895,6 +914,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.InsertAll<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
                 new[]
                 {
@@ -998,6 +1018,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Merge<DataEntityForDbRepositoryStatementBuilder>(
                 new DataEntityForDbRepositoryStatementBuilder
                 {
@@ -1046,6 +1067,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new
                 {
@@ -1094,6 +1116,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Merge<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
                 new DataEntityForDbRepositoryStatementBuilderForCrossCall
                 {
@@ -1147,6 +1170,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Query<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1);
 
             // Assert
@@ -1191,6 +1215,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.QueryMultiple<DataEntityForDbRepositoryStatementBuilderT1,
                 DataEntityForDbRepositoryStatementBuilderT2,
                 DataEntityForDbRepositoryStatementBuilderT3,
@@ -1367,6 +1392,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Truncate<DataEntityForDbRepositoryStatementBuilder>();
 
             // Assert
@@ -1397,6 +1423,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Truncate(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
 
             // Assert
@@ -1427,6 +1454,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Truncate<DataEntityForDbRepositoryStatementBuilderForCrossCall>();
 
             // Assert
@@ -1461,6 +1489,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Update<DataEntityForDbRepositoryStatementBuilder>(
                 new DataEntityForDbRepositoryStatementBuilder
                 {
@@ -1509,6 +1538,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new DataEntityForDbRepositoryStatementBuilderForTableName
                 {
@@ -1557,6 +1587,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Update<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
                 new DataEntityForDbRepositoryStatementBuilderForCrossCall
                 {
