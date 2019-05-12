@@ -7797,6 +7797,286 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region QueryAll(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryQueryAllViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryQueryAllViaTableNameWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    orderBy: orderBy);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryQueryAllViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    hints: SqlTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryQueryAllViaTableNameWithOrderByAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    orderBy: orderBy,
+                    hints: SqlTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        #endregion
+
+        #region QueryAllAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryQueryAllAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>()).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryQueryAllAsyncViaTableNameWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    orderBy: orderBy).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryQueryAllAsyncViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    hints: SqlTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryQueryAllAsyncViaTableNameWithOrderByAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    orderBy: orderBy,
+                    hints: SqlTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region QueryMultiple

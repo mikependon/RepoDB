@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 
 namespace RepoDb
 {
@@ -85,7 +84,7 @@ namespace RepoDb
             // Only if there are record
             if (m_reader.Read())
             {
-                value = (T)ObjectConverter.DbNullToNull(m_reader[0]);
+                value = ObjectConverter.ToType<T>(m_reader[0]);
             }
 
             // Move to next result
