@@ -10385,6 +10385,36 @@ namespace RepoDb.IntegrationTests.Operations
         #region Update(TableName)
 
         [TestMethod]
+        public void TestSqlConnectionUpdateViaTableNameViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
+                        item,
+                        item.Id);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameViaDynamic()
         {
             // Setup
@@ -10540,6 +10570,36 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region UpdateAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaTableNameAsyncViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                        item,
+                        item.Id).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameAsyncViaDynamic()

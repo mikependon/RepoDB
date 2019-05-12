@@ -477,12 +477,12 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
-            object where,
+            object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -493,7 +493,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Update(tableName: tableName,
                     entity: entity,
-                    where: where,
+                    whereOrPrimaryKey: whereOrPrimaryKey,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -637,12 +637,12 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
-            object where,
+            object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -653,7 +653,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync(tableName: tableName,
                     entity: entity,
-                    where: where,
+                    whereOrPrimaryKey: whereOrPrimaryKey,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,

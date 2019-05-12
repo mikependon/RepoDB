@@ -9928,6 +9928,36 @@ namespace RepoDb.IntegrationTests.Operations
         #region Update(TableName)
 
         [TestMethod]
+        public void TestDbRepositoryUpdateViaTableNameViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
+                        item,
+                        item.Id);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryUpdateViaTableNameViaDynamic()
         {
             // Setup
@@ -10083,6 +10113,36 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region UpdateAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateViaTableNameAsyncViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                        item,
+                        item.Id).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
 
         [TestMethod]
         public void TestDbRepositoryUpdateViaTableNameAsyncViaDynamic()

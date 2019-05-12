@@ -171,16 +171,6 @@ Via Object (targetting few fields):
 
 ### Update<TEntity>
 
-Via Data Entity:
-
-    using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query<Customer>(10045);
-		customer.FirstName = "John";
-		customer.LastUpdatedUtc = DateTime.UtcNow;
-		var affectedRows = connection.Update<Customer>(customer);
-	}
-
 Via PrimaryKey:
 
     using (var connection = new SqlConnection(ConnectionString))

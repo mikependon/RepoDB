@@ -477,7 +477,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -486,7 +486,7 @@ namespace RepoDb
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
-            object where,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -495,7 +495,7 @@ namespace RepoDb
             return Update(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup(where),
+                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -648,7 +648,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -657,7 +657,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
-            object where,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -666,7 +666,7 @@ namespace RepoDb
             return UpdateAsync(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup(where),
+                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
