@@ -171,6 +171,16 @@ Via Object (targetting few fields):
 
 ### Update<TEntity>
 
+Via DataEntity:
+
+    using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<Customer>(10045);
+		customer.FirstName = "John";
+		customer.LastUpdatedUtc = DateTime.UtcNow;
+		var affectedRows = connection.Update<Customer>(customer);
+	}
+
 Via PrimaryKey:
 
     using (var connection = new SqlConnection(ConnectionString))
@@ -202,18 +212,6 @@ Via Object:
 	}
 
 ### Update(TableName)
-
-Via Object (as Dynamic):
-
-    using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = new
-		{
-			FirstName = "John",
-			LastUpdatedUtc = DateTime.UtcNow
-		};
-		var affectedRows = connection.Update("Customer", customer);
-	}
 
 Via PrimaryKey:
 
