@@ -2,6 +2,7 @@
 using RepoDb.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 
@@ -91,7 +92,7 @@ namespace RepoDb.IntegrationTests
         }
 
         /// <summary>
-        /// Asserts the equalify of 2 types.
+        /// Asserts the properties equality of 2 types.
         /// </summary>
         /// <typeparam name="T1">The type of first object.</typeparam>
         /// <typeparam name="T2">The type of second object.</typeparam>
@@ -116,6 +117,32 @@ namespace RepoDb.IntegrationTests
                 var value2 = propertyOfType2.GetValue(t2);
                 Assert.AreEqual(value1, value2, $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1}' and '{value2}'.");
             });
+        }
+
+        /// <summary>
+        /// Asserts the members equality of 2 object and <see cref="ExpandoObject"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of first object.</typeparam>
+        /// <param name="obj">The instance of first object.</param>
+        /// <param name="expandoObj">The instance of second object.</param>
+        public static void AssertMembersEquality(object obj, ExpandoObject expandoObj)
+        {
+            var properties = obj.GetType().GetProperties();
+            var dictionary = expandoObj as IDictionary<string, object>;
+            properties.ToList().ForEach(property =>
+            {
+                if (property.Name == "Id")
+                {
+                    return;
+                }
+                if (dictionary.ContainsKey(property.Name))
+                {
+                    var value1 = property.GetValue(obj);
+                    var value2 = dictionary[property.Name];
+                    Assert.AreEqual(value1, value2, $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
+                }
+            });
+
         }
 
         #region IdentityTable
