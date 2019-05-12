@@ -13,12 +13,12 @@ Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter.
 ## Highlight
 
  - RepoDb is the fastest and the most efficient ORM library in .NET as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). You can see the actual execution result [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190307_netcore.txt).
- - RepoDb is used on the Production systems at Ørsted A/S.
  - RepoDb is covered by thousand of major business related Unit Tests and Integration Tests.
 
 ## Notes
 
-RepoDb is currently **not** accepting any pull-requests until the target core features has all been implemented.
+ - RepoDb is an open-source software and will always be free.
+ - Disclaimer: RepoDb is currently **NOT** accepting any pull-requests until the target core features has all been implemented.
 
 ## Build Result
 
@@ -80,9 +80,7 @@ Let us say you have a customer class named `Customer` that has an equivalent tab
 		public DateTime CreatedDateUtc { get; set; }
 	}
 
-### Query
-
-Below are the codes on how to query a record from the database.
+### Query<TEntity>
 
 Via PrimaryKey:
 
@@ -112,12 +110,53 @@ Via Object:
 		var customer = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 10045));
 	}
 
-### Insert
+### Query(TableName)
 
-Below is the code on how to insert a record into the database.
+Via PrimaryKey:
 
-	// Create a new instance
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query("Customer", 10045);
+	}
+
+Via Dynamic:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query("Customer", new { Id = 10045 });
+	}
+
+Via Object:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query("Customer", new QueryField(nameof(Customer.Id), 10045));
+	}
+	
+Via Object (targetting few fields):
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query("Customer", new QueryField(nameof(Customer.Id), 10045),
+			Field.From("Id", "FirstName", "LastName"));
+	}
+
+### Insert<TEntity>
+
     var customer = new Customer
+    {
+	    FirstName = "John",
+	    LastName = "Doe",
+	    IsActive = true
+    };
+    using (var connection = new SqlConnection(ConnectionString))
+	{
+		var id = connection.Insert<Customer, int>(customer);
+	}
+
+### Insert(TableName)
+
+    var customer = new
     {
 	    FirstName = "John",
 	    LastName = "Doe",
@@ -127,43 +166,96 @@ Below is the code on how to insert a record into the database.
     };
     using (var connection = new SqlConnection(ConnectionString))
 	{
-		// Call the insert method by passing the data entity object
-		var id = Convert.ToInt32(connection.Insert<Customer>(customer));
+		var id = connection.Insert<int>("Customer", customer);
 	}
 
-### Update
+### Update<TEntity>
 
-Below are the codes on how to update an existing record from the database.
-
-Querying and updating an existing instance.
+Via Data Entity:
 
     using (var connection = new SqlConnection(ConnectionString))
 	{
 		var customer = connection.Query<Customer>(10045);
-		// Set the properties
 		customer.FirstName = "John";
 		customer.LastUpdatedUtc = DateTime.UtcNow;
-		// Call the method
-		var updatedCount = connection.Update<Customer>(customer);
+		var affectedRows = connection.Update<Customer>(customer);
 	}
 
-Certain columns only.
+Via PrimaryKey:
 
     using (var connection = new SqlConnection(ConnectionString))
 	{
-		// Create a dynamic object
+		var customer = connection.Query<Customer>(10045);
+		customer.FirstName = "John";
+		customer.LastUpdatedUtc = DateTime.UtcNow;
+		var affectedRows = connection.Update<Customer>(customer, 10045);
+	}
+
+Via Dynamic:
+
+    using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<Customer>(10045);
+		customer.FirstName = "John";
+		customer.LastUpdatedUtc = DateTime.UtcNow;
+		var affectedRows = connection.Update<Customer>(customer, new { Id = 10045 });
+	}
+	
+Via Object:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<Customer>(10045);
+		customer.FirstName = "John";
+		customer.LastUpdatedUtc = DateTime.UtcNow;
+		var affectedRows = connection.Update<Customer>(customer, new QueryField(nameof(Customer.Id), 10045));
+	}
+
+### Update(TableName)
+
+Via Object (as Dynamic):
+
+    using (var connection = new SqlConnection(ConnectionString))
+	{
 		var customer = new
 		{
 			FirstName = "John",
 			LastUpdatedUtc = DateTime.UtcNow
 		};
-		// Call the method
-		var updatedCount = connection.Update(nameof(Customer), customer, new { Id = 10045 });
+		var affectedRows = connection.Update("Customer", customer);
 	}
 
-### Delete
+Via PrimaryKey:
 
-Below are the codes on how to delete a record from the database.
+    using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<Customer>(10045);
+		customer.FirstName = "John";
+		customer.LastUpdatedUtc = DateTime.UtcNow;
+		var affectedRows = connection.Update("Customer", customer, 10045);
+	}
+
+Via Dynamic:
+
+    using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<Customer>(10045);
+		customer.FirstName = "John";
+		customer.LastUpdatedUtc = DateTime.UtcNow;
+		var affectedRows = connection.Update("Customer", customer, new { Id = 10045 });
+	}
+	
+Via Object:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<Customer>(10045);
+		customer.FirstName = "John";
+		customer.LastUpdatedUtc = DateTime.UtcNow;
+		var affectedRows = connection.Update("Customer", customer, new QueryField(nameof(Customer.Id), 10045));
+	}
+
+### Delete<TEntity>
 
 Via PrimaryKey:
 
@@ -201,11 +293,31 @@ Via DataEntity:
 		var deletedCount = connection.Delete<Customer>(customer);
 	}
 
-### Merge
+### Delete(TableName)
 
-Inserts a new record in the database, otherwise update it.
+Via PrimaryKey:
 
-	// Create a new instance
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var deletedCount = connection.Delete("Customer", 10045);
+	}
+
+Via Dynamic:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var deletedCount = connection.Delete("Customer", { Id = 10045 });
+	}
+
+Via Object:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var deletedCount = connection.Delete("Customer", new QueryField(nameof(Customer.Id), 10045));
+	}
+
+### Merge<TEntity>
+
     var customer = new Customer
     {
 	    FirstName = "John",
@@ -216,14 +328,30 @@ Inserts a new record in the database, otherwise update it.
     };
 	using (var connection = new SqlConnection(ConnectionString))
 	{
-		// Create a qualifier (use FirstName and LastName as an example)
 		var qualifiers = new []
 		{
 			new Field(nameof(Customer.FirstName)),
 			new Field(nameof(Customer.LastName)),
 		};
-		// Merge the records (Upsert)
 		var mergeCount = connection.Merge<Customer>(customer, qualifiers);
+	}
+
+### Merge(TableName)
+
+    var customer = new Customer
+    {
+	    FirstName = "John",
+	    LastName = "Doe",
+	    IsActive = true
+    };
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var qualifiers = new []
+		{
+			new Field(nameof(Customer.FirstName)),
+			new Field(nameof(Customer.LastName)),
+		};
+		var mergeCount = connection.Merge("Customer", customer, qualifiers);
 	}
 
 ### ExecuteQuery
