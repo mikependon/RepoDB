@@ -105,7 +105,7 @@ namespace RepoDb.Extensions
         public static IEnumerable<Field> AsFields<TEntity>(this TEntity entity)
             where TEntity : class
         {
-            return Field.Parse<TEntity>(entity);
+            return FieldCache.Get<TEntity>();
         }
 
         /// <summary>

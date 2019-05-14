@@ -57,6 +57,8 @@
     <Compile Include="BulkInsertMapItem.cs" />
     <Compile Include="CommandArrayParameter.cs" />
     <Compile Include="CommandParameter.cs" />
+    <Compile Include="Contexts\Execution\UpdateExecutionContextCache.cs" />
+    <Compile Include="Contexts\Execution\UpdateExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertAllExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertExecutionContextCache.cs" />
