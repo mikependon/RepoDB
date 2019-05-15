@@ -6,80 +6,80 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the query operation arguments.
+    /// A class that holds the value of the update-all operation arguments.
     /// </summary>
-    internal class QueryAllRequest : BaseRequest, IEquatable<QueryAllRequest>
+    internal class UpdateAllRequest : BaseRequest, IEquatable<UpdateAllRequest>
     {
         private int? m_hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <see cref="QueryAllRequest"/> object.
+        /// Creates a new instance of <see cref="UpdateAllRequest"/> object.
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="fields">The list of the target fields.</param>
-        /// <param name="orderBy">The list of order fields.</param>
-        /// <param name="hints">The hints for the table.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public QueryAllRequest(Type type,
+        public UpdateAllRequest(Type type,
             IDbConnection connection,
             IEnumerable<Field> fields = null,
-            IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            IEnumerable<Field> qualifiers = null,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
                   fields,
-                  orderBy,
-                  hints,
+                  qualifiers,
+                  batchSize,
                   statementBuilder)
         {
             Type = type;
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="QueryAllRequest"/> object.
+        /// Creates a new instance of <see cref="UpdateAllRequest"/> object.
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="fields">The list of the target fields.</param>
-        /// <param name="orderBy">The list of order fields.</param>
-        /// <param name="hints">The hints for the table.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public QueryAllRequest(string name,
+        public UpdateAllRequest(string name,
             IDbConnection connection,
             IEnumerable<Field> fields = null,
-            IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            IEnumerable<Field> qualifiers = null,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
                   statementBuilder)
         {
             Fields = fields;
-            OrderBy = orderBy;
-            Hints = hints;
+            Qualifiers = qualifiers;
+            BatchSize = batchSize;
         }
 
         /// <summary>
-        /// Gets the list of the target fields.
+        /// Gets the target fields.
         /// </summary>
         public IEnumerable<Field> Fields { get; set; }
 
         /// <summary>
-        /// Gets the list of the order fields.
+        /// Gets the qualifiers fields.
         /// </summary>
-        public IEnumerable<OrderField> OrderBy { get; }
+        public IEnumerable<Field> Qualifiers { get; set; }
 
         /// <summary>
-        /// Gets the hints for the table.
+        /// Gets the size batch of the update operation.
         /// </summary>
-        public string Hints { get; }
+        public int BatchSize { get; set; }
 
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <see cref="QueryAllRequest"/>.
+        /// Returns the hashcode for this <see cref="UpdateAllRequest"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -91,9 +91,9 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".QueryAll").GetHashCode();
+            var hashCode = string.Concat(Name, ".UpdateAll").GetHashCode();
 
-            // Get the qualifier <see cref="Field"/> objects
+            // Get the fields
             if (Fields != null)
             {
                 foreach (var field in Fields)
@@ -102,19 +102,19 @@ namespace RepoDb.Requests
                 }
             }
 
-            // Add the order fields
-            if (!ReferenceEquals(null, OrderBy))
+            // Get the qualifier <see cref="Field"/> objects
+            if (Fields != null)
             {
-                foreach (var orderField in OrderBy)
+                foreach (var field in Qualifiers)
                 {
-                    hashCode += orderField.GetHashCode();
+                    hashCode += field.GetHashCode();
                 }
             }
 
-            // Add the hints
-            if (!ReferenceEquals(null, Hints))
+            // Get the batch size
+            if (BatchSize > 0)
             {
-                hashCode += Hints.GetHashCode();
+                hashCode += BatchSize.GetHashCode();
             }
 
             // Set back the hash code value
@@ -125,7 +125,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <see cref="QueryAllRequest"/> object equality against the given target object.
+        /// Compares the <see cref="UpdateAllRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -135,22 +135,22 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <see cref="QueryAllRequest"/> object equality against the given target object.
+        /// Compares the <see cref="UpdateAllRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(QueryAllRequest other)
+        public bool Equals(UpdateAllRequest other)
         {
             return other?.GetHashCode() == GetHashCode();
         }
 
         /// <summary>
-        /// Compares the equality of the two <see cref="QueryAllRequest"/> objects.
+        /// Compares the equality of the two <see cref="UpdateAllRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="QueryAllRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="QueryAllRequest"/> object.</param>
+        /// <param name="objA">The first <see cref="UpdateAllRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="UpdateAllRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(QueryAllRequest objA, QueryAllRequest objB)
+        public static bool operator ==(UpdateAllRequest objA, UpdateAllRequest objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -160,12 +160,12 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the inequality of the two <see cref="QueryAllRequest"/> objects.
+        /// Compares the inequality of the two <see cref="UpdateAllRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="QueryAllRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="QueryAllRequest"/> object.</param>
+        /// <param name="objA">The first <see cref="UpdateAllRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="UpdateAllRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(QueryAllRequest objA, QueryAllRequest objB)
+        public static bool operator !=(UpdateAllRequest objA, UpdateAllRequest objB)
         {
             return (objA == objB) == false;
         }

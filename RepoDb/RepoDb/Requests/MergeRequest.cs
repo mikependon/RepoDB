@@ -17,7 +17,7 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="fields">The list of the target fields.</param>
-        /// <param name="qualifiers">The list of qualifier fields.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public MergeRequest(Type type,
@@ -39,7 +39,7 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="fields">The list of the target fields.</param>
-        /// <param name="qualifiers">The list of qualifier fields.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public MergeRequest(string name,
@@ -61,7 +61,7 @@ namespace RepoDb.Requests
         public IEnumerable<Field> Fields { get; set; }
 
         /// <summary>
-        /// Gets the qualifier fields.
+        /// Gets the qualifier <see cref="Field"/> objects.
         /// </summary>
         public IEnumerable<Field> Qualifiers { get; set; }
 
@@ -82,7 +82,7 @@ namespace RepoDb.Requests
             // Get first the entity hash code
             var hashCode = string.Concat(Name, ".Merge").GetHashCode();
 
-            // Get the qualifier fields
+            // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
             {
                 foreach (var field in Fields)
@@ -91,7 +91,7 @@ namespace RepoDb.Requests
                 }
             }
 
-            // Get the qualifier fields
+            // Get the qualifier <see cref="Field"/> objects
             if (Qualifiers != null) // Much faster than Qualifers?.<Methods|Properties>
             {
                 foreach (var field in Qualifiers)

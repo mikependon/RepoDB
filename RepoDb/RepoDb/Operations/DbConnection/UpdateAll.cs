@@ -17,21 +17,21 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region InsertAll<TEntity>
+        #region UpdateAll<TEntity>
 
         /// <summary>
-        /// Inserts multiple data in the database.
+        /// Update an existing multiple data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
-        public static int InsertAll<TEntity>(this IDbConnection connection,
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int UpdateAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             int? commandTimeout = null,
@@ -40,8 +40,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertAllInternal<TEntity>(connection: connection,
+            return UpdateAllInternal<TEntity>(connection: connection,
                 entities: entities,
+                qualifiers: null,
                 batchSize: batchSize,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -50,19 +51,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database.
+        /// Update an existing multiple data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
-        internal static int InsertAllInternal<TEntity>(this IDbConnection connection,
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int UpdateAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -70,36 +73,73 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Return the result
-            return InsertAllInternalBase<TEntity>(connection: connection,
+            return UpdateAllInternal<TEntity>(connection: connection,
+                entities: entities,
+                qualifiers: qualifiers,
+                batchSize: batchSize,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Update an existing multiple data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static int UpdateAllInternal<TEntity>(this IDbConnection connection,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            if (qualifiers?.Any() != true)
+            {
+                var primary = GetAndGuardPrimaryKey<TEntity>();
+                qualifiers = primary.AsField().AsEnumerable();
+            }
+            return UpdateAllInternalBase<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
                 batchSize: batchSize,
                 fields: FieldCache.Get<TEntity>(),
+                qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: false);
+                statementBuilder: statementBuilder);
         }
 
         #endregion
 
-        #region InsertAllAsync<TEntity>
+        #region UpdateAllAsync<TEntity>
 
         /// <summary>
-        /// Inserts multiple data in the database in asynchronous way.
+        /// Update an existing multiple data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
-        public static Task<int> InsertAllAsync<TEntity>(this IDbConnection connection,
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> UpdateAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             int? commandTimeout = null,
@@ -108,8 +148,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertAllAsyncInternal<TEntity>(connection: connection,
+            return UpdateAllAsyncInternal<TEntity>(connection: connection,
                 entities: entities,
+                qualifiers: null,
                 batchSize: batchSize,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -118,19 +159,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database in asynchronous way.
+        /// Update an existing multiple data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
-        internal static Task<int> InsertAllAsyncInternal<TEntity>(this IDbConnection connection,
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> UpdateAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -138,37 +181,74 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Return the result
-            return InsertAllAsyncInternalBase<TEntity>(connection: connection,
+            return UpdateAllAsyncInternal<TEntity>(connection: connection,
+                entities: entities,
+                qualifiers: qualifiers,
+                batchSize: batchSize,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Update an existing multiple data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static Task<int> UpdateAllAsyncInternal<TEntity>(this IDbConnection connection,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            if (qualifiers?.Any() != true)
+            {
+                var primary = GetAndGuardPrimaryKey<TEntity>();
+                qualifiers = primary.AsField().AsEnumerable();
+            }
+            return UpdateAllAsyncInternalBase<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
                 batchSize: batchSize,
                 fields: FieldCache.Get<TEntity>(),
+                qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: false);
+                statementBuilder: statementBuilder);
         }
 
         #endregion
 
-        #region InsertAll(TableName)
+        #region UpdateAll(TableName)
 
         /// <summary>
-        /// Inserts multiple data in the database.
+        /// Update an existing multiple data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
-        public static int InsertAll(this IDbConnection connection,
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int UpdateAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -178,9 +258,10 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertAllInternal(connection: connection,
+            return UpdateAllInternal(connection: connection,
                 tableName: tableName,
                 entities: entities,
+                qualifiers: null,
                 batchSize: batchSize,
                 fields: fields,
                 commandTimeout: commandTimeout,
@@ -190,21 +271,23 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database (certain fields only).
+        /// Update an existing multiple data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
-        internal static int InsertAllInternal(this IDbConnection connection,
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int UpdateAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
+            IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             int? commandTimeout = null,
@@ -212,55 +295,10 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Check the fields
-            if (fields == null)
-            {
-                fields = DbFieldCache.Get(connection, tableName)?.AsFields();
-            }
-
-            // Return the result
-            return InsertAllInternalBase<object>(connection: connection,
+            return UpdateAllInternal(connection: connection,
                 tableName: tableName,
                 entities: entities,
-                batchSize: batchSize,
-                fields: fields,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: true);
-        }
-
-        #endregion
-
-        #region InsertAllAsync(TableName)
-
-        /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
-        public static Task<int> InsertAllAsync(this IDbConnection connection,
-            string tableName,
-            IEnumerable<object> entities,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            IEnumerable<Field> fields = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            return InsertAllAsyncInternal(connection: connection,
-                tableName: tableName,
-                entities: entities,
+                qualifiers: qualifiers,
                 batchSize: batchSize,
                 fields: fields,
                 commandTimeout: commandTimeout,
@@ -270,19 +308,76 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way.
+        /// Update an existing multiple data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
-        internal static Task<int> InsertAllAsyncInternal(this IDbConnection connection,
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static int UpdateAllInternal(this IDbConnection connection,
+            string tableName,
+            IEnumerable<object> entities,
+            IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            var dbFields = DbFieldCache.Get(connection, tableName);
+
+            // Check the fields
+            if (fields == null)
+            {
+                fields = dbFields?.AsFields();
+            }
+
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
+                qualifiers = primary?.AsField().AsEnumerable();
+            }
+
+            // Call the method
+            return UpdateAllInternalBase<object>(connection: connection,
+                tableName: tableName,
+                entities: entities,
+                batchSize: batchSize,
+                fields: fields,
+                qualifiers: qualifiers,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        #endregion
+
+        #region UpdateAllAsync(TableName)
+
+        /// <summary>
+        /// Update an existing multiple data in the database in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> UpdateAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -292,118 +387,163 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Check the fields
-            if (fields == null)
-            {
-                fields = DbFieldCache.Get(connection, tableName)?.AsFields();
-            }
-
-            // Return the result
-            return InsertAllAsyncInternalBase<object>(connection: connection,
+            return UpdateAllAsyncInternal(connection: connection,
                 tableName: tableName,
                 entities: entities,
+                qualifiers: null,
                 batchSize: batchSize,
                 fields: fields,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: true);
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Update an existing multiple data in the database in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> UpdateAllAsync(this IDbConnection connection,
+            string tableName,
+            IEnumerable<object> entities,
+            IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return UpdateAllAsyncInternal(connection: connection,
+                tableName: tableName,
+                entities: entities,
+                qualifiers: qualifiers,
+                batchSize: batchSize,
+                fields: fields,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Update an existing multiple data in the database in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of entity objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static Task<int> UpdateAllAsyncInternal(this IDbConnection connection,
+            string tableName,
+            IEnumerable<object> entities,
+            IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            var dbFields = DbFieldCache.Get(connection, tableName);
+
+            // Check the fields
+            if (fields == null)
+            {
+                fields = dbFields?.AsFields();
+            }
+
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
+                qualifiers = primary?.AsField().AsEnumerable();
+            }
+
+            // Call the method
+            return UpdateAllAsyncInternalBase<object>(connection: connection,
+                tableName: tableName,
+                entities: entities,
+                batchSize: batchSize,
+                fields: fields,
+                qualifiers: qualifiers,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         #endregion
 
-        #region InsertAllInternalBase<TEntity>
+        #region UpdateAllInternalBase<TEntity>
 
         /// <summary>
-        /// Inserts multiple data in the database.
+        /// Update an existing multiple data in the database.
         /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="entities">The list of data entities or dynamic objects to be updated.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be updated.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The number of inserted rows.</returns>
-        internal static int InsertAllInternalBase<TEntity>(this IDbConnection connection,
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static int UpdateAllInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            IEnumerable<Field> qualifiers = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Guard the parameters
-            var count = GuardInsertAll(entities);
-
-            // Validate the batch size
-            batchSize = Math.Min(batchSize, count);
-
             // Get the function
-            var callback = new Func<int, InsertAllExecutionContext<TEntity>>((int batchSizeValue) =>
+            var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
-                // Variables needed
-                var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName);
-                var inputFields = (IEnumerable<DbField>)null;
-                var outputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                // Variables
+                var request = new UpdateAllRequest(tableName,
+                    connection,
+                    fields,
+                    qualifiers,
+                    batchSizeValue,
+                    statementBuilder);
 
-                // Set the identity value
-                if (skipIdentityCheck == false)
-                {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
-                    if (identity == null && identityDbField != null)
-                    {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            field.UnquotedName.ToLower() == identityDbField.UnquotedName.ToLower());
-                    }
-                }
+                // Variables needed
+                var dbFields = DbFieldCache.Get(connection, tableName);
+                var inputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
-                    .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
                         fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
                     .AsList();
 
-                // Set the output fields
-                if (batchSizeValue > 1)
-                {
-                    outputFields = identityDbField?.AsEnumerable();
-                }
-
                 // Variables for the context
                 var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
-                var identitySettersFunc = (List<Action<TEntity, DbCommand>>)null;
                 var singleEntityFunc = (Action<DbCommand, TEntity>)null;
-                var identitySetterFunc = (Action<TEntity, object>)null;
-
-                // Get if we have not skipped it
-                if (skipIdentityCheck == false && identity != null)
-                {
-                    if (batchSizeValue <= 1)
-                    {
-                        identitySetterFunc = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
-                    }
-                    else
-                    {
-                        identitySettersFunc = new List<Action<TEntity, DbCommand>>();
-                        for (var index = 0; index < batchSizeValue; index++)
-                        {
-                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, index));
-                        }
-                    }
-                }
 
                 // Identity which objects to set
                 if (batchSizeValue <= 1)
@@ -417,45 +557,28 @@ namespace RepoDb
                     multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName),
                         inputFields?.AsList(),
-                        outputFields,
+                        null,
                         batchSizeValue);
                 }
 
                 // Return the value
-                return new InsertAllExecutionContext<TEntity>
+                return new UpdateAllExecutionContext<TEntity>
                 {
-                    CommandText = batchSizeValue > 1 ?
-                        CommandTextCache.GetInsertAllText(new InsertAllRequest(tableName,
-                            connection,
-                            fields,
-                            batchSizeValue,
-                            statementBuilder)) :
-                        CommandTextCache.GetInsertText(new InsertRequest(tableName,
-                            connection,
-                            fields,
-                            statementBuilder)),
+                    CommandText = CommandTextCache.GetUpdateAllText(request),
                     InputFields = inputFields,
-                    OutputFields = outputFields,
-                    BatchSize = batchSizeValue,
                     SingleDataEntityParametersSetterFunc = singleEntityFunc,
-                    MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc,
-                    IdentityPropertySetterFunc = identitySetterFunc,
-                    IdentityPropertySettersFunc = identitySettersFunc
+                    MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc
                 };
             });
 
             // Get the context
-            var context = (InsertAllExecutionContext<TEntity>)null;
-
-            // Identify the number of entities (performance), get an execution context from cache
-            context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, 1, callback) :
-                InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            var context = UpdateAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
-                trace.BeforeInsertAll(cancellableTraceLog);
+                trace.BeforeUpdateAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -496,24 +619,16 @@ namespace RepoDb
                     command.Prepare();
 
                     // Directly execute if the entities is only 1 (performance)
-                    if (context.BatchSize == 1)
+                    if (batchSize == 1)
                     {
+                        // Much better to use the actual single-based setter (performance)
                         foreach (var entity in entities)
                         {
                             // Set the values
                             context.SingleDataEntityParametersSetterFunc(command, entity);
 
                             // Actual Execution
-                            var returnValue = ObjectConverter.DbNullToNull(command.ExecuteScalar());
-
-                            // Set the return value
-                            if (returnValue != null)
-                            {
-                                context.IdentityPropertySetterFunc?.Invoke(entity, returnValue);
-                            }
-
-                            // Iterate the result
-                            result++;
+                            result += command.ExecuteNonQuery();
                         }
                     }
                     else
@@ -532,7 +647,7 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchItems.Count, callback);
+                                context = UpdateAllExecutionContextCache<TEntity>.Get(tableName, fields, batchItems.Count, callback);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
@@ -546,16 +661,6 @@ namespace RepoDb
 
                             // Actual Execution
                             result += command.ExecuteNonQuery();
-
-                            // Set the identities
-                            if (context.IdentityPropertySettersFunc != null && command.Parameters.Count > 0)
-                            {
-                                for (var index = 0; index < batchItems.Count; index++)
-                                {
-                                    var func = context.IdentityPropertySettersFunc.ElementAt(index);
-                                    func(batchItems[index], command);
-                                }
-                            }
                         }
                     }
                 }
@@ -587,7 +692,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsertAll(new TraceLog(context.CommandText, entities, result,
+                trace.AfterUpdateAll(new TraceLog(context.CommandText, entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -597,97 +702,59 @@ namespace RepoDb
 
         #endregion
 
-        #region InsertAllAsyncInternalBase<TEntity>
+        #region UpdateAllAsyncInternalBase<TEntity>
 
         /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way.
+        /// Update an existing multiple data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="entities">The list of data entities or dynamic objects to be updated.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be updated.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The number of inserted rows.</returns>
-        internal static async Task<int> InsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        internal static async Task<int> UpdateAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            IEnumerable<Field> qualifiers = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Guard the parameters
-            var count = GuardInsertAll(entities);
-
-            // Validate the batch size
-            batchSize = Math.Min(batchSize, count);
-
             // Get the function
-            var callback = new Func<int, InsertAllExecutionContext<TEntity>>((int batchSizeValue) =>
+            var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
-                // Variables needed
-                var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName);
-                var inputFields = (IEnumerable<DbField>)null;
-                var outputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                // Variables
+                var request = new UpdateAllRequest(tableName,
+                    connection,
+                    fields,
+                    qualifiers,
+                    batchSizeValue,
+                    statementBuilder);
 
-                // Set the identity value
-                if (skipIdentityCheck == false)
-                {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
-                    if (identity == null && identityDbField != null)
-                    {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            field.UnquotedName.ToLower() == identityDbField.UnquotedName.ToLower());
-                    }
-                }
+                // Variables needed
+                var dbFields = DbFieldCache.Get(connection, tableName);
+                var inputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
-                    .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
                         fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
                     .AsList();
 
-                // Set the output fields
-                if (batchSizeValue > 1)
-                {
-                    outputFields = identityDbField?.AsEnumerable();
-                }
-
                 // Variables for the context
                 var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
-                var identitySettersFunc = (List<Action<TEntity, DbCommand>>)null;
                 var singleEntityFunc = (Action<DbCommand, TEntity>)null;
-                var identitySetterFunc = (Action<TEntity, object>)null;
-
-                // Get if we have not skipped it
-                if (skipIdentityCheck == false && identity != null)
-                {
-                    if (batchSizeValue <= 1)
-                    {
-                        identitySetterFunc = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
-                    }
-                    else
-                    {
-                        identitySettersFunc = new List<Action<TEntity, DbCommand>>();
-                        for (var index = 0; index < batchSizeValue; index++)
-                        {
-                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, index));
-                        }
-                    }
-                }
 
                 // Identity which objects to set
                 if (batchSizeValue <= 1)
@@ -701,45 +768,28 @@ namespace RepoDb
                     multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName),
                         inputFields?.AsList(),
-                        outputFields,
+                        null,
                         batchSizeValue);
                 }
 
                 // Return the value
-                return new InsertAllExecutionContext<TEntity>
+                return new UpdateAllExecutionContext<TEntity>
                 {
-                    CommandText = batchSizeValue > 1 ?
-                        CommandTextCache.GetInsertAllText(new InsertAllRequest(tableName,
-                            connection,
-                            fields,
-                            batchSizeValue,
-                            statementBuilder)) :
-                        CommandTextCache.GetInsertText(new InsertRequest(tableName,
-                            connection,
-                            fields,
-                            statementBuilder)),
+                    CommandText = CommandTextCache.GetUpdateAllText(request),
                     InputFields = inputFields,
-                    OutputFields = outputFields,
-                    BatchSize = batchSizeValue,
                     SingleDataEntityParametersSetterFunc = singleEntityFunc,
-                    MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc,
-                    IdentityPropertySetterFunc = identitySetterFunc,
-                    IdentityPropertySettersFunc = identitySettersFunc
+                    MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc
                 };
             });
 
             // Get the context
-            var context = (InsertAllExecutionContext<TEntity>)null;
-
-            // Identify the number of entities (performance), get an execution context from cache
-            context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, 1, callback) :
-                InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            var context = UpdateAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
-                trace.BeforeInsertAll(cancellableTraceLog);
+                trace.BeforeUpdateAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -776,25 +826,20 @@ namespace RepoDb
                 using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
                     CommandType.Text, commandTimeout, transaction))
                 {
+                    // Prepare the command
+                    command.Prepare();
+
                     // Directly execute if the entities is only 1 (performance)
-                    if (context.BatchSize == 1)
+                    if (batchSize == 1)
                     {
+                        // Much better to use the actual single-based setter (performance)
                         foreach (var entity in entities)
                         {
                             // Set the values
                             context.SingleDataEntityParametersSetterFunc(command, entity);
 
                             // Actual Execution
-                            var returnValue = ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
-
-                            // Set the return value
-                            if (returnValue != null)
-                            {
-                                context.IdentityPropertySetterFunc?.Invoke(entity, returnValue);
-                            }
-
-                            // Iterate the result
-                            result++;
+                            result += await command.ExecuteNonQueryAsync();
                         }
                     }
                     else
@@ -813,7 +858,7 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchItems.Count, callback);
+                                context = UpdateAllExecutionContextCache<TEntity>.Get(tableName, fields, batchItems.Count, callback);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
@@ -827,16 +872,6 @@ namespace RepoDb
 
                             // Actual Execution
                             result += await command.ExecuteNonQueryAsync();
-
-                            // Set the identities
-                            if (context.IdentityPropertySettersFunc != null && command.Parameters.Count > 0)
-                            {
-                                for (var index = 0; index < batchItems.Count; index++)
-                                {
-                                    var func = context.IdentityPropertySettersFunc.ElementAt(index);
-                                    func(batchItems[index], command);
-                                }
-                            }
                         }
                     }
                 }
@@ -868,26 +903,12 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsertAll(new TraceLog(context.CommandText, entities, result,
+                trace.AfterUpdateAll(new TraceLog(context.CommandText, entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
             // Return the result
             return result;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        private static int GuardInsertAll<TEntity>(IEnumerable<TEntity> entities)
-        {
-            var count = entities?.Count();
-            if (count <= 0)
-            {
-                throw new InvalidOperationException("The entities must not be empty or null.");
-            }
-            return count.Value;
         }
 
         #endregion

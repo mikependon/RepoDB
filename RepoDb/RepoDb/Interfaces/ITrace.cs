@@ -119,6 +119,12 @@
         /// <param name="log">The cancellable log object referenced by the update execution.</param>
         void BeforeUpdate(CancellableTraceLog log);
 
+        /// <summary>
+        /// A method being raised before the actual update-all operation execution.
+        /// </summary>
+        /// <param name="log">The cancellable log object referenced by the update-all execution.</param>
+        void BeforeUpdateAll(CancellableTraceLog log);
+
         /*
          * AFTER
          */
@@ -231,5 +237,11 @@
         /// </summary>
         /// <param name="log">The log object referenced by the update execution.</param>
         void AfterUpdate(TraceLog log);
+
+        /// <summary>
+        /// A method being raised after the actual update-all operation execution.
+        /// </summary>
+        /// <param name="log">The log object referenced by the update-all execution.</param>
+        void AfterUpdateAll(TraceLog log);
     }
 }

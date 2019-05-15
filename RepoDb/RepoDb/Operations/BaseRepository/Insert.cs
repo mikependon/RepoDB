@@ -59,6 +59,7 @@ namespace RepoDb
         /// Inserts a new data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the primary field.</returns>
         public Task<TResult> InsertAsync<TResult>(TEntity entity,

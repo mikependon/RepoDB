@@ -355,6 +355,37 @@ namespace RepoDb
 
         #endregion
 
+        #region GetUpdateAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the update-all operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetUpdateAllText(UpdateAllRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var qualifiers = request.Qualifiers;
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
+                commandText = statementBuilder.CreateUpdateAll(new QueryBuilder(),
+                    request.Name,
+                    fields,
+                    request.Qualifiers,
+                    request.BatchSize,
+                    primaryField,
+                    identityField);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
         #region Helper Methods
 
         /// <summary>

@@ -534,12 +534,24 @@ namespace RepoDb
             return m_conjuctionTextAttribute.Text;
         }
 
+
         /// <summary>
         /// Gets the stringified query expression format of the current instance. A formatted string for field-operation-parameter will be
         /// conjuncted by the value of the <see cref="Conjunction"/> property.
         /// </summary>
         /// <returns>A stringified formatted-text of the current instance.</returns>
         public string GetString()
+        {
+            return GetString(0);
+        }
+
+        /// <summary>
+        /// Gets the stringified query expression format of the current instance. A formatted string for field-operation-parameter will be
+        /// conjuncted by the value of the <see cref="Conjunction"/> property.
+        /// </summary>
+        /// <param name="index">The parameter index for batch operation.</param>
+        /// <returns>A stringified formatted-text of the current instance.</returns>
+        public string GetString(int index)
         {
             // Fix first the parameters
             Fix();
@@ -552,14 +564,18 @@ namespace RepoDb
             // Check the instance fields
             if (QueryFields?.Count() > 0)
             {
-                var fields = QueryFields.Select(qf => qf.AsFieldAndParameter()).Join(separator);
+                var fields = QueryFields
+                    .AsList()
+                    .Select(qf => qf.AsFieldAndParameter(index)).Join(separator);
                 groupList.Add(fields);
             }
 
             // Check the instance groups
             if (QueryGroups?.Count() > 0)
             {
-                var groups = QueryGroups.Select(qg => qg.GetString()).Join(separator);
+                var groups = QueryGroups
+                    .AsList()
+                    .Select(qg => qg.GetString(index)).Join(separator);
                 groupList.Add(groups);
             }
 

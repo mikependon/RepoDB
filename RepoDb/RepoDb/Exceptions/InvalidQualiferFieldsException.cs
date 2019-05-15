@@ -3,7 +3,7 @@
 namespace RepoDb.Exceptions
 {
     /// <summary>
-    /// An exception that is being thrown if the qualifier fields passed in the operation are not valid.
+    /// An exception that is being thrown if the qualifier <see cref="Field"/> objects passed in the operation are not valid.
     /// </summary>
     public class InvalidQualiferFieldsException : Exception
     {

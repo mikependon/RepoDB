@@ -20,7 +20,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <returns>The number of inserted rows.</returns>
         public void InsertAll(IEnumerable<TEntity> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IDbTransaction transaction = null)
         {
             DbRepository.InsertAll<TEntity>(entities: entities,
@@ -40,7 +40,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public Task InsertAllAsync(IEnumerable<TEntity> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IDbTransaction transaction = null)
         {
             return DbRepository.InsertAllAsync<TEntity>(entities: entities,

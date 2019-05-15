@@ -57,6 +57,8 @@
     <Compile Include="BulkInsertMapItem.cs" />
     <Compile Include="CommandArrayParameter.cs" />
     <Compile Include="CommandParameter.cs" />
+    <Compile Include="Contexts\Execution\UpdateAllExecutionContext.cs" />
+    <Compile Include="Contexts\Execution\UpdateAllExecutionContextCache.cs" />
     <Compile Include="Contexts\Execution\UpdateExecutionContextCache.cs" />
     <Compile Include="Contexts\Execution\UpdateExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertExecutionContext.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="Operations\BaseRepository\CountAll.cs" />
     <Compile Include="Operations\BaseRepository\InsertAll.cs" />
     <Compile Include="Operations\BaseRepository\QueryAll.cs" />
+    <Compile Include="Operations\BaseRepository\UpdateAll.cs" />
     <Compile Include="Operations\BaseRepository\Update.cs" />
     <Compile Include="Operations\BaseRepository\Truncate.cs" />
     <Compile Include="Operations\BaseRepository\Query.cs" />
@@ -93,6 +96,7 @@
     <Compile Include="Operations\DbConnection\CountAll.cs" />
     <Compile Include="Operations\DbConnection\InsertAll.cs" />
     <Compile Include="Operations\DbConnection\QueryAll.cs" />
+    <Compile Include="Operations\DbConnection\UpdateAll.cs" />
     <Compile Include="Operations\DbConnection\Update.cs" />
     <Compile Include="Operations\DbConnection\Truncate.cs" />
     <Compile Include="Operations\DbConnection\DeleteAll.cs" />
@@ -116,6 +120,7 @@
     <Compile Include="Operations\DbRepository\InsertAll.cs" />
     <Compile Include="Operations\DbRepository\QueryAll.cs" />
     <Compile Include="Operations\DbRepository\QueryMultiple.cs" />
+    <Compile Include="Operations\DbRepository\UpdateAll.cs" />
     <Compile Include="Operations\DbRepository\Update.cs" />
     <Compile Include="Operations\DbRepository\Truncate.cs" />
     <Compile Include="Operations\DbRepository\Query.cs" />
@@ -154,6 +159,7 @@
     <Compile Include="Requests\QueryAllRequest.cs" />
     <Compile Include="Requests\TruncateRequest.cs" />
     <Compile Include="Requests\DeleteAllRequest.cs" />
+    <Compile Include="Requests\UpdateAllRequest.cs" />
     <Compile Include="Requests\UpdateRequest.cs" />
     <Compile Include="Requests\DeleteRequest.cs" />
     <Compile Include="Requests\InsertRequest.cs" />
