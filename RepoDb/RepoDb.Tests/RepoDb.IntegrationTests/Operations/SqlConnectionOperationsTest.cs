@@ -5518,7 +5518,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeViaTableName()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5527,27 +5527,30 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field("Id"));
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item);
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5564,7 +5567,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeViaTableNameViaPrimaryField()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5573,27 +5576,31 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.Id)));
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
+                    new Field(nameof(NonIdentityTable.Id)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5610,7 +5617,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeViaTableNameViaQualifier()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
+            var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5618,26 +5626,31 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                var queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = queryResult.ColumnInt,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.ColumnInt)));
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
+                    new Field(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5653,7 +5666,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeViaTableNameViaQualifiers()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5661,35 +5674,92 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = connection.Query<NonIdentityTable>(data => data.ColumnInt == 10 && data.ColumnBit == true).First();
 
                 // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = queryResult.ColumnBit,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = queryResult.ColumnInt,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
                     new[]
                     {
-                        new Field(nameof(IdentityTable.ColumnInt)),
-                        new Field(nameof(IdentityTable.ColumnBit))
+                        new Field(nameof(NonIdentityTable.ColumnInt)),
+                        new Field(nameof(NonIdentityTable.ColumnBit))
                     });
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = connection.Query<NonIdentityTable>(data => data.ColumnInt == 10 && data.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
                 Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(last.Id).First();
+
+                // Act
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
+
+                // Act
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<IdentityTable>(),
+                    item,
+                    Field.From(nameof(IdentityTable.Id)));
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = connection.Query<IdentityTable>(last.Id).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual(0, queryResult.ColumnInt);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
             }
         }
@@ -5699,10 +5769,10 @@ namespace RepoDb.IntegrationTests.Operations
         #region MergeAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameAsync()
+        public void TestSqlConnectionMergeAsyncViaTableName()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5711,27 +5781,30 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.Id))).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5745,10 +5818,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameAsyncViaPrimaryField()
+        public void TestSqlConnectionMergeAsyncViaTableNameViaPrimaryField()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
             var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -5757,27 +5830,31 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.Id))).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
+                    new Field(nameof(NonIdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5791,10 +5868,11 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameAsyncViaQualifier()
+        public void TestSqlConnectionMergeAsyncViaTableNameViaQualifier()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
+            var last = tables.Last();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5802,26 +5880,31 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                var queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = queryResult.ColumnInt,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.ColumnInt))).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
+                    new Field(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                queryResult = connection.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5834,10 +5917,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameAsyncViaQualifiers()
+        public void TestSqlConnectionMergeAsyncViaTableNameViaQualifiers()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -5845,35 +5928,92 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = connection.Query<NonIdentityTable>(data => data.ColumnInt == 10 && data.ColumnBit == true).First();
 
                 // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = queryResult.ColumnBit,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = queryResult.ColumnInt,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
                     new[]
                     {
-                        new Field(nameof(IdentityTable.ColumnInt)),
-                        new Field(nameof(IdentityTable.ColumnBit))
+                        new Field(nameof(NonIdentityTable.ColumnInt)),
+                        new Field(nameof(NonIdentityTable.ColumnBit))
                     }).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = connection.Query<NonIdentityTable>(data => data.ColumnInt == 10 && data.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
                 Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncViaTableNameForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(last.Id).First();
+
+                // Act
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
+
+                // Act
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    item,
+                    Field.From(nameof(IdentityTable.Id))).Result;
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = connection.Query<IdentityTable>(last.Id).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual(0, queryResult.ColumnInt);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
             }
         }
@@ -11118,6 +11258,53 @@ namespace RepoDb.IntegrationTests.Operations
 
         #region Update(TableName)
 
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfThePrimaryKeyIsNotFound()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    ColumnInt = 1,
+                    ColumnDecimal = 2
+                };
+                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    var data = new
+                    {
+                        Id = item.Id,
+                        ColumnBit = false,
+                        ColumnInt = item.ColumnInt * 100,
+                        ColumnDecimal = item.ColumnDecimal * 100
+                    };
+
+                    // Update each
+                    var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
+                        data);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
+
         [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameViaPrimaryKey()
         {
@@ -11139,8 +11326,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
-                        item,
-                        item.Id);
+                    item,
+                    item.Id);
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
@@ -11169,8 +11356,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(),
-                        item,
-                        new { item.Id });
+                    item,
+                    new { item.Id });
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
@@ -11326,8 +11513,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                        item,
-                        item.Id).Result;
+                    item,
+                    item.Id).Result;
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
@@ -11356,8 +11543,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                        item,
-                        new { item.Id }).Result;
+                    item,
+                    new { item.Id }).Result;
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);

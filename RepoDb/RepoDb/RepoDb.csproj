@@ -59,6 +59,8 @@
     <Compile Include="CommandParameter.cs" />
     <Compile Include="Contexts\Execution\UpdateAllExecutionContext.cs" />
     <Compile Include="Contexts\Execution\UpdateAllExecutionContextCache.cs" />
+    <Compile Include="Contexts\Execution\MergeExecutionContext.cs" />
+    <Compile Include="Contexts\Execution\MergeExecutionContextCache.cs" />
     <Compile Include="Contexts\Execution\UpdateExecutionContextCache.cs" />
     <Compile Include="Contexts\Execution\UpdateExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertExecutionContext.cs" />

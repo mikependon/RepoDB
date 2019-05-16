@@ -90,7 +90,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Merge<TEntity>(TEntity entity,
@@ -206,7 +206,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> MergeAsync<TEntity>(TEntity entity,
@@ -322,7 +322,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Merge(string tableName,
@@ -441,7 +441,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public async Task<int> MergeAsync(string tableName,

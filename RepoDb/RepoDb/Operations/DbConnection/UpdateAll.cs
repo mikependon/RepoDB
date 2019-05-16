@@ -520,6 +520,12 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Guard the parameters
+            var count = GuardUpdateAll(entities);
+
+            // Validate the batch size
+            batchSize = Math.Min(batchSize, count);
+
             // Get the function
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
@@ -731,6 +737,12 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Guard the parameters
+            var count = GuardUpdateAll(entities);
+
+            // Validate the batch size
+            batchSize = Math.Min(batchSize, count);
+
             // Get the function
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
@@ -909,6 +921,20 @@ namespace RepoDb
 
             // Return the result
             return result;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private static int GuardUpdateAll<TEntity>(IEnumerable<TEntity> entities)
+        {
+            var count = entities?.Count();
+            if (count <= 0)
+            {
+                throw new InvalidOperationException("The entities must not be empty or null.");
+            }
+            return count.Value;
         }
 
         #endregion

@@ -1,10 +1,13 @@
-﻿using RepoDb.Exceptions;
+﻿using RepoDb.Contexts.Execution;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -80,7 +83,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -110,7 +113,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -125,23 +128,25 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GetAndGuardPrimaryKey<TEntity>();
+            // Check the primary
+            var primary = GetAndGuardPrimaryKey<TEntity>();
 
-            // Variables
-            var request = new MergeRequest(typeof(TEntity),
-                connection,
-                entity?.AsFields<TEntity>(),
-                qualifiers,
-                statementBuilder);
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                qualifiers = primary.AsField().AsEnumerable();
+            }
 
             // Return the result
-            return MergeInternalBase(connection: connection,
-                request: request,
-                param: entity,
+            return MergeInternalBase<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                entity: entity,
+                fields: entity.AsFields(),
+                qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace);
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         #endregion
@@ -212,7 +217,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -242,7 +247,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -257,23 +262,25 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GetAndGuardPrimaryKey<TEntity>();
+            // Check the primary
+            var primary = GetAndGuardPrimaryKey<TEntity>();
 
-            // Variables
-            var request = new MergeRequest(typeof(TEntity),
-                connection,
-                entity?.AsFields<TEntity>(),
-                qualifiers,
-                statementBuilder);
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                qualifiers = primary.AsField().AsEnumerable();
+            }
 
             // Return the result
-            return MergeAsyncInternalBase(connection: connection,
-                request: request,
-                param: entity,
+            return MergeAsyncInternalBase<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                entity: entity,
+                fields: entity.AsFields(),
+                qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace);
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         #endregion
@@ -392,21 +399,23 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Variables
-            var request = new MergeRequest(tableName,
-                connection,
-                entity.AsFields(),
-                qualifiers,
-                statementBuilder);
-            var param = entity?.AsObject();
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                var primary = DbFieldCache.Get(connection, tableName).FirstOrDefault(dbField => dbField.IsPrimary);
+                qualifiers = primary?.AsField().AsEnumerable();
+            }
 
             // Return the result
-            return MergeInternalBase(connection: connection,
-                request: request,
-                param: param,
+            return MergeInternalBase<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                fields: entity.AsFields(),
+                qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace);
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         #endregion
@@ -516,7 +525,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static async Task<int> MergeAsyncInternal(this IDbConnection connection,
+        internal static Task<int> MergeAsyncInternal(this IDbConnection connection,
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
@@ -525,150 +534,238 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Variables
-            var request = new MergeRequest(tableName,
-                connection,
-                entity.AsFields(),
-                qualifiers,
-                statementBuilder);
-            var param = entity?.AsObject();
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                var primary = DbFieldCache.Get(connection, tableName).FirstOrDefault(dbField => dbField.IsPrimary);
+                qualifiers = primary?.AsField().AsEnumerable();
+            }
 
             // Return the result
-            return await MergeAsyncInternalBase(connection: connection,
-                request: request,
-                param: param,
+            return MergeAsyncInternalBase<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                fields: entity.AsFields(),
+                qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace);
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         #endregion
 
-        #region MergeInternalBase
+        #region MergeInternalBase<TEntity>
 
         /// <summary>
         /// Merges a data entity object into an existing data in the database.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="MergeRequest"/> object.</param>
-        /// <param name="param">The mapped object parameters.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity or dynamic object to be merged.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static int MergeInternalBase(this IDbConnection connection,
-            MergeRequest request,
-            object param,
+        internal static int MergeInternalBase<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            IEnumerable<Field> fields = null,
+            IEnumerable<Field> qualifiers = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            ITrace trace = null)
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
         {
-            // Variables
-            var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetMergeText(request);
+            // Get the function
+            var callback = new Func<MergeExecutionContext<TEntity>>(() =>
+            {
+                // Variables
+                var request = new MergeRequest(tableName,
+                    connection,
+                    fields,
+                    qualifiers,
+                    statementBuilder);
+
+                // Variables needed
+                var dbFields = DbFieldCache.Get(connection, tableName);
+                var inputFields = new List<DbField>();
+
+                // Filter the actual properties for input fields
+                inputFields = dbFields?
+                    .Where(dbField =>
+                        fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
+                    .AsList();
+
+                // Return the value
+                return new MergeExecutionContext<TEntity>
+                {
+                    CommandText = CommandTextCache.GetMergeText(request),
+                    InputFields = inputFields,
+                    ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
+                        string.Concat(typeof(TEntity).FullName, ".", request.Name),
+                        inputFields?.AsList())
+                };
+            });
+
+            // Get the context
+            var context = MergeExecutionContextCache<TEntity>.Get(tableName, qualifiers, fields, callback);
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entity, null);
                 trace.BeforeMerge(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(commandText);
+                        throw new CancelledExecutionException(context.CommandText);
                     }
                     return 0;
                 }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
+                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
+                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
             }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
-            // Actual Execution
-            var result = ExecuteNonQueryInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                skipCommandArrayParametersCheck: true);
+            // Execution variables
+            var result = 0;
+
+            // Create the command
+            using (var command = (DbCommand)connection.EnsureOpen().CreateCommand(context.CommandText,
+                CommandType.Text, commandTimeout, transaction))
+            {
+                // Set the values
+                context.ParametersSetterFunc(command, entity);
+
+                // Actual Execution
+                result = command.ExecuteNonQuery();
+            }
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterMerge(new TraceLog(commandText, param, result,
+                trace.AfterMerge(new TraceLog(context.CommandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
+            // Return the result
             return result;
         }
 
         #endregion
 
-        #region MergeAsyncInternalBase
+        #region MergeAsyncInternalBase<TEntity>
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in asynchronous way.
+        /// Merges a data entity object into an existing data in the database in an asynchronous way.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="MergeRequest"/> object.</param>
-        /// <param name="param">The mapped object parameters.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity or dynamic object to be merged.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static async Task<int> MergeAsyncInternalBase(this IDbConnection connection,
-            MergeRequest request,
-            object param,
+        internal static async Task<int> MergeAsyncInternalBase<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            IEnumerable<Field> fields = null,
+            IEnumerable<Field> qualifiers = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            ITrace trace = null)
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
         {
-            // Variables
-            var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetMergeText(request);
+            // Get the function
+            var callback = new Func<MergeExecutionContext<TEntity>>(() =>
+            {
+                // Variables
+                var request = new MergeRequest(tableName,
+                    connection,
+                    fields,
+                    qualifiers,
+                    statementBuilder);
+
+                // Variables needed
+                var dbFields = DbFieldCache.Get(connection, tableName);
+                var inputFields = new List<DbField>();
+
+                // Filter the actual properties for input fields
+                inputFields = dbFields?
+                    .Where(dbField =>
+                        fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
+                    .AsList();
+
+                // Return the value
+                return new MergeExecutionContext<TEntity>
+                {
+                    CommandText = CommandTextCache.GetMergeText(request),
+                    InputFields = inputFields,
+                    ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
+                        string.Concat(typeof(TEntity).FullName, ".", request.Name),
+                        inputFields?.AsList())
+                };
+            });
+
+            // Get the context
+            var context = MergeExecutionContextCache<TEntity>.Get(tableName, qualifiers, fields, callback);
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entity, null);
                 trace.BeforeMerge(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(commandText);
+                        throw new CancelledExecutionException(context.CommandText);
                     }
                     return 0;
                 }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
+                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
+                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
             }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
-            // Actual Execution
-            var result = await ExecuteNonQueryAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                skipCommandArrayParametersCheck: true);
+            // Execution variables
+            var result = 0;
+
+            // Create the command
+            using (var command = (DbCommand)(await connection.EnsureOpenAsync()).CreateCommand(context.CommandText,
+                CommandType.Text, commandTimeout, transaction))
+            {
+                // Set the values
+                context.ParametersSetterFunc(command, entity);
+
+                // Actual Execution
+                result = await command.ExecuteNonQueryAsync();
+            }
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterMerge(new TraceLog(commandText, param, result,
+                trace.AfterMerge(new TraceLog(context.CommandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
+            // Return the result
             return result;
         }
 

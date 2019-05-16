@@ -4989,7 +4989,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeViaTableName()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -4998,27 +4998,30 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var queryResult = repository.Query<IdentityTable>(last.Id).First();
+                var queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = repository.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field("Id"));
+                var mergeResult = repository.Merge(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item);
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<IdentityTable>(last.Id).First();
+                queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5035,7 +5038,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeViaTableNameViaPrimaryField()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -5044,27 +5047,31 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var queryResult = repository.Query<IdentityTable>(last.Id).First();
+                var queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = repository.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.Id)));
+                var mergeResult = repository.Merge(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
+                    new Field(nameof(NonIdentityTable.Id)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<IdentityTable>(last.Id).First();
+                queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5081,7 +5088,8 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeViaTableNameViaQualifier()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
+            var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5089,26 +5097,31 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                var queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = queryResult.ColumnInt,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = repository.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.ColumnInt)));
+                var mergeResult = repository.Merge(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
+                    new Field(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5124,7 +5137,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestDbRepositoryMergeViaTableNameViaQualifiers()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5132,35 +5145,92 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = repository.Query<NonIdentityTable>(data => data.ColumnInt == 10 && data.ColumnBit == true).First();
 
                 // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = queryResult.ColumnBit,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = queryResult.ColumnInt,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = repository.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
+                var mergeResult = repository.Merge(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
                     new[]
                     {
-                        new Field(nameof(IdentityTable.ColumnInt)),
-                        new Field(nameof(IdentityTable.ColumnBit))
+                        new Field(nameof(NonIdentityTable.ColumnInt)),
+                        new Field(nameof(NonIdentityTable.ColumnBit))
                     });
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = repository.Query<NonIdentityTable>(data => data.ColumnInt == 10 && data.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
                 Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeViaTableNameForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Act
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
+
+                // Act
+                var mergeResult = repository.Merge(ClassMappedNameCache.Get<IdentityTable>(),
+                    item,
+                    Field.From(nameof(IdentityTable.Id)));
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual(0, queryResult.ColumnInt);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
             }
         }
@@ -5170,10 +5240,10 @@ namespace RepoDb.IntegrationTests.Operations
         #region MergeAsync(TableName)
 
         [TestMethod]
-        public void TestDbRepositoryMergeViaTableNameAsync()
+        public void TestDbRepositoryMergeAsyncViaTableName()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -5182,27 +5252,30 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var queryResult = repository.Query<IdentityTable>(last.Id).First();
+                var queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.Id))).Result;
+                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<IdentityTable>(last.Id).First();
+                queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5216,10 +5289,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeViaTableNameAsyncViaPrimaryField()
+        public void TestDbRepositoryMergeAsyncViaTableNameViaPrimaryField()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
             var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -5228,27 +5301,31 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var queryResult = repository.Query<IdentityTable>(last.Id).First();
+                var queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.Id))).Result;
+                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
+                    new Field(nameof(NonIdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<IdentityTable>(last.Id).First();
+                queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5262,10 +5339,11 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeViaTableNameAsyncViaQualifier()
+        public void TestDbRepositoryMergeAsyncViaTableNameViaQualifier()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
+            var last = tables.Last();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5273,26 +5351,31 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                var queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = queryResult.ColumnInt,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.ColumnInt))).Result;
+                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
+                    new Field(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                queryResult = repository.Query<NonIdentityTable>(last.Id).First();
 
                 // Assert
                 Assert.AreEqual(false, queryResult.ColumnBit);
@@ -5305,10 +5388,10 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeViaTableNameAsyncViaQualifiers()
+        public void TestDbRepositoryMergeAsyncViaTableNameViaQualifiers()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var tables = Helper.CreateNonIdentityTables(10);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -5316,35 +5399,92 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = repository.Query<NonIdentityTable>(data => data.ColumnInt == 10 && data.ColumnBit == true).First();
 
                 // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    ColumnBit = queryResult.ColumnBit,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = queryResult.ColumnInt,
+                    ColumnNVarChar = "Merged"
+                };
 
                 // Act
-                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
+                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
                     new[]
                     {
-                        new Field(nameof(IdentityTable.ColumnInt)),
-                        new Field(nameof(IdentityTable.ColumnBit))
+                        new Field(nameof(NonIdentityTable.ColumnInt)),
+                        new Field(nameof(NonIdentityTable.ColumnBit))
                     }).Result;
 
                 // Assert
                 Assert.AreEqual(1, mergeResult);
 
                 // Act
-                queryResult = repository.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                queryResult = repository.Query<NonIdentityTable>(data => data.ColumnInt == 10 && data.ColumnBit == true).First();
 
                 // Assert
                 Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
                 Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
                 Assert.AreEqual(0, queryResult.ColumnDecimal);
                 Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAsyncViaTableNameForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Act
+                var item = new
+                {
+                    Id = queryResult.Id,
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = false,
+                    ColumnDateTime = Helper.EpocDate,
+                    ColumnDateTime2 = Helper.EpocDate,
+                    ColumnDecimal = 0,
+                    ColumnFloat = 0,
+                    ColumnInt = 0,
+                    ColumnNVarChar = "Merged"
+                };
+
+                // Act
+                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    item,
+                    Field.From(nameof(IdentityTable.Id))).Result;
+
+                // Assert
+                Assert.AreEqual(1, mergeResult);
+
+                // Act
+                queryResult = repository.Query<IdentityTable>(last.Id).First();
+
+                // Assert
+                Assert.AreEqual(false, queryResult.ColumnBit);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
+                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
+                Assert.AreEqual(0, queryResult.ColumnDecimal);
+                Assert.AreEqual(0, queryResult.ColumnFloat);
+                Assert.AreEqual(0, queryResult.ColumnInt);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
             }
         }

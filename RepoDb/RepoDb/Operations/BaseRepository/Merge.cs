@@ -45,7 +45,7 @@ namespace RepoDb
         /// Merges a data entity object into an existing data in the database.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Merge(TEntity entity,
@@ -94,7 +94,7 @@ namespace RepoDb
         /// Merges a data entity object into an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<int> MergeAsync(TEntity entity,

@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -466,6 +467,50 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int Update(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            var primary = DbFieldCache.Get(connection, tableName)?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var where = (QueryField)null;
+            if (primary!=null)
+            {
+                var property = entity?.GetType().GetProperty(primary.UnquotedName, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
+                if (property != null)
+                {
+                    where = new QueryField(new Field(property.Name, property.PropertyType),
+                        property.GetValue(entity));
+                }
+                else
+                {
+                    throw new PrimaryFieldNotFoundException("The primary field is not found.");
+                }
+            }
+            return Update(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: where,
+                commandTimeout: commandTimeout,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Updates an existing data in the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -826,7 +871,6 @@ namespace RepoDb
                 // Variables needed
                 var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
-                var queryInputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
@@ -949,7 +993,6 @@ namespace RepoDb
                 // Variables needed
                 var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
-                var queryInputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
