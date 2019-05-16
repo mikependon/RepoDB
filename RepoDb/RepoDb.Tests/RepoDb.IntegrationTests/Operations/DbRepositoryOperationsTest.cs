@@ -10730,6 +10730,39 @@ namespace RepoDb.IntegrationTests.Operations
         #region Update(TableName)
 
         [TestMethod]
+        public void TestDbRepositoryUpdateViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    var data = new
+                    {
+                        Id = item.Id,
+                        ColumnBit = false,
+                        ColumnInt = item.ColumnInt * 100,
+                        ColumnDecimal = item.ColumnDecimal * 100
+                    };
+
+                    // Update each
+                    var affectedRows = repository.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
+                        data);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryUpdateViaTableNameViaPrimaryKey()
         {
             // Setup
@@ -10750,8 +10783,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = repository.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
-                        item,
-                        item.Id);
+                    item,
+                    item.Id);
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
@@ -10780,8 +10813,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = repository.Update(ClassMappedNameCache.Get<IdentityTable>(),
-                        item,
-                        new { item.Id });
+                    item,
+                    new { item.Id });
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
@@ -10912,9 +10945,70 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnDbRepositoryUpdateViaTableNameIfThePrimaryKeyIsNotFound()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    ColumnInt = 1,
+                    ColumnDecimal = 2
+                };
+                repository.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnDbRepositoryUpdateViaTableNameIfTheFieldsAreNotFound()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    Id = 1,
+                    AnyField = 1
+                };
+                repository.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
+            }
+        }
+
         #endregion
 
         #region UpdateAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    var data = new
+                    {
+                        Id = item.Id,
+                        ColumnBit = false,
+                        ColumnInt = item.ColumnInt * 100,
+                        ColumnDecimal = item.ColumnDecimal * 100
+                    };
+
+                    // Update each
+                    var affectedRows = repository.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                        data).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
 
         [TestMethod]
         public void TestDbRepositoryUpdateViaTableNameAsyncViaPrimaryKey()
@@ -10937,8 +11031,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = repository.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                        item,
-                        item.Id).Result;
+                    item,
+                    item.Id).Result;
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
@@ -10967,8 +11061,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = repository.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                        item,
-                        new { item.Id }).Result;
+                    item,
+                    new { item.Id }).Result;
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
@@ -11096,6 +11190,34 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, result.Count());
                 Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnDbRepositoryUpdateAsyncViaTableNameIfThePrimaryKeyIsNotFound()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    ColumnInt = 1,
+                    ColumnDecimal = 2
+                };
+                repository.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), data).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnDbRepositoryUpdateAsyncViaTableNameIfTheFieldsAreNotFound()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    Id = 1,
+                    AnyField = 1
+                };
+                repository.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), data).Wait();
             }
         }
 

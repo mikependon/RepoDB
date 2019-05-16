@@ -11258,20 +11258,6 @@ namespace RepoDb.IntegrationTests.Operations
 
         #region Update(TableName)
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfThePrimaryKeyIsNotFound()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                var data = new
-                {
-                    ColumnInt = 1,
-                    ColumnDecimal = 2
-                };
-                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
-            }
-        }
-
         [TestMethod]
         public void TestSqlConnectionUpdateViaTableName()
         {
@@ -11488,9 +11474,70 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfThePrimaryKeyIsNotFound()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    ColumnInt = 1,
+                    ColumnDecimal = 2
+                };
+                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfTheFieldsAreNotFound()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    Id = 1,
+                    AnyField = 1
+                };
+                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
+            }
+        }
+
         #endregion
 
         #region UpdateAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    var data = new
+                    {
+                        Id = item.Id,
+                        ColumnBit = false,
+                        ColumnInt = item.ColumnInt * 100,
+                        ColumnDecimal = item.ColumnDecimal * 100
+                    };
+
+                    // Update each
+                    var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                        data).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameAsyncViaPrimaryKey()
@@ -11672,6 +11719,34 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, result.Count());
                 Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfThePrimaryKeyIsNotFound()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    ColumnInt = 1,
+                    ColumnDecimal = 2
+                };
+                connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), data).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfTheFieldsAreNotFound()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    Id = 1,
+                    AnyField = 1
+                };
+                connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), data).Wait();
             }
         }
 

@@ -480,22 +480,26 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
+            // Get the primary from the database
             var primary = DbFieldCache.Get(connection, tableName)?.FirstOrDefault(dbField => dbField.IsPrimary);
-            var where = (QueryField)null;
-            if (primary!=null)
+            var where = (QueryGroup)null;
+
+            // Identity the property via primary
+            if (primary != null)
             {
                 var property = entity?.GetType().GetProperty(primary.UnquotedName, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
                 if (property != null)
                 {
-                    where = new QueryField(new Field(property.Name, property.PropertyType),
-                        property.GetValue(entity));
+                    where = new QueryGroup(new QueryField(new Field(property.Name, property.PropertyType), property.GetValue(entity)));
                 }
                 else
                 {
                     throw new PrimaryFieldNotFoundException("The primary field is not found.");
                 }
             }
-            return Update(connection: connection,
+
+            // Execute the proper method
+            return UpdateInternal(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: where,
@@ -668,6 +672,54 @@ namespace RepoDb
         #endregion
 
         #region UpdateAsync(TableName)
+
+        /// <summary>
+        /// Updates an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static Task<int> UpdateAsync(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Get the primary from the database
+            var primary = DbFieldCache.Get(connection, tableName)?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var where = (QueryGroup)null;
+
+            // Identity the property via primary
+            if (primary != null)
+            {
+                var property = entity?.GetType().GetProperty(primary.UnquotedName, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
+                if (property != null)
+                {
+                    where = new QueryGroup(new QueryField(new Field(property.Name, property.PropertyType), property.GetValue(entity)));
+                }
+                else
+                {
+                    throw new PrimaryFieldNotFoundException("The primary field is not found.");
+                }
+            }
+
+            // Execute the proper method
+            return UpdateAsyncInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: where,
+                commandTimeout: commandTimeout,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                transaction: transaction);
+        }
 
         /// <summary>
         /// Updates an existing data in the database in asynchronous way.

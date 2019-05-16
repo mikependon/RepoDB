@@ -213,13 +213,28 @@ Via Object:
 
 ### Update(TableName)
 
+Via Dynamic Object:
+
+    using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = new
+		{
+			Id = 10045,
+			FirstName = "John",
+			LastUpdatedUtc = DateTime.UtcNow
+		};
+		var affectedRows = connection.Update("Customer", customer);
+	}
+
 Via PrimaryKey:
 
     using (var connection = new SqlConnection(ConnectionString))
 	{
-		var customer = connection.Query<Customer>(10045);
-		customer.FirstName = "John";
-		customer.LastUpdatedUtc = DateTime.UtcNow;
+		var customer = new
+		{
+			FirstName = "John",
+			LastUpdatedUtc = DateTime.UtcNow
+		};
 		var affectedRows = connection.Update("Customer", customer, 10045);
 	}
 
@@ -227,9 +242,11 @@ Via Dynamic:
 
     using (var connection = new SqlConnection(ConnectionString))
 	{
-		var customer = connection.Query<Customer>(10045);
-		customer.FirstName = "John";
-		customer.LastUpdatedUtc = DateTime.UtcNow;
+		var customer = new
+		{
+			FirstName = "John",
+			LastUpdatedUtc = DateTime.UtcNow
+		};
 		var affectedRows = connection.Update("Customer", customer, new { Id = 10045 });
 	}
 	
@@ -237,10 +254,12 @@ Via Object:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
-		var customer = connection.Query<Customer>(10045);
-		customer.FirstName = "John";
-		customer.LastUpdatedUtc = DateTime.UtcNow;
-		var affectedRows = connection.Update("Customer", customer, new QueryField(nameof(Customer.Id), 10045));
+		var customer = new
+		{
+			FirstName = "John",
+			LastUpdatedUtc = DateTime.UtcNow
+		};
+		var affectedRows = connection.Update("Customer", customer, new QueryField("Id", 10045));
 	}
 
 ### Delete<TEntity>
