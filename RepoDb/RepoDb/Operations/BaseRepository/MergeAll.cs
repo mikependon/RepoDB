@@ -10,38 +10,38 @@ namespace RepoDb
     /// </summary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region UpdateAll<TEntity>
+        #region MergeAll<TEntity>
 
         /// <summary>
-        /// Update an existing multiple data in the database.
+        /// Merges the multiple data entity objects into the database.
         /// </summary>
-        /// <param name="entities">The list of data entity objects to be used for update.</param>
-        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="entities">The list of data entity objects to be merged.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public int UpdateAll(IEnumerable<TEntity> entities,
+        public int MergeAll(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IDbTransaction transaction = null)
         {
-            return DbRepository.UpdateAll<TEntity>(entities: entities,
+            return DbRepository.MergeAll<TEntity>(entities: entities,
                 batchSize: batchSize,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Update an existing multiple data in the database.
+        /// Merges the multiple data entity objects into the database.
         /// </summary>
-        /// <param name="entities">The list of entity objects to be used for update.</param>
-        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
-        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="entities">The list of entity objects to be merged.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public int UpdateAll(IEnumerable<TEntity> entities,
+        public int MergeAll(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IDbTransaction transaction = null)
         {
-            return DbRepository.UpdateAll<TEntity>(entities: entities,
+            return DbRepository.MergeAll<TEntity>(entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
                 transaction: transaction);
@@ -49,38 +49,38 @@ namespace RepoDb
 
         #endregion
 
-        #region UpdateAllAsync<TEntity>
+        #region MergeAllAsync<TEntity>
 
         /// <summary>
-        /// Update an existing multiple data in the database in an aysnchronous way.
+        /// Merges the multiple dynamic objects into the database. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
-        /// <param name="entities">The list of data entity objects to be used for update.</param>
-        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="entities">The list of data entity objects to be merged.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public Task<int> UpdateAllAsync(IEnumerable<TEntity> entities,
+        public Task<int> MergeAllAsync(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IDbTransaction transaction = null)
         {
-            return DbRepository.UpdateAllAsync<TEntity>(entities: entities,
+            return DbRepository.MergeAllAsync<TEntity>(entities: entities,
                 batchSize: batchSize,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Update an existing multiple data in the database in an aysnchronous way.
+        /// Merges the multiple dynamic objects into the database. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
-        /// <param name="entities">The list of entity objects to be used for update.</param>
-        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
-        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="entities">The list of entity objects to be merged.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public Task<int> UpdateAllAsync(IEnumerable<TEntity> entities,
+        public Task<int> MergeAllAsync(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IDbTransaction transaction = null)
         {
-            return DbRepository.UpdateAllAsync<TEntity>(entities: entities,
+            return DbRepository.MergeAllAsync<TEntity>(entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
                 transaction: transaction);

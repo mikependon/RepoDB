@@ -1749,7 +1749,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -1785,7 +1785,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -1965,7 +1965,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -2001,7 +2001,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -2219,7 +2219,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -2255,7 +2255,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -2443,7 +2443,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -2479,7 +2479,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -5081,10 +5081,10 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.Merge(queryResult);
+                var mergeResult = connection.Merge<IdentityTable, long>(queryResult);
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(last.Id, mergeResult);
 
                 // Act
                 queryResult = connection.Query<IdentityTable>(last.Id).First();
@@ -5125,11 +5125,11 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.Merge(queryResult,
+                var mergeResult = connection.Merge<IdentityTable, long>(queryResult,
                     new Field(nameof(IdentityTable.Id)));
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(last.Id, mergeResult);
 
                 // Act
                 queryResult = connection.Query<IdentityTable>(last.Id).First();
@@ -5168,11 +5168,11 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.Merge(queryResult,
+                var mergeResult = connection.Merge<IdentityTable, long>(queryResult,
                     new Field(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(10, mergeResult);
 
                 // Act
                 queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
@@ -5209,14 +5209,14 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.Merge(queryResult, new[]
+                var mergeResult = connection.Merge<IdentityTable, long>(queryResult, new[]
                 {
                     new Field(nameof(IdentityTable.ColumnInt)),
                     new Field(nameof(IdentityTable.ColumnBit))
                 });
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(10, mergeResult);
 
                 // Act
                 queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
@@ -5310,10 +5310,10 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.MergeAsync(queryResult).Result;
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(queryResult).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(last.Id, mergeResult);
 
                 // Act
                 queryResult = connection.Query<IdentityTable>(last.Id).First();
@@ -5354,11 +5354,11 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.MergeAsync(queryResult,
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(queryResult,
                     new Field(nameof(IdentityTable.Id))).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(last.Id, mergeResult);
 
                 // Act
                 queryResult = connection.Query<IdentityTable>(last.Id).First();
@@ -5397,11 +5397,11 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.MergeAsync(queryResult,
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(queryResult,
                     new Field(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(10, mergeResult);
 
                 // Act
                 queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
@@ -5438,14 +5438,14 @@ namespace RepoDb.IntegrationTests.Operations
                 queryResult.ColumnNVarChar = "Merged";
 
                 // Act
-                var mergeResult = connection.MergeAsync(queryResult, new[]
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(queryResult, new[]
                 {
                     new Field(nameof(IdentityTable.ColumnInt)),
                     new Field(nameof(IdentityTable.ColumnBit))
                 }).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(10, mergeResult);
 
                 // Act
                 queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
@@ -5801,7 +5801,8 @@ namespace RepoDb.IntegrationTests.Operations
                     item).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(last.Id, mergeResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
 
                 // Act
                 queryResult = connection.Query<NonIdentityTable>(last.Id).First();
@@ -5851,7 +5852,8 @@ namespace RepoDb.IntegrationTests.Operations
                     new Field(nameof(NonIdentityTable.Id))).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(last.Id, mergeResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
 
                 // Act
                 queryResult = connection.Query<NonIdentityTable>(last.Id).First();
@@ -5901,7 +5903,8 @@ namespace RepoDb.IntegrationTests.Operations
                     new Field(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(last.Id, mergeResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
 
                 // Act
                 queryResult = connection.Query<NonIdentityTable>(last.Id).First();
@@ -5953,7 +5956,8 @@ namespace RepoDb.IntegrationTests.Operations
                     }).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
 
                 // Act
                 queryResult = connection.Query<NonIdentityTable>(data => data.ColumnInt == 10 && data.ColumnBit == true).First();
@@ -6002,7 +6006,8 @@ namespace RepoDb.IntegrationTests.Operations
                     Field.From(nameof(IdentityTable.Id))).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
 
                 // Act
                 queryResult = connection.Query<IdentityTable>(last.Id).First();
@@ -6015,6 +6020,282 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(0, queryResult.ColumnFloat);
                 Assert.AreEqual(0, queryResult.ColumnInt);
                 Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region MergeAll
+
+        #region Merge<TEntity>
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll(tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllWithRemainder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(15);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllWithExisting()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    item.ColumnBit = false;
+                    item.ColumnDateTime = Helper.EpocDate;
+                    item.ColumnDateTime2 = Helper.EpocDate;
+                    item.ColumnDecimal = 0;
+                    item.ColumnFloat = 0;
+                    item.ColumnInt = 0;
+                    item.ColumnNVarChar = "Merged";
+                });
+
+                // Act
+                var mergeAllResult = connection.MergeAll(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllWithExistingAndWithSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    item.ColumnBit = false;
+                    item.ColumnDateTime = Helper.EpocDate;
+                    item.ColumnDateTime2 = Helper.EpocDate;
+                    item.ColumnDecimal = 0;
+                    item.ColumnFloat = 0;
+                    item.ColumnInt = 0;
+                    item.ColumnNVarChar = "Merged";
+                });
+
+                // Act
+                var mergeAllResult = connection.MergeAll(tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllWithExistingViaPrimaryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    item.ColumnBit = false;
+                    item.ColumnDateTime = Helper.EpocDate;
+                    item.ColumnDateTime2 = Helper.EpocDate;
+                    item.ColumnDecimal = 0;
+                    item.ColumnFloat = 0;
+                    item.ColumnInt = 0;
+                    item.ColumnNVarChar = "Merged";
+                });
+
+                // Act
+                var mergeAllResult = connection.MergeAll(tables, new Field(nameof(IdentityTable.Id)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllWithExistingViaQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    item.ColumnBit = false;
+                    item.ColumnDateTime = Helper.EpocDate;
+                    item.ColumnDateTime2 = Helper.EpocDate;
+                    item.ColumnDecimal = 0;
+                    item.ColumnFloat = 0;
+                    item.ColumnNVarChar = "Merged";
+                });
+
+                // Act
+                var mergeAllResult = connection.MergeAll(tables, new Field(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllWithExistingViaQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    item.ColumnDateTime = Helper.EpocDate;
+                    item.ColumnDateTime2 = Helper.EpocDate;
+                    item.ColumnDecimal = 0;
+                    item.ColumnFloat = 0;
+                    item.ColumnNVarChar = "Merged";
+                });
+
+                // Act
+                var mergeAllResult = connection.MergeAll(tables, new[]
+                {
+                    new Field(nameof(IdentityTable.ColumnInt)),
+                    new Field(nameof(IdentityTable.ColumnBit))
+                });
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
             }
         }
 
@@ -6042,7 +6323,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6068,7 +6349,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6228,7 +6509,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6258,7 +6539,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6343,7 +6624,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6374,7 +6655,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6458,7 +6739,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6487,7 +6768,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
 
             }
         }
@@ -6569,7 +6850,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6590,7 +6871,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6611,7 +6892,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6632,7 +6913,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6653,7 +6934,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6674,7 +6955,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6695,7 +6976,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6715,7 +6996,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6735,7 +7016,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6755,7 +7036,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6775,7 +7056,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6795,7 +7076,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6815,7 +7096,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6933,7 +7214,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6973,7 +7254,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6997,7 +7278,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -7023,7 +7304,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -7183,7 +7464,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -7213,7 +7494,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -7298,7 +7579,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -7329,7 +7610,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -7413,7 +7694,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -7442,7 +7723,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
 
             }
         }
@@ -7524,7 +7805,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7545,7 +7826,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7566,7 +7847,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7587,7 +7868,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7608,7 +7889,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7629,7 +7910,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7650,7 +7931,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7670,7 +7951,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7690,7 +7971,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7710,7 +7991,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7730,7 +8011,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7750,7 +8031,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7770,7 +8051,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7888,7 +8169,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7928,7 +8209,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7953,7 +8234,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -7986,7 +8267,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -8015,7 +8296,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -8160,7 +8441,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -8192,7 +8473,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -8282,7 +8563,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -8315,7 +8596,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -8416,7 +8697,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -8449,7 +8730,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -8478,7 +8759,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -8623,7 +8904,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -8655,7 +8936,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -8745,7 +9026,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -8778,7 +9059,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -8986,7 +9267,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.QueryAll<WithExtraFieldsIdentityTable>();
 
                 // Assert
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -9118,7 +9399,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.QueryAllAsync<WithExtraFieldsIdentityTable>().Result;
 
                 // Assert
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -9146,7 +9427,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -9182,7 +9463,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -9214,7 +9495,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -9251,7 +9532,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -9286,7 +9567,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -9322,7 +9603,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -9354,7 +9635,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -9391,7 +9672,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Assert.AreEqual(target.Id, item.Id);
@@ -12340,7 +12621,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12374,7 +12655,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12408,7 +12689,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12442,7 +12723,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12476,7 +12757,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12511,7 +12792,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12591,7 +12872,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12625,7 +12906,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12659,7 +12940,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12693,7 +12974,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12727,7 +13008,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12762,7 +13043,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -12863,7 +13144,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -12884,7 +13165,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -12905,7 +13186,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -12968,7 +13249,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.Where(t => t.Id == item.Id).First();
                     Assert.AreEqual(target.ColumnBit, item.ColumnBit);
@@ -13217,7 +13498,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -13238,7 +13519,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -13259,7 +13540,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -13322,7 +13603,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.Where(t => t.Id == item.Id).First();
                     Assert.AreEqual(target.ColumnBit, item.ColumnBit);
@@ -14371,7 +14652,7 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -14396,11 +14677,11 @@ namespace RepoDb.IntegrationTests.Operations
                     new { From = 3, To = 4 }))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -14421,11 +14702,11 @@ namespace RepoDb.IntegrationTests.Operations
                     new { ColumnInt = new[] { 5, 6, 7 } }))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(3, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -14445,11 +14726,11 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReader("SELECT TOP (@Top) * FROM [sc].[IdentityTable];", new { Top = 2 }))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -14469,7 +14750,7 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReader("[dbo].[sp_get_identity_tables]", commandType: CommandType.StoredProcedure))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -14495,7 +14776,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandType: CommandType.StoredProcedure))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -14543,7 +14824,7 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable];").Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -14568,11 +14849,11 @@ namespace RepoDb.IntegrationTests.Operations
                     new { From = 3, To = 4 }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -14593,11 +14874,11 @@ namespace RepoDb.IntegrationTests.Operations
                     new { ColumnInt = new[] { 5, 6, 7 } }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(3, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -14617,11 +14898,11 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReaderAsync("SELECT TOP (@Top) * FROM [sc].[IdentityTable];", new { Top = 2 }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -14641,7 +14922,7 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReaderAsync("[dbo].[sp_get_identity_tables]", commandType: CommandType.StoredProcedure).Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
@@ -14667,7 +14948,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandType: CommandType.StoredProcedure).Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(1, result.Count());

@@ -22,7 +22,7 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="copyOptions">The bulk-copy options to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int BulkInsert<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
@@ -62,7 +62,7 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="copyOptions">The bulk-copy options to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int BulkInsert<TEntity>(DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
@@ -106,7 +106,7 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="copyOptions">The bulk-copy options to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
@@ -146,7 +146,7 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="copyOptions">The bulk-copy options to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> BulkInsertAsync<TEntity>(DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,

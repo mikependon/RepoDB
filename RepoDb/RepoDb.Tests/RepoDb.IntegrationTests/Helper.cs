@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace RepoDb.IntegrationTests
             var fromType = obj.GetType();
             var toTypeProperties = typeof(T).GetProperties();
             var result = default(T);
-            fromType.GetProperties().ToList().ForEach(property =>
+            fromType.GetProperties().AsList().ForEach(property =>
             {
                 var toProperty = toTypeProperties.FirstOrDefault(p => p.Name == property.Name);
                 if (strict)
@@ -102,7 +103,7 @@ namespace RepoDb.IntegrationTests
         {
             var propertiesOfType1 = typeof(T1).GetProperties();
             var propertiesOfType2 = typeof(T2).GetProperties();
-            propertiesOfType1.ToList().ForEach(propertyOfType1 =>
+            propertiesOfType1.AsList().ForEach(propertyOfType1 =>
             {
                 if (propertyOfType1.Name == "Id")
                 {
@@ -129,7 +130,7 @@ namespace RepoDb.IntegrationTests
         {
             var properties = obj.GetType().GetProperties();
             var dictionary = expandoObj as IDictionary<string, object>;
-            properties.ToList().ForEach(property =>
+            properties.AsList().ForEach(property =>
             {
                 if (property.Name == "Id")
                 {

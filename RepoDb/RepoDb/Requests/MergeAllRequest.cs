@@ -8,44 +8,49 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the merge operation arguments.
     /// </summary>
-    internal class MergeRequest : BaseRequest, IEquatable<MergeRequest>
+    internal class MergeAllRequest : BaseRequest, IEquatable<MergeAllRequest>
     {
         private int? m_hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <see cref="MergeRequest"/> object.
+        /// Creates a new instance of <see cref="MergeAllRequest"/> object.
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public MergeRequest(Type type,
+        public MergeAllRequest(Type type,
             IDbConnection connection,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
                   fields,
                   qualifiers,
+                  batchSize,
                   statementBuilder)
         {
             Type = type;
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="MergeRequest"/> object.
+        /// Creates a new instance of <see cref="MergeAllRequest"/> object.
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public MergeRequest(string name,
+        public MergeAllRequest(string name,
             IDbConnection connection,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
@@ -53,6 +58,7 @@ namespace RepoDb.Requests
         {
             Fields = fields;
             Qualifiers = qualifiers;
+            BatchSize = batchSize;
         }
 
         /// <summary>
@@ -65,10 +71,15 @@ namespace RepoDb.Requests
         /// </summary>
         public IEnumerable<Field> Qualifiers { get; set; }
 
+        /// <summary>
+        /// Gets the size batch of the update operation.
+        /// </summary>
+        public int BatchSize { get; set; }
+
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <see cref="MergeRequest"/>.
+        /// Returns the hashcode for this <see cref="MergeAllRequest"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -80,7 +91,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".Merge").GetHashCode();
+            var hashCode = string.Concat(Name, ".MergeAll").GetHashCode();
 
             // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
@@ -100,6 +111,12 @@ namespace RepoDb.Requests
                 }
             }
 
+            // Get the batch size
+            if (BatchSize > 0)
+            {
+                hashCode += BatchSize.GetHashCode();
+            }
+
             // Set back the hash code value
             m_hashCode = hashCode;
 
@@ -108,7 +125,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <see cref="MergeRequest"/> object equality against the given target object.
+        /// Compares the <see cref="MergeAllRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -118,22 +135,22 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <see cref="MergeRequest"/> object equality against the given target object.
+        /// Compares the <see cref="MergeAllRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(MergeRequest other)
+        public bool Equals(MergeAllRequest other)
         {
             return other?.GetHashCode() == GetHashCode();
         }
 
         /// <summary>
-        /// Compares the equality of the two <see cref="MergeRequest"/> objects.
+        /// Compares the equality of the two <see cref="MergeAllRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="MergeRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="MergeRequest"/> object.</param>
+        /// <param name="objA">The first <see cref="MergeAllRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="MergeAllRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(MergeRequest objA, MergeRequest objB)
+        public static bool operator ==(MergeAllRequest objA, MergeAllRequest objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -143,12 +160,12 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the inequality of the two <see cref="MergeRequest"/> objects.
+        /// Compares the inequality of the two <see cref="MergeAllRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="MergeRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="MergeRequest"/> object.</param>
+        /// <param name="objA">The first <see cref="MergeAllRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="MergeAllRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(MergeRequest objA, MergeRequest objB)
+        public static bool operator !=(MergeAllRequest objA, MergeAllRequest objB)
         {
             return (objA == objB) == false;
         }

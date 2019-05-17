@@ -29,7 +29,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static object Insert<TEntity>(this IDbConnection connection,
             TEntity entity,
             int? commandTimeout = null,
@@ -57,10 +57,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static TResult Insert<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             int? commandTimeout = null,
@@ -88,7 +85,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         internal static TResult InsertInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             int? commandTimeout = null,
@@ -123,7 +120,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static Task<object> InsertAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             int? commandTimeout = null,
@@ -151,10 +148,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>
-        /// The value of the primary key of the newly inserted data. Returns null if the 
-        /// primary key property is not present.
-        /// </returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static Task<TResult> InsertAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             int? commandTimeout = null,
@@ -182,7 +176,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         internal static Task<TResult> InsertAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             int? commandTimeout = null,
@@ -217,7 +211,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static object Insert(this IDbConnection connection,
             string tableName,
             object entity,
@@ -246,7 +240,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static TResult Insert<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -275,7 +269,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         internal static TResult InsertInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -310,7 +304,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static Task<object> InsertAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -319,7 +313,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertAsyncInternal<object>(connection: connection,
+            return InsertAsync<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 commandTimeout: commandTimeout,
@@ -339,7 +333,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static Task<TResult> InsertAsync<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -368,7 +362,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         internal static Task<TResult> InsertAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -407,7 +401,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         internal static TResult InsertInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
@@ -467,8 +461,9 @@ namespace RepoDb
                     CommandText = CommandTextCache.GetInsertText(request),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", request.Name),
-                        inputFields?.AsList()),
+                        string.Concat(typeof(TEntity).FullName, ".", request.Name, ".Insert"),
+                        inputFields?.AsList(),
+                        null),
                     IdentityPropertySetterFunc = identityPropertySetter
                 };
             });
@@ -545,7 +540,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         internal async static Task<TResult> InsertAsyncInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
@@ -605,8 +600,9 @@ namespace RepoDb
                     CommandText = CommandTextCache.GetInsertText(request),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", request.Name),
-                        inputFields?.AsList()),
+                        string.Concat(typeof(TEntity).FullName, ".", request.Name, ".Insert"),
+                        inputFields?.AsList(),
+                        null),
                     IdentityPropertySetterFunc = identityPropertySetter
                 };
             });

@@ -57,7 +57,9 @@
     <Compile Include="BulkInsertMapItem.cs" />
     <Compile Include="CommandArrayParameter.cs" />
     <Compile Include="CommandParameter.cs" />
+    <Compile Include="Contexts\Execution\MergeAllExecutionContext.cs" />
     <Compile Include="Contexts\Execution\UpdateAllExecutionContext.cs" />
+    <Compile Include="Contexts\Execution\MergeAllExecutionContextCache.cs" />
     <Compile Include="Contexts\Execution\UpdateAllExecutionContextCache.cs" />
     <Compile Include="Contexts\Execution\MergeExecutionContext.cs" />
     <Compile Include="Contexts\Execution\MergeExecutionContextCache.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="Operations\BaseRepository\CountAll.cs" />
     <Compile Include="Operations\BaseRepository\InsertAll.cs" />
     <Compile Include="Operations\BaseRepository\QueryAll.cs" />
+    <Compile Include="Operations\BaseRepository\MergeAll.cs" />
     <Compile Include="Operations\BaseRepository\UpdateAll.cs" />
     <Compile Include="Operations\BaseRepository\Update.cs" />
     <Compile Include="Operations\BaseRepository\Truncate.cs" />
@@ -97,6 +100,7 @@
     <Compile Include="Operations\DbConnection\BulkInsert.cs" />
     <Compile Include="Operations\DbConnection\CountAll.cs" />
     <Compile Include="Operations\DbConnection\InsertAll.cs" />
+    <Compile Include="Operations\DbConnection\MergeAll.cs" />
     <Compile Include="Operations\DbConnection\QueryAll.cs" />
     <Compile Include="Operations\DbConnection\UpdateAll.cs" />
     <Compile Include="Operations\DbConnection\Update.cs" />
@@ -122,6 +126,7 @@
     <Compile Include="Operations\DbRepository\InsertAll.cs" />
     <Compile Include="Operations\DbRepository\QueryAll.cs" />
     <Compile Include="Operations\DbRepository\QueryMultiple.cs" />
+    <Compile Include="Operations\DbRepository\MergeAll.cs" />
     <Compile Include="Operations\DbRepository\UpdateAll.cs" />
     <Compile Include="Operations\DbRepository\Update.cs" />
     <Compile Include="Operations\DbRepository\Truncate.cs" />
@@ -138,7 +143,6 @@
     <Compile Include="Enumerations\ConnectionPersistency.cs" />
     <Compile Include="Exceptions\NoMatchedFieldsException.cs" />
     <Compile Include="Exceptions\InvalidQueryExpressionException.cs" />
-    <Compile Include="PrimaryIdentityCache.cs" />
     <Compile Include="DataEntityDataReader.cs" />
     <Compile Include="Extensions\MemberInfoExtension.cs" />
     <Compile Include="FieldCache.cs" />
@@ -156,6 +160,7 @@
     <Compile Include="Requests\BatchQueryRequest.cs" />
     <Compile Include="Requests\CountAllRequest.cs" />
     <Compile Include="Requests\InsertAllRequest.cs" />
+    <Compile Include="Requests\MergeAllRequest.cs" />
     <Compile Include="Requests\MergeRequest.cs" />
     <Compile Include="Requests\QueryMultipleRequest.cs" />
     <Compile Include="Requests\QueryAllRequest.cs" />
@@ -209,9 +214,9 @@
     <Compile Include="Resolvers\SqlDbTypeToStringNameResolver.cs" />
     <Compile Include="Resolvers\ClientTypeToSqlDbTypeResolver.cs" />
     <Compile Include="Resolvers\SqlDbTypeNameToClientTypeResolver.cs" />
-    <Compile Include="SqlStatementBuilder.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="SqlTableHints.cs" />
+    <Compile Include="StatementBuilders\SqlStatementBuilder.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="TypeMapItem.cs" />
     <Compile Include="TypeMapper.cs" />

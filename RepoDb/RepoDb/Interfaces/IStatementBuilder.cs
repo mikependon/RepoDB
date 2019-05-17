@@ -136,7 +136,7 @@ namespace RepoDb.Interfaces
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <returns>A sql statement for insert operation.</returns>
@@ -181,6 +181,29 @@ namespace RepoDb.Interfaces
             string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers = null,
+            DbField primaryField = null,
+            DbField identityField = null);
+
+        #endregion
+
+        #region CreateMergeAll
+
+        /// <summary>
+        /// Creates a SQL Statement for merge-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be updated.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for update-all operation.</returns>
+        string CreateMergeAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
             DbField identityField = null);
 
@@ -287,7 +310,7 @@ namespace RepoDb.Interfaces
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be updated.</param>
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <returns>A sql statement for update-all operation.</returns>

@@ -24,7 +24,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -54,7 +54,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -92,7 +92,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -122,7 +122,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -156,11 +156,11 @@ namespace RepoDb
         #region InsertAll(TableName)
 
         /// <summary>
-        /// Inserts multiple data in the database.
+        /// Inserts multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -190,11 +190,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database (certain fields only).
+        /// Inserts multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -236,11 +236,11 @@ namespace RepoDb
         #region InsertAllAsync(TableName)
 
         /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way.
+        /// Inserts multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -270,11 +270,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way.
+        /// Inserts multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -321,7 +321,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity or dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -400,7 +400,7 @@ namespace RepoDb
                         identitySettersFunc = new List<Action<TEntity, DbCommand>>();
                         for (var index = 0; index < batchSizeValue; index++)
                         {
-                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, index));
+                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, identity.UnquotedName, index));
                         }
                     }
                 }
@@ -409,13 +409,14 @@ namespace RepoDb
                 if (batchSizeValue <= 1)
                 {
                     singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName),
-                        inputFields?.AsList());
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".InsertAll"),
+                        inputFields?.AsList(),
+                        null);
                 }
                 else
                 {
                     multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName),
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".InsertAll"),
                         inputFields?.AsList(),
                         outputFields,
                         batchSizeValue);
@@ -605,7 +606,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity or dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -684,7 +685,7 @@ namespace RepoDb
                         identitySettersFunc = new List<Action<TEntity, DbCommand>>();
                         for (var index = 0; index < batchSizeValue; index++)
                         {
-                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, index));
+                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, identity.UnquotedName, index));
                         }
                     }
                 }
@@ -693,13 +694,14 @@ namespace RepoDb
                 if (batchSizeValue <= 1)
                 {
                     singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName),
-                        inputFields?.AsList());
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".InsertAll"),
+                        inputFields?.AsList(),
+                        null);
                 }
                 else
                 {
                     multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName),
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".InsertAll"),
                         inputFields?.AsList(),
                         outputFields,
                         batchSizeValue);

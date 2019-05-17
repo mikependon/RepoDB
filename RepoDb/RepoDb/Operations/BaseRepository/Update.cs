@@ -18,7 +18,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
             IDbTransaction transaction = null)
         {
@@ -32,7 +32,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
             object whereOrPrimaryKey,
             IDbTransaction transaction = null)
@@ -48,7 +48,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
@@ -64,7 +64,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
             QueryField where,
             IDbTransaction transaction = null)
@@ -80,7 +80,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
             IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
@@ -96,7 +96,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
             QueryGroup where,
             IDbTransaction transaction = null)
@@ -115,7 +115,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             IDbTransaction transaction = null)
         {
@@ -129,7 +129,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             object whereOrPrimaryKey,
             IDbTransaction transaction = null)
@@ -145,7 +145,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
@@ -161,7 +161,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             QueryField where,
             IDbTransaction transaction = null)
@@ -177,7 +177,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
@@ -193,7 +193,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             QueryGroup where,
             IDbTransaction transaction = null)

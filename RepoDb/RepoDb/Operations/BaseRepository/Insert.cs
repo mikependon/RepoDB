@@ -16,7 +16,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public object Insert(TEntity entity,
             IDbTransaction transaction = null)
         {
@@ -30,7 +30,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public TResult Insert<TResult>(TEntity entity,
             IDbTransaction transaction = null)
         {
@@ -47,7 +47,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public Task<object> InsertAsync(TEntity entity,
             IDbTransaction transaction = null)
         {
@@ -61,7 +61,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public Task<TResult> InsertAsync<TResult>(TEntity entity,
             IDbTransaction transaction = null)
         {

@@ -317,7 +317,11 @@ namespace RepoDb
                 .ParametersFrom(insertableFields)
                 .CloseParen()
                 .End();
-            var result = identityField != null ? string.Concat("CONVERT(", databaseType, ", SCOPE_IDENTITY())") : primaryField != null ? primaryField.Name.AsParameter() : "NULL";
+
+            // Set the return value
+            var result = identityField != null ?
+                string.Concat("CONVERT(", databaseType, ", SCOPE_IDENTITY())") :
+                    primaryField != null ? primaryField.Name.AsParameter() : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -338,7 +342,7 @@ namespace RepoDb
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <returns>A sql statement for insert operation.</returns>
@@ -357,7 +361,7 @@ namespace RepoDb
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of insertable fields must not be null for '{tableName}'.");
+                throw new InvalidOperationException($"The list of fields cannot be null or empty.");
             }
 
             // Ensure the primary is on the list if it is not an identity
@@ -374,7 +378,7 @@ namespace RepoDb
             }
 
             // Variables needed
-            var databaseType = "BIGINT";
+            var databaseType = (string)null;
             var insertableFields = fields
                 .Where(f => f.Name.ToLower() != identityField?.Name.ToLower());
 
@@ -408,7 +412,9 @@ namespace RepoDb
                 if (identityField != null)
                 {
                     var returnValue = string.Concat(identityField.UnquotedName.AsParameter(index), " = ",
-                        "CONVERT(", databaseType, ", SCOPE_IDENTITY())");
+                        string.IsNullOrEmpty(databaseType) ?
+                            "SCOPE_IDENTITY()" :
+                            "CONVERT(", databaseType, ", SCOPE_IDENTITY())");
                     queryBuilder
                         .Set()
                         .WriteText(returnValue)
@@ -435,10 +441,10 @@ namespace RepoDb
         /// <returns>A sql statement for merge operation.</returns>
         [Obsolete("Please use the overloaded method.")]
         public string CreateMerge(QueryBuilder queryBuilder,
-             string tableName,
-             IEnumerable<Field> fields,
-             IEnumerable<Field> qualifiers = null,
-             DbField primaryField = null)
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers = null,
+            DbField primaryField = null)
         {
             return CreateMerge(queryBuilder: queryBuilder,
                 tableName: tableName,
@@ -473,7 +479,7 @@ namespace RepoDb
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of insertable fields must not be null for '{tableName}'.");
+                throw new NullReferenceException($"The list of fields cannot be null or empty.");
             }
 
             // Check the qualifiers
@@ -521,6 +527,16 @@ namespace RepoDb
             var updateableFields = fields
                 .Where(field => field.Name.ToLower() != primaryField?.Name.ToLower() && field.Name.ToLower() != identityField?.Name.ToLower());
 
+            // Variables needed
+            var databaseType = "BIGINT";
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
+                databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType);
+            }
+
             // Build the query
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
@@ -561,8 +577,176 @@ namespace RepoDb
                 .Then()
                 .Update()
                 .Set()
-                .FieldsAndAliasFieldsFrom(updateableFields, "S")
-                .End();
+                .FieldsAndAliasFieldsFrom(updateableFields, "S");
+
+            // Set the output
+            var outputField = identityField ?? primaryField;
+            if (outputField != null)
+            {
+                queryBuilder
+                    .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name))
+                    .As("[Result]");
+            }
+
+            // End the builder
+            queryBuilder.End();
+
+            // Return the query
+            return queryBuilder.GetString();
+        }
+
+        #endregion
+
+        #region CreateMergeAll
+
+        /// <summary>
+        /// Creates a SQL Statement for merge-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be merged.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for merge operation.</returns>
+        public string CreateMergeAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers = null,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            DbField primaryField = null,
+            DbField identityField = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
+
+            // Verify the fields
+            if (fields?.Any() != true)
+            {
+                throw new InvalidOperationException($"The list of fields cannot be null or empty.");
+            }
+
+            // Check the qualifiers
+            if (qualifiers?.Any() == true)
+            {
+                // Check if the qualifiers are present in the given fields
+                var unmatchesQualifiers = qualifiers.Where(field =>
+                    fields.FirstOrDefault(f =>
+                        field.UnquotedName.ToLower() == f.UnquotedName.ToLower()) == null);
+
+                // Throw an error we found any unmatches
+                if (unmatchesQualifiers?.Any() == true)
+                {
+                    throw new InvalidQualiferFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
+                        $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
+                }
+            }
+            else
+            {
+                if (primaryField != null)
+                {
+                    // Make sure that primary is present in the list of fields before qualifying to become a qualifier
+                    var isPresent = fields?.FirstOrDefault(f => f.Name.ToLower() == primaryField.Name.ToLower()) != null;
+
+                    // Throw if not present
+                    if (isPresent == false)
+                    {
+                        throw new InvalidQualiferFieldsException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
+                            $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
+                    }
+
+                    // The primary is present, use it as a default if there are no qualifiers given
+                    qualifiers = primaryField.AsField().AsEnumerable();
+                }
+                else
+                {
+                    // Throw exception, qualifiers are not defined
+                    throw new NullReferenceException($"There are no qualifier field objects found for '{tableName}'.");
+                }
+            }
+
+            // Get the insertable and updateable fields
+            var insertableFields = fields
+                .Where(field => field.Name.ToLower() != identityField?.Name.ToLower());
+            var updateableFields = fields
+                .Where(field => field.Name.ToLower() != primaryField?.Name.ToLower() && field.Name.ToLower() != identityField?.Name.ToLower());
+
+            // Variables needed
+            var databaseType = (string)null;
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
+                databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType);
+            }
+            else if (primaryField != null)
+            {
+                var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(primaryField.Type);
+                databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType);
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear();
+
+            // Iterate the indexes
+            for (var index = 0; index < batchSize; index++)
+            {
+                // MERGE T USING S
+                queryBuilder.Merge()
+                    .TableNameFrom(tableName)
+                    .As("T")
+                    .Using()
+                    .OpenParen()
+                    .Select()
+                    .ParametersAsFieldsFrom(fields, index)
+                    .CloseParen()
+                    .As("S")
+                    // QUALIFIERS
+                    .On()
+                    .OpenParen()
+                    .WriteText(qualifiers?
+                        .Select(
+                            field => field.AsJoinQualifier("S", "T"))
+                                .Join(" AND "))
+                    .CloseParen()
+                    // WHEN NOT MATCHED THEN INSERT VALUES
+                    .When()
+                    .Not()
+                    .Matched()
+                    .Then()
+                    .Insert()
+                    .OpenParen()
+                    .FieldsFrom(insertableFields)
+                    .CloseParen()
+                    .Values()
+                    .OpenParen()
+                    .AsAliasFieldsFrom(insertableFields, "S")
+                    .CloseParen()
+                    // WHEN MATCHED THEN UPDATE SET
+                    .When()
+                    .Matched()
+                    .Then()
+                    .Update()
+                    .Set()
+                    .FieldsAndAliasFieldsFrom(updateableFields, "S");
+
+                // Set the output
+                var outputField = identityField ?? primaryField;
+                if (outputField != null)
+                {
+                    queryBuilder
+                        .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name))
+                        .As("[Result]");
+                }
+
+                // End the builder
+                queryBuilder.End();
+            }
 
             // Return the query
             return queryBuilder.GetString();
@@ -807,7 +991,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be updated.</param>
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <returns>A sql statement for update-all operation.</returns>

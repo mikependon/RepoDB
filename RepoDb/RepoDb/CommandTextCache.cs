@@ -220,6 +220,37 @@ namespace RepoDb
 
         #endregion
 
+        #region GetMergeAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the merge-all operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetMergeAllText(MergeAllRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var qualifiers = request.Qualifiers;
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
+                commandText = statementBuilder.CreateMergeAll(new QueryBuilder(),
+                    request.Name,
+                    fields,
+                    request.Qualifiers,
+                    request.BatchSize,
+                    primaryField,
+                    identityField);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
         #region GetQueryText
 
         /// <summary>
@@ -426,7 +457,7 @@ namespace RepoDb
         /// <returns>The primary <see cref="DbField"/> object.</returns>
         private static DbField GetPrimaryField(BaseRequest request)
         {
-            if (request.Type != null)
+            if (request.Type != null && request.Type != typeof(object))
             {
                 var primaryPropery = PrimaryCache.Get(request.Type);
                 if (primaryPropery != null)
@@ -451,7 +482,7 @@ namespace RepoDb
         /// <returns>The identity <see cref="DbField"/> object.</returns>
         private static DbField GetIdentityField(BaseRequest request)
         {
-            if (request.Type != null)
+            if (request.Type != null && request.Type != typeof(object))
             {
                 var identityProperty = IdentityCache.Get(request.Type);
                 if (identityProperty != null)

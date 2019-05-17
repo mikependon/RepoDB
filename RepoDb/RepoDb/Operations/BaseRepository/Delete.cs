@@ -18,7 +18,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be deleted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(TEntity entity,
             IDbTransaction transaction = null)
         {
@@ -31,7 +31,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
@@ -44,7 +44,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
         {
@@ -57,7 +57,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(QueryField where,
             IDbTransaction transaction = null)
         {
@@ -70,7 +70,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
         {
@@ -83,7 +83,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(QueryGroup where,
             IDbTransaction transaction = null)
         {
@@ -100,7 +100,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be deleted.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(TEntity entity,
             IDbTransaction transaction = null)
         {
@@ -113,7 +113,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
@@ -126,7 +126,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
         {
@@ -139,7 +139,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(QueryField where,
             IDbTransaction transaction = null)
         {
@@ -152,7 +152,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
         {
@@ -165,7 +165,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(QueryGroup where,
             IDbTransaction transaction = null)
         {

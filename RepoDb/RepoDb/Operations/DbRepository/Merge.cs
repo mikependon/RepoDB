@@ -19,8 +19,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge<TEntity>(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public object Merge<TEntity>(TEntity entity,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -54,8 +54,8 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge<TEntity>(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public object Merge<TEntity>(TEntity entity,
             Field qualifier,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -68,7 +68,6 @@ namespace RepoDb
                 // Call the method
                 return connection.Merge<TEntity>(entity: entity,
                     qualifier: qualifier,
-                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -92,8 +91,8 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge<TEntity>(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public object Merge<TEntity>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -105,6 +104,119 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Merge<TEntity>(entity: entity,
+                    qualifiers: qualifiers,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public TResult Merge<TEntity, TResult>(TEntity entity,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Merge<TEntity, TResult>(entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public TResult Merge<TEntity, TResult>(TEntity entity,
+            Field qualifier,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Merge<TEntity, TResult>(entity: entity,
+                    qualifier: qualifier,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public TResult Merge<TEntity, TResult>(TEntity entity,
+            IEnumerable<Field> qualifiers,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Merge<TEntity, TResult>(entity: entity,
                     qualifiers: qualifiers,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -133,8 +245,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> MergeAsync<TEntity>(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<object> MergeAsync<TEntity>(TEntity entity,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -145,7 +257,6 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.MergeAsync<TEntity>(entity: entity,
-                    qualifiers: null,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -170,8 +281,8 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> MergeAsync<TEntity>(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<object> MergeAsync<TEntity>(TEntity entity,
             Field qualifier,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -208,8 +319,8 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> MergeAsync<TEntity>(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<object> MergeAsync<TEntity>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -221,6 +332,120 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.MergeAsync<TEntity>(entity: entity,
+                    qualifiers: qualifiers,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<TResult> MergeAsync<TEntity, TResult>(TEntity entity,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.MergeAsync<TEntity, TResult>(entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<TResult> MergeAsync<TEntity, TResult>(TEntity entity,
+            Field qualifier,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.MergeAsync<TEntity, TResult>(entity: entity,
+                    qualifier: qualifier,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<TResult> MergeAsync<TEntity, TResult>(TEntity entity,
+            IEnumerable<Field> qualifiers,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.MergeAsync<TEntity, TResult>(entity: entity,
                 qualifiers: qualifiers,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -249,8 +474,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge(string tableName,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public object Merge(string tableName,
             object entity,
             IDbTransaction transaction = null)
         {
@@ -285,8 +510,8 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge(string tableName,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public object Merge(string tableName,
             object entity,
             Field qualifier,
             IDbTransaction transaction = null)
@@ -300,7 +525,6 @@ namespace RepoDb
                 return connection.Merge(tableName: tableName,
                     entity: entity,
                     qualifier: qualifier,
-                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -324,8 +548,8 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge(string tableName,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public object Merge(string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
@@ -337,6 +561,122 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Merge(tableName: tableName,
+                    entity: entity,
+                    qualifiers: qualifiers,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public TResult Merge<TResult>(string tableName,
+            object entity,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Merge<TResult>(tableName: tableName,
+                    entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public TResult Merge<TResult>(string tableName,
+            object entity,
+            Field qualifier,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Merge<TResult>(tableName: tableName,
+                    entity: entity,
+                    qualifier: qualifier,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public TResult Merge<TResult>(string tableName,
+            object entity,
+            IEnumerable<Field> qualifiers,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Merge<TResult>(tableName: tableName,
                     entity: entity,
                     qualifiers: qualifiers,
                     commandTimeout: CommandTimeout,
@@ -366,8 +706,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> MergeAsync(string tableName,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<object> MergeAsync(string tableName,
             object entity,
             IDbTransaction transaction = null)
         {
@@ -379,7 +719,6 @@ namespace RepoDb
                 // Call the method
                 return await connection.MergeAsync(tableName: tableName,
                     entity: entity,
-                    qualifiers: null,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -404,8 +743,8 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> MergeAsync(string tableName,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<object> MergeAsync(string tableName,
             object entity,
             Field qualifier,
             IDbTransaction transaction = null)
@@ -443,8 +782,8 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public async Task<int> MergeAsync(string tableName,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<object> MergeAsync(string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
@@ -456,6 +795,123 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.MergeAsync(tableName: tableName,
+                    entity: entity,
+                    qualifiers: qualifiers,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<TResult> MergeAsync<TResult>(string tableName,
+            object entity,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.MergeAsync<TResult>(tableName: tableName,
+                    entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<TResult> MergeAsync<TResult>(string tableName,
+            object entity,
+            Field qualifier,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.MergeAsync<TResult>(tableName: tableName,
+                    entity: entity,
+                    qualifier: qualifier,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public async Task<TResult> MergeAsync<TResult>(string tableName,
+            object entity,
+            IEnumerable<Field> qualifiers,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.MergeAsync<TResult>(tableName: tableName,
                     entity: entity,
                     qualifiers: qualifiers,
                     commandTimeout: CommandTimeout,

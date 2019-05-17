@@ -472,10 +472,10 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Merged)";
 
                 // Act Update
-                var affectedRows = connection.Merge<MappedObject>(entity, Field.From("SessionId"));
+                var mergeResult = connection.Merge<MappedObject>(entity, Field.From("SessionId"));
 
                 // Assert
-                Assert.AreEqual(1, affectedRows);
+                Assert.AreEqual(entity.SessionIdMapped, mergeResult);
 
                 // Act Query
                 var data = connection.Query<MappedObject>(new { SessionId = id }).FirstOrDefault();

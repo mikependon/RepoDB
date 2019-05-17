@@ -90,6 +90,12 @@
         void BeforeMerge(CancellableTraceLog log);
 
         /// <summary>
+        /// A method being raised before the actual merge-all operation execution.
+        /// </summary>
+        /// <param name="log">The cancellable log object referenced by the merge-all execution.</param>
+        void BeforeMergeAll(CancellableTraceLog log);
+
+        /// <summary>
         /// A method being raised before the actual query operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the query execution.</param>
@@ -207,6 +213,12 @@
         /// </summary>
         /// <param name="log">The log object referenced by the merge execution.</param>
         void AfterMerge(TraceLog log);
+
+        /// <summary>
+        /// A method being raised after the actual merge-all operation execution.
+        /// </summary>
+        /// <param name="log">The log object referenced by the merge-all execution.</param>
+        void AfterMergeAll(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual query operation execution.

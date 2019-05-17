@@ -126,7 +126,8 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -159,7 +160,8 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -191,7 +193,8 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"OUTPUT INSERTED.[Id] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -223,7 +226,8 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -255,7 +259,8 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"OUTPUT INSERTED.[Id] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -286,7 +291,8 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -318,7 +324,8 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"INSERT ( [Field1], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field3] = S.[Field3] ;";
+                $"UPDATE SET [Field3] = S.[Field3] " +
+                $"OUTPUT INSERTED.[Field2] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);

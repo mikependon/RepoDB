@@ -29,8 +29,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static int Merge<TEntity>(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static object Merge<TEntity>(this IDbConnection connection,
             TEntity entity,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -38,9 +38,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Merge(connection: connection,
+            return Merge<TEntity>(connection: connection,
                 entity: entity,
-                qualifiers: null,
+                qualifier: null,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -58,8 +58,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static int Merge<TEntity>(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static object Merge<TEntity>(this IDbConnection connection,
             TEntity entity,
             Field qualifier,
             int? commandTimeout = null,
@@ -68,9 +68,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Merge(connection: connection,
+            return Merge<TEntity>(connection: connection,
                 entity: entity,
-                qualifiers: qualifier.AsEnumerable(),
+                qualifiers: qualifier?.AsEnumerable(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -88,8 +88,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static int Merge<TEntity>(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static object Merge<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             int? commandTimeout = null,
@@ -98,7 +98,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeInternal<TEntity>(connection: connection,
+            return MergeInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
@@ -111,6 +111,67 @@ namespace RepoDb
         /// Merges a data entity object into an existing data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Merge<TEntity, TResult>(connection: connection,
+                entity: entity,
+                qualifier: null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
+            TEntity entity,
+            Field qualifier,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Merge<TEntity, TResult>(connection: connection,
+                entity: entity,
+                qualifiers: qualifier?.AsEnumerable(),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
@@ -118,8 +179,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static int MergeInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             int? commandTimeout = null,
@@ -128,17 +189,46 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check the primary
-            var primary = GetAndGuardPrimaryKey<TEntity>();
+            return MergeInternal<TEntity, TResult>(connection: connection,
+                entity: entity,
+                qualifiers: qualifiers,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        internal static TResult MergeInternal<TEntity, TResult>(this IDbConnection connection,
+            TEntity entity,
+            IEnumerable<Field> qualifiers,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
+                var primary = GetAndGuardPrimaryKey<TEntity>();
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
             // Return the result
-            return MergeInternalBase<TEntity>(connection: connection,
+            return MergeInternalBase<TEntity, TResult>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 fields: entity.AsFields(),
@@ -146,7 +236,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                skipIdentityCheck: false);
         }
 
         #endregion
@@ -163,8 +254,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -172,9 +263,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsync(connection: connection,
+            return MergeAsync<TEntity>(connection: connection,
                 entity: entity,
-                qualifiers: null,
+                qualifier: null,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -192,8 +283,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             Field qualifier,
             int? commandTimeout = null,
@@ -202,9 +293,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsync(connection: connection,
+            return MergeAsync<TEntity, object>(connection: connection,
                 entity: entity,
-                qualifiers: qualifier.AsEnumerable(),
+                qualifiers: qualifier?.AsEnumerable(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -222,8 +313,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             int? commandTimeout = null,
@@ -232,7 +323,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsyncInternal(connection: connection,
+            return MergeAsyncInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
@@ -245,6 +336,67 @@ namespace RepoDb
         /// Merges a data entity object into an existing data in the database in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAsync<TEntity, TResult>(connection: connection,
+                entity: entity,
+                qualifier: null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifier">The field to be used during merge operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
+            TEntity entity,
+            Field qualifier,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAsync<TEntity, TResult>(connection: connection,
+                entity: entity,
+                qualifiers: qualifier?.AsEnumerable(),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
@@ -252,8 +404,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static Task<int> MergeAsyncInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             int? commandTimeout = null,
@@ -262,17 +414,46 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check the primary
-            var primary = GetAndGuardPrimaryKey<TEntity>();
+            return MergeAsyncInternal<TEntity, TResult>(connection: connection,
+                entity: entity,
+                qualifiers: qualifiers,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        internal static Task<TResult> MergeAsyncInternal<TEntity, TResult>(this IDbConnection connection,
+            TEntity entity,
+            IEnumerable<Field> qualifiers,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
+                var primary = GetAndGuardPrimaryKey<TEntity>();
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
             // Return the result
-            return MergeAsyncInternalBase<TEntity>(connection: connection,
+            return MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 fields: entity.AsFields(),
@@ -280,7 +461,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                skipIdentityCheck: false);
         }
 
         #endregion
@@ -288,7 +470,7 @@ namespace RepoDb
         #region Merge(TableName)
 
         /// <summary>
-        /// Merges an object into an existing data in the database.
+        /// Merges a dynamic object into an existing data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -297,8 +479,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static int Merge(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static object Merge(this IDbConnection connection,
             string tableName,
             object entity,
             int? commandTimeout = null,
@@ -309,7 +491,7 @@ namespace RepoDb
             return Merge(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                qualifiers: null,
+                qualifier: null,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -317,7 +499,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an object into an existing data in the database.
+        /// Merges a dynamic object into an existing data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -327,8 +509,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static int Merge(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static object Merge(this IDbConnection connection,
             string tableName,
             object entity,
             Field qualifier,
@@ -348,7 +530,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an object into an existing data in the database.
+        /// Merges a dynamic object into an existing data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -358,8 +540,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static int Merge(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static object Merge(this IDbConnection connection,
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
@@ -368,7 +550,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeInternal(connection: connection,
+            return MergeInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
@@ -379,8 +561,71 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an object into an existing data in the database.
+        /// Merges a dynamic object into an existing data in the database.
         /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static TResult Merge<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return Merge<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifier: null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a dynamic object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="qualifier">The qualifier field to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static TResult Merge<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            Field qualifier,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return Merge<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifier?.AsEnumerable(),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a dynamic object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
@@ -389,8 +634,40 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static int MergeInternal(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static TResult Merge<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            IEnumerable<Field> qualifiers,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return MergeInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifiers,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a dynamic object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        internal static TResult MergeInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
@@ -407,7 +684,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return MergeInternalBase<object>(connection: connection,
+            return MergeInternalBase<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: entity.AsFields(),
@@ -415,7 +692,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                skipIdentityCheck: true);
         }
 
         #endregion
@@ -423,7 +701,7 @@ namespace RepoDb
         #region MergeAsync(TableName)
 
         /// <summary>
-        /// Merges an object into an existing data in the database in an asynchronous way.
+        /// Merges a dynamic object into an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -432,8 +710,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> MergeAsync(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<object> MergeAsync(this IDbConnection connection,
             string tableName,
             object entity,
             int? commandTimeout = null,
@@ -444,7 +722,7 @@ namespace RepoDb
             return MergeAsync(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                qualifiers: null,
+                qualifier: null,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -452,7 +730,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an object into an existing data in the database in an asynchronous way.
+        /// Merges a dynamic object into an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -462,8 +740,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> MergeAsync(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<object> MergeAsync(this IDbConnection connection,
             string tableName,
             object entity,
             Field qualifier,
@@ -483,7 +761,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an object into an existing data in the database in an asynchronous way.
+        /// Merges a dynamic object into an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -493,8 +771,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> MergeAsync(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<object> MergeAsync(this IDbConnection connection,
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
@@ -503,7 +781,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeAsyncInternal(connection: connection,
+            return MergeAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
@@ -514,8 +792,71 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an object into an existing data in the database in an asynchronous way.
+        /// Merges a dynamic object into an existing data in the database in an asynchronous way.
         /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<TResult> MergeAsync<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return MergeAsync<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifier: null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a dynamic object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="qualifier">The qualifier field to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<TResult> MergeAsync<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            Field qualifier,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return MergeAsync<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifier?.AsEnumerable(),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a dynamic object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
@@ -524,8 +865,40 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static Task<int> MergeAsyncInternal(this IDbConnection connection,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public static Task<TResult> MergeAsync<TResult>(this IDbConnection connection,
+            string tableName,
+            object entity,
+            IEnumerable<Field> qualifiers,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return MergeAsyncInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifiers,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a dynamic object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        internal static Task<TResult> MergeAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
@@ -542,7 +915,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return MergeAsyncInternalBase<object>(connection: connection,
+            return MergeAsyncInternalBase<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: entity.AsFields(),
@@ -550,7 +923,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                skipIdentityCheck: true);
         }
 
         #endregion
@@ -558,9 +932,10 @@ namespace RepoDb
         #region MergeInternalBase<TEntity>
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges a data entity or dynamic object into an existing data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity or dynamic object to be merged.</param>
@@ -570,8 +945,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static int MergeInternalBase<TEntity>(this IDbConnection connection,
+        /// <param name="skipIdentityCheck">True to skip the identity check.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        internal static TResult MergeInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -579,7 +955,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            bool skipIdentityCheck = false)
             where TEntity : class
         {
             // Get the function
@@ -593,8 +970,21 @@ namespace RepoDb
                     statementBuilder);
 
                 // Variables needed
+                var identity = (Field)null;
                 var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
+                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+
+                // Set the identity field
+                if (skipIdentityCheck == false)
+                {
+                    identity = IdentityCache.Get<TEntity>()?.AsField();
+                    if (identity == null && identityDbField != null)
+                    {
+                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
+                            field.UnquotedName.ToLower() == identityDbField.UnquotedName.ToLower());
+                    }
+                }
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
@@ -602,14 +992,25 @@ namespace RepoDb
                         fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
                     .AsList();
 
+                // Variables for the entity action
+                var identityPropertySetter = (Action<TEntity, object>)null;
+
+                // Get the identity setter
+                if (skipIdentityCheck == false && identity != null)
+                {
+                    identityPropertySetter = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
+                }
+
                 // Return the value
                 return new MergeExecutionContext<TEntity>
                 {
                     CommandText = CommandTextCache.GetMergeText(request),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", request.Name),
-                        inputFields?.AsList())
+                        string.Concat(typeof(TEntity).FullName, ".", request.Name, ".Merge"),
+                        inputFields?.AsList(),
+                        null),
+                    IdentityPropertySetterFunc = identityPropertySetter
                 };
             });
 
@@ -627,7 +1028,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(context.CommandText);
                     }
-                    return 0;
+                    return default(TResult);
                 }
                 context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
                 entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
@@ -637,7 +1038,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Execution variables
-            var result = 0;
+            var result = default(TResult);
 
             // Create the command
             using (var command = (DbCommand)connection.EnsureOpen().CreateCommand(context.CommandText,
@@ -647,7 +1048,13 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Actual Execution
-                result = command.ExecuteNonQuery();
+                result = ObjectConverter.ToType<TResult>(command.ExecuteScalar());
+
+                // Set the return value
+                if (Equals(result, default(TResult)) == false)
+                {
+                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
+                }
             }
 
             // After Execution
@@ -666,9 +1073,10 @@ namespace RepoDb
         #region MergeAsyncInternalBase<TEntity>
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// Merges a data entity or dynamic object into an existing data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity or dynamic object to be merged.</param>
@@ -678,8 +1086,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static async Task<int> MergeAsyncInternalBase<TEntity>(this IDbConnection connection,
+        /// <param name="skipIdentityCheck">True to skip the identity check.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        internal static async Task<TResult> MergeAsyncInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -687,7 +1096,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            bool skipIdentityCheck = false)
             where TEntity : class
         {
             // Get the function
@@ -701,8 +1111,21 @@ namespace RepoDb
                     statementBuilder);
 
                 // Variables needed
+                var identity = (Field)null;
                 var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
+                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+
+                // Set the identity field
+                if (skipIdentityCheck == false)
+                {
+                    identity = IdentityCache.Get<TEntity>()?.AsField();
+                    if (identity == null && identityDbField != null)
+                    {
+                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
+                            field.UnquotedName.ToLower() == identityDbField.UnquotedName.ToLower());
+                    }
+                }
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
@@ -710,14 +1133,25 @@ namespace RepoDb
                         fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
                     .AsList();
 
+                // Variables for the entity action
+                var identityPropertySetter = (Action<TEntity, object>)null;
+
+                // Get the identity setter
+                if (skipIdentityCheck == false && identity != null)
+                {
+                    identityPropertySetter = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
+                }
+
                 // Return the value
                 return new MergeExecutionContext<TEntity>
                 {
                     CommandText = CommandTextCache.GetMergeText(request),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", request.Name),
-                        inputFields?.AsList())
+                        string.Concat(typeof(TEntity).FullName, ".", request.Name, ".Merge"),
+                        inputFields?.AsList(),
+                        null),
+                    IdentityPropertySetterFunc = identityPropertySetter
                 };
             });
 
@@ -735,7 +1169,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(context.CommandText);
                     }
-                    return 0;
+                    return default(TResult);
                 }
                 context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
                 entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
@@ -745,7 +1179,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Execution variables
-            var result = 0;
+            var result = default(TResult);
 
             // Create the command
             using (var command = (DbCommand)(await connection.EnsureOpenAsync()).CreateCommand(context.CommandText,
@@ -755,7 +1189,13 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Actual Execution
-                result = await command.ExecuteNonQueryAsync();
+                result = ObjectConverter.ToType<TResult>(await command.ExecuteScalarAsync());
+
+                // Set the return value
+                if (Equals(result, default(TResult)) == false)
+                {
+                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
+                }
             }
 
             // After Execution

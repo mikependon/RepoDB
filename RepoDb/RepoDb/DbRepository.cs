@@ -462,7 +462,7 @@ namespace RepoDb
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int ExecuteNonQuery(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -507,7 +507,7 @@ namespace RepoDb
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> ExecuteNonQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,

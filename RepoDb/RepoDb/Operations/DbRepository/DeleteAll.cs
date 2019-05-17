@@ -17,7 +17,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int DeleteAll<TEntity>(IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -53,7 +53,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> DeleteAllAsync<TEntity>(IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -89,7 +89,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public int DeleteAll(string tableName,
             IDbTransaction transaction = null)
         {
@@ -126,7 +126,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> DeleteAllAsync(string tableName,
             IDbTransaction transaction = null)
         {
