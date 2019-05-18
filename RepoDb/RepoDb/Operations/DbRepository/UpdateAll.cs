@@ -14,7 +14,7 @@ namespace RepoDb
         #region UpdateAll<TEntity>
 
         /// <summary>
-        /// Update an existing multiple data in the database.
+        /// Updates existing multiple data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -52,7 +52,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing multiple data in the database.
+        /// Updates existing multiple data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -97,7 +97,7 @@ namespace RepoDb
         #region UpdateAllAsync<TEntity>
 
         /// <summary>
-        /// Update an existing multiple data in the database in an asynchronous way.
+        /// Updates existing multiple data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -135,7 +135,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing multiple data in the database in an asynchronous way.
+        /// Updates existing multiple data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -180,7 +180,7 @@ namespace RepoDb
         #region UpdateAll(TableName)
 
         /// <summary>
-        /// Update an existing multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Updates existing multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
@@ -222,7 +222,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Updates existing multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
@@ -271,7 +271,7 @@ namespace RepoDb
         #region UpdateAllAsync(TableName)
 
         /// <summary>
-        /// Update an existing multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Updates existing multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
@@ -313,7 +313,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Updates existing multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>

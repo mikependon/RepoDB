@@ -13,7 +13,7 @@ namespace RepoDb
         #region UpdateAll<TEntity>
 
         /// <summary>
-        /// Update an existing multiple data in the database.
+        /// Updates existing multiple data in the database.
         /// </summary>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
@@ -29,7 +29,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing multiple data in the database.
+        /// Updates existing multiple data in the database.
         /// </summary>
         /// <param name="entities">The list of entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
@@ -52,7 +52,7 @@ namespace RepoDb
         #region UpdateAllAsync<TEntity>
 
         /// <summary>
-        /// Update an existing multiple data in the database in an aysnchronous way.
+        /// Updates existing multiple data in the database in an aysnchronous way.
         /// </summary>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
@@ -68,7 +68,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update an existing multiple data in the database in an aysnchronous way.
+        /// Updates existing multiple data in the database in an aysnchronous way.
         /// </summary>
         /// <param name="entities">The list of entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
