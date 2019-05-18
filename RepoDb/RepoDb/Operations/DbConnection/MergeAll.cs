@@ -456,8 +456,17 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
+                // Get the DB primary
                 var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
-                qualifiers = primary?.AsField().AsEnumerable();
+
+                // Throw if there is no primary
+                if (primary == null)
+                {
+                    throw new PrimaryFieldNotFoundException($"There is no primary found for '{tableName}'.");
+                }
+
+                // Set the primary as the qualifier
+                qualifiers = primary.AsField().AsEnumerable();
             }
 
             // Return the result
@@ -732,21 +741,56 @@ namespace RepoDb
                         batchSizeValue);
                 }
 
-                // Return the value
-                return new MergeAllExecutionContext<TEntity>
+                // Identity the requests
+                var mergeAllRequest = (MergeAllRequest)null;
+                var mergeRequest = (MergeRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
                 {
-                    CommandText = batchSizeValue > 1 ?
-                        CommandTextCache.GetMergeAllText(new MergeAllRequest(typeof(TEntity),
+                    if (batchSizeValue > 1)
+                    {
+                        mergeAllRequest = new MergeAllRequest(tableName,
                             connection,
                             fields,
                             qualifiers,
                             batchSizeValue,
-                            statementBuilder)) :
-                        CommandTextCache.GetMergeText(new MergeRequest(typeof(TEntity),
+                            statementBuilder);
+                    }
+                    else
+                    {
+                        mergeRequest = new MergeRequest(tableName,
                             connection,
                             fields,
                             qualifiers,
-                            statementBuilder)),
+                            statementBuilder);
+                    }
+                }
+                else
+                {
+                    if (batchSizeValue > 1)
+                    {
+                        mergeAllRequest = new MergeAllRequest(typeof(TEntity),
+                        connection,
+                        fields,
+                        qualifiers,
+                        batchSizeValue,
+                        statementBuilder);
+                    }
+                    else
+                    {
+                        mergeRequest = new MergeRequest(typeof(TEntity),
+                            connection,
+                            fields,
+                            qualifiers,
+                            statementBuilder);
+                    }
+                }
+
+                // Return the value
+                return new MergeAllExecutionContext<TEntity>
+                {
+                    CommandText = batchSizeValue > 1 ? CommandTextCache.GetMergeAllText(mergeAllRequest) : CommandTextCache.GetMergeText(mergeRequest),
                     InputFields = inputFields,
                     BatchSize = batchSizeValue,
                     SingleDataEntityParametersSetterFunc = singleEntityFunc,
@@ -854,33 +898,36 @@ namespace RepoDb
                             context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
 
                             // Actual Execution
-                            using (var reader = command.ExecuteReader())
+                            if (context.IdentityPropertySetterFunc == null)
                             {
-                                // Skip if there is no identity setter
-                                if (context.IdentityPropertySetterFunc == null)
+                                // No identity setters
+                                result += command.ExecuteNonQuery();
+                            }
+                            else
+                            {
+                                // Set the identity back
+                                using (var reader = command.ExecuteReader())
                                 {
-                                    continue;
-                                }
+                                    // Variables for the reader
+                                    var readerPosition = 0;
+                                    var readable = true;
 
-                                // Variables for the reader
-                                var readerPosition = 0;
-                                var readable = true;
-
-                                // Visit the next result
-                                while (readable)
-                                {
-                                    if (reader.Read())
+                                    // Visit the next result
+                                    while (readable)
                                     {
-                                        var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
-                                        context.IdentityPropertySetterFunc(batchItems[readerPosition], value);
+                                        if (reader.Read())
+                                        {
+                                            var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
+                                            context.IdentityPropertySetterFunc(batchItems[readerPosition], value);
+                                        }
+
+                                        // Iterate the result
+                                        result++;
+                                        readerPosition++;
+
+                                        // Set the flag
+                                        readable = reader.NextResult();
                                     }
-
-                                    // Iterate the result
-                                    result++;
-                                    readerPosition++;
-
-                                    // Set the flag
-                                    readable = reader.NextResult();
                                 }
                             }
                         }
@@ -1015,21 +1062,56 @@ namespace RepoDb
                         batchSizeValue);
                 }
 
-                // Return the value
-                return new MergeAllExecutionContext<TEntity>
+                // Identity the requests
+                var mergeAllRequest = (MergeAllRequest)null;
+                var mergeRequest = (MergeRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
                 {
-                    CommandText = batchSizeValue > 1 ?
-                        CommandTextCache.GetMergeAllText(new MergeAllRequest(typeof(TEntity),
+                    if (batchSizeValue > 1)
+                    {
+                        mergeAllRequest = new MergeAllRequest(tableName,
                             connection,
                             fields,
                             qualifiers,
                             batchSizeValue,
-                            statementBuilder)) :
-                        CommandTextCache.GetMergeText(new MergeRequest(typeof(TEntity),
+                            statementBuilder);
+                    }
+                    else
+                    {
+                        mergeRequest = new MergeRequest(tableName,
                             connection,
                             fields,
                             qualifiers,
-                            statementBuilder)),
+                            statementBuilder);
+                    }
+                }
+                else
+                {
+                    if (batchSizeValue > 1)
+                    {
+                        mergeAllRequest = new MergeAllRequest(typeof(TEntity),
+                        connection,
+                        fields,
+                        qualifiers,
+                        batchSizeValue,
+                        statementBuilder);
+                    }
+                    else
+                    {
+                        mergeRequest = new MergeRequest(typeof(TEntity),
+                            connection,
+                            fields,
+                            qualifiers,
+                            statementBuilder);
+                    }
+                }
+
+                // Return the value
+                return new MergeAllExecutionContext<TEntity>
+                {
+                    CommandText = batchSizeValue > 1 ? CommandTextCache.GetMergeAllText(mergeAllRequest) : CommandTextCache.GetMergeText(mergeRequest),
                     InputFields = inputFields,
                     BatchSize = batchSizeValue,
                     SingleDataEntityParametersSetterFunc = singleEntityFunc,
@@ -1137,33 +1219,36 @@ namespace RepoDb
                             context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
 
                             // Actual Execution
-                            using (var reader = await command.ExecuteReaderAsync())
+                            if (context.IdentityPropertySetterFunc == null)
                             {
-                                // Skip if there is no identity setter
-                                if (context.IdentityPropertySetterFunc == null)
+                                // No identity setters
+                                result += await command.ExecuteNonQueryAsync();
+                            }
+                            else
+                            {
+                                // Set the identity back
+                                using (var reader = await command.ExecuteReaderAsync())
                                 {
-                                    continue;
-                                }
+                                    // Variables for the reader
+                                    var readerPosition = 0;
+                                    var readable = true;
 
-                                // Variables for the reader
-                                var readerPosition = 0;
-                                var readable = true;
-
-                                // Visit the next result
-                                while (readable)
-                                {
-                                    if (await reader.ReadAsync())
+                                    // Visit the next result
+                                    while (readable)
                                     {
-                                        var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
-                                        context.IdentityPropertySetterFunc(batchItems[readerPosition], value);
+                                        if (await reader.ReadAsync())
+                                        {
+                                            var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
+                                            context.IdentityPropertySetterFunc(batchItems[readerPosition], value);
+                                        }
+
+                                        // Iterate the result
+                                        result++;
+                                        readerPosition++;
+
+                                        // Set the flag
+                                        readable = reader.NextResult();
                                     }
-
-                                    // Iterate the result
-                                    result++;
-                                    readerPosition++;
-
-                                    // Set the flag
-                                    readable = await reader.NextResultAsync();
                                 }
                             }
                         }

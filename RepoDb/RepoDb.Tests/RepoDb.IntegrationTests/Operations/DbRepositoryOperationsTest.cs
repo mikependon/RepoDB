@@ -6473,6 +6473,1381 @@ namespace RepoDb.IntegrationTests.Operations
 
         #region MergeAll
 
+        #region MergeAll<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForIdentityEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<IdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<IdentityTable>(tables,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAll<IdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAll<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAll<IdentityTable>(tables,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForNonIdentityEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForNonIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForNonIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForNonIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForNonIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForNonIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAll<TEntity>(SingleBatch, ModularBatch)
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<IdentityTable>(tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(19);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<IdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForNonIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllForNonIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(99);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAllAsync<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForIdentityEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForNonIdentityEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForNonIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForNonIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForNonIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForNonIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForNonIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAll<TEntity>(SingleBatch, ModularBatch)
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables, 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(19);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForNonIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables, 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncForNonIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(99);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAll(TEntity)
+
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnDbRepositoryMergeAllIfThereIsNoPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllViaTableNameForNonIdentityEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllViaTableNameForNonIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllViaTableNameForNonIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllViaTableNameForNonIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllViaTableNameForNonIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllViaTableNameForNonIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAll(TEntity)(SingleBatch, ModularBatch)
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllViaTableNameForIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<IdentityTable>(tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllViaTableNameForIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(19);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<IdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllViaTableNameForNonIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllViaTableNameForNonIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(99);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAllAsync(TEntity)
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnDbRepositoryMergeAllAsyncIfThereIsNoPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncViaTableNameForNonIdentityEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncViaTableNameForNonIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncViaTableNameForNonIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncViaTableNameForNonIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncViaTableNameForNonIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncViaTableNameForNonIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAllAsync(TEntity)(SingleBatch, ModularBatch)
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncViaTableNameForIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables, 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncViaTableNameForIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(19);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncViaTableNameForNonIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables, 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncViaTableNameForNonIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(99);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
 
         #endregion
 
