@@ -5,10 +5,10 @@ using System;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateMergeTest
+    public class SqlStatementBuilderCreateMergeAllTest
     {
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMerge()
+        public void TestSqlStatementBuilderCreateMergeAll()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -18,10 +18,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: null,
                 identityField: null);
             var expected = $"" +
@@ -39,7 +40,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithQuotedTableSchema()
+        public void TestSqlStatementBuilderCreateMergeAllWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -49,10 +50,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: null,
                 identityField: null);
             var expected = $"" +
@@ -70,7 +72,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithUnquotedTableSchema()
+        public void TestSqlStatementBuilderCreateMergeAllWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -80,10 +82,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: null,
                 identityField: null);
             var expected = $"" +
@@ -101,7 +104,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithCoveredPrimary()
+        public void TestSqlStatementBuilderCreateMergeAllWithCoveredPrimary()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -112,10 +115,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null);
 
             // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: primaryField,
                 identityField: null);
             var expected = $"" +
@@ -134,7 +138,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithCoveredPrimaryAsIdentity()
+        public void TestSqlStatementBuilderCreateMergeAllWithCoveredPrimaryAsIdentity()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -146,10 +150,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var identifyField = new DbField("Field1", true, true, false, typeof(int), null, null, null);
 
             // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: primaryField,
                 identityField: primaryField);
             var expected = $"" +
@@ -168,7 +173,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithUncoveredPrimary()
+        public void TestSqlStatementBuilderCreateMergeAllWithUncoveredPrimary()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -179,10 +184,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Id", true, true, false, typeof(int), null, null, null);
 
             // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: primaryField,
                 identityField: null);
             var expected = $"" +
@@ -201,7 +207,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithCoveredIdentity()
+        public void TestSqlStatementBuilderCreateMergeAllWithCoveredIdentity()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -212,10 +218,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null);
 
             // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
@@ -234,7 +241,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithUncoveredIdentity()
+        public void TestSqlStatementBuilderCreateMergeAllWithUncoveredIdentity()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -245,10 +252,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var identityField = new DbField("Id", false, true, false, typeof(int), null, null, null);
 
             // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
@@ -267,7 +275,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithCoveredPrimaryButWithoutQualifiers()
+        public void TestSqlStatementBuilderCreateMergeAllWithCoveredPrimaryButWithoutQualifiers()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -277,10 +285,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null);
 
             // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: null,
+                batchSize: 1,
                 primaryField: primaryField,
                 identityField: null);
             var expected = $"" +
@@ -299,7 +308,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithCoveredPrimaryAndWithCoveredIdentityButWithoutQualifiers()
+        public void TestSqlStatementBuilderCreateMergeAllWithCoveredPrimaryAndWithCoveredIdentityButWithoutQualifiers()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -310,10 +319,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null);
 
             // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: null,
+                batchSize: 1,
                 primaryField: primaryField,
                 identityField: identityField);
             var expected = $"" +
@@ -331,8 +341,60 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestSqlStatementBuilderCreateMergeAllWithIdentityForThreeBatches()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From("Field1", "Field2", "Field3");
+            var qualifiers = Field.From("Field1");
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null);
+
+            // Act
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                qualifiers: qualifiers,
+                batchSize: 3,
+                primaryField: null,
+                identityField: identityField);
+            var expected = $"" +
+                $"MERGE [Table] AS T " +
+                $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
+                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field2], S.[Field3] ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"OUTPUT INSERTED.[Field1] AS [Result] ; " +
+                $"MERGE [Table] AS T " +
+                $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
+                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field2], S.[Field3] ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"OUTPUT INSERTED.[Field1] AS [Result] ; " +
+                $"MERGE [Table] AS T " +
+                $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
+                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field2], S.[Field3] ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"OUTPUT INSERTED.[Field1] AS [Result] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThereAreNoFields()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMergeAllIfThereAreNoFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -341,16 +403,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Id");
 
             // Act
-            statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: null,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: null,
                 identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThereAreNoPrimaryAndNoQualifiers()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMergeAllIfThereAreNoPrimaryAndNoQualifiers()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -359,16 +422,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From("Field1", "Field2", "Field3");
 
             // Act
-            statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: null,
+                batchSize: 1,
                 primaryField: null,
                 identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQualifierFieldsException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheQualifiersAreNotPresentAtTheGivenFields()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMergeAllIfTheQualifiersAreNotPresentAtTheGivenFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -378,16 +442,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Id");
 
             // Act
-            statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: null,
                 identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQualifierFieldsException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThePrimaryAsQualifierIsNotPresentAtTheGivenFields()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMergeAllIfThePrimaryAsQualifierIsNotPresentAtTheGivenFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -397,16 +462,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null);
 
             // Act
-            statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: null,
+                batchSize: 1,
                 primaryField: primaryField,
                 identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheTableIsNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMergeAllIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -416,16 +482,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: null,
                 identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMergeAllIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -435,16 +502,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: null,
                 identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMergeAllIfTheTableIsWhitespace()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -454,16 +522,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: qualifiers,
+                batchSize: 1,
                 primaryField: null,
                 identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThePrimaryIsNotReallyAPrimary()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMergeAllIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -473,16 +542,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null);
 
             // Act
-            statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: null,
+                batchSize: 1,
                 primaryField: primaryField,
                 identityField: null);
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheIdentityIsNotReallyAnIdentity()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMergeAllIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
@@ -493,10 +563,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null);
 
             // Act
-            statementBuilder.CreateMerge(queryBuilder: queryBuilder,
+            statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 qualifiers: null,
+                batchSize: 1,
                 primaryField: null,
                 identityField: identifyField);
         }

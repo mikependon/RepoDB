@@ -771,11 +771,11 @@ namespace RepoDb
                     if (batchSizeValue > 1)
                     {
                         mergeAllRequest = new MergeAllRequest(typeof(TEntity),
-                        connection,
-                        fields,
-                        qualifiers,
-                        batchSizeValue,
-                        statementBuilder);
+                            connection,
+                            fields,
+                            qualifiers,
+                            batchSizeValue,
+                            statementBuilder);
                     }
                     else
                     {
@@ -910,7 +910,7 @@ namespace RepoDb
                                 {
                                     // Variables for the reader
                                     var readerPosition = 0;
-                                    var readable = true;
+                                    var readable = (reader != null);
 
                                     // Visit the next result
                                     while (readable)
@@ -1092,11 +1092,11 @@ namespace RepoDb
                     if (batchSizeValue > 1)
                     {
                         mergeAllRequest = new MergeAllRequest(typeof(TEntity),
-                        connection,
-                        fields,
-                        qualifiers,
-                        batchSizeValue,
-                        statementBuilder);
+                            connection,
+                            fields,
+                            qualifiers,
+                            batchSizeValue,
+                            statementBuilder);
                     }
                     else
                     {
@@ -1231,7 +1231,7 @@ namespace RepoDb
                                 {
                                     // Variables for the reader
                                     var readerPosition = 0;
-                                    var readable = true;
+                                    var readable = (reader != null);
 
                                     // Visit the next result
                                     while (readable)

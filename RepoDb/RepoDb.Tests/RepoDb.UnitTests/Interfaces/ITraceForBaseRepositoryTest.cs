@@ -343,6 +343,74 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region DeleteAll
+
+        #region DeleteAll
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForBeforeDeleteAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.DeleteAll();
+
+            // Assert
+            trace.Verify(t => t.BeforeDeleteAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForAfterDeleteAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.DeleteAll();
+
+            // Assert
+            trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region DeleteAllAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForBeforeDeleteAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.DeleteAllAsync().Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeDeleteAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForAfterDeleteAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.DeleteAllAsync().Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
         #region Insert
 
         #region Insert

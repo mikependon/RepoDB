@@ -361,7 +361,7 @@ namespace RepoDb
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new InvalidOperationException($"The list of fields cannot be null or empty.");
+                throw new NullReferenceException($"The list of fields cannot be null or empty.");
             }
 
             // Ensure the primary is on the list if it is not an identity
@@ -493,7 +493,7 @@ namespace RepoDb
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
                 {
-                    throw new InvalidQualiferFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
+                    throw new InvalidQualifierFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
@@ -507,7 +507,7 @@ namespace RepoDb
                     // Throw if not present
                     if (isPresent == false)
                     {
-                        throw new InvalidQualiferFieldsException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
+                        throw new InvalidQualifierFieldsException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
                             $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                     }
 
@@ -626,7 +626,7 @@ namespace RepoDb
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new InvalidOperationException($"The list of fields cannot be null or empty.");
+                throw new NullReferenceException($"The list of fields cannot be null or empty.");
             }
 
             // Check the qualifiers
@@ -640,7 +640,7 @@ namespace RepoDb
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
                 {
-                    throw new InvalidQualiferFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
+                    throw new InvalidQualifierFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
@@ -654,7 +654,7 @@ namespace RepoDb
                     // Throw if not present
                     if (isPresent == false)
                     {
-                        throw new InvalidQualiferFieldsException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
+                        throw new InvalidQualifierFieldsException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
                             $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                     }
 
@@ -1015,7 +1015,7 @@ namespace RepoDb
             }
 
             // Check the qualifiers
-            if (qualifiers.Any() == true)
+            if (qualifiers?.Any() == true)
             {
                 // Check if the qualifiers are present in the given fields
                 var unmatchesQualifiers = qualifiers?.Where(field =>
@@ -1025,7 +1025,7 @@ namespace RepoDb
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
                 {
-                    throw new InvalidQualiferFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
+                    throw new InvalidQualifierFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
@@ -1039,7 +1039,7 @@ namespace RepoDb
                     // Throw if not present
                     if (isPresent == false)
                     {
-                        throw new InvalidQualiferFieldsException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
+                        throw new InvalidQualifierFieldsException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
                             $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                     }
 

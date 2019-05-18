@@ -76,6 +76,7 @@
     <Compile Include="CustomObjects\CustomDbConnection.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomObjects\CustomDbDataReader.cs" />
     <Compile Include="CustomObjects\CustomDbParameter.cs" />
     <Compile Include="CustomObjects\CustomDbParameterCollection.cs" />
     <Compile Include="Caches\MemoryCacheTest.cs" />
@@ -133,10 +134,12 @@
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateDeleteTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateInsertAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateInsertTest.cs" />
+    <Compile Include="StatementBuilders\SqlStatementBuilder\CreateMergeAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateMergeTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateQueryAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateQueryTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateTruncateTest.cs" />
+    <Compile Include="StatementBuilders\SqlStatementBuilder\CreateUpdateAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateUpdateTest.cs" />
   </ItemGroup>
   <ItemGroup>
