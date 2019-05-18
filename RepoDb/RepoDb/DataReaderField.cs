@@ -5,7 +5,7 @@ namespace RepoDb
     /// <summary>
     /// A class used to handle the field definition of the data reader.
     /// </summary>
-    internal class DataReaderFieldDefinition
+    internal class DataReaderField
     {
         /// <summary>
         /// Gets or sets the name value.
