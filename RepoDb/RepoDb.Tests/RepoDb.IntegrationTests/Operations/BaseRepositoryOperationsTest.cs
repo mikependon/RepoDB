@@ -2455,617 +2455,1315 @@ namespace RepoDb.IntegrationTests.Operations
 
         #region Merge
 
-        #region Merge
+        #region Merge<TEntity>
 
         [TestMethod]
-        public void TestBaseRepositoryMerge()
+        public void TestBaseRepositoryMergeForIdentitySingleEntityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateIdentityTable();
 
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.Merge(queryResult);
+                var mergeResult = repository.Merge(item);
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
 
                 // Act
-                queryResult = repository.Query(last.Id).First();
+                var queryResult = repository.Query(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestBaseRepositoryMergeWithPrimaryField()
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new IdentityTableRepository())
+            using (var repository = new NonIdentityTableRepository())
             {
                 // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.Merge<long>(queryResult, new Field(nameof(IdentityTable.Id)));
+                var mergeResult = repository.Merge(item);
 
                 // Assert
-                Assert.AreEqual(last.Id, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
 
                 // Act
-                queryResult = repository.Query(last.Id).First();
+                var queryResult = repository.Query(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestBaseRepositoryMergeWithNonPrimaryFieldViaInstantiation()
+        public void TestBaseRepositoryMergeForIdentitySingleEntityWithQualifierForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var item = Helper.CreateIdentityTable();
 
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(item => item.ColumnInt == 10).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.Merge<long>(queryResult, new Field(nameof(IdentityTable.ColumnInt)));
+                var mergeResult = repository.Merge(item, Field.From(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
-                Assert.AreEqual(10, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
 
                 // Act
-                queryResult = repository.Query(item => item.ColumnInt == 10).First();
+                var queryResult = repository.Query(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestBaseRepositoryMergeWithNonPrimaryFieldViaFromMethod()
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityWithQualifierForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new IdentityTableRepository())
+            using (var repository = new NonIdentityTableRepository())
             {
                 // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(item => item.ColumnInt == 10).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.Merge<long>(queryResult, Field.From(nameof(IdentityTable.ColumnInt)));
+                var mergeResult = repository.Merge(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
-                Assert.AreEqual(10, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
 
                 // Act
-                queryResult = repository.Query(item => item.ColumnInt == 10).First();
+                var queryResult = repository.Query(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestBaseRepositoryMergeWithMultipleFieldsViaInstantiation()
+        public void TestBaseRepositoryMergeForIdentitySingleEntityWithQualifiersForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var item = Helper.CreateIdentityTable();
 
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.Merge<long>(queryResult, Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnBit)));
+                var mergeResult = repository.Merge(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
 
                 // Assert
-                Assert.AreEqual(10, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
 
                 // Act
-                queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = repository.Query(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestBaseRepositoryMergeWithMultipleFieldsViaFromMethod()
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityWithQualifiersForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.Merge(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForIdentitySingleEntityWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
 
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.Merge<long>(queryResult, Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnBit)));
+                var mergeResult = repository.Merge<long>(item);
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
 
                 // Act
-                queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = repository.Query(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.Merge<Guid>(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.Merge<long>(item, Field.From(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.Merge<Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.Merge<long>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.Merge<Guid>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForIdentitySingleEntityForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForIdentitySingleEntityWithQualifierForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge(item, Field.From(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityWithQualifierForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge<long>(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge<Guid>(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge<long>(item, Field.From(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge<Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge<long>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeForNonIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge<Guid>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        #endregion
+
+        #region Merge<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeWithExtraFieldsForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateWithExtraFieldsIdentityTable();
+
+            using (var repository = new WithExtraFieldsIdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.Merge(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeWithExtraFieldsForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateWithExtraFieldsIdentityTable();
+
+            using (var repository = new WithExtraFieldsIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.Merge(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         #endregion
 
-        #region Merge(Extra Fields)
+        #region MergeAsync<TEntity>
 
         [TestMethod]
-        public void TestBaseRepositoryMergeWithExtraFields()
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateIdentityTable();
 
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.InsertAll(tables);
+                var mergeResult = repository.MergeAsync(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
 
                 // Act
-                var queryResult = repository.Query(last.Id).First();
+                var queryResult = repository.Query(item.Id).First();
 
-                // Set
-                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(queryResult);
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
 
                 // Act
-                entity.ColumnBit = false;
-                entity.ColumnDateTime = Helper.EpocDate;
-                entity.ColumnDateTime2 = Helper.EpocDate;
-                entity.ColumnDecimal = 0;
-                entity.ColumnFloat = 0;
-                entity.ColumnInt = 0;
-                entity.ColumnNVarChar = "Merged";
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityWithQualifierForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
 
                 // Act
-                using (var withExtraFieldsRepository = new WithExtraFieldsIdentityTableRepository())
-                {
-                    var mergeResult = withExtraFieldsRepository.Merge(entity);
+                var queryResult = repository.Query(item.Id).First();
 
-                    // Assert
-                    Assert.AreEqual(1, mergeResult);
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
 
-                    // Act
-                    queryResult = repository.Query(last.Id).First();
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityWithQualifierForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
 
-                    // Assert
-                    Assert.AreEqual(false, queryResult.ColumnBit);
-                    Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                    Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                    Assert.AreEqual(0, queryResult.ColumnDecimal);
-                    Assert.AreEqual(0, queryResult.ColumnFloat);
-                    Assert.AreEqual(0, queryResult.ColumnInt);
-                    Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
-                }
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityWithQualifiersForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityWithQualifiersForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync<long>(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync<Guid>(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync<long>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync<Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync<long>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync<Guid>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityWithQualifierForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityWithQualifierForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync<long>(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync<Guid>(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync<long>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync<Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync<long>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForNonIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var repository = new NonIdentityTableRepository())
+            {
+                // Act
+                repository.Insert(item);
+
+                // Act
+                var mergeResult = repository.MergeAsync<Guid>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         #endregion
 
-        #region MergeAsync
+        #region MergeAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestBaseRepositoryMergeAsync()
+        public void TestBaseRepositoryMergeAsyncWithExtraFieldsForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var repository = new IdentityTableRepository())
+            using (var repository = new WithExtraFieldsIdentityTableRepository())
             {
                 // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.MergeAsync(queryResult).Result;
+                var mergeResult = repository.MergeAsync(item).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
 
                 // Act
-                queryResult = repository.Query(last.Id).First();
+                var queryResult = repository.Query(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestBaseRepositoryMergeAsyncWithPrimaryField()
+        public void TestBaseRepositoryMergeAsyncWithExtraFieldsForNonEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var repository = new IdentityTableRepository())
+            using (var repository = new WithExtraFieldsIdentityTableRepository())
             {
                 // Act
-                repository.InsertAll(tables);
+                repository.Insert(item);
 
                 // Act
-                var queryResult = repository.Query(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.MergeAsync<long>(queryResult, new Field(nameof(IdentityTable.Id))).Result;
+                var mergeResult = repository.MergeAsync(item).Result;
 
                 // Assert
-                Assert.AreEqual(last.Id, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
 
                 // Act
-                queryResult = repository.Query(last.Id).First();
+                var queryResult = repository.Query(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryMergeAsyncWithNonPrimaryFieldViaInstantiation()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(item => item.ColumnInt == 10).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.MergeAsync<long>(queryResult, new Field(nameof(IdentityTable.ColumnInt))).Result;
-
-                // Assert
-                Assert.AreEqual(10, mergeResult);
-
-                // Act
-                queryResult = repository.Query(item => item.ColumnInt == 10).First();
-
-                // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryMergeAsyncWithNonPrimaryFieldViaFromMethod()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(item => item.ColumnInt == 10).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.MergeAsync<long>(queryResult, Field.From(nameof(IdentityTable.ColumnInt))).Result;
-
-                // Assert
-                Assert.AreEqual(10, mergeResult);
-
-                // Act
-                queryResult = repository.Query(item => item.ColumnInt == 10).First();
-
-                // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryMergeAsyncWithMultipleFieldsViaInstantiation()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.MergeAsync<long>(queryResult, Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnBit))).Result;
-
-                // Assert
-                Assert.AreEqual(10, mergeResult);
-
-                // Act
-                queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Assert
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryMergeAsyncWithMultipleFieldsViaFromMethod()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = repository.MergeAsync<long>(queryResult, Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnBit))).Result;
-
-                // Assert
-                Assert.AreEqual(10, mergeResult);
-
-                // Act
-                queryResult = repository.Query(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Assert
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         #endregion
 
-        #region MergeAsync(Extra Fields)
-
-        [TestMethod]
-        public void TestBaseRepositoryMergeAsyncWithExtraFields()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var queryResult = repository.Query(last.Id).First();
-
-                // Set
-                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(queryResult);
-
-                // Act
-                entity.ColumnBit = false;
-                entity.ColumnDateTime = Helper.EpocDate;
-                entity.ColumnDateTime2 = Helper.EpocDate;
-                entity.ColumnDecimal = 0;
-                entity.ColumnFloat = 0;
-                entity.ColumnInt = 0;
-                entity.ColumnNVarChar = "Merged";
-
-                // Act
-                using (var withExtraFieldsRepository = new WithExtraFieldsIdentityTableRepository())
-                {
-                    var mergeResult = withExtraFieldsRepository.MergeAsync(entity).Result;
-
-                    // Assert
-                    Assert.AreEqual(1, mergeResult);
-
-                    // Act
-                    queryResult = repository.Query(last.Id).First();
-
-                    // Assert
-                    Assert.AreEqual(false, queryResult.ColumnBit);
-                    Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                    Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                    Assert.AreEqual(0, queryResult.ColumnDecimal);
-                    Assert.AreEqual(0, queryResult.ColumnFloat);
-                    Assert.AreEqual(0, queryResult.ColumnInt);
-                    Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
-                }
-            }
-        }
-
         #endregion
+
+        #region MergeAll
 
         #endregion
 
@@ -6310,7 +7008,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region UpdateAll<TEntity>
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAllViaDataEntities()
+        public void TestBaseRepositoryUpdateAllViaDataEntities()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -6345,7 +7043,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAllViaDataEntitiesWithSingleBatch()
+        public void TestBaseRepositoryUpdateAllViaDataEntitiesWithSingleBatch()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -6380,7 +7078,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAllViaDataEntitiesViaQualifiers()
+        public void TestBaseRepositoryUpdateAllViaDataEntitiesViaQualifiers()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -6415,7 +7113,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAllViaDataEntitiesViaQualifiersWithSingleBatch()
+        public void TestBaseRepositoryUpdateAllViaDataEntitiesViaQualifiersWithSingleBatch()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -6454,7 +7152,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region UpdateAllAsync<TEntity>
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAllAsyncViaDataEntities()
+        public void TestBaseRepositoryUpdateAllAsyncViaDataEntities()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -6489,7 +7187,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAllAsyncViaDataEntitiesWithSingleBatch()
+        public void TestBaseRepositoryUpdateAllAsyncViaDataEntitiesWithSingleBatch()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -6524,7 +7222,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAllAsyncViaDataEntitiesViaQualifiers()
+        public void TestBaseRepositoryUpdateAllAsyncViaDataEntitiesViaQualifiers()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -6559,7 +7257,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAllAsyncViaDataEntitiesViaQualifiersWithSingleBatch()
+        public void TestBaseRepositoryUpdateAllAsyncViaDataEntitiesViaQualifiersWithSingleBatch()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);

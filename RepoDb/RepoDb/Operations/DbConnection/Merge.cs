@@ -679,8 +679,17 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
+                // Get the DB primary
                 var primary = DbFieldCache.Get(connection, tableName).FirstOrDefault(dbField => dbField.IsPrimary);
-                qualifiers = primary?.AsField().AsEnumerable();
+
+                // Throw if there is no primary
+                if (primary == null)
+                {
+                    throw new PrimaryFieldNotFoundException($"There is no primary found for '{tableName}'.");
+                }
+
+                // Set the primary as the qualifier
+                qualifiers = primary.AsField().AsEnumerable();
             }
 
             // Return the result

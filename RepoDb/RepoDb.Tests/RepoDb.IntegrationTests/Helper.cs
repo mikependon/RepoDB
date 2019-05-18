@@ -116,7 +116,8 @@ namespace RepoDb.IntegrationTests
                 }
                 var value1 = propertyOfType1.GetValue(t1);
                 var value2 = propertyOfType2.GetValue(t2);
-                Assert.AreEqual(value1, value2, $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1}' and '{value2}'.");
+                Assert.AreEqual(value1, value2,
+                    $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1}' and '{value2}'.");
             });
         }
 
@@ -140,7 +141,10 @@ namespace RepoDb.IntegrationTests
                 {
                     var value1 = property.GetValue(obj);
                     var value2 = dictionary[property.Name];
-                    Assert.AreEqual(value1, value2, $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
+                    Assert.AreEqual(
+                        Convert.ChangeType(value1, property.PropertyType.GetUnderlyingType()),
+                        Convert.ChangeType(value2, property.PropertyType.GetUnderlyingType()),
+                        $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                 }
             });
 
@@ -307,6 +311,27 @@ namespace RepoDb.IntegrationTests
         #region IdentityTable
 
         /// <summary>
+        /// Creates a an instance of dynamic object for [sc].[IdentityTable].
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A dynamic for [sc].[IdentityTable].</returns>
+        public static dynamic CreateDynamicIdentityTable()
+        {
+            return new
+            {
+                Id = 1,
+                RowGuid = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate.AddDays(1),
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(1),
+                ColumnFloat = Convert.ToSingle(1),
+                ColumnInt = 1,
+                ColumnNVarChar = $"NVARCHAR{1}"
+            };
+        }
+
+        /// <summary>
         /// Creates a list of dynamic objects for [sc].[IdentityTable].
         /// </summary>
         /// <param name="count">The number of rows.</param>
@@ -319,12 +344,13 @@ namespace RepoDb.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
+                    Id = index,
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
                     ColumnDateTime = EpocDate.AddDays(index),
                     ColumnDateTime2 = DateTime.UtcNow,
-                    ColumnDecimal = index,
-                    ColumnFloat = index,
+                    ColumnDecimal = Convert.ToDecimal(index),
+                    ColumnFloat = Convert.ToSingle(index),
                     ColumnInt = index,
                     ColumnNVarChar = $"NVARCHAR{index}"
                 });
@@ -350,6 +376,7 @@ namespace RepoDb.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
+                    Id = index,
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
                     ColumnDateTime2 = DateTime.UtcNow,
@@ -362,6 +389,26 @@ namespace RepoDb.IntegrationTests
         #endregion
 
         #region NonIdentityTable
+
+        /// <summary>
+        /// Creates a an instance of dynamic object for [sc].[NonIdentityTable].
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A dynamic for [sc].[NonIdentityTable].</returns>
+        public static dynamic CreateDynamicNonIdentityTable()
+        {
+            return new
+            {
+                Id = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate.AddDays(1),
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(1),
+                ColumnFloat = Convert.ToSingle(1),
+                ColumnInt = 1,
+                ColumnNVarChar = $"NVARCHAR{1}"
+            };
+        }
 
         /// <summary>
         /// Creates a list of dynamic objects for [dbo].[NonIdentityTable].
@@ -380,8 +427,8 @@ namespace RepoDb.IntegrationTests
                     ColumnBit = true,
                     ColumnDateTime = EpocDate.AddDays(index),
                     ColumnDateTime2 = DateTime.UtcNow,
-                    ColumnDecimal = index,
-                    ColumnFloat = index,
+                    ColumnDecimal = Convert.ToDecimal(index),
+                    ColumnFloat = Convert.ToSingle(index),
                     ColumnInt = index,
                     ColumnNVarChar = $"NVARCHAR{index}"
                 });
