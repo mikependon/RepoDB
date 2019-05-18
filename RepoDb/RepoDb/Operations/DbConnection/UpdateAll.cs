@@ -669,14 +669,6 @@ namespace RepoDb
             // Get the function
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
-                // Variables
-                var request = new UpdateAllRequest(tableName,
-                    connection,
-                    fields,
-                    qualifiers,
-                    batchSizeValue,
-                    statementBuilder);
-
                 // Variables needed
                 var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
@@ -708,10 +700,33 @@ namespace RepoDb
                         batchSizeValue);
                 }
 
+                // Identity the requests
+                var updateAllRequest = (UpdateAllRequest)null;
+
+                // Variables
+                if (typeof(TEntity) == typeof(object))
+                {
+                    updateAllRequest = new UpdateAllRequest(tableName,
+                        connection,
+                        fields,
+                        qualifiers,
+                        batchSizeValue,
+                        statementBuilder);
+                }
+                else
+                {
+                    updateAllRequest = new UpdateAllRequest(typeof(TEntity),
+                        connection,
+                        fields,
+                        qualifiers,
+                        batchSizeValue,
+                        statementBuilder);
+                }
+
                 // Return the value
                 return new UpdateAllExecutionContext<TEntity>
                 {
-                    CommandText = CommandTextCache.GetUpdateAllText(request),
+                    CommandText = CommandTextCache.GetUpdateAllText(updateAllRequest),
                     InputFields = inputFields,
                     SingleDataEntityParametersSetterFunc = singleEntityFunc,
                     MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc
@@ -887,14 +902,6 @@ namespace RepoDb
             // Get the function
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
-                // Variables
-                var request = new UpdateAllRequest(tableName,
-                    connection,
-                    fields,
-                    qualifiers,
-                    batchSizeValue,
-                    statementBuilder);
-
                 // Variables needed
                 var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
@@ -926,10 +933,33 @@ namespace RepoDb
                         batchSizeValue);
                 }
 
+                // Identity the requests
+                var updateAllRequest = (UpdateAllRequest)null;
+
+                // Variables
+                if (typeof(TEntity) == typeof(object))
+                {
+                    updateAllRequest = new UpdateAllRequest(tableName,
+                        connection,
+                        fields,
+                        qualifiers,
+                        batchSizeValue,
+                        statementBuilder);
+                }
+                else
+                {
+                    updateAllRequest = new UpdateAllRequest(typeof(TEntity),
+                        connection,
+                        fields,
+                        qualifiers,
+                        batchSizeValue,
+                        statementBuilder);
+                }
+
                 // Return the value
                 return new UpdateAllExecutionContext<TEntity>
                 {
-                    CommandText = CommandTextCache.GetUpdateAllText(request),
+                    CommandText = CommandTextCache.GetUpdateAllText(updateAllRequest),
                     InputFields = inputFields,
                     SingleDataEntityParametersSetterFunc = singleEntityFunc,
                     MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc

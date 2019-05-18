@@ -422,19 +422,52 @@ namespace RepoDb
                         batchSizeValue);
                 }
 
-                // Return the value
-                return new InsertAllExecutionContext<TEntity>
+                // Identify the requests
+                var insertAllRequest = (InsertAllRequest)null;
+                var insertRequest = (InsertRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
                 {
-                    CommandText = batchSizeValue > 1 ?
-                        CommandTextCache.GetInsertAllText(new InsertAllRequest(tableName,
+                    if (batchSizeValue > 1)
+                    {
+                        insertAllRequest = new InsertAllRequest(tableName,
                             connection,
                             fields,
                             batchSizeValue,
-                            statementBuilder)) :
-                        CommandTextCache.GetInsertText(new InsertRequest(tableName,
+                            statementBuilder);
+                    }
+                    else
+                    {
+                        insertRequest = new InsertRequest(tableName,
                             connection,
                             fields,
-                            statementBuilder)),
+                            statementBuilder);
+                    }
+                }
+                else
+                {
+                    if (batchSizeValue > 1)
+                    {
+                        insertAllRequest = new InsertAllRequest(typeof(TEntity),
+                            connection,
+                            fields,
+                            batchSizeValue,
+                            statementBuilder);
+                    }
+                    else
+                    {
+                        insertRequest = new InsertRequest(typeof(TEntity),
+                            connection,
+                            fields,
+                            statementBuilder);
+                    }
+                }
+
+                // Return the value
+                return new InsertAllExecutionContext<TEntity>
+                {
+                    CommandText = batchSizeValue > 1 ? CommandTextCache.GetInsertAllText(insertAllRequest) : CommandTextCache.GetInsertText(insertRequest),
                     InputFields = inputFields,
                     OutputFields = outputFields,
                     BatchSize = batchSizeValue,
@@ -707,19 +740,52 @@ namespace RepoDb
                         batchSizeValue);
                 }
 
-                // Return the value
-                return new InsertAllExecutionContext<TEntity>
+                // Identify the requests
+                var insertAllRequest = (InsertAllRequest)null;
+                var insertRequest = (InsertRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
                 {
-                    CommandText = batchSizeValue > 1 ?
-                        CommandTextCache.GetInsertAllText(new InsertAllRequest(tableName,
+                    if (batchSizeValue > 1)
+                    {
+                        insertAllRequest = new InsertAllRequest(tableName,
                             connection,
                             fields,
                             batchSizeValue,
-                            statementBuilder)) :
-                        CommandTextCache.GetInsertText(new InsertRequest(tableName,
+                            statementBuilder);
+                    }
+                    else
+                    {
+                        insertRequest = new InsertRequest(tableName,
                             connection,
                             fields,
-                            statementBuilder)),
+                            statementBuilder);
+                    }
+                }
+                else
+                {
+                    if (batchSizeValue > 1)
+                    {
+                        insertAllRequest = new InsertAllRequest(typeof(TEntity),
+                            connection,
+                            fields,
+                            batchSizeValue,
+                            statementBuilder);
+                    }
+                    else
+                    {
+                        insertRequest = new InsertRequest(typeof(TEntity),
+                            connection,
+                            fields,
+                            statementBuilder);
+                    }
+                }
+
+                // Return the value
+                return new InsertAllExecutionContext<TEntity>
+                {
+                    CommandText = batchSizeValue > 1 ? CommandTextCache.GetInsertAllText(insertAllRequest) : CommandTextCache.GetInsertText(insertRequest),
                     InputFields = inputFields,
                     OutputFields = outputFields,
                     BatchSize = batchSizeValue,

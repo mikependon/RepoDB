@@ -741,7 +741,7 @@ namespace RepoDb
                         batchSizeValue);
                 }
 
-                // Identity the requests
+                // Identify the requests
                 var mergeAllRequest = (MergeAllRequest)null;
                 var mergeRequest = (MergeRequest)null;
 
@@ -1062,7 +1062,7 @@ namespace RepoDb
                         batchSizeValue);
                 }
 
-                // Identity the requests
+                // Identify the requests
                 var mergeAllRequest = (MergeAllRequest)null;
                 var mergeRequest = (MergeRequest)null;
 

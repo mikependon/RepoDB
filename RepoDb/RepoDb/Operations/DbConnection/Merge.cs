@@ -971,13 +971,6 @@ namespace RepoDb
             // Get the function
             var callback = new Func<MergeExecutionContext<TEntity>>(() =>
             {
-                // Variables
-                var request = new MergeRequest(tableName,
-                    connection,
-                    fields,
-                    qualifiers,
-                    statementBuilder);
-
                 // Variables needed
                 var identity = (Field)null;
                 var dbFields = DbFieldCache.Get(connection, tableName);
@@ -1010,13 +1003,34 @@ namespace RepoDb
                     identityPropertySetter = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
                 }
 
+                // Identify the requests
+                var mergeRequest = (MergeRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
+                {
+                    mergeRequest = new MergeRequest(tableName,
+                        connection,
+                        fields,
+                        qualifiers,
+                        statementBuilder);
+                }
+                else
+                {
+                    mergeRequest = new MergeRequest(typeof(TEntity),
+                        connection,
+                        fields,
+                        qualifiers,
+                        statementBuilder);
+                }
+
                 // Return the value
                 return new MergeExecutionContext<TEntity>
                 {
-                    CommandText = CommandTextCache.GetMergeText(request),
+                    CommandText = CommandTextCache.GetMergeText(mergeRequest),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", request.Name, ".Merge"),
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Merge"),
                         inputFields?.AsList(),
                         null),
                     IdentityPropertySetterFunc = identityPropertySetter
@@ -1112,13 +1126,6 @@ namespace RepoDb
             // Get the function
             var callback = new Func<MergeExecutionContext<TEntity>>(() =>
             {
-                // Variables
-                var request = new MergeRequest(tableName,
-                    connection,
-                    fields,
-                    qualifiers,
-                    statementBuilder);
-
                 // Variables needed
                 var identity = (Field)null;
                 var dbFields = DbFieldCache.Get(connection, tableName);
@@ -1151,13 +1158,34 @@ namespace RepoDb
                     identityPropertySetter = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
                 }
 
+                // Identify the requests
+                var mergeRequest = (MergeRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
+                {
+                    mergeRequest = new MergeRequest(tableName,
+                        connection,
+                        fields,
+                        qualifiers,
+                        statementBuilder);
+                }
+                else
+                {
+                    mergeRequest = new MergeRequest(typeof(TEntity),
+                        connection,
+                        fields,
+                        qualifiers,
+                        statementBuilder);
+                }
+
                 // Return the value
                 return new MergeExecutionContext<TEntity>
                 {
-                    CommandText = CommandTextCache.GetMergeText(request),
+                    CommandText = CommandTextCache.GetMergeText(mergeRequest),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", request.Name, ".Merge"),
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Merge"),
                         inputFields?.AsList(),
                         null),
                     IdentityPropertySetterFunc = identityPropertySetter

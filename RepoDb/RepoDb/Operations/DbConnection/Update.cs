@@ -913,13 +913,6 @@ namespace RepoDb
             // Get the function
             var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
             {
-                // Variables
-                var request = new UpdateRequest(tableName,
-                    connection,
-                    where,
-                    fields,
-                    statementBuilder);
-
                 // Variables needed
                 var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
@@ -931,13 +924,34 @@ namespace RepoDb
                         fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
                     .AsList();
 
+                // Identify the requests
+                var updateRequest = (UpdateRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
+                {
+                    updateRequest = new UpdateRequest(tableName,
+                    connection,
+                    where,
+                    fields,
+                    statementBuilder);
+                }
+                else
+                {
+                    updateRequest = new UpdateRequest(typeof(TEntity),
+                    connection,
+                    where,
+                    fields,
+                    statementBuilder);
+                }
+
                 // Return the value
                 return new UpdateExecutionContext<TEntity>
                 {
-                    CommandText = CommandTextCache.GetUpdateText(request),
+                    CommandText = CommandTextCache.GetUpdateText(updateRequest),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", request.Name, ".Update"),
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Update"),
                         inputFields?.AsList(),
                         null)
                 };
@@ -1036,13 +1050,6 @@ namespace RepoDb
             // Get the function
             var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
             {
-                // Variables
-                var request = new UpdateRequest(tableName,
-                    connection,
-                    where,
-                    fields,
-                    statementBuilder);
-
                 // Variables needed
                 var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
@@ -1054,13 +1061,34 @@ namespace RepoDb
                         fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
                     .AsList();
 
+                // Identify the requests
+                var updateRequest = (UpdateRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
+                {
+                    updateRequest = new UpdateRequest(tableName,
+                    connection,
+                    where,
+                    fields,
+                    statementBuilder);
+                }
+                else
+                {
+                    updateRequest = new UpdateRequest(typeof(TEntity),
+                    connection,
+                    where,
+                    fields,
+                    statementBuilder);
+                }
+
                 // Return the value
                 return new UpdateExecutionContext<TEntity>
                 {
-                    CommandText = CommandTextCache.GetUpdateText(request),
+                    CommandText = CommandTextCache.GetUpdateText(updateRequest),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", request.Name, ".Update"),
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Update"),
                         inputFields?.AsList(),
                         null)
                 };

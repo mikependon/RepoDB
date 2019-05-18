@@ -416,15 +416,9 @@ namespace RepoDb
             // Get the function
             var callback = new Func<InsertExecutionContext<TEntity>>(() =>
             {
-                // Variables
-                var request = new InsertRequest(tableName,
-                    connection,
-                    fields,
-                    statementBuilder);
-
                 // Variables needed
                 var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, request.Name);
+                var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
@@ -455,13 +449,32 @@ namespace RepoDb
                     identityPropertySetter = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
                 }
 
+                // Identify the requests
+                var insertRequest = (InsertRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
+                {
+                    insertRequest = new InsertRequest(tableName,
+                        connection,
+                        fields,
+                        statementBuilder);
+                }
+                else
+                {
+                    insertRequest = new InsertRequest(typeof(TEntity),
+                        connection,
+                        fields,
+                        statementBuilder);
+                }
+
                 // Return the value
                 return new InsertExecutionContext<TEntity>
                 {
-                    CommandText = CommandTextCache.GetInsertText(request),
+                    CommandText = CommandTextCache.GetInsertText(insertRequest),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", request.Name, ".Insert"),
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Insert"),
                         inputFields?.AsList(),
                         null),
                     IdentityPropertySetterFunc = identityPropertySetter
@@ -555,15 +568,9 @@ namespace RepoDb
             // Get the function
             var callback = new Func<InsertExecutionContext<TEntity>>(() =>
             {
-                // Variables
-                var request = new InsertRequest(tableName,
-                    connection,
-                    fields,
-                    statementBuilder);
-
                 // Variables needed
                 var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, request.Name);
+                var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
@@ -594,13 +601,32 @@ namespace RepoDb
                     identityPropertySetter = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
                 }
 
+                // Identify the requests
+                var insertRequest = (InsertRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
+                {
+                    insertRequest = new InsertRequest(tableName,
+                        connection,
+                        fields,
+                        statementBuilder);
+                }
+                else
+                {
+                    insertRequest = new InsertRequest(typeof(TEntity),
+                        connection,
+                        fields,
+                        statementBuilder);
+                }
+
                 // Return the value
                 return new InsertExecutionContext<TEntity>
                 {
-                    CommandText = CommandTextCache.GetInsertText(request),
+                    CommandText = CommandTextCache.GetInsertText(insertRequest),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", request.Name, ".Insert"),
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Insert"),
                         inputFields?.AsList(),
                         null),
                     IdentityPropertySetterFunc = identityPropertySetter
