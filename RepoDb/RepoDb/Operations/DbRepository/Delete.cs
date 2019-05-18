@@ -446,7 +446,7 @@ namespace RepoDb
         /// Deletes an existing data from the database.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="where">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(string tableName,
@@ -594,7 +594,7 @@ namespace RepoDb
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="where">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> DeleteAsync(string tableName,
