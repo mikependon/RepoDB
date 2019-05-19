@@ -441,9 +441,8 @@ namespace RepoDb.Reflection
             var dbTypeResolver = new ClientTypeToSqlDbTypeResolver();
 
             // Reusable function for input/output fields
-            var func = new Func<Expression, ParameterExpression, ParameterExpression, DbField, ClassProperty, bool, ParameterDirection, Expression>((Expression instance,
+            var func = new Func<Expression, ParameterExpression, DbField, ClassProperty, bool, ParameterDirection, Expression>((Expression instance,
                 ParameterExpression property,
-                ParameterExpression parameter,
                 DbField field,
                 ClassProperty classProperty,
                 bool skipValueAssignment,
@@ -452,25 +451,36 @@ namespace RepoDb.Reflection
                 // Parameters for the block
                 var parameterAssignments = new List<Expression>();
 
+                // Parameter variables
+                var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", field.UnquotedName));
+                var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
+                parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
+
                 // Set the name
-                var nameAssignment = Expression.Call(parameter, dbParameterParameterNameSetMethod, Expression.Constant(field.UnquotedName));
+                var nameAssignment = Expression.Call(parameterVariable, dbParameterParameterNameSetMethod, Expression.Constant(field.UnquotedName));
                 parameterAssignments.Add(nameAssignment);
 
-                // Set the value
+                // Property instance
                 var instanceProperty = (PropertyInfo)null;
 
                 #region Value
 
+                // Set the value
                 if (skipValueAssignment == false)
                 {
                     // Set the value
-                    var value = (Expression)null;
+                    var valueAssignment = (Expression)null;
 
                     // Check the proper type of the entity
                     if (typeOfEntity != typeOfObject && typeOfEntity.GetTypeInfo().IsGenericType == false)
                     {
                         instanceProperty = typeOfEntity.GetTypeInfo().GetProperty(classProperty.PropertyInfo.Name);
                     }
+
+                    #region Instance.Property or PropertyInfo.GetValue()
+
+                    // Set the value
+                    var value = (Expression)null;
 
                     // If the property is missing directly, then it could be a dynamic object
                     if (instanceProperty == null)
@@ -512,7 +522,8 @@ namespace RepoDb.Reflection
 
                     // Declare the variable for the value assignment
                     var valueBlock = (Expression)null;
-                    var isNullable = instanceProperty == null ||
+                    var isNullable = field.IsNullable == true ||
+                        instanceProperty == null ||
                         (
                             instanceProperty != null &&
                             (
@@ -521,12 +532,14 @@ namespace RepoDb.Reflection
                             )
                         );
 
+                    // The value for DBNull.Value
+                    var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), typeOfObject);
+
                     // Check if the property is nullable
                     if (isNullable == true)
                     {
                         // Identification of the DBNull
                         var valueVariable = Expression.Variable(typeOfObject, string.Concat("valueOf", field.UnquotedName));
-                        var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), typeOfObject);
                         var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
 
                         // Set the propert value
@@ -540,8 +553,42 @@ namespace RepoDb.Reflection
                     }
 
                     // Add to the collection
-                    var valueAssignment = Expression.Call(parameter, dbParameterValueSetMethod, valueBlock);
-                    parameterAssignments.Add(valueAssignment);
+                    valueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod, valueBlock);
+
+                    #endregion
+
+                    // Check if it is a direct assignment or not
+                    if (typeOfEntity != typeOfObject)
+                    {
+                        parameterAssignments.Add(valueAssignment);
+                    }
+                    else
+                    {
+                        var dbNullValueAssignment = (Expression)null;
+
+                        #region DBNull.Value
+
+                        // Set the default type value
+                        if (field.IsNullable == false && field.Type != null)
+                        {
+                            dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod,
+                                Expression.Convert(Expression.Default(field.Type), typeOfObject));
+                        }
+
+                        // Set the DBNull value
+                        if (dbNullValueAssignment == null)
+                        {
+                            dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod, dbNullValue);
+                        }
+
+                        #endregion
+
+                        // Check the presence of the property
+                        var propertyIsNull = Expression.Equal(property, Expression.Constant(null));
+
+                        // Add to parameter assignment
+                        parameterAssignments.Add(Expression.Condition(propertyIsNull, dbNullValueAssignment, valueAssignment));
+                    }
                 }
 
                 #endregion
@@ -591,7 +638,7 @@ namespace RepoDb.Reflection
                     // Set the DB Type
                     if (dbType != null)
                     {
-                        var dbTypeAssignment = Expression.Call(parameter, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
+                        var dbTypeAssignment = Expression.Call(parameterVariable, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
                         parameterAssignments.Add(dbTypeAssignment);
                     }
                 }
@@ -601,7 +648,7 @@ namespace RepoDb.Reflection
                 #region Direction
 
                 // Set the Parameter Direction
-                var directionAssignment = Expression.Call(parameter, dbParameterDirectionSetMethod, Expression.Constant(direction));
+                var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
                 parameterAssignments.Add(directionAssignment);
 
                 #endregion
@@ -616,7 +663,7 @@ namespace RepoDb.Reflection
                     // Set the Size
                     if (field.Size != null)
                     {
-                        var sizeAssignment = Expression.Call(parameter, dbParameterSizeSetMethod, Expression.Constant(field.Size.Value));
+                        var sizeAssignment = Expression.Call(parameterVariable, dbParameterSizeSetMethod, Expression.Constant(field.Size.Value));
                         parameterAssignments.Add(sizeAssignment);
                     }
                 }
@@ -628,7 +675,7 @@ namespace RepoDb.Reflection
                 // Set the Precision
                 if (field.Precision != null)
                 {
-                    var precisionAssignment = Expression.Call(parameter, dbParameterPrecisionSetMethod, Expression.Constant(field.Precision.Value));
+                    var precisionAssignment = Expression.Call(parameterVariable, dbParameterPrecisionSetMethod, Expression.Constant(field.Precision.Value));
                     parameterAssignments.Add(precisionAssignment);
                 }
 
@@ -639,17 +686,17 @@ namespace RepoDb.Reflection
                 // Set the Scale
                 if (field.Scale != null)
                 {
-                    var scaleAssignment = Expression.Call(parameter, dbParameterScaleSetMethod, Expression.Constant(field.Scale.Value));
+                    var scaleAssignment = Expression.Call(parameterVariable, dbParameterScaleSetMethod, Expression.Constant(field.Scale.Value));
                     parameterAssignments.Add(scaleAssignment);
                 }
 
                 #endregion
 
                 // Add the actual addition
-                parameterAssignments.Add(Expression.Call(dbParameterCollection, dbParameterCollectionAddMethod, parameter));
+                parameterAssignments.Add(Expression.Call(dbParameterCollection, dbParameterCollectionAddMethod, parameterVariable));
 
-                // Return the expression
-                return Expression.Block(parameterAssignments);
+                // Return the value
+                return Expression.Block(new[] { parameterVariable }, parameterAssignments);
             });
 
             // Variables for the object instance
@@ -713,8 +760,6 @@ namespace RepoDb.Reflection
                 var propertyIndex = (int)item.Index;
                 var propertyVariable = (ParameterExpression)null;
                 var propertyInstance = (Expression)null;
-                var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", field.UnquotedName));
-                var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                 var classProperty = (ClassProperty)null;
 
                 // Set the proper assignments (property)
@@ -742,7 +787,6 @@ namespace RepoDb.Reflection
                 // Execute the function
                 var parameterAssignment = func(instanceVariable /* instance */,
                     propertyVariable /* property */,
-                    parameterVariable /* parameter */,
                     field /* field */,
                     classProperty /* classProperty */,
                     (direction == ParameterDirection.Output) /* skipValueAssignment */,
@@ -753,14 +797,12 @@ namespace RepoDb.Reflection
                 {
                     propertyVariables.Add(propertyVariable);
                 }
-                propertyVariables.Add(parameterVariable);
 
                 // Add the necessary expressions
                 if (propertyVariable != null)
                 {
                     propertyExpressions.Add(Expression.Assign(propertyVariable, propertyInstance));
                 }
-                propertyExpressions.Add(Expression.Assign(parameterVariable, parameterInstance));
                 propertyExpressions.Add(parameterAssignment);
 
                 // Add the property block
@@ -850,10 +892,9 @@ namespace RepoDb.Reflection
             var dbTypeResolver = new ClientTypeToSqlDbTypeResolver();
 
             // Reusable function for input/output fields
-            var func = new Func<int, Expression, ParameterExpression, ParameterExpression, DbField, ClassProperty, bool, ParameterDirection, Expression>((int entityIndex,
+            var func = new Func<int, Expression, ParameterExpression, DbField, ClassProperty, bool, ParameterDirection, Expression>((int entityIndex,
                 Expression instance,
                 ParameterExpression property,
-                ParameterExpression parameter,
                 DbField field,
                 ClassProperty classProperty,
                 bool skipValueAssignment,
@@ -862,12 +903,17 @@ namespace RepoDb.Reflection
                 // Parameters for the block
                 var parameterAssignments = new List<Expression>();
 
+                // Parameter variables
+                var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", field.UnquotedName));
+                var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
+                parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
+
                 // Set the name
-                var nameAssignment = Expression.Call(parameter, dbParameterParameterNameSetMethod,
+                var nameAssignment = Expression.Call(parameterVariable, dbParameterParameterNameSetMethod,
                     Expression.Constant(entityIndex > 0 ? string.Concat(field.UnquotedName, "_", entityIndex) : field.UnquotedName));
                 parameterAssignments.Add(nameAssignment);
 
-                // Set the value
+                // Property instance
                 var instanceProperty = (PropertyInfo)null;
 
                 #region Value
@@ -876,13 +922,18 @@ namespace RepoDb.Reflection
                 if (skipValueAssignment == false)
                 {
                     // Set the value
-                    var value = (Expression)null;
+                    var valueAssignment = (Expression)null;
 
                     // Check the proper type of the entity
                     if (typeOfEntity != typeOfObject && typeOfEntity.GetTypeInfo().IsGenericType == false)
                     {
-                        instanceProperty = typeOfEntity.GetTypeInfo().GetProperty(field.UnquotedName);
+                        instanceProperty = typeOfEntity.GetTypeInfo().GetProperty(classProperty.PropertyInfo.Name);
                     }
+
+                    #region Instance.Property or PropertyInfo.GetValue()
+
+                    // Set the value
+                    var value = (Expression)null;
 
                     // If the property is missing directly, then it could be a dynamic object
                     if (instanceProperty == null)
@@ -924,7 +975,8 @@ namespace RepoDb.Reflection
 
                     // Declare the variable for the value assignment
                     var valueBlock = (Expression)null;
-                    var isNullable = instanceProperty == null ||
+                    var isNullable = field.IsNullable == true ||
+                        instanceProperty == null ||
                         (
                             instanceProperty != null &&
                             (
@@ -933,12 +985,14 @@ namespace RepoDb.Reflection
                             )
                         );
 
+                    // The value for DBNull.Value
+                    var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), typeOfObject);
+
                     // Check if the property is nullable
                     if (isNullable == true)
                     {
                         // Identification of the DBNull
                         var valueVariable = Expression.Variable(typeOfObject, string.Concat("valueOf", field.UnquotedName));
-                        var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), typeOfObject);
                         var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
 
                         // Set the propert value
@@ -952,8 +1006,42 @@ namespace RepoDb.Reflection
                     }
 
                     // Add to the collection
-                    var valueAssignment = Expression.Call(parameter, dbParameterValueSetMethod, valueBlock);
-                    parameterAssignments.Add(valueAssignment);
+                    valueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod, valueBlock);
+
+                    #endregion
+
+                    // Check if it is a direct assignment or not
+                    if (typeOfEntity != typeOfObject)
+                    {
+                        parameterAssignments.Add(valueAssignment);
+                    }
+                    else
+                    {
+                        var dbNullValueAssignment = (Expression)null;
+
+                        #region DBNull.Value
+
+                        // Set the default type value
+                        if (field.IsNullable == false && field.Type != null)
+                        {
+                            dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod,
+                                Expression.Convert(Expression.Default(field.Type), typeOfObject));
+                        }
+
+                        // Set the DBNull value
+                        if (dbNullValueAssignment == null)
+                        {
+                            dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod, dbNullValue);
+                        }
+
+                        #endregion
+
+                        // Check the presence of the property
+                        var propertyIsNull = Expression.Equal(property, Expression.Constant(null));
+
+                        // Add to parameter assignment
+                        parameterAssignments.Add(Expression.Condition(propertyIsNull, dbNullValueAssignment, valueAssignment));
+                    }
                 }
 
                 #endregion
@@ -1003,7 +1091,7 @@ namespace RepoDb.Reflection
                     // Set the DB Type
                     if (dbType != null)
                     {
-                        var dbTypeAssignment = Expression.Call(parameter, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
+                        var dbTypeAssignment = Expression.Call(parameterVariable, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
                         parameterAssignments.Add(dbTypeAssignment);
                     }
                 }
@@ -1013,7 +1101,7 @@ namespace RepoDb.Reflection
                 #region Direction
 
                 // Set the Parameter Direction
-                var directionAssignment = Expression.Call(parameter, dbParameterDirectionSetMethod, Expression.Constant(direction));
+                var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
                 parameterAssignments.Add(directionAssignment);
 
                 #endregion
@@ -1028,7 +1116,7 @@ namespace RepoDb.Reflection
                     // Set the Size
                     if (field.Size != null)
                     {
-                        var sizeAssignment = Expression.Call(parameter, dbParameterSizeSetMethod, Expression.Constant(field.Size.Value));
+                        var sizeAssignment = Expression.Call(parameterVariable, dbParameterSizeSetMethod, Expression.Constant(field.Size.Value));
                         parameterAssignments.Add(sizeAssignment);
                     }
                 }
@@ -1040,7 +1128,7 @@ namespace RepoDb.Reflection
                 // Set the Precision
                 if (field.Precision != null)
                 {
-                    var precisionAssignment = Expression.Call(parameter, dbParameterPrecisionSetMethod, Expression.Constant(field.Precision.Value));
+                    var precisionAssignment = Expression.Call(parameterVariable, dbParameterPrecisionSetMethod, Expression.Constant(field.Precision.Value));
                     parameterAssignments.Add(precisionAssignment);
                 }
 
@@ -1051,17 +1139,17 @@ namespace RepoDb.Reflection
                 // Set the Scale
                 if (field.Scale != null)
                 {
-                    var scaleAssignment = Expression.Call(parameter, dbParameterScaleSetMethod, Expression.Constant(field.Scale.Value));
+                    var scaleAssignment = Expression.Call(parameterVariable, dbParameterScaleSetMethod, Expression.Constant(field.Scale.Value));
                     parameterAssignments.Add(scaleAssignment);
                 }
 
                 #endregion
 
                 // Add the actual addition
-                parameterAssignments.Add(Expression.Call(dbParameterCollection, dbParameterCollectionAddMethod, parameter));
+                parameterAssignments.Add(Expression.Call(dbParameterCollection, dbParameterCollectionAddMethod, parameterVariable));
 
-                // Return the expression
-                return Expression.Block(parameterAssignments);
+                // Return the value
+                return Expression.Block(new[] { parameterVariable }, parameterAssignments);
             });
 
             // Variables for the object instance
@@ -1129,8 +1217,6 @@ namespace RepoDb.Reflection
                     var propertyIndex = (int)item.Index;
                     var propertyVariable = (ParameterExpression)null;
                     var propertyInstance = (Expression)null;
-                    var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", field.UnquotedName));
-                    var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                     var classProperty = (ClassProperty)null;
 
                     // Set the proper assignments (property)
@@ -1159,7 +1245,6 @@ namespace RepoDb.Reflection
                     var parameterAssignment = func(entityIndex /* index */,
                         instanceVariable /* instance */,
                         propertyVariable /* property */,
-                        parameterVariable /* parameter */,
                         field /* field */,
                         classProperty /* classProperty */,
                         (direction == ParameterDirection.Output) /* skipValueAssignment */,
@@ -1170,14 +1255,12 @@ namespace RepoDb.Reflection
                     {
                         propertyVariables.Add(propertyVariable);
                     }
-                    propertyVariables.Add(parameterVariable);
 
                     // Add the necessary expressions
                     if (propertyVariable != null)
                     {
                         propertyExpressions.Add(Expression.Assign(propertyVariable, propertyInstance));
                     }
-                    propertyExpressions.Add(Expression.Assign(parameterVariable, parameterInstance));
                     propertyExpressions.Add(parameterAssignment);
 
                     // Add the property block

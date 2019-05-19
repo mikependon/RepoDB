@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.9.4</version>
+    <version>1.9.5</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -11,7 +11,7 @@
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
-      RepoDb v1.9.4:
+      RepoDb v1.9.5:
       - [Note] This version is the first ever version release with complete features. The next version will be only be bug-fixes from this version (if we found some).
       - [Core] Introduce 'UpdateMultiple', different from 'UpdateAll'. #94
       - [Core] Introduce the 'UpdateAll' via 'PrimaryKey'. #93
@@ -39,6 +39,7 @@
       - [Bug] [Core] Insert is failing for non-null (non-table) properties (XJNEN) #212
       - [Bug] DbHelper: Script execution security related issue in the company (XJNEN) #229
       - [Bug] Expression based using the 'ToList().Contains()' is failing. But the 'ToArray().Contains()' is working. XJNEN #233
+      - [Known-Bug] Error is thrown when calling the 'UpdateAll' with dynamic entities (and the fields are not equals to the DB fields) and the 'qualifiers' were not defined. #232
       - [Adhoc] Call the 'AsList()' method when calling the 'QueryGroup.GetString()' method. Support the case of XJNEN #228
       - [Adhoc] Reviewed BaseRepository, DbRepository, DbConnection Async/Await Keywords
       - [Adhoc] Reviewed UnitTests for the ITrace (BaseRepository, DbRepository, DbConnection)
