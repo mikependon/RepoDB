@@ -37,6 +37,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.BatchQuery(0,
                 10,
                 null,
@@ -89,6 +90,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Count((object)null);
 
             // Assert
@@ -127,6 +129,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.CountAll();
 
             // Assert
@@ -163,6 +166,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Delete(e => e.Id == 1);
 
             // Assert
@@ -199,6 +203,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.DeleteAll();
 
             // Assert
@@ -233,10 +238,12 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Insert(new DataEntityForBaseRepositoryStatementBuilder
-            {
-                Name = "Name"
-            });
+            CommandTextCache.Flush();
+            repository.Insert(
+                new DataEntityForBaseRepositoryStatementBuilder
+                {
+                    Name = "Name"
+                });
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -279,6 +286,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.InsertAll(
                 new[]
                 {
@@ -378,11 +386,13 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Merge(new DataEntityForBaseRepositoryStatementBuilder
-            {
-                Name = "Name"
-            },
-            new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
+            CommandTextCache.Flush();
+            repository.Merge(
+                new DataEntityForBaseRepositoryStatementBuilder
+                {
+                    Name = "Name"
+                },
+                new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -399,11 +409,12 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Merge(new DataEntityForBaseRepositoryStatementBuilder
-            {
-                Name = "Name"
-            },
-            new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
+            repositoryNever.Merge(
+                new DataEntityForBaseRepositoryStatementBuilder
+                {
+                    Name = "Name"
+                },
+                new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -428,6 +439,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Query(e => e.Id == 1);
 
             // Assert
@@ -472,6 +484,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
+            CommandTextCache.Flush();
             repository.Truncate();
 
             // Assert
@@ -506,11 +519,13 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new DataEntityRepository(statementBuilder.Object);
 
             // Act
-            repository.Update(new DataEntityForBaseRepositoryStatementBuilder
-            {
-                Name = "Update"
-            },
-            e => e.Id == 1);
+            CommandTextCache.Flush();
+            repository.Update(
+                new DataEntityForBaseRepositoryStatementBuilder
+                {
+                    Name = "Update"
+                },
+                e => e.Id == 1);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -527,11 +542,12 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Update(new DataEntityForBaseRepositoryStatementBuilder
-            {
-                Name = "Update"
-            },
-            e => e.Id == 1);
+            repositoryNever.Update(
+                new DataEntityForBaseRepositoryStatementBuilder
+                {
+                    Name = "Update"
+                },
+                e => e.Id == 1);
 
             // Assert
             statementBuilderNever.Verify(builder =>

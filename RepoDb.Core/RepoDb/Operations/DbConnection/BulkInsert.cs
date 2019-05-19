@@ -63,7 +63,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -93,7 +93,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this IDbConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -123,7 +123,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert(this IDbConnection connection,
             string tableName,
             DbDataReader reader,
@@ -154,7 +154,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal<TEntity>(this IDbConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -185,7 +185,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -304,7 +304,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal(this IDbConnection connection,
             DbDataReader reader,
             string tableName,
@@ -416,7 +416,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -446,7 +446,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -476,7 +476,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync(this IDbConnection connection,
             string tableName,
             DbDataReader reader,
@@ -507,7 +507,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> BulkInsertAsyncInternal<TEntity>(this IDbConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -538,7 +538,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkInsertAsyncInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -657,7 +657,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkInsertAsyncInternal(this IDbConnection connection,
             DbDataReader reader,
             string tableName,

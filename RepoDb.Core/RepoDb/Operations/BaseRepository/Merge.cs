@@ -17,8 +17,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public object Merge(TEntity entity,
             IDbTransaction transaction = null)
         {
             return DbRepository.Merge<TEntity>(entity: entity,
@@ -31,8 +31,8 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public object Merge(TEntity entity,
             Field qualifier,
             IDbTransaction transaction = null)
         {
@@ -45,14 +45,63 @@ namespace RepoDb
         /// Merges a data entity object into an existing data in the database.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public object Merge(TEntity entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
         {
             return DbRepository.Merge<TEntity>(entity: entity,
+                qualifiers: qualifiers,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public TResult Merge<TResult>(TEntity entity,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Merge<TEntity, TResult>(entity: entity,
+                qualifier: null,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public TResult Merge<TResult>(TEntity entity,
+            Field qualifier,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Merge<TEntity, TResult>(entity: entity,
+                qualifier: qualifier,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public TResult Merge<TResult>(TEntity entity,
+            IEnumerable<Field> qualifiers,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Merge<TEntity, TResult>(entity: entity,
                 qualifiers: qualifiers,
                 transaction: transaction);
         }
@@ -66,8 +115,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<int> MergeAsync(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public Task<object> MergeAsync(TEntity entity,
             IDbTransaction transaction = null)
         {
             return DbRepository.MergeAsync<TEntity>(entity: entity,
@@ -80,8 +129,8 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<int> MergeAsync(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public Task<object> MergeAsync(TEntity entity,
             Field qualifier,
             IDbTransaction transaction = null)
         {
@@ -94,14 +143,63 @@ namespace RepoDb
         /// Merges a data entity object into an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<int> MergeAsync(TEntity entity,
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public Task<object> MergeAsync(TEntity entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
         {
             return DbRepository.MergeAsync<TEntity>(entity: entity,
+                qualifiers: qualifiers,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public Task<TResult> MergeAsync<TResult>(TEntity entity,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MergeAsync<TEntity, TResult>(entity: entity,
+                qualifier: null,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public Task<TResult> MergeAsync<TResult>(TEntity entity,
+            Field qualifier,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MergeAsync<TEntity, TResult>(entity: entity,
+                qualifier: qualifier,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        public Task<TResult> MergeAsync<TResult>(TEntity entity,
+            IEnumerable<Field> qualifiers,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MergeAsync<TEntity, TResult>(entity: entity,
                 qualifiers: qualifiers,
                 transaction: transaction);
         }

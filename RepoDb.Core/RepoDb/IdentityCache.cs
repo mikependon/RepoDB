@@ -31,11 +31,15 @@ namespace RepoDb
         {
             var key = type.FullName.GetHashCode();
             var property = (ClassProperty)null;
+
+            // Try get the value
             if (m_cache.TryGetValue(key, out property) == false)
             {
                 property = PropertyCache.Get(type).FirstOrDefault(p => p.IsIdentity() == true);
                 m_cache.TryAdd(key, property);
             }
+
+            // Return the value
             return property;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
@@ -989,6 +990,740 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region BatchQuery(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameFirstBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (0, 3)
+                Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameFirstBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (9, 6)
+                Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameSecondBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQuerySecondPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (4, 7)
+                Helper.AssertMembersEquality(tables.ElementAt(4), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(7), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameSecondBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQuerySecondPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (5, 2)
+                Helper.AssertMembersEquality(tables.ElementAt(5), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(2), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameWithWhereForFirstBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new[]
+                    {
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
+                    },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (10, 13)
+                Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameWithWhereForFirstBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: new[]
+                    {
+                        new QueryField("ColumnInt", Operation.GreaterThanOrEqual, 1),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 10)
+                    },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (9, 6)
+                Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameWithWhereForSecondBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQuerySecondPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new[]
+                    {
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
+                    },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (14, 17)
+                Helper.AssertMembersEquality(tables.ElementAt(14), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(17), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameWithWhereForSecondBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQuerySecondPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: new[]
+                    {
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
+                    },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (15, 12)
+                Helper.AssertMembersEquality(tables.ElementAt(15), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(12), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (2)
+                Helper.AssertMembersEquality(tables.ElementAt(2), result.ElementAt(0));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: field,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (3, 6)
+                Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: fields,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (10, 13)
+                Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: queryGroup,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (10, 13)
+                Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        #endregion
+
+        #region BatchQueryAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameFirstBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (0, 3)
+                Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameFirstBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (9, 6)
+                Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameSecondBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQuerySecondPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (4, 7)
+                Helper.AssertMembersEquality(tables.ElementAt(4), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(7), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameSecondBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQuerySecondPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (5, 2)
+                Helper.AssertMembersEquality(tables.ElementAt(5), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(2), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForFirstBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new[]
+                    {
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
+                    },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (10, 13)
+                Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForFirstBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: new[]
+                    {
+                        new QueryField("ColumnInt", Operation.GreaterThanOrEqual, 1),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 10)
+                    },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (9, 6)
+                Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForSecondBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQuerySecondPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new[]
+                    {
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
+                    },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (14, 17)
+                Helper.AssertMembersEquality(tables.ElementAt(14), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(17), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForSecondBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQuerySecondPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: new[]
+                    {
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
+                    },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (15, 12)
+                Helper.AssertMembersEquality(tables.ElementAt(15), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(12), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (2)
+                Helper.AssertMembersEquality(tables.ElementAt(2), result.ElementAt(0));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: field,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (3, 6)
+                Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: fields,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (10, 13)
+                Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: queryGroup,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (10, 13)
+                Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region BulkInsert
@@ -1014,7 +1749,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -1050,7 +1785,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -1230,7 +1965,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -1266,7 +2001,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -1484,7 +2219,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -1520,7 +2255,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -1708,7 +2443,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -1744,7 +2479,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ToList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
@@ -4208,7 +4943,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, Constant.DefaultBatchOperationSize, tables.Item2).Wait();
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -4284,7 +5019,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, Constant.DefaultBatchInsertSize, tables.Item2).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, Constant.DefaultBatchOperationSize, tables.Item2).Wait();
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -4322,176 +5057,598 @@ namespace RepoDb.IntegrationTests.Operations
         #region Merge<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionMerge()
+        public void TestSqlConnectionMergeForIdentitySingleEntityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.Merge(queryResult);
+                var mergeResult = connection.Merge<IdentityTable>(item);
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaPrimaryField()
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.Merge(queryResult,
-                    new Field(nameof(IdentityTable.Id)));
+                var mergeResult = connection.Merge<NonIdentityTable>(item);
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaQualifier()
+        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifierForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var item = Helper.CreateIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.Merge(queryResult,
-                    new Field(nameof(IdentityTable.ColumnInt)));
+                var mergeResult = connection.Merge<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaQualifiers()
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifierForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var item = Helper.CreateNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.Merge(queryResult, new[]
-                {
-                    new Field(nameof(IdentityTable.ColumnInt)),
-                    new Field(nameof(IdentityTable.ColumnBit))
-                });
+                var mergeResult = connection.Merge<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifiersForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<IdentityTable>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifiersForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<NonIdentityTable>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForIdentitySingleEntityWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<IdentityTable, long>(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<NonIdentityTable, Guid>(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<IdentityTable, long>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<NonIdentityTable, Guid>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForIdentitySingleEntityForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<IdentityTable>(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<NonIdentityTable>(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifierForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifierForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<IdentityTable>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<NonIdentityTable>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<IdentityTable, long>(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<NonIdentityTable, Guid>(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<IdentityTable, long>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<NonIdentityTable, Guid>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
@@ -4500,49 +5657,51 @@ namespace RepoDb.IntegrationTests.Operations
         #region Merge<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSqlConnectionMergeWithExtraFields()
+        public void TestSqlConnectionMergeWithExtraFieldsForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateWithExtraFieldsIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
-
-                // Set
-                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(queryResult);
-
-                // Act
-                entity.ColumnBit = false;
-                entity.ColumnDateTime = Helper.EpocDate;
-                entity.ColumnDateTime2 = Helper.EpocDate;
-                entity.ColumnDecimal = 0;
-                entity.ColumnFloat = 0;
-                entity.ColumnInt = 0;
-                entity.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.Merge(entity);
+                var mergeResult = connection.Merge<WithExtraFieldsIdentityTable>(item);
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<WithExtraFieldsIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeWithExtraFieldsForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateWithExtraFieldsIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<WithExtraFieldsIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.Merge<WithExtraFieldsIdentityTable>(item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<WithExtraFieldsIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
@@ -4551,176 +5710,598 @@ namespace RepoDb.IntegrationTests.Operations
         #region MergeAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsync()
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.MergeAsync(queryResult).Result;
+                var mergeResult = connection.MergeAsync<IdentityTable>(item).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaPrimaryField()
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.MergeAsync(queryResult,
-                    new Field(nameof(IdentityTable.Id))).Result;
+                var mergeResult = connection.MergeAsync<NonIdentityTable>(item).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaQualifier()
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifierForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var item = Helper.CreateIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.MergeAsync(queryResult,
-                    new Field(nameof(IdentityTable.ColumnInt))).Result;
+                var mergeResult = connection.MergeAsync<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaQualifiers()
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifierForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var item = Helper.CreateNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.MergeAsync(queryResult, new[]
-                {
-                    new Field(nameof(IdentityTable.ColumnInt)),
-                    new Field(nameof(IdentityTable.ColumnBit))
-                }).Result;
+                var mergeResult = connection.MergeAsync<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifiersForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<IdentityTable>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifiersForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<NonIdentityTable>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<IdentityTable>(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<NonIdentityTable>(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifierForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifierForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<IdentityTable>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<NonIdentityTable>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(item,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<NonIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<NonIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
@@ -4729,49 +6310,51 @@ namespace RepoDb.IntegrationTests.Operations
         #region MergeAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncWithExtraFields()
+        public void TestSqlConnectionMergeAsyncWithExtraFieldsForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateWithExtraFieldsIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
-
-                // Set
-                var entity = Helper.ConverToType<WithExtraFieldsIdentityTable>(queryResult);
-
-                // Act
-                entity.ColumnBit = false;
-                entity.ColumnDateTime = Helper.EpocDate;
-                entity.ColumnDateTime2 = Helper.EpocDate;
-                entity.ColumnDecimal = 0;
-                entity.ColumnFloat = 0;
-                entity.ColumnInt = 0;
-                entity.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.MergeAsync(entity).Result;
+                var mergeResult = connection.MergeAsync<WithExtraFieldsIdentityTable>(item).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<WithExtraFieldsIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncWithExtraFieldsForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateWithExtraFieldsIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<WithExtraFieldsIdentityTable>(item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<WithExtraFieldsIdentityTable>(item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<WithExtraFieldsIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
             }
         }
 
@@ -4780,182 +6363,317 @@ namespace RepoDb.IntegrationTests.Operations
         #region Merge(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableName()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateDynamicNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field("Id"));
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertMembersEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameViaPrimaryField()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifierForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateDynamicNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.Id)));
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertMembersEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameViaQualifier()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifiersForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var item = Helper.CreateDynamicNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.ColumnInt)));
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertMembersEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameViaQualifiers()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithTypedResultForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var item = Helper.CreateDynamicNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new[]
-                    {
-                        new Field(nameof(IdentityTable.ColumnInt)),
-                        new Field(nameof(IdentityTable.ColumnBit))
-                    });
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifierForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionMergeViaTableNameIfThereIsNoPrimaryKey()
+        {
+            // Setup
+            var item = Helper.CreateDynamicIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Merge(ClassMappedNameCache.Get<IdentityTable>(), (object)item);
             }
         }
 
@@ -4964,142 +6682,330 @@ namespace RepoDb.IntegrationTests.Operations
         #region MergeAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameAsync()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateDynamicNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.Id))).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertMembersEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameAsyncViaPrimaryField()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifierForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var last = tables.Last();
+            var item = Helper.CreateDynamicNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(last.Id).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnInt = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.Id))).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(last.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual(0, queryResult.ColumnInt);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertMembersEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameAsyncViaQualifier()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifiersForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var item = Helper.CreateDynamicNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
-
-                // Act
-                queryResult.ColumnBit = false;
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new Field(nameof(IdentityTable.ColumnInt))).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
-                Assert.AreEqual(false, queryResult.ColumnBit);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                Helper.AssertMembersEquality(item, queryResult);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameAsyncViaQualifiers()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifierForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Act
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionMergeAsyncViaTableNameIfThereIsNoPrimaryKey()
+        {
+            // Setup
+            var item = Helper.CreateDynamicIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(), (object)item).Wait();
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region MergeAll
+
+        #region MergeAll<TEntity>
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForIdentityEmptyTable()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -5107,39 +7013,1395 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
-
-                // Act
-                queryResult.ColumnDateTime = Helper.EpocDate;
-                queryResult.ColumnDateTime2 = Helper.EpocDate;
-                queryResult.ColumnDecimal = 0;
-                queryResult.ColumnFloat = 0;
-                queryResult.ColumnNVarChar = "Merged";
-
-                // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryResult,
-                    new[]
-                    {
-                        new Field(nameof(IdentityTable.ColumnInt)),
-                        new Field(nameof(IdentityTable.ColumnBit))
-                    }).Result;
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables);
 
                 // Assert
-                Assert.AreEqual(1, mergeResult);
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
 
                 // Act
-                queryResult = connection.Query<IdentityTable>(item => item.ColumnInt == 10 && item.ColumnBit == true).First();
+                var queryResult = connection.QueryAll<IdentityTable>();
 
                 // Assert
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime);
-                Assert.AreEqual(Helper.EpocDate, queryResult.ColumnDateTime2);
-                Assert.AreEqual(0, queryResult.ColumnDecimal);
-                Assert.AreEqual(0, queryResult.ColumnFloat);
-                Assert.AreEqual("Merged", queryResult.ColumnNVarChar);
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForNonIdentityEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForNonIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForNonIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForNonIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForNonIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForNonIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAll<TEntity>(SingleBatch, ModularBatch)
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(19);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForNonIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForNonIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(99);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAllAsync<TEntity>
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForIdentityEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables,
+                    Field.From(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForNonIdentityEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForNonIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForNonIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForNonIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForNonIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForNonIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<NonIdentityTable>(tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAll<TEntity>(SingleBatch, ModularBatch)
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables, 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(19);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForNonIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables, 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncForNonIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(99);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAll(TableName)
+
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionMergeAllIfThereIsNoPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+            }
+        }
+
+        //[TestMethod]
+        //public void TestSqlConnectionMergeAllViaTableName()
+        //{
+        //    // Setup
+        //    var tables = new[]
+        //    {
+        //        new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
+        //        new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
+        //        new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
+        //    };
+
+        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    {
+        //        // Act
+        //        var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+        //        // Assert
+        //        Assert.AreEqual(tables.Length, mergeAllResult);
+        //        Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+        //        // Act
+        //        var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+        //        // Assert
+        //        tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
+        //            queryResult.First(data => data.Id == item.Id)));
+        //    }
+        //}
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForNonIdentityEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForNonIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForNonIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForNonIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForNonIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForNonIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAll(TableName)(SingleBatch, ModularBatch)
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(19);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForNonIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForNonIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(99);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAllAsync(TableName)
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionMergeAllAsyncIfThereIsNoPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForNonIdentityEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForNonIdentityEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForNonIdentityEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForNonIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForNonIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForNonIdentityNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region MergeAllAsync(TableName)(SingleBatch, ModularBatch)
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables, 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(19);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForNonIdentityEmptyTableViaSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables, 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForNonIdentityEmptyTableViaModularBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(99);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
             }
         }
 
@@ -5167,7 +8429,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -5193,7 +8455,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -5353,7 +8615,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -5383,7 +8645,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -5468,7 +8730,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -5499,7 +8761,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -5583,7 +8845,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -5612,7 +8874,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
 
             }
         }
@@ -5694,7 +8956,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5715,7 +8977,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5736,7 +8998,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5757,7 +9019,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5778,7 +9040,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5799,7 +9061,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5820,7 +9082,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5840,7 +9102,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5860,7 +9122,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5880,7 +9142,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5900,7 +9162,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5920,7 +9182,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -5940,7 +9202,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6058,7 +9320,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6098,7 +9360,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6122,7 +9384,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6148,7 +9410,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6308,7 +9570,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6338,7 +9600,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6423,7 +9685,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6454,7 +9716,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6538,7 +9800,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -6567,7 +9829,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
 
             }
         }
@@ -6649,7 +9911,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6670,7 +9932,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6691,7 +9953,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6712,7 +9974,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6733,7 +9995,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6754,7 +10016,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6775,7 +10037,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6795,7 +10057,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6815,7 +10077,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6835,7 +10097,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6855,7 +10117,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6875,7 +10137,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -6895,7 +10157,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7013,7 +10275,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
             }
         }
 
@@ -7053,7 +10315,933 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
-                result.ToList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+                result.AsList().ForEach(table => Helper.AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        #endregion
+
+        #region Query(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameWithoutConditionAndWithFewFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null,
+                    Field.From("Id", "RowGuid", "ColumnFloat"));
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameWithTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var top = 3;
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    whereOrPrimaryKey: null,
+                    top: top);
+
+                // Assert
+                Assert.AreEqual(top, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    whereOrPrimaryKey: null,
+                    orderBy: orderBy.AsEnumerable());
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.First(), result.Last());
+                Helper.AssertPropertiesEquality(tables.Last(), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameWithOrderByAndTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var top = 3;
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    whereOrPrimaryKey: null,
+                    top: top,
+                    orderBy: orderBy.AsEnumerable());
+
+                // Assert
+                Assert.AreEqual(result.Count(), top);
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.Last());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    last.Id);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    new { last.Id });
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    new QueryField(nameof(IdentityTable.Id), last.Id));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(4, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameViaQueryFieldsWithTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var top = 2;
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields,
+                    top: top);
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameViaQueryFieldsWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields,
+                    orderBy: orderBy.AsEnumerable());
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Last());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameViaQueryFieldsWithOrderByAndTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var top = 3;
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields,
+                    orderBy: orderBy.AsEnumerable(), top: top);
+
+                // Assert
+                Assert.AreEqual(top, result.Count());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Last());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), 6)
+            };
+            var queryGroup = new QueryGroup(fields, Conjunction.Or);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameViaQueryGroupWithTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var top = 2;
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup,
+                    top: top);
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameViaQueryGroupWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup,
+                    orderBy: orderBy.AsEnumerable());
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Last());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameViaQueryGroupWithOrderByAndTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+            var top = 3;
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup,
+                    orderBy: orderBy.AsEnumerable(),
+                    top: top);
+
+                // Assert
+                Assert.AreEqual(top, result.Count());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Last());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionQueryViaTableNameViaPrimaryKeyIfThePrimaryKeyIsNotDefinedFromTheDatabase()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    1);
+            }
+        }
+
+        #endregion
+
+        #region QueryAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameWithoutConditionAndWithFewFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null,
+                    Field.From("Id", "RowGuid", "ColumnFloat")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameWithTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var top = 3;
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    whereOrPrimaryKey: null,
+                    top: top).Result;
+
+                // Assert
+                Assert.AreEqual(top, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    whereOrPrimaryKey: null,
+                    orderBy: orderBy.AsEnumerable()).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.First(), result.Last());
+                Helper.AssertPropertiesEquality(tables.Last(), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameWithOrderByAndTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var top = 3;
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    whereOrPrimaryKey: null,
+                    top: top,
+                    orderBy: orderBy.AsEnumerable()).Result;
+
+                // Assert
+                Assert.AreEqual(result.Count(), top);
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.Last());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    last.Id).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new { last.Id }).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new QueryField(nameof(IdentityTable.Id), last.Id)).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(4, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryFieldsWithTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var top = 2;
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields,
+                    top: top).Result;
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryFieldsWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields,
+                    orderBy: orderBy.AsEnumerable()).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Last());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryFieldsWithOrderByAndTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var top = 3;
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields,
+                    orderBy: orderBy.AsEnumerable(), top: top).Result;
+
+                // Assert
+                Assert.AreEqual(top, result.Count());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Last());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), 6)
+            };
+            var queryGroup = new QueryGroup(fields, Conjunction.Or);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryGroupWithTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var top = 2;
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup,
+                    top: top).Result;
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryGroupWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup,
+                    orderBy: orderBy.AsEnumerable()).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.Last());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryGroupWithOrderByAndTop()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+            var top = 3;
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup,
+                    orderBy: orderBy.AsEnumerable(),
+                    top: top).Result;
+
+                // Assert
+                Assert.AreEqual(top, result.Count());
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Last());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnQueryAsyncViaTableNameViaPrimaryKeyIfThePrimaryKeyIsNotDefinedFromTheDatabase()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    1).Wait();
             }
         }
 
@@ -7185,7 +11373,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.QueryAll<WithExtraFieldsIdentityTable>();
 
                 // Assert
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
@@ -7317,10 +11505,290 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.QueryAllAsync<WithExtraFieldsIdentityTable>().Result;
 
                 // Assert
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #region QueryAll(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllViaTableNameWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    orderBy: orderBy);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    hints: SqlTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllViaTableNameWithOrderByAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    orderBy: orderBy,
+                    hints: SqlTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        #endregion
+
+        #region QueryAllAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>()).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncViaTableNameWithOrderBy()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    orderBy: orderBy).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    hints: SqlTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncViaTableNameWithOrderByAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var orderBy = OrderField.Parse(new
+            {
+                Id = Order.Ascending
+            });
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    orderBy: orderBy,
+                    hints: SqlTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.Id, item.Id);
+                    Assert.AreEqual(target.RowGuid, item.RowGuid);
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnDateTime2, item.ColumnDateTime2);
+                    Assert.AreEqual(target.ColumnDecimal, item.ColumnDecimal);
+                    Assert.AreEqual(target.ColumnFloat, item.ColumnFloat);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
                 });
             }
         }
@@ -8238,7 +12706,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -8273,7 +12741,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -8308,7 +12776,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -8343,7 +12811,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -8493,7 +12961,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -8529,7 +12997,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -8565,7 +13033,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -8723,7 +13191,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -8758,7 +13226,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -8793,7 +13261,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -8828,7 +13296,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -8978,7 +13446,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -9014,7 +13482,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -9050,7 +13518,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -9178,6 +13646,69 @@ namespace RepoDb.IntegrationTests.Operations
         #region Update(TableName)
 
         [TestMethod]
+        public void TestSqlConnectionUpdateViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    var data = new
+                    {
+                        Id = item.Id,
+                        ColumnBit = false,
+                        ColumnInt = item.ColumnInt * 100,
+                        ColumnDecimal = item.ColumnDecimal * 100
+                    };
+
+                    // Update each
+                    var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
+                        data);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaTableNameViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
+                    item.Id);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameViaDynamic()
         {
             // Setup
@@ -9198,8 +13729,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(),
-                        item,
-                        new { item.Id });
+                    item,
+                    new { item.Id });
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
@@ -9210,7 +13741,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -9330,9 +13861,100 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfThePrimaryKeyIsNotFound()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    ColumnInt = 1,
+                    ColumnDecimal = 2
+                };
+                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfTheFieldsAreNotFound()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    Id = 1,
+                    AnyField = 1
+                };
+                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
+            }
+        }
+
         #endregion
 
         #region UpdateAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    var data = new
+                    {
+                        Id = item.Id,
+                        ColumnBit = false,
+                        ColumnInt = item.ColumnInt * 100,
+                        ColumnDecimal = item.ColumnDecimal * 100
+                    };
+
+                    // Update each
+                    var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                        data).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaTableNameAsyncViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    item,
+                    item.Id).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameAsyncViaDynamic()
@@ -9355,8 +13977,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                        item,
-                        new { item.Id }).Result;
+                    item,
+                    new { item.Id }).Result;
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
@@ -9367,7 +13989,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -9487,6 +14109,602 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfThePrimaryKeyIsNotFound()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    ColumnInt = 1,
+                    ColumnDecimal = 2
+                };
+                connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), data).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfTheFieldsAreNotFound()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var data = new
+                {
+                    Id = 1,
+                    AnyField = 1
+                };
+                connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), data).Wait();
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region UpdateAll
+
+        #region UpdateAll<TEntity>
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllViaDataEntities()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAll(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllViaDataEntitiesWithSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAll(tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllViaDataEntitiesViaQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAll(tables, Field.From("ColumnFloat", "ColumnNVarChar"));
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllViaDataEntitiesViaQualifiersWithSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAll(tables, Field.From("ColumnFloat", "ColumnNVarChar"), 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region UpdateAllAsync<TEntity>
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllAsyncViaDataEntities()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAllAsync(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesWithSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAllAsync(tables, 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAllAsync(tables, Field.From("ColumnFloat", "ColumnNVarChar")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaQualifiersWithSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAllAsync(tables, Field.From("ColumnFloat", "ColumnNVarChar"), 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var result = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #region UpdateAll(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllViaDataEntitiesViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var items = tables.Select(item => new
+                {
+                    // Set Values
+                    item.Id,
+                    item.ColumnDateTime,
+                    item.ColumnDateTime2,
+                    item.ColumnFloat,
+                    item.ColumnNVarChar,
+                    ColumnBit = false,
+                    ColumnInt = item.ColumnInt * 100,
+                    ColumnDecimal = item.ColumnDecimal * 100
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(), items);
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllViaDataEntitiesViaTableNameWithSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var items = tables.Select(item => new
+                {
+                    // Set Values
+                    item.Id,
+                    item.ColumnDateTime,
+                    item.ColumnDateTime2,
+                    item.ColumnFloat,
+                    item.ColumnNVarChar,
+                    ColumnBit = false,
+                    ColumnInt = item.ColumnInt * 100,
+                    ColumnDecimal = item.ColumnDecimal * 100
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables, 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllViaDataEntitiesViaTableNameViaQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var items = tables.Select(item => new
+                {
+                    // Set Values
+                    item.Id,
+                    item.ColumnDateTime,
+                    item.ColumnDateTime2,
+                    item.ColumnFloat,
+                    item.ColumnNVarChar,
+                    ColumnBit = false,
+                    ColumnInt = item.ColumnInt * 100,
+                    ColumnDecimal = item.ColumnDecimal * 100
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From("ColumnFloat", "ColumnNVarChar"));
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllViaDataEntitiesViaTableNameViaQualifiersWithSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var items = tables.Select(item => new
+                {
+                    // Set Values
+                    item.Id,
+                    item.ColumnDateTime,
+                    item.ColumnDateTime2,
+                    item.ColumnFloat,
+                    item.ColumnNVarChar,
+                    ColumnBit = false,
+                    ColumnInt = item.ColumnInt * 100,
+                    ColumnDecimal = item.ColumnDecimal * 100
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From("ColumnFloat", "ColumnNVarChar"), 1);
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+            }
+        }
+
+        #endregion
+
+        #region UpdateAllAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var items = tables.Select(item => new
+                {
+                    // Set Values
+                    item.Id,
+                    item.ColumnDateTime,
+                    item.ColumnDateTime2,
+                    item.ColumnFloat,
+                    item.ColumnNVarChar,
+                    ColumnBit = false,
+                    ColumnInt = item.ColumnInt * 100,
+                    ColumnDecimal = item.ColumnDecimal * 100
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), items).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameWithSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var items = tables.Select(item => new
+                {
+                    // Set Values
+                    item.Id,
+                    item.ColumnDateTime,
+                    item.ColumnDateTime2,
+                    item.ColumnFloat,
+                    item.ColumnNVarChar,
+                    ColumnBit = false,
+                    ColumnInt = item.ColumnInt * 100,
+                    ColumnDecimal = item.ColumnDecimal * 100
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables, 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameViaQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var items = tables.Select(item => new
+                {
+                    // Set Values
+                    item.Id,
+                    item.ColumnDateTime,
+                    item.ColumnDateTime2,
+                    item.ColumnFloat,
+                    item.ColumnNVarChar,
+                    ColumnBit = false,
+                    ColumnInt = item.ColumnInt * 100,
+                    ColumnDecimal = item.ColumnDecimal * 100
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From("ColumnFloat", "ColumnNVarChar")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameViaQualifiersWithSingleBatch()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var items = tables.Select(item => new
+                {
+                    // Set Values
+                    item.Id,
+                    item.ColumnDateTime,
+                    item.ColumnDateTime2,
+                    item.ColumnFloat,
+                    item.ColumnNVarChar,
+                    ColumnBit = false,
+                    ColumnInt = item.ColumnInt * 100,
+                    ColumnDecimal = item.ColumnDecimal * 100
+                });
+
+                // Update each
+                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From("ColumnFloat", "ColumnNVarChar"), 1).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+            }
+        }
+
         #endregion
 
         #endregion
@@ -9509,7 +14727,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -9543,7 +14761,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -9577,7 +14795,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -9611,7 +14829,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -9645,7 +14863,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -9680,7 +14898,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -9760,7 +14978,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -9794,7 +15012,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -9828,7 +15046,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -9862,7 +15080,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -9896,7 +15114,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -9931,7 +15149,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
-                result.ToList().ForEach(kvpItem =>
+                result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
                     var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
@@ -10011,7 +15229,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -10032,7 +15250,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -10053,7 +15271,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -10074,7 +15292,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -10095,7 +15313,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -10137,7 +15355,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.Where(t => t.Id == item.Id).First();
                     Assert.AreEqual(target.ColumnBit, item.ColumnBit);
@@ -10365,7 +15583,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -10386,7 +15604,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -10407,7 +15625,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -10428,7 +15646,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
-                result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
             }
         }
 
@@ -10449,7 +15667,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
-                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
@@ -10491,7 +15709,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     var target = tables.Where(t => t.Id == item.Id).First();
                     Assert.AreEqual(target.ColumnBit, item.ColumnBit);
@@ -11540,11 +16758,11 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
-                    tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                    tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
                 }
             }
         }
@@ -11565,11 +16783,11 @@ namespace RepoDb.IntegrationTests.Operations
                     new { From = 3, To = 4 }))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -11590,11 +16808,11 @@ namespace RepoDb.IntegrationTests.Operations
                     new { ColumnInt = new[] { 5, 6, 7 } }))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(3, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -11614,11 +16832,11 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReader("SELECT TOP (@Top) * FROM [sc].[IdentityTable];", new { Top = 2 }))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -11638,11 +16856,11 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReader("[dbo].[sp_get_identity_tables]", commandType: CommandType.StoredProcedure))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
-                    tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                    tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
                 }
             }
         }
@@ -11664,7 +16882,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandType: CommandType.StoredProcedure))
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(1, result.Count());
@@ -11712,11 +16930,11 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable];").Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
-                    tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                    tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
                 }
             }
         }
@@ -11737,11 +16955,11 @@ namespace RepoDb.IntegrationTests.Operations
                     new { From = 3, To = 4 }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -11762,11 +16980,11 @@ namespace RepoDb.IntegrationTests.Operations
                     new { ColumnInt = new[] { 5, 6, 7 } }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(3, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -11786,11 +17004,11 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReaderAsync("SELECT TOP (@Top) * FROM [sc].[IdentityTable];", new { Top = 2 }).Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(2, result.Count());
-                    result.ToList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                    result.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
                 }
             }
         }
@@ -11810,11 +17028,11 @@ namespace RepoDb.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReaderAsync("[dbo].[sp_get_identity_tables]", commandType: CommandType.StoredProcedure).Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(tables.Count, result.Count());
-                    tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                    tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
                 }
             }
         }
@@ -11836,7 +17054,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandType: CommandType.StoredProcedure).Result)
                 {
                     // Act
-                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).ToList();
+                    var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     Assert.AreEqual(1, result.Count());

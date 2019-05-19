@@ -33,6 +33,8 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             Database.Cleanup();
         }
 
+        #region <TEntity>
+
         [TestMethod]
         public void TestBaseRepositorySpatialsCrud()
         {
@@ -248,5 +250,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 Assert.IsNull(data.ColumnGeometryMapped);
             }
         }
+
+        #endregion
     }
 }

@@ -9,7 +9,7 @@ namespace RepoDb
     /// </summary>
     public static class ClassMappedNameCache
     {
-        private static readonly ConcurrentDictionary<string, string> m_cache = new ConcurrentDictionary<string, string>();
+        private static readonly ConcurrentDictionary<int, string> m_cache = new ConcurrentDictionary<int, string>();
 
         /// <summary>
         /// Gets the cached mapped-name for the entity.
@@ -42,13 +42,17 @@ namespace RepoDb
         /// <returns>The cached mapped name of the entity.</returns>
         internal static string Get(Type type, bool quoted = true)
         {
-            var key = string.Concat(type.FullName, ".", quoted.ToString());
+            var key = type.FullName.GetHashCode() + quoted.GetHashCode();
             var result = (string)null;
+
+            // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
                 result = DataEntityExtension.GetMappedName(type, quoted);
                 m_cache.TryAdd(key, result);
             }
+
+            // Return the value
             return result;
         }
     }

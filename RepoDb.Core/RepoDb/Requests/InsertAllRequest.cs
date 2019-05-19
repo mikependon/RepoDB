@@ -23,7 +23,7 @@ namespace RepoDb.Requests
         public InsertAllRequest(Type type,
             IDbConnection connection,
             IEnumerable<Field> fields = null,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
@@ -45,7 +45,7 @@ namespace RepoDb.Requests
         public InsertAllRequest(string name,
             IDbConnection connection,
             IEnumerable<Field> fields = null,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
@@ -82,7 +82,7 @@ namespace RepoDb.Requests
             // Get first the entity hash code
             var hashCode = string.Concat(Name, ".InsertAll").GetHashCode();
 
-            // Get the qualifier fields
+            // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
             {
                 foreach (var field in Fields)

@@ -3,7 +3,7 @@ using System.Data.Common;
 
 namespace RepoDb.UnitTests.CustomObjects
 {
-    public class CustomDbCommand : DbCommand
+    public class CustomDbCommand : DbCommand, IDbCommand
     {
         public CustomDbCommand()
         {
@@ -31,6 +31,10 @@ namespace RepoDb.UnitTests.CustomObjects
         public override object ExecuteScalar()
         {
             return null;
+        }
+        public new DbDataReader ExecuteReader()
+        {
+            return new CustomDbDataReader();
         }
         public override void Prepare()
         {

@@ -51,7 +51,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -81,7 +81,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -111,7 +111,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -141,7 +141,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -168,7 +168,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -195,7 +195,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -222,7 +222,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -253,7 +253,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -283,7 +283,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -313,7 +313,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -343,7 +343,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -370,7 +370,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -397,7 +397,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -424,7 +424,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -792,7 +792,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -826,7 +826,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -860,7 +860,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -894,7 +894,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -925,7 +925,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -956,7 +956,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -987,7 +987,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1022,7 +1022,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1056,7 +1056,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1090,7 +1090,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1124,7 +1124,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1155,7 +1155,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1186,7 +1186,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1217,7 +1217,7 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(values.Count(), result.Count());
-                    result.ToList().ForEach(item =>
+                    result.AsList().ForEach(item =>
                     {
                         Assert.IsTrue(values.Contains(item.ColumnInt));
                         Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1587,7 +1587,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1617,7 +1617,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1647,7 +1647,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1677,7 +1677,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1704,7 +1704,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1731,7 +1731,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1758,7 +1758,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1789,7 +1789,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1819,7 +1819,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1849,7 +1849,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1879,7 +1879,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1906,7 +1906,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1933,7 +1933,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
@@ -1960,7 +1960,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
-                result.ToList().ForEach(item =>
+                result.AsList().ForEach(item =>
                 {
                     Assert.IsTrue(values.Contains(item.ColumnInt));
                     Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);

@@ -1,7 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 
@@ -67,7 +69,7 @@ namespace RepoDb.IntegrationTests
             var fromType = obj.GetType();
             var toTypeProperties = typeof(T).GetProperties();
             var result = default(T);
-            fromType.GetProperties().ToList().ForEach(property =>
+            fromType.GetProperties().AsList().ForEach(property =>
             {
                 var toProperty = toTypeProperties.FirstOrDefault(p => p.Name == property.Name);
                 if (strict)
@@ -91,7 +93,7 @@ namespace RepoDb.IntegrationTests
         }
 
         /// <summary>
-        /// Asserts the equalify of 2 types.
+        /// Asserts the properties equality of 2 types.
         /// </summary>
         /// <typeparam name="T1">The type of first object.</typeparam>
         /// <typeparam name="T2">The type of second object.</typeparam>
@@ -101,7 +103,7 @@ namespace RepoDb.IntegrationTests
         {
             var propertiesOfType1 = typeof(T1).GetProperties();
             var propertiesOfType2 = typeof(T2).GetProperties();
-            propertiesOfType1.ToList().ForEach(propertyOfType1 =>
+            propertiesOfType1.AsList().ForEach(propertyOfType1 =>
             {
                 if (propertyOfType1.Name == "Id")
                 {
@@ -114,8 +116,38 @@ namespace RepoDb.IntegrationTests
                 }
                 var value1 = propertyOfType1.GetValue(t1);
                 var value2 = propertyOfType2.GetValue(t2);
-                Assert.AreEqual(value1, value2, $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1}' and '{value2}'.");
+                Assert.AreEqual(value1, value2,
+                    $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1}' and '{value2}'.");
             });
+        }
+
+        /// <summary>
+        /// Asserts the members equality of 2 object and <see cref="ExpandoObject"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of first object.</typeparam>
+        /// <param name="obj">The instance of first object.</param>
+        /// <param name="expandoObj">The instance of second object.</param>
+        public static void AssertMembersEquality(object obj, ExpandoObject expandoObj)
+        {
+            var properties = obj.GetType().GetProperties();
+            var dictionary = expandoObj as IDictionary<string, object>;
+            properties.AsList().ForEach(property =>
+            {
+                if (property.Name == "Id")
+                {
+                    return;
+                }
+                if (dictionary.ContainsKey(property.Name))
+                {
+                    var value1 = property.GetValue(obj);
+                    var value2 = dictionary[property.Name];
+                    Assert.AreEqual(
+                        Convert.ChangeType(value1, property.PropertyType.GetUnderlyingType()),
+                        Convert.ChangeType(value2, property.PropertyType.GetUnderlyingType()),
+                        $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
+                }
+            });
+
         }
 
         #region IdentityTable
@@ -240,7 +272,13 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = index,
                     ColumnFloat = index,
                     ColumnInt = index,
-                    ColumnNVarChar = $"NVARCHAR{index}"
+                    ColumnNVarChar = $"NVARCHAR{index}",
+                    ExtraField = $"ExtraField{index}",
+                    IdentityTables = new[]
+                    {
+                        CreateIdentityTable(),
+                        CreateIdentityTable()
+                    }
                 });
             }
             return tables;
@@ -273,6 +311,27 @@ namespace RepoDb.IntegrationTests
         #region IdentityTable
 
         /// <summary>
+        /// Creates a an instance of dynamic object for [sc].[IdentityTable].
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A dynamic for [sc].[IdentityTable].</returns>
+        public static dynamic CreateDynamicIdentityTable()
+        {
+            return new
+            {
+                Id = 1,
+                RowGuid = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate.AddDays(1),
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(1),
+                ColumnFloat = Convert.ToSingle(1),
+                ColumnInt = 1,
+                ColumnNVarChar = $"NVARCHAR{1}"
+            };
+        }
+
+        /// <summary>
         /// Creates a list of dynamic objects for [sc].[IdentityTable].
         /// </summary>
         /// <param name="count">The number of rows.</param>
@@ -285,12 +344,13 @@ namespace RepoDb.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
+                    Id = index,
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
                     ColumnDateTime = EpocDate.AddDays(index),
                     ColumnDateTime2 = DateTime.UtcNow,
-                    ColumnDecimal = index,
-                    ColumnFloat = index,
+                    ColumnDecimal = Convert.ToDecimal(index),
+                    ColumnFloat = Convert.ToSingle(index),
                     ColumnInt = index,
                     ColumnNVarChar = $"NVARCHAR{index}"
                 });
@@ -316,6 +376,7 @@ namespace RepoDb.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
+                    Id = index,
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
                     ColumnDateTime2 = DateTime.UtcNow,
@@ -328,6 +389,26 @@ namespace RepoDb.IntegrationTests
         #endregion
 
         #region NonIdentityTable
+
+        /// <summary>
+        /// Creates a an instance of dynamic object for [sc].[NonIdentityTable].
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A dynamic for [sc].[NonIdentityTable].</returns>
+        public static dynamic CreateDynamicNonIdentityTable()
+        {
+            return new
+            {
+                Id = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate.AddDays(1),
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(1),
+                ColumnFloat = Convert.ToSingle(1),
+                ColumnInt = 1,
+                ColumnNVarChar = $"NVARCHAR{1}"
+            };
+        }
 
         /// <summary>
         /// Creates a list of dynamic objects for [dbo].[NonIdentityTable].
@@ -346,8 +427,8 @@ namespace RepoDb.IntegrationTests
                     ColumnBit = true,
                     ColumnDateTime = EpocDate.AddDays(index),
                     ColumnDateTime2 = DateTime.UtcNow,
-                    ColumnDecimal = index,
-                    ColumnFloat = index,
+                    ColumnDecimal = Convert.ToDecimal(index),
+                    ColumnFloat = Convert.ToSingle(index),
                     ColumnInt = index,
                     ColumnNVarChar = $"NVARCHAR{index}"
                 });

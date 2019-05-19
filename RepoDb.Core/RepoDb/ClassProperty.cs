@@ -187,7 +187,7 @@ namespace RepoDb
             }
             m_isDbTypeWasSet = true;
             return m_dbType = PropertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                TypeMapper.Get(PropertyInfo.PropertyType.GetUnderlyingType())?.DbType ??
+                TypeMapper.Get(PropertyInfo.PropertyType.GetUnderlyingType()) ??
                 m_clientTypeToSqlDbTypeResolver.Resolve(PropertyInfo.PropertyType);
         }
 

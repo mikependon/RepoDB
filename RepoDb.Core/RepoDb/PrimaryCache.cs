@@ -9,7 +9,7 @@ namespace RepoDb
     /// </summary>
     public static class PrimaryCache
     {
-        private static readonly ConcurrentDictionary<string, ClassProperty> m_cache = new ConcurrentDictionary<string, ClassProperty>();
+        private static readonly ConcurrentDictionary<int, ClassProperty> m_cache = new ConcurrentDictionary<int, ClassProperty>();
 
         /// <summary>
         /// Gets the cached primary property of the data entity.
@@ -29,16 +29,20 @@ namespace RepoDb
         /// <returns>The cached primary property.</returns>
         public static ClassProperty Get(Type type)
         {
-            var key = type.FullName;
+            // Variables for the cache
             var property = (ClassProperty)null;
+            var key = type.FullName.GetHashCode();
+
+            // Try get the value
             if (m_cache.TryGetValue(key, out property) == false)
             {
+                // Get all with IsPrimary() flags
                 var properties = PropertyCache.Get(type).Where(p => p.IsPrimary() == true);
 
                 // Check if there is forced [Primary] attribute
                 property = properties.FirstOrDefault(p => p.GetPrimaryAttribute() != null);
 
-                // Otherwise, get any if present
+                // Otherwise, get the first one
                 if (property == null)
                 {
                     property = properties?.FirstOrDefault();
@@ -47,6 +51,8 @@ namespace RepoDb
                 // Add to the cache (whatever)
                 m_cache.TryAdd(key, property);
             }
+
+            // Return the value
             return property;
         }
     }

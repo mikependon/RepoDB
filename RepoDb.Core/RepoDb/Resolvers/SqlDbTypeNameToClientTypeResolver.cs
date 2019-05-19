@@ -29,12 +29,14 @@ namespace RepoDb
             {
                 case "bigint":
                     return typeof(long);
+                case "attribute":
                 case "binary":
                 case "filestream":
                 case "image":
                 case "rowversion":
                 case "timestamp":
                 case "varbinary":
+                case "varbinary(max)":
                     return typeof(byte[]);
                 case "bit":
                     return typeof(bool);
@@ -58,10 +60,6 @@ namespace RepoDb
                 case "numeric":
                 case "smallmoney":
                     return typeof(decimal);
-                case "FILESTREAM":
-                case "attribute":
-                case "varbinary(max)":
-                    return typeof(byte[]);
                 case "float":
                     return typeof(double);
                 case "int":

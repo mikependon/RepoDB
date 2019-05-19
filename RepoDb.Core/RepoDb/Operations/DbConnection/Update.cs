@@ -1,11 +1,15 @@
-﻿using RepoDb.Exceptions;
+﻿using RepoDb.Contexts.Execution;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -27,7 +31,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             int? commandTimeout = null,
@@ -57,7 +61,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             object whereOrPrimaryKey,
@@ -88,7 +92,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
@@ -118,7 +122,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryField where,
@@ -148,7 +152,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<QueryField> where,
@@ -178,7 +182,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
@@ -208,7 +212,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static int UpdateInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
@@ -218,26 +222,19 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Variables
-            var request = new UpdateRequest(typeof(TEntity),
-                connection,
-                where,
-                entity.AsFields(),
-                statementBuilder);
-
             // Append the prefixes
             where?.PrependAnUnderscoreAtTheParameters();
 
-            // Get the params
-            var param = entity?.Merge(where);
-
             // Return the result
-            return UpdateInternalBase(connection: connection,
-                request: request,
-                param: param,
+            return UpdateInternalBase<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                entity: entity,
+                where: where,
+                fields: entity.AsFields(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace);
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         #endregion
@@ -254,7 +251,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             int? commandTimeout = null,
@@ -284,7 +281,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             object whereOrPrimaryKey,
@@ -315,7 +312,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
@@ -345,7 +342,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryField where,
@@ -375,7 +372,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<QueryField> where,
@@ -405,7 +402,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
@@ -435,7 +432,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> UpdateAsyncInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
@@ -445,26 +442,19 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Variables
-            var request = new UpdateRequest(typeof(TEntity),
-                connection,
-                where,
-                entity.AsFields(),
-                statementBuilder);
-
             // Append the prefixes
             where?.PrependAnUnderscoreAtTheParameters();
 
-            // Get the params
-            var param = entity?.Merge(where);
-
             // Return the result
-            return UpdateAsyncInternalBase(connection: connection,
-                request: request,
-                param: param,
+            return UpdateAsyncInternalBase<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                entity: entity,
+                where: where,
+                fields: entity.AsFields(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace);
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         #endregion
@@ -477,16 +467,64 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
-            object where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Get the primary from the database
+            var primary = DbFieldCache.Get(connection, tableName)?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var where = (QueryGroup)null;
+
+            // Identity the property via primary
+            if (primary != null)
+            {
+                var property = entity?.GetType().GetTypeInfo().GetProperty(primary.UnquotedName, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
+                if (property != null)
+                {
+                    where = new QueryGroup(new QueryField(new Field(property.Name, property.PropertyType), property.GetValue(entity)));
+                }
+                else
+                {
+                    throw new PrimaryFieldNotFoundException("The primary field is not found.");
+                }
+            }
+
+            // Execute the proper method
+            return UpdateInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: where,
+                commandTimeout: commandTimeout,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Updates an existing data in the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static int Update(this IDbConnection connection,
+            string tableName,
+            object entity,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -495,7 +533,7 @@ namespace RepoDb
             return Update(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup(where),
+                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -513,7 +551,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -544,7 +582,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -575,7 +613,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -606,7 +644,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static int UpdateInternal(this IDbConnection connection,
             string tableName,
             object entity,
@@ -616,26 +654,19 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Variables
-            var request = new UpdateRequest(tableName,
-                connection,
-                where,
-                entity?.AsFields(),
-                statementBuilder);
-
             // Append the prefixes
             where?.PrependAnUnderscoreAtTheParameters();
 
-            // Get the params
-            var param = entity?.Merge(where);
-
             // Return the result
-            return UpdateInternalBase(connection: connection,
-                request: request,
-                param: param,
+            return UpdateInternalBase<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: where,
+                fields: entity?.AsFields(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace);
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         #endregion
@@ -643,21 +674,69 @@ namespace RepoDb
         #region UpdateAsync(TableName)
 
         /// <summary>
+        /// Updates an existing data in the database in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static Task<int> UpdateAsync(this IDbConnection connection,
+            string tableName,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Get the primary from the database
+            var primary = DbFieldCache.Get(connection, tableName)?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var where = (QueryGroup)null;
+
+            // Identity the property via primary
+            if (primary != null)
+            {
+                var property = entity?.GetType().GetTypeInfo().GetProperty(primary.UnquotedName, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
+                if (property != null)
+                {
+                    where = new QueryGroup(new QueryField(new Field(property.Name, property.PropertyType), property.GetValue(entity)));
+                }
+                else
+                {
+                    throw new PrimaryFieldNotFoundException("The primary field is not found.");
+                }
+            }
+
+            // Execute the proper method
+            return UpdateAsyncInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: where,
+                commandTimeout: commandTimeout,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                transaction: transaction);
+        }
+
+        /// <summary>
         /// Updates an existing data in the database in asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
-            object where,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -666,7 +745,7 @@ namespace RepoDb
             return UpdateAsync(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup(where),
+                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -684,7 +763,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -715,7 +794,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -746,7 +825,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -777,7 +856,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> UpdateAsyncInternal(this IDbConnection connection,
             string tableName,
             object entity,
@@ -787,155 +866,292 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Variables
-            var request = new UpdateRequest(tableName,
-                connection,
-                where,
-                entity?.AsFields(),
-                statementBuilder);
-
             // Append the prefixes
             where?.PrependAnUnderscoreAtTheParameters();
 
-            // Get the params
-            var param = entity?.Merge(where);
-
             // Return the result
-            return UpdateAsyncInternalBase(connection: connection,
-                request: request,
-                param: param,
+            return UpdateAsyncInternalBase<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: where,
+                fields: entity?.AsFields(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace);
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         #endregion
 
-        #region UpdateInternalBase
+        #region UpdateInternalBase<TEntity>
 
         /// <summary>
         /// Updates an existing data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="UpdateRequest"/> object.</param>
-        /// <param name="param">The mapped object parameters.</param>
+        /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity or dynamic object to be updated.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static int UpdateInternalBase(this IDbConnection connection,
-            UpdateRequest request,
-            object param,
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        internal static int UpdateInternalBase<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            QueryGroup where,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            ITrace trace = null)
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
         {
-            // Variables
-            var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetUpdateText(request);
+            // Get the function
+            var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
+            {
+                // Variables needed
+                var dbFields = DbFieldCache.Get(connection, tableName);
+                var inputFields = new List<DbField>();
+
+                // Filter the actual properties for input fields
+                inputFields = dbFields?
+                    .Where(dbField => dbField.IsIdentity == false)
+                    .Where(dbField =>
+                        fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
+                    .AsList();
+
+                // Identify the requests
+                var updateRequest = (UpdateRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
+                {
+                    updateRequest = new UpdateRequest(tableName,
+                    connection,
+                    where,
+                    fields,
+                    statementBuilder);
+                }
+                else
+                {
+                    updateRequest = new UpdateRequest(typeof(TEntity),
+                    connection,
+                    where,
+                    fields,
+                    statementBuilder);
+                }
+
+                // Return the value
+                return new UpdateExecutionContext<TEntity>
+                {
+                    CommandText = CommandTextCache.GetUpdateText(updateRequest),
+                    InputFields = inputFields,
+                    ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Update"),
+                        inputFields?.AsList(),
+                        null)
+                };
+            });
+
+            // Get the context
+            var context = UpdateExecutionContextCache<TEntity>.Get(tableName, where, fields, callback);
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entity, null);
                 trace.BeforeUpdate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(commandText);
+                        throw new CancelledExecutionException(context.CommandText);
                     }
                     return 0;
                 }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
+                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
+                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
             }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
-            // Actual Execution
-            var result = ExecuteNonQueryInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                skipCommandArrayParametersCheck: true);
+            // Execution variables
+            var result = 0;
+
+            // Create the command
+            using (var command = (DbCommand)connection.EnsureOpen().CreateCommand(context.CommandText,
+                CommandType.Text, commandTimeout, transaction))
+            {
+                // Set the values
+                context.ParametersSetterFunc(command, entity);
+
+                // Add the fields from the query group
+                if (where != null)
+                {
+                    foreach (var queryField in where.GetFields(true))
+                    {
+                        // Create a parameter
+                        var parameter = command.CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null);
+
+                        // Add to the command object
+                        command.Parameters.Add(parameter);
+                    }
+                }
+
+                // Actual Execution
+                result = command.ExecuteNonQuery();
+            }
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterUpdate(new TraceLog(commandText, param, result,
+                trace.AfterUpdate(new TraceLog(context.CommandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
+            // Return the result
             return result;
         }
 
         #endregion
 
-        #region UpdateAsyncInternalBase
+        #region UpdateAsyncInternalBase<TEntity>
 
         /// <summary>
         /// Updates an existing data in the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="UpdateRequest"/> object.</param>
-        /// <param name="param">The mapped object parameters.</param>
+        /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity or dynamic object to be updated.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        internal static async Task<int> UpdateAsyncInternalBase(this IDbConnection connection,
-            UpdateRequest request,
-            object param,
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        internal static async Task<int> UpdateAsyncInternalBase<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            QueryGroup where,
+            IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            ITrace trace = null)
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
         {
-            // Variables
-            var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetUpdateText(request);
+            // Get the function
+            var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
+            {
+                // Variables needed
+                var dbFields = DbFieldCache.Get(connection, tableName);
+                var inputFields = new List<DbField>();
+
+                // Filter the actual properties for input fields
+                inputFields = dbFields?
+                    .Where(dbField => dbField.IsIdentity == false)
+                    .Where(dbField =>
+                        fields.FirstOrDefault(field => field.UnquotedName.ToLower() == dbField.UnquotedName.ToLower()) != null)
+                    .AsList();
+
+                // Identify the requests
+                var updateRequest = (UpdateRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
+                {
+                    updateRequest = new UpdateRequest(tableName,
+                    connection,
+                    where,
+                    fields,
+                    statementBuilder);
+                }
+                else
+                {
+                    updateRequest = new UpdateRequest(typeof(TEntity),
+                    connection,
+                    where,
+                    fields,
+                    statementBuilder);
+                }
+
+                // Return the value
+                return new UpdateExecutionContext<TEntity>
+                {
+                    CommandText = CommandTextCache.GetUpdateText(updateRequest),
+                    InputFields = inputFields,
+                    ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Update"),
+                        inputFields?.AsList(),
+                        null)
+                };
+            });
+
+            // Get the context
+            var context = UpdateExecutionContextCache<TEntity>.Get(tableName, where, fields, callback);
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entity, null);
                 trace.BeforeUpdate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(commandText);
+                        throw new CancelledExecutionException(context.CommandText);
                     }
                     return 0;
                 }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
+                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
+                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
             }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
-            // Actual Execution
-            var result = await ExecuteNonQueryAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                skipCommandArrayParametersCheck: true);
+            // Execution variables
+            var result = 0;
+
+            // Create the command
+            using (var command = (DbCommand)(await connection.EnsureOpenAsync()).CreateCommand(context.CommandText,
+                CommandType.Text, commandTimeout, transaction))
+            {
+                // Set the values
+                context.ParametersSetterFunc(command, entity);
+
+                // Add the fields from the query group
+                if (where != null)
+                {
+                    foreach (var queryField in where.GetFields(true))
+                    {
+                        // Create a parameter
+                        var parameter = command.CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null);
+
+                        // Add to the command object
+                        command.Parameters.Add(parameter);
+                    }
+                }
+
+                // Actual Execution
+                result = await command.ExecuteNonQueryAsync();
+            }
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterUpdate(new TraceLog(commandText, param, result,
+                trace.AfterUpdate(new TraceLog(context.CommandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
+            // Return the result
             return result;
         }
 

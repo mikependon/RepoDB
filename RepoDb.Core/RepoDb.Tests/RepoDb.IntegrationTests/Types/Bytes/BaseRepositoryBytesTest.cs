@@ -34,6 +34,8 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             Database.Cleanup();
         }
 
+        #region <TEntity>
+
         [TestMethod]
         public void TestBaseRepositoryBytesCrud()
         {
@@ -289,5 +291,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 Assert.IsNull(data.ColumnVarBinaryMapped);
             }
         }
+
+        #endregion
     }
 }

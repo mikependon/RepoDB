@@ -23,6 +23,8 @@ namespace RepoDb.IntegrationTests.Types.Dates
             Database.Cleanup();
         }
 
+        #region <TEntity>
+
         [TestMethod]
         public void TestDbRepositoryDatesCrud()
         {
@@ -306,5 +308,153 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.IsNull(data.ColumnTimeMapped);
             }
         }
+
+        #endregion
+
+        #region (TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryDatesCrudViaTableName()
+        {
+            // Setup
+            var dateTime = new DateTime(1970, 1, 1, 12, 50, 30, DateTimeKind.Utc);
+            var dateTime2 = dateTime.AddMilliseconds(100);
+            var entity = new DatesClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnDate = dateTime.Date,
+                ColumnDateTime = dateTime,
+                ColumnDateTime2 = dateTime2,
+                ColumnSmallDateTime = dateTime,
+                ColumnDateTimeOffset = new DateTimeOffset(dateTime.Date).ToOffset(TimeSpan.FromHours(2)),
+                ColumnTime = dateTime.TimeOfDay
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var id = repository.Insert(ClassMappedNameCache.Get<DatesClass>(), entity);
+
+                // Act Query
+                var data = repository.Query(ClassMappedNameCache.Get<DatesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnDate, data.ColumnDate);
+                Assert.AreEqual(entity.ColumnDateTime, data.ColumnDateTime);
+                Assert.AreEqual(entity.ColumnDateTime2, data.ColumnDateTime2); Assert.AreEqual(dateTime.AddSeconds(30), data.ColumnSmallDateTime); // Always in a fraction of minutes, round (off/up)
+                Assert.AreEqual(entity.ColumnDateTimeOffset, data.ColumnDateTimeOffset);
+                Assert.AreEqual(entity.ColumnTime, data.ColumnTime);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDatesNullCrudViaTableName()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnDate = (DateTime?)null,
+                ColumnDateTime = (DateTime?)null,
+                ColumnDateTime2 = (DateTime?)null,
+                ColumnSmallDateTime = (DateTime?)null,
+                ColumnDateTimeOffset = (DateTimeOffset?)null,
+                ColumnTime = (TimeSpan?)null
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var id = repository.Insert(ClassMappedNameCache.Get<DatesClass>(), entity);
+
+                // Act Query
+                var data = repository.Query(ClassMappedNameCache.Get<DatesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnDate);
+                Assert.IsNull(data.ColumnDateTime);
+                Assert.IsNull(data.ColumnDateTime2);
+                Assert.IsNull(data.ColumnSmallDateTime);
+                Assert.IsNull(data.ColumnDateTimeOffset);
+                Assert.IsNull(data.ColumnTime);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDatesCrudViaTableNameAsync()
+        {
+            // Setup
+            var dateTime = new DateTime(1970, 1, 1, 12, 50, 30, DateTimeKind.Utc);
+            var dateTime2 = dateTime.AddMilliseconds(100);
+            var entity = new DatesClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnDate = dateTime.Date,
+                ColumnDateTime = dateTime,
+                ColumnDateTime2 = dateTime2,
+                ColumnSmallDateTime = dateTime,
+                ColumnDateTimeOffset = new DateTimeOffset(dateTime.Date).ToOffset(TimeSpan.FromHours(2)),
+                ColumnTime = dateTime.TimeOfDay
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<DatesClass>(), entity);
+                var id = insertResult.Result;
+
+                // Act Query
+                var queryResult = repository.QueryAsync(ClassMappedNameCache.Get<DatesClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.Result.FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnDate, data.ColumnDate);
+                Assert.AreEqual(entity.ColumnDateTime, data.ColumnDateTime);
+                Assert.AreEqual(entity.ColumnDateTime2, data.ColumnDateTime2); Assert.AreEqual(dateTime.AddSeconds(30), data.ColumnSmallDateTime); // Always in a fraction of minutes, round (off/up)
+                Assert.AreEqual(entity.ColumnDateTimeOffset, data.ColumnDateTimeOffset);
+                Assert.AreEqual(entity.ColumnTime, data.ColumnTime);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDatesNullCrudViaTableNameAsync()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnDate = (DateTime?)null,
+                ColumnDateTime = (DateTime?)null,
+                ColumnDateTime2 = (DateTime?)null,
+                ColumnSmallDateTime = (DateTime?)null,
+                ColumnDateTimeOffset = (DateTimeOffset?)null,
+                ColumnTime = (TimeSpan?)null
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<DatesClass>(), entity);
+                var id = insertResult.Result;
+
+                // Act Query
+                var queryResult = repository.QueryAsync(ClassMappedNameCache.Get<DatesClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.Result.FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnDate);
+                Assert.IsNull(data.ColumnDateTime);
+                Assert.IsNull(data.ColumnDateTime2);
+                Assert.IsNull(data.ColumnSmallDateTime);
+                Assert.IsNull(data.ColumnDateTimeOffset);
+                Assert.IsNull(data.ColumnTime);
+            }
+        }
+
+        #endregion
     }
 }

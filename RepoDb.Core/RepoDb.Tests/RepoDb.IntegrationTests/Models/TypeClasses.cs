@@ -11,11 +11,11 @@ namespace RepoDb.IntegrationTests.Models
         public long? ColumnBigInt { get; set; }
         public bool? ColumnBit { get; set; }
         public decimal? ColumnDecimal { get; set; }
-        public float? ColumnFloat { get; set; }
+        public double? ColumnFloat { get; set; }
         public int? ColumnInt { get; set; }
         public decimal? ColumnMoney { get; set; }
         public decimal? ColumnNumeric { get; set; }
-        public Single? ColumnReal { get; set; }
+        public float? ColumnReal { get; set; }
         public short? ColumnSmallInt { get; set; }
         public decimal? ColumnSmallMoney { get; set; }
     }

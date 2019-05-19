@@ -525,13 +525,26 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Appends a word WHERE and the stringified values of the Query Group to the SQL Query Statement.
+        /// Appends a word WHERE and the stringified values of the <see cref="QueryGroup"/> to the SQL Query Statement.
         /// </summary>
         /// <param name="queryGroup">The query group to be stringified.</param>
+        /// <param name="index">The parameter index.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder WhereFrom(QueryGroup queryGroup)
+        public QueryBuilder WhereFrom(QueryGroup queryGroup, int index = 0)
         {
-            return (queryGroup != null) ? Append(string.Concat("WHERE ", queryGroup.GetString())) : this;
+            return (queryGroup != null) ? Append(string.Concat("WHERE ", queryGroup.GetString(index))) : this;
+        }
+
+        /// <summary>
+        /// Appends a word WHERE and the stringified values of the <see cref="QueryGroup"/> to the SQL Query Statement.
+        /// </summary>
+        /// <param name="fields">The list of fields to be stringified.</param>
+        /// <param name="index">The parameter index.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder WhereFrom(IEnumerable<Field> fields, int index = 0)
+        {
+            return (fields?.Any() == true) ? Append(string.Concat("WHERE (",
+                fields.Select(f => f.UnquotedName.AsFieldAndParameter(index)).Join(" AND "), ")")) : this;
         }
 
         /// <summary>

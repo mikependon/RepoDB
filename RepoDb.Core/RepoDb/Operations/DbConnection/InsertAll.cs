@@ -24,7 +24,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -33,7 +33,7 @@ namespace RepoDb
         /// <returns>The number of inserted rows.</returns>
         public static int InsertAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -54,7 +54,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -63,7 +63,7 @@ namespace RepoDb
         /// <returns>The number of inserted rows.</returns>
         internal static int InsertAllInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -92,7 +92,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -101,7 +101,7 @@ namespace RepoDb
         /// <returns>The number of inserted rows.</returns>
         public static Task<int> InsertAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -122,7 +122,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -131,7 +131,7 @@ namespace RepoDb
         /// <returns>The number of inserted rows.</returns>
         internal static Task<int> InsertAllAsyncInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -156,13 +156,13 @@ namespace RepoDb
         #region InsertAll(TableName)
 
         /// <summary>
-        /// Inserts multiple data in the database.
+        /// Inserts multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -171,7 +171,7 @@ namespace RepoDb
         public static int InsertAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -190,13 +190,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database (certain fields only).
+        /// Inserts multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -205,7 +205,7 @@ namespace RepoDb
         internal static int InsertAllInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -236,13 +236,13 @@ namespace RepoDb
         #region InsertAllAsync(TableName)
 
         /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way.
+        /// Inserts multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -251,7 +251,7 @@ namespace RepoDb
         public static Task<int> InsertAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -270,13 +270,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way.
+        /// Inserts multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The dynamic objects to be inserted.</param>
+        /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -285,7 +285,7 @@ namespace RepoDb
         internal static Task<int> InsertAllAsyncInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -321,9 +321,9 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity or dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -333,7 +333,7 @@ namespace RepoDb
         internal static int InsertAllInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -400,7 +400,7 @@ namespace RepoDb
                         identitySettersFunc = new List<Action<TEntity, DbCommand>>();
                         for (var index = 0; index < batchSizeValue; index++)
                         {
-                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, index));
+                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, identity.UnquotedName, index));
                         }
                     }
                 }
@@ -409,31 +409,65 @@ namespace RepoDb
                 if (batchSizeValue <= 1)
                 {
                     singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName),
-                        inputFields?.AsList());
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".InsertAll"),
+                        inputFields?.AsList(),
+                        null);
                 }
                 else
                 {
                     multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName),
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".InsertAll"),
                         inputFields?.AsList(),
                         outputFields,
                         batchSizeValue);
                 }
 
-                // Return the value
-                return new InsertAllExecutionContext<TEntity>
+                // Identify the requests
+                var insertAllRequest = (InsertAllRequest)null;
+                var insertRequest = (InsertRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
                 {
-                    CommandText = batchSizeValue > 1 ?
-                        CommandTextCache.GetInsertAllText(new InsertAllRequest(tableName,
+                    if (batchSizeValue > 1)
+                    {
+                        insertAllRequest = new InsertAllRequest(tableName,
                             connection,
                             fields,
                             batchSizeValue,
-                            statementBuilder)) :
-                        CommandTextCache.GetInsertText(new InsertRequest(tableName,
+                            statementBuilder);
+                    }
+                    else
+                    {
+                        insertRequest = new InsertRequest(tableName,
                             connection,
                             fields,
-                            statementBuilder)),
+                            statementBuilder);
+                    }
+                }
+                else
+                {
+                    if (batchSizeValue > 1)
+                    {
+                        insertAllRequest = new InsertAllRequest(typeof(TEntity),
+                            connection,
+                            fields,
+                            batchSizeValue,
+                            statementBuilder);
+                    }
+                    else
+                    {
+                        insertRequest = new InsertRequest(typeof(TEntity),
+                            connection,
+                            fields,
+                            statementBuilder);
+                    }
+                }
+
+                // Return the value
+                return new InsertAllExecutionContext<TEntity>
+                {
+                    CommandText = batchSizeValue > 1 ? CommandTextCache.GetInsertAllText(insertAllRequest) : CommandTextCache.GetInsertText(insertRequest),
                     InputFields = inputFields,
                     OutputFields = outputFields,
                     BatchSize = batchSizeValue,
@@ -492,6 +526,9 @@ namespace RepoDb
                 using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
                     CommandType.Text, commandTimeout, transaction))
                 {
+                    // Prepare the command
+                    command.Prepare();
+
                     // Directly execute if the entities is only 1 (performance)
                     if (context.BatchSize == 1)
                     {
@@ -602,9 +639,9 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be inserted.</param>
+        /// <param name="entities">The list of data entity or dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/>s to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -614,7 +651,7 @@ namespace RepoDb
         internal static async Task<int> InsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            int batchSize = Constant.DefaultBatchInsertSize,
+            int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -681,7 +718,7 @@ namespace RepoDb
                         identitySettersFunc = new List<Action<TEntity, DbCommand>>();
                         for (var index = 0; index < batchSizeValue; index++)
                         {
-                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, index));
+                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, identity.UnquotedName, index));
                         }
                     }
                 }
@@ -690,31 +727,65 @@ namespace RepoDb
                 if (batchSizeValue <= 1)
                 {
                     singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName),
-                        inputFields?.AsList());
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".InsertAll"),
+                        inputFields?.AsList(),
+                        null);
                 }
                 else
                 {
                     multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName),
+                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".InsertAll"),
                         inputFields?.AsList(),
                         outputFields,
                         batchSizeValue);
                 }
 
-                // Return the value
-                return new InsertAllExecutionContext<TEntity>
+                // Identify the requests
+                var insertAllRequest = (InsertAllRequest)null;
+                var insertRequest = (InsertRequest)null;
+
+                // Create a different kind of requests
+                if (typeof(TEntity) == typeof(object))
                 {
-                    CommandText = batchSizeValue > 1 ?
-                        CommandTextCache.GetInsertAllText(new InsertAllRequest(tableName,
+                    if (batchSizeValue > 1)
+                    {
+                        insertAllRequest = new InsertAllRequest(tableName,
                             connection,
                             fields,
                             batchSizeValue,
-                            statementBuilder)) :
-                        CommandTextCache.GetInsertText(new InsertRequest(tableName,
+                            statementBuilder);
+                    }
+                    else
+                    {
+                        insertRequest = new InsertRequest(tableName,
                             connection,
                             fields,
-                            statementBuilder)),
+                            statementBuilder);
+                    }
+                }
+                else
+                {
+                    if (batchSizeValue > 1)
+                    {
+                        insertAllRequest = new InsertAllRequest(typeof(TEntity),
+                            connection,
+                            fields,
+                            batchSizeValue,
+                            statementBuilder);
+                    }
+                    else
+                    {
+                        insertRequest = new InsertRequest(typeof(TEntity),
+                            connection,
+                            fields,
+                            statementBuilder);
+                    }
+                }
+
+                // Return the value
+                return new InsertAllExecutionContext<TEntity>
+                {
+                    CommandText = batchSizeValue > 1 ? CommandTextCache.GetInsertAllText(insertAllRequest) : CommandTextCache.GetInsertText(insertRequest),
                     InputFields = inputFields,
                     OutputFields = outputFields,
                     BatchSize = batchSizeValue,

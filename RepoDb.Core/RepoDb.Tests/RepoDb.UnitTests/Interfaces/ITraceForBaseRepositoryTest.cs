@@ -112,7 +112,7 @@ namespace RepoDb.UnitTests.Interfaces
             repository.BatchQueryAsync(0,
                 10,
                 OrderField.Parse(new { Id = Order.Ascending }),
-                (object)null);
+                (object)null).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeBatchQuery(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -129,7 +129,7 @@ namespace RepoDb.UnitTests.Interfaces
             repository.BatchQueryAsync(0,
                 10,
                 OrderField.Parse(new { Id = Order.Ascending }),
-                (object)null);
+                (object)null).Wait();
 
             // Assert
             trace.Verify(t => t.AfterBatchQuery(It.IsAny<TraceLog>()), Times.Once);
@@ -183,7 +183,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.CountAsync((object)null);
+            repository.CountAsync((object)null).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -197,7 +197,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.CountAsync((object)null);
+            repository.CountAsync((object)null).Wait();
 
             // Assert
             trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Once);
@@ -251,7 +251,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.CountAllAsync();
+            repository.CountAllAsync().Wait();
 
             // Assert
             trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -265,7 +265,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.CountAllAsync();
+            repository.CountAllAsync().Wait();
 
             // Assert
             trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Once);
@@ -319,7 +319,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.DeleteAsync(0);
+            repository.DeleteAsync(0).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -333,10 +333,78 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.DeleteAsync(0);
+            repository.DeleteAsync(0).Wait();
 
             // Assert
             trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region DeleteAll
+
+        #region DeleteAll
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForBeforeDeleteAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.DeleteAll();
+
+            // Assert
+            trace.Verify(t => t.BeforeDeleteAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForAfterDeleteAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.DeleteAll();
+
+            // Assert
+            trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region DeleteAllAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForBeforeDeleteAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.DeleteAllAsync().Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeDeleteAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForAfterDeleteAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.DeleteAllAsync().Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
@@ -355,10 +423,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.Insert(new TraceEntity
-            {
-                Name = "Name"
-            });
+            repository.Insert(new TraceEntity { Name = "Name" });
 
             // Assert
             trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -372,10 +437,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.Insert(new TraceEntity
-            {
-                Name = "Name"
-            });
+            repository.Insert(new TraceEntity { Name = "Name" });
 
             // Assert
             trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Once);
@@ -393,10 +455,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.InsertAsync(new TraceEntity
-            {
-                Name = "Name"
-            });
+            repository.InsertAsync(new TraceEntity { Name = "Name" }).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -410,10 +469,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.InsertAsync(new TraceEntity
-            {
-                Name = "Name"
-            });
+            repository.InsertAsync(new TraceEntity { Name = "Name" }).Wait();
 
             // Assert
             trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Once);
@@ -467,7 +523,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.InsertAllAsync(new[] { new TraceEntity { Name = "Name" } });
+            repository.InsertAllAsync(new[] { new TraceEntity { Name = "Name" } }).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeInsertAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
@@ -481,7 +537,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.InsertAll(new[] { new TraceEntity { Name = "Name" } });
+            repository.InsertAllAsync(new[] { new TraceEntity { Name = "Name" } }).Wait();
 
             // Assert
             trace.Verify(t => t.AfterInsertAll(It.IsAny<TraceLog>()), Times.Exactly(1));
@@ -503,11 +559,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.Merge(new TraceEntity
-            {
-                Id = 1,
-                Name = "Name"
-            });
+            repository.Merge(new TraceEntity { Id = 1, Name = "Name" });
 
             // Assert
             trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -521,11 +573,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.Merge(new TraceEntity
-            {
-                Id = 1,
-                Name = "Name"
-            });
+            repository.Merge(new TraceEntity { Id = 1, Name = "Name" });
 
             // Assert
             trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Once);
@@ -543,11 +591,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MergeAsync(new TraceEntity
-            {
-                Id = 1,
-                Name = "Name"
-            });
+            repository.MergeAsync(new TraceEntity { Id = 1, Name = "Name" }).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -561,14 +605,78 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MergeAsync(new TraceEntity
-            {
-                Id = 1,
-                Name = "Name"
-            });
+            repository.MergeAsync(new TraceEntity { Id = 1, Name = "Name" }).Wait();
 
             // Assert
             trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region MergeAll
+
+        #region MergeAll
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForBeforeMergeAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.MergeAll(new[] { new TraceEntity { Id = 1, Name = "Name" } });
+
+            // Assert
+            trace.Verify(t => t.BeforeMergeAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForAfterMergeAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.MergeAll(new[] { new TraceEntity { Id = 1, Name = "Name" } });
+
+            // Assert
+            trace.Verify(t => t.AfterMergeAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region MergeAllAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForBeforeMergeAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.MergeAllAsync(new[] { new TraceEntity { Id = 1, Name = "Name" } }).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMergeAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForAfterMergeAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.MergeAllAsync(new[] { new TraceEntity { Id = 1, Name = "Name" } }).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMergeAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
@@ -619,7 +727,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.QueryAsync(te => te.Id == 1);
+            repository.QueryAsync(te => te.Id == 1).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeQuery(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -633,7 +741,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.QueryAsync(te => te.Id == 1);
+            repository.QueryAsync(te => te.Id == 1).Wait();
 
             // Assert
             trace.Verify(t => t.AfterQuery(It.IsAny<TraceLog>()), Times.Once);
@@ -755,7 +863,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.TruncateAsync();
+            repository.TruncateAsync().Wait();
 
             // Assert
             trace.Verify(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -769,7 +877,7 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.TruncateAsync();
+            repository.TruncateAsync().Wait();
 
             // Assert
             trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Once);
@@ -792,11 +900,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             repository.Update(
-                new TraceEntity
-                {
-                    Id = 1,
-                    Name = "Name"
-                },
+                new TraceEntity { Id = 1, Name = "Name" },
                 whereOrPrimaryKey: 1);
 
             // Assert
@@ -812,11 +916,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             repository.Update(
-                new TraceEntity
-                {
-                    Id = 1,
-                    Name = "Name"
-                },
+                new TraceEntity { Id = 1, Name = "Name" },
                 whereOrPrimaryKey: 1);
 
             // Assert
@@ -836,12 +936,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             repository.UpdateAsync(
-                new TraceEntity
-                {
-                    Id = 1,
-                    Name = "Name"
-                },
-                whereOrPrimaryKey: 1);
+                new TraceEntity { Id = 1, Name = "Name" },
+                whereOrPrimaryKey: 1).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -856,15 +952,79 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             repository.UpdateAsync(
-                new TraceEntity
-                {
-                    Id = 1,
-                    Name = "Name"
-                },
-                whereOrPrimaryKey: 1);
+                new TraceEntity { Id = 1, Name = "Name" },
+                whereOrPrimaryKey: 1).Wait();
 
             // Assert
             trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region UpdateAll
+
+        #region UpdateAll
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForBeforeUpdateAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.UpdateAll(new[] { new TraceEntity { Id = 1, Name = "Name" } });
+
+            // Assert
+            trace.Verify(t => t.BeforeUpdateAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForAfterUpdateAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.UpdateAll(new[] { new TraceEntity { Id = 1, Name = "Name" } });
+
+            // Assert
+            trace.Verify(t => t.AfterUpdateAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region UpdateAllAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForBeforeUpdateAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.UpdateAllAsync(new[] { new TraceEntity { Id = 1, Name = "Name" } }).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeUpdateAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForAfterUpdateAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.UpdateAllAsync(new[] { new TraceEntity { Id = 1, Name = "Name" } }).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterUpdateAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion

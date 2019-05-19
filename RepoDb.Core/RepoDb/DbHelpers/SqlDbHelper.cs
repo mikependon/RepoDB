@@ -27,42 +27,42 @@ namespace RepoDb.DbHelpers
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
         public IEnumerable<DbField> GetFields(string connectionString, string tableName)
         {
-            var result = new List<DbField>();
-
             // Open a connection
             using (var connection = new SqlConnection(connectionString).EnsureOpen())
             {
+                // TODO: https://github.com/mikependon/RepoDb/issues/229
                 // Check for the command type
                 var commandText = @"
                     SELECT C.COLUMN_NAME AS ColumnName
-	                    , CASE WHEN TC.CONSTRAINT_TYPE = 'PRIMARY KEY' THEN
-		                    CONVERT(BIT, 1)
-	                      ELSE
-		                    CONVERT(BIT, 0)
-	                      END AS IsPrimary
-	                    , TMP.is_identity AS IsIdentity
-	                    , TMP.is_nullable AS IsNullable
+	                    , CONVERT(BIT, COALESCE(TC.is_primary, 0)) AS IsPrimary
+	                    , CONVERT(BIT, COALESCE(TMP.is_identity, 1)) AS IsIdentity
+	                    , CONVERT(BIT, COALESCE(TMP.is_nullable, 1)) AS IsNullable
 	                    , C.DATA_TYPE AS DataType
-						, TMP.max_length AS Size
-						, TMP.precision AS Precision
-						, TMP.scale AS Scale
+	                    , CONVERT(INT, COALESCE(TMP.max_length, 1)) AS Size
+	                    , CONVERT(TINYINT, COALESCE(TMP.precision, 1)) AS Precision
+	                    , CONVERT(TINYINT, COALESCE(TMP.scale, 1)) AS Scale
                     FROM INFORMATION_SCHEMA.COLUMNS C
-                    LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU
-	                    ON KCU.TABLE_SCHEMA = C.TABLE_SCHEMA
-	                    AND KCU.TABLE_NAME = C.TABLE_NAME
-	                    AND KCU.COLUMN_NAME = C.COLUMN_NAME
-                    LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC
-	                    ON TC.TABLE_SCHEMA = C.TABLE_SCHEMA
-	                    AND TC.TABLE_NAME = C.TABLE_NAME
-	                    AND TC.CONSTRAINT_NAME = KCU.CONSTRAINT_NAME
+                    OUTER APPLY
+                    (
+	                    SELECT 1 AS is_primary
+	                    FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU
+	                    LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC
+		                    ON TC.TABLE_SCHEMA = C.TABLE_SCHEMA
+		                    AND TC.TABLE_NAME = C.TABLE_NAME
+		                    AND TC.CONSTRAINT_NAME = KCU.CONSTRAINT_NAME
+	                    WHERE KCU.TABLE_SCHEMA = C.TABLE_SCHEMA
+		                    AND KCU.TABLE_NAME = C.TABLE_NAME
+		                    AND KCU.COLUMN_NAME = C.COLUMN_NAME
+		                    AND TC.CONSTRAINT_TYPE = 'PRIMARY KEY'
+                    ) TC 
                     OUTER APPLY
                     (
 	                    SELECT SC.name
 		                    , SC.is_identity
 		                    , SC.is_nullable
-							, SC.max_length
-							, SC.scale
-							, SC.precision
+		                    , SC.max_length
+		                    , SC.scale
+		                    , SC.precision
 	                    FROM [sys].[columns] SC
 	                    INNER JOIN [sys].[tables] ST ON ST.object_id = SC.object_id
 	                    WHERE SC.name = C.COLUMN_NAME
@@ -97,14 +97,14 @@ namespace RepoDb.DbHelpers
                         while (reader.Read())
                         {
                             yield return new DbField(reader.GetString(0),
-                                reader.GetBoolean(1),
-                                reader.GetBoolean(2),
-                                reader.GetBoolean(3),
-                                DbTypeResolver.Resolve(reader.GetString(4)),
-                                reader.GetInt16(5),
-                                reader.GetByte(6),
-                                reader.GetByte(7),
-                                reader.GetString(4));
+                                reader.IsDBNull(1) ? false : reader.GetBoolean(1),
+                                reader.IsDBNull(2) ? false : reader.GetBoolean(2),
+                                reader.IsDBNull(3) ? false : reader.GetBoolean(3),
+                                reader.IsDBNull(4) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(reader.GetString(4)),
+                                reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
+                                reader.IsDBNull(6) ? (byte?)0 : reader.GetByte(6),
+                                reader.IsDBNull(7) ? (byte?)0 : reader.GetByte(7),
+                                reader.IsDBNull(7) ? "text" : reader.GetString(4));
                         }
                     }
                 }

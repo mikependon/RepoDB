@@ -27,21 +27,6 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity object.
-        /// </summary>
-        /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
-        /// <returns>An array of data entity objects.</returns>
-        [Obsolete("Use the DataReader.ToEnumerable<TEntity>() method.")]
-        internal static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader, IDbConnection connection, bool basedOnFields)
-            where TEntity : class
-        {
-            return DataReader.ToEnumerable<TEntity>(reader, connection, basedOnFields);
-        }
-
-        /// <summary>
         /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
@@ -49,19 +34,7 @@ namespace RepoDb.Reflection
         [Obsolete("Use the DataReader.ToEnumerable() method.")]
         public static IEnumerable<dynamic> ToEnumerable(DbDataReader reader)
         {
-            return DataReader.ToEnumerable(reader, false);
-        }
-
-        /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object.
-        /// </summary>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
-        /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
-        [Obsolete("Use the DataReader.ToEnumerable() method.")]
-        internal static IEnumerable<dynamic> ToEnumerable(DbDataReader reader, bool basedOnFields)
-        {
-            return DataReader.ToEnumerable(reader, basedOnFields);
+            return DataReader.ToEnumerable(reader);
         }
     }
 }

@@ -113,6 +113,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                tableName: null,
                 skipCommandArrayParametersCheck: false);
         }
 
@@ -129,6 +130,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -139,6 +141,7 @@ namespace RepoDb
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
+            string tableName,
             bool skipCommandArrayParametersCheck)
         {
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -151,7 +154,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReader.ToEnumerable(reader, true).AsList();
+                    return DataReader.ToEnumerable(reader, tableName, connection).AsList();
                 }
             }
         }
@@ -189,6 +192,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                tableName: null,
                 skipCommandArrayParametersCheck: false);
         }
 
@@ -205,6 +209,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -215,6 +220,7 @@ namespace RepoDb
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
+            string tableName,
             bool skipCommandArrayParametersCheck)
         {
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -227,14 +233,14 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return DataReader.ToEnumerable(reader, true).AsList();
+                    return DataReader.ToEnumerable(reader, tableName, connection).AsList();
                 }
             }
         }
 
         #endregion
 
-        #region ExecuteQuery
+        #region ExecuteQuery<TEntity>
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
@@ -317,7 +323,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteQueryAsync
+        #region ExecuteQueryAsync<TEntity>
 
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
@@ -617,7 +623,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int ExecuteNonQuery(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -648,7 +654,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static int ExecuteNonQueryInternal(this IDbConnection connection,
             string commandText,
             object param,
@@ -686,7 +692,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> ExecuteNonQueryAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -717,7 +723,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> ExecuteNonQueryAsyncInternal(this IDbConnection connection,
             string commandText,
             object param,
@@ -1043,7 +1049,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be validated.</param>
         /// <param name="transaction">The transaction object to compare.</param>
-        private static void ValidateTransactionConnectionObject(this IDbConnection connection, IDbTransaction transaction)
+        private static void ValidateTransactionConnectionObject(this IDbConnection connection,
+            IDbTransaction transaction)
         {
             if (transaction != null && transaction.Connection != connection)
             {
@@ -1052,7 +1059,42 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the primary key to <see cref="QueryGroup"/> object.
+        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static QueryGroup WhereOrPrimaryKeyToQueryGroup(IDbConnection connection,
+            string tableName,
+            object whereOrPrimaryKey)
+        {
+            if (whereOrPrimaryKey == null)
+            {
+                return null;
+            }
+            if (whereOrPrimaryKey.GetType().GetTypeInfo().IsGenericType)
+            {
+                return QueryGroup.Parse(whereOrPrimaryKey);
+            }
+            else
+            {
+                var primary = DbFieldCache.Get(connection, tableName)?.FirstOrDefault(p => p.IsPrimary == true);
+                if (primary == null)
+                {
+                    throw new PrimaryFieldNotFoundException(string.Format("Primary key not found for '{0}' entity.",
+                        tableName));
+                }
+                else
+                {
+                    return new QueryGroup(new QueryField(new Field(primary.UnquotedName, primary.Type),
+                        whereOrPrimaryKey).AsEnumerable());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
@@ -1126,7 +1168,8 @@ namespace RepoDb
         /// <param name="property">The instance of <see cref="ClassProperty"/> to be converted.</param>
         /// <param name="entity">The instance of the actual entity.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup ToQueryGroup<TEntity>(ClassProperty property, TEntity entity)
+        private static QueryGroup ToQueryGroup<TEntity>(ClassProperty property,
+            TEntity entity)
             where TEntity : class
         {
             if (property == null)
@@ -1218,7 +1261,9 @@ namespace RepoDb
         /// <param name="parameterName">The name of the parameter to be replaced.</param>
         /// <param name="values">The array of the values.</param>
         /// <returns></returns>
-        private static string ToRawSqlWithArrayParams(string commandText, string parameterName, IEnumerable<object> values)
+        private static string ToRawSqlWithArrayParams(string commandText,
+            string parameterName,
+            IEnumerable<object> values)
         {
             // Check for the defined parameter
             if (commandText.IndexOf(parameterName) < 0)
@@ -1248,7 +1293,8 @@ namespace RepoDb
         /// <param name="param">The parameter passed.</param>
         /// <param name="commandText">The command text to be replaced.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
-        private static IList<CommandArrayParameter> AsCommandArrayParameters(object param, ref string commandText)
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(object param,
+            ref string commandText)
         {
             if (param == null)
             {
@@ -1314,7 +1360,8 @@ namespace RepoDb
         /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
-        private static IList<CommandArrayParameter> AsCommandArrayParameters(IDictionary<string, object> dictionary, ref string commandText)
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(IDictionary<string, object> dictionary,
+            ref string commandText)
         {
             if (dictionary == null)
             {
@@ -1357,7 +1404,8 @@ namespace RepoDb
         /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
-        private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryGroup queryGroup, ref string commandText)
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryGroup queryGroup,
+            ref string commandText)
         {
             return AsCommandArrayParameters(queryGroup.GetFields(true), ref commandText);
         }
@@ -1368,7 +1416,8 @@ namespace RepoDb
         /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
         /// <param name="commandText">The command text to be replaced.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
-        private static IList<CommandArrayParameter> AsCommandArrayParameters(IEnumerable<QueryField> queryFields, ref string commandText)
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(IEnumerable<QueryField> queryFields,
+            ref string commandText)
         {
             if (queryFields == null)
             {
@@ -1411,7 +1460,8 @@ namespace RepoDb
         /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
-        private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryField queryField, ref string commandText)
+        private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryField queryField,
+            ref string commandText)
         {
             if (queryField == null)
             {
@@ -1445,7 +1495,9 @@ namespace RepoDb
         /// <param name="values">The array value of the <see cref="CommandArrayParameter"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
         /// <returns>An instance of <see cref="CommandArrayParameter"/> object.</returns>
-        private static CommandArrayParameter AsCommandArrayParameter(string name, IEnumerable<object> values, ref string commandText)
+        private static CommandArrayParameter AsCommandArrayParameter(string name,
+            IEnumerable<object> values,
+            ref string commandText)
         {
             // Convert to raw sql
             commandText = ToRawSqlWithArrayParams(commandText, name, values);

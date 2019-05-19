@@ -6,6 +6,7 @@ namespace RepoDb.UnitTests.StatementBuilders
     [TestClass]
     public class SqlStatementBuilderCreateInsertTest
     {
+        [TestMethod]
         public void TestSqlStatementBuilderCreateInsert()
         {
             // Setup
@@ -18,6 +19,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
+                primaryField: null,
                 identityField: null);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
@@ -30,6 +32,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
         public void TestSqlStatementBuilderCreateInsertWithQuotedTableSchema()
         {
             // Setup
@@ -42,6 +45,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
+                primaryField: null,
                 identityField: null);
             var expected = $"" +
                 $"INSERT INTO [dbo].[Table] " +
@@ -54,6 +58,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
         public void TestSqlStatementBuilderCreateInsertWithUnquotedTableSchema()
         {
             // Setup
@@ -66,6 +71,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
+                primaryField: null,
                 identityField: null);
             var expected = $"" +
                 $"INSERT INTO [dbo].[Table] " +

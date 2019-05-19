@@ -24,6 +24,8 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             Database.Cleanup();
         }
 
+        #region <TEntity>
+
         [TestMethod]
         public void TestDbRepositoryBytesCrud()
         {
@@ -279,5 +281,139 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 Assert.IsNull(data.ColumnVarBinaryMapped);
             }
         }
+
+        #endregion
+
+        #region (TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryBytesCrudViaTableName()
+        {
+            // Setup
+            var text = Helper.GetAssemblyDescription();
+            var bytes = Encoding.UTF8.GetBytes(text);
+            var entity = new BytesClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBinary = bytes,
+                ColumnImage = bytes,
+                ColumnVarBinary = bytes,
+                ColumnTinyInt = 128
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var id = repository.Insert(entity);
+
+                // Act Query
+                var data = repository.Query(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(((byte[])data.ColumnBinary).Take(entity.ColumnBinary.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
+                Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryBytesNullCrudViaTableName()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBinary = (byte[])null,
+                ColumnImage = (byte[])null,
+                ColumnTinyInt = (byte?)null,
+                ColumnVarBinary = (byte[])null
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var id = repository.Insert(ClassMappedNameCache.Get<BytesClass>(), entity);
+
+                // Act Query
+                var data = repository.Query(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnBinary);
+                Assert.IsNull(data.ColumnImage);
+                Assert.IsNull(data.ColumnTinyInt);
+                Assert.IsNull(data.ColumnVarBinary);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryBytesCrudViaTableNameAsync()
+        {
+            // Setup
+            var text = Helper.GetAssemblyDescription();
+            var bytes = Encoding.UTF8.GetBytes(text);
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBinary = bytes,
+                ColumnImage = bytes,
+                ColumnVarBinary = bytes,
+                ColumnTinyInt = 128
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
+                var id = insertResult.Result;
+
+                // Act Query
+                var queryResult = repository.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.Result.FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(((byte[])data.ColumnBinary).Take(entity.ColumnBinary.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
+                Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryBytesNullCrudViaTableNameAsync()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBinary = (byte[])null,
+                ColumnImage = (byte[])null,
+                ColumnTinyInt = (byte?)null,
+                ColumnVarBinary = (byte[])null
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
+                var id = insertResult.Result;
+
+                // Act Query
+                var queryResult = repository.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.Result.FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnBinary);
+                Assert.IsNull(data.ColumnImage);
+                Assert.IsNull(data.ColumnTinyInt);
+                Assert.IsNull(data.ColumnVarBinary);
+            }
+        }
+
+        #endregion
     }
 }

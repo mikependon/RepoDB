@@ -1,14 +1,14 @@
 ﻿namespace RepoDb
 {
     /// <summary>
-    /// A class that holds the constant values for <see cref="RepoDb"/> library.
+    /// A class that holds the constant values for the library.
     /// </summary>
     public static class Constant
     {
         /// <summary>
-        /// The default value of the batch insert size.
+        /// The default value of the batch operation size.
         /// </summary>
-        public const int DefaultBatchInsertSize = 10;
+        public const int DefaultBatchOperationSize = 10;
 
         /// <summary>
         /// The default value of the cache expiration in minutes.

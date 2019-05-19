@@ -7830,7 +7830,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region MergeAll(TEntity)
+        #region MergeAll(TableName)
 
         [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
         public void ThrowExceptionOnSqlConnectionMergeAllIfThereIsNoPrimaryKey()
@@ -7844,6 +7844,35 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
             }
         }
+
+        //[TestMethod]
+        //public void TestSqlConnectionMergeAllViaTableName()
+        //{
+        //    // Setup
+        //    var tables = new[]
+        //    {
+        //        new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
+        //        new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
+        //        new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
+        //    };
+
+        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    {
+        //        // Act
+        //        var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+        //        // Assert
+        //        Assert.AreEqual(tables.Length, mergeAllResult);
+        //        Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+        //        // Act
+        //        var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+        //        // Assert
+        //        tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
+        //            queryResult.First(data => data.Id == item.Id)));
+        //    }
+        //}
 
         [TestMethod]
         public void TestSqlConnectionMergeAllViaTableNameForNonIdentityEmptyTable()
@@ -8004,7 +8033,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region MergeAll(TEntity)(SingleBatch, ModularBatch)
+        #region MergeAll(TableName)(SingleBatch, ModularBatch)
 
         [TestMethod]
         public void TestSqlConnectionMergeAllViaTableNameForIdentityEmptyTableViaSingleBatch()
@@ -8104,7 +8133,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region MergeAllAsync(TEntity)
+        #region MergeAllAsync(TableName)
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnSqlConnectionMergeAllAsyncIfThereIsNoPrimaryKey()
@@ -8278,7 +8307,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region MergeAllAsync(TEntity)(SingleBatch, ModularBatch)
+        #region MergeAllAsync(TableName)(SingleBatch, ModularBatch)
 
         [TestMethod]
         public void TestSqlConnectionMergeAllAsyncViaTableNameForIdentityEmptyTableViaSingleBatch()

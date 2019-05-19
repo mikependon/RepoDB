@@ -59,7 +59,7 @@ namespace RepoDb.Extensions
         }
 
         // AsFieldAndParameter
-        internal static string AsFieldAndParameter(this QueryField queryField)
+        internal static string AsFieldAndParameter(this QueryField queryField, int index = 0)
         {
             if (queryField.Operation == Operation.Equal && queryField.Parameter.Value == null)
             {
@@ -73,15 +73,15 @@ namespace RepoDb.Extensions
             {
                 if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                 {
-                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsBetweenParameter());
+                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsBetweenParameter(index));
                 }
                 else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
                 {
-                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsInParameter());
+                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsInParameter(index));
                 }
                 else
                 {
-                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsParameter());
+                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsParameter(index));
                 }
             }
         }

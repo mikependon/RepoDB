@@ -220,16 +220,45 @@ namespace RepoDb
 
         #endregion
 
+        #region GetMergeAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the merge-all operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetMergeAllText(MergeAllRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var qualifiers = request.Qualifiers;
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
+                commandText = statementBuilder.CreateMergeAll(new QueryBuilder(),
+                    request.Name,
+                    fields,
+                    request.Qualifiers,
+                    request.BatchSize,
+                    primaryField,
+                    identityField);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
         #region GetQueryText
 
         /// <summary>
         /// Gets a command text from the cache for the query operation.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        internal static string GetQueryText<TEntity>(QueryRequest request)
-            where TEntity : class
+        internal static string GetQueryText(QueryRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -255,11 +284,9 @@ namespace RepoDb
         /// <summary>
         /// Gets a command text from the cache for the query-all operation.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        internal static string GetQueryAllText<TEntity>(QueryAllRequest request)
-            where TEntity : class
+        internal static string GetQueryAllText(QueryAllRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
@@ -359,6 +386,37 @@ namespace RepoDb
 
         #endregion
 
+        #region GetUpdateAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the update-all operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetUpdateAllText(UpdateAllRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var qualifiers = request.Qualifiers;
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
+                commandText = statementBuilder.CreateUpdateAll(new QueryBuilder(),
+                    request.Name,
+                    fields,
+                    request.Qualifiers,
+                    request.BatchSize,
+                    primaryField,
+                    identityField);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
         #region Helper Methods
 
         /// <summary>
@@ -399,7 +457,7 @@ namespace RepoDb
         /// <returns>The primary <see cref="DbField"/> object.</returns>
         private static DbField GetPrimaryField(BaseRequest request)
         {
-            if (request.Type != null)
+            if (request.Type != null && request.Type != typeof(object))
             {
                 var primaryPropery = PrimaryCache.Get(request.Type);
                 if (primaryPropery != null)
@@ -424,7 +482,7 @@ namespace RepoDb
         /// <returns>The identity <see cref="DbField"/> object.</returns>
         private static DbField GetIdentityField(BaseRequest request)
         {
-            if (request.Type != null)
+            if (request.Type != null && request.Type != typeof(object))
             {
                 var identityProperty = IdentityCache.Get(request.Type);
                 if (identityProperty != null)

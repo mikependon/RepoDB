@@ -33,6 +33,8 @@ namespace RepoDb.IntegrationTests.Types.Dates
             Database.Cleanup();
         }
 
+        #region <TEntity>
+
         [TestMethod]
         public void TestBaseRepositoryDatesCrud()
         {
@@ -319,5 +321,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.IsNull(data.ColumnTimeMapped);
             }
         }
+
+        #endregion
     }
 }

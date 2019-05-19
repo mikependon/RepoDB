@@ -23,7 +23,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int DeleteAll<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -47,7 +47,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static int DeleteAllInternal<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -81,7 +81,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -105,7 +105,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> DeleteAllAsyncInternal<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -139,7 +139,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static int DeleteAll(this IDbConnection connection,
             string tableName,
             int? commandTimeout = null,
@@ -164,7 +164,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static int DeleteAllInternal(this IDbConnection connection,
             string tableName,
             int? commandTimeout = null,
@@ -198,7 +198,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> DeleteAllAsync(this IDbConnection connection,
             string tableName,
             int? commandTimeout = null,
@@ -223,7 +223,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> DeleteAllAsyncInternal(this IDbConnection connection,
             string tableName,
             int? commandTimeout = null,
@@ -256,7 +256,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static int DeleteAllInternalBase(this IDbConnection connection,
             DeleteAllRequest request,
             int? commandTimeout = null,
@@ -318,7 +318,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> DeleteAllAsyncInternalBase(this IDbConnection connection,
             DeleteAllRequest request,
             int? commandTimeout = null,

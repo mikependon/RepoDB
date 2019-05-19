@@ -90,6 +90,12 @@
         void BeforeMerge(CancellableTraceLog log);
 
         /// <summary>
+        /// A method being raised before the actual merge-all operation execution.
+        /// </summary>
+        /// <param name="log">The cancellable log object referenced by the merge-all execution.</param>
+        void BeforeMergeAll(CancellableTraceLog log);
+
+        /// <summary>
         /// A method being raised before the actual query operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the query execution.</param>
@@ -118,6 +124,12 @@
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the update execution.</param>
         void BeforeUpdate(CancellableTraceLog log);
+
+        /// <summary>
+        /// A method being raised before the actual update-all operation execution.
+        /// </summary>
+        /// <param name="log">The cancellable log object referenced by the update-all execution.</param>
+        void BeforeUpdateAll(CancellableTraceLog log);
 
         /*
          * AFTER
@@ -203,6 +215,12 @@
         void AfterMerge(TraceLog log);
 
         /// <summary>
+        /// A method being raised after the actual merge-all operation execution.
+        /// </summary>
+        /// <param name="log">The log object referenced by the merge-all execution.</param>
+        void AfterMergeAll(TraceLog log);
+
+        /// <summary>
         /// A method being raised after the actual query operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the query execution.</param>
@@ -231,5 +249,11 @@
         /// </summary>
         /// <param name="log">The log object referenced by the update execution.</param>
         void AfterUpdate(TraceLog log);
+
+        /// <summary>
+        /// A method being raised after the actual update-all operation execution.
+        /// </summary>
+        /// <param name="log">The log object referenced by the update-all execution.</param>
+        void AfterUpdateAll(TraceLog log);
     }
 }

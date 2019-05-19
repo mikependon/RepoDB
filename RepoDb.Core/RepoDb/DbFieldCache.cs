@@ -10,7 +10,7 @@ namespace RepoDb
     /// </summary>
     public static class DbFieldCache
     {
-        private static readonly ConcurrentDictionary<string, IEnumerable<DbField>> m_cache = new ConcurrentDictionary<string, IEnumerable<DbField>>();
+        private static readonly ConcurrentDictionary<long, IEnumerable<DbField>> m_cache = new ConcurrentDictionary<long, IEnumerable<DbField>>();
 
         /// <summary>
         /// Gets the cached list of <see cref="DbField"/> of the database table based on the data entity mapped name.
@@ -45,14 +45,28 @@ namespace RepoDb
         /// <returns>The cached field definitions of the entity.</returns>
         internal static IEnumerable<DbField> Get(Type type, string connectionString, string tableName)
         {
-            var key = string.Concat(type.FullName, ".", connectionString, ".", tableName);
+            var key = (long)type.FullName.GetHashCode();
             var result = (IEnumerable<DbField>)null;
+
+            // Set the keys
+            if (string.IsNullOrEmpty(connectionString) == false)
+            {
+                key += connectionString.GetHashCode();
+            }
+            if (string.IsNullOrEmpty(tableName) == false)
+            {
+                key += tableName.GetHashCode();
+            }
+
+            // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
                 var dbHelper = DbHelperMapper.Get(type);
                 result = dbHelper?.GetFields(connectionString, tableName);
                 m_cache.TryAdd(key, result);
             }
+
+            // Return the value
             return result;
         }
     }

@@ -53,6 +53,20 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryField"/> object.
         /// </summary>
         /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        public QueryField(Field field,
+            object value)
+            : this(field,
+                  Operation.Equal,
+                  value,
+                  false)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryField"/> object.
+        /// </summary>
+        /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         public QueryField(Field field,
