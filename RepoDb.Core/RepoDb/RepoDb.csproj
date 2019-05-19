@@ -4,35 +4,48 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.9.3</Version>
+    <Version>1.9.4</Version>
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>RepoDb v1.9.3:
-- [Core] Introduce ExecutionContext to hold the caching of the execution for 'InsertAll'. #204
-- [Enhancement, Performance] InsertAll Compiled Expressions
-- [Enhancement] Revisits the DbField for Primary and Identity Columns. #182
-- [Enhancement] Add the IdentityDbField in both Merge and Update SqlStatementBuilder. #198
-- [Enhancement] Rename the DataReaderConverter to DataReader. #200
-- [Enhancement] Add Flush method in the CommandTextCache, and exposed the class. #220
+    <PackageReleaseNotes>RepoDb v1.9.4:
+- [Note] This version is the first ever version release with complete features. The next version will be only be bug-fixes from this version (if we found some).
+- [Core] Introduce 'UpdateMultiple', different from 'UpdateAll'. #94
+- [Core] Introduce the 'UpdateAll' via 'PrimaryKey'. #93
+- [Core] Introduce Query and QueryAsync Table-Based Calls #176
+- [Core] Introduce QueryAll and QueryAllAsync Table-Based Calls #221
+- [Core] Introduce BatchQuery, BatchQueryAsync Table-Based Calls #175
+- [Core] Create an IL and Compiled Expressions for Update, Merge, Insert and InsertAll Parameter Passing #197
+- [Core] Introduce the 'InsertMultiple', different from 'InsertAll'. #92
+- [Core] Add ExecutionContext Cache for Insert. #205
+- [Core] Add ExecutionContext Cache for Merge. #206
+- [Core] Add ExecutionContext Cache for Update. #208
+- [Core] Add ExecutionContext Cache for UpdateAll. #209
+- [Core] Add ExecutionContext Cache for MergeAll. #207
+- [Core] Re-enable the operation for UPDATE via DataEntity object. #188
 - [Performance] Create a cached Expression when setting back the PrimaryKey values in Insert and InsertAll. #211
-- [Performance] Use the compiled function for inserting single DataEntity if the BatchSize is 1 for InsertAll. #217
-- [Fixed] Remove the Insert and InsertAll identity conversion from SQL. #203 - Fixed by introducing the 'ConversionResolver' classes.
-- [Test] Create UnitTests for (DbConnection, DbRepository, BaseRepository) InsertAll operation for IStatementBuilder. #216
-- [Test] Add UnitTests for ClientTypeToSqlDbTypeResolver, SqlDbTypeNameToClientTypeResolver and SqlDbTypeToStringNameResolver #219
-- [Added] IConversionResolver
-- [Added] ClientTypeToSqlDbTypeResolver
-- [Added] SqlDbTypeNameToClientTypeResolver
-- [Added] SqlDbTypeToStringNameResolver
-- [Added] SqlVariant
-- [Added] ParameterField
-- [Added] InsertExecutionContext
-- [Added] InsertExecutionContextCache
-- [Added] InsertAllExecutionContext
-- [Added] InsertAllExecutionContextCache</PackageReleaseNotes>
+- [Test] Add extensive IntegrationTests for type CRUD via TableName Calls. #222
+- [Test] Insert via TableName using Dynamic object with Invalid Column Casing #223
+- [Test] Add more IntegrationTest for UpdateAll. #231
+- [Test] Add UnitTest for MergeAll ITrace object. #240
+- [Test] Added more extensive IntegrationTests for MergeAll operation. #242
+- [Test] Add UnitTest for UpdateAll (IStatementBuilder, ITrace, QueryBuilder) #230
+- [Test] Add 'UnitTest' for 'InsertAll'. #214
+- [Bug] The version 1.9.2 is an (untagged) pre-release version. The Id property is failing on Insert if the Data Type is not long #215
+- [Bug] Insert via TableName using Dynamic object with Invalid Column Casing #223
+- [Bug] [Core] Insert is failing for non-null (non-table) properties (XJNEN) #212
+- [Bug] DbHelper: Script execution security related issue in the company (XJNEN) #229
+- [Bug] Expression based using the 'ToList().Contains()' is failing. But the 'ToArray().Contains()' is working. XJNEN #233
+- [Adhoc] Call the 'AsList()' method when calling the 'QueryGroup.GetString()' method. Support the case of XJNEN #228
+- [Adhoc] Reviewed BaseRepository, DbRepository, DbConnection Async/Await Keywords
+- [Adhoc] Reviewed UnitTests for the ITrace (BaseRepository, DbRepository, DbConnection)
+- [Adhoc] Convert all Mappers to become a Resolvers by implementing the IResolver interface. #227
+- [Adhoc] Remove all MapItem Classes from the Mappers. #226
+- [Removed] TypeMapItem Class
+- [Removed] DbIdentityCache Class</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb</RepositoryUrl>
@@ -40,8 +53,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.9.3.1</AssemblyVersion>
-    <FileVersion>1.9.3.1</FileVersion>
+    <AssemblyVersion>1.9.4.0</AssemblyVersion>
+    <FileVersion>1.9.4.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
