@@ -10,7 +10,7 @@ namespace RepoDb
     /// </summary>
     public static class PropertyCache
     {
-        private static readonly ConcurrentDictionary<string, IEnumerable<ClassProperty>> m_cache = new ConcurrentDictionary<string, IEnumerable<ClassProperty>>();
+        private static readonly ConcurrentDictionary<int, IEnumerable<ClassProperty>> m_cache = new ConcurrentDictionary<int, IEnumerable<ClassProperty>>();
 
         /// <summary>
         /// Gets the cached list of <see cref="ClassProperty"/> objects of the data entity.
@@ -20,13 +20,17 @@ namespace RepoDb
         public static IEnumerable<ClassProperty> Get<TEntity>()
             where TEntity : class
         {
-            var key = typeof(TEntity).FullName;
             var properties = (IEnumerable<ClassProperty>)null;
+            var key = typeof(TEntity).FullName.GetHashCode();
+
+            // Try get the value
             if (m_cache.TryGetValue(key, out properties) == false)
             {
                 properties = ClassExpression.GetProperties<TEntity>();
                 m_cache.TryAdd(key, properties);
             }
+
+            // Return the value
             return properties;
         }
 
@@ -37,13 +41,17 @@ namespace RepoDb
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
         public static IEnumerable<ClassProperty> Get(Type type)
         {
-            var key = type.FullName;
             var properties = (IEnumerable<ClassProperty>)null;
+            var key = type.FullName.GetHashCode();
+
+            // Try get the value
             if (m_cache.TryGetValue(key, out properties) == false)
             {
                 properties = type.GetProperties().Select(p => new ClassProperty(p));
                 m_cache.TryAdd(key, properties);
             }
+
+            // Return the value
             return properties;
         }
     }

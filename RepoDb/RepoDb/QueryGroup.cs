@@ -788,24 +788,31 @@ namespace RepoDb
             // Check methods for the 'Like', both 'Array.<All|Any>()'
             if (expression.Method.Name == "All" || expression.Method.Name == "Any")
             {
-                return ParseAllOrAnyForArray<TEntity>(expression, isNot, isEqualsTo);
+                return ParseAllOrAnyForArrayOrAnyForList<TEntity>(expression, isNot, isEqualsTo);
             }
 
             // Check methods for the 'Like', both 'Array.Contains()' and 'StringProperty.Contains()'
             else if (expression.Method.Name == "Contains")
             {
-                // Check for the (p => p.Property.Contains("A")) for LIKE
                 if (expression.Object?.IsMember() == true)
                 {
-                    if (expression.Object.ToMember().Type == typeof(string))
+                    // Cast to proper object
+                    var member = expression.Object.ToMember();
+                    if (member.Type == typeof(string))
                     {
+                        // Check for the (p => p.Property.Contains("A")) for LIKE
                         return ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(expression, isNot, isEqualsTo);
                     }
+                    else if (member.Type.IsConstructedGenericType == true)
+                    {
+                        // Check for the (p => list.Contains(p.Property)) or (p => (new List<int> { 1, 2 }).Contains(p.Property))
+                        return ParseContainsForArrayOrList<TEntity>(expression, isNot, isEqualsTo);
+                    }
                 }
-                // Check for the (new [] { value1, value2 }).Contains(p.Property)
                 else
                 {
-                    return ParseContainsForArray<TEntity>(expression, isNot, isEqualsTo);
+                    // Check for the (array.Contains(p.Property)) or (new [] { value1, value2 }).Contains(p.Property))
+                    return ParseContainsForArrayOrList<TEntity>(expression, isNot, isEqualsTo);
                 }
             }
 
@@ -825,7 +832,7 @@ namespace RepoDb
             return null;
         }
 
-        private static QueryGroup ParseAllOrAnyForArray<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
+        private static QueryGroup ParseAllOrAnyForArrayOrAnyForList<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() != true)
@@ -914,7 +921,7 @@ namespace RepoDb
             return new QueryGroup(queryFields, null, conjunction, (isNot == isEqualsTo));
         }
 
-        private static QueryGroup ParseContainsForArray<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo = true) where TEntity : class
+        private static QueryGroup ParseContainsForArrayOrList<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() != true)
@@ -950,15 +957,37 @@ namespace RepoDb
             }
 
             // Get the values
-            var values = expression.Arguments.First().GetValue();
+            var values = (object)null;
+
+            // Array/List Separation
+            if (expression.Object == null)
+            {
+                // Expecting an array
+                values = expression.Arguments.First().GetValue();
+            }
+            else
+            {
+                // Expecting a list here
+                values = expression.Object.GetValue();
+
+                // Convert to a proper array type
+                if ((values is Array) == false)
+                {
+                    values = values.AsArray();
+                }
+            }
 
             // Add to query fields
             var operation = isNot ? Operation.NotIn : Operation.In;
             var queryField = new QueryField(property.Name, operation, values);
 
             // Return the result
-            var queryGroup = new QueryGroup(queryField.AsEnumerable());
+            var queryGroup = new QueryGroup(queryField);
+
+            // Set the IsNot value
             queryGroup.SetIsNot(isEqualsTo == false);
+
+            // Return the instance
             return queryGroup;
         }
 

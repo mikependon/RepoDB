@@ -165,6 +165,10 @@ namespace RepoDb.Extensions
             {
                 return expression.ToNewArray().GetValue();
             }
+            else if (expression.IsListInit())
+            {
+                return expression.ToListInit().GetValue();
+            }
             else if (expression.IsNew())
             {
                 return expression.ToNew().GetValue();
@@ -254,6 +258,28 @@ namespace RepoDb.Extensions
             foreach (var item in expression.Expressions)
             {
                 array.SetValue(item.GetValue(), expression.Expressions.IndexOf(item));
+            }
+            return array;
+        }
+
+        /// <summary>
+        /// Gets a value from the current instance of <see cref="ListInitExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="ListInitExpression"/> object where the value is to be extracted.</param>
+        /// <returns>The extracted value from <see cref="ListInitExpression"/> object.</returns>
+        public static object GetValue(this ListInitExpression expression)
+        {
+            var arrayType = expression.Type.IsConstructedGenericType ?
+                expression.Type.GetGenericArguments().FirstOrDefault() ?? typeof(object) :
+                typeof(object);
+            var array = Array.CreateInstance(arrayType, (int)expression.Initializers?.Count);
+            foreach (var item in expression.Initializers)
+            {
+                var itemValue = item.Arguments?.FirstOrDefault();
+                if (itemValue != null)
+                {
+                    array.SetValue(itemValue.GetValue(), item.Arguments.IndexOf(itemValue));
+                }
             }
             return array;
         }
@@ -497,6 +523,26 @@ namespace RepoDb.Extensions
         public static NewArrayExpression ToNewArray(this Expression expression)
         {
             return (NewArrayExpression)expression;
+        }
+
+        /// <summary>
+        /// Identify whether the instance of <see cref="Expression"/> is a <see cref="ListInitExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
+        /// <returns>Returns true if the expression is a <see cref="ListInitExpression"/>.</returns>
+        public static bool IsListInit(this Expression expression)
+        {
+            return expression is ListInitExpression;
+        }
+
+        /// <summary>
+        /// Converts the <see cref="Expression"/> object into <see cref="ListInitExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
+        /// <returns>A converted instance of <see cref="ListInitExpression"/> object.</returns>
+        public static ListInitExpression ToListInit(this Expression expression)
+        {
+            return (ListInitExpression)expression;
         }
 
         /// <summary>

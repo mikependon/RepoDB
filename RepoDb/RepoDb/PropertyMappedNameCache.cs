@@ -23,11 +23,15 @@ namespace RepoDb
                 property.Name.GetHashCode() +
                 quoted.GetHashCode();
             var result = (string)null;
+
+            // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
                 result = PropertyInfoExtension.GetMappedName(property, quoted);
                 m_cache.TryAdd(key, result);
             }
+
+            // Return the value
             return result;
         }
     }

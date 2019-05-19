@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using RepoDb.Enumerations;
-using RepoDb.Exceptions;
 
 namespace RepoDb
 {
@@ -13,12 +11,11 @@ namespace RepoDb
     /// </summary>
     public static class TypeMapper
     {
-        private static readonly IList<TypeMapItem> m_cache = new List<TypeMapItem>();
+        private static readonly ConcurrentDictionary<int, DbType?> m_maps = new ConcurrentDictionary<int, DbType?>();
 
         static TypeMapper()
         {
             ConversionType = ConversionType.Default;
-            new List<TypeMapItem>();
         }
 
         /// <summary>
@@ -26,11 +23,6 @@ namespace RepoDb
         /// The default value is <see cref="ConversionType.Default"/>.
         /// </summary>
         public static ConversionType ConversionType { get; set; }
-
-        /// <summary>
-        /// Gets the list of type-mapping objects.
-        /// </summary>
-        public static IEnumerable<TypeMapItem> TypeMaps => m_cache;
 
         /// <summary>
         /// Adds a mapping between .NET CLR Type and database type.
@@ -50,40 +42,27 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Map(Type type, DbType dbType, bool force = false)
         {
-            Map(new TypeMapItem(type, dbType), force);
-        }
+            var key = type.FullName.GetHashCode();
+            var value = (DbType?)null;
 
-        /// <summary>
-        /// Adds a mapping between .NET CLR Type and database type.
-        /// </summary>
-        /// <param name="item">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
-        public static void Map(TypeMapItem item)
-        {
-            Map(item, false);
-        }
-
-        /// <summary>
-        /// Adds a mapping between .NET CLR Type and database type.
-        /// </summary>
-        /// <param name="item">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
-        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Map(TypeMapItem item, bool force = false)
-        {
-            var target = Get(item.Type);
-            if (target == null)
+            // Try get the cache
+            if (m_maps.TryGetValue(key, out value))
             {
-                m_cache.Add(item);
-            }
-            else
-            {
-                if (force == false)
+                if (force)
                 {
-                    throw new DuplicateTypeMapException($"A mapping for type '{target.Type.FullName}' is already defined. It is currently mapped to '{target.DbType.GetType().FullName}' database type.");
+                    // Update the existing one
+                    m_maps.TryUpdate(key, dbType, value);
                 }
                 else
                 {
-                    target.SetDbType(item.DbType);
+                    // Throws an exception
+                    throw new InvalidOperationException($"Mapping to provider '{key}' already exists.");
                 }
+            }
+            else
+            {
+                // Add the mapping
+                m_maps.TryAdd(key, dbType);
             }
         }
 
@@ -92,9 +71,16 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The .NET CLR Type used for mapping.</param>
         /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
-        public static TypeMapItem Get(Type type)
+        public static DbType? Get(Type type)
         {
-            return m_cache.FirstOrDefault(t => t.Type == type);
+            var value = (DbType?)null;
+            var key = type.FullName.GetHashCode();
+
+            // Try get the value
+            m_maps.TryGetValue(key, out value);
+
+            // Return the value
+            return value;
         }
 
         /// <summary>
@@ -102,7 +88,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The dynamic .NET CLR Type used for mapping.</typeparam>
         /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
-        public static TypeMapItem Get<T>()
+        public static DbType? Get<T>()
         {
             return Get(typeof(T));
         }
@@ -113,12 +99,11 @@ namespace RepoDb
         /// <param name="type">The .NET CLR Type mapping to be removed.</param>
         public static void Unmap(Type type)
         {
-            var item = Get(type);
-            if (item == null)
-            {
-                throw new InvalidOperationException($"The type mapping for type '{type.FullName}' is not found.");
-            }
-            m_cache.Remove(item);
+            var key = type.FullName.GetHashCode();
+            var value = (DbType?)null;
+
+            // Try get the value
+            m_maps.TryRemove(key, out value);
         }
     }
 }

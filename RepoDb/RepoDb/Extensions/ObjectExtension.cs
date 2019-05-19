@@ -12,6 +12,50 @@ namespace RepoDb.Extensions
     public static class ObjectExtension
     {
         /// <summary>
+        /// Converts the current object to become an array.
+        /// </summary>
+        /// <param name="obj">The object to be converted.</param>
+        /// <returns>A converted instance of <see cref="Array"/>.</returns>
+        internal static Array AsArray(this object obj)
+        {
+            // Return immediately if it is an array
+            if (obj is Array)
+            {
+                return (Array)obj;
+            }
+
+            // Get the type
+            var array = (Array)null;
+            var type = obj.GetType();
+
+            // If this is a constructed
+            if (type.IsConstructedGenericType == true)
+            {
+                // Get the first generic type
+                type = type.GetGenericArguments()[0];
+
+                // Create a type from generic
+                var listType = typeof(List<>).MakeGenericType(type);
+                var toArrayMethod = listType.GetMethod("get_Item", new[] { type });
+                var countProperty = listType.GetProperty("Count");
+                var count = (int)countProperty.GetValue(obj);
+
+                // Create a new instance of array
+                array = Array.CreateInstance(type, count);
+
+                // Iterate the values from the object
+                for (var index = 0; index < count; index++)
+                {
+                    var value = toArrayMethod.GetValue(obj, new object[] { index });
+                    array.SetValue(value, index);
+                }
+            }
+
+            // Return the converted array
+            return array;
+        }
+
+        /// <summary>
         /// Merges an object into an instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the object.</typeparam>

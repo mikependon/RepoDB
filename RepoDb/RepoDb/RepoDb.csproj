@@ -75,7 +75,7 @@
     <Compile Include="Expressions\ClassExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
     <Compile Include="ClassProperty.cs" />
-    <Compile Include="DataReaderFieldDefinition.cs" />
+    <Compile Include="DataReaderField.cs" />
     <Compile Include="Exceptions\InvalidQualifierFieldsException.cs" />
     <Compile Include="Exceptions\ParameterNotFoundException.cs" />
     <Compile Include="Extensions\DbFieldExtension.cs" />
@@ -116,7 +116,6 @@
     <Compile Include="Extensions\MemberBindingExtension.cs" />
     <Compile Include="DbField.cs" />
     <Compile Include="DbFieldCache.cs" />
-    <Compile Include="DbIdentityCache.cs" />
     <Compile Include="Extensions\ClassPropertyExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="IdentityCache.cs" />
@@ -218,7 +217,6 @@
     <Compile Include="SqlTableHints.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder.cs" />
     <Compile Include="TraceLog.cs" />
-    <Compile Include="TypeMapItem.cs" />
     <Compile Include="TypeMapper.cs" />
     <Compile Include="Types\SqlVariant.cs" />
   </ItemGroup>

@@ -50,7 +50,7 @@ namespace RepoDb.Extensions
                 {
                     // Get the database type
                     var dbType = property.GetDbType() ??
-                        TypeMapper.Get(property.PropertyInfo.PropertyType.GetUnderlyingType())?.DbType;
+                        TypeMapper.Get(property.PropertyInfo.PropertyType.GetUnderlyingType());
 
                     // Ensure the type mapping
                     if (dbType == null)
@@ -209,7 +209,7 @@ namespace RepoDb.Extensions
                     var value = property.PropertyInfo.GetValue(param);
                     var dbType = property.GetDbType() ??
                         TypeMapper.Get(property.PropertyInfo.PropertyType.GetUnderlyingType() ??
-                            value?.GetType().GetUnderlyingType())?.DbType;
+                            value?.GetType().GetUnderlyingType());
 
                     // Ensure the type mapping
                     if (dbType == null)
@@ -257,11 +257,11 @@ namespace RepoDb.Extensions
                     // Get the DB Type
                     dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
                         TypeMapper.Get(property?.PropertyType?.GetUnderlyingType() ??
-                            kvp.Value?.GetType()?.GetUnderlyingType())?.DbType;
+                            kvp.Value?.GetType()?.GetUnderlyingType());
                 }
                 else
                 {
-                    dbType = TypeMapper.Get(kvp.Value?.GetType()?.GetUnderlyingType())?.DbType;
+                    dbType = TypeMapper.Get(kvp.Value?.GetType()?.GetUnderlyingType());
                 }
 
                 // Add the parameter
@@ -328,7 +328,7 @@ namespace RepoDb.Extensions
 
             // Get the values
             var value = queryField.Parameter.Value;
-            var dbType = TypeMapper.Get(value?.GetType()?.GetUnderlyingType())?.DbType;
+            var dbType = TypeMapper.Get(value?.GetType()?.GetUnderlyingType());
 
             // Create the parameter
             command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType));
@@ -483,7 +483,7 @@ namespace RepoDb.Extensions
                         // Get the property values
                         var value = property.PropertyInfo.GetValue(param);
                         var dbType = property.GetDbType() ??
-                            TypeMapper.Get(property.PropertyInfo.PropertyType.GetUnderlyingType())?.DbType;
+                            TypeMapper.Get(property.PropertyInfo.PropertyType.GetUnderlyingType());
 
                         // Ensure the type mapping
                         if (dbType == null)
@@ -569,12 +569,12 @@ namespace RepoDb.Extensions
 
                     // Get the DB Type
                     dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                        TypeMapper.Get(property?.PropertyType.GetUnderlyingType())?.DbType;
+                        TypeMapper.Get(property?.PropertyType.GetUnderlyingType());
                 }
                 else
                 {
                     // Get the DB Type
-                    dbType = TypeMapper.Get(kvp.Value?.GetType()?.GetUnderlyingType())?.DbType;
+                    dbType = TypeMapper.Get(kvp.Value?.GetType()?.GetUnderlyingType());
                 }
 
                 // Set the parameter
@@ -660,7 +660,7 @@ namespace RepoDb.Extensions
                 var value = queryField.Parameter.Value;
 
                 // Get the DB Type
-                dbType = TypeMapper.Get(value?.GetType()?.GetUnderlyingType())?.DbType;
+                dbType = TypeMapper.Get(value?.GetType()?.GetUnderlyingType());
 
                 // Set the parameter
                 parameter.Value = value;
@@ -717,7 +717,7 @@ namespace RepoDb.Extensions
             if (parameter != null)
             {
                 var value = queryField.Parameter.Value;
-                var dbType = TypeMapper.Get(value?.GetType()?.GetUnderlyingType())?.DbType;
+                var dbType = TypeMapper.Get(value?.GetType()?.GetUnderlyingType());
 
                 // Set the value
                 parameter.Value = value;

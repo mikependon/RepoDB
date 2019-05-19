@@ -37,7 +37,7 @@ namespace RepoDb.Reflection
             // Matching the fields
             var readerFields = Enumerable.Range(0, reader.FieldCount)
                 .Select(reader.GetName)
-                .Select((name, ordinal) => new DataReaderFieldDefinition
+                .Select((name, ordinal) => new DataReaderField
                 {
                     Name = name.ToLower(),
                     Ordinal = ordinal,
@@ -73,7 +73,7 @@ namespace RepoDb.Reflection
         /// <returns>The enumerable list of member assignment and bindings.</returns>
         private static IEnumerable<MemberAssignment> GetMemberAssignmentsForDataEntity<TEntity>(Expression newEntityExpression,
             ParameterExpression readerParameterExpression,
-            IEnumerable<DataReaderFieldDefinition> readerFields,
+            IEnumerable<DataReaderField> readerFields,
             IDbConnection connection)
             where TEntity : class
         {
@@ -202,7 +202,7 @@ namespace RepoDb.Reflection
         }
 
         private static Expression ConvertValueExpressionForDataEntity(Expression expression,
-            DataReaderFieldDefinition readerField,
+            DataReaderField readerField,
             Type propertyType,
             Type convertType)
         {
@@ -287,7 +287,7 @@ namespace RepoDb.Reflection
             // Matching the fields
             var readerFields = Enumerable.Range(0, reader.FieldCount)
                 .Select(reader.GetName)
-                .Select((name, ordinal) => new DataReaderFieldDefinition
+                .Select((name, ordinal) => new DataReaderField
                 {
                     Name = name,
                     Ordinal = ordinal,
@@ -320,7 +320,7 @@ namespace RepoDb.Reflection
         /// <param name="readerFields">The list of fields to be bound from the data reader.</param>
         /// <returns>The enumerable list of child elements initializations.</returns>
         private static IEnumerable<ElementInit> GetElementInitsForDictionary(ParameterExpression readerParameterExpression,
-            IList<DataReaderFieldDefinition> readerFields)
+            IList<DataReaderField> readerFields)
         {
             // Initialize variables
             var elementInits = new List<ElementInit>();
@@ -580,7 +580,9 @@ namespace RepoDb.Reflection
                 // Set for non Timestamp
                 if (fieldOrPropertyType != typeOfTimeSpan)
                 {
-                    var dbType = TypeMapper.Get(fieldOrPropertyType)?.DbType;
+                    var dbType = TypeMapper.Get(fieldOrPropertyType);
+
+                    // Use the resolver
                     if (dbType == null)
                     {
                         dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
@@ -990,7 +992,9 @@ namespace RepoDb.Reflection
                 // Set for non Timestamp
                 if (fieldOrPropertyType != typeOfTimeSpan)
                 {
-                    var dbType = TypeMapper.Get(fieldOrPropertyType)?.DbType;
+                    var dbType = TypeMapper.Get(fieldOrPropertyType);
+
+                    // Use the resolver
                     if (dbType == null)
                     {
                         dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
@@ -1325,7 +1329,7 @@ namespace RepoDb.Reflection
                  parameter.Direction = direction;
 
                  // Set the DB Type
-                 var dbType = TypeMapper.Get(field.Type?.GetUnderlyingType())?.DbType;
+                 var dbType = TypeMapper.Get(field.Type?.GetUnderlyingType());
 
                  // Ensure the type mapping
                  if (dbType == null)
