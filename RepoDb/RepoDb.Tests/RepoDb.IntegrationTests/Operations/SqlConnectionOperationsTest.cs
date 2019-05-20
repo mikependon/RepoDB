@@ -4741,6 +4741,35 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAll(TableName)
 
         [TestMethod]
+        public void TestSqlConnectionInsertAllForIdentityTableViaTableNameWithIncompleteProperties()
+        {
+            // Setup
+            var tables = new[]
+            {
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Length, insertAllResult);
+                Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.RowGuid == item.RowGuid)));
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertAllForIdentityTableViaTableName()
         {
             // Setup
@@ -4895,6 +4924,35 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region InsertAllAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaTableNameWithIncompleteProperties()
+        {
+            // Setup
+            var tables = new[]
+            {
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Length, insertAllResult);
+                Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
+
+                // Act
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.RowGuid == item.RowGuid)));
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionInsertAllAsyncForIdentityTableViaTableName()
