@@ -80,7 +80,7 @@
     <Compile Include="Exceptions\ParameterNotFoundException.cs" />
     <Compile Include="Extensions\DbFieldExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
-    <Compile Include="Interfaces\IConversionResolver.cs" />
+    <Compile Include="Interfaces\IResolver.cs" />
     <Compile Include="Operations\BaseRepository\CountAll.cs" />
     <Compile Include="Operations\BaseRepository\InsertAll.cs" />
     <Compile Include="Operations\BaseRepository\QueryAll.cs" />

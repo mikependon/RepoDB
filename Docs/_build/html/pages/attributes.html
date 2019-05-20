@@ -204,9 +204,10 @@
 </div>
 <p>The following primary property identification processed will be used in any case.</p>
 <ol class="arabic simple">
-<li>If the <cite>PrimaryAttribute</cite> is not defined, it checks for <cite>Id</cite> property. If present, it will then become the default primary property.</li>
-<li>If the <cite>Id</cite> property is not present, it checks for the <cite>Class.Name</cite> + <cite>Id</cite> property. In the case above, it should be <cite>CustomerId</cite>. If present, it will then become the default property.</li>
-<li>If both properties are not present, it then checks for the <cite>Mapped.Name</cite> + <cite>Id</cite> property. In the case above, it should be <cite>CustomerId</cite>. If present, it will then become the default property.</li>
+<li>If the <cite>PrimaryAttribute</cite> is not defined, it then checks for database table primary key.</li>
+<li>If the database table primary key is not present, it then checks for <cite>Id</cite> property.</li>
+<li>If the <cite>Id</cite> property is not present, it then checks for the <cite>Class.Name</cite> + <cite>Id</cite> property.</li>
+<li>If all properties defined above are not present, it then checks for the <cite>Mapped.Name</cite> + <cite>Id</cite> property.</li>
 </ol>
 </div>
 <div class="section" id="identity">

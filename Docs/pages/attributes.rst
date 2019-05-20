@@ -46,9 +46,10 @@ Is used to define a primary key property in the class.
 
 The following primary property identification processed will be used in any case.
 
-1. If the `PrimaryAttribute` is not defined, it checks for `Id` property. If present, it will then become the default primary property.
-2. If the `Id` property is not present, it checks for the `Class.Name` + `Id` property. In the case above, it should be `CustomerId`. If present, it will then become the default property.
-3. If both properties are not present, it then checks for the `Mapped.Name` + `Id` property. In the case above, it should be `CustomerId`. If present, it will then become the default property.
+1. If the `PrimaryAttribute` is not defined, it then checks for database table primary key.
+2. If the database table primary key is not present, it then checks for `Id` property.
+3. If the `Id` property is not present, it then checks for the `Class.Name` + `Id` property.
+4. If all properties defined above are not present, it then checks for the `Mapped.Name` + `Id` property.
 
 Identity
 --------

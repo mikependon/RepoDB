@@ -46,6 +46,34 @@ Explicit way:
 			new QueryField(nameof(Order.CustomerId), 10045));
 	}
 
+Targetted columns can also be batch-queried via table-name-based calls.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		connection.BatchQuery("Order",
+			0,
+			24,
+			new OrderField("Id", Order.Ascending).AsEnumerable(),
+			new { CustomerId = 10045 });
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		connection.BatchQuery("Order",
+			0,
+			24,
+			new OrderField("Id", Order.Ascending).AsEnumerable(),
+			new QueryField(nameof(Order.CustomerId), 10045));
+	}
+
 BulkInsert
 ----------
 
@@ -765,7 +793,6 @@ A dynamic typed-based call is also provided when calling this method, see below.
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		// Instantiate a dynamic object (not really an "Order" object)
 		var entity = new
 		{
 			CustomerId = 10045,
@@ -776,7 +803,7 @@ A dynamic typed-based call is also provided when calling this method, see below.
 		var id = connection.Insert<long>("Order", entity);
 	}
 
-**Note**: Use the table name based if the scenario is to only insert targetted columns.
+**Note**: Use the table-name-based calls if the scenario is to only insert targetted columns.
 
 InsertAll
 ---------
@@ -797,19 +824,20 @@ Inserts multiple data in the database.
 				CustomerId = 10045,
 				ProductId = 12
 				Quantity = 2,
-				CreatedDate = DateTime.UtcNow
+				Price = 35.50
+				CreatedDate = DateTime.UtcNow,
+				LastUpdatedUtc = DateTime.UtcNow
 			});
 		}
 		connection.InsertAll(orders);
 	}
 
-**Certain** columns can also be inserted via table name calls.
+**Certain** columns can also be inserted via table-name-based calls.
 
 ::
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		// Instantiate a dynamic object (not really an "Order" object)
 		var orders = new List<dynamic>();
 		for (var i = 0; i < 100; i++)
 		{
@@ -821,15 +849,21 @@ Inserts multiple data in the database.
 				CreatedDate = DateTime.UtcNow
 			});
 		}
-		var id = connection.Insert<long>("Order", orders);
+		var id = connection.InsertAll<long>("Order",
+			entities: orders,
+			fields: Field.From("CustomerId", "ProductId", "Quantity", "CreatedDate"));
 	}
 
-**Note**: Use the table name based if the scenario is to only insert targetted columns.
+**Why passing the fields arguments?**
+
+This is optional since this is an insert operation. However, by default, the library will use the database columns of the `Order` entity. If the values to that argument is not set, then `InsertAll` operation will set it to `null` in the database.
+
+**Note**: Use the table-name-based calls if the scenario is to only insert targetted columns.
 
 Merge
 -----
 
-Merges a data entity object into an existing data in the database.
+Merges a data entity or dynamic object into the database.
 
 .. highlight:: c#
 
@@ -843,19 +877,7 @@ Merges a data entity object into an existing data in the database.
 		connection.Merge(order, Field.Parse<Order>(o => o.Id));
 	}
 
-In the second parameter, the `Field.From` method can also be used.
-
-::
-	
-	var id = connection.Merge<Order>(entity, Field.From(nameof(Order.Id)));
-
-Or, via a literal array of string.
-
-::
-
-	var id = connection.Merge<Order>(entity, Field.From("Id"));
-
-**Note**: The second parameter can be omitted if the data entity has a primary key.
+**Note**: The second parameter (a qualifier) can be omitted if the data entity has a primary key.
 
 **Certain** columns can also be merged via table name calls.
 
@@ -873,7 +895,59 @@ Or, via a literal array of string.
 		connection.Merge("Order", entity, Field.From("Id"));
 	}
 
-**Note**: Use the table name based if the scenario is to only merge targetted columns.
+**Note**: Use the table-name-based calls if the scenario is to only merge targetted columns.
+
+MergeAll
+--------
+
+Merges the multiple data entity or dynamic objects into the database.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var orders = connection.Query<Order>(o => o.CustomerId == 10045);
+		for (var i = 0; i < 100; i++)
+		{
+			var order = orders.ElementAt(i);
+			order.Quantity = 5;
+			order.LastUpdatedUtc = DateTime.UtcNow;
+		}
+		connection.MergeAll(orders);
+	}
+
+**Note**: All fields are being merged when calling the typed-based method.
+
+**Certain** columns can also be merged via table name calls.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var orders = connection.Query<Order>(o => o.CustomerId == 10045);
+		var mergeables = new List<dynamic>();
+		for (var i = 0; i < 100; i++)
+		{
+			var order = orders.ElementAt(i);
+			mergeables.Add(new
+			{
+				Id = order.Id,
+				Quantity = 5,
+				LastUpdatedUtc = DateTime.UtcNow
+			});
+		}
+		connection.MergeAll("Order",
+			entities: mergeables,
+			fields: Field.From("Id", "Quantity", "LastUpdatedUtc"));
+	}
+
+**Why passing the fields arguments?**
+
+Be aware on this behavior since this is a merge operation. By default, the library will use the database columns of the `Order` entity. If the values to that fields has not been set, then `MergeAll` operation will set it to `null` in the database. By setting the `fields` argument, it will only merge the listed `fields` in the batch operations.
+
+**Note**: Use the table-name-based calls if the scenario is to only merge targetted columns.
 
 Query
 -----
@@ -928,7 +1002,7 @@ With ordering.
 		{
 			Id = Order.Ascending
 		};
-		var customers = connection.Query<Order>(new { CustomerId = 10045 }, orderBy: orderBy);
+		var orders = connection.Query<Order>(new { CustomerId = 10045 }, orderBy: orderBy);
 	}
 
 With hint.
@@ -938,6 +1012,22 @@ With hint.
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var customers = connection.Query<Customer>(new { CustomerId = 10045 }, hints: SqlTableHints.NoLock);
+	}
+
+**Certain** columns can also be queried via table-name-based calls.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var orderBy = new
+		{
+			Id = Order.Ascending
+		};
+		var orders = connection.Query("Order",
+			new { CustomerId = 10045 },
+			fields: Field.From("Id", "CustomerId", "CreatedDateUtc"),
+			orderBy: orderBy);
 	}
 
 **Note**: By setting the `where` argument to blank would query all the records. Exactly the same as `QueryAll` operation.
@@ -976,6 +1066,21 @@ With hint.
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var customers = connection.QueryAll<Customer>(SqlTableHints.NoLock);
+	}
+
+**Certain** columns can also be queried via table-name-based calls.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var orderBy = new
+		{
+			Id = Order.Ascending
+		};
+		var orders = connection.QueryAll("Order",
+			fields: Field.From("Id", "CustomerId", "CreatedDateUtc"),
+			orderBy: orderBy);
 	}
 
 QueryMultiple
@@ -1218,3 +1323,55 @@ Explicit way:
 		};
 		var affectedRows = connection.Update("Order", entity, new QueryField("Id", 1002));
 	}
+
+UpdateAll
+---------
+
+Updates existing multiple data in the database.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var orders = connection.Query<Order>(o => o.CustomerId == 10045);
+		for (var i = 0; i < 100; i++)
+		{
+			var order = orders.ElementAt(i);
+			order.Quantity = 5;
+			order.LastUpdatedUtc = DateTime.UtcNow;
+		}
+		connection.UpdateAll(orders);
+	}
+
+**Note**: All fields are being updated when calling the typed-based method.
+
+**Certain** columns can also be updated via table name calls.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var orders = connection.Query<Order>(o => o.CustomerId == 10045);
+		var updatables = new List<dynamic>();
+		for (var i = 0; i < 100; i++)
+		{
+			var order = orders.ElementAt(i);
+			updatables.Add(new
+			{
+				Id = order.Id,
+				Quantity = 5,
+				LastUpdatedUtc = DateTime.UtcNow
+			});
+		}
+		connection.UpdateAll("Order",
+			entities: updatables,
+			fields: Field.From("Id", "Quantity", "LastUpdatedUtc"));
+	}
+
+**Why passing the fields arguments?**
+
+Be aware on this behavior since this is an update operation. By default, the library will use the database columns of the `Order` entity. If the values to that fields has not been set, then `UpdateAll` operation will set it to `null` in the database. By setting the `fields` argument, it will only update the listed `fields` in the batch operations.
+
+**Note**: Use the table-name-based calls if the scenario is to only merge targetted columns.

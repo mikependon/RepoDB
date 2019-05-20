@@ -8,6 +8,7 @@ RepoDb is highly extensible for RDBMS only. Below are the objects that can be ex
 - Inline Hints
 - Provider Operations (soon to come)
 - Repository
+- Resolvers
 - Statement Builder
 - Trace
 

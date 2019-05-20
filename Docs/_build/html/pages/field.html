@@ -176,15 +176,15 @@
 <p>An object that signifies as data field in the query statement.</p>
 <div class="section" id="creating-a-new-instance">
 <h2>Creating a new Instance<a class="headerlink" href="#creating-a-new-instance" title="Permalink to this headline">¶</a></h2>
-<p>The constructor only accepts a single string parameter.</p>
+<p>The constructor accepts 2 parameters, a <cite>Name</cite> and a <cite>Type</cite>.</p>
 <p>By literal string:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">field</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>By class property:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">field</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">));</span>
 </pre></div>
 </div>
+<p>Or</p>
+<blockquote>
+<div>var field = new Field(nameof(Customer.Id), typeof(int));</div></blockquote>
+<p>The library uses the <cite>Type</cite> parameter to be resolved when any of the operation is being called.</p>
 </div>
 <div class="section" id="asenumerable">
 <h2>AsEnumerable<a class="headerlink" href="#asenumerable" title="Permalink to this headline">¶</a></h2>
@@ -208,21 +208,15 @@
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Name</span><span class="p">));</span>
 </pre></div>
 </div>
+<p><strong>Note</strong>:  When using this method, the <cite>Type</cite> parameter is not being set. The library will then not set the <cite>DbType</cite> value of the <cite>DbCommand</cite> object. By default, ADO.NET uses the <cite>DbType.String</cite> value.</p>
 </div>
 <div class="section" id="usage-of-field">
 <h2>Usage of Field<a class="headerlink" href="#usage-of-field" title="Permalink to this headline">¶</a></h2>
-<p>The field object is useful on certain operations.</p>
-<p>Being the qualifers in the <cite>InlineMerge</cite> Operation:</p>
+<p>The field object is mostly used as a queryable fields and qualifiers at some operations.</p>
+<p>Being the fields in the <cite>Query</cite> operation via table name:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="n">connection</span><span class="p">.</span><span class="n">InlineMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span>
-        <span class="p">{</span>
-                <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span>
-                <span class="n">ProductId</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
-                <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
-                <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
-        <span class="p">},</span>
-        <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">ProductId</span><span class="p">));</span> <span class="c1">// If CustomerId and ProductId is unique</span>
+        <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="s">&quot;CustomerId&quot;</span><span class="p">,</span> <span class="s">&quot;ProductId&quot;</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -237,7 +231,61 @@
                 <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
                 <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
         <span class="p">},</span>
-        <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">Id</span><span class="p">)));</span>
+        <span class="n">qualifiers</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">Id</span><span class="p">)));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Being the target fields and qualifers in the <cite>MergeAll</cite> operation via table name:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">entities</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span>
+        <span class="p">{</span>
+                <span class="k">new</span>
+                <span class="p">{</span>
+                        <span class="n">Id</span> <span class="p">=</span> <span class="m">1002</span><span class="p">,</span>
+                        <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span>
+                        <span class="n">ProductId</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+                        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+                        <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+                <span class="p">},</span>
+                <span class="k">new</span>
+                <span class="p">{</span>
+                        <span class="n">Id</span> <span class="p">=</span> <span class="m">1003</span><span class="p">,</span>
+                        <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10224</span><span class="p">,</span>
+                        <span class="n">ProductId</span> <span class="p">=</span> <span class="m">19</span><span class="p">,</span>
+                        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+                        <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+                <span class="p">}</span>
+        <span class="p">};</span>
+        <span class="n">connection</span><span class="p">.</span><span class="n">Merge</span><span class="p">(</span><span class="n">tableName</span><span class="p">:</span> <span class="s">&quot;Order&quot;</span><span class="p">,</span>
+                <span class="n">entities</span><span class="p">:</span> <span class="n">entities</span><span class="p">,</span>
+                <span class="n">qualifiers</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">),</span>
+                <span class="n">fields</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;CustomerId&quot;</span><span class="p">,</span> <span class="s">&quot;ProductId&quot;</span><span class="p">,</span> <span class="s">&quot;Quantity&quot;</span><span class="p">,</span> <span class="s">&quot;LastUpdatedUtc&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Being the target fields and qualifers in the <cite>MergeAll</cite> operation via table name:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">entities</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span>
+        <span class="p">{</span>
+                <span class="k">new</span>
+                <span class="p">{</span>
+                        <span class="n">Id</span> <span class="p">=</span> <span class="m">1002</span><span class="p">,</span>
+                        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+                        <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+                <span class="p">},</span>
+                <span class="k">new</span>
+                <span class="p">{</span>
+                        <span class="n">Id</span> <span class="p">=</span> <span class="m">1003</span><span class="p">,</span>
+                        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+                        <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+                <span class="p">}</span>
+        <span class="p">};</span>
+        <span class="n">connection</span><span class="p">.</span><span class="n">Merge</span><span class="p">(</span><span class="n">tableName</span><span class="p">:</span> <span class="s">&quot;Order&quot;</span><span class="p">,</span>
+                <span class="n">entities</span><span class="p">:</span> <span class="n">entities</span><span class="p">,</span>
+                <span class="n">qualifiers</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">),</span>
+                <span class="n">fields</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Quantity&quot;</span><span class="p">,</span> <span class="s">&quot;LastUpdatedUtc&quot;</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
