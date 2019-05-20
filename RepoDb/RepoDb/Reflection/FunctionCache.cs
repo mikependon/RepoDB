@@ -80,17 +80,20 @@ namespace RepoDb
         private static class GetFieldBasedDataReaderToDataEntityFunctionCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<string, Func<DbDataReader, TEntity>> m_cache = new ConcurrentDictionary<string, Func<DbDataReader, TEntity>>();
+            private static ConcurrentDictionary<long, Func<DbDataReader, TEntity>> m_cache = new ConcurrentDictionary<long, Func<DbDataReader, TEntity>>();
 
             public static Func<DbDataReader, TEntity> Get(DbDataReader reader, IDbConnection connection)
             {
                 var result = (Func<DbDataReader, TEntity>)null;
                 var fields = Enumerable.Range(0, reader.FieldCount)
                     .Select(reader.GetName)
-                    .Join(".");
-                var key = string.Concat(connection?.ConnectionString, ".",
-                    typeof(TEntity).FullName, ".",
-                    fields);
+                    .Join(".")
+                    .GetHashCode();
+                var key = typeof(TEntity).FullName.GetHashCode() + fields.GetHashCode();
+                if (string.IsNullOrEmpty(connection?.ConnectionString) == false)
+                {
+                    key += connection.ConnectionString.GetHashCode();
+                }
                 if (m_cache.TryGetValue(key, out result) == false)
                 {
                     result = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection);
@@ -147,7 +150,7 @@ namespace RepoDb
                 {
                     key += tableName.GetHashCode();
                 }
-                if (connection != null)
+                if (string.IsNullOrEmpty(connection?.ConnectionString) == false)
                 {
                     key += connection.ConnectionString.GetHashCode();
                 }

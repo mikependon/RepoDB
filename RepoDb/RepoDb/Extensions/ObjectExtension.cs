@@ -146,7 +146,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="entity">The instance to be converted.</param>
         /// <returns>An enumerable list of fields.</returns>
-        public static IEnumerable<Field> AsFields<TEntity>(this TEntity entity)
+        internal static IEnumerable<Field> AsFields<TEntity>(this TEntity entity)
             where TEntity : class
         {
             return FieldCache.Get<TEntity>();
@@ -157,7 +157,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
         /// <returns>An enumerable list of fields.</returns>
-        public static IEnumerable<Field> AsFields(this object obj)
+        internal static IEnumerable<Field> AsFields(this object obj)
         {
             return Field.Parse(obj);
         }
@@ -167,7 +167,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
         /// <returns>An enumerable list of order fields.</returns>
-        public static IEnumerable<OrderField> AsOrderFields(this object obj)
+        internal static IEnumerable<OrderField> AsOrderFields(this object obj)
         {
             return OrderField.Parse(obj);
         }
@@ -178,7 +178,7 @@ namespace RepoDb.Extensions
         /// <param name="obj">The current object.</param>
         /// <param name="parameters">The list of parameters.</param>
         /// <returns>The first non-null object.</returns>
-        public static object Coalesce(this object obj, params object[] parameters)
+        internal static object Coalesce(this object obj, params object[] parameters)
         {
             return parameters.First(param => param != null);
         }
@@ -190,7 +190,7 @@ namespace RepoDb.Extensions
         /// <param name="obj">The current object.</param>
         /// <param name="parameters">The list of parameters.</param>
         /// <returns>The first non-defaulted object.</returns>
-        public static T Coalesce<T>(this object obj, params T[] parameters)
+        internal static T Coalesce<T>(this object obj, params T[] parameters)
         {
             return parameters.First(param => Equals(param, default(T)) == false);
         }
