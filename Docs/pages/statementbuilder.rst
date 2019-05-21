@@ -84,13 +84,13 @@ This method is used to compose a SQL statement for `BatchQuery` operation.
 ::
 
 	public string CreateBatchQuery(QueryBuilder queryBuilder,
-		string tableName,
-		IEnumerable<Field> fields,
-		int page,
-		int rowsPerBatch,
-		IEnumerable<OrderField> orderBy = null,
-		QueryGroup where = null,
-		string hints = null)
+        string tableName,
+        IEnumerable<Field> fields,
+        int page,
+        int rowsPerBatch,
+        IEnumerable<OrderField> orderBy = null,
+        QueryGroup where = null,
+        string hints = null)
 	{
 		...
 	}
@@ -105,9 +105,9 @@ This method is used to compose a SQL statement for `Count` operation.
 ::
 
 	public string CreateCount(QueryBuilder queryBuilder,
-		string tableName,
-		QueryGroup where = null,
-		string hints = null)
+        string tableName,
+        QueryGroup where = null,
+        string hints = null)
 	{
 		...
 	}
@@ -122,8 +122,8 @@ This method is used to compose a SQL statement for `CountAll` operation.
 ::
 
 	public string CreateCountAll(QueryBuilder queryBuilder,
-		string tableName,
-		string hints = null)
+        string tableName,
+        string hints = null)
 	{
 		...
 	}
@@ -138,8 +138,8 @@ This method is used to compose a SQL statement for `Delete` operation.
 ::
 
 	public string CreateDelete(QueryBuilder queryBuilder,
-		string tableName,
-		QueryGroup where = null)
+        string tableName,
+        QueryGroup where = null)
 	{
 		...
 	}
@@ -154,7 +154,7 @@ This method is used to compose a SQL statement for `DeleteAll` operation.
 ::
 
 	public string CreateDeleteAll(QueryBuilder queryBuilder,
-		string tableName)
+        string tableName)
 	{
 		...
 	}
@@ -169,9 +169,29 @@ This method is used to compose a SQL statement for `Insert` operation.
 ::
 
 	public string CreateInsert(QueryBuilder queryBuilder,
-		string tableName,
-		IEnumerable<Field> fields = null,
-		DbField primaryField = null)
+        string tableName,
+        IEnumerable<Field> fields = null,
+        DbField primaryField = null,
+        DbField identityField = null)
+	{
+		...
+	}
+	
+CreateInsertAll
+---------------
+
+.. highlight:: none
+
+This method is used to compose a SQL statement for `InsertAll` operation.
+
+::
+
+	public string CreateInsertAll(QueryBuilder queryBuilder,
+        string tableName,
+        IEnumerable<Field> fields = null,
+        int batchSize = Constant.DefaultBatchOperationSize,
+        DbField primaryField = null,
+        DbField identityField = null)
 	{
 		...
 	}
@@ -186,10 +206,31 @@ This method is used to compose a SQL statement for `Merge` operation.
 ::
 
 	public string CreateMerge(QueryBuilder queryBuilder,
-		string tableName,
-		IEnumerable<Field> fields,
-		IEnumerable<Field> qualifiers = null,
-		DbField primaryField = null)
+        string tableName,
+        IEnumerable<Field> fields,
+        IEnumerable<Field> qualifiers = null,
+        DbField primaryField = null,
+        DbField identityField = null)
+	{
+		...
+	}
+
+CreateMerge
+-----------
+
+.. highlight:: none
+
+This method is used to compose a SQL statement for `MergeAll` operation.
+
+::
+
+	public string CreateMergeAll(QueryBuilder queryBuilder,
+        string tableName,
+        IEnumerable<Field> fields,
+        IEnumerable<Field> qualifiers,
+        int batchSize = Constant.DefaultBatchOperationSize,
+        DbField primaryField = null,
+        DbField identityField = null)
 	{
 		...
 	}
@@ -204,12 +245,12 @@ This method is used to compose a SQL statement for `Query` operation.
 ::
 
 	public string CreateQuery(QueryBuilder queryBuilder,
-		string tableName,
-		IEnumerable<Field> fields,
-		QueryGroup where = null,
-		IEnumerable<OrderField> orderBy = null,
-		int? top = null,
-		string hints = null)
+        string tableName,
+        IEnumerable<Field> fields,
+        QueryGroup where = null,
+        IEnumerable<OrderField> orderBy = null,
+        int? top = null,
+        string hints = null)
 	{
 		...
 	}
@@ -224,10 +265,10 @@ This method is used to compose a SQL statement for `QueryAll` operation.
 ::
 
 	public string CreateQueryAll(QueryBuilder queryBuilder,
-		string tableName,
-		IEnumerable<Field> fields,
-		IEnumerable<OrderField> orderBy = null,
-		string hints = null)
+        string tableName,
+        IEnumerable<Field> fields,
+        IEnumerable<OrderField> orderBy = null,
+        string hints = null)
 	{
 		...
 	}
@@ -242,7 +283,7 @@ This method is used to compose a SQL statement for `Truncate` operation.
 ::
 
 	public string CreateTruncate(QueryBuilder queryBuilder,
-		string tableName)
+        string tableName)
 	{
 		...
 	}
@@ -257,10 +298,31 @@ This method is used to compose a SQL statement for `Update` operation.
 ::
 
 	public string CreateUpdate(QueryBuilder queryBuilder,
-		string tableName,
-		IEnumerable<Field> fields,
-		QueryGroup where = null,
-		DbField primaryField = null)
+        string tableName,
+        IEnumerable<Field> fields,
+        QueryGroup where = null,
+        DbField primaryField = null,
+        DbField identityField = null)
+	{
+		...
+	}
+	
+CreateUpdateAll
+---------------
+
+.. highlight:: none
+
+This method is used to compose a SQL statement for `UpdateAll` operation.
+
+::
+
+	public string CreateUpdateAll(QueryBuilder queryBuilder,
+        string tableName,
+        IEnumerable<Field> fields,
+        IEnumerable<Field> qualifiers,
+        int batchSize = Constant.DefaultBatchOperationSize,
+        DbField primaryField = null,
+        DbField identityField = null)
 	{
 		...
 	}
