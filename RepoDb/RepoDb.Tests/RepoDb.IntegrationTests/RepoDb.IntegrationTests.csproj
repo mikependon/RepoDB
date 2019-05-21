@@ -59,12 +59,14 @@
     <Compile Include="Caches\SqlConnectionCachesTest.cs" />
     <Compile Include="ExecuteParameterTest.cs" />
     <Compile Include="Models\IdentityTable.cs" />
+    <Compile Include="Models\IdentityTableWithDifferentPrimary.cs" />
     <Compile Include="Models\WithExtraFieldsIdentityTable.cs" />
     <Compile Include="Models\LiteIdentityTable.cs" />
     <Compile Include="Models\NonIdentityTable.cs" />
     <Compile Include="Models\TypeClasses.cs" />
     <Compile Include="Models\TypeMappableClasses.cs" />
     <Compile Include="ExecuteArrayParameterTest.cs" />
+    <Compile Include="DifferentPrimaryTest.cs" />
     <Compile Include="ObjectMappingTest.cs" />
     <Compile Include="ObjectNameCasingTest.cs" />
     <Compile Include="Operations\BaseRepositoryOperationsTest.cs" />
