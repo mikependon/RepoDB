@@ -215,12 +215,12 @@ namespace RepoDb
         public Conjunction Conjunction { get; }
 
         /// <summary>
-        /// Gets the list of fields being grouped by this object.
+        /// Gets the list of child <see cref="QueryField"/> objects.
         /// </summary>
         public IEnumerable<QueryField> QueryFields { get; }
 
         /// <summary>
-        /// Gets the list of child query groups being grouped by this object.
+        /// Gets the list of child <see cref="QueryGroup"/> objects.
         /// </summary>
         public IEnumerable<QueryGroup> QueryGroups { get; }
 

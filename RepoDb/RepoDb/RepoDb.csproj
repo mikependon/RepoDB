@@ -209,7 +209,6 @@
     <Compile Include="QueryField.cs" />
     <Compile Include="CancellableTraceLog.cs" />
     <Compile Include="ObjectConverter.cs" />
-    <Compile Include="Reflection\DataReaderConverter.cs" />
     <Compile Include="Resolvers\SqlDbTypeToStringNameResolver.cs" />
     <Compile Include="Resolvers\ClientTypeToSqlDbTypeResolver.cs" />
     <Compile Include="Resolvers\SqlDbTypeNameToClientTypeResolver.cs" />
