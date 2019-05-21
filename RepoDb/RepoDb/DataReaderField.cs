@@ -18,9 +18,9 @@ namespace RepoDb
         public int Ordinal { get; set; }
 
         /// <summary>
-        /// Gets or sets the value that defines whether the column is nullable.
+        /// Gets or sets the <see cref="DbField"/> value.
         /// </summary>
-        public bool IsNullable { get; set; }
+        public DbField DbField { get; set; }
 
         /// <summary>
         /// Gets or sets the type value.

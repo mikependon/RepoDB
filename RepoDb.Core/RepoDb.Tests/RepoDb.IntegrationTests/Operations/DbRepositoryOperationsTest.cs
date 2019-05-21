@@ -4212,6 +4212,35 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAll(TableName)
 
         [TestMethod]
+        public void TestDbRepositoryInsertAllForIdentityTableViaTableNameWithIncompleteProperties()
+        {
+            // Setup
+            var tables = new[]
+            {
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = repository.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Length, insertAllResult);
+                Assert.AreEqual(tables.Length, repository.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.RowGuid == item.RowGuid)));
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryInsertAllForIdentityTableViaTableName()
         {
             // Setup
@@ -4366,6 +4395,35 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region InsertAllAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryInsertAllAsyncForIdentityTableViaTableNameWithIncompleteProperties()
+        {
+            // Setup
+            var tables = new[]
+            {
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = repository.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Length, insertAllResult);
+                Assert.AreEqual(tables.Length, repository.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.RowGuid == item.RowGuid)));
+            }
+        }
 
         [TestMethod]
         public void TestDbRepositoryInsertAllAsyncForIdentityTableViaTableName()
@@ -14396,6 +14454,32 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.ExecuteQuery<LiteIdentityTable>("SELECT * FROM [sc].[IdentityTable];");
+
+                // Assert
+                Assert.AreEqual(10, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.Where(t => t.Id == item.Id).First();
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnInt, item.ColumnInt);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWhereTheDataReaderColumnsAreLessThanClassProperties()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT Id, ColumnBit, ColumnDateTime, ColumnInt FROM [sc].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(10, result.Count());

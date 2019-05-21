@@ -52,7 +52,7 @@ namespace RepoDb.Interfaces
 
         #endregion
 
-        #region CreateCount
+        #region CreateCountAll
 
         /// <summary>
         /// Creates a SQL Statement for count-all operation.

@@ -14468,6 +14468,32 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestDbRepositoryExecuteQueryWhereTheDataReaderColumnsAreLessThanClassProperties()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT Id, ColumnBit, ColumnDateTime, ColumnInt FROM [sc].[IdentityTable];");
+
+                // Assert
+                Assert.AreEqual(10, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.Where(t => t.Id == item.Id).First();
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnInt, item.ColumnInt);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryExecuteQueryWithDictionaryParameters()
         {
             // Setup

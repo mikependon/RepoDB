@@ -34,14 +34,18 @@ namespace RepoDb.Reflection
             var readerParameterExpression = Expression.Parameter(typeof(DbDataReader), "reader");
             var newEntityExpression = Expression.New(typeof(TEntity));
 
+            // DB Variables
+            var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+
             // Matching the fields
             var readerFields = Enumerable.Range(0, reader.FieldCount)
-                .Select(reader.GetName)
+                .Select((index) => reader.GetName(index))
                 .Select((name, ordinal) => new DataReaderField
                 {
                     Name = name.ToLower(),
                     Ordinal = ordinal,
-                    Type = reader.GetFieldType(ordinal)
+                    Type = reader.GetFieldType(ordinal),
+                    DbField = dbFields?.FirstOrDefault(f => f.UnquotedName.ToLower() == name.ToLower())
                 });
 
             // Get the member assignments
@@ -80,11 +84,16 @@ namespace RepoDb.Reflection
             // Initialize variables
             var memberAssignments = new List<MemberAssignment>();
             var dataReaderType = typeof(DbDataReader);
-            var tableFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
             var isDefaultConversion = TypeMapper.ConversionType == ConversionType.Default;
+            var properties = PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite);
+
+            // Filter the properties by reader fields
+            properties = properties.Where(property =>
+                readerFields.FirstOrDefault(field =>
+                    field.Name == property.GetUnquotedMappedName().ToLower()) != null);
 
             // Iterate each properties
-            foreach (var property in PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite))
+            foreach (var property in properties)
             {
                 // Gets the mapped name and the ordinal
                 var mappedName = property.GetUnquotedMappedName().ToLower();
@@ -94,13 +103,12 @@ namespace RepoDb.Reflection
                 if (ordinal >= 0)
                 {
                     // Variables needed for the iteration
-                    var tableField = tableFields?.FirstOrDefault(f => f.UnquotedName.ToLower() == mappedName);
                     var readerField = readerFields.First(f => f.Name.ToLower() == mappedName);
-                    var isTableFieldNullable = tableField == null || tableField?.IsNullable == true;
                     var underlyingType = Nullable.GetUnderlyingType(property.PropertyInfo.PropertyType);
                     var propertyType = underlyingType ?? property.PropertyInfo.PropertyType;
                     var convertType = readerField.Type;
                     var isConversionNeeded = readerField.Type != propertyType;
+                    var isNullable = readerField.DbField == null || readerField.DbField?.IsNullable == true;
 
                     // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue() method
                     var readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", readerField.Type.Name));
@@ -132,7 +140,7 @@ namespace RepoDb.Reflection
                     var valueExpression = (Expression)null;
 
                     // Check for nullables
-                    if (isTableFieldNullable == true)
+                    if (isNullable == true)
                     {
                         var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
 
@@ -292,7 +300,7 @@ namespace RepoDb.Reflection
                     Name = name,
                     Ordinal = ordinal,
                     Type = reader.GetFieldType(ordinal),
-                    IsNullable = dbFields?.FirstOrDefault(f => f.UnquotedName.ToLower() == name.ToLower())?.IsNullable == true
+                    DbField = dbFields?.FirstOrDefault(f => f.UnquotedName.ToLower() == name.ToLower())
                 });
 
             // Initialize the elements
@@ -347,7 +355,7 @@ namespace RepoDb.Reflection
                 var valueExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
 
                 // Check for nullables
-                if (readerField.IsNullable == true)
+                if (readerField.DbField == null || readerField.DbField?.IsNullable == true)
                 {
                     var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
                     var trueExpression = (Expression)null;
@@ -408,6 +416,13 @@ namespace RepoDb.Reflection
             var typeOfBytes = typeof(byte[]);
             var typeOfTimeSpan = typeof(TimeSpan);
             var typeOfBindingFlags = typeof(BindingFlags);
+            var typeOfGuid = typeof(Guid);
+            var typeOfDateTime = typeof(DateTime);
+            var typeOfDecimal = typeof(Decimal);
+            var typeOfFloat = typeof(float);
+            var typeOfLong = typeof(long);
+            var typeOfDouble = typeof(Double);
+            var typeOfShort = typeof(short);
 
             // Variables for arguments
             var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
@@ -499,9 +514,9 @@ namespace RepoDb.Reflection
                             var valueToConvert = Expression.Property(instance, instanceProperty);
 
                             // Create a new guid here
-                            if (propertyType == typeof(string) && fieldType == typeof(Guid) /* StringToGuid */)
+                            if (propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */)
                             {
-                                value = Expression.New(typeof(Guid).GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
+                                value = Expression.New(typeOfGuid.GetTypeInfo().GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
                             }
                             else
                             {
@@ -605,14 +620,14 @@ namespace RepoDb.Reflection
                     var fieldType = field.Type?.GetUnderlyingType();
 
                     // Identity the conversion
-                    if (propertyType == typeof(DateTime) && fieldType == typeOfString /* DateTimeToString */ ||
-                        propertyType == typeof(decimal) && fieldType == typeof(float) /* DecimalToFloat */ ||
-                        propertyType == typeof(double) && fieldType == typeof(long) /* DoubleToBigint */||
-                        propertyType == typeof(double) && fieldType == typeof(int) /* DoubleToBigint */ ||
-                        propertyType == typeof(double) && fieldType == typeof(short) /* DoubleToShort */||
-                        propertyType == typeof(float) && fieldType == typeof(long) /* FloatToBigint */ ||
-                        propertyType == typeof(float) && fieldType == typeof(short) /* FloatToShort */ ||
-                        propertyType == typeof(Guid) && fieldType == typeof(string) /* UniqueIdentifierToString */)
+                    if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
+                        propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
+                        propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
+                        propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
+                        propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
+                        propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
+                        propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
+                        propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
                     {
                         fieldOrPropertyType = propertyType;
                     }
@@ -856,6 +871,13 @@ namespace RepoDb.Reflection
             var typeOfPropertyInfo = typeof(PropertyInfo);
             var typeOfTimeSpan = typeof(TimeSpan);
             var typeOfBindingFlags = typeof(BindingFlags);
+            var typeOfGuid = typeof(Guid);
+            var typeOfDateTime = typeof(DateTime);
+            var typeOfDecimal = typeof(Decimal);
+            var typeOfFloat = typeof(float);
+            var typeOfLong = typeof(long);
+            var typeOfDouble = typeof(Double);
+            var typeOfShort = typeof(short);
 
             // Variables for arguments
             var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
@@ -952,9 +974,9 @@ namespace RepoDb.Reflection
                             var valueToConvert = Expression.Property(instance, instanceProperty);
 
                             // Create a new guid here
-                            if (propertyType == typeof(string) && fieldType == typeof(Guid) /* StringToGuid */)
+                            if (propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */)
                             {
-                                value = Expression.New(typeof(Guid).GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
+                                value = Expression.New(typeOfGuid.GetTypeInfo().GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
                             }
                             else
                             {
@@ -997,8 +1019,8 @@ namespace RepoDb.Reflection
 
                         // Set the propert value
                         valueBlock = Expression.Block(new[] { valueVariable },
-                            Expression.Assign(valueVariable, value),
-                            Expression.Condition(valueIsNull, dbNullValue, valueVariable));
+                                                    Expression.Assign(valueVariable, value),
+                                                    Expression.Condition(valueIsNull, dbNullValue, valueVariable));
                     }
                     else
                     {
@@ -1058,14 +1080,14 @@ namespace RepoDb.Reflection
                     var fieldType = field.Type?.GetUnderlyingType();
 
                     // Identity the conversion
-                    if (propertyType == typeof(DateTime) && fieldType == typeOfString /* DateTimeToString */ ||
-                        propertyType == typeof(decimal) && fieldType == typeof(float) /* DecimalToFloat */ ||
-                        propertyType == typeof(double) && fieldType == typeof(long) /* DoubleToBigint */||
-                        propertyType == typeof(double) && fieldType == typeof(int) /* DoubleToBigint */ ||
-                        propertyType == typeof(double) && fieldType == typeof(short) /* DoubleToShort */||
-                        propertyType == typeof(float) && fieldType == typeof(long) /* FloatToBigint */ ||
-                        propertyType == typeof(float) && fieldType == typeof(short) /* FloatToShort */ ||
-                        propertyType == typeof(Guid) && fieldType == typeof(string) /* UniqueIdentifierToString */)
+                    if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
+                        propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
+                        propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
+                        propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
+                        propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
+                        propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
+                        propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
+                        propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
                     {
                         fieldOrPropertyType = propertyType;
                     }
