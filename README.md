@@ -30,11 +30,13 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
 
 ## Why RepoDb?
 
- - It is very fast in fetching data.
+ - It is very fast in CRUD operations.
  - It is very efficient in memory usage.
- - It is extensible.
- - It is easy to switch between lightweight and massive operations.
- - It is fluent and clean.
+ - It is highly extensible.
+ - It is easy to switch between lightweight and method-based operations.
+ - It is simple, fluent and clean.
+ - It supports batch operations.
+ - It has bulk-insert.
  - It supports multi-resultset query.
  - It has massive ORM operations.
  - It support Async operations.
@@ -46,12 +48,14 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - It is easy to cache the data.
  - It has a dynamic type mapping.
  - It support query hints.
+ - Ut has Table-Based call operations.
  - It has abstracted the ADO.Net transaction.
  - It is always free!
 
 ## Features
  
  - Asynchronous Operations
+ - Batch Operations
  - Caching
  - Connection Persistency
  - Database Helpers
@@ -59,7 +63,7 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - Field Mapping
  - Inline Hints
  - Multi-Resultset Query
- - Operations (Generics/Explicits/MethodCalls)
+ - Operations (Generics/Explicits/MethodCalls/TableBased)
  - Query Builder
  - Statement Builder
  - Tracing
