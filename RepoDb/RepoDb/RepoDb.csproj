@@ -78,6 +78,7 @@
     <Compile Include="DataReaderField.cs" />
     <Compile Include="Exceptions\InvalidQualifierFieldsException.cs" />
     <Compile Include="Exceptions\ParameterNotFoundException.cs" />
+    <Compile Include="Extensions\DataEntityExtension.cs" />
     <Compile Include="Extensions\DbFieldExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Interfaces\IResolver.cs" />
@@ -191,7 +192,6 @@
     <Compile Include="Enumerations\Order.cs" />
     <Compile Include="Enumerations\Operation.cs" />
     <Compile Include="Exceptions\DuplicateTypeMapException.cs" />
-    <Compile Include="Extensions\DataEntityExtension.cs" />
     <Compile Include="Extensions\DataReaderExtension.cs" />
     <Compile Include="Extensions\DbCommandExtension.cs" />
     <Compile Include="Extensions\DbConnectionExtension.cs" />

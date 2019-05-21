@@ -12,34 +12,6 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class DataEntityExtension
     {
-        /// <summary>
-        /// Converts the value to the type of the primary property of the target data entity.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="value">The value to be converted.</param>
-        /// <returns>The converted value to primary property type.</returns>
-        internal static object ValueToPrimaryType<TEntity>(object value)
-            where TEntity : class
-        {
-            if (value == null || value == DBNull.Value)
-            {
-                return null;
-            }
-            var primary = PrimaryCache.Get<TEntity>();
-            if (primary != null)
-            {
-                if (primary.PropertyInfo.PropertyType == typeof(Guid))
-                {
-                    value = Guid.Parse(value.ToString());
-                }
-                else
-                {
-                    value = Convert.ChangeType(value, primary.PropertyInfo.PropertyType);
-                }
-            }
-            return value;
-        }
-
         // GetProperties
         internal static IEnumerable<ClassProperty> GetProperties(Type type)
         {
@@ -57,21 +29,6 @@ namespace RepoDb.Extensions
             where TEntity : class
         {
             return GetProperties(typeof(TEntity));
-        }
-
-        // GetPropertyByAttribute
-
-        internal static PropertyInfo GetPropertyByAttribute(Type type, Type attributeType)
-        {
-            return type
-                .GetProperties()
-                .FirstOrDefault(property => property.GetCustomAttribute(attributeType) != null);
-        }
-
-        internal static PropertyInfo GetPropertyByAttribute<TEntity>(Type attributeType)
-            where TEntity : class
-        {
-            return GetPropertyByAttribute(typeof(TEntity), attributeType);
         }
 
         // GetMappedName

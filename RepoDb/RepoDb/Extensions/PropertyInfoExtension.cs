@@ -123,7 +123,7 @@ namespace RepoDb.Extensions
         /// <param name="property">The instance of the property to be converted.</param>
         /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>A instance of string containing the value of a mapped name.</returns>
-        public static string AsFieldAsString(this PropertyInfo property, bool quoted = true)
+        internal static string AsFieldAsString(this PropertyInfo property, bool quoted = true)
         {
             return PropertyMappedNameCache.Get(property, quoted);
         }
@@ -133,7 +133,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="property">The instance of the property to be converted.</param>
         /// <returns>A instance of string containing the value of a parameterized name.</returns>
-        public static string AsParameterAsString(this PropertyInfo property)
+        internal static string AsParameterAsString(this PropertyInfo property)
         {
             return string.Concat("@", PropertyMappedNameCache.Get(property, false));
         }
@@ -143,7 +143,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="property">The instance of the property to be converted.</param>
         /// <returns>A instance of string containing the value of a parameterized (as field) name.</returns>
-        public static string AsParameterAsFieldAsString(this PropertyInfo property)
+        internal static string AsParameterAsFieldAsString(this PropertyInfo property)
         {
             return string.Concat(AsParameterAsString(property), " AS ", AsFieldAsString(property));
         }
@@ -153,7 +153,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="property">The instance of the property to be converted.</param>
         /// <returns>A instance of string containing the value of a field and parameter name.</returns>
-        public static string AsFieldAndParameterAsString(this PropertyInfo property)
+        internal static string AsFieldAndParameterAsString(this PropertyInfo property)
         {
             return string.Concat(AsFieldAsString(property), " = ", AsParameterAsString(property));
         }
@@ -164,7 +164,7 @@ namespace RepoDb.Extensions
         /// <param name="property">The instance of the property to be converted.</param>
         /// <param name="alias">The alias to be used.</param>
         /// <returns>A instance of string containing the value of a field (and its alias) name.</returns>
-        public static string AsFieldAndAliasField(this PropertyInfo property, string alias)
+        internal static string AsFieldAndAliasField(this PropertyInfo property, string alias)
         {
             return string.Concat(AsFieldAsString(property), " = ", alias, ".", AsFieldAsString(property));
         }
@@ -176,7 +176,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
         /// <returns>An enumerable array of strings containing the converted values of the given properties (as field).</returns>
-        public static IEnumerable<string> AsFieldsAsStrings(this IEnumerable<PropertyInfo> properties)
+        internal static IEnumerable<string> AsFieldsAsStrings(this IEnumerable<PropertyInfo> properties)
         {
             foreach (var property in properties)
             {
@@ -189,7 +189,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
         /// <returns>An enumerable array of strings containing the converted values of the given properties (as parameters).</returns>
-        public static IEnumerable<string> AsParameters(this IEnumerable<PropertyInfo> properties)
+        internal static IEnumerable<string> AsParameters(this IEnumerable<PropertyInfo> properties)
         {
             return properties?.Select(property => property.AsParameterAsString());
         }
@@ -199,7 +199,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
         /// <returns>An enumerable array of strings containing the converted values of the given properties (as parameters as fields).</returns>
-        public static IEnumerable<string> AsParametersAsFields(this IEnumerable<PropertyInfo> properties)
+        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<PropertyInfo> properties)
         {
             return properties?.Select(property => property.AsParameterAsFieldAsString());
         }
@@ -209,7 +209,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
         /// <returns>An enumerable array of strings containing the converted values of the given properties (as field and parameters).</returns>
-        public static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<PropertyInfo> properties)
+        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<PropertyInfo> properties)
         {
             return properties?.Select(property => property.AsFieldAndParameterAsString());
         }
@@ -220,7 +220,7 @@ namespace RepoDb.Extensions
         /// <param name="properties">The enumerable array of properties to be converted.</param>
         /// <param name="alias">The alias to be used.</param>
         /// <returns>An enumerable array of strings containing the converted values of the given properties (as field and its alias).</returns>
-        public static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<PropertyInfo> properties, string alias)
+        internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<PropertyInfo> properties, string alias)
         {
             return properties?.Select(property => property.AsFieldAndAliasField(alias));
         }
