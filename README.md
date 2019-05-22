@@ -60,14 +60,16 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  
  - Asynchronous Operations
  - Batch Operations
+ - Bulk Operations
  - Caching
  - Connection Persistency
  - Database Helpers
+ - Database Operation Providers
  - Expression Trees
  - Field Mapping
  - Inline Hints
+ - Massive Operations (Generics/Explicits/MethodCalls/TableBased)
  - Multi-Resultset Query
- - Operations (Generics/Explicits/MethodCalls/TableBased)
  - Query Builder
  - Repositories
  - Statement Builder
