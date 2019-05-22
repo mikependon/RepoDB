@@ -3822,6 +3822,29 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestDbRepositoryInsertViaTableNameNameWithIncompleteProperties()
+        {
+            // Setup
+            var item = new { RowGuid = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = repository.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(), item);
+
+                // Assert
+                Assert.IsTrue(insertResult > 0);
+                Assert.AreEqual(1, repository.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult.First());
+            }
+        }
+
         #endregion
 
         #region InsertAsync(TableName)
@@ -3892,6 +3915,29 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(item.Id, value);
                 Assert.AreEqual(1, result.Count());
                 Helper.AssertPropertiesEquality(item, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInsertAsyncViaTableNameNameWithIncompleteProperties()
+        {
+            // Setup
+            var item = new { RowGuid = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = repository.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(), item).Result;
+
+                // Assert
+                Assert.IsTrue(insertResult > 0);
+                Assert.AreEqual(1, repository.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult.First());
             }
         }
 
@@ -4212,35 +4258,6 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAll(TableName)
 
         [TestMethod]
-        public void TestDbRepositoryInsertAllForIdentityTableViaTableNameWithIncompleteProperties()
-        {
-            // Setup
-            var tables = new[]
-            {
-                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
-                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
-                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
-            };
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                var insertAllResult = repository.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
-
-                // Assert
-                Assert.AreEqual(tables.Length, insertAllResult);
-                Assert.AreEqual(tables.Length, repository.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
-
-                // Act
-                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
-
-                // Assert
-                tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
-                    queryResult.First(data => data.RowGuid == item.RowGuid)));
-            }
-        }
-
-        [TestMethod]
         public void TestDbRepositoryInsertAllForIdentityTableViaTableName()
         {
             // Setup
@@ -4392,12 +4409,8 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        #endregion
-
-        #region InsertAllAsync(TableName)
-
         [TestMethod]
-        public void TestDbRepositoryInsertAllAsyncForIdentityTableViaTableNameWithIncompleteProperties()
+        public void TestDbRepositoryInsertAllForIdentityTableViaTableNameWithIncompleteProperties()
         {
             // Setup
             var tables = new[]
@@ -4410,7 +4423,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var insertAllResult = repository.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
+                var insertAllResult = repository.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(tables.Length, insertAllResult);
@@ -4424,6 +4437,10 @@ namespace RepoDb.IntegrationTests.Operations
                     queryResult.First(data => data.RowGuid == item.RowGuid)));
             }
         }
+
+        #endregion
+
+        #region InsertAllAsync(TableName)
 
         [TestMethod]
         public void TestDbRepositoryInsertAllAsyncForIdentityTableViaTableName()
@@ -4574,6 +4591,35 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryInsertAllAsyncForIdentityTableViaTableNameWithIncompleteProperties()
+        {
+            // Setup
+            var tables = new[]
+            {
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
+                new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = repository.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Length, insertAllResult);
+                Assert.AreEqual(tables.Length, repository.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.RowGuid == item.RowGuid)));
             }
         }
 
@@ -5892,29 +5938,6 @@ namespace RepoDb.IntegrationTests.Operations
         #region Merge(TableName)
 
         [TestMethod]
-        public void TestDbRepositoryMergeViaTableNameForNonIdentityEmptyTableWithIncompleteProperties()
-        {
-            // Setup
-            var item = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                var mergeResult = repository.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), item);
-
-                // Assert
-                Assert.AreEqual(item.Id, mergeResult);
-                Assert.AreEqual(1, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
-
-                // Act
-                var queryResult = repository.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
-
-                // Assert
-                Helper.AssertMembersEquality(item, queryResult);
-            }
-        }
-
-        [TestMethod]
         public void TestDbRepositoryMergeViaTableNameForNonIdentitySingleEntityForEmptyTable()
         {
             // Setup
@@ -6216,6 +6239,29 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestDbRepositoryMergeViaTableNameForNonIdentityEmptyTableWithIncompleteProperties()
+        {
+            // Setup
+            var item = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = repository.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
         public void ThrowExceptionOnDbRepositoryMergeViaTableNameIfThereIsNoPrimaryKey()
         {
@@ -6232,29 +6278,6 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region MergeAsync(TableName)
-
-        [TestMethod]
-        public void TestDbRepositoryMergeAsyncViaTableNameForNonIdentityEmptyTableWithIncompleteProperties()
-        {
-            // Setup
-            var item = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), item).Result;
-
-                // Assert
-                Assert.AreEqual(item.Id, mergeResult);
-                Assert.AreEqual(1, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
-
-                // Act
-                var queryResult = repository.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
-
-                // Assert
-                Helper.AssertMembersEquality(item, queryResult);
-            }
-        }
 
         [TestMethod]
         public void TestDbRepositoryMergeAsyncViaTableNameForNonIdentitySingleEntityForEmptyTable()
@@ -6549,6 +6572,29 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, repository.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = repository.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAsyncViaTableNameForNonIdentityEmptyTableWithIncompleteProperties()
+        {
+            // Setup
+            var item = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
                 var queryResult = repository.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
@@ -7407,48 +7453,6 @@ namespace RepoDb.IntegrationTests.Operations
 
         #region MergeAll(TableName)
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnDbRepositoryMergeAllIfThereIsNoPrimaryKey()
-        {
-            // Setup
-            var tables = Helper.CreateDynamicIdentityTables(10);
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                repository.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
-            }
-        }
-
-        [TestMethod]
-        public void TestDbRepositoryMergeAllAsyncViaTableNameForNonIdentityEmptyTableWithIncompleteProperties()
-        {
-            // Setup
-            var tables = new[]
-            {
-                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
-                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
-                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
-            };
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Length, mergeAllResult);
-                Assert.AreEqual(tables.Length, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
-
-                // Act
-                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
-
-                // Assert
-                tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
-                    queryResult.First(data => data.Id == item.Id)));
-            }
-        }
-
         [TestMethod]
         public void TestDbRepositoryMergeAllViaTableNameForNonIdentityEmptyTable()
         {
@@ -7606,6 +7610,48 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestDbRepositoryMergeAllAsyncViaTableNameForNonIdentityEmptyTableWithIncompleteProperties()
+        {
+            // Setup
+            var tables = new[]
+            {
+                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
+                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
+                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Length, mergeAllResult);
+                Assert.AreEqual(tables.Length, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        public void ThrowExceptionOnDbRepositoryMergeAllIfThereIsNoPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+            }
+        }
+
         #endregion
 
         #region MergeAll(TableName)(SingleBatch, ModularBatch)
@@ -7709,48 +7755,6 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region MergeAllAsync(TableName)
-
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnDbRepositoryMergeAllAsyncIfThereIsNoPrimaryKey()
-        {
-            // Setup
-            var tables = Helper.CreateDynamicIdentityTables(10);
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                repository.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
-            }
-        }
-
-        [TestMethod]
-        public void TestDbRepositoryMergeAllViaTableNameForNonIdentityEmptyTableWithIncompleteProperties()
-        {
-            // Setup
-            var tables = new[]
-            {
-                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
-                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
-                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
-            };
-
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
-
-                // Assert
-                Assert.AreEqual(tables.Length, mergeAllResult);
-                Assert.AreEqual(tables.Length, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
-
-                // Act
-                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
-
-                // Assert
-                tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
-                    queryResult.First(data => data.Id == item.Id)));
-            }
-        }
 
         [TestMethod]
         public void TestDbRepositoryMergeAllAsyncViaTableNameForNonIdentityEmptyTable()
@@ -7906,6 +7910,48 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
                     queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMergeAllViaTableNameForNonIdentityEmptyTableWithIncompleteProperties()
+        {
+            // Setup
+            var tables = new[]
+            {
+                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 1},
+                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 2},
+                new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Length, mergeAllResult);
+                Assert.AreEqual(tables.Length, repository.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
+
+                // Act
+                var queryResult = repository.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnDbRepositoryMergeAllAsyncIfThereIsNoPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
             }
         }
 
@@ -13465,6 +13511,31 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestDbRepositoryUpdateViaTableNameForNonIdentityEmptyTableWithIncompleteProperties()
+        {
+            // Setup
+            var item = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), item);
+
+                // Act
+                var updateResult = repository.Update(ClassMappedNameCache.Get<NonIdentityTable>(), item);
+
+                // Assert
+                Assert.AreEqual(1, updateResult);
+
+                // Act
+                var queryResult = repository.Query(ClassMappedNameCache.Get<NonIdentityTable>(), item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
         public void ThrowExceptionOnDbRepositoryUpdateViaTableNameIfThePrimaryKeyIsNotFound()
         {
@@ -13710,6 +13781,31 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, result.Count());
                 Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateAsyncViaTableNameForNonIdentityEmptyTableWithIncompleteProperties()
+        {
+            // Setup
+            var item = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), item);
+
+                // Act
+                var updateResult = repository.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), item).Result;
+
+                // Assert
+                Assert.AreEqual(1, updateResult);
+
+                // Act
+                var queryResult = repository.Query(ClassMappedNameCache.Get<NonIdentityTable>(), item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
             }
         }
 

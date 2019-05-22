@@ -1082,7 +1082,7 @@ namespace RepoDb
                 var primary = DbFieldCache.Get(connection, tableName)?.FirstOrDefault(p => p.IsPrimary == true);
                 if (primary == null)
                 {
-                    throw new PrimaryFieldNotFoundException(string.Format("Primary key not found for '{0}' entity.",
+                    throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.",
                         tableName));
                 }
                 else
@@ -1115,7 +1115,7 @@ namespace RepoDb
                 var primary = PrimaryCache.Get<TEntity>();
                 if (primary == null)
                 {
-                    throw new PrimaryFieldNotFoundException(string.Format("Primary key not found for '{0}' entity.", typeof(TEntity).Name));
+                    throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", typeof(TEntity).Name));
                 }
                 else
                 {

@@ -931,18 +931,18 @@ namespace RepoDb
                 if (typeof(TEntity) == typeof(object))
                 {
                     updateRequest = new UpdateRequest(tableName,
-                    connection,
-                    where,
-                    fields,
-                    statementBuilder);
+                        connection,
+                        where,
+                        fields,
+                        statementBuilder);
                 }
                 else
                 {
                     updateRequest = new UpdateRequest(typeof(TEntity),
-                    connection,
-                    where,
-                    fields,
-                    statementBuilder);
+                        connection,
+                        where,
+                        fields,
+                        statementBuilder);
                 }
 
                 // Return the value
@@ -1068,18 +1068,18 @@ namespace RepoDb
                 if (typeof(TEntity) == typeof(object))
                 {
                     updateRequest = new UpdateRequest(tableName,
-                    connection,
-                    where,
-                    fields,
-                    statementBuilder);
+                        connection,
+                        where,
+                        fields,
+                        statementBuilder);
                 }
                 else
                 {
                     updateRequest = new UpdateRequest(typeof(TEntity),
-                    connection,
-                    where,
-                    fields,
-                    statementBuilder);
+                        connection,
+                        where,
+                        fields,
+                        statementBuilder);
                 }
 
                 // Return the value
