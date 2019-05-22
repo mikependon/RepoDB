@@ -37,6 +37,7 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - It is simple, fluent and clean.
  - It is easy to write RawSql statements.
  - It is easy to cache the data.
+ - It is well covered by Unit/Integration tests.
  - It has Batch operations.
  - It has Bulk-Insert operation.
  - It has massive ORM operations.
@@ -50,6 +51,7 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - It has Query Hints.
  - It has Table-Based call operations.
  - It has an extensible Statement Builders.
+ - It has a built-in Repositories.
  - It has ADO.NET transaction supports.
  - It is always free!
 
@@ -66,6 +68,7 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - Multi-Resultset Query
  - Operations (Generics/Explicits/MethodCalls/TableBased)
  - Query Builder
+ - Repositories
  - Statement Builder
  - Tracing
  - Transaction
