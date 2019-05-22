@@ -5,23 +5,30 @@
 
 ### Why RepoDb
 
- - It is very fast in fetching data.
+ - It is very fast in CRUD operations.
  - It is very efficient in memory usage.
- - It is extensible.
- - It is easy to switch between lightweight and massive operations.
- - It is fluent and clean.
- - It supports multi-resultset query.
- - It has massive ORM operations.
- - It support Async operations.
+ - It is highly extensible.
+ - It is easy to switch between lightweight and method-based operations.
+ - It is simple, fluent and clean.
  - It is easy to write RawSql statements.
- - It has Linq Expressions.
- - It supports dynamic variable passing.
- - It has database helpers.
- - It has a tracing capability.
  - It is easy to cache the data.
- - It has a dynamic type mapping.
- - It support query hints.
- - It has abstracted the ADO.Net transaction.
+ - It is well covered by Unit/Integration tests.
+ - It has Batch operations.
+ - It has Bulk-Insert operation.
+ - It has massive ORM operations.
+ - It has Async operations.
+ - It has Multi-ResultSet query operations.
+ - It has Type mapping.
+ - It has Query Hints.
+ - It has built-in Repositories.
+ - It has Dynamic Expressions support.
+ - It has Linq Expressions support.
+ - It has Table-Based call operations.
+ - It has an extensible Tracers.
+ - It has an extensible Database Helpers.
+ - It has an extensible DB Operation Providers.
+ - It has an extensible Statement Builders.
+ - It has ADO.NET transaction supports.
  - It is always free!
 
 ### Documentation

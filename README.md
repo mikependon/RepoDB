@@ -12,7 +12,7 @@ Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter.
 
 ## Highlight
 
- - RepoDb is the fastest and the most efficient ORM library in .NET as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). You can see the actual execution result [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190307_netcore.txt).
+ - RepoDb is the fastest and the most efficient ORM library in .NET as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). You can see the actual execution result [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
  - RepoDb is covered by thousand of major business related Unit Tests and Integration Tests.
 
 ## Notes
@@ -43,15 +43,16 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - It has massive ORM operations.
  - It has Async operations.
  - It has Multi-ResultSet query operations.
- - It has Linq Expressions support.
- - It has Dynamic supports in most operations.
- - It has an extensible Database Helpers.
- - It has Tracing capability.
  - It has Type mapping.
  - It has Query Hints.
+ - It has built-in Repositories.
+ - It has Dynamic Expressions support.
+ - It has Linq Expressions support.
  - It has Table-Based call operations.
+ - It has an extensible Tracers.
+ - It has an extensible Database Helpers.
+ - It has an extensible DB Operation Providers.
  - It has an extensible Statement Builders.
- - It has a built-in Repositories.
  - It has ADO.NET transaction supports.
  - It is always free!
 
