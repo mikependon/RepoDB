@@ -37,18 +37,19 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - It is simple, fluent and clean.
  - It is easy to write RawSql statements.
  - It is easy to cache the data.
- - It has batch operations.
- - It has bulk-insert operation.
+ - It has Batch operations.
+ - It has Bulk-Insert operation.
  - It has massive ORM operations.
  - It has Async operations.
- - It has multi-resultset query operations.
+ - It has Multi-ResultSet query operations.
  - It has Linq Expressions support.
- - It has dynamic variable passing.
- - It has an extensible database helpers.
+ - It has Dynamic supports in most operations.
+ - It has an extensible Database Helpers.
  - It has Tracing capability.
- - It has a dynamic type mapping.
- - It has query hints.
- - It has table-based call operations.
+ - It has Type mapping.
+ - It has Query Hints.
+ - It has Table-Based call operations.
+ - It has an extensible Statement Builders.
  - It has ADO.NET transaction supports.
  - It is always free!
 
