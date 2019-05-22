@@ -69,9 +69,11 @@
     <Compile Include="Contexts\Execution\InsertAllExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertExecutionContextCache.cs" />
     <Compile Include="DbHelperMapper.cs" />
+    <Compile Include="DbOperationProviders\SqlServer\BulkInsert.cs" />
     <Compile Include="Enumerations\ConversionType.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="Contexts\Execution\InsertAllExecutionContextCache.cs" />
+    <Compile Include="Exceptions\MissingMappingException.cs" />
     <Compile Include="Expressions\ClassExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
     <Compile Include="ClassProperty.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Extensions\DataEntityExtension.cs" />
     <Compile Include="Extensions\DbFieldExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
+    <Compile Include="Interfaces\IDbOperationProvider.cs" />
     <Compile Include="Interfaces\IResolver.cs" />
     <Compile Include="Operations\BaseRepository\CountAll.cs" />
     <Compile Include="Operations\BaseRepository\InsertAll.cs" />
@@ -212,6 +215,7 @@
     <Compile Include="Resolvers\SqlDbTypeToStringNameResolver.cs" />
     <Compile Include="Resolvers\ClientTypeToSqlDbTypeResolver.cs" />
     <Compile Include="Resolvers\SqlDbTypeNameToClientTypeResolver.cs" />
+    <Compile Include="DbOperationProviderMapper.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="SqlTableHints.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder.cs" />

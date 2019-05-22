@@ -1048,7 +1048,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be validated.</param>
         /// <param name="transaction">The transaction object to compare.</param>
-        private static void ValidateTransactionConnectionObject(this IDbConnection connection,
+        internal static void ValidateTransactionConnectionObject(this IDbConnection connection,
             IDbTransaction transaction)
         {
             if (transaction != null && transaction.Connection != connection)

@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Exceptions;
+using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
 using System.Collections.Concurrent;
@@ -511,7 +512,7 @@ namespace RepoDb
             builder = builder ?? StatementBuilderMapper.Get(connection.GetType());
             if (builder == null)
             {
-                throw new InvalidOperationException($"There is no '{nameof(IStatementBuilder)}' object defined. Please visit your mappings and make sure to map a type of '{nameof(DbConnection)}' to a correct '{nameof(IStatementBuilder)}' object.");
+                throw new MissingMappingException($"There is no statement builder mapping found for '{connection.GetType().FullName}' object.");
             }
             return builder;
         }

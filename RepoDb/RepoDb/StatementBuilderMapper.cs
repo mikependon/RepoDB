@@ -11,7 +11,7 @@ namespace RepoDb
     /// </summary>
     public static class StatementBuilderMapper
     {
-        private static readonly ConcurrentDictionary<string, IStatementBuilder> m_maps = new ConcurrentDictionary<string, IStatementBuilder>();
+        private static readonly ConcurrentDictionary<int, IStatementBuilder> m_maps = new ConcurrentDictionary<int, IStatementBuilder>();
         private static Type m_type = typeof(DbConnection);
 
         static StatementBuilderMapper()
@@ -53,12 +53,12 @@ namespace RepoDb
 
             var value = (IStatementBuilder)null;
 
-            if (m_maps.TryGetValue(type.FullName, out value))
+            if (m_maps.TryGetValue(type.FullName.GetHashCode(), out value))
             {
                 return value;
             }
 
-            throw new InvalidOperationException($"There is no existing mapping for '{type.FullName}'.");
+            throw new InvalidOperationException($"There is no existing statement builder mapping for '{type.FullName}'.");
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace RepoDb
             Guard(type);
 
             var value = (IStatementBuilder)null;
-            var key = type.FullName;
+            var key = type.FullName.GetHashCode();
 
             if (m_maps.TryGetValue(key, out value))
             {
@@ -82,7 +82,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Mapping to provider '{key}' already exists.");
+                    throw new InvalidOperationException($"Statement builder mapping already exists ('{type.Name}' = '{value?.GetType().Name}').");
                 }
             }
             else

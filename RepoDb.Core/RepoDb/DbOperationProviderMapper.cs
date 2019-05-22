@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.DbOperationProviders;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Data.Common;
@@ -8,17 +9,17 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to map the type of <see cref="DbConnection"/> into an instance of <see cref="IStatementBuilder"/> object.
+    /// A class that is used to map the type of <see cref="DbConnection"/> into an instance of <see cref="IDbOperationProvider"/> object.
     /// </summary>
-    public static class StatementBuilderMapper
+    public static class DbOperationProviderMapper
     {
-        private static readonly ConcurrentDictionary<int, IStatementBuilder> m_maps = new ConcurrentDictionary<int, IStatementBuilder>();
+        private static readonly ConcurrentDictionary<int, IDbOperationProvider> m_maps = new ConcurrentDictionary<int, IDbOperationProvider>();
         private static Type m_type = typeof(DbConnection);
 
-        static StatementBuilderMapper()
+        static DbOperationProviderMapper()
         {
             // Default for SqlConnection
-            Add(typeof(SqlConnection), new SqlStatementBuilder());
+            Add(typeof(SqlConnection), new SqlDbOperationProvider());
         }
 
         /// <summary>
@@ -33,46 +34,46 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the mapped <see cref="IStatementBuilder"/> from the type of <see cref="DbConnection"/>.
+        /// Gets the mapped <see cref="IDbOperationProvider"/> from the type of <see cref="DbConnection"/>.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
-        /// <returns>An instance of <see cref="IStatementBuilder"/> defined on the mapping.</returns>
-        public static IStatementBuilder Get<TDbConnection>()
+        /// <returns>An instance of <see cref="IDbOperationProvider"/> defined on the mapping.</returns>
+        public static IDbOperationProvider Get<TDbConnection>()
             where TDbConnection : DbConnection
         {
             return Get(typeof(TDbConnection));
         }
 
         /// <summary>
-        /// Gets the mapped <see cref="IStatementBuilder"/> from the type of <see cref="DbConnection"/>.
+        /// Gets the mapped <see cref="IDbOperationProvider"/> from the type of <see cref="DbConnection"/>.
         /// </summary>
         /// <param name="type">The type of <see cref="DbConnection"/>.</param>
-        /// <returns>An instance of <see cref="IStatementBuilder"/> defined on the mapping.</returns>
-        public static IStatementBuilder Get(Type type)
+        /// <returns>An instance of <see cref="IDbOperationProvider"/> defined on the mapping.</returns>
+        public static IDbOperationProvider Get(Type type)
         {
             Guard(type);
 
-            var value = (IStatementBuilder)null;
+            var value = (IDbOperationProvider)null;
 
             if (m_maps.TryGetValue(type.FullName.GetHashCode(), out value))
             {
                 return value;
             }
 
-            throw new InvalidOperationException($"There is no existing statement builder mapping for '{type.FullName}'.");
+            throw new InvalidOperationException($"There is no existing database operation provider mapping for '{type.FullName}'.");
         }
 
         /// <summary>
-        /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IStatementBuilder"/> object.
+        /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbOperationProvider"/> object.
         /// </summary>
         /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
         /// <param name="statementBuilder">The statement builder to be mapped.</param>
         /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
-        public static void Add(Type type, IStatementBuilder statementBuilder, bool @override = false)
+        public static void Add(Type type, IDbOperationProvider statementBuilder, bool @override = false)
         {
             Guard(type);
 
-            var value = (IStatementBuilder)null;
+            var value = (IDbOperationProvider)null;
             var key = type.FullName.GetHashCode();
 
             if (m_maps.TryGetValue(key, out value))
@@ -83,7 +84,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Statement builder mapping already exists ('{type.Name}' = '{value?.GetType().Name}').");
+                    throw new InvalidOperationException($"Database operation provider mapping already exists ('{type.Name}' = '{value?.GetType().Name}').");
                 }
             }
             else
