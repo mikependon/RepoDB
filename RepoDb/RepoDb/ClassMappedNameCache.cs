@@ -31,7 +31,7 @@ namespace RepoDb
         public static string Get<TEntity>(bool quoted = true)
             where TEntity : class
         {
-            return Get(typeof(TEntity));
+            return Get(typeof(TEntity), quoted);
         }
 
         /// <summary>
