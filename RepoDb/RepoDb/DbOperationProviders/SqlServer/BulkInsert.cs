@@ -89,15 +89,17 @@ namespace RepoDb.DbOperationProviders
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int BulkInsert<TEntity>(IDbConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -105,8 +107,9 @@ namespace RepoDb.DbOperationProviders
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
                 mappings: mappings,
-                copyOptions: copyOptions,
+                options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
                 transaction: transaction);
         }
 
@@ -117,15 +120,17 @@ namespace RepoDb.DbOperationProviders
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int BulkInsert<TEntity>(IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -143,7 +148,7 @@ namespace RepoDb.DbOperationProviders
             // Actual Execution
             using (var reader = new DataEntityDataReader<TEntity>(entities, connection))
             {
-                using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, copyOptions, (SqlTransaction)transaction))
+                using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, options, (SqlTransaction)transaction))
                 {
                     // Set the destinationtable
                     sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
@@ -152,6 +157,12 @@ namespace RepoDb.DbOperationProviders
                     if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
                     {
                         sqlBulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
+                    }
+
+                    // Set the batch szie
+                    if (batchSize != null && batchSize.HasValue)
+                    {
+                        sqlBulkCopy.BatchSize = batchSize.Value;
                     }
 
                     // Add the mappings
@@ -194,16 +205,18 @@ namespace RepoDb.DbOperationProviders
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int BulkInsert(IDbConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null)
         {
             // Validate the objects
@@ -218,7 +231,7 @@ namespace RepoDb.DbOperationProviders
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, copyOptions, (SqlTransaction)transaction))
+            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, options, (SqlTransaction)transaction))
             {
                 // Set the destinationtable
                 sqlBulkCopy.DestinationTableName = tableName;
@@ -227,6 +240,12 @@ namespace RepoDb.DbOperationProviders
                 if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
                 {
                     sqlBulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
+                }
+
+                // Set the batch szie
+                if (batchSize != null && batchSize.HasValue)
+                {
+                    sqlBulkCopy.BatchSize = batchSize.Value;
                 }
 
                 // Add the mappings
@@ -264,15 +283,17 @@ namespace RepoDb.DbOperationProviders
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -280,8 +301,9 @@ namespace RepoDb.DbOperationProviders
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
                 mappings: mappings,
-                copyOptions: copyOptions,
+                options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
                 transaction: transaction);
         }
 
@@ -292,15 +314,17 @@ namespace RepoDb.DbOperationProviders
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> BulkInsertAsync<TEntity>(IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -318,7 +342,7 @@ namespace RepoDb.DbOperationProviders
             // Actual Execution
             using (var reader = new DataEntityDataReader<TEntity>(entities, connection))
             {
-                using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, copyOptions, (SqlTransaction)transaction))
+                using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, options, (SqlTransaction)transaction))
                 {
                     // Set the destinationtable
                     sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
@@ -327,6 +351,12 @@ namespace RepoDb.DbOperationProviders
                     if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
                     {
                         sqlBulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
+                    }
+
+                    // Set the batch szie
+                    if (batchSize != null && batchSize.HasValue)
+                    {
+                        sqlBulkCopy.BatchSize = batchSize.Value;
                     }
 
                     // Add the mappings
@@ -369,16 +399,18 @@ namespace RepoDb.DbOperationProviders
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> BulkInsertAsync(IDbConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null)
         {
             // Validate the objects
@@ -393,7 +425,7 @@ namespace RepoDb.DbOperationProviders
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, copyOptions, (SqlTransaction)transaction))
+            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, options, (SqlTransaction)transaction))
             {
                 // Set the destinationtable
                 sqlBulkCopy.DestinationTableName = tableName;
@@ -402,6 +434,12 @@ namespace RepoDb.DbOperationProviders
                 if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
                 {
                     sqlBulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
+                }
+
+                // Set the batch szie
+                if (batchSize != null && batchSize.HasValue)
+                {
+                    sqlBulkCopy.BatchSize = batchSize.Value;
                 }
 
                 // Add the mappings

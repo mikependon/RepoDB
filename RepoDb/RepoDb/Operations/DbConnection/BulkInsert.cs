@@ -23,16 +23,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
             where TEntity : class
@@ -65,8 +67,9 @@ namespace RepoDb
             result = provider.BulkInsert<TEntity>(connection: connection,
                 entities: entities,
                 mappings: mappings,
-                copyOptions: copyOptions,
+                options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
                 transaction: transaction);
 
             // After Execution
@@ -87,16 +90,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this IDbConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
             where TEntity : class
@@ -129,8 +134,9 @@ namespace RepoDb
             result = provider.BulkInsert<TEntity>(connection: connection,
                 reader: reader,
                 mappings: mappings,
-                copyOptions: copyOptions,
+                options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
                 transaction: transaction);
 
             // After Execution
@@ -151,8 +157,9 @@ namespace RepoDb
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -160,8 +167,9 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
@@ -194,8 +202,9 @@ namespace RepoDb
                 tableName: tableName,
                 reader: reader,
                 mappings: mappings,
-                copyOptions: copyOptions,
+                options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
                 transaction: transaction);
 
             // After Execution
@@ -220,16 +229,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
             where TEntity : class
@@ -262,8 +273,9 @@ namespace RepoDb
             result = await provider.BulkInsertAsync<TEntity>(connection: connection,
                 entities: entities,
                 mappings: mappings,
-                copyOptions: copyOptions,
+                options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
                 transaction: transaction);
 
             // After Execution
@@ -284,16 +296,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
             where TEntity : class
@@ -326,8 +340,9 @@ namespace RepoDb
             result = await provider.BulkInsertAsync<TEntity>(connection: connection,
                 reader: reader,
                 mappings: mappings,
-                copyOptions: copyOptions,
+                options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
                 transaction: transaction);
 
             // After Execution
@@ -348,8 +363,9 @@ namespace RepoDb
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="copyOptions">The bulk-copy options to be used.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -357,8 +373,9 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions copyOptions = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
@@ -391,8 +408,9 @@ namespace RepoDb
                 tableName: tableName,
                 reader: reader,
                 mappings: mappings,
-                copyOptions: copyOptions,
+                options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
                 transaction: transaction);
 
             // After Execution
@@ -436,6 +454,5 @@ namespace RepoDb
         }
 
         #endregion
-
     }
 }

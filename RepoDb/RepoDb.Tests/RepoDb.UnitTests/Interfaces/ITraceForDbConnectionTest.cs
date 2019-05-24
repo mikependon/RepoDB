@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Attributes;
@@ -18,6 +22,7 @@ namespace RepoDb.UnitTests.Interfaces
         public static void ClassInitialize(TestContext context)
         {
             DbHelperMapper.Add(typeof(CustomDbConnection), new DbConnectionCustomerDbHelper(), true);
+            DbOperationProviderMapper.Add(typeof(CustomDbConnection), new DbConnectionCustomDbOperationProvider(), true);
         }
 
         #region SubClasses
@@ -44,6 +49,39 @@ namespace RepoDb.UnitTests.Interfaces
                     };
                 }
                 return null;
+            }
+        }
+
+        private class DbConnectionCustomDbOperationProvider : IDbOperationProvider
+        {
+            public int BulkInsert<TEntity>(IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
+            {
+                return 1;
+            }
+
+            public int BulkInsert<TEntity>(IDbConnection connection, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
+            {
+                return 1;
+            }
+
+            public int BulkInsert(IDbConnection connection, string tableName, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
+            {
+                return 1;
+            }
+
+            public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
+            {
+                return Task.FromResult(1);
+            }
+
+            public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
+            {
+                return Task.FromResult(1);
+            }
+
+            public Task<int> BulkInsertAsync(IDbConnection connection, string tableName, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
+            {
+                return Task.FromResult(1);
             }
         }
 
@@ -131,6 +169,82 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t => t.AfterBatchQuery(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #endregion
+
+        #region BulkInsert
+
+        #region BulkInsert
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeBulkInsert()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+            var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
+
+            // Act
+            connection.BulkInsert<TraceEntity>(entities,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t => t.BeforeBulkInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterBulkInsert()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+            var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
+
+            // Act
+            connection.BulkInsert<TraceEntity>(entities,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t => t.AfterBulkInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region BulkInsertAsync
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeBulkInsertAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+            var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
+
+            // Act
+            connection.BulkInsertAsync<TraceEntity>(entities,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeBulkInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterBulkInsertAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnection();
+            var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
+
+            // Act
+            connection.BulkInsertAsync<TraceEntity>(entities,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterBulkInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
         #endregion
