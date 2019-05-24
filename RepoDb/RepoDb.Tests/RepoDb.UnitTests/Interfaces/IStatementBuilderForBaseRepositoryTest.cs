@@ -12,14 +12,16 @@ namespace RepoDb.UnitTests.Interfaces
     {
         #region SubClasses
 
-        public class DataEntityForBaseRepositoryStatementBuilder
+        private class CustomDbConnectionForBaseRepositoryIStatementBuilder : CustomDbConnection { }
+
+        private class DataEntityForBaseRepositoryStatementBuilder
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityRepository : BaseRepository<DataEntityForBaseRepositoryStatementBuilder, CustomDbConnection>
+        private class DataEntityRepository : BaseRepository<DataEntityForBaseRepositoryStatementBuilder, CustomDbConnectionForBaseRepositoryIStatementBuilder>
         {
             public DataEntityRepository(IStatementBuilder statementBuilder)
                 : base("Connection", statementBuilder) { }

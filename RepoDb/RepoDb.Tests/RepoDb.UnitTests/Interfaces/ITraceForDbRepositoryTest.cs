@@ -21,11 +21,13 @@ namespace RepoDb.UnitTests.Interfaces
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            DbHelperMapper.Add(typeof(CustomDbConnection), new DbRepositoryCustomDbHelper(), true);
-            DbOperationProviderMapper.Add(typeof(CustomDbConnection), new DbRepositoryCustomDbOperationProvider(), true);
+            DbHelperMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), new DbRepositoryCustomDbHelper(), true);
+            DbOperationProviderMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), new DbRepositoryCustomDbOperationProvider(), true);
         }
 
         #region SubClasses
+
+        private class CustomDbConnectionForDbRepositoryITrace : CustomDbConnection { }
 
         private class TraceEntity
         {
@@ -40,15 +42,11 @@ namespace RepoDb.UnitTests.Interfaces
 
             public IEnumerable<DbField> GetFields(string connectionString, string tableName)
             {
-                if (tableName == ClassMappedNameCache.Get<TraceEntity>())
+                return new[]
                 {
-                    return new[]
-                    {
-                        new DbField("Id", true, true, false, typeof(int), null, null, null),
-                        new DbField("Name", false, false, true, typeof(string), null, null, null)
-                    };
-                }
-                return null;
+                    new DbField("Id", true, true, false, typeof(int), null, null, null),
+                    new DbField("Name", false, false, true, typeof(string), null, null, null)
+                };
             }
         }
 
@@ -96,7 +94,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -118,7 +116,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -144,7 +142,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -166,7 +164,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -196,7 +194,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 trace.Object);
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
@@ -212,7 +210,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 trace.Object);
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
@@ -232,7 +230,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 trace.Object);
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
@@ -248,7 +246,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 trace.Object);
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
@@ -272,7 +270,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -291,7 +289,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -310,7 +308,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -330,7 +328,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -354,7 +352,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -373,7 +371,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -392,7 +390,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -412,7 +410,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -440,7 +438,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -459,7 +457,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -478,7 +476,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -497,7 +495,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -520,7 +518,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -539,7 +537,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -558,7 +556,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -577,7 +575,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -604,7 +602,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -623,7 +621,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -642,7 +640,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -661,7 +659,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -684,7 +682,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -703,7 +701,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -722,7 +720,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -741,7 +739,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -768,7 +766,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -787,7 +785,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -806,7 +804,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -825,7 +823,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -848,7 +846,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -867,7 +865,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -886,7 +884,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -905,7 +903,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -932,7 +930,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -951,7 +949,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -970,7 +968,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -989,7 +987,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1012,7 +1010,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1031,7 +1029,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1050,7 +1048,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1069,7 +1067,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1096,7 +1094,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1115,7 +1113,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1134,7 +1132,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1155,7 +1153,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1180,7 +1178,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1199,7 +1197,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1218,7 +1216,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1239,7 +1237,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1268,7 +1266,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1287,7 +1285,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1306,7 +1304,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1325,7 +1323,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1348,7 +1346,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1367,7 +1365,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1386,7 +1384,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1405,7 +1403,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1432,7 +1430,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1451,7 +1449,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1470,7 +1468,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1489,7 +1487,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1512,7 +1510,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1531,7 +1529,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1550,7 +1548,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1569,7 +1567,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1596,7 +1594,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1615,7 +1613,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1638,7 +1636,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1657,7 +1655,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1684,7 +1682,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1703,7 +1701,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1726,7 +1724,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1745,7 +1743,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1772,7 +1770,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1792,7 +1790,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1816,7 +1814,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1836,7 +1834,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1864,7 +1862,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1883,7 +1881,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1902,7 +1900,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1921,7 +1919,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1944,7 +1942,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1963,7 +1961,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -1982,7 +1980,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2001,7 +1999,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2028,7 +2026,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2049,7 +2047,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2070,7 +2068,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2091,7 +2089,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2116,7 +2114,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2137,7 +2135,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2158,7 +2156,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2179,7 +2177,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2208,7 +2206,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2227,7 +2225,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2246,7 +2244,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2265,7 +2263,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2288,7 +2286,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2307,7 +2305,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2326,7 +2324,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
@@ -2345,7 +2343,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,

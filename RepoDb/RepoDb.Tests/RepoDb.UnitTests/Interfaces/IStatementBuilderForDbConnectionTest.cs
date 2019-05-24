@@ -13,70 +13,72 @@ namespace RepoDb.UnitTests.Interfaces
     {
         #region SubClasses
 
-        public class DataEntityForDbConnectionStatementBuilder
+        private class CustomDbConnectionForDbConnectionIStatementBuilder : CustomDbConnection { }
+
+        private class DataEntityForDbConnectionStatementBuilder
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbConnectionStatementBuilderForTableName
+        private class DataEntityForDbConnectionStatementBuilderForTableName
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbConnectionStatementBuilderForCrossCall
+        private class DataEntityForDbConnectionStatementBuilderForCrossCall
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbConnectionStatementBuilderT1
+        private class DataEntityForDbConnectionStatementBuilderT1
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbConnectionStatementBuilderT2
+        private class DataEntityForDbConnectionStatementBuilderT2
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbConnectionStatementBuilderT3
+        private class DataEntityForDbConnectionStatementBuilderT3
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbConnectionStatementBuilderT4
+        private class DataEntityForDbConnectionStatementBuilderT4
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbConnectionStatementBuilderT5
+        private class DataEntityForDbConnectionStatementBuilderT5
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbConnectionStatementBuilderT6
+        private class DataEntityForDbConnectionStatementBuilderT6
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbConnectionStatementBuilderT7
+        private class DataEntityForDbConnectionStatementBuilderT7
         {
             [Primary, Identity]
             public int Id { get; set; }
@@ -92,7 +94,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -146,7 +148,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -182,7 +184,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -220,7 +222,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -261,7 +263,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -293,7 +295,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -327,7 +329,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -364,7 +366,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -398,7 +400,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -440,7 +442,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -482,7 +484,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -512,7 +514,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -544,7 +546,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -579,7 +581,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -625,7 +627,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -671,7 +673,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -722,7 +724,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -772,7 +774,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -818,7 +820,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -872,7 +874,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -922,7 +924,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -975,7 +977,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1028,7 +1030,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1078,7 +1080,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1128,7 +1130,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1183,7 +1185,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1239,7 +1241,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1291,7 +1293,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1347,7 +1349,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1399,7 +1401,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1456,7 +1458,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1513,7 +1515,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1557,7 +1559,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1733,7 +1735,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1763,7 +1765,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1795,7 +1797,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1830,7 +1832,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1872,7 +1874,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1928,7 +1930,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -1982,7 +1984,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -2038,7 +2040,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();
@@ -2094,7 +2096,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
             CommandTextCache.Flush();

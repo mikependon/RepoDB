@@ -15,7 +15,9 @@ namespace RepoDb.UnitTests.Interfaces
     {
         #region SubClasses
 
-        public class CacheEntity
+        private class CustomDbConnectionForDbConnectionICache : CustomDbConnection { }
+
+        private class CacheEntity
         {
             [Primary, Identity]
             public int Id { get; set; }
@@ -35,7 +37,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CustomDbConnection().Query<CacheEntity>(where: (QueryGroup)null,
+            new CustomDbConnectionForDbConnectionICache().Query<CacheEntity>(where: (QueryGroup)null,
                 orderBy: null,
                 top: 0,
                 hints: null,
@@ -65,7 +67,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CustomDbConnection().Query<CacheEntity>((object)null, /* whereOrPrimaryKey */
+            new CustomDbConnectionForDbConnectionICache().Query<CacheEntity>((object)null, /* whereOrPrimaryKey */
                 (IEnumerable<OrderField>)null, /* orderBy */
                 (int?)null, /* top */
                 (string)null, /* hints */
@@ -95,7 +97,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CustomDbConnection().Query<CacheEntity>(where: (QueryField)null,
+            new CustomDbConnectionForDbConnectionICache().Query<CacheEntity>(where: (QueryField)null,
                 orderBy: null,
                 top: 0,
                 hints: null,
@@ -125,7 +127,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CustomDbConnection().Query<CacheEntity>(where: (IEnumerable<QueryField>)null,
+            new CustomDbConnectionForDbConnectionICache().Query<CacheEntity>(where: (IEnumerable<QueryField>)null,
                 orderBy: null,
                 top: 0,
                 hints: null,
@@ -155,7 +157,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CustomDbConnection().Query<CacheEntity>(where: (Expression<Func<CacheEntity, bool>>)null,
+            new CustomDbConnectionForDbConnectionICache().Query<CacheEntity>(where: (Expression<Func<CacheEntity, bool>>)null,
                 orderBy: null,
                 top: 0,
                 hints: null,
@@ -185,7 +187,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CustomDbConnection().Query<CacheEntity>(where: (QueryGroup)null,
+            new CustomDbConnectionForDbConnectionICache().Query<CacheEntity>(where: (QueryGroup)null,
                 orderBy: null,
                 top: 0,
                 hints: null,
@@ -219,7 +221,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            var result = new CustomDbConnection().QueryAsync<CacheEntity>(where: (QueryGroup)null,
+            var result = new CustomDbConnectionForDbConnectionICache().QueryAsync<CacheEntity>(where: (QueryGroup)null,
                 orderBy: null,
                 top: 0,
                 hints: null,
@@ -249,7 +251,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            var result = new CustomDbConnection().QueryAsync<CacheEntity>((object)null, /* whereOrPrimaryKey */
+            var result = new CustomDbConnectionForDbConnectionICache().QueryAsync<CacheEntity>((object)null, /* whereOrPrimaryKey */
                 (IEnumerable<OrderField>)null, /* orderBy */
                 (int?)null, /* top */
                 (string)null, /* hints */
@@ -279,7 +281,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            var result = new CustomDbConnection().QueryAsync<CacheEntity>(where: (QueryField)null,
+            var result = new CustomDbConnectionForDbConnectionICache().QueryAsync<CacheEntity>(where: (QueryField)null,
                 orderBy: null,
                 top: 0,
                 hints: null,
@@ -309,7 +311,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            var result = new CustomDbConnection().QueryAsync<CacheEntity>(where: (IEnumerable<QueryField>)null,
+            var result = new CustomDbConnectionForDbConnectionICache().QueryAsync<CacheEntity>(where: (IEnumerable<QueryField>)null,
                 orderBy: null,
                 top: 0,
                 hints: null,
@@ -339,7 +341,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            var result = new CustomDbConnection().QueryAsync<CacheEntity>(where: (Expression<Func<CacheEntity, bool>>)null,
+            var result = new CustomDbConnectionForDbConnectionICache().QueryAsync<CacheEntity>(where: (Expression<Func<CacheEntity, bool>>)null,
                 orderBy: null,
                 top: 0,
                 hints: null,
@@ -369,7 +371,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            var result = new CustomDbConnection().QueryAsync<CacheEntity>(where: (QueryGroup)null,
+            var result = new CustomDbConnectionForDbConnectionICache().QueryAsync<CacheEntity>(where: (QueryGroup)null,
                 orderBy: null,
                 top: 0,
                 hints: null,

@@ -16,14 +16,16 @@ namespace RepoDb.UnitTests.Interfaces
     {
         #region SubClasses
 
-        public class CacheEntity
+        private class CustomDbConnectionForBaseRepositoryICache : CustomDbConnection { }
+
+        private class CacheEntity
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class CacheEntityRepository : BaseRepository<CacheEntity, CustomDbConnection>
+        private class CacheEntityRepository : BaseRepository<CacheEntity, CustomDbConnectionForBaseRepositoryICache>
         {
             public CacheEntityRepository(ICache cache, int cacheItemExpiration)
                 : base("ConnectionString",

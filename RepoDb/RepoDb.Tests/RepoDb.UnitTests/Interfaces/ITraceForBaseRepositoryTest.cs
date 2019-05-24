@@ -19,11 +19,13 @@ namespace RepoDb.UnitTests.Interfaces
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            DbHelperMapper.Add(typeof(CustomDbConnection), new BaseRepositoryCustomDbHelper(), true);
-            DbOperationProviderMapper.Add(typeof(CustomDbConnection), new BaseRepositoryCustomDbOperationProvider(), true);
+            DbHelperMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), new BaseRepositoryCustomDbHelper(), true);
+            DbOperationProviderMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), new BaseRepositoryCustomDbOperationProvider(), true);
         }
 
         #region SubClasses
+
+        private class CustomDbConnectionForBaseRepositoryITrace : CustomDbConnection { }
 
         private class TraceEntity
         {
@@ -32,7 +34,7 @@ namespace RepoDb.UnitTests.Interfaces
             public string Name { get; set; }
         }
 
-        private class TraceEntityRepository : BaseRepository<TraceEntity, CustomDbConnection>
+        private class TraceEntityRepository : BaseRepository<TraceEntity, CustomDbConnectionForBaseRepositoryITrace>
         {
             public TraceEntityRepository(ITrace trace) :
                 base("ConnectionString",

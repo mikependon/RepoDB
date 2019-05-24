@@ -21,11 +21,13 @@ namespace RepoDb.UnitTests.Interfaces
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            DbHelperMapper.Add(typeof(CustomDbConnection), new DbConnectionCustomerDbHelper(), true);
-            DbOperationProviderMapper.Add(typeof(CustomDbConnection), new DbConnectionCustomDbOperationProvider(), true);
+            DbHelperMapper.Add(typeof(CustomDbConnectionForDbConnectionITrace), new CustomerDbConnectionDbHelper(), true);
+            DbOperationProviderMapper.Add(typeof(CustomDbConnectionForDbConnectionITrace), new DbConnectionCustomDbOperationProvider(), true);
         }
 
         #region SubClasses
+
+        private class CustomDbConnectionForDbConnectionITrace : CustomDbConnection { }
 
         private class TraceEntity
         {
@@ -34,21 +36,17 @@ namespace RepoDb.UnitTests.Interfaces
             public string Name { get; set; }
         }
 
-        private class DbConnectionCustomerDbHelper : IDbHelper
+        private class CustomerDbConnectionDbHelper : IDbHelper
         {
             public IResolver<string, Type> DbTypeResolver { get; set; }
 
             public IEnumerable<DbField> GetFields(string connectionString, string tableName)
             {
-                if (tableName == ClassMappedNameCache.Get<TraceEntity>())
+                return new[]
                 {
-                    return new[]
-                    {
-                        new DbField("Id", true, true, false, typeof(int), null, null, null),
-                        new DbField("Name", false, false, true, typeof(string), null, null, null)
-                    };
-                }
-                return null;
+                    new DbField("Id", true, true, false, typeof(int), null, null, null),
+                    new DbField("Name", false, false, true, typeof(string), null, null, null)
+                };
             }
         }
 
@@ -96,7 +94,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.BatchQuery<TraceEntity>(0,
@@ -115,7 +113,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.BatchQuery<TraceEntity>(0,
@@ -138,7 +136,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.BatchQueryAsync<TraceEntity>(0,
@@ -157,7 +155,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.BatchQueryAsync<TraceEntity>(0,
@@ -184,7 +182,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
             // Act
@@ -200,7 +198,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
             // Act
@@ -220,7 +218,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
             // Act
@@ -236,7 +234,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
             // Act
@@ -260,7 +258,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Count<TraceEntity>(trace: trace.Object,
@@ -276,7 +274,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Count<TraceEntity>(trace: trace.Object,
@@ -292,7 +290,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Count(ClassMappedNameCache.Get<TraceEntity>(),
@@ -309,7 +307,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Count(ClassMappedNameCache.Get<TraceEntity>(),
@@ -330,7 +328,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAsync<TraceEntity>(trace: trace.Object,
@@ -346,7 +344,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAsync<TraceEntity>(trace: trace.Object,
@@ -362,7 +360,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -379,7 +377,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -404,7 +402,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAll<TraceEntity>(trace: trace.Object,
@@ -419,7 +417,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAll<TraceEntity>(trace: trace.Object,
@@ -434,7 +432,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -450,7 +448,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -470,7 +468,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAllAsync<TraceEntity>(trace: trace.Object,
@@ -485,7 +483,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAllAsync<TraceEntity>(trace: trace.Object,
@@ -500,7 +498,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -516,7 +514,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -540,7 +538,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Delete<TraceEntity>(0,
@@ -556,7 +554,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Delete<TraceEntity>(0,
@@ -572,7 +570,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Delete(ClassMappedNameCache.Get<TraceEntity>(),
@@ -592,7 +590,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Delete(ClassMappedNameCache.Get<TraceEntity>(),
@@ -616,7 +614,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAsync<TraceEntity>(0,
@@ -632,7 +630,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAsync<TraceEntity>(0,
@@ -648,7 +646,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -668,7 +666,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -696,7 +694,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAll<TraceEntity>(trace: trace.Object,
@@ -711,7 +709,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAll<TraceEntity>(trace: trace.Object,
@@ -726,7 +724,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -742,7 +740,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -762,7 +760,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAllAsync<TraceEntity>(trace: trace.Object,
@@ -777,7 +775,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAllAsync<TraceEntity>(trace: trace.Object,
@@ -792,7 +790,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -808,7 +806,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -832,7 +830,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Insert<TraceEntity>(
@@ -849,7 +847,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Insert<TraceEntity>(
@@ -866,7 +864,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Insert(ClassMappedNameCache.Get<TraceEntity>(),
@@ -883,7 +881,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Insert(ClassMappedNameCache.Get<TraceEntity>(),
@@ -904,7 +902,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAsync<TraceEntity>(
@@ -921,7 +919,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAsync<TraceEntity>(
@@ -938,7 +936,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -955,7 +953,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -980,7 +978,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAll<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
@@ -996,7 +994,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAll<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
@@ -1012,7 +1010,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1030,7 +1028,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1052,7 +1050,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
@@ -1068,7 +1066,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
@@ -1084,7 +1082,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1102,7 +1100,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1128,7 +1126,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Merge<TraceEntity>(
@@ -1145,7 +1143,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Merge<TraceEntity>(
@@ -1162,7 +1160,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Merge(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1179,7 +1177,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Merge(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1200,7 +1198,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAsync<TraceEntity>(
@@ -1217,7 +1215,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAsync<TraceEntity>(
@@ -1234,7 +1232,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1251,7 +1249,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1276,7 +1274,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAll<TraceEntity>(
@@ -1293,7 +1291,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAll<TraceEntity>(
@@ -1310,7 +1308,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1327,7 +1325,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1348,7 +1346,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAllAsync<TraceEntity>(
@@ -1365,7 +1363,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAllAsync<TraceEntity>(
@@ -1382,7 +1380,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1399,7 +1397,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1424,7 +1422,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Query<TraceEntity>(te => te.Id == 1,
@@ -1440,7 +1438,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Query<TraceEntity>(te => te.Id == 1,
@@ -1460,7 +1458,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.QueryAsync<TraceEntity>(te => te.Id == 1,
@@ -1476,7 +1474,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.QueryAsync<TraceEntity>(te => te.Id == 1,
@@ -1500,7 +1498,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.QueryAll<TraceEntity>(trace: trace.Object,
@@ -1515,7 +1513,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.QueryAll<TraceEntity>(trace: trace.Object,
@@ -1534,7 +1532,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.QueryAllAsync<TraceEntity>(trace: trace.Object,
@@ -1549,7 +1547,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.QueryAllAsync<TraceEntity>(trace: trace.Object,
@@ -1572,7 +1570,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1,
@@ -1589,7 +1587,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1,
@@ -1610,7 +1608,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
@@ -1627,7 +1625,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
@@ -1652,7 +1650,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Truncate<TraceEntity>(trace: trace.Object,
@@ -1667,7 +1665,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Truncate<TraceEntity>(trace: trace.Object,
@@ -1682,7 +1680,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Truncate(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1698,7 +1696,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Truncate(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1718,7 +1716,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.TruncateAsync<TraceEntity>(trace: trace.Object,
@@ -1733,7 +1731,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.TruncateAsync<TraceEntity>(trace: trace.Object,
@@ -1748,7 +1746,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1764,7 +1762,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1788,7 +1786,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Update<TraceEntity>(
@@ -1810,7 +1808,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Update<TraceEntity>(
@@ -1832,7 +1830,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Update(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1856,7 +1854,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.Update(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1884,7 +1882,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAsync<TraceEntity>(
@@ -1906,7 +1904,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAsync<TraceEntity>(
@@ -1928,7 +1926,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1952,7 +1950,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1984,7 +1982,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAll<TraceEntity>(
@@ -2001,7 +1999,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAll<TraceEntity>(
@@ -2018,7 +2016,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2035,7 +2033,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2056,7 +2054,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAllAsync<TraceEntity>(
@@ -2073,7 +2071,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAllAsync<TraceEntity>(
@@ -2090,7 +2088,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2107,7 +2105,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var connection = new CustomDbConnection();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
             connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),

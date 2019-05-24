@@ -12,70 +12,72 @@ namespace RepoDb.UnitTests.Interfaces
     {
         #region SubClasses
 
-        public class DataEntityForDbRepositoryStatementBuilder
+        private class CustomDbConnectionForDbRepositoryIStatementBuilder : CustomDbConnection { }
+
+        private class DataEntityForDbRepositoryStatementBuilder
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderForTableName
+        private class DataEntityForDbRepositoryStatementBuilderForTableName
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderForCrossCall
+        private class DataEntityForDbRepositoryStatementBuilderForCrossCall
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT1
+        private class DataEntityForDbRepositoryStatementBuilderT1
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT2
+        private class DataEntityForDbRepositoryStatementBuilderT2
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT3
+        private class DataEntityForDbRepositoryStatementBuilderT3
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT4
+        private class DataEntityForDbRepositoryStatementBuilderT4
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT5
+        private class DataEntityForDbRepositoryStatementBuilderT5
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT6
+        private class DataEntityForDbRepositoryStatementBuilderT6
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT7
+        private class DataEntityForDbRepositoryStatementBuilderT7
         {
             [Primary, Identity]
             public int Id { get; set; }
@@ -91,7 +93,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -114,7 +116,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.BatchQuery<DataEntityForDbRepositoryStatementBuilder>(0,
@@ -144,7 +146,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -160,7 +162,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Count<DataEntityForDbRepositoryStatementBuilder>((object)null);
@@ -179,7 +181,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -196,7 +198,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -216,7 +218,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -232,7 +234,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -256,7 +258,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -271,7 +273,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.CountAll<DataEntityForDbRepositoryStatementBuilder>();
@@ -289,7 +291,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -304,7 +306,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.CountAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
@@ -322,7 +324,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -337,7 +339,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.CountAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
@@ -359,7 +361,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -374,7 +376,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Delete<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1);
@@ -392,7 +394,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -411,7 +413,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Delete(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -433,7 +435,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -448,7 +450,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Delete(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -474,7 +476,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -488,7 +490,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.DeleteAll<DataEntityForDbRepositoryStatementBuilder>();
@@ -505,7 +507,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -519,7 +521,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
@@ -536,7 +538,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -550,7 +552,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
@@ -571,7 +573,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -592,7 +594,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Insert<DataEntityForDbRepositoryStatementBuilder>(
@@ -616,7 +618,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -637,7 +639,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -661,7 +663,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -682,7 +684,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -711,7 +713,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -734,7 +736,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll<DataEntityForDbRepositoryStatementBuilder>(
@@ -760,7 +762,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -783,7 +785,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll<DataEntityForDbRepositoryStatementBuilder>(
@@ -809,7 +811,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -833,7 +835,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -860,7 +862,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -884,7 +886,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -911,7 +913,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -934,7 +936,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -961,7 +963,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -984,7 +986,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -1015,7 +1017,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1038,7 +1040,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Merge<DataEntityForDbRepositoryStatementBuilder>(
@@ -1064,7 +1066,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1087,7 +1089,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -1113,7 +1115,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1136,7 +1138,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -1167,7 +1169,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1186,7 +1188,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Query<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1);
@@ -1212,7 +1214,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1297,7 +1299,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.QueryMultiple<DataEntityForDbRepositoryStatementBuilderT1,
@@ -1389,7 +1391,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1403,7 +1405,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Truncate<DataEntityForDbRepositoryStatementBuilder>();
@@ -1420,7 +1422,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1434,7 +1436,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Truncate(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
@@ -1451,7 +1453,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1465,7 +1467,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Truncate(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
@@ -1486,7 +1488,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1509,7 +1511,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Update<DataEntityForDbRepositoryStatementBuilder>(
@@ -1535,7 +1537,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1558,7 +1560,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -1584,7 +1586,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1607,7 +1609,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
