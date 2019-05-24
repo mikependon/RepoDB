@@ -35,7 +35,7 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <see cref="DbField"/> object.
         /// </summary>
-        public DbField(string name,
+        internal DbField(string name,
             bool isPrimary,
             bool isIdentity,
             bool isNullable,

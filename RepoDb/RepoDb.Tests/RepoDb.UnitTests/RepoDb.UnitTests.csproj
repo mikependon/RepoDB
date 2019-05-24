@@ -81,6 +81,7 @@
     <Compile Include="CustomObjects\CustomDbParameterCollection.cs" />
     <Compile Include="Caches\MemoryCacheTest.cs" />
     <Compile Include="CustomObjects\CustomDbTransaction.cs" />
+    <Compile Include="DbHelpers\DbHelperTest.cs" />
     <Compile Include="Enumerations\ConjunctionTextTest.cs" />
     <Compile Include="Enumerations\OperationTextTest.cs" />
     <Compile Include="Enumerations\OrderTextTest.cs" />
