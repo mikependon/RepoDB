@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace RepoDb
 {
@@ -35,6 +36,19 @@ namespace RepoDb
             m_reader?.Dispose();
         }
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the position of the <see cref="DbDataReader"/>.
+        /// </summary>
+        public int Position { get; private set; }
+
+        #endregion
+
+        #region Extract
+
+        #region Extract<TEntity>
+
         /// <summary>
         /// Extract the <see cref="DbDataReader"/> object into an enumerable of data entity objects.
         /// </summary>
@@ -52,6 +66,114 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Extract the <see cref="DbDataReader"/> object into an enumerable of data entity objects in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of data entity to be extracted.</typeparam>
+        /// <returns>An enumerable of extracted data entity.</returns>
+        public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>() where TEntity : class
+        {
+            var result = await DataReader.ToEnumerableAsync<TEntity>(m_reader, m_connection, false);
+
+            // Move to next result
+            await NextResultAsync();
+
+            // Return the result
+            return result;
+        }
+
+        #endregion
+
+        #region Extract<dynamic>
+
+        /// <summary>
+        /// Extract the <see cref="DbDataReader"/> object into an enumerable of dynamic objects.
+        /// </summary>
+        /// <returns>An enumerable of extracted data entity.</returns>
+        public IEnumerable<dynamic> Extract()
+        {
+            var result = DataReader.ToEnumerable(m_reader).AsList();
+
+            // Move to next result
+            NextResult();
+
+            // Return the result
+            return result;
+        }
+
+        /// <summary>
+        /// Extract the <see cref="DbDataReader"/> object into an enumerable of dynamic objects in an asynchronous way.
+        /// </summary>
+        /// <returns>An enumerable of extracted data entity.</returns>
+        public async Task<IEnumerable<dynamic>> ExtractAsync()
+        {
+            var result = await DataReader.ToEnumerableAsync(m_reader);
+
+            // Move to next result
+            await NextResultAsync();
+
+            // Return the result
+            return result;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Scalar
+
+        #region Scalar<TResult>
+
+        /// <summary>
+        /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <returns>An instance of extracted object as value result.</returns>
+        public TResult Scalar<TResult>()
+        {
+            var value = default(TResult);
+
+            // Only if there are record
+            if (m_reader.Read())
+            {
+                // TODO: This can be compiled expression using the 'Get<Type>()' method
+                value = ObjectConverter.ToType<TResult>(m_reader[0]);
+            }
+
+            // Move to next result
+            NextResult();
+
+            // Return the result
+            return value;
+        }
+
+        /// <summary>
+        /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <returns>An instance of extracted object as value result.</returns>
+        public async Task<TResult> ScalarAsync<TResult>()
+        {
+            var value = default(TResult);
+
+            // Only if there are record
+            if (await m_reader.ReadAsync())
+            {
+                // TODO: This can be compiled expression using the 'Get<Type>()' method
+                value = ObjectConverter.ToType<TResult>(m_reader[0]);
+            }
+
+            // Move to next result
+            await NextResultAsync();
+
+            // Return the result
+            return value;
+        }
+
+        #endregion
+
+        #region Scalar<object>
+
+        /// <summary>
         /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object.
         /// </summary>
         /// <returns>An instance of extracted object as value result.</returns>
@@ -62,7 +184,7 @@ namespace RepoDb
             // Only if there are record
             if (m_reader.Read())
             {
-                value = ObjectConverter.DbNullToNull(m_reader[0]);
+                value = ObjectConverter.DbNullToNull(m_reader.GetValue(0));
             }
 
             // Move to next result
@@ -73,31 +195,31 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object.
+        /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object in an asynchronous way.
         /// </summary>
-        /// <typeparam name="T">The target return type.</typeparam>
         /// <returns>An instance of extracted object as value result.</returns>
-        public T Scalar<T>()
+        public async Task<object> ScalarAsync()
         {
-            var value = default(T);
+            var value = (object)null;
 
             // Only if there are record
-            if (m_reader.Read())
+            if (await m_reader.ReadAsync())
             {
-                value = ObjectConverter.ToType<T>(m_reader[0]);
+                value = ObjectConverter.DbNullToNull(m_reader.GetValue(0));
             }
 
             // Move to next result
-            NextResult();
+            await NextResultAsync();
 
             // Return the result
             return value;
         }
 
-        /// <summary>
-        /// Gets the position of the <see cref="DbDataReader"/>.
-        /// </summary>
-        public int Position { get; private set; }
+        #endregion
+
+        #endregion
+
+        #region NextResult
 
         /// <summary>
         /// Advances the <see cref="DbDataReader"/> object to the next result.
@@ -107,5 +229,16 @@ namespace RepoDb
         {
             return (Position = m_reader.NextResult() ? Position + 1 : -1) >= 0;
         }
+
+        /// <summary>
+        /// Advances the <see cref="DbDataReader"/> object to the next result in an asynchronous way.
+        /// <returns>True if there are more result sets; otherwise false.</returns>
+        /// </summary>
+        public async Task<bool> NextResultAsync()
+        {
+            return (Position = await m_reader.NextResultAsync() ? Position + 1 : -1) >= 0;
+        }
+
+        #endregion
     }
 }

@@ -14961,7 +14961,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region ExecuteQuery (Dynamics)
+        #region ExecuteQuery<dynamic>
 
         [TestMethod]
         public void TestSqlConnectionExecuteQueryViaDynamics()
@@ -15212,7 +15212,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region ExecuteQueryAsync (Dynamics)
+        #region ExecuteQueryAsync<dynamic>
 
         [TestMethod]
         public void TestSqlConnectionExecuteQueryAsyncViaDynamics()
@@ -15463,7 +15463,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region ExecuteQuery
+        #region ExecuteQuery<TEntity>
 
         [TestMethod]
         public void TestSqlConnectionExecuteQuery()
@@ -15843,7 +15843,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region ExecuteQueryAsync
+        #region ExecuteQueryAsync<TEntity>
 
         [TestMethod]
         public void TestSqlConnectionExecuteQueryAsync()
@@ -16197,7 +16197,9 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region ExecuteQueryMultiple (Extract)
+        #region ExecuteQueryMultiple.Extract
+
+        #region Extract<TEntity>
 
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleForExtractWithoutParameters()
@@ -16360,32 +16362,180 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowExceptionOnTestSqlConnectionExecuteQueryMultipleForExtractIfTheParametersAreNotDefined()
+        #endregion
+
+        #region Extract<dynamic>
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForExtractAsDynamicWithoutParameters()
         {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQueryMultiple("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
+                    SELECT TOP 2 * FROM [sc].[IdentityTable];
+                    SELECT TOP 3 * FROM [sc].[IdentityTable];
+                    SELECT TOP 4 * FROM [sc].[IdentityTable];
+                    SELECT TOP 5 * FROM [sc].[IdentityTable];"))
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act
+                        var items = result.Extract();
+
+                        // Assert
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert
+                        for (var c = 0; c < index; c++)
+                        {
+                            Helper.AssertMembersEquality(tables.ElementAt(c), (ExpandoObject)items.ElementAt(c));
+                        }
+                    }
+                }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowExceptionOnTestSqlConnectionQueryMultipleForExtractIfThereAreSqlStatementProblems()
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForExtractAsDynamicWithMultipleTopParameters()
         {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQueryMultiple("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [sc].[IdentityTable];",
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }))
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act
+                        var items = result.Extract();
+
+                        // Assert
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert
+                        for (var c = 0; c < index; c++)
+                        {
+                            Helper.AssertMembersEquality(tables.ElementAt(c), (ExpandoObject)items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForExtractAsDynamicWithMultipleArrayParameters()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }))
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act
+                        var items = result.Extract();
+
+                        // Assert
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert
+                        for (var c = 0; c < index; c++)
+                        {
+                            Helper.AssertMembersEquality(tables.ElementAt(c), (ExpandoObject)items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForExtractAsDynamicWithNormalStatementFollowedByStoredProcedures()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                    EXEC [dbo].[sp_get_identity_tables];
+                    EXEC [dbo].[sp_get_identity_table_by_id] @Id",
+                    new { Top1 = 1, tables.Last().Id }, CommandType.Text))
+                {
+                    // Act
+                    var value1 = result.Extract<IdentityTable>();
+
+                    // Assert
+                    Assert.AreEqual(1, value1.Count());
+                    Helper.AssertPropertiesEquality(tables.Where(t => t.Id == value1.First().Id).First(), value1.First());
+
+                    // Act
+                    var value2 = result.Extract();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, value2.Count());
+                    tables.ForEach(item => Helper.AssertPropertiesEquality(item, value2.ElementAt(tables.IndexOf(item))));
+
+                    // Act
+                    var value3 = result.Extract();
+
+                    // Assert
+                    Assert.AreEqual(1, value3.Count());
+                    Helper.AssertMembersEquality(tables.Where(t => t.Id == value3.First().Id).First(), (ExpandoObject)value3.First());
+                }
             }
         }
 
         #endregion
 
-        #region ExecuteQueryMultipleAsync (Extract)
+        #endregion
+
+        #region ExecuteQueryMultipleAsync.ExtractAsync
+
+        #region ExtractAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncMultipleForExtractWithoutParameters()
+        public void TestSqlConnectionExecuteQueryAsyncMultipleForExtractAsyncWithoutParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -16408,7 +16558,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.Extract<IdentityTable>();
+                        var items = result.ExtractAsync<IdentityTable>().Result;
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -16424,7 +16574,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractWithMultipleTopParameters()
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncWithMultipleTopParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -16448,7 +16598,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.Extract<IdentityTable>();
+                        var items = result.ExtractAsync<IdentityTable>().Result;
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -16464,7 +16614,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractWithMultipleArrayParameters()
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncWithMultipleArrayParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -16488,7 +16638,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.Extract<IdentityTable>();
+                        var items = result.ExtractAsync<IdentityTable>().Result;
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -16504,7 +16654,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractWithNormalStatementFollowedByStoredProcedures()
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncWithNormalStatementFollowedByStoredProcedures()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -16521,21 +16671,21 @@ namespace RepoDb.IntegrationTests.Operations
                     new { Top1 = 1, tables.Last().Id }, CommandType.Text).Result)
                 {
                     // Act
-                    var value1 = result.Extract<IdentityTable>();
+                    var value1 = result.ExtractAsync<IdentityTable>().Result;
 
                     // Assert
                     Assert.AreEqual(1, value1.Count());
                     Helper.AssertPropertiesEquality(tables.Where(t => t.Id == value1.First().Id).First(), value1.First());
 
                     // Act
-                    var value2 = result.Extract<IdentityTable>();
+                    var value2 = result.ExtractAsync<IdentityTable>().Result;
 
                     // Assert
                     Assert.AreEqual(tables.Count, value2.Count());
                     tables.ForEach(item => Helper.AssertPropertiesEquality(item, value2.ElementAt(tables.IndexOf(item))));
 
                     // Act
-                    var value3 = result.Extract<IdentityTable>();
+                    var value3 = result.ExtractAsync<IdentityTable>().Result;
 
                     // Assert
                     Assert.AreEqual(1, value3.Count());
@@ -16545,29 +16695,290 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestSqlConnectionExecuteQueryMultipleAsyncForExtractIfTheParametersAreNotDefined()
+        #endregion
+
+        #region ExtractAsync<dynamic>
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncAsDynamicWithoutParameters()
         {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryMultipleAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
+                    SELECT TOP 2 * FROM [sc].[IdentityTable];
+                    SELECT TOP 3 * FROM [sc].[IdentityTable];
+                    SELECT TOP 4 * FROM [sc].[IdentityTable];
+                    SELECT TOP 5 * FROM [sc].[IdentityTable];").Result)
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act
+                        var items = result.ExtractAsync().Result;
+
+                        // Assert
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert
+                        for (var c = 0; c < index; c++)
+                        {
+                            Helper.AssertMembersEquality(tables.ElementAt(c), (ExpandoObject)items.ElementAt(c));
+                        }
+                    }
+                }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestSqlConnectionQueryMultipleAsyncForExtractIfThereAreSqlStatementProblems()
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncAsDynamicWithMultipleTopParameters()
         {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryMultipleAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [sc].[IdentityTable];",
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }).Result)
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act
+                        var items = result.ExtractAsync().Result;
+
+                        // Assert
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert
+                        for (var c = 0; c < index; c++)
+                        {
+                            Helper.AssertMembersEquality(tables.ElementAt(c), (ExpandoObject)items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncAsDynamicWithMultipleArrayParameters()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
+                    SELECT TOP (@Top5) * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }).Result)
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act
+                        var items = result.ExtractAsync().Result;
+
+                        // Assert
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert
+                        for (var c = 0; c < index; c++)
+                        {
+                            Helper.AssertMembersEquality(tables.ElementAt(c), (ExpandoObject)items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncAsDynamicWithNormalStatementFollowedByStoredProcedures()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                    EXEC [dbo].[sp_get_identity_tables];
+                    EXEC [dbo].[sp_get_identity_table_by_id] @Id",
+                    new { Top1 = 1, tables.Last().Id }, CommandType.Text).Result)
+                {
+                    // Act
+                    var value1 = result.ExtractAsync().Result;
+
+                    // Assert
+                    Assert.AreEqual(1, value1.Count());
+                    Helper.AssertMembersEquality(tables.Where(t => t.Id == value1.First().Id).First(), value1.First());
+
+                    // Act
+                    var value2 = result.ExtractAsync().Result;
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, value2.Count());
+                    tables.ForEach(item => Helper.AssertPropertiesEquality(item, value2.ElementAt(tables.IndexOf(item))));
+
+                    // Act
+                    var value3 = result.ExtractAsync().Result;
+
+                    // Assert
+                    Assert.AreEqual(1, value3.Count());
+                    Helper.AssertMembersEquality(tables.Where(t => t.Id == value3.First().Id).First(), (ExpandoObject)value3.First());
+                }
             }
         }
 
         #endregion
 
-        #region ExecuteQueryMultiple (Scalar)
+        #endregion
+
+        #region ExecuteQueryMultiple.Scalar
+
+        #region Scalar<TResult>
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarAsTypedResultWithoutParameters()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT GETUTCDATE();
+                    SELECT (2 * 7);
+                    SELECT 'USER';"))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(typeof(DateTime), value1.GetType());
+
+                    // Assert
+                    var value2 = result.Scalar<int>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(14, value2);
+
+                    // Assert
+                    var value3 = result.Scalar<string>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual("USER", value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarAsTypedResultWithMultipleParameters()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = (2 * 7),
+                Value3 = "USER"
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
+                    SELECT @Value2;
+                    SELECT @Value3;", param))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert
+                    var value2 = result.Scalar<int>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(param.Value2, value2);
+
+                    // Assert
+                    var value3 = result.Scalar<string>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(param.Value3, value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarAsTypedResultWithSimpleScalaredValueFollowedByMultipleStoredProcedures()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = 2,
+                Value3 = 3
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
+                    EXEC [dbo].[sp_get_database_date_time];
+                    EXEC [dbo].[sp_multiply] @Value2, @Value3;", param))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert
+                    var value2 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(typeof(DateTime), value2.GetType());
+
+                    // Assert
+                    var value3 = result.Scalar<int>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(6, value3);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Scalar<object>
 
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleForScalarWithoutParameters()
@@ -16680,7 +17091,124 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region ExecuteQueryMultipleAsync (Scalar)
+        #endregion
+
+        #region ExecuteQueryMultipleAsync.ScalarAsync
+
+        #region ScalarAsync<TResult>
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarAsTypedResultWithoutParameters()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT GETUTCDATE();
+                    SELECT (2 * 7);
+                    SELECT 'USER';").Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(typeof(DateTime), value1.GetType());
+
+                    // Assert
+                    var value2 = result.Scalar<int>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(14, value2);
+
+                    // Assert
+                    var value3 = result.Scalar<string>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual("USER", value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarAsTypedResultWithMultipleParameters()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = (2 * 7),
+                Value3 = "USER"
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
+                    SELECT @Value2;
+                    SELECT @Value3;", param).Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert
+                    var value2 = result.Scalar<int>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(param.Value2, value2);
+
+                    // Assert
+                    var value3 = result.Scalar<string>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(param.Value3, value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarAsTypedResultWithSimpleScalaredValueFollowedByMultipleStoredProcedures()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = 2,
+                Value3 = 3
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
+                    EXEC [dbo].[sp_get_database_date_time];
+                    EXEC [dbo].[sp_multiply] @Value2, @Value3;", param).Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert
+                    var value2 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(typeof(DateTime), value2.GetType());
+
+                    // Assert
+                    var value3 = result.Scalar<int>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(6, value3);
+                }
+            }
+        }
+
+        #endregion
+
+        #region ScalarAsync<object>
 
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarWithoutParameters()
@@ -16696,17 +17224,17 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar();
+                    var value1 = result.ScalarAsync().Result;
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(typeof(DateTime), value1.GetType());
 
                     // Assert
-                    var value2 = result.Scalar();
+                    var value2 = result.ScalarAsync().Result;
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(14, value2);
 
                     // Assert
-                    var value3 = result.Scalar();
+                    var value3 = result.ScalarAsync().Result;
                     Assert.IsNotNull(value3);
                     Assert.AreEqual("USER", value3);
                 }
@@ -16735,17 +17263,17 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar();
+                    var value1 = result.ScalarAsync().Result;
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param.Value1, value1);
 
                     // Assert
-                    var value2 = result.Scalar();
+                    var value2 = result.ScalarAsync().Result;
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(param.Value2, value2);
 
                     // Assert
-                    var value3 = result.Scalar();
+                    var value3 = result.ScalarAsync().Result;
                     Assert.IsNotNull(value3);
                     Assert.AreEqual(param.Value3, value3);
                 }
@@ -16774,17 +17302,17 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar();
+                    var value1 = result.ScalarAsync().Result;
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param.Value1, value1);
 
                     // Assert
-                    var value2 = result.Scalar();
+                    var value2 = result.ScalarAsync().Result;
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(typeof(DateTime), value2.GetType());
 
                     // Assert
-                    var value3 = result.Scalar();
+                    var value3 = result.ScalarAsync().Result;
                     Assert.IsNotNull(value3);
                     Assert.AreEqual(6, value3);
                 }
@@ -16792,230 +17320,6 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         #endregion
-
-        #region ExecuteQueryMultiple (Scalar<T>)
-
-        [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleForScalarTWithoutParameters()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                using (var result = connection.ExecuteQueryMultiple(@"SELECT GETUTCDATE();
-                    SELECT (2 * 7);
-                    SELECT 'USER';"))
-                {
-                    // Index
-                    var index = result.Position + 1;
-
-                    // Assert
-                    var value1 = result.Scalar<DateTime>();
-                    Assert.IsNotNull(value1);
-                    Assert.AreEqual(typeof(DateTime), value1.GetType());
-
-                    // Assert
-                    var value2 = result.Scalar<int>();
-                    Assert.IsNotNull(value2);
-                    Assert.AreEqual(14, value2);
-
-                    // Assert
-                    var value3 = result.Scalar<string>();
-                    Assert.IsNotNull(value3);
-                    Assert.AreEqual("USER", value3);
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleForScalarTWithMultipleParameters()
-        {
-            // Setup
-            var param = new
-            {
-                Value1 = DateTime.UtcNow,
-                Value2 = (2 * 7),
-                Value3 = "USER"
-            };
-
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
-                    SELECT @Value2;
-                    SELECT @Value3;", param))
-                {
-                    // Index
-                    var index = result.Position + 1;
-
-                    // Assert
-                    var value1 = result.Scalar<DateTime>();
-                    Assert.IsNotNull(value1);
-                    Assert.AreEqual(param.Value1, value1);
-
-                    // Assert
-                    var value2 = result.Scalar<int>();
-                    Assert.IsNotNull(value2);
-                    Assert.AreEqual(param.Value2, value2);
-
-                    // Assert
-                    var value3 = result.Scalar<string>();
-                    Assert.IsNotNull(value3);
-                    Assert.AreEqual(param.Value3, value3);
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleForScalarTWithSimpleScalaredValueFollowedByMultipleStoredProcedures()
-        {
-            // Setup
-            var param = new
-            {
-                Value1 = DateTime.UtcNow,
-                Value2 = 2,
-                Value3 = 3
-            };
-
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
-                    EXEC [dbo].[sp_get_database_date_time];
-                    EXEC [dbo].[sp_multiply] @Value2, @Value3;", param))
-                {
-                    // Index
-                    var index = result.Position + 1;
-
-                    // Assert
-                    var value1 = result.Scalar<DateTime>();
-                    Assert.IsNotNull(value1);
-                    Assert.AreEqual(param.Value1, value1);
-
-                    // Assert
-                    var value2 = result.Scalar<DateTime>();
-                    Assert.IsNotNull(value2);
-                    Assert.AreEqual(typeof(DateTime), value2.GetType());
-
-                    // Assert
-                    var value3 = result.Scalar<int>();
-                    Assert.IsNotNull(value3);
-                    Assert.AreEqual(6, value3);
-                }
-            }
-        }
-
-        #endregion
-
-        #region ExecuteQueryMultipleAsync (Scalar<T>)
-
-        [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarTWithoutParameters()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT GETUTCDATE();
-                    SELECT (2 * 7);
-                    SELECT 'USER';").Result)
-                {
-                    // Index
-                    var index = result.Position + 1;
-
-                    // Assert
-                    var value1 = result.Scalar<DateTime>();
-                    Assert.IsNotNull(value1);
-                    Assert.AreEqual(typeof(DateTime), value1.GetType());
-
-                    // Assert
-                    var value2 = result.Scalar<int>();
-                    Assert.IsNotNull(value2);
-                    Assert.AreEqual(14, value2);
-
-                    // Assert
-                    var value3 = result.Scalar<string>();
-                    Assert.IsNotNull(value3);
-                    Assert.AreEqual("USER", value3);
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarTWithMultipleParameters()
-        {
-            // Setup
-            var param = new
-            {
-                Value1 = DateTime.UtcNow,
-                Value2 = (2 * 7),
-                Value3 = "USER"
-            };
-
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
-                    SELECT @Value2;
-                    SELECT @Value3;", param).Result)
-                {
-                    // Index
-                    var index = result.Position + 1;
-
-                    // Assert
-                    var value1 = result.Scalar<DateTime>();
-                    Assert.IsNotNull(value1);
-                    Assert.AreEqual(param.Value1, value1);
-
-                    // Assert
-                    var value2 = result.Scalar<int>();
-                    Assert.IsNotNull(value2);
-                    Assert.AreEqual(param.Value2, value2);
-
-                    // Assert
-                    var value3 = result.Scalar<string>();
-                    Assert.IsNotNull(value3);
-                    Assert.AreEqual(param.Value3, value3);
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarTWithSimpleScalaredValueFollowedByMultipleStoredProcedures()
-        {
-            // Setup
-            var param = new
-            {
-                Value1 = DateTime.UtcNow,
-                Value2 = 2,
-                Value3 = 3
-            };
-
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
-                    EXEC [dbo].[sp_get_database_date_time];
-                    EXEC [dbo].[sp_multiply] @Value2, @Value3;", param).Result)
-                {
-                    // Index
-                    var index = result.Position + 1;
-
-                    // Assert
-                    var value1 = result.Scalar<DateTime>();
-                    Assert.IsNotNull(value1);
-                    Assert.AreEqual(param.Value1, value1);
-
-                    // Assert
-                    var value2 = result.Scalar<DateTime>();
-                    Assert.IsNotNull(value2);
-                    Assert.AreEqual(typeof(DateTime), value2.GetType());
-
-                    // Assert
-                    var value3 = result.Scalar<int>();
-                    Assert.IsNotNull(value3);
-                    Assert.AreEqual(6, value3);
-                }
-            }
-        }
 
         #endregion
 
