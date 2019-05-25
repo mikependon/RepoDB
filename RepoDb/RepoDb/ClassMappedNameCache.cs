@@ -11,6 +11,8 @@ namespace RepoDb
     {
         private static readonly ConcurrentDictionary<int, string> m_cache = new ConcurrentDictionary<int, string>();
 
+        #region Methods
+
         /// <summary>
         /// Gets the cached mapped-name for the entity.
         /// </summary>
@@ -55,5 +57,19 @@ namespace RepoDb
             // Return the value
             return result;
         }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Flushes all the existing cached class mapped names.
+        /// </summary>
+        public static void Flush()
+        {
+            m_cache.Clear();
+        }
+
+        #endregion
     }
 }
