@@ -36,9 +36,8 @@ namespace RepoDb.Extensions
 
                 // Create a type from generic
                 var listType = typeof(List<>).MakeGenericType(type);
-                var toArrayMethod = listType.GetMethod("get_Item", new[] { type });
-                var countProperty = listType.GetProperty("Count");
-                var count = (int)countProperty.GetValue(obj);
+                var toArrayMethod = listType.GetMethod("get_Item", new[] { typeof(int) });
+                var count = (int)listType.GetProperty("Count").GetValue(obj);
 
                 // Create a new instance of array
                 array = Array.CreateInstance(type, count);
