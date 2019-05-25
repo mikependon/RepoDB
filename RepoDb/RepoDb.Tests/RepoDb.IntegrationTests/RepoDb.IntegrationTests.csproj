@@ -76,6 +76,7 @@
     <Compile Include="Setup\Database.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="SpecialOperationTest.cs" />
+    <Compile Include="SqlTransactionTest.cs" />
     <Compile Include="TypeConversionsTest.cs" />
     <Compile Include="Types\Bytes\BaseRepositoryBytesTest.cs" />
     <Compile Include="Types\Bytes\DbRepositoryBytesTest.cs" />
