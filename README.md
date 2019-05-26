@@ -85,15 +85,17 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
 
 Let us say you have a customer class named `Customer` that has an equivalent table in the database named `[dbo].[Customer]`.
 
-	public class Customer
-	{
-		public int Id { get; set; }
-		public string FirstName { get; set; }
-		public string LastName { get; set; }
-		public bool IsActive { get; set; }
-		public DateTime LastUpdatedUtc { get; set; }
-		public DateTime CreatedDateUtc { get; set; }
-	}
+```csharp
+public class Customer
+{
+	public int Id { get; set; }
+	public string FirstName { get; set; }
+	public string LastName { get; set; }
+	public bool IsActive { get; set; }
+	public DateTime LastUpdatedUtc { get; set; }
+	public DateTime CreatedDateUtc { get; set; }
+}
+```
 
 ### Query<TEntity>
 
