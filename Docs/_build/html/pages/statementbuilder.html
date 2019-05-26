@@ -194,15 +194,15 @@
 <p>A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.</p>
 <p>Below is a sample code that creates a SQL Statement for the <cite>Query</cite> operation for <cite>Oracle</cite> data provider.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery(QueryBuilder queryBuilder,
-string tableName,
-IEnumerable&lt;Field&gt; fields,
-QueryGroup where = null,
-IEnumerable&lt;OrderField&gt; orderBy = null,
-int? top = null,
-string hints = null)
+        string tableName,
+        IEnumerable&lt;Field&gt; fields,
+        QueryGroup where = null,
+        IEnumerable&lt;OrderField&gt; orderBy = null,
+        int? top = null,
+        string hints = null)
 {
         // There should be fields
-        if (fields == null || fields.Any() == false)
+        if (fields?.Any() != true)
         {
                 throw new NullReferenceException($&quot;The list of queryable fields must not be null for &#39;{tableName}&#39;.&quot;);
         }

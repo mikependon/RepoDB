@@ -38,8 +38,11 @@ A new instance of a connection is being instantiated and disposed on every call 
 			orders.ToList().ForEach(order =>
 			{
 				
-				// Update the Order updated date
-				repository.InlineUpdate<Order>(new { UpdatedDate = DateTime.UtcNow }, order.Id);
+				// Update the updated date field
+				order.LastUpdatedUtc = DateTime.UtcNow;
+
+				// Update the order
+				repository.Update<Order>(order);
 
 			});
 
@@ -83,8 +86,11 @@ A single connection object is being used until the lifetime of the repository. R
 			orders.ToList().ForEach(order =>
 			{
 				
-				// Update the Order updated date
-				repository.InlineUpdate<Order>(new { UpdatedDate = DateTime.UtcNow }, order.Id);
+				// Update the updated date field
+				order.LastUpdatedUtc = DateTime.UtcNow;
+
+				// Update the order
+				repository.Update<Order>(order);
 
 			});
 

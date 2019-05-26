@@ -15,15 +15,15 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 ::
 
 	public string CreateQuery(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable<Field> fields,
-        QueryGroup where = null,
-        IEnumerable<OrderField> orderBy = null,
-        int? top = null,
-        string hints = null)
+		string tableName,
+		IEnumerable<Field> fields,
+		QueryGroup where = null,
+		IEnumerable<OrderField> orderBy = null,
+		int? top = null,
+		string hints = null)
 	{
 		// There should be fields
-		if (fields == null || fields.Any() == false)
+		if (fields?.Any() != true)
 		{
 			throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
 		}
