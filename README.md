@@ -101,299 +101,357 @@ public class Customer
 
 Via PrimaryKey:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query<Customer>(10045);
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(10045);
+}
+```
 
 Via Dynamic:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query<Customer>(new { Id = 10045 });
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(new { Id = 10045 });
+}
+```
 
 Via Expression:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query<Customer>(c => c.Id == 10045);
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(c => c.Id == 10045);
+}
+```
 
 Via Object:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 10045));
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 10045));
+}
+```
 
 ### Query(TableName)
 
 Via PrimaryKey:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query("Customer", 10045);
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query("Customer", 10045);
+}
+```
 
 Via Dynamic:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query("Customer", new { Id = 10045 });
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query("Customer", new { Id = 10045 });
+}
+```
 
 Via Object:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query("Customer", new QueryField(nameof(Customer.Id), 10045));
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query("Customer", new QueryField(nameof(Customer.Id), 10045));
+}
+```
 	
 Via Object (targetting few fields):
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query("Customer", new QueryField(nameof(Customer.Id), 10045),
-			Field.From("Id", "FirstName", "LastName"));
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query("Customer", new QueryField(nameof(Customer.Id), 10045),
+		Field.From("Id", "FirstName", "LastName"));
+}
+```
 
 ### Insert<TEntity>
 
-    var customer = new Customer
-    {
-	    FirstName = "John",
-	    LastName = "Doe",
-	    IsActive = true
-    };
-    using (var connection = new SqlConnection(ConnectionString))
-	{
-		var id = connection.Insert<Customer, int>(customer);
-	}
+```csharp
+var customer = new Customer
+{
+	FirstName = "John",
+	LastName = "Doe",
+	IsActive = true
+};
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var id = connection.Insert<Customer, int>(customer);
+}
+```
 
 ### Insert(TableName)
 
-    var customer = new
-    {
-	    FirstName = "John",
-	    LastName = "Doe",
-	    IsActive = true,
-	    LastUpdatedUtc = DateTime.Utc,
-	    CreatedDateUtc = DateTime.Utc
-    };
-    using (var connection = new SqlConnection(ConnectionString))
-	{
-		var id = connection.Insert<int>("Customer", customer);
-	}
+```csharp
+var customer = new
+{
+	FirstName = "John",
+	LastName = "Doe",
+	IsActive = true,
+	LastUpdatedUtc = DateTime.Utc,
+	CreatedDateUtc = DateTime.Utc
+};
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var id = connection.Insert<int>("Customer", customer);
+}
+```
 
 ### Update<TEntity>
 
 Via DataEntity:
 
-    using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query<Customer>(10045);
-		customer.FirstName = "John";
-		customer.LastUpdatedUtc = DateTime.UtcNow;
-		var affectedRows = connection.Update<Customer>(customer);
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(10045);
+	customer.FirstName = "John";
+	customer.LastUpdatedUtc = DateTime.UtcNow;
+	var affectedRows = connection.Update<Customer>(customer);
+}
+```
 
 Via PrimaryKey:
 
-    using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query<Customer>(10045);
-		customer.FirstName = "John";
-		customer.LastUpdatedUtc = DateTime.UtcNow;
-		var affectedRows = connection.Update<Customer>(customer, 10045);
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(10045);
+	customer.FirstName = "John";
+	customer.LastUpdatedUtc = DateTime.UtcNow;
+	var affectedRows = connection.Update<Customer>(customer, 10045);
+}
+```
 
 Via Dynamic:
 
-    using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query<Customer>(10045);
-		customer.FirstName = "John";
-		customer.LastUpdatedUtc = DateTime.UtcNow;
-		var affectedRows = connection.Update<Customer>(customer, new { Id = 10045 });
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(10045);
+	customer.FirstName = "John";
+	customer.LastUpdatedUtc = DateTime.UtcNow;
+	var affectedRows = connection.Update<Customer>(customer, new { Id = 10045 });
+}
+```
 	
 Via Object:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query<Customer>(10045);
-		customer.FirstName = "John";
-		customer.LastUpdatedUtc = DateTime.UtcNow;
-		var affectedRows = connection.Update<Customer>(customer, new QueryField(nameof(Customer.Id), 10045));
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(10045);
+	customer.FirstName = "John";
+	customer.LastUpdatedUtc = DateTime.UtcNow;
+	var affectedRows = connection.Update<Customer>(customer, new QueryField(nameof(Customer.Id), 10045));
+}
+```
 
 ### Update(TableName)
 
 Via Dynamic Object:
 
-    using (var connection = new SqlConnection(ConnectionString))
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = new
 	{
-		var customer = new
-		{
-			Id = 10045,
-			FirstName = "John",
-			LastUpdatedUtc = DateTime.UtcNow
-		};
-		var affectedRows = connection.Update("Customer", customer);
-	}
+		Id = 10045,
+		FirstName = "John",
+		LastUpdatedUtc = DateTime.UtcNow
+	};
+	var affectedRows = connection.Update("Customer", customer);
+}
+```
 
 Via PrimaryKey:
 
-    using (var connection = new SqlConnection(ConnectionString))
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = new
 	{
-		var customer = new
-		{
-			FirstName = "John",
-			LastUpdatedUtc = DateTime.UtcNow
-		};
-		var affectedRows = connection.Update("Customer", customer, 10045);
-	}
+		FirstName = "John",
+		LastUpdatedUtc = DateTime.UtcNow
+	};
+	var affectedRows = connection.Update("Customer", customer, 10045);
+}
+```
 
 Via Dynamic:
 
-    using (var connection = new SqlConnection(ConnectionString))
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = new
 	{
-		var customer = new
-		{
-			FirstName = "John",
-			LastUpdatedUtc = DateTime.UtcNow
-		};
-		var affectedRows = connection.Update("Customer", customer, new { Id = 10045 });
-	}
+		FirstName = "John",
+		LastUpdatedUtc = DateTime.UtcNow
+	};
+	var affectedRows = connection.Update("Customer", customer, new { Id = 10045 });
+}
+```
 	
 Via Object:
 
-	using (var connection = new SqlConnection(ConnectionString))
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = new
 	{
-		var customer = new
-		{
-			FirstName = "John",
-			LastUpdatedUtc = DateTime.UtcNow
-		};
-		var affectedRows = connection.Update("Customer", customer, new QueryField("Id", 10045));
-	}
+		FirstName = "John",
+		LastUpdatedUtc = DateTime.UtcNow
+	};
+	var affectedRows = connection.Update("Customer", customer, new QueryField("Id", 10045));
+}
+```
 
 ### Delete<TEntity>
 
 Via PrimaryKey:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var deletedCount = connection.Delete<Customer>(10045);
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete<Customer>(10045);
+}
+```
 
 Via Dynamic:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var deletedCount = connection.Delete<Customer>(new { Id = 10045 });
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete<Customer>(new { Id = 10045 });
+}
+```
 
 Via Expression:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var deletedCount = connection.Delete<Customer>(c => c.Id == 10045);
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete<Customer>(c => c.Id == 10045);
+}
+```
 
 Via Object:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var deletedCount = connection.Delete<Customer>(new QueryField(nameof(Customer.Id), 10045));
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete<Customer>(new QueryField(nameof(Customer.Id), 10045));
+}
+```
 
 Via DataEntity:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.Query<Customer>(new { Id = 10045 });
-		var deletedCount = connection.Delete<Customer>(customer);
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(new { Id = 10045 });
+	var deletedCount = connection.Delete<Customer>(customer);
+}
+```
 
 ### Delete(TableName)
 
 Via PrimaryKey:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var deletedCount = connection.Delete("Customer", 10045);
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete("Customer", 10045);
+}
+```
 
 Via Dynamic:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var deletedCount = connection.Delete("Customer", { Id = 10045 });
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete("Customer", { Id = 10045 });
+}
+```
 
 Via Object:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var deletedCount = connection.Delete("Customer", new QueryField(nameof(Customer.Id), 10045));
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete("Customer", new QueryField(nameof(Customer.Id), 10045));
+}
+```
 
 ### Merge<TEntity>
 
-    var customer = new Customer
-    {
-	    FirstName = "John",
-	    LastName = "Doe",
-	    IsActive = true,
-	    LastUpdatedUtc = DateTime.Utc,
-	    CreatedDateUtc = DateTime.Utc
-    };
-	using (var connection = new SqlConnection(ConnectionString))
+```csharp
+var customer = new Customer
+{
+	FirstName = "John",
+	LastName = "Doe",
+	IsActive = true,
+	LastUpdatedUtc = DateTime.Utc,
+	CreatedDateUtc = DateTime.Utc
+};
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var qualifiers = new []
 	{
-		var qualifiers = new []
-		{
-			new Field(nameof(Customer.FirstName)),
-			new Field(nameof(Customer.LastName)),
-		};
-		var mergeCount = connection.Merge<Customer>(customer, qualifiers);
-	}
+		new Field(nameof(Customer.FirstName)),
+		new Field(nameof(Customer.LastName)),
+	};
+	var mergeCount = connection.Merge<Customer>(customer, qualifiers);
+}
+```
 
 ### Merge(TableName)
 
-    var customer = new Customer
-    {
-	    FirstName = "John",
-	    LastName = "Doe",
-	    IsActive = true
-    };
-	using (var connection = new SqlConnection(ConnectionString))
+```csharp
+var customer = new Customer
+{
+	FirstName = "John",
+	LastName = "Doe",
+	IsActive = true
+};
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var qualifiers = new []
 	{
-		var qualifiers = new []
-		{
-			new Field(nameof(Customer.FirstName)),
-			new Field(nameof(Customer.LastName)),
-		};
-		var mergeCount = connection.Merge("Customer", customer, qualifiers);
-	}
+		new Field(nameof(Customer.FirstName)),
+		new Field(nameof(Customer.LastName)),
+	};
+	var mergeCount = connection.Merge("Customer", customer, qualifiers);
+}
+```
 
 ### ExecuteQuery
 
 You can create a class with combined properties of different tables or with stored procedures. It does not need to be 100% identical to the schema, as long the property of the class is part of the result set.
 
-	public class ComplexClass
-	{
-		public int CustomerId { get; set; }
-		public int OrderId { get; set; }
-		public int ProductId { get; set; }
-		public string CustomerName { get; set; }
-		public string ProductName { get; set; }
-		public DateTime ProductDescription { get; set; } // This is not in the CommandText, will be ignored
-		public DateTime OrderDate { get; set; }
-		public int Quantity { get; set; }
-		public double Price { get; set; }
-	}
+```csharp
+public class ComplexClass
+{
+	public int CustomerId { get; set; }
+	public int OrderId { get; set; }
+	public int ProductId { get; set; }
+	public string CustomerName { get; set; }
+	public string ProductName { get; set; }
+	public DateTime ProductDescription { get; set; } // This is not in the CommandText, will be ignored
+	public DateTime OrderDate { get; set; }
+	public int Quantity { get; set; }
+	public double Price { get; set; }
+}
+```
 
 Then you can create this command text.
 
@@ -415,13 +473,16 @@ Then you can create this command text.
 
 Via Dynamic:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.ExecuteQuery<ComplexClass>(commandText, new { CustomerId = 10045, OrderDate = DateTime.UtcNow.Date });
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.ExecuteQuery<ComplexClass>(commandText, new { CustomerId = 10045, OrderDate = DateTime.UtcNow.Date });
+}
+```
 
 Via Object:
 
+```csharp
 	using (var connection = new SqlConnection(ConnectionString))
 	{
 		var queryGroup = new QueryGroup(new []
@@ -431,6 +492,7 @@ Via Object:
 		});
 		var customer = connection.ExecuteQuery<Customer>(commandText, queryGroup);
 	}
+```
 
 The `ExecuteQuery` method is purposely not being supported by `Expression` based query as we are avoiding the user to bind the complex-class to its target query text.
 
@@ -470,24 +532,28 @@ Then it can be called as below.
 
 Via Dynamic:
 
-	using (var connection = new SqlConnection(ConnectionString))
-	{
-		var customer = connection.ExecuteQuery<ComplexClass>("[dbo].[sp_get_customer_orders_by_date]",
-			param: new { CustomerId = 10045, OrderDate = DateTime.UtcNow.Date },
-			commandType: CommandType.StoredProcedure);
-	}
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.ExecuteQuery<ComplexClass>("[dbo].[sp_get_customer_orders_by_date]",
+		param: new { CustomerId = 10045, OrderDate = DateTime.UtcNow.Date },
+		commandType: CommandType.StoredProcedure);
+}
+```
 
 Via Object:
 
-	using (var connection = new SqlConnection(ConnectionString))
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var queryGroup = new QueryGroup(new []
 	{
-		var queryGroup = new QueryGroup(new []
-		{
-			new QueryField("CustomerId", 10045),
-			new QueryField("OrderDate", DateTime.UtcNow.Date)
-		});
-		var customer = connection.ExecuteQuery<Customer>(commandText, queryGroup,
-			commandType: CommandType.StoredProcedure);
-	}
+		new QueryField("CustomerId", 10045),
+		new QueryField("OrderDate", DateTime.UtcNow.Date)
+	});
+	var customer = connection.ExecuteQuery<Customer>(commandText, queryGroup,
+		commandType: CommandType.StoredProcedure);
+}
+```
 
 Please visit our [documentation](https://repodb.readthedocs.io/en/latest/) for further details about the codes.
