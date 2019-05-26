@@ -20,6 +20,10 @@ Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter.
  - RepoDb is an open-source software and will always be free.
  - Disclaimer: RepoDb is currently **NOT** accepting any pull-requests until the target core features has all been implemented.
 
+## Architecture
+
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/HLA.PNG" height="1024px" />
+
 ## Build Result
 
 Type of Build		 | Net (Framework)																																	 | Net (Standard)
