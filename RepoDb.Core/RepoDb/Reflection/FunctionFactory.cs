@@ -86,18 +86,19 @@ namespace RepoDb.Reflection
             var dataReaderType = typeof(DbDataReader);
             var isDefaultConversion = TypeMapper.ConversionType == ConversionType.Default;
             var properties = PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite);
+            var fieldNames = readerFields.Select(f => f.Name).AsList();
 
             // Filter the properties by reader fields
             properties = properties.Where(property =>
-                readerFields.FirstOrDefault(field =>
-                    field.Name == property.GetUnquotedMappedName().ToLower()) != null);
+                fieldNames.FirstOrDefault(field =>
+                    field == property.GetUnquotedMappedName().ToLower()) != null);
 
             // Iterate each properties
             foreach (var property in properties)
             {
                 // Gets the mapped name and the ordinal
                 var mappedName = property.GetUnquotedMappedName().ToLower();
-                var ordinal = readerFields?.Select(f => f.Name).AsList().IndexOf(mappedName);
+                var ordinal = fieldNames.IndexOf(mappedName);
 
                 // Process only if there is a correct ordinal
                 if (ordinal >= 0)
@@ -1424,20 +1425,20 @@ namespace RepoDb.Reflection
                  DbField field,
                  ParameterDirection direction) =>
              {
-         // Create the parameter
-         var parameter = command.CreateParameter();
+                 // Create the parameter
+                 var parameter = command.CreateParameter();
 
-         // Set the property
-         parameter.ParameterName = index > 0 ? string.Concat(field.UnquotedName, "_", index) : field.UnquotedName;
+                 // Set the property
+                 parameter.ParameterName = index > 0 ? string.Concat(field.UnquotedName, "_", index) : field.UnquotedName;
 
-         // Set the Direction
-         parameter.Direction = direction;
+                 // Set the Direction
+                 parameter.Direction = direction;
 
-         // Set the DB Type
-         var dbType = TypeMapper.Get(field.Type?.GetUnderlyingType());
+                 // Set the DB Type
+                 var dbType = TypeMapper.Get(field.Type?.GetUnderlyingType());
 
-         // Ensure the type mapping
-         if (dbType == null)
+                 // Ensure the type mapping
+                 if (dbType == null)
                  {
                      if (field.Type == typeOfBytes)
                      {
@@ -1445,38 +1446,38 @@ namespace RepoDb.Reflection
                      }
                  }
 
-         // Resolve manually
-         if (dbType == null)
+                 // Resolve manually
+                 if (dbType == null)
                  {
                      dbType = dbTypeResolver.Resolve(field.Type);
                  }
 
-         // Set the DB Type if present
-         if (dbType != null)
+                 // Set the DB Type if present
+                 if (dbType != null)
                  {
                      parameter.DbType = dbType.Value;
                  }
 
-         // Set the Size if present
-         if (field.Size != null)
+                 // Set the Size if present
+                 if (field.Size != null)
                  {
                      parameter.Size = field.Size.Value;
                  }
 
-         // Set the Precision if present
-         if (field.Precision != null)
+                 // Set the Precision if present
+                 if (field.Precision != null)
                  {
                      parameter.Precision = field.Precision.Value;
                  }
 
-         // Set the Scale if present
-         if (field.Scale != null)
+                 // Set the Scale if present
+                 if (field.Scale != null)
                  {
                      parameter.Scale = field.Scale.Value;
                  }
 
-         // Add the parameter
-         command.Parameters.Add(parameter);
+                 // Add the parameter
+                 command.Parameters.Add(parameter);
              });
 
             for (var index = 0; index < batchSize; index++)

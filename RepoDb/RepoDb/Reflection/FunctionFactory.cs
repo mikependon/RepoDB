@@ -86,18 +86,19 @@ namespace RepoDb.Reflection
             var dataReaderType = typeof(DbDataReader);
             var isDefaultConversion = TypeMapper.ConversionType == ConversionType.Default;
             var properties = PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite);
+            var fieldNames = readerFields.Select(f => f.Name).AsList();
 
             // Filter the properties by reader fields
             properties = properties.Where(property =>
-                readerFields.FirstOrDefault(field =>
-                    field.Name == property.GetUnquotedMappedName().ToLower()) != null);
+                fieldNames.FirstOrDefault(field =>
+                    field == property.GetUnquotedMappedName().ToLower()) != null);
 
             // Iterate each properties
             foreach (var property in properties)
             {
                 // Gets the mapped name and the ordinal
                 var mappedName = property.GetUnquotedMappedName().ToLower();
-                var ordinal = readerFields?.Select(f => f.Name).AsList().IndexOf(mappedName);
+                var ordinal = fieldNames.IndexOf(mappedName);
 
                 // Process only if there is a correct ordinal
                 if (ordinal >= 0)

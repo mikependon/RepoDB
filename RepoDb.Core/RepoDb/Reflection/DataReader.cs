@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Dynamic;
+using System.Threading.Tasks;
 
 namespace RepoDb.Reflection
 {
@@ -10,6 +11,8 @@ namespace RepoDb.Reflection
     /// </summary>
     public static class DataReader
     {
+        #region ToEnumerable<TEntity>
+
         /// <summary>
         /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity object.
         /// </summary>
@@ -51,6 +54,57 @@ namespace RepoDb.Reflection
             }
         }
 
+        #endregion
+
+        #region ToEnumerableAsync<TEntity>
+
+        /// <summary>
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity object in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <returns>An array of data entity objects.</returns>
+        public static Task<IEnumerable<TEntity>> ToEnumerableAsync<TEntity>(DbDataReader reader,
+            IDbConnection connection)
+            where TEntity : class
+        {
+            return ToEnumerableAsync<TEntity>(reader,
+                connection,
+                false);
+        }
+
+        /// <summary>
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity object in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
+        /// <returns>An array of data entity objects.</returns>
+        internal static async Task<IEnumerable<TEntity>> ToEnumerableAsync<TEntity>(DbDataReader reader,
+            IDbConnection connection,
+            bool basedOnFields)
+            where TEntity : class
+        {
+            var list = new List<TEntity>();
+            if (reader != null && reader.IsClosed == false && reader.HasRows)
+            {
+                var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader,
+                    connection,
+                    basedOnFields);
+                while (await reader.ReadAsync())
+                {
+                    list.Add(func(reader));
+                }
+            }
+            return list;
+        }
+
+        #endregion
+
+        #region ToEnumerable<dynamic>
+
         /// <summary>
         /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object.
         /// </summary>
@@ -83,5 +137,46 @@ namespace RepoDb.Reflection
                 }
             }
         }
+
+        #endregion
+
+        #region ToEnumerableAsync<dynamic>
+
+        /// <summary>
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object in an asynchronous way.
+        /// </summary>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
+        public static Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader)
+        {
+            return ToEnumerableAsync(reader, null, null);
+        }
+
+        /// <summary>
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object in an asynchronous way.
+        /// </summary>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
+        internal static async Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader,
+            string tableName,
+            IDbConnection connection)
+        {
+            var list = new List<dynamic>();
+            if (reader != null && reader.HasRows)
+            {
+                var func = FunctionCache.GetDataReaderToExpandoObjectConverterFunction(reader,
+                    tableName,
+                    connection);
+                while (await reader.ReadAsync())
+                {
+                    list.Add(func(reader));
+                }
+            }
+            return list;
+        }
+
+        #endregion
     }
 }

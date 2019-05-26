@@ -9,11 +9,19 @@ namespace RepoDb.Contexts.Execution
     /// A class used to cache the context of the merge-all executions.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-    internal static class MergeAllExecutionContextCache<TEntity>
+    public static class MergeAllExecutionContextCache<TEntity>
         where TEntity : class
     {
         private static ConcurrentDictionary<int, MergeAllExecutionContext<TEntity>> m_cache =
             new ConcurrentDictionary<int, MergeAllExecutionContext<TEntity>>();
+
+        /// <summary>
+        /// Flushes all the cached execution text for merge-all operation.
+        /// </summary>
+        public static void Flush()
+        {
+            m_cache.Clear();
+        }
 
         /// <summary>
         /// Gets the cached execution context.
@@ -24,7 +32,7 @@ namespace RepoDb.Contexts.Execution
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="callback">The callback function to be invoked.</param>
         /// <returns>The instance of the cached execution context.</returns>
-        public static MergeAllExecutionContext<TEntity> Get(string tableName,
+        internal static MergeAllExecutionContext<TEntity> Get(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             int batchSize,

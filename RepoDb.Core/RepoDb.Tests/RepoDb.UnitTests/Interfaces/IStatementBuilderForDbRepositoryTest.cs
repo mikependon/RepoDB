@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Attributes;
+using RepoDb.Contexts.Execution;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
 using System.Collections.Generic;
@@ -12,70 +13,72 @@ namespace RepoDb.UnitTests.Interfaces
     {
         #region SubClasses
 
-        public class DataEntityForDbRepositoryStatementBuilder
+        private class CustomDbConnectionForDbRepositoryIStatementBuilder : CustomDbConnection { }
+
+        private class DataEntityForDbRepositoryStatementBuilder
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderForTableName
+        private class DataEntityForDbRepositoryStatementBuilderForTableName
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderForCrossCall
+        private class DataEntityForDbRepositoryStatementBuilderForCrossCall
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT1
+        private class DataEntityForDbRepositoryStatementBuilderT1
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT2
+        private class DataEntityForDbRepositoryStatementBuilderT2
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT3
+        private class DataEntityForDbRepositoryStatementBuilderT3
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT4
+        private class DataEntityForDbRepositoryStatementBuilderT4
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT5
+        private class DataEntityForDbRepositoryStatementBuilderT5
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT6
+        private class DataEntityForDbRepositoryStatementBuilderT6
         {
             [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class DataEntityForDbRepositoryStatementBuilderT7
+        private class DataEntityForDbRepositoryStatementBuilderT7
         {
             [Primary, Identity]
             public int Id { get; set; }
@@ -84,6 +87,8 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region Sync
+
         #region CreateBatchQuery
 
         [TestMethod]
@@ -91,7 +96,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -114,7 +119,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.BatchQuery<DataEntityForDbRepositoryStatementBuilder>(0,
@@ -144,7 +149,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -160,7 +165,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Count<DataEntityForDbRepositoryStatementBuilder>((object)null);
@@ -179,7 +184,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -196,7 +201,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -216,7 +221,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -232,7 +237,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Count(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -256,7 +261,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -271,7 +276,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.CountAll<DataEntityForDbRepositoryStatementBuilder>();
@@ -289,7 +294,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -304,7 +309,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.CountAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
@@ -322,7 +327,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -337,7 +342,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.CountAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
@@ -359,7 +364,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -374,7 +379,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Delete<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1);
@@ -392,7 +397,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -411,7 +416,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Delete(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -433,7 +438,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -448,7 +453,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Delete(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -474,7 +479,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -488,7 +493,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.DeleteAll<DataEntityForDbRepositoryStatementBuilder>();
@@ -505,7 +510,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -519,7 +524,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
@@ -536,7 +541,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -550,7 +555,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.DeleteAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
@@ -571,9 +576,10 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            InsertExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
             CommandTextCache.Flush();
             repository.Insert<DataEntityForDbRepositoryStatementBuilder>(
                 new DataEntityForDbRepositoryStatementBuilder
@@ -592,7 +598,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Insert<DataEntityForDbRepositoryStatementBuilder>(
@@ -616,9 +622,10 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            InsertExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             repository.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new
@@ -637,7 +644,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -661,9 +668,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            InsertExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            InsertExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             repository.Insert<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
                 new DataEntityForDbRepositoryStatementBuilderForCrossCall
@@ -682,7 +691,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Insert(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -711,9 +720,10 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            InsertAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
             CommandTextCache.Flush();
             repository.InsertAll<DataEntityForDbRepositoryStatementBuilder>(
                 new[]
@@ -734,7 +744,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll<DataEntityForDbRepositoryStatementBuilder>(
@@ -760,9 +770,10 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            InsertAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
             CommandTextCache.Flush();
             repository.InsertAll<DataEntityForDbRepositoryStatementBuilder>(
                 new[]
@@ -783,7 +794,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll<DataEntityForDbRepositoryStatementBuilder>(
@@ -809,9 +820,10 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            InsertAllExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             repository.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new[]
@@ -833,7 +845,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -860,9 +872,10 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            InsertAllExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             repository.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new[]
@@ -884,7 +897,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -911,9 +924,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            InsertAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            InsertAllExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             repository.InsertAll<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
                 new[]
@@ -934,7 +949,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -961,9 +976,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            InsertAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            InsertAllExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             repository.InsertAll<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
                 new[]
@@ -984,7 +1001,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.InsertAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -1015,9 +1032,10 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            MergeExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
             CommandTextCache.Flush();
             repository.Merge<DataEntityForDbRepositoryStatementBuilder>(
                 new DataEntityForDbRepositoryStatementBuilder
@@ -1038,7 +1056,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Merge<DataEntityForDbRepositoryStatementBuilder>(
@@ -1064,9 +1082,10 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            MergeExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             repository.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new
@@ -1087,7 +1106,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -1113,9 +1132,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            MergeExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            MergeExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             repository.Merge<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
                 new DataEntityForDbRepositoryStatementBuilderForCrossCall
@@ -1136,7 +1157,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Merge(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -1160,6 +1181,332 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region CreateMergeAll
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAll<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id)));
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAll<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id)));
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAllWithSizePerBatchEqualsToOne()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAll<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id)),
+                batchSize: 1);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAll<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id)),
+                batchSize: 1);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAllViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id)));
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id)));
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAllWithSizePerBatchEqualsToOneViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id)),
+                batchSize: 1);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id)),
+                batchSize: 1);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAllViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            MergeAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAll<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)));
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)),
+                fields: FieldCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAllWithSizePerBatchEqualsToOneViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            MergeAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAll<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)),
+                batchSize: 1);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new[]
+                {
+                    new { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)),
+                batchSize: 1,
+                fields: FieldCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        #endregion
+
         #region CreateQuery
 
         [TestMethod]
@@ -1167,7 +1514,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1186,10 +1533,92 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Query<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1);
+            repository.Query<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryForTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.Query(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>(),
+                new { Id = 1 });
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.Query(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>(),
+                new { Id = 1 });
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.Query<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.Query(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>(),
+                new { Id = 1 });
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -1205,6 +1634,118 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region CreateQueryAll
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.QueryAll<DataEntityForDbRepositoryStatementBuilder>();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.QueryAll<DataEntityForDbRepositoryStatementBuilder>();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryAllForTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.QueryAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>());
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.QueryAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>());
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryAllViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.QueryAll<DataEntityForDbRepositoryStatementBuilder>();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.QueryAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>());
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
         #region CreateQuery(Multple)
 
         [TestMethod]
@@ -1212,7 +1753,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1297,7 +1838,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.QueryMultiple<DataEntityForDbRepositoryStatementBuilderT1,
@@ -1389,7 +1930,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1403,7 +1944,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Truncate<DataEntityForDbRepositoryStatementBuilder>();
@@ -1420,7 +1961,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1434,7 +1975,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Truncate(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>());
@@ -1451,7 +1992,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
             CommandTextCache.Flush();
@@ -1465,7 +2006,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Truncate(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
@@ -1486,9 +2027,10 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            UpdateExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
             CommandTextCache.Flush();
             repository.Update<DataEntityForDbRepositoryStatementBuilder>(
                 new DataEntityForDbRepositoryStatementBuilder
@@ -1509,7 +2051,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Update<DataEntityForDbRepositoryStatementBuilder>(
@@ -1535,9 +2077,10 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            UpdateExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             repository.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
                 new DataEntityForDbRepositoryStatementBuilderForTableName
@@ -1558,7 +2101,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
@@ -1584,9 +2127,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilder.Object);
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
 
             // Act
+            UpdateExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            UpdateExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             repository.Update<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
                 new DataEntityForDbRepositoryStatementBuilderForCrossCall
@@ -1607,7 +2152,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
-            var repositoryNever = new DbRepository<CustomDbConnection>("ConnectionString", statementBuilderNever.Object);
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
 
             // Act
             repositoryNever.Update(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
@@ -1628,6 +2173,2441 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
         }
+
+        #endregion
+
+        #region CreateUpdateAll
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForUpdateAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            UpdateAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
+            CommandTextCache.Flush();
+            repository.UpdateAll<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id)));
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.UpdateAll<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id)));
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForUpdateAllViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            UpdateAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.UpdateAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id)));
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.UpdateAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id)));
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForUpdateAllViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            UpdateAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            UpdateAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.UpdateAll<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)));
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.UpdateAll(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)),
+                fields: FieldCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>());
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Async
+
+        #region CreateBatchQueryAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForBatchQueryAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.BatchQueryAsync<DataEntityForDbRepositoryStatementBuilder>(0,
+                10,
+                null,
+                (object)null).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateBatchQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.BatchQueryAsync<DataEntityForDbRepositoryStatementBuilder>(0,
+                10,
+                null,
+                (object)null).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateBatchQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateCountAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForCountAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.CountAsync<DataEntityForDbRepositoryStatementBuilder>((object)null).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateCount(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.CountAsync<DataEntityForDbRepositoryStatementBuilder>((object)null).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCount(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForCountAsyncViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.CountAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                (object)null).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateCount(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.CountAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                (object)null).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCount(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForCountAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.CountAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>((object)null).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateCount(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.CountAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                (object)null).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCount(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateCountAllAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForCountAllAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.CountAllAsync<DataEntityForDbRepositoryStatementBuilder>().Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.CountAllAsync<DataEntityForDbRepositoryStatementBuilder>().Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForCountAllAsyncViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.CountAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.CountAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForCountAllAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.CountAllAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>().Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.CountAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateCountAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateDeleteAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForDeleteAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.DeleteAsync<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateDelete(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<QueryGroup>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.DeleteAsync<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateDelete(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<QueryGroup>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForDeleteAsyncViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.DeleteAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new
+                {
+                    Id = 1
+                }).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateDelete(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<QueryGroup>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.DeleteAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new
+                {
+                    Id = 1
+                }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateDelete(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<QueryGroup>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForDeleteAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.DeleteAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>(e => e.Id == 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateDelete(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<QueryGroup>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.DeleteAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new
+                {
+                    Id = 1
+                }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateDelete(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<QueryGroup>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateDeleteAllAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForDeleteAllAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.DeleteAllAsync<DataEntityForDbRepositoryStatementBuilder>().Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateDeleteAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>())), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.DeleteAllAsync<DataEntityForDbRepositoryStatementBuilder>().Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateDeleteAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>())), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForDeleteAllAsyncViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.DeleteAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateDeleteAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>())), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.DeleteAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateDeleteAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>())), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForDeleteAllAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.DeleteAllAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>().Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateDeleteAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>())), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.DeleteAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateDeleteAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>())), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateInsertAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForInsertAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            InsertExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
+            CommandTextCache.Flush();
+            repository.InsertAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new DataEntityForDbRepositoryStatementBuilder
+                {
+                    Name = "Name"
+                }).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InsertAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new DataEntityForDbRepositoryStatementBuilder
+                {
+                    Name = "Name"
+                }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForInsertAsyncViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            InsertExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.InsertAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new
+                {
+                    Name = "Name"
+                }).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InsertAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new
+                {
+                    Name = "Name"
+                }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForInsertAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            InsertExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            InsertExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.InsertAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new DataEntityForDbRepositoryStatementBuilderForCrossCall
+                {
+                    Name = "Name"
+                }).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InsertAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new
+                {
+                    Id = 1,
+                    Name = "Name"
+                }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateInsertAllAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForInsertAllAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            InsertAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
+            CommandTextCache.Flush();
+            repository.InsertAllAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder{ Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilder{ Name = "Name" }
+                }).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateInsertAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.Is<int>(v => v > 1),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InsertAllAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder{ Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilder{ Name = "Name" }
+                }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsertAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.Is<int>(v => v > 1),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForInsertAllAsyncWithSizePerBatchEqualsToOne()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            InsertAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
+            CommandTextCache.Flush();
+            repository.InsertAllAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder{ Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilder{ Name = "Name" }
+                },
+                batchSize: 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InsertAllAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder{ Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilder{ Name = "Name" }
+                },
+                batchSize: 1).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForInsertAllAsyncForTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            InsertAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.InsertAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForTableName{ Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilderForTableName{ Name = "Name" }
+                },
+                fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) }).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateInsertAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.Is<int>(v => v > 1),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InsertAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForTableName{ Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilderForTableName{ Name = "Name" }
+                },
+                fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsertAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.Is<int>(v => v > 1),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForInsertAllAsyncWithSizePerBatchEqualsToOneForTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            InsertAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.InsertAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForTableName{ Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilderForTableName{ Name = "Name" }
+                },
+                fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
+                batchSize: 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InsertAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForTableName{ Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilderForTableName{ Name = "Name" }
+                },
+                fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
+                batchSize: 1).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForInsertAllAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            InsertAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            InsertAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.InsertAllAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name" }
+                }).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateInsertAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.Is<int>(v => v > 1),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InsertAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name" }
+                },
+                fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsertAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.Is<int>(v => v > 1),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForInsertAllAsyncWithSizePerBatchEqualsToOneViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            InsertAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            InsertAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.InsertAllAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name" }
+                },
+                batchSize: 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.InsertAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name" }
+                },
+                fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
+                batchSize: 1).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateInsert(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateMergeAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new DataEntityForDbRepositoryStatementBuilder
+                {
+                    Name = "Name"
+                },
+                new Field(nameof(DataEntityForDbRepositoryStatementBuilder.Id))).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.MergeAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new DataEntityForDbRepositoryStatementBuilder
+                {
+                    Name = "Name"
+                },
+                new Field(nameof(DataEntityForDbRepositoryStatementBuilder.Id))).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAsyncViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new
+                {
+                    Name = "Name"
+                },
+                new Field(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id))).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.MergeAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new
+                {
+                    Name = "Name"
+                },
+                new Field(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id))).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            MergeExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new DataEntityForDbRepositoryStatementBuilderForCrossCall
+                {
+                    Name = "Name"
+                },
+                new Field(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id))).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.MergeAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new
+                {
+                    Id = 1,
+                    Name = "Name"
+                },
+                new Field(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id))).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateMergeAllAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAllAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAllAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id))).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAllAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id))).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAllAsyncWithSizePerBatchEqualsToOne()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAllAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id)),
+                batchSize: 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAllAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id)),
+                batchSize: 1).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAllAsyncViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id))).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id))).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAllAsyncWithSizePerBatchEqualsToOneViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id)),
+                batchSize: 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id)),
+                batchSize: 1).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAllAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            MergeAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAllAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id))).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)),
+                fields: FieldCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMergeAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForMergeAllAsyncWithSizePerBatchEqualsToOneViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            MergeAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            MergeAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.MergeAllAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)),
+                batchSize: 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.MergeAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new[]
+                {
+                    new { Name = "Name1" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)),
+                batchSize: 1,
+                fields: FieldCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMerge(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateQueryAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.QueryAsync<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.QueryAsync<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryAsyncForTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.QueryAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>(),
+                new { Id = 1 }).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.QueryAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>(),
+                new { Id = 1 }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.QueryAsync<DataEntityForDbRepositoryStatementBuilder>(e => e.Id == 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.QueryAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>(),
+                new { Id = 1 }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateQueryAllAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryAllAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.QueryAllAsync<DataEntityForDbRepositoryStatementBuilder>().Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.QueryAllAsync<DataEntityForDbRepositoryStatementBuilder>().Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryAllAsyncForTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.QueryAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.QueryAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryAllAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.QueryAllAsync<DataEntityForDbRepositoryStatementBuilder>().Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.QueryAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQueryAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.IsAny<string>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateQueryAsync(Multple)
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForQueryMultipleAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.QueryMultipleAsync<DataEntityForDbRepositoryStatementBuilderT1,
+                DataEntityForDbRepositoryStatementBuilderT2,
+                DataEntityForDbRepositoryStatementBuilderT3,
+                DataEntityForDbRepositoryStatementBuilderT4,
+                DataEntityForDbRepositoryStatementBuilderT5,
+                DataEntityForDbRepositoryStatementBuilderT6,
+                DataEntityForDbRepositoryStatementBuilderT7>(e => e.Id == 1,
+                e => e.Id == 1,
+                e => e.Id == 1,
+                e => e.Id == 1,
+                e => e.Id == 1,
+                e => e.Id == 1,
+                e => e.Id == 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT1>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT2>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT3>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT4>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT5>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT6>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+            statementBuilder.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT7>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.QueryMultipleAsync<DataEntityForDbRepositoryStatementBuilderT1,
+                DataEntityForDbRepositoryStatementBuilderT2,
+                DataEntityForDbRepositoryStatementBuilderT3,
+                DataEntityForDbRepositoryStatementBuilderT4,
+                DataEntityForDbRepositoryStatementBuilderT5,
+                DataEntityForDbRepositoryStatementBuilderT6,
+                DataEntityForDbRepositoryStatementBuilderT7>(e => e.Id == 1,
+                e => e.Id == 1,
+                e => e.Id == 1,
+                e => e.Id == 1,
+                e => e.Id == 1,
+                e => e.Id == 1,
+                e => e.Id == 1).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT1>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT2>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT3>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT4>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT5>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT6>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+            statementBuilderNever.Verify(builder =>
+                builder.CreateQuery(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderT7>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateTruncate
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForTruncateAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.TruncateAsync<DataEntityForDbRepositoryStatementBuilder>().Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateTruncate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>())), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.TruncateAsync<DataEntityForDbRepositoryStatementBuilder>().Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateTruncate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>())), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForTruncateAsyncViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.TruncateAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateTruncate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>())), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.TruncateAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateTruncate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>())), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForTruncateAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.TruncateAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>().Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateTruncate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>())), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.TruncateAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateTruncate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>())), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateUpdateAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForUpdateAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            UpdateExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
+            CommandTextCache.Flush();
+            repository.UpdateAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new DataEntityForDbRepositoryStatementBuilder
+                {
+                    Name = "Update"
+                },
+                e => e.Id == 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateUpdate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.UpdateAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new DataEntityForDbRepositoryStatementBuilder
+                {
+                    Name = "Update"
+                },
+                e => e.Id == 1).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateUpdate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForUpdateAsyncTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            UpdateExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.UpdateAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new DataEntityForDbRepositoryStatementBuilderForTableName
+                {
+                    Name = "Update"
+                },
+                new { Id = 1 }).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateUpdate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.UpdateAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new DataEntityForDbRepositoryStatementBuilderForTableName
+                {
+                    Name = "Update"
+                },
+                new { Id = 1 }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateUpdate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForUpdateAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            UpdateExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            UpdateExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.UpdateAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new DataEntityForDbRepositoryStatementBuilderForCrossCall
+                {
+                    Name = "Update"
+                },
+                e => e.Id == 1).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateUpdate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.UpdateAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new DataEntityForDbRepositoryStatementBuilderForCrossCall
+                {
+                    Id = 1,
+                    Name = "Update"
+                },
+                new { Id = 1 }).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateUpdate(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateUpdateAllAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForUpdateAllAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            UpdateAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilder>.Flush();
+            CommandTextCache.Flush();
+            repository.UpdateAllAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id))).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.UpdateAllAsync<DataEntityForDbRepositoryStatementBuilder>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilder { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilder.Id))).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilder>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForUpdateAllAsyncViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            UpdateAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.UpdateAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id))).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.UpdateAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForTableName.Id))).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForTableName>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForUpdateAllAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryIStatementBuilder>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            UpdateAllExecutionContextCache<DataEntityForDbRepositoryStatementBuilderForCrossCall>.Flush();
+            UpdateAllExecutionContextCache<object>.Flush();
+            CommandTextCache.Flush();
+            repository.UpdateAllAsync<DataEntityForDbRepositoryStatementBuilderForCrossCall>(
+                new[]
+                {
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name1" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name2" },
+                    new DataEntityForDbRepositoryStatementBuilderForCrossCall { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id))).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+
+            // Act
+            repository.UpdateAllAsync(ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>(),
+                new[]
+                {
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
+                },
+                Field.From(nameof(DataEntityForDbRepositoryStatementBuilderForCrossCall.Id)),
+                fields: FieldCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateUpdateAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForDbRepositoryStatementBuilderForCrossCall>()),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<IEnumerable<Field>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DbField>(),
+                    It.IsAny<DbField>()), Times.Exactly(0));
+        }
+
+        #endregion
 
         #endregion
     }

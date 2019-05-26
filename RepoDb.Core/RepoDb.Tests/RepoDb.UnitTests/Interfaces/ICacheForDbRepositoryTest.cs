@@ -16,7 +16,9 @@ namespace RepoDb.UnitTests.Interfaces
     {
         #region SubClasses
 
-        public class CacheEntity
+        private class CustomDbConnectionForDbRepositoryICache : CustomDbConnection { }
+
+        private class CacheEntity
         {
             [Primary, Identity]
             public int Id { get; set; }
@@ -34,7 +36,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
@@ -66,7 +68,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
@@ -98,7 +100,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
@@ -130,7 +132,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
@@ -162,7 +164,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
@@ -194,7 +196,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
@@ -230,7 +232,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
@@ -262,7 +264,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
@@ -294,7 +296,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
@@ -326,7 +328,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
@@ -358,7 +360,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
@@ -390,7 +392,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnection>("ConnectionString",
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,

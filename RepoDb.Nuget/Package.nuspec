@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.9.5</version>
+    <version>1.9.6</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -11,42 +11,27 @@
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
-      RepoDb v1.9.5:
+      RepoDb v1.9.6:
       - [Note] This version is the first ever version release with complete features. The next version will be only be bug-fixes from this version (if we found some).
-      - [Core] Introduce 'UpdateMultiple', different from 'UpdateAll'. #94
-      - [Core] Introduce the 'UpdateAll' via 'PrimaryKey'. #93
-      - [Core] Introduce Query and QueryAsync Table-Based Calls #176
-      - [Core] Introduce QueryAll and QueryAllAsync Table-Based Calls #221
-      - [Core] Introduce BatchQuery, BatchQueryAsync Table-Based Calls #175
-      - [Core] Create an IL and Compiled Expressions for Update, Merge, Insert and InsertAll Parameter Passing #197
-      - [Core] Introduce the 'InsertMultiple', different from 'InsertAll'. #92
-      - [Core] Add ExecutionContext Cache for Insert. #205
-      - [Core] Add ExecutionContext Cache for Merge. #206
-      - [Core] Add ExecutionContext Cache for Update. #208
-      - [Core] Add ExecutionContext Cache for UpdateAll. #209
-      - [Core] Add ExecutionContext Cache for MergeAll. #207
-      - [Core] Re-enable the operation for UPDATE via DataEntity object. #188
-      - [Performance] Create a cached Expression when setting back the PrimaryKey values in Insert and InsertAll. #211
-      - [Test] Add extensive IntegrationTests for type CRUD via TableName Calls. #222
-      - [Test] Insert via TableName using Dynamic object with Invalid Column Casing #223
-      - [Test] Add more IntegrationTest for UpdateAll. #231
-      - [Test] Add UnitTest for MergeAll ITrace object. #240
-      - [Test] Added more extensive IntegrationTests for MergeAll operation. #242
-      - [Test] Add UnitTest for UpdateAll (IStatementBuilder, ITrace, QueryBuilder) #230
-      - [Test] Add 'UnitTest' for 'InsertAll'. #214
-      - [Bug] The version 1.9.2 is an (untagged) pre-release version. The Id property is failing on Insert if the Data Type is not long #215
-      - [Bug] Insert via TableName using Dynamic object with Invalid Column Casing #223
-      - [Bug] [Core] Insert is failing for non-null (non-table) properties (XJNEN) #212
-      - [Bug] DbHelper: Script execution security related issue in the company (XJNEN) #229
-      - [Bug] Expression based using the 'ToList().Contains()' is failing. But the 'ToArray().Contains()' is working. XJNEN #233
-      - [Known-Bug] Error is thrown when calling the 'UpdateAll' with dynamic entities (and the fields are not equals to the DB fields) and the 'qualifiers' were not defined. #232
-      - [Adhoc] Call the 'AsList()' method when calling the 'QueryGroup.GetString()' method. Support the case of XJNEN #228
-      - [Adhoc] Reviewed BaseRepository, DbRepository, DbConnection Async/Await Keywords
-      - [Adhoc] Reviewed UnitTests for the ITrace (BaseRepository, DbRepository, DbConnection)
-      - [Adhoc] Convert all Mappers to become a Resolvers by implementing the IResolver interface. #227
-      - [Adhoc] Remove all MapItem Classes from the Mappers. #226
-      - [Removed] TypeMapItem Class
-      - [Removed] DbIdentityCache Class
+      - [Core] Optimize the Expression field iteration between the number of Class properties and DbDataReader columns. #136
+      - [Core] Add a pluggable interface/abstract for DbProviderOperation #158
+      - [Core] Add a DbTransaction object on InsertAll, MergeAll, UpdateAll operations. #213
+      - [Test] Added an Integration Tests for IdentityClassWithDifferentIdentity.
+      - [Test] Add IntegrationTest for 'UpdateAll' targeting certain columns. #245
+      - [Test] Add an Async method support to QueryMultipleExtractor.Extract. #255
+      - [Test] Add an Async method support to QueryMultipleExtractor.Scalar. #256
+      - [Test] Introduce UnitTest for IDbOperationProvider Interface. #253
+      - [Test] Create a test for IStatementBuilder for all Async operations for DbConnection, DbRepository, BaseRepository. #218
+      - [Test] Add more extensive UnitTest for IN, NOT IN, BETWEEN, NOT BETWEEN, LIKE and NOT LIKE operations. #186
+      - [Test] Create a much more extensive UnitTests for all Operations (Equal, NotEqual, Between ... ) #178
+      - [Test] Create an extensive IntegrationTests for IN, NOT IN, BETWEEN, NOT BETWEEN, LIKE and NOT LIKE operations. #180
+      - [Test] Create IntegrationTest for DbTransaction (Insert, Merge, Delete, Update) #181
+      - [Added] Introduce SqlDbOperationProvider Class. #251
+      - [Added] Introduce DbOperationProviderMapper Class. #252
+      - [Added] Introduce IDbOperationProvider Interface. #250
+      - [Adhoc] Add 'BatchSize' in BulkInsert. #257
+      - [Adhoc] Remove all 'obsolete' methods for v1.9.6. #246
+      - [Minor] Hide the exposed extended internal methods. #244
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

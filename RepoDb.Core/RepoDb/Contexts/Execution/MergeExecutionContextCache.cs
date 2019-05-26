@@ -9,11 +9,19 @@ namespace RepoDb.Contexts.Execution
     /// A class used to cache the context of the merge executions.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-    internal static class MergeExecutionContextCache<TEntity>
+    public static class MergeExecutionContextCache<TEntity>
         where TEntity : class
     {
         private static ConcurrentDictionary<int, MergeExecutionContext<TEntity>> m_cache =
             new ConcurrentDictionary<int, MergeExecutionContext<TEntity>>();
+
+        /// <summary>
+        /// Flushes all the cached execution text for merge operation.
+        /// </summary>
+        public static void Flush()
+        {
+            m_cache.Clear();
+        }
 
         /// <summary>
         /// Gets the cached execution context.
@@ -23,7 +31,7 @@ namespace RepoDb.Contexts.Execution
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="callback">The callback function to be invoked.</param>
         /// <returns>The instance of the cached execution context.</returns>
-        public static MergeExecutionContext<TEntity> Get(string tableName,
+        internal static MergeExecutionContext<TEntity> Get(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             Func<MergeExecutionContext<TEntity>> callback)

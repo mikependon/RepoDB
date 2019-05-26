@@ -278,7 +278,7 @@ namespace RepoDb.Extensions
                 var itemValue = item.Arguments?.FirstOrDefault();
                 if (itemValue != null)
                 {
-                    array.SetValue(itemValue.GetValue(), item.Arguments.IndexOf(itemValue));
+                    array.SetValue(itemValue.GetValue(), expression.Initializers.IndexOf(item));
                 }
             }
             return array;

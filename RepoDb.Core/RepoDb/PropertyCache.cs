@@ -13,6 +13,8 @@ namespace RepoDb
     {
         private static readonly ConcurrentDictionary<int, IEnumerable<ClassProperty>> m_cache = new ConcurrentDictionary<int, IEnumerable<ClassProperty>>();
 
+        #region Methods
+
         /// <summary>
         /// Gets the cached list of <see cref="ClassProperty"/> objects of the data entity.
         /// </summary>
@@ -55,5 +57,19 @@ namespace RepoDb
             // Return the value
             return properties;
         }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Flushes all the existing cached enumerable of <see cref="ClassProperty"/> objects.
+        /// </summary>
+        public static void Flush()
+        {
+            m_cache.Clear();
+        }
+
+        #endregion
     }
 }

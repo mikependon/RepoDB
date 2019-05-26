@@ -11,6 +11,8 @@ namespace RepoDb
     {
         private static readonly ConcurrentDictionary<int, ClassProperty> m_cache = new ConcurrentDictionary<int, ClassProperty>();
 
+        #region Methods
+
         /// <summary>
         /// Gets the cached identity property of the data entity.
         /// </summary>
@@ -42,5 +44,19 @@ namespace RepoDb
             // Return the value
             return property;
         }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Flushes all the existing cached identity <see cref="ClassProperty"/> objects.
+        /// </summary>
+        public static void Flush()
+        {
+            m_cache.Clear();
+        }
+
+        #endregion
     }
 }

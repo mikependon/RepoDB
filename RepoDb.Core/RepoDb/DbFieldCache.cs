@@ -12,6 +12,8 @@ namespace RepoDb
     {
         private static readonly ConcurrentDictionary<long, IEnumerable<DbField>> m_cache = new ConcurrentDictionary<long, IEnumerable<DbField>>();
 
+        #region Methods
+
         /// <summary>
         /// Gets the cached list of <see cref="DbField"/> of the database table based on the data entity mapped name.
         /// </summary>
@@ -20,7 +22,7 @@ namespace RepoDb
         /// <returns>The cached field definitions of the entity.</returns>
         public static IEnumerable<DbField> Get(IDbConnection connection, string tableName)
         {
-            return Get(connection.GetType(), connection.ConnectionString, tableName);
+            return Get(connection?.GetType(), connection?.ConnectionString, tableName);
         }
 
         /// <summary>
@@ -45,7 +47,7 @@ namespace RepoDb
         /// <returns>The cached field definitions of the entity.</returns>
         internal static IEnumerable<DbField> Get(Type type, string connectionString, string tableName)
         {
-            var key = (long)type.FullName.GetHashCode();
+            var key = (long)type?.FullName.GetHashCode();
             var result = (IEnumerable<DbField>)null;
 
             // Set the keys
@@ -69,5 +71,19 @@ namespace RepoDb
             // Return the value
             return result;
         }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Flushes all the existing cached enumerable of <see cref="DbField"/> objects.
+        /// </summary>
+        public static void Flush()
+        {
+            m_cache.Clear();
+        }
+
+        #endregion
     }
 }

@@ -233,7 +233,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return DataReader.ToEnumerable(reader, tableName, connection).AsList();
+                    return await DataReader.ToEnumerableAsync(reader, tableName, connection);
                 }
             }
         }
@@ -399,7 +399,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return DataReader.ToEnumerable<TEntity>(reader, connection, basedOnFields).AsList();
+                    return await DataReader.ToEnumerableAsync<TEntity>(reader, connection, basedOnFields);
                 }
             }
         }

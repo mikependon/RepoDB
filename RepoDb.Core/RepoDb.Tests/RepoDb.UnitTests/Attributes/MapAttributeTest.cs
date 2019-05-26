@@ -16,7 +16,7 @@ namespace RepoDb.UnitTests.Attributes
         public void TestMapAttributeName()
         {
             // Act
-            var actual = DataEntityExtension.GetMappedName<TestMapAttributeNameClass>();
+            var actual = ClassMappedNameCache.Get<TestMapAttributeNameClass>();
             var expected = "Name".AsQuoted(true);
 
             // Assert
@@ -27,7 +27,7 @@ namespace RepoDb.UnitTests.Attributes
         public void TestMapAttributeUnquotedName()
         {
             // Act
-            var actual = DataEntityExtension.GetMappedName<TestMapAttributeNameClass>(false);
+            var actual = ClassMappedNameCache.Get<TestMapAttributeNameClass>(false);
             var expected = "Name";
 
             // Assert

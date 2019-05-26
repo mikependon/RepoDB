@@ -483,15 +483,15 @@ using (var connection = new SqlConnection(ConnectionString))
 Via Object:
 
 ```csharp
-	using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var queryGroup = new QueryGroup(new []
 	{
-		var queryGroup = new QueryGroup(new []
-		{
-			new QueryField("CustomerId", 10045),
-			new QueryField("OrderDate", DateTime.UtcNow.Date)
-		});
-		var customer = connection.ExecuteQuery<Customer>(commandText, queryGroup);
-	}
+		new QueryField("CustomerId", 10045),
+		new QueryField("OrderDate", DateTime.UtcNow.Date)
+	});
+	var customer = connection.ExecuteQuery<Customer>(commandText, queryGroup);
+}
 ```
 
 The `ExecuteQuery` method is purposely not being supported by `Expression` based query as we are avoiding the user to bind the complex-class to its target query text.

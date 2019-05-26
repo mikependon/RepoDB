@@ -12,6 +12,8 @@ namespace RepoDb
     {
         private static readonly ConcurrentDictionary<int, IEnumerable<Field>> m_cache = new ConcurrentDictionary<int, IEnumerable<Field>>();
 
+        #region
+
         /// <summary>
         /// Gets the cached list of <see cref="Field"/> objects of the data entity.
         /// </summary>
@@ -39,5 +41,19 @@ namespace RepoDb
             }
             return fields;
         }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Flushes all the existing cached enumerable of <see cref="Field"/> objects.
+        /// </summary>
+        public static void Flush()
+        {
+            m_cache.Clear();
+        }
+
+        #endregion
     }
 }

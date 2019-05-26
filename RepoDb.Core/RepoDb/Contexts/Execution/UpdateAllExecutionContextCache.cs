@@ -9,11 +9,19 @@ namespace RepoDb.Contexts.Execution
     /// A class used to cache the context of the update-all executions.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-    internal static class UpdateAllExecutionContextCache<TEntity>
+    public static class UpdateAllExecutionContextCache<TEntity>
         where TEntity : class
     {
         private static ConcurrentDictionary<int, UpdateAllExecutionContext<TEntity>> m_cache =
             new ConcurrentDictionary<int, UpdateAllExecutionContext<TEntity>>();
+
+        /// <summary>
+        /// Flushes all the cached execution text for update-all operation.
+        /// </summary>
+        public static void Flush()
+        {
+            m_cache.Clear();
+        }
 
         /// <summary>
         /// Gets the cached execution context.
@@ -23,7 +31,7 @@ namespace RepoDb.Contexts.Execution
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="callback">The callback function to be invoked.</param>
         /// <returns>The instance of the cached execution context.</returns>
-        public static UpdateAllExecutionContext<TEntity> Get(string tableName,
+        internal static UpdateAllExecutionContext<TEntity> Get(string tableName,
             IEnumerable<Field> fields,
             int batchSize,
             Func<int, UpdateAllExecutionContext<TEntity>> callback)
