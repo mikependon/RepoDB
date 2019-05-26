@@ -20,10 +20,6 @@ Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter.
  - RepoDb is an open-source software and will always be free.
  - Disclaimer: RepoDb is currently **NOT** accepting any pull-requests until the target core features has all been implemented.
 
-## Architecture
-
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/HLA.PNG" />
-
 ## Build Result
 
 Type of Build		 | Net (Framework)																																	 | Net (Standard)
@@ -31,6 +27,10 @@ Type of Build		 | Net (Framework)																																	 | Net (Standa
 Project/Solution	 | [![Build status](https://ci.appveyor.com/api/projects/status/c563cikul4c2a5vc?svg=true)](https://ci.appveyor.com/project/mikependon/repodb)		 | [![Build status](https://ci.appveyor.com/api/projects/status/0ix2khcfrv1ub6ba?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw) |
 Unit Test			 | [![Build status](https://ci.appveyor.com/api/projects/status/xtfp2urkxa29s7b9?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-g4ml5) | [![Build status](https://ci.appveyor.com/api/projects/status/78nch60yyoj6wiok?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx) |
 Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status/qnvun61tyyy1vwlb?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-neg8t) | [![Build status](https://ci.appveyor.com/api/projects/status/3fsp38vaqchmec7y?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-qksas) |
+
+## High-Level Architecture
+
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/HLA.PNG" />
 
 ## Why RepoDb?
 
