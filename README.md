@@ -22,7 +22,7 @@ Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter.
 
 ## Architecture
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/HLA.PNG" height="1024px" />
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/HLA.PNG" />
 
 ## Build Result
 
