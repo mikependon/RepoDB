@@ -96,6 +96,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
@@ -193,7 +194,7 @@ is pre-touching the databases to pre-cached all the schemas for performance purp
 <p>If however a custom <cite>IDbHelper</cite> has been introduced to be a helper method for other databases, let us say <cite>Oracle</cite>, then it can
 also be mapped using this class.</p>
 <p>A code below is a simple call to map a customized <cite>IDbHelper</cite> class named <cite>OracleDbHelper</cite> into an <cite>Oracle</cite> DB provider.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">DbHelperMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OracleConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OracleDbHelper</span><span class="p">(),</span> <span class="k">true</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">DbHelperMapper</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OracleConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OracleDbHelper</span><span class="p">(),</span> <span class="k">true</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>The last <cite>boolean</cite> argument is used to override an existing mapping (if present). Otherwise, an exception will be thrown.</p>

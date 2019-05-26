@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Provider Operation &mdash; RepoDb 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Transaction" href="transaction.html" />
+    <link rel="prev" title="Hints" href="hints.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> RepoDb
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Provider Operation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dboperationprovidermapper">DbOperationProviderMapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#idboperationprovider">IDbOperationProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sqldboperationprovider">SqlDbOperationProvider</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RepoDb</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Provider Operation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/pages/provideroperation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="provider-operation">
+<h1>Provider Operation<a class="headerlink" href="#provider-operation" title="Permalink to this headline">¶</a></h1>
+<p>A feature which allow the developers to override the DB Provider specific operations (i.e: <cite>BulkInsert</cite>).</p>
+<p><strong>How is it being used?</strong></p>
+<p>Some operations of the <cite>Repositories</cite> or extended methods of the <cite>DbConnection</cite> object is using a DB Provider specific functionality. Bulk-insert is one of the operation
+that is widely used for SQL Server, Oracle, MySql (and any other DB Provider that supports Bulk-Insert), but it is not commonly used in <cite>OLE DB</cite> providers. By overriding,
+the default implementation of the library, a developer can write and customize its own way of implementing this.</p>
+<p><strong>Why BulkInsert is a DB Provider specific feature?</strong></p>
+<p>Considering <cite>ADO.NET</cite>, by default, it has included the <cite>SqlBulkCopy</cite> class that allow developers to implement bulk-operation for SQL Server databases. The library is also
+using the <cite>SqlBulkCopy</cite> class to support the SQL Server bulk-insert operation.</p>
+<p>For other provider to get supported, a specialized <cite>&lt;Provider&gt;BulkCopy</cite> class must be implemented that uses the proper way of doing the bulk-operations.</p>
+<div class="section" id="dboperationprovidermapper">
+<h2>DbOperationProviderMapper<a class="headerlink" href="#dboperationprovidermapper" title="Permalink to this headline">¶</a></h2>
+<p>This class is used to map the <cite>Type</cite> of database provider into an instance of <cite>IDbOperationProvider</cite> object.</p>
+<p>By default, the <cite>SqlDbOperationProvider</cite> class is provided by the library which is mainly used for SQL Server DB providers.</p>
+<p>A code below is called in the static constructor of this class.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">static</span> <span class="nf">DbOperationProviderMapper</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="c1">// Default for SqlConnection</span>
+        <span class="n">Add</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqlDbOperationProvider</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Notice, this class itself has defaulted the <cite>SqlConnection</cite> mappings into <cite>SqlDbOperationProvider</cite> object.</p>
+<p>A code below is a simple call to map a customized <cite>IDbOperationProvider</cite> class named <cite>OracleDbOperationProvider</cite> into an <cite>Oracle</cite> DB provider.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">DbOperationProviderMapper</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OracleConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OracleDbOperationProvider</span><span class="p">(),</span> <span class="k">true</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The last <cite>boolean</cite> argument is used to override an existing mapping (if present). Otherwise, an exception will be thrown.</p>
+</div>
+<div class="section" id="idboperationprovider">
+<h2>IDbOperationProvider<a class="headerlink" href="#idboperationprovider" title="Permalink to this headline">¶</a></h2>
+<p>An interface used to mark the class to become a database operation provider. Below is a sample code that implements this interface.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">OracleDbOperationProvider</span> <span class="p">:</span> <span class="n">IDbOperationProvider</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">BulkInsert</span><span class="p">&lt;</span><span class="n">TEntity</span><span class="p">&gt;(</span><span class="n">IDbConnection</span> <span class="n">connection</span><span class="p">,</span>
+                <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">TEntity</span><span class="p">&gt;</span> <span class="n">entities</span><span class="p">,</span>
+                <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">BulkInsertMapItem</span><span class="p">&gt;</span> <span class="n">mappings</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="n">OracleBulkCopyOptions</span> <span class="n">options</span> <span class="p">=</span> <span class="n">OracleBulkCopyOptions</span><span class="p">.</span><span class="n">Default</span><span class="p">,</span>
+                <span class="kt">int?</span> <span class="n">bulkCopyTimeout</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="kt">int?</span> <span class="n">batchSize</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="n">IDbTransaction</span> <span class="n">transaction</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">where</span> <span class="n">TEntity</span> <span class="p">:</span> <span class="k">class</span>
+        <span class="p">{</span>
+                <span class="p">...</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">BulkInsert</span><span class="p">&lt;</span><span class="n">TEntity</span><span class="p">&gt;(</span><span class="n">IDbConnection</span> <span class="n">connection</span><span class="p">,</span>
+                <span class="n">DbDataReader</span> <span class="n">reader</span><span class="p">,</span>
+                <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">BulkInsertMapItem</span><span class="p">&gt;</span> <span class="n">mappings</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="n">OracleBulkCopyOptions</span> <span class="n">options</span> <span class="p">=</span> <span class="n">OracleBulkCopyOptions</span><span class="p">.</span><span class="n">Default</span><span class="p">,</span>
+                <span class="kt">int?</span> <span class="n">bulkCopyTimeout</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="kt">int?</span> <span class="n">batchSize</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="n">IDbTransaction</span> <span class="n">transaction</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">where</span> <span class="n">TEntity</span> <span class="p">:</span> <span class="k">class</span>
+        <span class="p">{</span>
+                <span class="p">...</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="kt">int</span> <span class="nf">BulkInsert</span><span class="p">(</span><span class="n">IDbConnection</span> <span class="n">connection</span><span class="p">,</span>
+                <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+                <span class="n">DbDataReader</span> <span class="n">reader</span><span class="p">,</span>
+                <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">BulkInsertMapItem</span><span class="p">&gt;</span> <span class="n">mappings</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="n">OracleBulkCopyOptions</span> <span class="n">options</span> <span class="p">=</span> <span class="n">OracleBulkCopyOptions</span><span class="p">.</span><span class="n">Default</span><span class="p">,</span>
+                <span class="kt">int?</span> <span class="n">bulkCopyTimeout</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="kt">int?</span> <span class="n">batchSize</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="n">IDbTransaction</span> <span class="n">transaction</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="p">...</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Once the class <cite>OracleDbOperationProvider</cite> has been mapped to Oracle DB Provider, then the library will automatically use it in Oracle bulk-insert operations.</p>
+</div>
+<div class="section" id="sqldboperationprovider">
+<h2>SqlDbOperationProvider<a class="headerlink" href="#sqldboperationprovider" title="Permalink to this headline">¶</a></h2>
+<p>This class is used by the <cite>Repositories</cite> and other extended methods of the <cite>DbConnection</cite> object to execute a DB Provider specific operations. As of today, the
+current identified provider specific operation is the <cite>BulkInsert</cite> operation. By default, the library has mapped this class into a <cite>SqlConnection</cite> DB provider.</p>
+<p>Below is the implementation of this class.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">SqlDbOperationProvider</span> <span class="p">:</span> <span class="n">IDbOperationProvider</span>
+<span class="p">{</span>
+        <span class="c1">// Sync</span>
+
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">BulkInsert</span><span class="p">&lt;</span><span class="n">TEntity</span><span class="p">&gt;(</span><span class="n">IDbConnection</span> <span class="n">connection</span><span class="p">,</span>
+                <span class="n">DbDataReader</span> <span class="n">reader</span><span class="p">,</span>
+                <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">BulkInsertMapItem</span><span class="p">&gt;</span> <span class="n">mappings</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="n">SqlBulkCopyOptions</span> <span class="n">options</span> <span class="p">=</span> <span class="n">SqlBulkCopyOptions</span><span class="p">.</span><span class="n">Default</span><span class="p">,</span>
+                <span class="kt">int?</span> <span class="n">bulkCopyTimeout</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="kt">int?</span> <span class="n">batchSize</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="n">IDbTransaction</span> <span class="n">transaction</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">where</span> <span class="n">TEntity</span> <span class="p">:</span> <span class="k">class</span>
+        <span class="p">{</span>
+                <span class="p">...</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Async</span>
+
+        <span class="k">public</span> <span class="n">Task</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">BulkInsertAsync</span><span class="p">&lt;</span><span class="n">TEntity</span><span class="p">&gt;(</span><span class="n">IDbConnection</span> <span class="n">connection</span><span class="p">,</span>
+                <span class="n">DbDataReader</span> <span class="n">reader</span><span class="p">,</span>
+                <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">BulkInsertMapItem</span><span class="p">&gt;</span> <span class="n">mappings</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="n">SqlBulkCopyOptions</span> <span class="n">options</span> <span class="p">=</span> <span class="n">SqlBulkCopyOptions</span><span class="p">.</span><span class="n">Default</span><span class="p">,</span>
+                <span class="kt">int?</span> <span class="n">bulkCopyTimeout</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="kt">int?</span> <span class="n">batchSize</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+                <span class="n">IDbTransaction</span> <span class="n">transaction</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">where</span> <span class="n">TEntity</span> <span class="p">:</span> <span class="k">class</span>
+        <span class="p">{</span>
+                <span class="p">...</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Click <a class="reference external" href="https://github.com/mikependon/RepoDb/blob/master/RepoDb/RepoDb/DbOperationProviders/SqlServer/BulkInsert.cs">here</a> to see the actual class implementation for SQL Server <cite>BulkInsert</cite> operation.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="transaction.html" class="btn btn-neutral float-right" title="Transaction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hints.html" class="btn btn-neutral float-left" title="Hints" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Michael Camara Pendon
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

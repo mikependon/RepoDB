@@ -36,7 +36,7 @@ A code below is a simple call to map a customized `IDbHelper` class named `Oracl
 
 ::
 
-	DbHelperMapper.Map(typeof(OracleConnection), new OracleDbHelper(), true);
+	DbHelperMapper.Add(typeof(OracleConnection), new OracleDbHelper(), true);
 
 The last `boolean` argument is used to override an existing mapping (if present). Otherwise, an exception will be thrown.
 

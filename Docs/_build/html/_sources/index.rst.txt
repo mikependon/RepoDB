@@ -14,6 +14,7 @@ RepoDb Documentation
    pages/rawsql
    pages/dbhelper
    pages/hints
+   pages/provideroperation
    pages/transaction
    pages/querygroup
    pages/repository
