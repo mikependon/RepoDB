@@ -6,7 +6,7 @@ A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.
 Goal
 ----
 
-To be the fastest and most efficient ORM library for .NET.
+To be the fastest and the most efficient ORM library for .NET.
 
 Vision
 ------
@@ -23,17 +23,19 @@ Features
 --------
 
 * Asynchronous Operations
+* Batch Operations
+* Bulk Operations
 * Caching
 * Connection Persistency
 * Database Helpers
-* Dynamics Calls
+* Database Operation Providers
 * Expression Trees
 * Field Mapping
 * Inline Hints
+* Massive Operations (Generics/Explicits/MethodCalls/TableBased)
 * Multi-Resultset Query
-* Operations (Generics/Explicits/MethodCalls)
 * Query Builder
-* Resolvers
+* Repositories
 * Statement Builder
 * Tracing
 * Transaction

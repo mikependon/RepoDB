@@ -18,6 +18,8 @@ By literal string:
 
 Or
 
+::
+
 	var field = new Field(nameof(Customer.Id), typeof(int));
 
 The library uses the `Type` parameter to be resolved when any of the operation is being called.
@@ -114,13 +116,13 @@ Being the target fields and qualifers in the `MergeAll` operation via table name
 				LastUpdatedUtc = DateTime.UtcNow
 			}
 		};
-		connection.Merge(tableName: "Order",
+		connection.MergeAll(tableName: "Order",
 			entities: entities,
 			qualifiers: Field.From("Id"),
 			fields: Field.From("CustomerId", "ProductId", "Quantity", "LastUpdatedUtc"));
 	}
 
-Being the target fields and qualifers in the `MergeAll` operation via table name:
+Also, being the target fields and qualifers in the `UpdateAll` operation via table name:
 
 ::
 
@@ -141,8 +143,7 @@ Being the target fields and qualifers in the `MergeAll` operation via table name
 				LastUpdatedUtc = DateTime.UtcNow
 			}
 		};
-		connection.Merge(tableName: "Order",
+		connection.UpdateAll(tableName: "Order",
 			entities: entities,
-			qualifiers: Field.From("Id"),
-			fields: Field.From("Quantity", "LastUpdatedUtc"));
+			fields: Field.From("Id", "Quantity", "LastUpdatedUtc"));
 	}

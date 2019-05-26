@@ -89,6 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
@@ -167,19 +168,19 @@
             
   <div class="section" id="extensibility">
 <h1>Extensibility<a class="headerlink" href="#extensibility" title="Permalink to this headline">¶</a></h1>
-<p>RepoDb is highly extensible for RDBMS only. Below are the objects that can be extended.</p>
+<p>RepoDb is a Hybrid-ORM for RDBMS. It has complete support for SQL Server databases and can be extended to support various data providers like Oracle, MySql, PostgreSQL and OleDb Databases.</p>
+<p>Below are the objects that can be extended.</p>
 <ul class="simple">
-<li>Cache</li>
-<li>Database Helpers</li>
+<li>Caches</li>
+<li>Database Helper</li>
 <li>Inline Hints</li>
-<li>Provider Operations (soon to come)</li>
-<li>Repository</li>
+<li>Provider Operations</li>
+<li>Repositories</li>
 <li>Resolvers</li>
-<li>Statement Builder</li>
-<li>Trace</li>
+<li>Statement Builders</li>
+<li>Traces</li>
 </ul>
-<p>RepoDb can be extended to support various data providers like Oracle, MySql, PostgreSQL and OleDb Databases.</p>
-<p>RepoDb is an ORM for RDBMS and cannot be extended for NoSql Databases.</p>
+<p><strong>Note</strong>: RepoDb cannot be extended for NoSQL databases</p>
 </div>
 
 

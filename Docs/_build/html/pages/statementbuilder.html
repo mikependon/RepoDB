@@ -89,6 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
@@ -104,13 +105,16 @@
 <li class="toctree-l2"><a class="reference internal" href="#createdelete">CreateDelete</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createdeleteall">CreateDeleteAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createinsert">CreateInsert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createinsertall">CreateInsertAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createmerge">CreateMerge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">CreateMerge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createquery">CreateQuery</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createqueryall">CreateQueryAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createtruncate">CreateTruncate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createupdate">CreateUpdate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createupdateall">CreateUpdateAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cutomizing-a-builder">Cutomizing a Builder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sqldbstatementbuilder">SqlDbStatementBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sqldbstatementmapper">SqlDbStatementMapper</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
@@ -187,15 +191,14 @@
 <div class="section" id="querybuilder">
 <h2>QueryBuilder<a class="headerlink" href="#querybuilder" title="Permalink to this headline">¶</a></h2>
 <p>A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.</p>
-<p>By default, the library is using the <cite>QueryBuilder&lt;TEntity&gt;</cite> object when composing the statement.</p>
 <p>Below is a sample code that creates a SQL Statement for the <cite>Query</cite> operation for <cite>Oracle</cite> data provider.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable&lt;Field&gt; fields,
-        QueryGroup where = null,
-        IEnumerable&lt;OrderField&gt; orderBy = null,
-        int? top = null,
-        string hints = null)
+string tableName,
+IEnumerable&lt;Field&gt; fields,
+QueryGroup where = null,
+IEnumerable&lt;OrderField&gt; orderBy = null,
+int? top = null,
+string hints = null)
 {
         // There should be fields
         if (fields == null || fields.Any() == false)
@@ -320,7 +323,23 @@
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInsert(QueryBuilder queryBuilder,
         string tableName,
         IEnumerable&lt;Field&gt; fields = null,
-        DbField primaryField = null)
+        DbField primaryField = null,
+        DbField identityField = null)
+{
+        ...
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="createinsertall">
+<h2>CreateInsertAll<a class="headerlink" href="#createinsertall" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL statement for <cite>InsertAll</cite> operation.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInsertAll(QueryBuilder queryBuilder,
+        string tableName,
+        IEnumerable&lt;Field&gt; fields = null,
+        int batchSize = Constant.DefaultBatchOperationSize,
+        DbField primaryField = null,
+        DbField identityField = null)
 {
         ...
 }
@@ -334,7 +353,24 @@
         string tableName,
         IEnumerable&lt;Field&gt; fields,
         IEnumerable&lt;Field&gt; qualifiers = null,
-        DbField primaryField = null)
+        DbField primaryField = null,
+        DbField identityField = null)
+{
+        ...
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>CreateMerge<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL statement for <cite>MergeAll</cite> operation.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateMergeAll(QueryBuilder queryBuilder,
+        string tableName,
+        IEnumerable&lt;Field&gt; fields,
+        IEnumerable&lt;Field&gt; qualifiers,
+        int batchSize = Constant.DefaultBatchOperationSize,
+        DbField primaryField = null,
+        DbField identityField = null)
 {
         ...
 }
@@ -389,7 +425,24 @@
         string tableName,
         IEnumerable&lt;Field&gt; fields,
         QueryGroup where = null,
-        DbField primaryField = null)
+        DbField primaryField = null,
+        DbField identityField = null)
+{
+        ...
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="createupdateall">
+<h2>CreateUpdateAll<a class="headerlink" href="#createupdateall" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL statement for <cite>UpdateAll</cite> operation.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateUpdateAll(QueryBuilder queryBuilder,
+        string tableName,
+        IEnumerable&lt;Field&gt; fields,
+        IEnumerable&lt;Field&gt; qualifiers,
+        int batchSize = Constant.DefaultBatchOperationSize,
+        DbField primaryField = null,
+        DbField identityField = null)
 {
         ...
 }
@@ -413,17 +466,11 @@
 </div>
 <p>With the code snippets above, everytime the repository operation methods is being called, the <cite>OracleStatementBuilder</cite> corresponding method will be executed.</p>
 </div>
-<div class="section" id="sqldbstatementbuilder">
-<h2>SqlDbStatementBuilder<a class="headerlink" href="#sqldbstatementbuilder" title="Permalink to this headline">¶</a></h2>
-<p>By default, the library is using the <cite>SqlDbStatementBuilder</cite> object for the statement builder. As discussed above, when creating a custom statement builder, it can then be injected as an object in the repository. However, if the developer wants to map the statement builder by provider level, this feature comes into the play.</p>
+<div class="section" id="sqldbstatementmapper">
+<h2>SqlDbStatementMapper<a class="headerlink" href="#sqldbstatementmapper" title="Permalink to this headline">¶</a></h2>
+<p>By default, the library has mapped the <cite>SqlDbStatementBuilder</cite> object for the statement building. This means that library has fully supported the SQL Server DB Provider. With this class, a custom <cite>IStatementBuilder</cite> object can be injected as a statement builder for the <cite>Repositories</cite> and other <cite>DbConnection</cite> extended methods.</p>
 <p>The mapper is of static type <cite>StatementBuilderMapper</cite>.</p>
-<p>The following are the methods of this object.</p>
-<ul class="simple">
-<li><strong>Get</strong>: returns the instance of statement builder by type (of type <cite>System.Data.IDbConnection</cite>).</li>
-<li><strong>Map</strong>: maps the custom statement builder to a type (of type <cite>System.Data.IDbConnection</cite>).</li>
-</ul>
-<p>Mapping a statement builder enables the developer to map the custom statement builder by provider level.</p>
-<p>Let say for example, if the developers created the following repositories:</p>
+<p>Let say for example, the developers created the following repositories:</p>
 <blockquote>
 <div><ul class="simple">
 <li>CustomerRepository (for <cite>SqlConnection</cite>)</li>
@@ -432,20 +479,18 @@
 <li>CompanyRepository (for <cite>OleDbConnection</cite>)</li>
 </ul>
 </div></blockquote>
-<p>Then, by mapping a custom statement builders, it will enable the library to summon the statement builder based on the provider of the repository. With the following repositories defined above, the developers must implement atleast two (2) custom statement builder (one for Oracle provider and one for OleDb provider).</p>
-<p>Let say the developer created 2 new custom statement builders named:</p>
+<p>With the following repositories defined above, the developers must implement atleast two (2) custom statement builder (one for Oracle provider and one for OleDb provider).</p>
 <blockquote>
 <div><ul class="simple">
 <li>OracleStatementBuilder</li>
 <li>OleDbStatementBuilder</li>
 </ul>
 </div></blockquote>
-<p>The developers can now map the following statement builders into the repositories by provider level. Below is the sample way on how to do it.</p>
+<p>Then, by mapping a custom statement builders, it will enable the library to re-use the instance of the statement builder mapped into the desired DB provider. This feature works to both <cite>Repositories</cite> and <cite>DbConnection</cite> extended methods.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OracleConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OracleStatementBuilder</span><span class="p">());</span>
 <span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OleDbConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OleDbStatementBuilder</span><span class="p">());</span>
 </pre></div>
 </div>
-<p>The object <cite>StatementBuilderMapper.Map</cite> is callable everywhere in the application as it was implemented in s static way. Make sure to call it once, or else, an exception will be thrown.</p>
 </div>
 </div>
 

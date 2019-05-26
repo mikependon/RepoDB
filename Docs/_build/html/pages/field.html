@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
@@ -182,8 +183,9 @@
 </pre></div>
 </div>
 <p>Or</p>
-<blockquote>
-<div>var field = new Field(nameof(Customer.Id), typeof(int));</div></blockquote>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">field</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="k">typeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+</pre></div>
+</div>
 <p>The library uses the <cite>Type</cite> parameter to be resolved when any of the operation is being called.</p>
 </div>
 <div class="section" id="asenumerable">
@@ -257,14 +259,14 @@
                         <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
                 <span class="p">}</span>
         <span class="p">};</span>
-        <span class="n">connection</span><span class="p">.</span><span class="n">Merge</span><span class="p">(</span><span class="n">tableName</span><span class="p">:</span> <span class="s">&quot;Order&quot;</span><span class="p">,</span>
+        <span class="n">connection</span><span class="p">.</span><span class="n">MergeAll</span><span class="p">(</span><span class="n">tableName</span><span class="p">:</span> <span class="s">&quot;Order&quot;</span><span class="p">,</span>
                 <span class="n">entities</span><span class="p">:</span> <span class="n">entities</span><span class="p">,</span>
                 <span class="n">qualifiers</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">),</span>
                 <span class="n">fields</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;CustomerId&quot;</span><span class="p">,</span> <span class="s">&quot;ProductId&quot;</span><span class="p">,</span> <span class="s">&quot;Quantity&quot;</span><span class="p">,</span> <span class="s">&quot;LastUpdatedUtc&quot;</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Being the target fields and qualifers in the <cite>MergeAll</cite> operation via table name:</p>
+<p>Also, being the target fields and qualifers in the <cite>UpdateAll</cite> operation via table name:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">entities</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span>
@@ -282,10 +284,9 @@
                         <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
                 <span class="p">}</span>
         <span class="p">};</span>
-        <span class="n">connection</span><span class="p">.</span><span class="n">Merge</span><span class="p">(</span><span class="n">tableName</span><span class="p">:</span> <span class="s">&quot;Order&quot;</span><span class="p">,</span>
+        <span class="n">connection</span><span class="p">.</span><span class="n">UpdateAll</span><span class="p">(</span><span class="n">tableName</span><span class="p">:</span> <span class="s">&quot;Order&quot;</span><span class="p">,</span>
                 <span class="n">entities</span><span class="p">:</span> <span class="n">entities</span><span class="p">,</span>
-                <span class="n">qualifiers</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">),</span>
-                <span class="n">fields</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Quantity&quot;</span><span class="p">,</span> <span class="s">&quot;LastUpdatedUtc&quot;</span><span class="p">));</span>
+                <span class="n">fields</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="s">&quot;Quantity&quot;</span><span class="p">,</span> <span class="s">&quot;LastUpdatedUtc&quot;</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>

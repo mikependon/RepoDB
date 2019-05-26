@@ -10,19 +10,17 @@ QueryBuilder
 
 A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.
 
-By default, the library is using the `QueryBuilder<TEntity>` object when composing the statement.
-
 Below is a sample code that creates a SQL Statement for the `Query` operation for `Oracle` data provider.
 
 ::
 
 	public string CreateQuery(QueryBuilder queryBuilder,
-		string tableName,
-		IEnumerable<Field> fields,
-		QueryGroup where = null,
-		IEnumerable<OrderField> orderBy = null,
-		int? top = null,
-		string hints = null)
+        string tableName,
+        IEnumerable<Field> fields,
+        QueryGroup where = null,
+        IEnumerable<OrderField> orderBy = null,
+        int? top = null,
+        string hints = null)
 	{
 		// There should be fields
 		if (fields == null || fields.Any() == false)
@@ -84,13 +82,13 @@ This method is used to compose a SQL statement for `BatchQuery` operation.
 ::
 
 	public string CreateBatchQuery(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable<Field> fields,
-        int page,
-        int rowsPerBatch,
-        IEnumerable<OrderField> orderBy = null,
-        QueryGroup where = null,
-        string hints = null)
+		string tableName,
+		IEnumerable<Field> fields,
+		int page,
+		int rowsPerBatch,
+		IEnumerable<OrderField> orderBy = null,
+		QueryGroup where = null,
+		string hints = null)
 	{
 		...
 	}
@@ -105,9 +103,9 @@ This method is used to compose a SQL statement for `Count` operation.
 ::
 
 	public string CreateCount(QueryBuilder queryBuilder,
-        string tableName,
-        QueryGroup where = null,
-        string hints = null)
+		string tableName,
+		QueryGroup where = null,
+		string hints = null)
 	{
 		...
 	}
@@ -122,8 +120,8 @@ This method is used to compose a SQL statement for `CountAll` operation.
 ::
 
 	public string CreateCountAll(QueryBuilder queryBuilder,
-        string tableName,
-        string hints = null)
+		string tableName,
+		string hints = null)
 	{
 		...
 	}
@@ -138,8 +136,8 @@ This method is used to compose a SQL statement for `Delete` operation.
 ::
 
 	public string CreateDelete(QueryBuilder queryBuilder,
-        string tableName,
-        QueryGroup where = null)
+		string tableName,
+		QueryGroup where = null)
 	{
 		...
 	}
@@ -154,7 +152,7 @@ This method is used to compose a SQL statement for `DeleteAll` operation.
 ::
 
 	public string CreateDeleteAll(QueryBuilder queryBuilder,
-        string tableName)
+		string tableName)
 	{
 		...
 	}
@@ -169,10 +167,10 @@ This method is used to compose a SQL statement for `Insert` operation.
 ::
 
 	public string CreateInsert(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable<Field> fields = null,
-        DbField primaryField = null,
-        DbField identityField = null)
+		string tableName,
+		IEnumerable<Field> fields = null,
+		DbField primaryField = null,
+		DbField identityField = null)
 	{
 		...
 	}
@@ -187,11 +185,11 @@ This method is used to compose a SQL statement for `InsertAll` operation.
 ::
 
 	public string CreateInsertAll(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable<Field> fields = null,
-        int batchSize = Constant.DefaultBatchOperationSize,
-        DbField primaryField = null,
-        DbField identityField = null)
+		string tableName,
+		IEnumerable<Field> fields = null,
+		int batchSize = Constant.DefaultBatchOperationSize,
+		DbField primaryField = null,
+		DbField identityField = null)
 	{
 		...
 	}
@@ -206,11 +204,11 @@ This method is used to compose a SQL statement for `Merge` operation.
 ::
 
 	public string CreateMerge(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable<Field> fields,
-        IEnumerable<Field> qualifiers = null,
-        DbField primaryField = null,
-        DbField identityField = null)
+		string tableName,
+		IEnumerable<Field> fields,
+		IEnumerable<Field> qualifiers = null,
+		DbField primaryField = null,
+		DbField identityField = null)
 	{
 		...
 	}
@@ -225,12 +223,12 @@ This method is used to compose a SQL statement for `MergeAll` operation.
 ::
 
 	public string CreateMergeAll(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable<Field> fields,
-        IEnumerable<Field> qualifiers,
-        int batchSize = Constant.DefaultBatchOperationSize,
-        DbField primaryField = null,
-        DbField identityField = null)
+		string tableName,
+		IEnumerable<Field> fields,
+		IEnumerable<Field> qualifiers,
+		int batchSize = Constant.DefaultBatchOperationSize,
+		DbField primaryField = null,
+		DbField identityField = null)
 	{
 		...
 	}
@@ -245,12 +243,12 @@ This method is used to compose a SQL statement for `Query` operation.
 ::
 
 	public string CreateQuery(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable<Field> fields,
-        QueryGroup where = null,
-        IEnumerable<OrderField> orderBy = null,
-        int? top = null,
-        string hints = null)
+		string tableName,
+		IEnumerable<Field> fields,
+		QueryGroup where = null,
+		IEnumerable<OrderField> orderBy = null,
+		int? top = null,
+		string hints = null)
 	{
 		...
 	}
@@ -265,10 +263,10 @@ This method is used to compose a SQL statement for `QueryAll` operation.
 ::
 
 	public string CreateQueryAll(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable<Field> fields,
-        IEnumerable<OrderField> orderBy = null,
-        string hints = null)
+		string tableName,
+		IEnumerable<Field> fields,
+		IEnumerable<OrderField> orderBy = null,
+		string hints = null)
 	{
 		...
 	}
@@ -283,7 +281,7 @@ This method is used to compose a SQL statement for `Truncate` operation.
 ::
 
 	public string CreateTruncate(QueryBuilder queryBuilder,
-        string tableName)
+		string tableName)
 	{
 		...
 	}
@@ -298,11 +296,11 @@ This method is used to compose a SQL statement for `Update` operation.
 ::
 
 	public string CreateUpdate(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable<Field> fields,
-        QueryGroup where = null,
-        DbField primaryField = null,
-        DbField identityField = null)
+		string tableName,
+		IEnumerable<Field> fields,
+		QueryGroup where = null,
+		DbField primaryField = null,
+		DbField identityField = null)
 	{
 		...
 	}
@@ -317,12 +315,12 @@ This method is used to compose a SQL statement for `UpdateAll` operation.
 ::
 
 	public string CreateUpdateAll(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable<Field> fields,
-        IEnumerable<Field> qualifiers,
-        int batchSize = Constant.DefaultBatchOperationSize,
-        DbField primaryField = null,
-        DbField identityField = null)
+		string tableName,
+		IEnumerable<Field> fields,
+		IEnumerable<Field> qualifiers,
+		int batchSize = Constant.DefaultBatchOperationSize,
+		DbField primaryField = null,
+		DbField identityField = null)
 	{
 		...
 	}
@@ -352,41 +350,30 @@ Once the custom statement builder is created, it then can be used as an injectab
 
 With the code snippets above, everytime the repository operation methods is being called, the `OracleStatementBuilder` corresponding method will be executed.
 
-SqlDbStatementBuilder
----------------------
+SqlDbStatementMapper
+--------------------
 
 .. highlight:: c#
 
-By default, the library is using the `SqlDbStatementBuilder` object for the statement builder. As discussed above, when creating a custom statement builder, it can then be injected as an object in the repository. However, if the developer wants to map the statement builder by provider level, this feature comes into the play.
+By default, the library has mapped the `SqlDbStatementBuilder` object for the statement building. This means that library has fully supported the SQL Server DB Provider. With this class, a custom `IStatementBuilder` object can be injected as a statement builder for the `Repositories` and other `DbConnection` extended methods.
 
 The mapper is of static type `StatementBuilderMapper`.
 
-The following are the methods of this object.
-
-- **Get**: returns the instance of statement builder by type (of type `System.Data.IDbConnection`).
-- **Map**: maps the custom statement builder to a type (of type `System.Data.IDbConnection`).
-
-Mapping a statement builder enables the developer to map the custom statement builder by provider level. 
-
-Let say for example, if the developers created the following repositories:
+Let say for example, the developers created the following repositories:
 
  - CustomerRepository (for `SqlConnection`)
  - ProductRepository (for `SqlConnection`)
  - OrderRepository (for `OracleConnection`)
  - CompanyRepository (for `OleDbConnection`)
 
-Then, by mapping a custom statement builders, it will enable the library to summon the statement builder based on the provider of the repository. With the following repositories defined above, the developers must implement atleast two (2) custom statement builder (one for Oracle provider and one for OleDb provider).
-
-Let say the developer created 2 new custom statement builders named:
+With the following repositories defined above, the developers must implement atleast two (2) custom statement builder (one for Oracle provider and one for OleDb provider).
 
  - OracleStatementBuilder
  - OleDbStatementBuilder
-
-The developers can now map the following statement builders into the repositories by provider level. Below is the sample way on how to do it.
+ 
+Then, by mapping a custom statement builders, it will enable the library to re-use the instance of the statement builder mapped into the desired DB provider. This feature works to both `Repositories` and `DbConnection` extended methods.
 
 ::
 
 	StatementBuilderMapper.Map(typeof(OracleConnection), new OracleStatementBuilder());
 	StatementBuilderMapper.Map(typeof(OleDbConnection), new OleDbStatementBuilder());
-
-The object `StatementBuilderMapper.Map` is callable everywhere in the application as it was implemented in s static way. Make sure to call it once, or else, an exception will be thrown.

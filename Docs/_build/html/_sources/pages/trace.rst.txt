@@ -3,21 +3,6 @@ Trace
 
 Allow the developers to do `Debugging` or `Tracing` on the operations while executing it against the database
 
-ITrace
-------
-
-Is an interface used to create a custom `Trace` class object.
-
-TraceLog
---------
-
-An object that holds the value of the operations if the `Tracing` is enabled.
-
-CancellableTraceLog
--------------------
-
-An object that holds the value of the operations with extended members to support the cancellation of the operations.
-
 Custom Trace
 ------------
 
@@ -32,7 +17,17 @@ Below is a sample customized `Trace` object.
 		...
 	}
 
-Below is the way on how to inject a Trace class in the repository.
+Below is the way on how to inject a `Trace` class in the connection.
+
+::
+
+	var trace = new NorthwindDatabaseTrace();
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		connection.Query<Order>(o => o.CustomerId == 10045, trace: trace);
+	}
+
+Below is the way on how to inject a `Trace` class in the repository.
 
 ::
 
@@ -41,8 +36,8 @@ Below is the way on how to inject a Trace class in the repository.
 
 A breakpoint can be placed in any of the methods of the custom `Trace` class, the debugger will hit the breakpoint once the operation has been called.
 
-Cancel
-------
+Cancellation
+------------
 
 To cancel an operation, simply call the `Cancel` method of type `CancelableTraceLog` in any `Before` operation.
 

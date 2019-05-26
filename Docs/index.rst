@@ -12,6 +12,7 @@ RepoDb Documentation
    pages/orderfield
    pages/connection
    pages/rawsql
+   pages/dbhelper
    pages/hints
    pages/transaction
    pages/querygroup
