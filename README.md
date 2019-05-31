@@ -15,12 +15,7 @@ Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter.
  - RepoDb is the fastest and the most efficient ORM library in .NET as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). You can see the actual execution result [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
  - RepoDb is covered by thousand of major business related Unit Tests and Integration Tests.
 
-## Notes
-
- - RepoDb is an open-source software and will always be free.
- - RepoDb is now open and accepting pull-requests.
-
-## Build Result
+## Build Results
 
 Type of Build		 | Net (Framework)																																	 | Net (Standard)
 ---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
