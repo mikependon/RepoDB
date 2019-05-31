@@ -164,7 +164,6 @@ namespace RepoDb
             if (m_operationTextAttribute == null)
             {
                 m_operationTextAttribute = typeof(Operation)
-                    .GetTypeInfo()
                     .GetMembers()
                     .First(member => member.Name.ToLower() == Operation.ToString().ToLower())
                     .GetCustomAttribute<TextAttribute>();

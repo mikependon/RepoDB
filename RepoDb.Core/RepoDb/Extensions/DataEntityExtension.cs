@@ -16,7 +16,6 @@ namespace RepoDb.Extensions
         internal static IEnumerable<ClassProperty> GetProperties(Type type)
         {
             return type
-                .GetTypeInfo()
                 .GetProperties()
                 .Select(property => new ClassProperty(property));
         }

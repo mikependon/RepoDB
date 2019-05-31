@@ -72,7 +72,6 @@ namespace RepoDb.DbOperationProviders
 
             // Get the field (whether null or not)
             m_bulkInsertRowsCopiedField = typeof(SqlBulkCopy)
-                .GetTypeInfo()
                 .GetField("_rowsCopied", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
 
             // Return the value

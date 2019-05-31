@@ -112,13 +112,13 @@ namespace RepoDb.Reflection
                     var isNullable = readerField.DbField == null || readerField.DbField?.IsNullable == true;
 
                     // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue() method
-                    var readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod(string.Concat("Get", readerField.Type.Name));
+                    var readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", readerField.Type.Name));
                     if (readerGetValueMethod == null)
                     {
                         // Single value is throwing an exception in GetString(), skip it and use the GetValue() instead
                         if (isDefaultConversion == false && readerField.Type != typeof(Single))
                         {
-                            readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod(string.Concat("Get", propertyType.Name));
+                            readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", propertyType.Name));
                         }
 
                         // If present, then use the property type, otherwise, use the object
@@ -128,7 +128,7 @@ namespace RepoDb.Reflection
                         }
                         else
                         {
-                            readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod("GetValue");
+                            readerGetValueMethod = dataReaderType.GetMethod("GetValue");
                             convertType = typeof(object);
                         }
 
@@ -143,7 +143,7 @@ namespace RepoDb.Reflection
                     // Check for nullables
                     if (isNullable == true)
                     {
-                        var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetTypeInfo().GetMethod("IsDBNull"), ordinalExpression);
+                        var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
 
                         // True expression
                         var trueExpression = (Expression)null;
@@ -173,7 +173,7 @@ namespace RepoDb.Reflection
                         }
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
                         {
-                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetTypeInfo().GetConstructor(new[] { propertyType });
+                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
                             falseExpression = Expression.New(nullableConstructorExpression, falseExpression);
                         }
 
@@ -196,7 +196,7 @@ namespace RepoDb.Reflection
                         // Set for the 'Nullable' property
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
                         {
-                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetTypeInfo().GetConstructor(new[] { propertyType });
+                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
                             valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
                         }
                     }
@@ -232,19 +232,19 @@ namespace RepoDb.Reflection
                 if (propertyType == typeof(Guid) && readerField.Type == typeof(string))
                 {
                     // This is (new Guid(string))
-                    expression = Expression.New(typeof(Guid).GetTypeInfo().GetConstructor(new[] { typeof(string) }), expression);
+                    expression = Expression.New(typeof(Guid).GetConstructor(new[] { typeof(string) }), expression);
                 }
                 else if (propertyType == typeof(string) && readerField.Type == typeof(Guid))
                 {
                     // This is Guid.ToString()
-                    targetMethod = typeof(Guid).GetTypeInfo().GetMethod("ToString", new Type[0]);
+                    targetMethod = typeof(Guid).GetMethod("ToString", new Type[0]);
                     targetInstance = expression;
                     targetParameter = null;
                 }
                 else
                 {
                     // This System.Convert.To<Type>()
-                    targetMethod = typeof(Convert).GetTypeInfo().GetMethod(string.Concat("To", propertyType.Name), new[] { convertType });
+                    targetMethod = typeof(Convert).GetMethod(string.Concat("To", propertyType.Name), new[] { convertType });
                     targetInstance = null;
                     targetParameter = expression;
                 }
@@ -334,7 +334,7 @@ namespace RepoDb.Reflection
             // Initialize variables
             var elementInits = new List<ElementInit>();
             var dataReaderType = typeof(DbDataReader);
-            var addMethod = typeof(IDictionary<string, object>).GetTypeInfo().GetMethod("Add", new[] { typeof(string), typeof(object) });
+            var addMethod = typeof(IDictionary<string, object>).GetMethod("Add", new[] { typeof(string), typeof(object) });
 
             // Iterate each properties
             for (var ordinal = 0; ordinal < readerFields?.Count(); ordinal++)
@@ -344,10 +344,10 @@ namespace RepoDb.Reflection
                 var isConversionNeeded = false;
 
                 // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue
-                var readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod(string.Concat("Get", readerField.Type.Name));
+                var readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", readerField.Type.Name));
                 if (readerGetValueMethod == null)
                 {
-                    readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod("GetValue");
+                    readerGetValueMethod = dataReaderType.GetMethod("GetValue");
                     isConversionNeeded = true;
                 }
 
@@ -358,7 +358,7 @@ namespace RepoDb.Reflection
                 // Check for nullables
                 if (readerField.DbField == null || readerField.DbField?.IsNullable == true)
                 {
-                    var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetTypeInfo().GetMethod("IsDBNull"), ordinalExpression);
+                    var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
                     var trueExpression = (Expression)null;
                     if (readerField.Type.GetTypeInfo().IsValueType == true)
                     {
@@ -433,25 +433,25 @@ namespace RepoDb.Reflection
             var entityProperties = PropertyCache.Get<TEntity>();
 
             // Variables for DbCommand
-            var dbCommandParametersProperty = typeOfDbCommand.GetTypeInfo().GetProperty("Parameters");
-            var dbCommandCreateParameterMethod = typeOfDbCommand.GetTypeInfo().GetMethod("CreateParameter");
-            var dbParameterParameterNameSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("ParameterName").SetMethod;
-            var dbParameterValueSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("Value").SetMethod;
-            var dbParameterDbTypeSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("DbType").SetMethod;
-            var dbParameterDirectionSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("Direction").SetMethod;
-            var dbParameterSizeSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("Size").SetMethod;
-            var dbParameterPrecisionSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("Precision").SetMethod;
-            var dbParameterScaleSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("Scale").SetMethod;
+            var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
+            var dbCommandCreateParameterMethod = typeOfDbCommand.GetMethod("CreateParameter");
+            var dbParameterParameterNameSetMethod = typeOfDbParameter.GetProperty("ParameterName").SetMethod;
+            var dbParameterValueSetMethod = typeOfDbParameter.GetProperty("Value").SetMethod;
+            var dbParameterDbTypeSetMethod = typeOfDbParameter.GetProperty("DbType").SetMethod;
+            var dbParameterDirectionSetMethod = typeOfDbParameter.GetProperty("Direction").SetMethod;
+            var dbParameterSizeSetMethod = typeOfDbParameter.GetProperty("Size").SetMethod;
+            var dbParameterPrecisionSetMethod = typeOfDbParameter.GetProperty("Precision").SetMethod;
+            var dbParameterScaleSetMethod = typeOfDbParameter.GetProperty("Scale").SetMethod;
 
             // Variables for DbParameterCollection
             var dbParameterCollection = Expression.Property(commandParameterExpression, dbCommandParametersProperty);
-            var dbParameterCollectionAddMethod = typeOfDbParameterCollection.GetTypeInfo().GetMethod("Add", new[] { typeOfObject });
-            var dbParameterCollectionClearMethod = typeOfDbParameterCollection.GetTypeInfo().GetMethod("Clear");
+            var dbParameterCollectionAddMethod = typeOfDbParameterCollection.GetMethod("Add", new[] { typeOfObject });
+            var dbParameterCollectionClearMethod = typeOfDbParameterCollection.GetMethod("Clear");
 
             // Variables for 'Dynamic|Object' object
-            var objectGetTypeMethod = typeOfObject.GetTypeInfo().GetMethod("GetType");
-            var typeGetPropertyMethod = typeOfType.GetTypeInfo().GetMethod("GetProperty", new[] { typeOfString, typeOfBindingFlags });
-            var propertyInfoGetValueMethod = typeOfPropertyInfo.GetTypeInfo().GetMethod("GetValue", new[] { typeOfObject });
+            var objectGetTypeMethod = typeOfObject.GetMethod("GetType");
+            var typeGetPropertyMethod = typeOfType.GetMethod("GetProperty", new[] { typeOfString, typeOfBindingFlags });
+            var propertyInfoGetValueMethod = typeOfPropertyInfo.GetMethod("GetValue", new[] { typeOfObject });
 
             // Other variables
             var dbTypeResolver = new ClientTypeToSqlDbTypeResolver();
@@ -490,7 +490,7 @@ namespace RepoDb.Reflection
                     // Check the proper type of the entity
                     if (typeOfEntity != typeOfObject && typeOfEntity.GetTypeInfo().IsGenericType == false)
                     {
-                        instanceProperty = typeOfEntity.GetTypeInfo().GetProperty(classProperty.PropertyInfo.Name);
+                        instanceProperty = typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
                     }
 
                     #region Instance.Property or PropertyInfo.GetValue()
@@ -517,7 +517,7 @@ namespace RepoDb.Reflection
                             // Create a new guid here
                             if (propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */)
                             {
-                                value = Expression.New(typeOfGuid.GetTypeInfo().GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
+                                value = Expression.New(typeOfGuid.GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
                             }
                             else
                             {
@@ -888,28 +888,28 @@ namespace RepoDb.Reflection
             var entityProperties = PropertyCache.Get<TEntity>();
 
             // Variables for DbCommand
-            var dbCommandParametersProperty = typeOfDbCommand.GetTypeInfo().GetProperty("Parameters");
-            var dbCommandCreateParameterMethod = typeOfDbCommand.GetTypeInfo().GetMethod("CreateParameter");
-            var dbParameterParameterNameSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("ParameterName").SetMethod;
-            var dbParameterValueSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("Value").SetMethod;
-            var dbParameterDbTypeSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("DbType").SetMethod;
-            var dbParameterDirectionSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("Direction").SetMethod;
-            var dbParameterSizeSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("Size").SetMethod;
-            var dbParameterPrecisionSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("Precision").SetMethod;
-            var dbParameterScaleSetMethod = typeOfDbParameter.GetTypeInfo().GetProperty("Scale").SetMethod;
+            var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
+            var dbCommandCreateParameterMethod = typeOfDbCommand.GetMethod("CreateParameter");
+            var dbParameterParameterNameSetMethod = typeOfDbParameter.GetProperty("ParameterName").SetMethod;
+            var dbParameterValueSetMethod = typeOfDbParameter.GetProperty("Value").SetMethod;
+            var dbParameterDbTypeSetMethod = typeOfDbParameter.GetProperty("DbType").SetMethod;
+            var dbParameterDirectionSetMethod = typeOfDbParameter.GetProperty("Direction").SetMethod;
+            var dbParameterSizeSetMethod = typeOfDbParameter.GetProperty("Size").SetMethod;
+            var dbParameterPrecisionSetMethod = typeOfDbParameter.GetProperty("Precision").SetMethod;
+            var dbParameterScaleSetMethod = typeOfDbParameter.GetProperty("Scale").SetMethod;
 
             // Variables for DbParameterCollection
             var dbParameterCollection = Expression.Property(commandParameterExpression, dbCommandParametersProperty);
-            var dbParameterCollectionAddMethod = typeOfDbParameterCollection.GetTypeInfo().GetMethod("Add", new[] { typeOfObject });
-            var dbParameterCollectionClearMethod = typeOfDbParameterCollection.GetTypeInfo().GetMethod("Clear");
+            var dbParameterCollectionAddMethod = typeOfDbParameterCollection.GetMethod("Add", new[] { typeOfObject });
+            var dbParameterCollectionClearMethod = typeOfDbParameterCollection.GetMethod("Clear");
 
             // Variables for 'Dynamic|Object' object
-            var objectGetTypeMethod = typeOfObject.GetTypeInfo().GetMethod("GetType");
-            var typeGetPropertyMethod = typeOfType.GetTypeInfo().GetMethod("GetProperty", new[] { typeOfString, typeOfBindingFlags });
-            var propertyInfoGetValueMethod = typeOfPropertyInfo.GetTypeInfo().GetMethod("GetValue", new[] { typeOfObject });
+            var objectGetTypeMethod = typeOfObject.GetMethod("GetType");
+            var typeGetPropertyMethod = typeOfType.GetMethod("GetProperty", new[] { typeOfString, typeOfBindingFlags });
+            var propertyInfoGetValueMethod = typeOfPropertyInfo.GetMethod("GetValue", new[] { typeOfObject });
 
             // Variables for List<T>
-            var listIndexerMethod = typeOfListEntity.GetTypeInfo().GetMethod("get_Item", new[] { typeOfInt });
+            var listIndexerMethod = typeOfListEntity.GetMethod("get_Item", new[] { typeOfInt });
 
             // Other variables
             var dbTypeResolver = new ClientTypeToSqlDbTypeResolver();
@@ -950,7 +950,7 @@ namespace RepoDb.Reflection
                     // Check the proper type of the entity
                     if (typeOfEntity != typeOfObject && typeOfEntity.GetTypeInfo().IsGenericType == false)
                     {
-                        instanceProperty = typeOfEntity.GetTypeInfo().GetProperty(classProperty.PropertyInfo.Name);
+                        instanceProperty = typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
                     }
 
                     #region Instance.Property or PropertyInfo.GetValue()
@@ -977,7 +977,7 @@ namespace RepoDb.Reflection
                             // Create a new guid here
                             if (propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */)
                             {
-                                value = Expression.New(typeOfGuid.GetTypeInfo().GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
+                                value = Expression.New(typeOfGuid.GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
                             }
                             else
                             {
@@ -1337,16 +1337,16 @@ namespace RepoDb.Reflection
             var dbCommandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
 
             // Variables for DbCommand
-            var dbCommandParametersProperty = typeOfDbCommand.GetTypeInfo().GetProperty("Parameters");
+            var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
 
             // Variables for DbParameterCollection
-            var dbParameterCollectionIndexerMethod = typeOfDbParameterCollection.GetTypeInfo().GetMethod("get_Item", new[] { typeOfString });
+            var dbParameterCollectionIndexerMethod = typeOfDbParameterCollection.GetMethod("get_Item", new[] { typeOfString });
 
             // Variables for DbParameter
-            var dbParameterValueProperty = typeOfDbParameter.GetTypeInfo().GetProperty("Value");
+            var dbParameterValueProperty = typeOfDbParameter.GetProperty("Value");
 
             // Get the entity property
-            var property = typeOfEntity.GetTypeInfo().GetProperty(field.UnquotedName).SetMethod;
+            var property = typeOfEntity.GetProperty(field.UnquotedName).SetMethod;
 
             // Get the command parameter
             var name = parameterName ?? field.UnquotedName;
@@ -1386,7 +1386,7 @@ namespace RepoDb.Reflection
             var valueParameter = Expression.Parameter(typeOfObject, "value");
 
             // Get the entity property
-            var property = typeOfEntity.GetTypeInfo().GetProperty(field.UnquotedName).SetMethod;
+            var property = typeOfEntity.GetProperty(field.UnquotedName).SetMethod;
 
             // Assign the value into DataEntity.Property
             var propertyAssignment = Expression.Call(entityParameter, property,

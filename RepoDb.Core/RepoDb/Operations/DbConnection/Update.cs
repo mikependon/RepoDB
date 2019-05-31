@@ -487,7 +487,7 @@ namespace RepoDb
             // Identity the property via primary
             if (primary != null)
             {
-                var property = entity?.GetType().GetTypeInfo().GetProperty(primary.UnquotedName, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
+                var property = entity?.GetType().GetProperty(primary.UnquotedName, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
                 if (property != null)
                 {
                     where = new QueryGroup(new QueryField(new Field(property.Name, property.PropertyType), property.GetValue(entity)));
@@ -699,7 +699,7 @@ namespace RepoDb
             // Identity the property via primary
             if (primary != null)
             {
-                var property = entity?.GetType().GetTypeInfo().GetProperty(primary.UnquotedName, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
+                var property = entity?.GetType().GetProperty(primary.UnquotedName, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
                 if (property != null)
                 {
                     where = new QueryGroup(new QueryField(new Field(property.Name, property.PropertyType), property.GetValue(entity)));

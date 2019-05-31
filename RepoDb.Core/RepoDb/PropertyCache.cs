@@ -50,7 +50,7 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out properties) == false)
             {
-                properties = type.GetTypeInfo().GetProperties().Select(p => new ClassProperty(p));
+                properties = type.GetProperties().Select(p => new ClassProperty(p));
                 m_cache.TryAdd(key, properties);
             }
 

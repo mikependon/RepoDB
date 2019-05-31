@@ -249,7 +249,7 @@ namespace RepoDb.Extensions
                 if (kvp.Value is CommandParameter)
                 {
                     var commandParameter = (CommandParameter)kvp.Value;
-                    var property = commandParameter.MappedToType.GetTypeInfo().GetProperty(kvp.Key);
+                    var property = commandParameter.MappedToType.GetProperty(kvp.Key);
 
                     // Get the value
                     value = commandParameter.Value;
@@ -562,7 +562,7 @@ namespace RepoDb.Extensions
                 if (kvp.Value is CommandParameter)
                 {
                     var commandParameter = (CommandParameter)kvp.Value;
-                    var property = commandParameter.MappedToType.GetTypeInfo().GetProperty(kvp.Key);
+                    var property = commandParameter.MappedToType.GetProperty(kvp.Key);
 
                     // Get the value
                     value = commandParameter.Value;

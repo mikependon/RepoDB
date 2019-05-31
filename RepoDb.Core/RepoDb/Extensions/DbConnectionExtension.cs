@@ -1324,7 +1324,7 @@ namespace RepoDb
             else
             {
                 // Iterate the properties
-                foreach (var property in param.GetType().GetTypeInfo().GetProperties())
+                foreach (var property in param.GetType().GetProperties())
                 {
                     // Skip if it is not an array
                     if (property.PropertyType.IsArray == false)

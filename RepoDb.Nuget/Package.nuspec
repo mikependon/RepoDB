@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.9.6</version>
+    <version>1.9.7</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -11,29 +11,11 @@
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
-      RepoDb v1.9.6:
-      - [Note] This version is the first ever version release with complete features. The next version will be only be bug-fixes from this version (if we found some).
-      - [Core] Optimize the Expression field iteration between the number of Class properties and DbDataReader columns. #136
-      - [Core] Add a pluggable interface/abstract for DbProviderOperation #158
-      - [Core] Add a DbTransaction object on InsertAll, MergeAll, UpdateAll operations. #213
-      - [Test] Added an Integration Tests for IdentityClassWithDifferentIdentity.
-      - [Test] Add IntegrationTest for 'UpdateAll' targeting certain columns. #245
-      - [Test] Add an Async method support to QueryMultipleExtractor.Extract. #255
-      - [Test] Add an Async method support to QueryMultipleExtractor.Scalar. #256
-      - [Test] Introduce UnitTest for IDbOperationProvider Interface. #253
-      - [Test] Create a test for IStatementBuilder for all Async operations for DbConnection, DbRepository, BaseRepository. #218
-      - [Test] Add more extensive UnitTest for IN, NOT IN, BETWEEN, NOT BETWEEN, LIKE and NOT LIKE operations. #186
-      - [Test] Create a much more extensive UnitTests for all Operations (Equal, NotEqual, Between ... ) #178
-      - [Test] Create an extensive IntegrationTests for IN, NOT IN, BETWEEN, NOT BETWEEN, LIKE and NOT LIKE operations. #180
-      - [Test] Create IntegrationTest for DbTransaction (Insert, Merge, Delete, Update) #181
-      - [Added] Introduce SqlDbOperationProvider Class. #251
-      - [Added] Introduce DbOperationProviderMapper Class. #252
-      - [Added] Introduce IDbOperationProvider Interface. #250
-      - [Adhoc] Add 'BatchSize' in BulkInsert. #257
-      - [Adhoc] Remove all 'obsolete' methods for v1.9.6. #246
-      - [Minor] Hide the exposed extended internal methods. #244
+      RepoDb v1.9.7:
+      - Stable release with complete feature sets.
+      - Added netstandard2.0 as the default target framework at Nuget Package.
     </releaseNotes>
-    <copyright>Copyright © 2018</copyright>
+    <copyright>Copyright © 2019</copyright>
     <tags>orm sql repo repodb repository</tags>
     <projectUrl>https://github.com/mikependon/RepoDb</projectUrl>
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
@@ -47,12 +29,22 @@
         <dependency id="System.Dynamic.Runtime" version="4.3.0" exclude="Build,Analyzers" />
         <dependency id="System.Reflection.Emit" version="4.3.0" exclude="Build,Analyzers" />
         <dependency id="System.Reflection.Emit.Lightweight" version="4.3.0" exclude="Build,Analyzers" />
-        <dependency id="System.Reflection.Extensions" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.TypeExtensions" version="4.4.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="System.Data.Common" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Data.SqlClient" version="4.5.1" exclude="Build,Analyzers" />
+        <dependency id="System.Dynamic.Runtime" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit.Lightweight" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.TypeExtensions" version="4.4.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.5.1" />
+      <frameworkAssembly assemblyName="System.Core" targetFramework=".NETFramework4.5.1" />
       <frameworkAssembly assemblyName="System.Data" targetFramework=".NETFramework4.5.1" />
+      <frameworkAssembly assemblyName="System.Data.DataSetExtensions" targetFramework=".NETFramework4.5.1" />
       <frameworkAssembly assemblyName="System" targetFramework=".NETFramework4.5.1" />
       <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.5.1" />
       <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework=".NETFramework4.5.1" />

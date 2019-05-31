@@ -78,9 +78,9 @@ namespace RepoDb
             private static Func<TEntity, IEnumerable<PropertyValue>> GetFunc(IEnumerable<ClassProperty> properties)
             {
                 // Expressions
-                var addMethod = typeof(List<PropertyValue>).GetTypeInfo().GetMethod("Add", new[] { typeof(PropertyValue) });
+                var addMethod = typeof(List<PropertyValue>).GetMethod("Add", new[] { typeof(PropertyValue) });
                 var obj = Expression.Parameter(typeof(TEntity), "obj");
-                var constructor = typeof(PropertyValue).GetTypeInfo().GetConstructor(new[]
+                var constructor = typeof(PropertyValue).GetConstructor(new[]
                 {
                     typeof(string),
                     typeof(object),

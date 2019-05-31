@@ -32,12 +32,12 @@ namespace RepoDb.Extensions
             if (type.IsConstructedGenericType == true)
             {
                 // Get the first generic type
-                type = type.GetTypeInfo().GetGenericArguments()[0];
+                type = type.GetGenericArguments()[0];
 
                 // Create a type from generic
                 var listType = typeof(List<>).MakeGenericType(type);
-                var toArrayMethod = listType.GetTypeInfo().GetMethod("get_Item", new[] { typeof(int) });
-                var count = (int)listType.GetTypeInfo().GetProperty("Count").GetValue(obj);
+                var toArrayMethod = listType.GetMethod("get_Item", new[] { typeof(int) });
+                var count = (int)listType.GetProperty("Count").GetValue(obj);
 
                 // Create a new instance of array
                 array = Array.CreateInstance(type, count);
@@ -75,7 +75,7 @@ namespace RepoDb.Extensions
         /// <returns>A dynamic object with the merged fields from <see cref="QueryGroup"/>.</returns>
         internal static object Merge(this object obj, QueryGroup queryGroup)
         {
-            return Merge(obj, obj?.GetType().GetTypeInfo().GetProperties(), queryGroup);
+            return Merge(obj, obj?.GetType().GetProperties(), queryGroup);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-                var properties = obj.GetType().GetTypeInfo().GetProperties();
+                var properties = obj.GetType().GetProperties();
                 foreach (var property in properties)
                 {
                     yield return new QueryField(property.Name, property.GetValue(obj));

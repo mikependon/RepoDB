@@ -117,7 +117,7 @@ namespace RepoDb
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
         internal static IEnumerable<Field> Parse(object obj)
         {
-            foreach (var property in obj?.GetType().GetTypeInfo().GetProperties())
+            foreach (var property in obj?.GetType().GetProperties())
             {
                 yield return property.AsField();
             }

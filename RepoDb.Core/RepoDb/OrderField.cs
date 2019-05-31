@@ -64,7 +64,6 @@ namespace RepoDb
             if (m_orderTextAttribute == null)
             {
                 m_orderTextAttribute = typeof(Order)
-                    .GetTypeInfo()
                     .GetMembers()
                     .First(member => member.Name.ToLower() == Order.ToString().ToLower())
                     .GetCustomAttribute<TextAttribute>();
@@ -144,7 +143,7 @@ namespace RepoDb
                 throw new NullReferenceException("The 'obj' must not be null.");
             }
             var list = new List<OrderField>();
-            foreach (var property in obj.GetType().GetTypeInfo().GetProperties())
+            foreach (var property in obj.GetType().GetProperties())
             {
                 if (property.PropertyType != typeof(Order))
                 {

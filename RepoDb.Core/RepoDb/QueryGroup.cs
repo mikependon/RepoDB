@@ -527,7 +527,6 @@ namespace RepoDb
             if (m_conjuctionTextAttribute == null)
             {
                 m_conjuctionTextAttribute = typeof(Conjunction)
-                    .GetTypeInfo()
                     .GetMembers()
                     .First(member => member.Name.ToLower() == Conjunction.ToString().ToLower())
                     .GetCustomAttribute<TextAttribute>();
@@ -1082,7 +1081,7 @@ namespace RepoDb
             var fields = new List<QueryField>();
 
             // Iterate every property
-            foreach (var property in type.GetTypeInfo().GetProperties())
+            foreach (var property in type.GetProperties())
             {
                 fields.Add(new QueryField(property.Name, property.GetValue(obj)));
             }

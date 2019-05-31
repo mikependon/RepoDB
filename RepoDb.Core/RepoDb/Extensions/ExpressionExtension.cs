@@ -270,7 +270,7 @@ namespace RepoDb.Extensions
         public static object GetValue(this ListInitExpression expression)
         {
             var arrayType = expression.Type.IsConstructedGenericType ?
-                expression.Type.GetTypeInfo().GetGenericArguments().FirstOrDefault() ?? typeof(object) :
+                expression.Type.GetGenericArguments().FirstOrDefault() ?? typeof(object) :
                 typeof(object);
             var array = Array.CreateInstance(arrayType, (int)expression.Initializers?.Count);
             foreach (var item in expression.Initializers)
