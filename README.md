@@ -18,7 +18,7 @@ Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter.
 ## Notes
 
  - RepoDb is an open-source software and will always be free.
- - Disclaimer: RepoDb is currently **NOT** accepting any pull-requests until the target core features has all been implemented.
+ - RepoDb is now open and accepting pull-requests.
 
 ## Build Result
 
