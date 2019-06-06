@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
+using RepoDb.IntegrationTests.Enumerations;
 using RepoDb.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
@@ -351,6 +352,125 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
                 ColumnInt = random.Next(int.MinValue, int.MaxValue),
                 ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        #endregion
+
+        #region EnumCompleteTable
+
+        /// <summary>
+        /// Creates a list of <see cref="EnumCompleteTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="EnumCompleteTable"/> objects.</returns>
+        public static List<EnumCompleteTable> CreateEnumCompleteTables(int count)
+        {
+            var tables = new List<EnumCompleteTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new EnumCompleteTable
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnBit = BooleanValue.True,
+                    ColumnNVarChar = Direction.West,
+                    ColumnInt = Direction.West,
+                    ColumnBigInt = Direction.West,
+                    ColumnSmallInt = Direction.West
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="EnumCompleteTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="EnumCompleteTable"/> object.</returns>
+        public static EnumCompleteTable CreateEnumCompleteTable()
+        {
+            return new EnumCompleteTable
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBit = BooleanValue.True,
+                ColumnNVarChar = Direction.West,
+                ColumnInt = Direction.West,
+                ColumnBigInt = Direction.West,
+                ColumnSmallInt = Direction.West
+            };
+        }
+
+        #endregion
+
+        #region EnumAsIntForStringCompleteTable
+
+        /// <summary>
+        /// Creates a list of <see cref="EnumAsIntForStringCompleteTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="EnumAsIntForStringCompleteTable"/> objects.</returns>
+        public static List<EnumAsIntForStringCompleteTable> CreateEnumAsIntForStringCompleteTables(int count)
+        {
+            var tables = new List<EnumAsIntForStringCompleteTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new EnumAsIntForStringCompleteTable
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnNVarChar = Direction.West
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="EnumAsIntForStringCompleteTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="EnumAsIntForStringCompleteTable"/> object.</returns>
+        public static EnumAsIntForStringCompleteTable CreateEnumAsIntForStringCompleteTable()
+        {
+            return new EnumAsIntForStringCompleteTable
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnNVarChar = Direction.West
+            };
+        }
+
+        #endregion
+
+        #region TypeLevelMappedForStringEnumCompleteTable
+
+        /// <summary>
+        /// Creates a list of <see cref="TypeLevelMappedForStringEnumCompleteTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="TypeLevelMappedForStringEnumCompleteTable"/> objects.</returns>
+        public static List<TypeLevelMappedForStringEnumCompleteTable> CreateTypeLevelMappedForStringEnumCompleteTables(int count)
+        {
+            var tables = new List<TypeLevelMappedForStringEnumCompleteTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new TypeLevelMappedForStringEnumCompleteTable
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnNVarChar = Continent.Asia
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="TypeLevelMappedForStringEnumCompleteTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="TypeLevelMappedForStringEnumCompleteTable"/> object.</returns>
+        public static TypeLevelMappedForStringEnumCompleteTable CreateTypeLevelMappedForStringEnumCompleteTable()
+        {
+            return new TypeLevelMappedForStringEnumCompleteTable
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnNVarChar = Continent.Asia
             };
         }
 

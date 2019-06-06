@@ -9,7 +9,7 @@ namespace RepoDb
     /// <summary>
     /// A class used to resolve the .NET CLR Types into SQL Database Types.
     /// </summary>
-    public class ClientTypeToSqlDbTypeResolver : IResolver<Type, DbType>
+    public class ClientTypeToSqlDbTypeResolver : IResolver<Type, DbType?>
     {
         /*
          * Taken:
@@ -21,7 +21,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The .NET CLR Type.</param>
         /// <returns>The equivalent <see cref="DbType"/> Type.</returns>
-        public DbType Resolve(Type type)
+        public DbType? Resolve(Type type)
         {
             if (type == null)
             {
@@ -79,10 +79,15 @@ namespace RepoDb
                 return DbType.Int16;
             }
             // Object must be defaulted to String, defaulted by .NET for DbType
-            /*else if (type == typeof(object))
+            else if (type == typeof(object))
             {
-                return DbType.Object;
-            }*/
+                //return DbType.Object;
+                return DbType.String;
+            }
+            else if (type == typeof(char[]))
+            {
+                return DbType.String;
+            }
             else if (type == typeof(TimeSpan))
             {
                 return DbType.Time;
@@ -104,7 +109,8 @@ namespace RepoDb
             {
                 return DbType.Xml;
             }*/
-            return DbType.String;
+
+            return null;
         }
     }
 }

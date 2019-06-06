@@ -13,7 +13,7 @@ namespace RepoDb
     /// <summary>
     /// A class used to cache the compiled functions.
     /// </summary>
-    internal static class FunctionCache
+    public static class FunctionCache
     {
         private static ConcurrentDictionary<string, Action<DbCommand, object>> m_cache = new ConcurrentDictionary<string, Action<DbCommand, object>>();
 
@@ -177,7 +177,7 @@ namespace RepoDb
         /// <param name="inputFields">The list of the input <see cref="DbField"/> objects to be used.</param>
         /// <param name="outputFields">The list of the ouput <see cref="DbField"/> objects to be used.</param>
         /// <returns>The compiled function.</returns>
-        public static Action<DbCommand, TEntity> GetDataEntityDbCommandParameterSetterFunction<TEntity>(string cacheKey,
+        internal static Action<DbCommand, TEntity> GetDataEntityDbCommandParameterSetterFunction<TEntity>(string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields)
             where TEntity : class
@@ -236,7 +236,7 @@ namespace RepoDb
         /// <param name="outputFields">The list of the output <see cref="DbField"/> objects to be used.</param>
         /// <param name="batchSize">The batch size of the entities to be passed.</param>
         /// <returns>The compiled function.</returns>
-        public static Action<DbCommand, IList<TEntity>> GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(string cacheKey,
+        internal static Action<DbCommand, IList<TEntity>> GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize)
@@ -296,7 +296,7 @@ namespace RepoDb
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="index">The index of the batches.</param>
         /// <returns>A compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.</returns>
-        public static Action<TEntity, DbCommand> GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(Field field,
+        internal static Action<TEntity, DbCommand> GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(Field field,
             string parameterName,
             int index = 0)
             where TEntity : class

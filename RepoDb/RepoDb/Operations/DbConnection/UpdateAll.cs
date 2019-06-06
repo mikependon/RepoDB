@@ -141,7 +141,7 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>();
+                var primary = GetAndGuardPrimaryKey<TEntity>(connection);
                 qualifiers = primary.AsField().AsEnumerable();
             }
             return UpdateAllInternalBase<TEntity>(connection: connection,
@@ -282,7 +282,7 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>();
+                var primary = GetAndGuardPrimaryKey<TEntity>(connection);
                 qualifiers = primary.AsField().AsEnumerable();
             }
             return UpdateAllAsyncInternalBase<TEntity>(connection: connection,

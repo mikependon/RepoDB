@@ -164,7 +164,48 @@ namespace RepoDb.Reflection
                         {
                             if (isDefaultConversion == true)
                             {
-                                falseExpression = Expression.Convert(falseExpression, propertyType);
+                                if (propertyType.GetTypeInfo().IsEnum)
+                                {
+                                    #region StringToEnum
+
+                                    if (readerField.Type == typeof(string))
+                                    {
+                                        var enumParseMethod = typeof(Enum).GetMethod("Parse", new[] { typeof(Type), typeof(string), typeof(bool) });
+                                        falseExpression = Expression.Call(enumParseMethod, new[]
+                                        {
+                                            Expression.Constant(propertyType),
+                                            falseExpression,
+                                            Expression.Constant(true)
+                                        });
+                                        falseExpression = Expression.Convert(falseExpression, propertyType);
+                                    }
+
+                                    #endregion
+
+                                    #region <Bool|Numbers>ToEnum
+
+                                    else
+                                    {
+                                        var enumUnderlyingType = Enum.GetUnderlyingType(propertyType);
+                                        var enumToObjectMethod = typeof(Enum).GetMethod("ToObject", new[] { typeof(Type), readerField.Type });
+                                        if (readerField.Type == typeof(bool))
+                                        {
+                                            falseExpression = Expression.Convert(falseExpression, typeof(object));
+                                        }
+                                        falseExpression = Expression.Call(enumToObjectMethod, new[]
+                                        {
+                                            Expression.Constant(propertyType),
+                                            falseExpression
+                                        });
+                                        falseExpression = Expression.Convert(falseExpression, propertyType);
+                                    }
+
+                                    #endregion
+                                }
+                                else
+                                {
+                                    falseExpression = Expression.Convert(falseExpression, propertyType);
+                                }
                             }
                             else
                             {
@@ -424,6 +465,7 @@ namespace RepoDb.Reflection
             var typeOfLong = typeof(long);
             var typeOfDouble = typeof(Double);
             var typeOfShort = typeof(short);
+            var typeOfConvert = typeof(Convert);
 
             // Variables for arguments
             var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
@@ -478,6 +520,8 @@ namespace RepoDb.Reflection
 
                 // Property instance
                 var instanceProperty = (PropertyInfo)null;
+                var propertyType = (Type)null;
+                var fieldType = field.Type?.GetUnderlyingType();
 
                 #region Value
 
@@ -490,7 +534,7 @@ namespace RepoDb.Reflection
                     // Check the proper type of the entity
                     if (typeOfEntity != typeOfObject && typeOfEntity.GetTypeInfo().IsGenericType == false)
                     {
-                        instanceProperty = typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
+                        instanceProperty = classProperty.PropertyInfo; // typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
                     }
 
                     #region Instance.Property or PropertyInfo.GetValue()
@@ -505,13 +549,13 @@ namespace RepoDb.Reflection
                     }
                     else
                     {
+                        propertyType = instanceProperty.PropertyType.GetUnderlyingType();
+
                         // Parse with Guid if necessary
                         if (TypeMapper.ConversionType == ConversionType.Automatic)
                         {
                             #region StringToGuid
 
-                            var propertyType = instanceProperty?.PropertyType.GetUnderlyingType();
-                            var fieldType = field.Type?.GetUnderlyingType();
                             var valueToConvert = Expression.Property(instance, instanceProperty);
 
                             // Create a new guid here
@@ -531,6 +575,23 @@ namespace RepoDb.Reflection
                             // Get the Class.Property
                             value = Expression.Property(instance, instanceProperty);
                         }
+
+                        #region EnumAsIntForString
+
+                        if (propertyType.GetTypeInfo().IsEnum)
+                        {
+                            var mappedToType = classProperty?.GetDbType();
+                            if (mappedToType != null && mappedToType != DbType.String)
+                            {
+                                var convertToTypeMethod = typeOfConvert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { typeOfObject });
+                                if (convertToTypeMethod != null)
+                                {
+                                    value = Expression.Call(convertToTypeMethod, Expression.Convert(value, typeOfObject));
+                                }
+                            }
+                        }
+
+                        #endregion
 
                         // Convert to object
                         value = Expression.Convert(value, typeOfObject);
@@ -617,9 +678,6 @@ namespace RepoDb.Reflection
                 // Identify the conversion
                 if (TypeMapper.ConversionType == ConversionType.Automatic)
                 {
-                    var propertyType = instanceProperty?.PropertyType.GetUnderlyingType();
-                    var fieldType = field.Type?.GetUnderlyingType();
-
                     // Identity the conversion
                     if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
                         propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
@@ -643,7 +701,19 @@ namespace RepoDb.Reflection
                 // Set for non Timestamp
                 if (fieldOrPropertyType != typeOfTimeSpan)
                 {
-                    var dbType = TypeMapper.Get(fieldOrPropertyType);
+                    var dbType = (DbType?)null;
+
+                    // Get the class property
+                    if (propertyType?.GetTypeInfo().IsEnum == true)
+                    {
+                        dbType = classProperty?.GetDbType();
+                    }
+
+                    // Get the type mapping
+                    if (dbType == null)
+                    {
+                        dbType = TypeMapper.Get(fieldOrPropertyType);
+                    }
 
                     // Use the resolver
                     if (dbType == null)
@@ -879,6 +949,7 @@ namespace RepoDb.Reflection
             var typeOfLong = typeof(long);
             var typeOfDouble = typeof(Double);
             var typeOfShort = typeof(short);
+            var typeOfConvert = typeof(Convert);
 
             // Variables for arguments
             var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
@@ -938,6 +1009,8 @@ namespace RepoDb.Reflection
 
                 // Property instance
                 var instanceProperty = (PropertyInfo)null;
+                var propertyType = (Type)null;
+                var fieldType = field.Type?.GetUnderlyingType();
 
                 #region Value
 
@@ -950,7 +1023,7 @@ namespace RepoDb.Reflection
                     // Check the proper type of the entity
                     if (typeOfEntity != typeOfObject && typeOfEntity.GetTypeInfo().IsGenericType == false)
                     {
-                        instanceProperty = typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
+                        instanceProperty = classProperty.PropertyInfo; // typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
                     }
 
                     #region Instance.Property or PropertyInfo.GetValue()
@@ -965,13 +1038,13 @@ namespace RepoDb.Reflection
                     }
                     else
                     {
+                        propertyType = instanceProperty?.PropertyType.GetUnderlyingType();
+
                         // Parse with Guid if necessary
                         if (TypeMapper.ConversionType == ConversionType.Automatic)
                         {
                             #region StringToGuid
 
-                            var propertyType = instanceProperty?.PropertyType.GetUnderlyingType();
-                            var fieldType = field.Type?.GetUnderlyingType();
                             var valueToConvert = Expression.Property(instance, instanceProperty);
 
                             // Create a new guid here
@@ -991,6 +1064,23 @@ namespace RepoDb.Reflection
                             // Get the Class.Property
                             value = Expression.Property(instance, instanceProperty);
                         }
+
+                        #region EnumAsIntForString
+
+                        if (propertyType.GetTypeInfo().IsEnum)
+                        {
+                            var mappedToType = classProperty?.GetDbType();
+                            if (mappedToType != null && mappedToType != DbType.String)
+                            {
+                                var convertToTypeMethod = typeOfConvert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { typeOfObject });
+                                if (convertToTypeMethod != null)
+                                {
+                                    value = Expression.Call(convertToTypeMethod, Expression.Convert(value, typeOfObject));
+                                }
+                            }
+                        }
+
+                        #endregion
 
                         // Convert to object
                         value = Expression.Convert(value, typeOfObject);
@@ -1077,9 +1167,6 @@ namespace RepoDb.Reflection
                 // Identify the conversion
                 if (TypeMapper.ConversionType == ConversionType.Automatic)
                 {
-                    var propertyType = instanceProperty?.PropertyType.GetUnderlyingType();
-                    var fieldType = field.Type?.GetUnderlyingType();
-
                     // Identity the conversion
                     if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
                         propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
@@ -1103,7 +1190,19 @@ namespace RepoDb.Reflection
                 // Set for non Timestamp
                 if (fieldOrPropertyType != typeOfTimeSpan)
                 {
-                    var dbType = TypeMapper.Get(fieldOrPropertyType);
+                    var dbType = (DbType?)null;
+
+                    // Get the class property db type
+                    if (propertyType?.GetTypeInfo().IsEnum == true)
+                    {
+                        dbType = classProperty?.GetDbType();
+                    }
+
+                    // Get the type mapping
+                    if (dbType == null)
+                    {
+                        dbType = TypeMapper.Get(fieldOrPropertyType);
+                    }
 
                     // Use the resolver
                     if (dbType == null)

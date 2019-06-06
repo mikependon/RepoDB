@@ -140,7 +140,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Check the primary
-            var primary = GetAndGuardPrimaryKey<TEntity>();
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
@@ -286,7 +286,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Check the primary
-            var primary = GetAndGuardPrimaryKey<TEntity>();
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)

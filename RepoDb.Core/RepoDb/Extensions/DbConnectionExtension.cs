@@ -1032,11 +1032,22 @@ namespace RepoDb
         /// Throws an exception if there is no defined primary key on the data entity type.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
         /// <returns>The primary <see cref="ClassProperty"/> of the type.</returns>
-        private static ClassProperty GetAndGuardPrimaryKey<TEntity>()
+        private static ClassProperty GetAndGuardPrimaryKey<TEntity>(IDbConnection connection)
             where TEntity : class
         {
             var property = PrimaryCache.Get<TEntity>();
+            if (property == null)
+            {
+                var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+                var primary = dbFields.FirstOrDefault(df => df.IsPrimary);
+                if (primary != null)
+                {
+                    var properties = PropertyCache.Get<TEntity>();
+                    property = properties.FirstOrDefault(p => string.Equals(p.GetUnquotedMappedName(), primary.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                }
+            }
             if (property == null)
             {
                 throw new PrimaryFieldNotFoundException($"No primary key found at type '{typeof(TEntity).FullName}'.");

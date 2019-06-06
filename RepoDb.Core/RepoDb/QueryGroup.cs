@@ -8,6 +8,7 @@ using RepoDb.Exceptions;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Dynamic;
+using System.Data;
 
 namespace RepoDb
 {
@@ -683,11 +684,18 @@ namespace RepoDb
              * LEFT
              */
 
-            // Get the value in the right
-            if (expression.Right.Type.GetUnderlyingType() == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
+            // Get the value in the right for (IsNot)
+            if (expression.Type == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
             {
                 var value = expression.Right.GetValue();
-                isEqualsTo = value is bool && Equals(value, false) == false;
+                if (value is bool)
+                {
+                    isEqualsTo = Equals(value, false) == false;
+                }
+                else
+                {
+                    // TODO: Fix the issue of the Enum for the Expression-Based Query
+                }
                 skipRight = true;
             }
 
@@ -776,6 +784,24 @@ namespace RepoDb
             var value = expression.GetValue();
             if (value != null)
             {
+                #region Enum
+
+                if (expression.Type.GetTypeInfo().IsEnum)
+                {
+                    var dbType = TypeMapper.Get(expression.Type);
+                    if (dbType != null && dbType.Value != DbType.String)
+                    {
+                        var mappedToType = new SqlDbTypeToClientTypeResolver().Resolve(dbType.Value);
+                        var convertMethod = typeof(Convert).GetMethod(string.Concat("To", mappedToType.Name), new[] { typeof(object) });
+                        if (convertMethod != null)
+                        {
+                            value = convertMethod.Invoke(null, new[] { value });
+                        }
+                    }
+                }
+
+                #endregion
+
                 var field = new QueryField(expression.Member.GetMappedName(), QueryField.GetOperation(expressionType), value);
                 queryGroup = new QueryGroup(field.AsEnumerable());
                 queryGroup.SetIsNot(isEqualsTo == false);
@@ -1083,7 +1109,8 @@ namespace RepoDb
             // Iterate every property
             foreach (var property in type.GetProperties())
             {
-                fields.Add(new QueryField(property.Name, property.GetValue(obj)));
+                var value = property.GetValue(obj);
+                fields.Add(new QueryField(property.Name, value));
             }
 
             // Return

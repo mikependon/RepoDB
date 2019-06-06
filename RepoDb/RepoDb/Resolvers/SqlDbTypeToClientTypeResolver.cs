@@ -1,4 +1,5 @@
 ﻿using RepoDb.Interfaces;
+using System;
 using System.Data;
 
 namespace RepoDb
@@ -6,7 +7,7 @@ namespace RepoDb
     /// <summary>
     /// A class used to resolve the <see cref="DbType"/> into its equivalent database string name.
     /// </summary>
-    public class SqlDbTypeToStringNameResolver : IResolver<DbType, string>
+    public class SqlDbTypeToClientTypeResolver : IResolver<DbType, Type>
     {
         /*
          * Taken:
@@ -18,54 +19,54 @@ namespace RepoDb
         /// </summary>
         /// <param name="dbType">The type of the database.</param>
         /// <returns>The equivalent string name.</returns>
-        public string Resolve(DbType dbType)
+        public Type Resolve(DbType dbType)
         {
             switch (dbType)
             {
                 case DbType.Int64:
-                    return "BIGINT";
+                    return typeof(long);
                 case DbType.Binary:
-                    return "BINARY";
+                    return typeof(byte[]);
                 case DbType.Boolean:
-                    return "BIT";
+                    return typeof(bool);
                 case DbType.String:
-                    return "NVARCHAR";
+                    return typeof(string);
                 case DbType.Date:
-                    return "DATE";
+                    return typeof(DateTime);
                 case DbType.DateTime:
-                    return "DATETIME";
+                    return typeof(DateTime);
                 case DbType.DateTime2:
-                    return "DATETIME2";
+                    return typeof(DateTime);
                 case DbType.DateTimeOffset:
-                    return "DATETIMEOFFSET";
+                    return typeof(DateTimeOffset);
                 case DbType.Decimal:
-                    return "DECIMAL(18,2)";
+                    return typeof(decimal);
                 case DbType.Single:
-                    return "REAL";
+                    return typeof(Single);
                 case DbType.Double:
-                    return "FLOAT";
+                    return typeof(double);
                 case DbType.Int32:
-                    return "INT";
+                    return typeof(int);
                 case DbType.Int16:
-                    return "SMALLINT";
+                    return typeof(short);
                 case DbType.Time:
-                    return "TIME";
+                    return typeof(TimeSpan);
                 case DbType.Byte:
-                    return "TINYINT";
+                    return typeof(byte);
                 case DbType.Guid:
-                    return "UNIQUEIDENTIFIER";
+                    return typeof(Guid);
                 case DbType.AnsiString:
-                    return "VARCHAR";
+                    return typeof(string);
                 case DbType.AnsiStringFixedLength:
-                    return "CHAR";
+                    return typeof(string);
                 case DbType.StringFixedLength:
-                    return "NCHAR";
+                    return typeof(string);
                 case DbType.Object:
-                    return "OBJECT";
-                case DbType.Xml:
-                    return "XML";
+                    return typeof(object);
+                //case DbType.Xml:
+                //    return "XML";
                 default:
-                    return "NVARCHAR";
+                    return typeof(string);
             }
         }
     }

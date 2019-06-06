@@ -279,7 +279,10 @@ namespace RepoDb
             if (identityField != null)
             {
                 var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
-                databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType);
+                if (dbType != null)
+                {
+                    databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType.Value);
+                }
             }
 
             // Build the query
@@ -365,7 +368,10 @@ namespace RepoDb
             if (identityField != null)
             {
                 var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
-                databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType);
+                if (dbType != null)
+                {
+                    databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType.Value);
+                }
             }
 
             // Build the query
@@ -489,7 +495,10 @@ namespace RepoDb
             if (identityField != null)
             {
                 var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
-                databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType);
+                if (dbType != null)
+                {
+                    databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType.Value);
+                }
             }
 
             // Build the query
@@ -636,12 +645,18 @@ namespace RepoDb
             if (identityField != null)
             {
                 var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
-                databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType);
+                if (dbType != null)
+                {
+                    databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType.Value);
+                }
             }
             else if (primaryField != null)
             {
                 var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(primaryField.Type);
-                databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType);
+                if (dbType != null)
+                {
+                    databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType.Value);
+                }
             }
 
             // Build the query

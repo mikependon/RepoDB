@@ -40,7 +40,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>();
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
             return Update<TEntity>(connection: connection,
                 entity: entity,
                 where: ToQueryGroup<TEntity>(primary, entity),
@@ -71,7 +71,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>();
+            GetAndGuardPrimaryKey<TEntity>(connection);
             return Update<TEntity>(connection: connection,
                 entity: entity,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
@@ -260,7 +260,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>();
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: ToQueryGroup<TEntity>(primary, entity),
@@ -291,7 +291,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>();
+            GetAndGuardPrimaryKey<TEntity>(connection);
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),

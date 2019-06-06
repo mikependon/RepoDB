@@ -57,7 +57,12 @@
     <Compile Include="Caches\BaseRepositoryCachesTest.cs" />
     <Compile Include="Caches\DbRepositoryCachesTest.cs" />
     <Compile Include="Caches\SqlConnectionCachesTest.cs" />
+    <Compile Include="Enumerations\BooleanValue.cs" />
+    <Compile Include="Enumerations\Continent.cs" />
+    <Compile Include="Enumerations\Direction.cs" />
+    <Compile Include="EnumPropertyTest.cs" />
     <Compile Include="ExecuteParameterTest.cs" />
+    <Compile Include="Models\EnumClasses.cs" />
     <Compile Include="Models\IdentityTable.cs" />
     <Compile Include="Models\IdentityTableWithDifferentPrimary.cs" />
     <Compile Include="Models\WithExtraFieldsIdentityTable.cs" />

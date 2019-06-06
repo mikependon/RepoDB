@@ -5,7 +5,7 @@ using System;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to resolve the SQL Database Types into .NET CLR Types.
+    /// A class used to resolve the SQL Database Types into its equivalent .NET CLR Types.
     /// </summary>
     public class SqlDbTypeNameToClientTypeResolver : IResolver<string, Type>
     {

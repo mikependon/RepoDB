@@ -185,10 +185,25 @@ namespace RepoDb
             {
                 return m_dbType;
             }
+
+            // Set the flag
             m_isDbTypeWasSet = true;
-            return m_dbType = PropertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                TypeMapper.Get(PropertyInfo.PropertyType.GetUnderlyingType()) ??
-                m_clientTypeToSqlDbTypeResolver.Resolve(PropertyInfo.PropertyType);
+
+            // Get the type (underlying type)
+            var propertyType = PropertyInfo.PropertyType.GetUnderlyingType();
+
+            // Property and Type level mapping
+            m_dbType = PropertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
+                TypeMapper.Get(propertyType);
+
+            // Try to resolve if not found
+            if (m_dbType == null && propertyType.GetTypeInfo().IsEnum == false)
+            {
+                m_dbType = m_clientTypeToSqlDbTypeResolver.Resolve(PropertyInfo.PropertyType);
+            }
+
+            // Return the value
+            return m_dbType;
         }
 
         /*

@@ -223,7 +223,7 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>();
+                var primary = GetAndGuardPrimaryKey<TEntity>(connection);
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
@@ -448,7 +448,7 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>();
+                var primary = GetAndGuardPrimaryKey<TEntity>(connection);
                 qualifiers = primary.AsField().AsEnumerable();
             }
 

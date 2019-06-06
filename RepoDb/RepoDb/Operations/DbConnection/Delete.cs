@@ -36,7 +36,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>();
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
             return Delete<TEntity>(connection: connection,
                 where: ToQueryGroup<TEntity>(primary, entity),
                 commandTimeout: commandTimeout,
@@ -64,7 +64,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>();
+            GetAndGuardPrimaryKey<TEntity>(connection);
             return Delete<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
@@ -245,7 +245,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>();
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
             return DeleteAsync<TEntity>(connection: connection,
                 where: ToQueryGroup<TEntity>(primary, entity),
                 commandTimeout: commandTimeout,
@@ -273,7 +273,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>();
+            GetAndGuardPrimaryKey<TEntity>(connection);
             return DeleteAsync<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,

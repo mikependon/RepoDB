@@ -207,14 +207,25 @@ namespace RepoDb.Extensions
                     // Get the property vaues
                     var name = property.GetUnquotedMappedName();
                     var value = property.PropertyInfo.GetValue(param);
-                    var dbType = property.GetDbType() ??
-                        TypeMapper.Get(property.PropertyInfo.PropertyType.GetUnderlyingType() ??
-                            value?.GetType().GetUnderlyingType());
 
-                    // Ensure the type mapping
+                    // Get property db type
+                    var dbType = property.GetDbType();
+
+                    // Ensure mapping based on the value type
                     if (dbType == null)
                     {
-                        if (value == null && property.PropertyInfo.PropertyType == m_bytesType)
+                        dbType = TypeMapper.Get(value?.GetType().GetUnderlyingType());
+                    }
+
+                    // Check for specialized
+                    if (dbType == null)
+                    {
+                        var propertyType = property.PropertyInfo.PropertyType.GetUnderlyingType();
+                        if (propertyType?.GetTypeInfo().IsEnum == true)
+                        {
+                            dbType = DbType.String;
+                        }
+                        else if (propertyType == m_bytesType)
                         {
                             dbType = DbType.Binary;
                         }
@@ -244,6 +255,7 @@ namespace RepoDb.Extensions
             foreach (var kvp in kvps)
             {
                 var value = kvp.Value;
+                var valueType = (Type)null;
 
                 // Cast the proper object and identify the properties
                 if (kvp.Value is CommandParameter)
@@ -255,13 +267,36 @@ namespace RepoDb.Extensions
                     value = commandParameter.Value;
 
                     // Get the DB Type
-                    dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                        TypeMapper.Get(property?.PropertyType?.GetUnderlyingType() ??
-                            kvp.Value?.GetType()?.GetUnderlyingType());
+                    dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType;
+
+                    // Get the property-level mapping
+                    if (property != null)
+                    {
+                        dbType = TypeMapper.Get(property.PropertyType.GetUnderlyingType());
+                    }
+
+                    // Set the value type if the DB Type is not found
+                    if (dbType == null)
+                    {
+                        valueType = value?.GetType()?.GetUnderlyingType();
+                    }
                 }
                 else
                 {
-                    dbType = TypeMapper.Get(kvp.Value?.GetType()?.GetUnderlyingType());
+                    valueType = kvp.Value?.GetType()?.GetUnderlyingType();
+                }
+
+                // Check for the specialized types
+                if (dbType == null)
+                {
+                    if (valueType?.GetTypeInfo().IsEnum == true)
+                    {
+                        dbType = DbType.String;
+                    }
+                    else if (valueType == m_bytesType)
+                    {
+                        dbType = DbType.Binary;
+                    }
                 }
 
                 // Add the parameter
@@ -328,7 +363,21 @@ namespace RepoDb.Extensions
 
             // Get the values
             var value = queryField.Parameter.Value;
-            var dbType = TypeMapper.Get(value?.GetType()?.GetUnderlyingType());
+            var valueType = value?.GetType()?.GetUnderlyingType();
+            var dbType = TypeMapper.Get(valueType);
+
+            // Check for the specialized types
+            if (dbType == null)
+            {
+                if (valueType?.GetTypeInfo().IsEnum == true)
+                {
+                    dbType = DbType.String;
+                }
+                else if (valueType == m_bytesType)
+                {
+                    dbType = DbType.Binary;
+                }
+            }
 
             // Create the parameter
             command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType));
