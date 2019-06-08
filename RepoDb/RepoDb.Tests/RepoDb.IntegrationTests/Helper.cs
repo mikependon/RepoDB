@@ -476,6 +476,48 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region UnorganizedTable
+
+        /// <summary>
+        /// Creates a list of <see cref="UnorganizedTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="UnorganizedTable"/> objects.</returns>
+        public static List<UnorganizedTable> CreateUnorganizedTables(int count)
+        {
+            var tables = new List<UnorganizedTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new UnorganizedTable
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnInt = index,
+                    ColumnNVarChar = $"NVARCHAR{index}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="UnorganizedTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="UnorganizedTable"/> object.</returns>
+        public static UnorganizedTable CreateUnorganizedTable()
+        {
+            var random = new Random();
+            return new UnorganizedTable
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        #endregion
+
         #region Dynamics
 
         #region IdentityTable

@@ -35,7 +35,7 @@ namespace RepoDb
             }
 
             // Set the name
-            Name = name.AsQuoted(true);
+            Name = name.AsQuoted(true, null);
             UnquotedName = name.AsUnquoted(true);
 
             // Set the type

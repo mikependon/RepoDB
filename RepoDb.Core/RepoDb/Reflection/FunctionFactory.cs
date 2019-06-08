@@ -510,12 +510,13 @@ namespace RepoDb.Reflection
                 var parameterAssignments = new List<Expression>();
 
                 // Parameter variables
-                var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", field.UnquotedName));
+                var parameterName = field.UnquotedName.AsAlphaNumeric();
+                var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", parameterName));
                 var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                 parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
 
                 // Set the name
-                var nameAssignment = Expression.Call(parameterVariable, dbParameterParameterNameSetMethod, Expression.Constant(field.UnquotedName));
+                var nameAssignment = Expression.Call(parameterVariable, dbParameterParameterNameSetMethod, Expression.Constant(parameterName));
                 parameterAssignments.Add(nameAssignment);
 
                 // Property instance
@@ -616,7 +617,7 @@ namespace RepoDb.Reflection
                     if (isNullable == true)
                     {
                         // Identification of the DBNull
-                        var valueVariable = Expression.Variable(typeOfObject, string.Concat("valueOf", field.UnquotedName));
+                        var valueVariable = Expression.Variable(typeOfObject, string.Concat("valueOf", parameterName));
                         var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
 
                         // Set the propert value
@@ -847,25 +848,26 @@ namespace RepoDb.Reflection
                 var propertyVariable = (ParameterExpression)null;
                 var propertyInstance = (Expression)null;
                 var classProperty = (ClassProperty)null;
+                var propertyName = field.UnquotedName;
 
                 // Set the proper assignments (property)
                 if (typeOfEntity == typeOfObject)
                 {
-                    propertyVariable = Expression.Variable(typeOfPropertyInfo, string.Concat("property", field.UnquotedName));
+                    propertyVariable = Expression.Variable(typeOfPropertyInfo, string.Concat("property", propertyName));
                     propertyInstance = Expression.Call(Expression.Call(instanceVariable, objectGetTypeMethod),
                         typeGetPropertyMethod,
                         new[]
                         {
-                            Expression.Constant(field.UnquotedName),
+                            Expression.Constant(propertyName),
                             Expression.Constant(BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)
                         });
                 }
                 else
                 {
-                    classProperty = entityProperties.First(property => property.GetUnquotedMappedName().ToLower() == field.UnquotedName.ToLower());
+                    classProperty = entityProperties.First(property => property.GetUnquotedMappedName().ToLower() == propertyName.ToLower());
                     if (classProperty != null)
                     {
-                        propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", field.UnquotedName));
+                        propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", propertyName));
                         propertyInstance = Expression.Property(instanceVariable, classProperty.PropertyInfo);
                     }
                 }
@@ -998,13 +1000,14 @@ namespace RepoDb.Reflection
                 var parameterAssignments = new List<Expression>();
 
                 // Parameter variables
-                var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", field.UnquotedName));
+                var parameterName = field.UnquotedName.AsAlphaNumeric();
+                var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", parameterName));
                 var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                 parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
 
                 // Set the name
                 var nameAssignment = Expression.Call(parameterVariable, dbParameterParameterNameSetMethod,
-                    Expression.Constant(entityIndex > 0 ? string.Concat(field.UnquotedName, "_", entityIndex) : field.UnquotedName));
+                    Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
                 parameterAssignments.Add(nameAssignment);
 
                 // Property instance
@@ -1105,7 +1108,7 @@ namespace RepoDb.Reflection
                     if (isNullable == true)
                     {
                         // Identification of the DBNull
-                        var valueVariable = Expression.Variable(typeOfObject, string.Concat("valueOf", field.UnquotedName));
+                        var valueVariable = Expression.Variable(typeOfObject, string.Concat("valueOf", parameterName));
                         var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
 
                         // Set the propert value
@@ -1340,25 +1343,26 @@ namespace RepoDb.Reflection
                     var propertyVariable = (ParameterExpression)null;
                     var propertyInstance = (Expression)null;
                     var classProperty = (ClassProperty)null;
+                    var propertyName = field.UnquotedName;
 
                     // Set the proper assignments (property)
                     if (typeOfEntity == typeOfObject)
                     {
-                        propertyVariable = Expression.Variable(typeOfPropertyInfo, string.Concat("property", field.UnquotedName));
+                        propertyVariable = Expression.Variable(typeOfPropertyInfo, string.Concat("property", propertyName));
                         propertyInstance = Expression.Call(Expression.Call(instanceVariable, objectGetTypeMethod),
                             typeGetPropertyMethod,
                             new[]
                             {
-                                Expression.Constant(field.UnquotedName),
+                                Expression.Constant(propertyName),
                                 Expression.Constant(BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)
                             });
                     }
                     else
                     {
-                        classProperty = entityProperties.FirstOrDefault(property => property.GetUnquotedMappedName().ToLower() == field.UnquotedName.ToLower());
+                        classProperty = entityProperties.FirstOrDefault(property => property.GetUnquotedMappedName().ToLower() == propertyName.ToLower());
                         if (classProperty != null)
                         {
-                            propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", field.UnquotedName));
+                            propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", propertyName));
                             propertyInstance = Expression.Property(instanceVariable, classProperty.PropertyInfo);
                         }
                     }
@@ -1445,10 +1449,11 @@ namespace RepoDb.Reflection
             var dbParameterValueProperty = typeOfDbParameter.GetProperty("Value");
 
             // Get the entity property
-            var property = typeOfEntity.GetProperty(field.UnquotedName).SetMethod;
+            var propertyName = field.UnquotedName.AsAlphaNumeric();
+            var property = typeOfEntity.GetProperty(propertyName).SetMethod;
 
             // Get the command parameter
-            var name = parameterName ?? field.UnquotedName;
+            var name = parameterName ?? propertyName;
             var parameters = Expression.Property(dbCommandParameterExpression, dbCommandParametersProperty);
             var parameter = Expression.Call(parameters, dbParameterCollectionIndexerMethod,
                 Expression.Constant(index > 0 ? string.Concat(name, "_", index) : name));
@@ -1526,9 +1531,10 @@ namespace RepoDb.Reflection
              {
                  // Create the parameter
                  var parameter = command.CreateParameter();
+                 var name = field.UnquotedName.AsAlphaNumeric();
 
                  // Set the property
-                 parameter.ParameterName = index > 0 ? string.Concat(field.UnquotedName, "_", index) : field.UnquotedName;
+                 parameter.ParameterName = index > 0 ? string.Concat(name, "_", index) : name;
 
                  // Set the Direction
                  parameter.Direction = direction;

@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace RepoDb.UnitTests
 {
+    [TestClass]
     public partial class QueryGroupTest
     {
         #region Constructor
@@ -764,6 +765,53 @@ namespace RepoDb.UnitTests
             // Act
             var actual = queryGroup.GetString();
             var expected = "([Field1] = @Field1 AND [Field1] IN (@Field1_1_In_0, @Field1_1_In_1, @Field1_1_In_2))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
+        #region NonAlphaNumericChars
+
+        [TestMethod]
+        public void TestQueryGroupWithSpace()
+        {
+            // Setup
+            var queryGroup = new QueryGroup(new QueryField("Field 1", Operation.Equal, 1));
+
+            // Act
+            var actual = queryGroup.GetString();
+            var expected = "([Field 1] = @Field_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupWithSpaces()
+        {
+            // Setup
+            var queryGroup = new QueryGroup(new QueryField("Date Of Birth", Operation.Equal, 1));
+
+            // Act
+            var actual = queryGroup.GetString();
+            var expected = "([Date Of Birth] = @Date_Of_Birth)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        [TestMethod]
+        public void TestQueryGroupWithInvalidChars()
+        {
+            // Setup
+            var queryGroup = new QueryGroup(new QueryField("Date.Of.Birth/BirthDay", Operation.Equal, 1));
+
+            // Act
+            var actual = queryGroup.GetString();
+            var expected = "([Date.Of.Birth/BirthDay] = @Date_Of_Birth_BirthDay)";
 
             // Assert
             Assert.AreEqual(expected, actual);

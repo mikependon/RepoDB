@@ -22,19 +22,53 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Removes the database quotes from the string.
+        /// Removes the non-alphanumeric characters.
         /// </summary>
-        /// <param name="value">The string value where the database quotes will be removed.</param>
-        /// <param name="trim">The boolean value that indicates whether to trim the string before unquoting.</param>
-        /// <returns>The quoted string.</returns>
-        public static string AsUnquoted(this string value, bool trim = false)
+        /// <param name="value">The string value where the non-alphanumeric characters will be removed.</param>
+        /// <param name="trim">The boolean value that indicates whether to trim the string before removing the non-alphanumeric characters.</param>
+        /// <returns>The alphanumeric string.</returns>
+        internal static string AsAlphaNumeric(this string value, bool trim = false)
         {
             if (trim)
             {
                 value = value.Trim();
             }
-            var v = value?.IndexOf(".") >= 0 ? value.Split(".".ToCharArray()).Last() : value;
-            return Regex.Replace(v, @"[\[\]']+", "");
+            return Regex.Replace(value, @"[^a-zA-Z0-9]", "_");
+        }
+
+        /// <summary>
+        /// Removes the database quotes from the string.
+        /// </summary>
+        /// <param name="value">The string value where the database quotes will be removed.</param>
+        /// <param name="trim">The boolean value that indicates whether to trim the string before unquoting.</param>
+        /// <param name="separator">The separator in which the quotes will be removed.</param>
+        /// <returns>The quoted string.</returns>
+        public static string AsUnquoted(this string value, bool trim = false, string separator = ".")
+        {
+            if (trim)
+            {
+                value = value.Trim();
+            }
+
+            if (string.IsNullOrEmpty(separator) || value.IndexOf(separator) < 0)
+            {
+                return value.AsUnquoted();
+            }
+            else
+            {
+                var splitted = value.Split(separator.ToCharArray());
+                return splitted.Select(s => s.AsUnquoted()).Join(separator);
+            }
+        }
+
+        /// <summary>
+        /// Remove the quotes from the string.
+        /// </summary>
+        /// <param name="value">The string value where the database quotes will be removed.</param>
+        /// <returns></returns>
+        private static string AsUnquoted(this string value)
+        {
+            return Regex.Replace(value, @"[\[\]']+", "");
         }
 
         /// <summary>
@@ -42,26 +76,27 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value">The string value where the database quotes will be added.</param>
         /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
+        /// <param name="separator">The separator in which the quotes will be placed.</param>
         /// <returns>The quoted string.</returns>
-        public static string AsQuoted(this string value, bool trim = false)
+        public static string AsQuoted(this string value, bool trim = false, string separator = ".")
         {
             if (trim)
             {
                 value = value.Trim();
             }
-            if (value.IndexOf(".") < 0)
+            if (string.IsNullOrEmpty(separator) || value.IndexOf(separator) < 0)
             {
                 return value.AsQuoted();
             }
             else
             {
-                var splitted = value.Split(".".ToCharArray());
-                return splitted.Select(s => s.AsQuoted()).Join(".");
+                var splitted = value.Split(separator.ToCharArray());
+                return splitted.Select(s => s.AsQuoted()).Join(separator);
             }
         }
 
         /// <summary>
-        /// Adds a quotes to the string.
+        /// Add the quotes into the string.
         /// </summary>
         /// <param name="value">The string value where the database quotes will be added.</param>
         /// <returns></returns>

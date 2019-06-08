@@ -63,6 +63,7 @@
     <Compile Include="EnumPropertyTest.cs" />
     <Compile Include="ExecuteParameterTest.cs" />
     <Compile Include="Models\EnumClasses.cs" />
+    <Compile Include="Models\UnorganizedTable.cs" />
     <Compile Include="Models\IdentityTable.cs" />
     <Compile Include="Models\IdentityTableWithDifferentPrimary.cs" />
     <Compile Include="Models\WithExtraFieldsIdentityTable.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="DifferentPrimaryTest.cs" />
     <Compile Include="ObjectMappingTest.cs" />
     <Compile Include="ObjectNameCasingTest.cs" />
+    <Compile Include="ObjectQuotationTest.cs" />
     <Compile Include="Operations\BaseRepositoryOperationsTest.cs" />
     <Compile Include="Operations\DbRepositoryOperationsTest.cs" />
     <Compile Include="Operations\SqlConnectionOperationsTest.cs" />

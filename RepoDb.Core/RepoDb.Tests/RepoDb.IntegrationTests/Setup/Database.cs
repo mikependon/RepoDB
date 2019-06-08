@@ -85,6 +85,7 @@ namespace RepoDb.IntegrationTests.Setup
             CreateCompleteTable();
             CreateIdentityTable();
             CreateNonIdentityTable();
+            CreateUnorganizedTable();
         }
 
         /// <summary>
@@ -108,6 +109,7 @@ namespace RepoDb.IntegrationTests.Setup
                 connection.Truncate("[dbo].[CompleteTable]");
                 connection.Truncate("[sc].[IdentityTable]");
                 connection.Truncate("[dbo].[NonIdentityTable]");
+                connection.Truncate("[dbo].[Unorganized Table]");
             }
         }
 
@@ -182,6 +184,28 @@ namespace RepoDb.IntegrationTests.Setup
 		                (
 			                [Id] ASC
 		                )
+	                ) ON [PRIMARY];
+                END";
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                connection.ExecuteNonQuery(commandText);
+            }
+        }
+
+        /// <summary>
+        /// Creates an unorganized table that has some non-alphanumeric fields. All fields are nullable.
+        /// </summary>
+        public static void CreateUnorganizedTable()
+        {
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Unorganized Table'))
+                BEGIN
+	                CREATE TABLE [dbo].[Unorganized Table]
+	                (
+		                [Id] BIGINT NOT NULL IDENTITY(1, 1),
+                        [Session Id] UNIQUEIDENTIFIER NOT NULL,
+		                [Column Int] INT NULL,
+		                [Column/NVarChar] NVARCHAR(128) NULL,
+		                [Column.DateTime] DATETIME2(7) NULL
 	                ) ON [PRIMARY];
                 END";
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())

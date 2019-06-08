@@ -27,8 +27,8 @@ namespace RepoDb.Extensions
         // AsParameter
         private static string AsParameter(this Field field, int index = 0, string prefix = Constant.DefaultParameterPrefix)
         {
-            return index > 0 ? string.Concat(prefix, field.UnquotedName, "_", index) :
-                string.Concat(prefix, field.UnquotedName);
+            return index > 0 ? string.Concat(prefix, field.UnquotedName.AsAlphaNumeric(true), "_", index) :
+                string.Concat(prefix, field.UnquotedName.AsAlphaNumeric(true));
         }
 
         // AsAliasField

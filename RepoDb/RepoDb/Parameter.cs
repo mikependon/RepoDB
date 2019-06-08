@@ -35,7 +35,7 @@ namespace RepoDb
             }
 
             // Set the properties
-            Name = name.AsUnquoted(true);
+            Name = name.AsAlphaNumeric(true);
             Value = value;
             if (prependUnderscore)
             {

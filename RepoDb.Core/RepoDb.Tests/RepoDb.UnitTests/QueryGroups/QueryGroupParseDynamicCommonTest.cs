@@ -2,7 +2,6 @@
 
 namespace RepoDb.UnitTests
 {
-    [TestClass]
     public partial class QueryGroupTest
     {
         [TestMethod]

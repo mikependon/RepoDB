@@ -142,6 +142,7 @@
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateTruncateTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateUpdateAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateUpdateTest.cs" />
+    <Compile Include="Others\QuotationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb\RepoDb.csproj">
