@@ -12,6 +12,7 @@ RepoDb Documentation
    pages/orderfield
    pages/connection
    pages/rawsql
+   pages/enumeration
    pages/dbhelper
    pages/hints
    pages/provideroperation

@@ -41,6 +41,7 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - It has Bulk-Insert operation.
  - It has massive ORM operations.
  - It has Async operations.
+ - It has Enumeration supports.
  - It has Multi-ResultSet query operations.
  - It has Type mapping.
  - It has Query Hints.
