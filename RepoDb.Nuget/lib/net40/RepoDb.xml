@@ -2064,28 +2064,45 @@
             <param name="separator">The separator to be used.</param>
             <returns>A joined string from a given array of strings separated by the defined separator.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.StringExtension.AsUnquoted(System.String,System.Boolean)">
+        <member name="M:RepoDb.Extensions.StringExtension.AsAlphaNumeric(System.String,System.Boolean)">
             <summary>
-            Removes the database quotes from the string.
+            Removes the non-alphanumeric characters.
             </summary>
-            <param name="value">The string value where the database quotes will be removed.</param>
-            <param name="trim">The boolean value that indicates whether to trim the string before unquoting.</param>
-            <returns>The quoted string.</returns>
+            <param name="value">The string value where the non-alphanumeric characters will be removed.</param>
+            <param name="trim">The boolean value that indicates whether to trim the string before removing the non-alphanumeric characters.</param>
+            <returns>The alphanumeric string.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.StringExtension.AsQuoted(System.String,System.Boolean)">
+        <member name="M:RepoDb.Extensions.StringExtension.AsUnquoted(System.String)">
             <summary>
-            Adds a quotes to the string.
+            Unquotes a string.
             </summary>
-            <param name="value">The string value where the database quotes will be added.</param>
-            <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
-            <returns>The quoted string.</returns>
+            <param name="value">The string value to be unqouted.</param>
+            <returns>The unquoted string.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.StringExtension.AsUnquoted(System.String,System.Boolean,System.String)">
+            <summary>
+            Unquotes a string.
+            </summary>
+            <param name="value">The string value to be unqouted.</param>
+            <param name="trim">The boolean value that indicates whether to trim the string before unquoting.</param>
+            <param name="separator">The separator in which the quotes will be removed.</param>
+            <returns>The unquoted string.</returns>
         </member>
         <member name="M:RepoDb.Extensions.StringExtension.AsQuoted(System.String)">
             <summary>
-            Adds a quotes to the string.
+            Quotes a string.
             </summary>
-            <param name="value">The string value where the database quotes will be added.</param>
-            <returns></returns>
+            <param name="value">The string value to be quoted.</param>
+            <returns>The quoted string.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.StringExtension.AsQuoted(System.String,System.Boolean,System.String)">
+            <summary>
+            Quotes a string.
+            </summary>
+            <param name="value">The string value to be quoted.</param>
+            <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
+            <param name="separator">The separator in which the quotes will be placed.</param>
+            <returns>The quoted string.</returns>
         </member>
         <member name="T:RepoDb.Interfaces.IDbOperationProvider">
             <summary>
@@ -9477,11 +9494,12 @@
             <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>A first occurence value (first column of first row) of the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.GetAndGuardPrimaryKey``1">
+        <member name="M:RepoDb.DbConnectionExtension.GetAndGuardPrimaryKey``1(System.Data.IDbConnection)">
             <summary>
             Throws an exception if there is no defined primary key on the data entity type.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
             <returns>The primary <see cref="T:RepoDb.ClassProperty"/> of the type.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ValidateTransactionConnectionObject(System.Data.IDbConnection,System.Data.IDbTransaction)">
@@ -15872,9 +15890,21 @@
             <param name="value">The value to be checked for <see cref="F:System.DBNull.Value"/>.</param>
             <returns>The converted value.</returns>
         </member>
+        <member name="T:RepoDb.SqlDbTypeToClientTypeResolver">
+            <summary>
+            A class used to resolve the <see cref="T:System.Data.DbType"/> into its equivalent database string name.
+            </summary>
+        </member>
+        <member name="M:RepoDb.SqlDbTypeToClientTypeResolver.Resolve(System.Data.DbType)">
+            <summary>
+            Returns the equivalent <see cref="T:System.Data.DbType"/> of the .NET CLR Types.
+            </summary>
+            <param name="dbType">The type of the database.</param>
+            <returns>The equivalent string name.</returns>
+        </member>
         <member name="T:RepoDb.SqlDbTypeToStringNameResolver">
             <summary>
-            A class used to resolve the .NET CLR Types into its equivalent database string name.
+            A class used to resolve the <see cref="T:System.Data.DbType"/> into its equivalent database string name.
             </summary>
         </member>
         <member name="M:RepoDb.SqlDbTypeToStringNameResolver.Resolve(System.Data.DbType)">
@@ -15898,7 +15928,7 @@
         </member>
         <member name="T:RepoDb.SqlDbTypeNameToClientTypeResolver">
             <summary>
-            A class used to resolve the SQL Database Types into .NET CLR Types.
+            A class used to resolve the SQL Database Types into its equivalent .NET CLR Types.
             </summary>
         </member>
         <member name="M:RepoDb.SqlDbTypeNameToClientTypeResolver.Resolve(System.String)">

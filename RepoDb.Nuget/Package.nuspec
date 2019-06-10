@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.9.7</version>
+    <version>1.9.8-beta1</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -11,9 +11,9 @@
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
-      RepoDb v1.9.7:
-      - Stable release with complete feature sets.
-      - Added netstandard2.0 as the default target framework at Nuget Package.
+      RepoDb v1.9.8-beta1:
+      - Requested: Document Enum Support #261
+      - Bug: Operations are failing on the Unorganized Table - by Christian Franck #262
     </releaseNotes>
     <copyright>Copyright © 2019</copyright>
     <tags>orm sql repo repodb repository</tags>
