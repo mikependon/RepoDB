@@ -39,7 +39,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression can be extracted as <see cref="QueryField"/> object.</returns>
-        public static bool IsExtractable(this Expression expression)
+        internal static bool IsExtractable(this Expression expression)
         {
             return m_extractableExpressionTypes.Contains(expression.NodeType);
         }
@@ -49,7 +49,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression can be grouped as <see cref="QueryGroup"/> object.</returns>
-        public static bool IsGroupable(this Expression expression)
+        internal static bool IsGroupable(this Expression expression)
         {
             return expression.NodeType == ExpressionType.AndAlso || expression.NodeType == ExpressionType.OrElse;
         }
@@ -59,7 +59,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is using the <see cref="Math"/> object operations.</returns>
-        public static bool IsMathematical(this Expression expression)
+        internal static bool IsMathematical(this Expression expression)
         {
             return m_mathematicalExpressionTypes.Contains(expression.NodeType);
         }

@@ -664,11 +664,11 @@ namespace RepoDb
             }
             else if (expression.IsUnary())
             {
-                return Parse<TEntity>(expression.ToUnary(), expression.NodeType);
+                return Parse<TEntity>(expression.ToUnary(), null, expression.NodeType, true);
             }
             else if (expression.IsMethodCall())
             {
-                return Parse<TEntity>(expression.ToMethodCall());
+                return Parse<TEntity>(expression.ToMethodCall(), false, true);
             }
             return null;
         }
@@ -677,6 +677,7 @@ namespace RepoDb
         {
             var leftQueryGroup = (QueryGroup)null;
             var rightQueryGroup = (QueryGroup)null;
+            var rightValue = (object)null;
             var skipRight = false;
             var isEqualsTo = true;
 
@@ -684,19 +685,15 @@ namespace RepoDb
              * LEFT
              */
 
-            // Get the value in the right for (IsNot)
-            if (expression.Type == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
+            // Get the value in the right
+            if (expression.IsExtractable())
             {
-                var value = expression.Right.GetValue();
-                if (value is bool)
-                {
-                    isEqualsTo = Equals(value, false) == false;
-                }
-                else
-                {
-                    // TODO: Fix the issue of the Enum for the Expression-Based Query
-                }
+                rightValue = expression.Right.GetValue();
                 skipRight = true;
+                if (rightValue is bool)
+                {
+                    isEqualsTo = Equals(rightValue, false) == false;
+                }
             }
 
             // Binary
@@ -708,12 +705,12 @@ namespace RepoDb
             // Unary
             else if (expression.Left.IsUnary() == true)
             {
-                leftQueryGroup = Parse<TEntity>(expression.Left.ToUnary(), expression.NodeType, isEqualsTo: isEqualsTo);
+                leftQueryGroup = Parse<TEntity>(expression.Left.ToUnary(), rightValue, expression.NodeType, isEqualsTo);
             }
             // MethodCall
             else if (expression.Left.IsMethodCall())
             {
-                leftQueryGroup = Parse<TEntity>(expression.Left.ToMethodCall(), isEqualsTo: isEqualsTo);
+                leftQueryGroup = Parse<TEntity>(expression.Left.ToMethodCall(), false, isEqualsTo);
             }
             else
             {
@@ -743,14 +740,14 @@ namespace RepoDb
                     rightQueryGroup = Parse<TEntity>(expression.Right.ToBinary());
                 }
                 // Unary
-                if (expression.Right.IsUnary() == true)
+                else if (expression.Right.IsUnary() == true)
                 {
-                    rightQueryGroup = Parse<TEntity>(expression.Right.ToUnary(), expression.NodeType);
+                    rightQueryGroup = Parse<TEntity>(expression.Right.ToUnary(), null, expression.NodeType, true);
                 }
                 // MethodCall
                 else if (expression.Right.IsMethodCall())
                 {
-                    rightQueryGroup = Parse<TEntity>(expression.Right.ToMethodCall());
+                    rightQueryGroup = Parse<TEntity>(expression.Right.ToMethodCall(), false, true);
                 }
 
                 // Return both of them
@@ -765,11 +762,11 @@ namespace RepoDb
             return leftQueryGroup ?? rightQueryGroup;
         }
 
-        private static QueryGroup Parse<TEntity>(UnaryExpression expression, ExpressionType expressionType, bool isEqualsTo = true) where TEntity : class
+        private static QueryGroup Parse<TEntity>(UnaryExpression expression, object rightValue, ExpressionType expressionType, bool isEqualsTo) where TEntity : class
         {
             if (expression.Operand?.IsMember() == true)
             {
-                return Parse<TEntity>(expression.Operand.ToMember(), expressionType);
+                return Parse<TEntity>(expression.Operand.ToMember(), rightValue, expressionType, false, true);
             }
             else if (expression.Operand?.IsMethodCall() == true)
             {
@@ -778,38 +775,36 @@ namespace RepoDb
             return null;
         }
 
-        private static QueryGroup Parse<TEntity>(MemberExpression expression, ExpressionType expressionType, bool isNot = false, bool isEqualsTo = true) where TEntity : class
+        private static QueryGroup Parse<TEntity>(MemberExpression expression, object rightValue, ExpressionType expressionType, bool isNot, bool isEqualsTo) where TEntity : class
         {
             var queryGroup = (QueryGroup)null;
-            var value = expression.GetValue();
+            var value = rightValue ?? expression.GetValue();
+
+            // Check if there are values
             if (value != null)
             {
-                #region Enum
-
+                // Specialized for enum
                 if (expression.Type.GetTypeInfo().IsEnum)
                 {
                     var dbType = TypeMapper.Get(expression.Type);
-                    if (dbType != null && dbType.Value != DbType.String)
-                    {
-                        var mappedToType = new SqlDbTypeToClientTypeResolver().Resolve(dbType.Value);
-                        var convertMethod = typeof(Convert).GetMethod(string.Concat("To", mappedToType.Name), new[] { typeof(object) });
-                        if (convertMethod != null)
-                        {
-                            value = convertMethod.Invoke(null, new[] { value });
-                        }
-                    }
+                    value = Enum.ToObject(expression.Type, value);
                 }
 
-                #endregion
-
+                // Create a new field
                 var field = new QueryField(expression.Member.GetMappedName(), QueryField.GetOperation(expressionType), value);
-                queryGroup = new QueryGroup(field.AsEnumerable());
+
+                // Set the query group
+                queryGroup = new QueryGroup(field);
+
+                // Set the query group IsNot property
                 queryGroup.SetIsNot(isEqualsTo == false);
             }
+
+            // Return the result
             return queryGroup;
         }
 
-        private static QueryGroup Parse<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
+        private static QueryGroup Parse<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo) where TEntity : class
         {
             // Check methods for the 'Like', both 'Array.<All|Any>()'
             if (expression.Method.Name == "All" || expression.Method.Name == "Any")
@@ -858,7 +853,7 @@ namespace RepoDb
             return null;
         }
 
-        private static QueryGroup ParseAllOrAnyForArrayOrAnyForList<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
+        private static QueryGroup ParseAllOrAnyForArrayOrAnyForList<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo) where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() != true)
@@ -947,7 +942,7 @@ namespace RepoDb
             return new QueryGroup(queryFields, null, conjunction, (isNot == isEqualsTo));
         }
 
-        private static QueryGroup ParseContainsForArrayOrList<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo = true) where TEntity : class
+        private static QueryGroup ParseContainsForArrayOrList<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo) where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() != true)
@@ -1004,20 +999,20 @@ namespace RepoDb
             }
 
             // Add to query fields
-            var operation = isNot ? Operation.NotIn : Operation.In;
+            var operation = (isNot == false && isEqualsTo == true) ? Operation.In : Operation.NotIn;
             var queryField = new QueryField(property.Name, operation, values);
 
             // Return the result
             var queryGroup = new QueryGroup(queryField);
 
             // Set the IsNot value
-            queryGroup.SetIsNot(isEqualsTo == false);
+            queryGroup.SetIsNot(isNot == true && isEqualsTo == false);
 
             // Return the instance
             return queryGroup;
         }
 
-        private static QueryGroup ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
+        private static QueryGroup ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo) where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() != true)

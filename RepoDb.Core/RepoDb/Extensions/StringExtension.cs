@@ -37,12 +37,22 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Removes the database quotes from the string.
+        /// Unquotes a string.
         /// </summary>
-        /// <param name="value">The string value where the database quotes will be removed.</param>
+        /// <param name="value">The string value to be unqouted.</param>
+        /// <returns>The unquoted string.</returns>
+        public static string AsUnquoted(this string value)
+        {
+            return Regex.Replace(value, @"[\[\]']+", "");
+        }
+
+        /// <summary>
+        /// Unquotes a string.
+        /// </summary>
+        /// <param name="value">The string value to be unqouted.</param>
         /// <param name="trim">The boolean value that indicates whether to trim the string before unquoting.</param>
         /// <param name="separator">The separator in which the quotes will be removed.</param>
-        /// <returns>The quoted string.</returns>
+        /// <returns>The unquoted string.</returns>
         public static string AsUnquoted(this string value, bool trim = false, string separator = ".")
         {
             if (trim)
@@ -62,19 +72,27 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Remove the quotes from the string.
+        /// Quotes a string.
         /// </summary>
-        /// <param name="value">The string value where the database quotes will be removed.</param>
-        /// <returns></returns>
-        private static string AsUnquoted(this string value)
+        /// <param name="value">The string value to be quoted.</param>
+        /// <returns>The quoted string.</returns>
+        public static string AsQuoted(this string value)
         {
-            return Regex.Replace(value, @"[\[\]']+", "");
+            if (!value.StartsWith("["))
+            {
+                value = string.Concat("[", value);
+            }
+            if (!value.EndsWith("]"))
+            {
+                value = string.Concat(value, "]");
+            }
+            return value;
         }
 
         /// <summary>
-        /// Adds a quotes to the string.
+        /// Quotes a string.
         /// </summary>
-        /// <param name="value">The string value where the database quotes will be added.</param>
+        /// <param name="value">The string value to be quoted.</param>
         /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
         /// <param name="separator">The separator in which the quotes will be placed.</param>
         /// <returns>The quoted string.</returns>
@@ -93,24 +111,6 @@ namespace RepoDb.Extensions
                 var splitted = value.Split(separator.ToCharArray());
                 return splitted.Select(s => s.AsQuoted()).Join(separator);
             }
-        }
-
-        /// <summary>
-        /// Add the quotes into the string.
-        /// </summary>
-        /// <param name="value">The string value where the database quotes will be added.</param>
-        /// <returns></returns>
-        private static string AsQuoted(this string value)
-        {
-            if (!value.StartsWith("["))
-            {
-                value = string.Concat("[", value);
-            }
-            if (!value.EndsWith("]"))
-            {
-                value = string.Concat(value, "]");
-            }
-            return value;
         }
 
         // AsEnumerable

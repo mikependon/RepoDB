@@ -6,7 +6,7 @@ namespace RepoDb.UnitTests
 {
     public partial class QueryGroupTest
     {
-        // Values
+        #region Values
 
         [TestMethod]
         public void TestQueryGroupParseExpressionValueIntConstant()
@@ -362,7 +362,9 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        // Contains
+        #endregion
+
+        #region Contains
 
         [TestMethod]
         public void TestQueryGroupParseExpressionValueForStringPropertyContains()
@@ -522,7 +524,9 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("B", ((Array)actual).GetValue(1));
         }
 
-        // All
+        #endregion
+
+        #region All
 
         [TestMethod]
         public void TestQueryGroupParseExpressionValueForArrayAll()
@@ -613,7 +617,9 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("B", actual2);
         }
 
-        // Any
+        #endregion
+
+        #region Any
 
         [TestMethod]
         public void TestQueryGroupParseExpressionValueForArrayAny()
@@ -703,5 +709,39 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("A", actual1);
             Assert.AreEqual("B", actual2);
         }
+
+        #endregion
+
+        #region Enums
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueForEnum()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == Direction.East);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual(Direction.East, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueForEnums()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == Direction.East || p.Direction == Direction.West);
+
+            // Act
+            var actual1 = parsed.QueryGroups.First().QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryGroups.Last().QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual(Direction.East, actual1);
+            Assert.AreEqual(Direction.West, actual2);
+        }
+
+        #endregion
     }
 }

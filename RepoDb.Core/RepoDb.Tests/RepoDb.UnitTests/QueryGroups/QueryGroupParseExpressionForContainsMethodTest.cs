@@ -514,7 +514,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString();
-            var expected = "NOT ([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
+            var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -544,7 +544,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString();
-            var expected = "NOT ([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
+            var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -662,7 +662,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString();
-            var expected = "NOT ([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
+            var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -692,7 +692,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString();
-            var expected = "NOT ([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
+            var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
             Assert.AreEqual(expected, actual);

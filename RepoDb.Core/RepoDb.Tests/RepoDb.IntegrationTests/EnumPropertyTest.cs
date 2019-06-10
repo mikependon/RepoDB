@@ -96,25 +96,25 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        //[TestMethod]
-        //public void TestQueryGroupForEnumViaExpression()
-        //{
-        //    // Setup
-        //    var entities = Helper.CreateEnumCompleteTables(10);
+        [TestMethod]
+        public void TestQueryGroupForEnumViaExpression()
+        {
+            // Setup
+            var entities = Helper.CreateEnumCompleteTables(10);
 
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-        //    {
-        //        // Act
-        //        var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
-        //        var queryResult = connection.Query<EnumCompleteTable>(e => e.ColumnNVarChar == Direction.West);
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
+                var queryResult = connection.Query<EnumCompleteTable>(e => e.ColumnNVarChar == Direction.West);
 
-        //        // Assert
-        //        Assert.AreEqual(entities.Count, queryResult.Count());
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
 
-        //        // Assert
-        //        entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
-        //    }
-        //}
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+            }
+        }
 
         [TestMethod]
         public void TestQueryGroupForEnumViaQueryField()

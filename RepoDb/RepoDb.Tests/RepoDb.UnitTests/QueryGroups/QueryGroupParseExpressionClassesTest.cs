@@ -11,6 +11,14 @@ namespace RepoDb.UnitTests
             public string PropertyString { get; set; }
         }
 
+        public enum Direction
+        {
+            North,
+            South,
+            East,
+            West
+        }
+
         public class QueryGroupTestExpressionClass
         {
             public int PropertyInt { get; set; }
@@ -21,6 +29,7 @@ namespace RepoDb.UnitTests
             public Guid PropertyGuid { get; set; }
             public Boolean PropertyBoolean { get; set; }
             public Byte[] PropertyBytes { get; set; }
+            public Direction Direction { get; set; }
             [Map("PropertyString")]
             public string OtherPropertyString { get; set; }
             public QueryGroupTestExpressionClassMember Member { get; set; }
