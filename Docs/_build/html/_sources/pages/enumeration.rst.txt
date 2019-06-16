@@ -75,6 +75,87 @@ The value of enum is being saved as a `Targetted-Typed` in the database.
 
 When the operations of like `Query`, `Insert`, `Merge`, `Update` is being invoked, the behavior of the `Gender` property will be passed as `1 for Male` or `2 for Female` in the database.
 
+Property Mapping
+----------------
+
+This feature enables the library to force save the `Enum` on the desired database type, by targetting the specific class properties.
+
+.. highlight:: c#
+
+::
+
+	CREATE TABLE [dbo].[Customer]
+	(
+		[Id] BIGINT IDENTITY(1, 1) PRIMARY
+		, [Name] NVARCHAR(128) NOT NULL
+		, [Gender] NVARCHAR(16)
+	);
+
+::
+
+	public enum Gender
+	{
+		Male = 1,
+		Female = 2
+	}
+
+Below is the code to force the `Gender` enumeration to be saved as `INT` in the database, even the `Gender` column is on `NVARCHAR(16)` data type.
+
+::
+
+	[Map("[dbo].[Customer]")]
+	public class Customer
+	{
+		public long Id { get; set; }
+		public string Name { get; set; }
+		[TypeMap(DbType.Int32)]
+		public Gender Gender { get; set; }
+	}
+
+**Note**: Enum will only succeed if it is convertible to the target database type.
+
+Enum Mapping
+------------
+
+This feature enables the library to force save the `Enum` on the desired database type, by targetting the type of the `Enum`.
+
+.. highlight:: c#
+
+::
+
+	CREATE TABLE [dbo].[Customer]
+	(
+		[Id] BIGINT IDENTITY(1, 1) PRIMARY
+		, [Name] NVARCHAR(128) NOT NULL
+		, [Gender] NVARCHAR(16)
+	);
+
+::
+
+	public enum Gender
+	{
+		Male = 1,
+		Female = 2
+	}
+
+To save the enum `Gender` as `INT`, the type level mapping must be called.
+
+::
+
+	TypeMapper.Map(typeof(Gender), DbType.Int32);
+
+::
+
+	[Map("[dbo].[Customer]")]
+	public class Customer
+	{
+		public long Id { get; set; }
+		public string Name { get; set; }
+		public Gender Gender { get; set; }
+	}
+
+**Note**: Enum will only succeed if it is convertible to the target database type.
+
 Unmapped Behaviors
 ------------------
 

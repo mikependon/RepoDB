@@ -92,6 +92,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Enumeration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#as-string">As String</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#as-numeric">As Numeric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#property-mapping">Property Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#enum-mapping">Enum Mapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#unmapped-behaviors">Unmapped Behaviors</a></li>
 </ul>
 </li>
@@ -233,6 +235,70 @@
 </pre></div>
 </div>
 <p>When the operations of like <cite>Query</cite>, <cite>Insert</cite>, <cite>Merge</cite>, <cite>Update</cite> is being invoked, the behavior of the <cite>Gender</cite> property will be passed as <cite>1 for Male</cite> or <cite>2 for Female</cite> in the database.</p>
+</div>
+<div class="section" id="property-mapping">
+<h2>Property Mapping<a class="headerlink" href="#property-mapping" title="Permalink to this headline">¶</a></h2>
+<p>This feature enables the library to force save the <cite>Enum</cite> on the desired database type, by targetting the specific class properties.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span>
+<span class="p">(</span>
+<span class="na">        [Id]</span> <span class="n">BIGINT</span> <span class="n">IDENTITY</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="n">PRIMARY</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="m">128</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Gender</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="m">16</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">Gender</span>
+<span class="p">{</span>
+        <span class="n">Male</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+        <span class="n">Female</span> <span class="p">=</span> <span class="m">2</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Below is the code to force the <cite>Gender</cite> enumeration to be saved as <cite>INT</cite> in the database, even the <cite>Gender</cite> column is on <cite>NVARCHAR(16)</cite> data type.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="kt">long</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="na">        [TypeMap(DbType.Int32)]</span>
+        <span class="k">public</span> <span class="n">Gender</span> <span class="n">Gender</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: Enum will only succeed if it is convertible to the target database type.</p>
+</div>
+<div class="section" id="enum-mapping">
+<h2>Enum Mapping<a class="headerlink" href="#enum-mapping" title="Permalink to this headline">¶</a></h2>
+<p>This feature enables the library to force save the <cite>Enum</cite> on the desired database type, by targetting the type of the <cite>Enum</cite>.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span>
+<span class="p">(</span>
+<span class="na">        [Id]</span> <span class="n">BIGINT</span> <span class="n">IDENTITY</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="n">PRIMARY</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="m">128</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Gender</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="m">16</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">Gender</span>
+<span class="p">{</span>
+        <span class="n">Male</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+        <span class="n">Female</span> <span class="p">=</span> <span class="m">2</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To save the enum <cite>Gender</cite> as <cite>INT</cite>, the type level mapping must be called.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">Gender</span><span class="p">),</span> <span class="n">DbType</span><span class="p">.</span><span class="n">Int32</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="kt">long</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Gender</span> <span class="n">Gender</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: Enum will only succeed if it is convertible to the target database type.</p>
 </div>
 <div class="section" id="unmapped-behaviors">
 <h2>Unmapped Behaviors<a class="headerlink" href="#unmapped-behaviors" title="Permalink to this headline">¶</a></h2>
