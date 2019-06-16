@@ -41,7 +41,7 @@ namespace RepoDb.IntegrationTests
             public DateTime? ColumnDateTimeMapped { get; set; }
             [Map("COLUMNDATETIME2")]
             public DateTime? ColumnDateTime2Mapped { get; set; }
-            [Map("COLUMNNVARCHAR")]
+            [Map("[COLUMNNVARCHAR]")]
             public string ColumnNVarCharMapped { get; set; }
         }
 

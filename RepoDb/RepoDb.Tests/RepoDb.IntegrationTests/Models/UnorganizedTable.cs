@@ -9,7 +9,7 @@ namespace RepoDb.IntegrationTests.Models
         public long Id { get; set; }
         [Map("Session Id")]
         public Guid SessionId { get; set; }
-        [Map("Column Int")]
+        [Map("[Column Int]")]
         public int? ColumnInt { get; set; }
         [Map("Column/NVarChar")]
         public string ColumnNVarChar { get; set; }
