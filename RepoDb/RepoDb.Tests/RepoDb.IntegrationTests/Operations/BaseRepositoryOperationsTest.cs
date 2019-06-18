@@ -6033,7 +6033,7 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var result = repository.QueryAsync(c => c.ColumnNVarChar.Contains("NVAR")).Result;
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.StartsWith("NVAR")).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());

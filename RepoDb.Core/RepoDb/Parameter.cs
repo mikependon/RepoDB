@@ -43,7 +43,7 @@ namespace RepoDb
             }
 
             // Set the hashcode
-            m_hashCode = name.GetHashCode();
+            m_hashCode = Name.GetHashCode();
         }
 
         /// <summary>

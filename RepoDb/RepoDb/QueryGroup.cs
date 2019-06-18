@@ -934,7 +934,7 @@ namespace RepoDb
                 var operation = QueryField.GetOperation(binary.NodeType);
                 foreach (var value in (Array)values)
                 {
-                    queryFields.Add(new QueryField(property.Name, operation, value));
+                    queryFields.Add(new QueryField(PropertyMappedNameCache.Get(property, true), operation, value));
                 }
             }
 
@@ -1000,7 +1000,7 @@ namespace RepoDb
 
             // Add to query fields
             var operation = (isNot == false && isEqualsTo == true) ? Operation.In : Operation.NotIn;
-            var queryField = new QueryField(property.Name, operation, values);
+            var queryField = new QueryField(PropertyMappedNameCache.Get(property, true), operation, values);
 
             // Return the result
             var queryGroup = new QueryGroup(queryField);
@@ -1047,7 +1047,7 @@ namespace RepoDb
 
             // Add to query fields
             var operation = (isNot == isEqualsTo) ? Operation.NotLike : Operation.Like;
-            var queryField = new QueryField(property.Name, operation, ConvertToLikeableValue(expression.Method.Name, value));
+            var queryField = new QueryField(PropertyMappedNameCache.Get(property, true), operation, ConvertToLikeableValue(expression.Method.Name, value));
 
             // Return the result
             return new QueryGroup(queryField.AsEnumerable());
@@ -1105,7 +1105,7 @@ namespace RepoDb
             foreach (var property in type.GetProperties())
             {
                 var value = property.GetValue(obj);
-                fields.Add(new QueryField(property.Name, value));
+                fields.Add(new QueryField(PropertyMappedNameCache.Get(property, true), value));
             }
 
             // Return

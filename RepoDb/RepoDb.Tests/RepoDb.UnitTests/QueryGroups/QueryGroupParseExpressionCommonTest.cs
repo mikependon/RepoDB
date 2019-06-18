@@ -6,7 +6,7 @@ namespace RepoDb.UnitTests
 {
     public partial class QueryGroupTest
     {
-        // Name
+        #region Name
 
         [TestMethod]
         public void TestQueryGroupParseExpressionWithNameAtLeft()
@@ -26,7 +26,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWhereNameHasMapping()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.OtherPropertyString == "ABC");
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString == "ABC");
 
             // Act
             var actual = parsed.QueryFields.First().Field.Name;
@@ -43,7 +43,9 @@ namespace RepoDb.UnitTests
             QueryGroup.Parse<QueryGroupTestExpressionClass>(e => 1 == e.PropertyInt);
         }
 
-        // Properties
+        #endregion
+
+        #region Properties
 
         [TestMethod]
         public void TestQueryGroupParseExpressionWithDoubleSameFieldsForAnd()
@@ -67,7 +69,9 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        // Groupings
+        #endregion
+
+        #region Groupings
 
         [TestMethod]
         public void TestQueryGroupParseExpressionWithSingleGroupForAnd()
@@ -135,5 +139,51 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        #endregion
+
+        #region Mapped
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionForMappedProperty()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString == "A").GetString();
+            var expected = "([PropertyString] = @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
+        #region Quoted
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionForQuotedProperty()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString == "A").GetString();
+            var expected = "([PropertyString] = @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
+        #region Unorganized
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionForUnorganizedProperty()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.UnorganizedPropertyString == "A").GetString();
+            var expected = "([Property / . String] = @Property_____String)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
     }
 }

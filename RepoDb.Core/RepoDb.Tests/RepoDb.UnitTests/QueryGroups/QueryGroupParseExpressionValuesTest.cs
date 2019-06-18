@@ -6,6 +6,40 @@ namespace RepoDb.UnitTests
 {
     public partial class QueryGroupTest
     {
+        #region SubClass
+
+        private static class StaticEnumClass
+        {
+            static StaticEnumClass()
+            {
+                Direction = GetDirection();
+            }
+
+            public static Direction Direction { get; }
+
+            public static Direction GetDirection()
+            {
+                return Direction.East;
+            }
+        }
+
+        private class NonStaticEnumClass
+        {
+            public NonStaticEnumClass()
+            {
+                Direction = GetDirection();
+            }
+
+            public Direction Direction { get; }
+
+            public Direction GetDirection()
+            {
+                return Direction.East;
+            }
+        }
+
+        #endregion
+
         #region Values
 
         [TestMethod]
@@ -740,6 +774,72 @@ namespace RepoDb.UnitTests
             // Assert
             Assert.AreEqual(Direction.East, actual1);
             Assert.AreEqual(Direction.West, actual2);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueForEnumFromVariable()
+        {
+            // Setup
+            var direction = Direction.East;
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == direction);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual(Direction.East, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueForEnumFromStaticClassMethod()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == StaticEnumClass.GetDirection());
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual(Direction.East, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueForEnumFromStaticClassProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == StaticEnumClass.Direction);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual(Direction.East, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueForEnumFromNonStaticClassMethod()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == new NonStaticEnumClass().GetDirection());
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual(Direction.East, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueForEnumFromNonStaticClassProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == new NonStaticEnumClass().Direction);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual(Direction.East, actual);
         }
 
         #endregion

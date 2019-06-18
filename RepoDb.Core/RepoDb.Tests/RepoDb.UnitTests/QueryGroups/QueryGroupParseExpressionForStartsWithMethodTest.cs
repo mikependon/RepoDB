@@ -61,5 +61,47 @@ namespace RepoDb.UnitTests
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionStartsWithForMappedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString.StartsWith("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionStartsWithForQuotedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString.StartsWith("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionStartsWithForUnorganizedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.UnorganizedPropertyString.StartsWith("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([Property / . String] LIKE @Property_____String)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

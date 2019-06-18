@@ -77,7 +77,7 @@ namespace RepoDb.Extensions
         {
             var attribute = (MapAttribute)GetCustomAttribute(property, typeof(MapAttribute));
             var name = (attribute?.Name ?? property.Name);
-            return quoted == true ? name.AsQuoted(true) : name.AsUnquoted(true);
+            return quoted == true ? name.AsQuoted(true, null) : name.AsUnquoted(true, null);
         }
 
         /// <summary>

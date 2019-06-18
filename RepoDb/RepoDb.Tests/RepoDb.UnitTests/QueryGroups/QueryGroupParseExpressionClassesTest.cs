@@ -31,7 +31,11 @@ namespace RepoDb.UnitTests
             public Byte[] PropertyBytes { get; set; }
             public Direction Direction { get; set; }
             [Map("PropertyString")]
-            public string OtherPropertyString { get; set; }
+            public string MappedPropertyString { get; set; }
+            [Map("[PropertyString]")]
+            public string QuotedPropertyString { get; set; }
+            [Map("Property / . String")]
+            public string UnorganizedPropertyString { get; set; }
             public QueryGroupTestExpressionClassMember Member { get; set; }
         }
 

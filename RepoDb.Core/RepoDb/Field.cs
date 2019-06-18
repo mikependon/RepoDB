@@ -37,13 +37,13 @@ namespace RepoDb
 
             // Set the name
             Name = name.AsQuoted(true, null);
-            UnquotedName = name.AsUnquoted(true);
+            UnquotedName = name.AsUnquoted(true, null);
 
             // Set the type
             Type = type;
 
             // Set the hashcode
-            m_hashCode = name.GetHashCode();
+            m_hashCode = Name.GetHashCode();
             if (type != null)
             {
                 m_hashCode += type.GetHashCode();

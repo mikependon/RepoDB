@@ -402,6 +402,48 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestQueryGroupParseExpressionStringContainsAtMappedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString.Contains("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionStringContainsAtQuotedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString.Contains("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionStringContainsAtUnorganizedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.UnorganizedPropertyString.Contains("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([Property / . String] LIKE @Property_____String)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         #endregion
 
         #region Array
@@ -550,6 +592,93 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestQueryGroupParseExpressionArrayContainsAtMappedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new string[] { "A", "B" }).Contains(e.MappedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionArrayContainsAtMappedPropertyFromVariables()
+        {
+            // Setup
+            var list = new string[] { "A", "B" };
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => list.Contains(e.MappedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionArrayContainsAtQuotedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new string[] { "A", "B" }).Contains(e.QuotedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionArrayContainsAtQuotedPropertyFromVariables()
+        {
+            // Setup
+            var list = new string[] { "A", "B" };
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => list.Contains(e.QuotedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionArrayContainsAtUnorganizedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new string[] { "A", "B" }).Contains(e.UnorganizedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([Property / . String] IN (@Property_____String_In_0, @Property_____String_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionArrayContainsAtUnorganizedPropertyFromVariables()
+        {
+            // Setup
+            var list = new string[] { "A", "B" };
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => list.Contains(e.UnorganizedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([Property / . String] IN (@Property_____String_In_0, @Property_____String_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         #endregion
 
         #region List
@@ -693,6 +822,93 @@ namespace RepoDb.UnitTests
             // Act
             var actual = parsed.GetString();
             var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionListContainsAtMappedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new List<string>() { "A", "B" }).Contains(e.MappedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionListContainsFromVariablesAtMappedProperty()
+        {
+            // Setup
+            var list = new List<string>() { "A", "B" };
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => list.Contains(e.MappedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionListContainsAtQuotedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new List<string>() { "A", "B" }).Contains(e.QuotedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionListContainsFromVariablesAtQuotedProperty()
+        {
+            // Setup
+            var list = new List<string>() { "A", "B" };
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => list.Contains(e.QuotedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionListContainsAtUnorganizedProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new List<string>() { "A", "B" }).Contains(e.UnorganizedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([Property / . String] IN (@Property_____String_In_0, @Property_____String_In_1))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionListContainsFromVariablesAtUnorganizedProperty()
+        {
+            // Setup
+            var list = new List<string>() { "A", "B" };
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => list.Contains(e.UnorganizedPropertyString));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([Property / . String] IN (@Property_____String_In_0, @Property_____String_In_1))";
 
             // Assert
             Assert.AreEqual(expected, actual);
