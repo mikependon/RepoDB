@@ -622,6 +622,32 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestQueryGroupForConjunctionOrWithoutQueryFieldButWithMultipleChildQueryGroupsWithMultipleSameFields()
+        {
+            // Setup
+            var childQueryGroup1 = new QueryGroup(new[]
+            {
+                new QueryField("Field1", Operation.NotLike, "%B%"),
+                new QueryField("Field1", Operation.NotLike, "%C%"),
+                new QueryField("Field1", Operation.NotLike, "%D%")
+            });
+            var childQueryGroup2 = new QueryGroup(new[]
+            {
+                new QueryField("Field1", Operation.Equal, "A")
+            });
+            var parentChildqueryGroup = new QueryGroup(new[] { childQueryGroup1, childQueryGroup2 }, Conjunction.Or);
+            var queryGroup = new QueryGroup(new QueryField("Field2", "E").AsEnumerable(),
+                parentChildqueryGroup.AsEnumerable(), Conjunction.Or);
+
+            // Act
+            var actual = queryGroup.GetString();
+            var expected = "([Field2] = @Field2 OR (([Field1] NOT LIKE @Field1 AND [Field1] NOT LIKE @Field1_1 AND [Field1] NOT LIKE @Field1_2) OR ([Field1] = @Field1_3)))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         #endregion
 
         #region Combinations

@@ -4571,7 +4571,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionIStatementBuilder();
 
             // Act
-            UpdateAllExecutionContextCache<DataEntityForDbConnectionStatementBuilderForTableName>.Flush();
+            UpdateAllExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             connection.UpdateAllAsync(ClassMappedNameCache.Get<DataEntityForDbConnectionStatementBuilderForTableName>(),
                 new[]
@@ -4629,6 +4629,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             UpdateAllExecutionContextCache<DataEntityForDbConnectionStatementBuilderForCrossCall>.Flush();
+            UpdateAllExecutionContextCache<object>.Flush();
             CommandTextCache.Flush();
             connection.UpdateAllAsync<DataEntityForDbConnectionStatementBuilderForCrossCall>(
                 new[]

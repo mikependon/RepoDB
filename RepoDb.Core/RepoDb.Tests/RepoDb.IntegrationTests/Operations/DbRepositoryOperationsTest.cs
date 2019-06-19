@@ -8561,7 +8561,7 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("NVAR"));
+                var result = repository.Query<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR"));
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());

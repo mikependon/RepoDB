@@ -174,7 +174,10 @@ namespace RepoDb
         public QueryGroup(IEnumerable<QueryField> queryFields,
             Conjunction conjunction = Conjunction.And,
             bool isNot = false) :
-            this(queryFields, null, conjunction, isNot)
+            this(queryFields,
+                null,
+                conjunction,
+                isNot)
         { }
 
         /// <summary>
@@ -186,6 +189,35 @@ namespace RepoDb
                 queryGroups,
                 Conjunction.And,
                 false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
+        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        public QueryGroup(IEnumerable<QueryGroup> queryGroups,
+            Conjunction conjunction = Conjunction.And) :
+            this(null,
+                queryGroups,
+                conjunction,
+                false)
+        { }
+
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
+        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
+        public QueryGroup(IEnumerable<QueryGroup> queryGroups,
+            Conjunction conjunction = Conjunction.And,
+            bool isNot = false) :
+            this(null,
+                queryGroups,
+                conjunction,
+                isNot)
         { }
 
         /// <summary>
@@ -306,20 +338,29 @@ namespace RepoDb
                 secondList.RemoveAll(qf => qf.Field.Equals(queryField.Field));
             }
 
-            // Set all flags of the child groups
+            // Force the fixes
+            ForceFix();
+
+            // Return the current instance
+            return this;
+        }
+
+        /// <summary>
+        /// Force to set the <see cref="m_isFixed"/> variable to True.
+        /// </summary>
+        private void ForceFix()
+        {
+            // Set the flags of the children
             if (QueryGroups?.Any() == true)
             {
                 foreach (var queryGroup in QueryGroups)
                 {
-                    queryGroup.m_isFixed = true;
+                    queryGroup.ForceFix();
                 }
             }
 
-            // Set the flag
+            // Set the flag of the current instance
             m_isFixed = true;
-
-            // Return the current instance
-            return this;
         }
 
         /// <summary>

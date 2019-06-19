@@ -9090,7 +9090,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.Contains("NVAR"));
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR"));
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
