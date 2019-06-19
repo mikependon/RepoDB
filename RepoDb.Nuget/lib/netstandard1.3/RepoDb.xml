@@ -14239,6 +14239,21 @@
             </summary>
             <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryGroup},RepoDb.Enumerations.Conjunction)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
+            <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryGroup},RepoDb.Enumerations.Conjunction,System.Boolean)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
+            <param name="conjunction">The conjunction to be used for every group seperation.</param>
+            <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
+        </member>
         <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.QueryGroup},RepoDb.Enumerations.Conjunction,System.Boolean)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
@@ -14284,6 +14299,11 @@
             Fix the names of the <see cref="T:RepoDb.Parameter"/> on every <see cref="T:RepoDb.QueryField"/> (and on every child <see cref="T:RepoDb.QueryGroup"/>) of the current <see cref="T:RepoDb.QueryGroup"/>.
             </summary>
             <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryGroup.ForceFix">
+            <summary>
+            Force to set the <see cref="F:RepoDb.QueryGroup.m_isFixed"/> variable to True.
+            </summary>
         </member>
         <member name="M:RepoDb.QueryGroup.Reset">
             <summary>

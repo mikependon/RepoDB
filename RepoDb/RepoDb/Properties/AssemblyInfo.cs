@@ -8,7 +8,7 @@ using System.Security;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RepoDb")]
-[assembly: AssemblyDescription("A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET")]
+[assembly: AssemblyDescription("A hybrid ORM library for .NET.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("RepoDb")]
@@ -35,7 +35,7 @@ using System.Security;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.9.8.2")]
-[assembly: AssemblyFileVersion("1.9.8.2")]
+[assembly: AssemblyVersion("1.9.8.3")]
+[assembly: AssemblyFileVersion("1.9.8.3")]
 [assembly: NeutralResourcesLanguage("")]
 

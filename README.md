@@ -1,7 +1,7 @@
 
 ## RepoDb
 
-A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.
+A hybrid ORM library for .NET.
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png" height="128px" />
 

@@ -1,6 +1,6 @@
 ## RepoDb
 
-A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.
+A hybrid ORM library for .NET.
 
 ### Highlight
 
@@ -10,7 +10,7 @@ Link: https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/201
 
 ### Goal
 
-To be the fastest and the easiest-to-use lightweight ORM.
+To be the fastest and the easiest-to-use hybrid ORM library for .NET.
 
 ### Vision
 
