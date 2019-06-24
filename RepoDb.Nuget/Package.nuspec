@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.9.8-beta4</version>
+    <version>1.9.8</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -11,9 +11,11 @@
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
-      RepoDb v1.9.8-beta4:
-      - Title: A hybrid ORM library for .NET.
-      - Fix: Fixed the issue in the 'QueryGroup.Fix()' method if the depth of the Tree is at Level 4.
+      RepoDb v1.9.8:
+      - Stable release of RepoDb.
+      - Enum Supports.
+      - Unorganized Table/Column Supports.
+      - Bug Fixes.
     </releaseNotes>
     <copyright>Copyright © 2019</copyright>
     <tags>orm sql repo repodb repository</tags>

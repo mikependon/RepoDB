@@ -14,7 +14,7 @@ namespace RepoDb.IntegrationTests.Setup
         public static void Initialize()
         {
             // Check the connection string
-            var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.User);
+            var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.Machine);
 
             // Master connection
             ConnectionForMaster = (environment == "DEVELOPMENT") ?
