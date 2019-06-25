@@ -68,7 +68,8 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".CountAll").GetHashCode();
+            var hashCode = TypeNameHashCode;
+            hashCode += ".CountAll".GetHashCode();
 
             // Add the hints
             if (!ReferenceEquals(null, Hints))

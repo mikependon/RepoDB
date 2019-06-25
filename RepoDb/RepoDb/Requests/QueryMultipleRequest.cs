@@ -124,7 +124,8 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".QueryMultiple").GetHashCode();
+            var hashCode = TypeNameHashCode;
+            hashCode += ".Query".GetHashCode();
 
             // Add the index
             if (!ReferenceEquals(null, Index))

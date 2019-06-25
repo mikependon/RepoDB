@@ -91,7 +91,8 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".MergeAll").GetHashCode();
+            var hashCode = TypeNameHashCode;
+            hashCode += ".MergeAll".GetHashCode();
 
             // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)

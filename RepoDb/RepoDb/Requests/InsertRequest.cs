@@ -69,7 +69,8 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".Insert").GetHashCode();
+            var hashCode = TypeNameHashCode;
+            hashCode += ".Insert".GetHashCode();
 
             // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
