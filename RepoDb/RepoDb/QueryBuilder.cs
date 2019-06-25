@@ -41,7 +41,14 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public string GetString()
         {
-            return m_stringBuilder.ToString(1, m_stringBuilder.Length - 1);
+            if (m_stringBuilder.Length == 0)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return m_stringBuilder.ToString(1, m_stringBuilder.Length - 1);
+            }
         }
 
         /// <summary>
