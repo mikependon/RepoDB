@@ -53,11 +53,11 @@ namespace RepoDb
             // Set the keys
             if (string.IsNullOrEmpty(connectionString) == false)
             {
-                key += connectionString.GetHashCode();
+                key ^= connectionString.GetHashCode();
             }
             if (string.IsNullOrEmpty(tableName) == false)
             {
-                key += tableName.GetHashCode();
+                key ^= tableName.GetHashCode();
             }
 
             // Try get the value

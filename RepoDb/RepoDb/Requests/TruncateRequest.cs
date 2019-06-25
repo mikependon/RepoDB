@@ -57,7 +57,7 @@ namespace RepoDb.Requests
 
             // Get first the entity hash code
             var hashCode = TypeNameHashCode;
-            hashCode += ".Truncate".GetHashCode();
+            hashCode ^= ".Truncate".GetHashCode();
 
             // Set back the hash code value
             m_hashCode = hashCode;

@@ -89,10 +89,10 @@ namespace RepoDb
                     .Select(reader.GetName)
                     .Join(".")
                     .GetHashCode();
-                var key = typeof(TEntity).FullName.GetHashCode() + fields.GetHashCode();
+                var key = typeof(TEntity).FullName.GetHashCode() ^ fields.GetHashCode();
                 if (string.IsNullOrEmpty(connection?.ConnectionString) == false)
                 {
-                    key += connection.ConnectionString.GetHashCode();
+                    key ^= connection.ConnectionString.GetHashCode();
                 }
                 if (m_cache.TryGetValue(key, out result) == false)
                 {
@@ -148,11 +148,11 @@ namespace RepoDb
                     .GetHashCode();
                 if (tableName != null)
                 {
-                    key += tableName.GetHashCode();
+                    key ^= tableName.GetHashCode();
                 }
                 if (string.IsNullOrEmpty(connection?.ConnectionString) == false)
                 {
-                    key += connection.ConnectionString.GetHashCode();
+                    key ^= connection.ConnectionString.GetHashCode();
                 }
                 if (m_cache.TryGetValue(key, out result) == false)
                 {
@@ -202,14 +202,14 @@ namespace RepoDb
                 {
                     foreach (var field in inputFields)
                     {
-                        key += field.GetHashCode();
+                        key ^= field.GetHashCode();
                     }
                 }
                 if (outputFields != null)
                 {
                     foreach (var field in outputFields)
                     {
-                        key += field.GetHashCode();
+                        key ^= field.GetHashCode();
                     }
                 }
                 if (m_cache.TryGetValue(key, out func) == false)
@@ -257,19 +257,19 @@ namespace RepoDb
                 IEnumerable<DbField> outputFields,
                 int batchSize)
             {
-                var key = (long)cacheKey.GetHashCode() + batchSize.GetHashCode();
+                var key = (long)cacheKey.GetHashCode() ^ batchSize.GetHashCode();
                 if (inputFields?.Any() == true)
                 {
                     foreach (var field in inputFields)
                     {
-                        key += field.GetHashCode();
+                        key ^= field.GetHashCode();
                     }
                 }
                 if (outputFields?.Any() == true)
                 {
                     foreach (var field in outputFields)
                     {
-                        key += field.GetHashCode();
+                        key ^= field.GetHashCode();
                     }
                 }
                 var func = (Action<DbCommand, IList<TEntity>>)null;
@@ -315,8 +315,10 @@ namespace RepoDb
                 string parameterName,
                 int index)
             {
-                var key = (long)typeof(TEntity).FullName.GetHashCode() + field.GetHashCode() +
-                    parameterName.GetHashCode() + index.GetHashCode();
+                var key = (long)typeof(TEntity).FullName.GetHashCode()
+                        ^ field.GetHashCode()
+                        ^ parameterName.GetHashCode()
+                        ^ index.GetHashCode();
                 var func = (Action<TEntity, DbCommand>)null;
                 if (m_cache.TryGetValue(key, out func) == false)
                 {
@@ -354,7 +356,7 @@ namespace RepoDb
 
             public static Action<TEntity, object> Get(Field field)
             {
-                var key = (long)typeof(TEntity).FullName.GetHashCode() + field.UnquotedName.GetHashCode();
+                var key = (long)typeof(TEntity).FullName.GetHashCode() ^ field.UnquotedName.GetHashCode();
                 var func = (Action<TEntity, object>)null;
                 if (m_cache.TryGetValue(key, out func) == false)
                 {

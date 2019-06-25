@@ -45,7 +45,7 @@ namespace RepoDb.Contexts.Execution
             {
                 foreach (var field in fields)
                 {
-                    key += field.GetHashCode();
+                    key ^= field.GetHashCode();
                 }
             }
 
@@ -54,7 +54,7 @@ namespace RepoDb.Contexts.Execution
             {
                 foreach (var field in qualifiers)
                 {
-                    key += field.GetHashCode();
+                    key ^= field.GetHashCode();
                 }
             }
 

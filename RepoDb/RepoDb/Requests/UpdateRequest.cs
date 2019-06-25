@@ -81,12 +81,12 @@ namespace RepoDb.Requests
 
             // Get first the entity hash code
             var hashCode = TypeNameHashCode;
-            hashCode += ".Update".GetHashCode();
+            hashCode ^= ".Update".GetHashCode();
 
             // Get the properties hash codes
             if (Where != null)
             {
-                hashCode += Where.GetHashCode();
+                hashCode ^= Where.GetHashCode();
             }
 
             // Get the qualifier <see cref="Field"/> objects
@@ -94,7 +94,7 @@ namespace RepoDb.Requests
             {
                 foreach (var field in Fields)
                 {
-                    hashCode += field.GetHashCode();
+                    hashCode ^= field.GetHashCode();
                 }
             }
 

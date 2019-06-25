@@ -92,14 +92,14 @@ namespace RepoDb.Requests
 
             // Get first the entity hash code
             var hashCode = TypeNameHashCode;
-            hashCode += ".MergeAll".GetHashCode();
+            hashCode ^= ".MergeAll".GetHashCode();
 
             // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
             {
                 foreach (var field in Fields)
                 {
-                    hashCode += field.GetHashCode();
+                    hashCode ^= field.GetHashCode();
                 }
             }
 
@@ -108,14 +108,14 @@ namespace RepoDb.Requests
             {
                 foreach (var field in Qualifiers)
                 {
-                    hashCode += field.GetHashCode();
+                    hashCode ^= field.GetHashCode();
                 }
             }
 
             // Get the batch size
             if (BatchSize > 0)
             {
-                hashCode += BatchSize.GetHashCode();
+                hashCode ^= BatchSize.GetHashCode();
             }
 
             // Set back the hash code value

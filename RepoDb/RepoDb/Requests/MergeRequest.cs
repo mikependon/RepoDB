@@ -81,14 +81,14 @@ namespace RepoDb.Requests
 
             // Get first the entity hash code
             var hashCode = TypeNameHashCode;
-            hashCode += ".Merge".GetHashCode();
+            hashCode ^= ".Merge".GetHashCode();
 
             // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
             {
                 foreach (var field in Fields)
                 {
-                    hashCode += field.GetHashCode();
+                    hashCode ^= field.GetHashCode();
                 }
             }
 
@@ -97,7 +97,7 @@ namespace RepoDb.Requests
             {
                 foreach (var field in Qualifiers)
                 {
-                    hashCode += field.GetHashCode();
+                    hashCode ^= field.GetHashCode();
                 }
             }
 

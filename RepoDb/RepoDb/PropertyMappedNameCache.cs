@@ -21,9 +21,9 @@ namespace RepoDb
         /// <returns>The cached mapped-name of the property.</returns>
         public static string Get(PropertyInfo property, bool quoted = true)
         {
-            var key = property.DeclaringType.FullName.GetHashCode() +
-                property.Name.GetHashCode() +
-                quoted.GetHashCode();
+            var key = property.DeclaringType.FullName.GetHashCode()
+                    ^ property.Name.GetHashCode()
+                    ^ quoted.GetHashCode();
             var result = (string)null;
 
             // Try get the value

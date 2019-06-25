@@ -37,7 +37,7 @@ namespace RepoDb
             Order = order;
 
             // Set the hashcode here
-            m_hashCode = name.GetHashCode() + (int)order;
+            m_hashCode = name.GetHashCode() ^ (int)order;
         }
 
         /// <summary>

@@ -37,7 +37,7 @@ namespace RepoDb.Contexts.Execution
             Func<int, InsertAllExecutionContext<TEntity>> callback)
         {
             // Variables
-            var key = tableName.GetHashCode() + batchSize.GetHashCode();
+            var key = tableName.GetHashCode() ^ batchSize.GetHashCode();
             var context = (InsertAllExecutionContext<TEntity>)null;
 
             // The fields hashcodes
@@ -45,7 +45,7 @@ namespace RepoDb.Contexts.Execution
             {
                 foreach (var field in fields)
                 {
-                    key += field.GetHashCode();
+                    key ^= field.GetHashCode();
                 }
             }
 

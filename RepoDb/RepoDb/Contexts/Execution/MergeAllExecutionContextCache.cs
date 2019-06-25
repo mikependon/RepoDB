@@ -39,7 +39,7 @@ namespace RepoDb.Contexts.Execution
             Func<int, MergeAllExecutionContext<TEntity>> callback)
         {
             // Variables
-            var key = tableName.GetHashCode() + batchSize.GetHashCode();
+            var key = tableName.GetHashCode() ^ batchSize.GetHashCode();
             var context = (MergeAllExecutionContext<TEntity>)null;
 
             // The fields hashcodes
@@ -47,7 +47,7 @@ namespace RepoDb.Contexts.Execution
             {
                 foreach (var field in fields)
                 {
-                    key += field.GetHashCode();
+                    key ^= field.GetHashCode();
                 }
             }
 
@@ -56,7 +56,7 @@ namespace RepoDb.Contexts.Execution
             {
                 foreach (var field in qualifiers)
                 {
-                    key += field.GetHashCode();
+                    key ^= field.GetHashCode();
                 }
             }
 

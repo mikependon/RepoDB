@@ -69,12 +69,12 @@ namespace RepoDb.Requests
 
             // Get first the entity hash code
             var hashCode = TypeNameHashCode;
-            hashCode += ".Delete".GetHashCode();
+            hashCode ^= ".Delete".GetHashCode();
 
             // Get the properties hash codes
             if (Where != null)
             {
-                hashCode += Where.GetHashCode();
+                hashCode ^= Where.GetHashCode();
             }
 
             // Set back the hash code value

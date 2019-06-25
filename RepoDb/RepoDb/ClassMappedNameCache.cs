@@ -44,7 +44,7 @@ namespace RepoDb
         /// <returns>The cached mapped name of the entity.</returns>
         internal static string Get(Type type, bool quoted = true)
         {
-            var key = type.FullName.GetHashCode() + quoted.GetHashCode();
+            var key = type.FullName.GetHashCode() ^ quoted.GetHashCode();
             var result = (string)null;
 
             // Try get the value

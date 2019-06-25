@@ -64,26 +64,26 @@ namespace RepoDb
             DatabaseType = databaseType;
 
             // Set the hashcode
-            m_hashCode = name.GetHashCode() + isPrimary.GetHashCode() + isIdentity.GetHashCode() + isNullable.GetHashCode();
+            m_hashCode = name.GetHashCode() ^ isPrimary.GetHashCode() ^ isIdentity.GetHashCode() ^ isNullable.GetHashCode();
             if (type != null)
             {
-                m_hashCode += type.GetHashCode();
+                m_hashCode ^= type.GetHashCode();
             }
             if (size != null)
             {
-                m_hashCode += size.GetHashCode();
+                m_hashCode ^= size.GetHashCode();
             }
             if (precision != null)
             {
-                m_hashCode += precision.GetHashCode();
+                m_hashCode ^= precision.GetHashCode();
             }
             if (scale != null)
             {
-                m_hashCode += scale.GetHashCode();
+                m_hashCode ^= scale.GetHashCode();
             }
             if (databaseType != null)
             {
-                m_hashCode += databaseType.GetHashCode();
+                m_hashCode ^= databaseType.GetHashCode();
             }
         }
 

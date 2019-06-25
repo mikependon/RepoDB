@@ -45,7 +45,7 @@ namespace RepoDb
             m_hashCode = Name.GetHashCode();
             if (type != null)
             {
-                m_hashCode += type.GetHashCode();
+                m_hashCode ^= type.GetHashCode();
             }
         }
 

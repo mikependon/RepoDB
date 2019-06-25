@@ -43,7 +43,7 @@ namespace RepoDb.Contexts.Execution
             {
                 foreach (var field in fields)
                 {
-                    key += field.GetHashCode();
+                    key ^= field.GetHashCode();
                 }
             }
 

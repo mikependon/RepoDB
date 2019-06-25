@@ -43,7 +43,7 @@ namespace RepoDb.Contexts.Execution
             // The expression hashcode
             if (where != null)
             {
-                key += where.GetHashCode();
+                key ^= where.GetHashCode();
             }
 
             // The fields hashcodes
@@ -51,7 +51,7 @@ namespace RepoDb.Contexts.Execution
             {
                 foreach (var field in fields)
                 {
-                    key += field.GetHashCode();
+                    key ^= field.GetHashCode();
                 }
             }
 
