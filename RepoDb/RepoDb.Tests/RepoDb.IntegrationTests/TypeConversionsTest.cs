@@ -405,7 +405,7 @@ namespace RepoDb.IntegrationTests
             var entity = new StringToDateClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnDate = "1970-01-01"
+                ColumnDate = "1970-01-02"
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
@@ -417,7 +417,8 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToDateClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual("1/1/1970 12:00:00 AM", data.ColumnDate);
+                Assert.IsTrue(DateTime.Parse(entity.ColumnDate)
+                      .Equals(DateTime.Parse(data.ColumnDate)));
             }
         }
 
@@ -440,7 +441,7 @@ namespace RepoDb.IntegrationTests
             var entity = new StringToDateTimeClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnDateTime = "1970-01-01 11:30 AM"
+                ColumnDateTime = "1970-01-02 11:30 AM"
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
@@ -452,7 +453,8 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToDateTimeClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual("1/1/1970 11:30:00 AM", data.ColumnDateTime);
+                Assert.IsTrue(DateTime.Parse(entity.ColumnDateTime)
+                      .Equals(DateTime.Parse(data.ColumnDateTime)));
             }
         }
 
@@ -475,7 +477,7 @@ namespace RepoDb.IntegrationTests
             var entity = new StringToDateTime2Class
             {
                 SessionId = Guid.NewGuid(),
-                ColumnDateTime2 = "2019-03-03 15:22:10.0500000"
+                ColumnDateTime2 = "2019-03-04 15:22:10.1234567"
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
@@ -487,7 +489,8 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToDateTime2Class>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual("3/3/2019 3:22:10 PM", data.ColumnDateTime2);
+                Assert.IsTrue(DateTime.Parse(entity.ColumnDateTime2)
+                      .Equals(DateTime.Parse(data.ColumnDateTime2)));
             }
         }
 

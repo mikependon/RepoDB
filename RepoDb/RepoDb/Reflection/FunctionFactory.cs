@@ -282,6 +282,15 @@ namespace RepoDb.Reflection
                     targetInstance = expression;
                     targetParameter = null;
                 }
+                else if (propertyType == typeof(string) && readerField.Type == typeof(DateTime))
+                {
+                    // This is DateTime.ToString("o")
+                    // The 'round-trip' format specifier "o" produces a human-readable, locale-agnostic DateTime string.
+                    // It preserves time-zone information and can be parsed unambiguously by DateTime.Parse().
+                    targetMethod = typeof(DateTime).GetMethod("ToString", new[] { typeof(string) });
+                    targetInstance = expression;
+                    targetParameter = Expression.Constant("o", (typeof(string)));
+                }
                 else
                 {
                     // This System.Convert.To<Type>()
