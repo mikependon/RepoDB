@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace RepoDb.Extensions
 {
@@ -33,7 +32,26 @@ namespace RepoDb.Extensions
             {
                 value = value.Trim();
             }
-            return Regex.Replace(value, @"[^a-zA-Z0-9]", "_");
+
+            int originalLength = value.Length;
+            char[] filtered = new char[originalLength];
+            for (var pos = 0; pos < originalLength; pos++)
+            {
+                char currentChar = value[pos];
+                if ((currentChar >= '0' && currentChar <= 'z') &&  // Are we within the alpha-numeric range of the ASCII table?
+                    (currentChar >= 'a' ||                         // Lower-case
+                     currentChar <= '9' ||                         // Numeric
+                     (currentChar >= 'A' && currentChar <= 'Z')))  // Upper-case 
+                {
+                    filtered[pos] = currentChar;
+                }
+                else
+                {
+                    filtered[pos] = '_';
+                }
+            }
+
+            return new string(filtered);
         }
 
         /// <summary>
@@ -43,7 +61,25 @@ namespace RepoDb.Extensions
         /// <returns>The unquoted string.</returns>
         public static string AsUnquoted(this string value)
         {
-            return Regex.Replace(value, @"[\[\]']+", "");
+            int originalLength = value.Length;
+            int validCharCount = 0;
+
+            char[] unquoted = new char[originalLength];
+
+            for (var pos = 0; pos < originalLength; pos++)
+            {
+                var currentChar = value[pos];
+                if (currentChar != '[' &&
+                    currentChar != ']' &&
+                    currentChar != '\'' &&
+                    currentChar != '\"')
+                {
+                    unquoted[validCharCount] = currentChar;
+                    validCharCount++;
+                }
+            }
+
+            return new string(unquoted, 0, validCharCount);
         }
 
         /// <summary>
@@ -60,14 +96,25 @@ namespace RepoDb.Extensions
                 value = value.Trim();
             }
 
-            if (string.IsNullOrEmpty(separator) || value.IndexOf(separator) < 0)
+            if (value.Length == 0)
+            {
+                return String.Empty;
+            }
+            else if (string.IsNullOrEmpty(separator))
             {
                 return value.AsUnquoted();
             }
             else
             {
                 var splitted = value.Split(separator.ToCharArray());
-                return splitted.Select(s => s.AsUnquoted()).Join(separator);
+                if (splitted.Count() == 1)
+                {
+                    return value.AsUnquoted();
+                }
+                else
+                {
+                    return splitted.Select(s => s.AsUnquoted()).Join(separator);
+                }
             }
         }
 
@@ -102,14 +149,26 @@ namespace RepoDb.Extensions
             {
                 value = value.Trim();
             }
-            if (string.IsNullOrEmpty(separator) || value.IndexOf(separator) < 0)
+
+            if (value.Length == 0)
+            {
+                return String.Empty;
+            }
+            else if (string.IsNullOrEmpty(separator))
             {
                 return value.AsQuoted();
             }
             else
             {
                 var splitted = value.Split(separator.ToCharArray());
-                return splitted.Select(s => s.AsQuoted()).Join(separator);
+                if (splitted.Count() == 1)
+                {
+                    return value.AsQuoted();
+                }
+                else
+                {
+                    return splitted.Select(s => s.AsQuoted()).Join(separator);
+                }
             }
         }
 

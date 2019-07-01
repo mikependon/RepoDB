@@ -39,3 +39,5 @@ using System.Security;
 [assembly: AssemblyFileVersion("1.9.8.4")]
 [assembly: NeutralResourcesLanguage("")]
 
+// Expose internal classes for unit testing
+[assembly: InternalsVisibleTo("RepoDb.UnitTests")]
