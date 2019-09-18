@@ -94,18 +94,27 @@ namespace RepoDb.DbHelpers
                     // Execute and set the result
                     using (var reader = dbCommand.ExecuteReader())
                     {
+                        var dbFields = new List<DbField>();
+
+                        // Iterate the list of the fields
                         while (reader.Read())
                         {
-                            yield return new DbField(reader.GetString(0),
-                                reader.IsDBNull(1) ? false : reader.GetBoolean(1),
-                                reader.IsDBNull(2) ? false : reader.GetBoolean(2),
-                                reader.IsDBNull(3) ? false : reader.GetBoolean(3),
-                                reader.IsDBNull(4) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(reader.GetString(4)),
-                                reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
-                                reader.IsDBNull(6) ? (byte?)0 : reader.GetByte(6),
-                                reader.IsDBNull(7) ? (byte?)0 : reader.GetByte(7),
-                                reader.IsDBNull(7) ? "text" : reader.GetString(4));
+                            var dbField = new DbField(reader.GetString(0),
+                               reader.IsDBNull(1) ? false : reader.GetBoolean(1),
+                               reader.IsDBNull(2) ? false : reader.GetBoolean(2),
+                               reader.IsDBNull(3) ? false : reader.GetBoolean(3),
+                               reader.IsDBNull(4) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(reader.GetString(4)),
+                               reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
+                               reader.IsDBNull(6) ? (byte?)0 : reader.GetByte(6),
+                               reader.IsDBNull(7) ? (byte?)0 : reader.GetByte(7),
+                               reader.IsDBNull(7) ? "text" : reader.GetString(4));
+
+                            // Add the field to the list
+                            dbFields.Add(dbField);
                         }
+
+                        // return the list of fields
+                        return dbFields;
                     }
                 }
             }
