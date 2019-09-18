@@ -19,12 +19,12 @@ namespace RepoDb.IntegrationTests.Setup
             // Master connection
             ConnectionForMaster = (environment == "DEVELOPMENT") ?
                 @"Server=(local);Database=master;Integrated Security=False;User ID=michael;Password=Password123;" :
-                @"Server=(local)\SQL2017;Database=master;ntegrated Security=False;User ID=sa;Password=Password12!;";
+                @"Server=(local)\SQL2017;Database=master;Integrated Security=False;User ID=sa;Password=Password12!;";
 
             // RepoDb connection
             ConnectionStringForRepoDb = (environment == "DEVELOPMENT") ?
                 @"Server=(local);Database=RepoDb;Integrated Security=False;User ID=michael;Password=Password123;" :
-                @"Server=(local)\SQL2017;Database=RepoDb;ntegrated Security=False;User ID=sa;Password=Password12!;";
+                @"Server=(local)\SQL2017;Database=RepoDb;Integrated Security=False;User ID=sa;Password=Password12!;";
 
             // Set the proper values for type mapper
             TypeMapper.Map(typeof(DateTime), System.Data.DbType.DateTime2, true);
