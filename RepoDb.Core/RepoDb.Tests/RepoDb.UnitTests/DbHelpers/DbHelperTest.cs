@@ -4,6 +4,7 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace RepoDb.UnitTests.DbHelpers
@@ -48,7 +49,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()))
                 ).Returns(GetDbFields());
 
@@ -67,7 +68,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -90,7 +91,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -113,7 +114,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -136,7 +137,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -159,7 +160,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -182,7 +183,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -205,7 +206,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -228,7 +229,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -251,7 +252,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -269,7 +270,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()))
                 ).Returns(GetDbFields());
 
@@ -289,7 +290,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -303,7 +304,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()))
                 ).Returns(GetDbFields());
 
@@ -320,7 +321,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -334,7 +335,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()))
                 ).Returns(GetDbFields());
 
@@ -351,7 +352,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -365,7 +366,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()))
                 ).Returns(GetDbFields());
 
@@ -382,7 +383,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -396,7 +397,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()))
                 ).Returns(GetDbFields());
 
@@ -413,7 +414,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -427,7 +428,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()))
                 ).Returns(GetDbFields());
 
@@ -444,7 +445,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -458,7 +459,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()))
                 ).Returns(GetDbFields());
 
@@ -474,7 +475,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -488,7 +489,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()))
                 ).Returns(GetDbFields());
 
@@ -505,7 +506,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 
@@ -519,7 +520,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()))
                 ).Returns(GetDbFields());
 
@@ -536,7 +537,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
-                    It.Is<string>(s => s == connection.ConnectionString),
+                    It.Is<IDbConnection>(s => s == connection),
                     It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>())), Times.Exactly(1));
         }
 

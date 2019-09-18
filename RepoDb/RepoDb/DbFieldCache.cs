@@ -2,6 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace RepoDb
 {
@@ -22,7 +24,7 @@ namespace RepoDb
         /// <returns>The cached field definitions of the entity.</returns>
         public static IEnumerable<DbField> Get(IDbConnection connection, string tableName)
         {
-            return Get(connection?.GetType(), connection?.ConnectionString, tableName);
+            return GetInternal(connection, tableName);
         }
 
         /// <summary>
@@ -35,26 +37,33 @@ namespace RepoDb
         public static IEnumerable<DbField> Get<TDbConnection>(string connectionString, string tableName)
             where TDbConnection : IDbConnection
         {
-            return Get(typeof(TDbConnection), connectionString, tableName);
+            using (var connection = (TDbConnection)Activator.CreateInstance(typeof(TDbConnection), new object[] { connectionString }))
+            {
+                return GetInternal(connection, tableName);
+            }
         }
 
         /// <summary>
         /// Gets the cached field definitions of the entity.
         /// </summary>
-        /// <param name="type">The type of <see cref="IDbConnection"/> object.</param>
-        /// <param name="connectionString">The connection string to be used.</param>
+        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
+        /// <param name="connection">The instance of the <see cref="IDbConnection"/> object.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        internal static IEnumerable<DbField> Get(Type type, string connectionString, string tableName)
+        internal static IEnumerable<DbField> GetInternal<TDbConnection>(TDbConnection connection, string tableName)
+            where TDbConnection : IDbConnection
         {
-            var key = (long)type?.FullName.GetHashCode();
+            var type = connection.GetType();
+            var key = (long)type.FullName.GetHashCode();
             var result = (IEnumerable<DbField>)null;
 
-            // Set the keys
-            if (string.IsNullOrEmpty(connectionString) == false)
+            // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
+            if (!string.IsNullOrEmpty(connection?.Database))
             {
-                key += connectionString.GetHashCode();
+                key += connection.Database.GetHashCode();
             }
+
+            // Add the hashcode of the table name
             if (string.IsNullOrEmpty(tableName) == false)
             {
                 key += tableName.GetHashCode();
@@ -64,7 +73,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(key, out result) == false)
             {
                 var dbHelper = DbHelperMapper.Get(type);
-                result = dbHelper?.GetFields(connectionString, tableName);
+                result = dbHelper?.GetFields(connection, tableName);
                 m_cache.TryAdd(key, result);
             }
 

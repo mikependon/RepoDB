@@ -2,6 +2,8 @@
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace RepoDb.DbHelpers
@@ -30,9 +32,22 @@ namespace RepoDb.DbHelpers
             // Open a connection
             using (var connection = new SqlConnection(connectionString).EnsureOpen())
             {
-                // TODO: https://github.com/mikependon/RepoDb/issues/229
-                // Check for the command type
-                var commandText = @"
+                return GetFields(connection, tableName);
+            }
+        }
+
+        /// <summary>
+        /// Gets the list of <see cref="DbField"/> of the table.
+        /// </summary>
+        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
+        /// <param name="connection">The instance of the connection object.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
+        public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName)
+            where TDbConnection : IDbConnection
+        {
+            // Check for the command type
+            var commandText = @"
                     SELECT C.COLUMN_NAME AS ColumnName
 	                    , CONVERT(BIT, COALESCE(TC.is_primary, 0)) AS IsPrimary
 	                    , CONVERT(BIT, COALESCE(TMP.is_identity, 1)) AS IsIdentity
@@ -71,51 +86,50 @@ namespace RepoDb.DbHelpers
                     WHERE
 	                    C.TABLE_SCHEMA = @Schema
 	                    AND C.TABLE_NAME = @TableName;";
-                var schema = "dbo";
+            var schema = "dbo";
 
-                // Get the schema and table name
-                if (tableName.IndexOf(".") > 0)
-                {
-                    var splitted = tableName.Split(".".ToCharArray());
-                    schema = splitted[0].AsUnquoted(true);
-                    tableName = splitted[1].AsUnquoted(true);
-                }
-                else
-                {
-                    tableName = tableName.AsUnquoted();
-                }
+            // Get the schema and table name
+            if (tableName.IndexOf(".") > 0)
+            {
+                var splitted = tableName.Split(".".ToCharArray());
+                schema = splitted[0].AsUnquoted(true);
+                tableName = splitted[1].AsUnquoted(true);
+            }
+            else
+            {
+                tableName = tableName.AsUnquoted();
+            }
 
-                // Open a command
-                using (var dbCommand = connection.EnsureOpen().CreateCommand(commandText))
-                {
-                    // Create parameters
-                    dbCommand.CreateParameters(new { Schema = schema, TableName = tableName });
+            // Open a command
+            using (var dbCommand = connection.EnsureOpen().CreateCommand(commandText))
+            {
+                // Create parameters
+                dbCommand.CreateParameters(new { Schema = schema, TableName = tableName });
 
-                    // Execute and set the result
-                    using (var reader = dbCommand.ExecuteReader())
+                // Execute and set the result
+                using (var reader = dbCommand.ExecuteReader())
+                {
+                    var dbFields = new List<DbField>();
+
+                    // Iterate the list of the fields
+                    while (reader.Read())
                     {
-                        var dbFields = new List<DbField>();
+                        var dbField = new DbField(reader.GetString(0),
+                           reader.IsDBNull(1) ? false : reader.GetBoolean(1),
+                           reader.IsDBNull(2) ? false : reader.GetBoolean(2),
+                           reader.IsDBNull(3) ? false : reader.GetBoolean(3),
+                           reader.IsDBNull(4) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(reader.GetString(4)),
+                           reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
+                           reader.IsDBNull(6) ? (byte?)0 : reader.GetByte(6),
+                           reader.IsDBNull(7) ? (byte?)0 : reader.GetByte(7),
+                           reader.IsDBNull(7) ? "text" : reader.GetString(4));
 
-                        // Iterate the list of the fields
-                        while (reader.Read())
-                        {
-                            var dbField = new DbField(reader.GetString(0),
-                               reader.IsDBNull(1) ? false : reader.GetBoolean(1),
-                               reader.IsDBNull(2) ? false : reader.GetBoolean(2),
-                               reader.IsDBNull(3) ? false : reader.GetBoolean(3),
-                               reader.IsDBNull(4) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(reader.GetString(4)),
-                               reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
-                               reader.IsDBNull(6) ? (byte?)0 : reader.GetByte(6),
-                               reader.IsDBNull(7) ? (byte?)0 : reader.GetByte(7),
-                               reader.IsDBNull(7) ? "text" : reader.GetString(4));
-
-                            // Add the field to the list
-                            dbFields.Add(dbField);
-                        }
-
-                        // return the list of fields
-                        return dbFields;
+                        // Add the field to the list
+                        dbFields.Add(dbField);
                     }
+
+                    // return the list of fields
+                    return dbFields;
                 }
             }
         }

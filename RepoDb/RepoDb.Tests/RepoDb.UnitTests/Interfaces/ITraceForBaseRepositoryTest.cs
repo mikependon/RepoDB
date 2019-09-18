@@ -52,6 +52,11 @@ namespace RepoDb.UnitTests.Interfaces
 
             public IEnumerable<DbField> GetFields(string connectionString, string tableName)
             {
+                return GetFields((DbConnection)null, tableName);
+            }
+
+            public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName) where TDbConnection : IDbConnection
+            {
                 if (tableName == ClassMappedNameCache.Get<TraceEntity>())
                 {
                     return new[]
