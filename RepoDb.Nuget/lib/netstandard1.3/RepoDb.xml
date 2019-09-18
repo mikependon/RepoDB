@@ -2520,12 +2520,12 @@
             <param name="tableName">The name of the target table.</param>
             <returns>The cached field definitions of the entity.</returns>
         </member>
-        <member name="M:RepoDb.DbFieldCache.Get(System.Type,System.String,System.String)">
+        <member name="M:RepoDb.DbFieldCache.GetInternal``1(``0,System.String)">
             <summary>
             Gets the cached field definitions of the entity.
             </summary>
-            <param name="type">The type of <see cref="T:System.Data.IDbConnection"/> object.</param>
-            <param name="connectionString">The connection string to be used.</param>
+            <typeparam name="TDbConnection">The type of <see cref="T:System.Data.IDbConnection"/> object.</typeparam>
+            <param name="connection">The instance of the <see cref="T:System.Data.IDbConnection"/> object.</param>
             <param name="tableName">The name of the target table.</param>
             <returns>The cached field definitions of the entity.</returns>
         </member>
@@ -2581,6 +2581,15 @@
             Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
             </summary>
             <param name="connectionString">The connection string to connect to.</param>
+            <param name="tableName">The name of the target table.</param>
+            <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
+        </member>
+        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFields``1(``0,System.String)">
+            <summary>
+            Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
+            </summary>
+            <typeparam name="TDbConnection">The type of <see cref="T:System.Data.Common.DbConnection"/> object.</typeparam>
+            <param name="connection">The instance of the connection object.</param>
             <param name="tableName">The name of the target table.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
         </member>
@@ -12617,6 +12626,15 @@
             Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
             </summary>
             <param name="connectionString">The connection string to connect to.</param>
+            <param name="tableName">The name of the target table.</param>
+            <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
+        </member>
+        <member name="M:RepoDb.Interfaces.IDbHelper.GetFields``1(``0,System.String)">
+            <summary>
+            Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
+            </summary>
+            <typeparam name="TDbConnection">The type of <see cref="T:System.Data.IDbConnection"/> object.</typeparam>
+            <param name="connection">The instance of the connection object.</param>
             <param name="tableName">The name of the target table.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
         </member>
