@@ -6703,10 +6703,18 @@
         </member>
         <member name="M:RepoDb.Extensions.TypeExtension.GetUnderlyingType(System.Type)">
             <summary>
-            Gets the underlying type of the current type. If there is no underlying type, this will return the current type.
+            Returns the underlying type of the current type. If there is no underlying type, this will return the current type.
             </summary>
             <param name="type">The current type to check.</param>
             <returns>The underlying type or the current type.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.TypeExtension.GetPropertyByMapping(System.Type,System.String)">
+            <summary>
+            Returns the mapped property if the property is not present.
+            </summary>
+            <param name="type">The current type.</param>
+            <param name="mappedName">The name of the property mapping.</param>
+            <returns>The instance of <see cref="T:RepoDb.ClassProperty"/>.</returns>
         </member>
         <member name="T:RepoDb.DbConnectionExtension">
             <summary>
