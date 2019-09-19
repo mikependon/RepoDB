@@ -32,7 +32,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="dbFields">The <see cref="DbField"/> to be converted.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> list of <see cref="Field"/> object.</returns>
-        internal static IEnumerable<Field> AsFields(this IEnumerable<DbField> dbFields)
+        public static IEnumerable<Field> AsFields(this IEnumerable<DbField> dbFields)
         {
             foreach (var dbField in dbFields)
             {
