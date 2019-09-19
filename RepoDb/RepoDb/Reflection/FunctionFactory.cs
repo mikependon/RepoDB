@@ -1450,7 +1450,7 @@ namespace RepoDb.Reflection
 
             // Get the entity property
             var propertyName = field.UnquotedName.AsAlphaNumeric();
-            var property = typeOfEntity.GetProperty(propertyName).SetMethod;
+            var property = (typeOfEntity.GetProperty(propertyName) ?? typeOfEntity.GetPropertyByMapping(propertyName)?.PropertyInfo)?.SetMethod;
 
             // Get the command parameter
             var name = parameterName ?? propertyName;
@@ -1490,7 +1490,7 @@ namespace RepoDb.Reflection
             var valueParameter = Expression.Parameter(typeOfObject, "value");
 
             // Get the entity property
-            var property = typeOfEntity.GetProperty(field.UnquotedName).SetMethod;
+            var property = (typeOfEntity.GetProperty(field.UnquotedName) ?? typeOfEntity.GetPropertyByMapping(field.UnquotedName)?.PropertyInfo)?.SetMethod;
 
             // Assign the value into DataEntity.Property
             var propertyAssignment = Expression.Call(entityParameter, property,

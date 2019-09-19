@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -19,13 +21,25 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets the underlying type of the current type. If there is no underlying type, this will return the current type.
+        /// Returns the underlying type of the current type. If there is no underlying type, this will return the current type.
         /// </summary>
         /// <param name="type">The current type to check.</param>
         /// <returns>The underlying type or the current type.</returns>
         public static Type GetUnderlyingType(this Type type)
         {
             return type != null ? Nullable.GetUnderlyingType(type) ?? type : null;
+        }
+
+        /// <summary>
+        /// Returns the mapped property if the property is not present.
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <param name="mappedName">The name of the property mapping.</param>
+        /// <returns>The instance of <see cref="ClassProperty"/>.</returns>
+        internal static ClassProperty GetPropertyByMapping(this Type type, string mappedName)
+        {
+            return PropertyCache.Get(type)
+                .FirstOrDefault(p => string.Equals(p.GetUnquotedMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
