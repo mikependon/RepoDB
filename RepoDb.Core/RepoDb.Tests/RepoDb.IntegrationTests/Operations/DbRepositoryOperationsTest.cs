@@ -1876,6 +1876,73 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region BulkInsert(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryBulkInsertForTableNameEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = repository.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryBulkInsertForTableNameDbDataReader()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                repository.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        var bulkInsertResult = destinationRepository.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader);
+
+                        // Assert
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var result = destinationRepository.QueryAll<IdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, result.Count());
+                    }
+                }
+            }
+        }
+
+        #endregion
+
         #region BulkInsertAsync<TEntity>
 
         [TestMethod]
@@ -1962,7 +2029,6 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsertAsync(tables, mappings);
-                bulkInsertResult.Wait();
 
                 // Trigger
                 var result = bulkInsertResult.Result;
@@ -2089,7 +2155,6 @@ namespace RepoDb.IntegrationTests.Operations
                     {
                         // Act
                         var bulkInsertResult = destinationRepository.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
-                        bulkInsertResult.Wait();
 
                         // Trigger
                         var result = bulkInsertResult.Result;
@@ -2161,6 +2226,73 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
+            }
+        }
+
+        #endregion
+
+        #region BulkInsertAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryBulkInsertAsyncForTableNameEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = repository.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryBulkInsertAsyncForTableNameDbDataReader()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                repository.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        var bulkInsertResult = destinationRepository.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader).Result;
+
+                        // Assert
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var result = destinationRepository.QueryAll<IdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, result.Count());
+                    }
+                }
             }
         }
 

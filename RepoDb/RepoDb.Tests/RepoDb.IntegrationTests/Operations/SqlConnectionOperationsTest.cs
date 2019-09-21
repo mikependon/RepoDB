@@ -2013,6 +2013,32 @@ namespace RepoDb.IntegrationTests.Operations
         #region BulkInsert(TableName)
 
         [TestMethod]
+        public void TestSqlConnectionBulkInsertForTableNameDataEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionBulkInsertForTableNameDbDataReader()
         {
             // Setup
@@ -2162,7 +2188,7 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert("CompleteTable", (DbDataReader)reader);
+                        destinationConnection.BulkInsert("InvalidTable", (DbDataReader)reader);
                     }
                 }
             }
@@ -2284,7 +2310,6 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables, mappings);
-                bulkInsertResult.Wait();
 
                 // Trigger
                 var result = bulkInsertResult.Result;
@@ -2411,7 +2436,6 @@ namespace RepoDb.IntegrationTests.Operations
                     {
                         // Act
                         var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
-                        bulkInsertResult.Wait();
 
                         // Trigger
                         var result = bulkInsertResult.Result;
@@ -2489,6 +2513,32 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region BulkInsertAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertAsyncForTableNameDataEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionBulkInsertAsyncForTableNameDbDataReader()
@@ -2610,7 +2660,6 @@ namespace RepoDb.IntegrationTests.Operations
                     {
                         // Act
                         var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings);
-                        bulkInsertResult.Wait();
 
                         // Trigger
                         var result = bulkInsertResult.Result;
@@ -2641,8 +2690,7 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync("CompleteTable", (DbDataReader)reader);
-                        bulkInsertResult.Wait();
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync("InvalidTable", (DbDataReader)reader);
 
                         // Trigger
                         var result = bulkInsertResult.Result;
@@ -2674,7 +2722,6 @@ namespace RepoDb.IntegrationTests.Operations
                     {
                         // Act
                         var bulkInsertResult = destinationConnection.BulkInsertAsync("MissingTable", (DbDataReader)reader);
-                        bulkInsertResult.Wait();
 
                         // Trigger
                         var result = bulkInsertResult.Result;

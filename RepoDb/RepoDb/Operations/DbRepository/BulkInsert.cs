@@ -149,7 +149,6 @@ namespace RepoDb
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -157,13 +156,12 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public int BulkInsert<TEntity>(string tableName,
+        public int BulkInsert(string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
             IDbTransaction transaction = null)
-            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -331,7 +329,6 @@ namespace RepoDb
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -339,13 +336,12 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public async Task<int> BulkInsertAsync<TEntity>(string tableName,
+        public async Task<int> BulkInsertAsync(string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
             IDbTransaction transaction = null)
-            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());

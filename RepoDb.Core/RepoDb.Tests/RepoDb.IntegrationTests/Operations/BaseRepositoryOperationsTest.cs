@@ -1121,6 +1121,36 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region BulkInsert(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryBulkInsertForTableNameEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var bulkInsertResult = repository.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = repository.QueryAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        #endregion
+
         #region BulkInsertAsync
 
         [TestMethod]
@@ -1279,6 +1309,36 @@ namespace RepoDb.IntegrationTests.Operations
                         Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                     });
                 }
+            }
+        }
+
+        #endregion
+
+        #region BulkInsertAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryBulkInsertAsyncForTableNameEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var bulkInsertResult = repository.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = repository.QueryAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
             }
         }
 
