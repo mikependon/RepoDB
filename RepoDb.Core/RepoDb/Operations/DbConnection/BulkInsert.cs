@@ -44,13 +44,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", entities, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", entities, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert.Cancelled");
+                        throw new CancelledExecutionException("BulkInsert");
                     }
                     return 0;
                 }
@@ -75,79 +75,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", entities, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Return the result
-            return result;
-        }
-
-        /// <summary>
-        /// Bulk insert a list of data entity objects into the database.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
-        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="options">The bulk-copy options to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkInsert<TEntity>(this IDbConnection connection,
-            string tableName,
-            IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
-            where TEntity : class
-        {
-            var provider = GetDbOperationProvider(connection);
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", entities, null);
-                trace.BeforeBulkInsert(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BulkInsert.Cancelled");
-                    }
-                    return 0;
-                }
-                entities = (IEnumerable<TEntity>)cancellableTraceLog.Parameter ?? entities;
-            }
-
-            // Variables for the operation
-            var result = 0;
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual execution
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
-            {
-                result = provider.BulkInsert(connection: connection,
-                    tableName: tableName,
-                    reader: reader,
-                    mappings: mappings,
-                    options: options,
-                    bulkCopyTimeout: bulkCopyTimeout,
-                    batchSize: batchSize,
-                    transaction: transaction);
-            }
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", entities, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert", entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -183,13 +111,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", reader, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert.Cancelled");
+                        throw new CancelledExecutionException("BulkInsert");
                     }
                     return 0;
                 }
@@ -214,7 +142,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", reader, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -250,13 +178,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", reader, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert.Cancelled");
+                        throw new CancelledExecutionException("BulkInsert");
                     }
                     return 0;
                 }
@@ -282,7 +210,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", reader, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -322,13 +250,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", entities, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", entities, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert.Cancelled");
+                        throw new CancelledExecutionException("BulkInsert");
                     }
                     return 0;
                 }
@@ -353,79 +281,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", entities, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Return the result
-            return result;
-        }
-
-        /// <summary>
-        /// Bulk insert a list of data entity objects into the database in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
-        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="options">The bulk-copy options to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection,
-            string tableName,
-            IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
-            where TEntity : class
-        {
-            var provider = GetDbOperationProvider(connection);
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", entities, null);
-                trace.BeforeBulkInsert(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BulkInsert.Cancelled");
-                    }
-                    return 0;
-                }
-                entities = (IEnumerable<TEntity>)cancellableTraceLog.Parameter ?? entities;
-            }
-
-            // Variables for the operation
-            var result = 0;
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual execution
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
-            {
-                result = await provider.BulkInsertAsync(connection: connection,
-                    tableName: tableName,
-                    reader: reader,
-                    mappings: mappings,
-                    options: options,
-                    bulkCopyTimeout: bulkCopyTimeout,
-                    batchSize: batchSize,
-                    transaction: transaction);
-            }
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", entities, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert", entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -461,13 +317,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", reader, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert.Cancelled");
+                        throw new CancelledExecutionException("BulkInsert");
                     }
                     return 0;
                 }
@@ -492,7 +348,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", reader, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -528,13 +384,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", reader, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert.Cancelled");
+                        throw new CancelledExecutionException("BulkInsert");
                     }
                     return 0;
                 }
@@ -560,7 +416,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", reader, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
