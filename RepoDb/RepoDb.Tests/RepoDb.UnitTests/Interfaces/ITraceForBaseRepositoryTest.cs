@@ -67,6 +67,24 @@ namespace RepoDb.UnitTests.Interfaces
                 }
                 return null;
             }
+
+            public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString, string tableName)
+            {
+                return GetFieldsAsync((DbConnection)null, tableName);
+            }
+
+            public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName) where TDbConnection : IDbConnection
+            {
+                if (tableName == ClassMappedNameCache.Get<TraceEntity>())
+                {
+                    return Task.FromResult<IEnumerable<DbField>>(new[]
+                    {
+                        new DbField("Id", true, true, false, typeof(int), null, null, null),
+                        new DbField("Name", false, false, true, typeof(string), null, null, null)
+                    });
+                }
+                return null;
+            }
         }
 
         private class BaseRepositoryCustomDbOperationProvider : IDbOperationProvider
