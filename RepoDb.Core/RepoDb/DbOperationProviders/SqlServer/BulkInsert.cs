@@ -1,9 +1,11 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -168,14 +170,23 @@ namespace RepoDb.DbOperationProviders
                     // Add the mappings
                     if (mappings == null)
                     {
-                        foreach (var property in reader.Properties)
+                        // Get the actual DB fields
+                        var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+                        var fields = reader.Properties.AsFields();
+
+                        // Filter the fields based on the actual DB fields
+                        fields = fields
+                            .Where(field => dbFields.FirstOrDefault(dbField => string.Equals(dbField.UnquotedName, field.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null);
+
+                        // Iterate the filtered fields
+                        foreach (var field in fields)
                         {
-                            var columnName = property.GetUnquotedMappedName();
-                            sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
+                            sqlBulkCopy.ColumnMappings.Add(field.UnquotedName, field.UnquotedName);
                         }
                     }
                     else
                     {
+                        // Iterate the provided mappings
                         foreach (var mapItem in mappings)
                         {
                             sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
@@ -187,10 +198,10 @@ namespace RepoDb.DbOperationProviders
                     sqlBulkCopy.WriteToServer(reader);
 
                     // Hack the 'SqlBulkCopy' object
-                    var field = GetRowsCopiedField();
+                    var copiedField = GetRowsCopiedField();
 
                     // Set the return value
-                    result = field != null ? (int)field.GetValue(sqlBulkCopy) : reader.RecordsAffected;
+                    result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
                 }
             }
 
@@ -249,8 +260,26 @@ namespace RepoDb.DbOperationProviders
                 }
 
                 // Add the mappings
-                if (mappings != null)
+                if (mappings == null)
                 {
+                    // Get the actual DB fields
+                    var dbFields = DbFieldCache.Get(connection, tableName);
+                    var readerFields = Enumerable.Range(0, reader.FieldCount)
+                        .Select((index) => reader.GetName(index));
+
+                    // Filter the fields based on the actual DB fields
+                    readerFields = readerFields
+                        .Where(field => dbFields.FirstOrDefault(dbField => string.Equals(dbField.UnquotedName, field, StringComparison.OrdinalIgnoreCase)) != null);
+
+                    // Iterate the filtered fields
+                    foreach (var field in readerFields)
+                    {
+                        sqlBulkCopy.ColumnMappings.Add(field, field);
+                    }
+                }
+                else
+                {
+                    // Iterate the provided mappings
                     foreach (var mapItem in mappings)
                     {
                         sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
@@ -262,10 +291,10 @@ namespace RepoDb.DbOperationProviders
                 sqlBulkCopy.WriteToServer(reader);
 
                 // Hack the 'SqlBulkCopy' object
-                var field = GetRowsCopiedField();
+                var copiedField = GetRowsCopiedField();
 
                 // Set the return value
-                result = field != null ? (int)field.GetValue(sqlBulkCopy) : reader.RecordsAffected;
+                result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
             }
 
             // Result
@@ -362,14 +391,23 @@ namespace RepoDb.DbOperationProviders
                     // Add the mappings
                     if (mappings == null)
                     {
-                        foreach (var property in reader.Properties)
+                        // Get the actual DB fields
+                        var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>());
+                        var fields = reader.Properties.AsFields();
+
+                        // Filter the fields based on the actual DB fields
+                        fields = fields
+                            .Where(field => dbFields.FirstOrDefault(dbField => string.Equals(dbField.UnquotedName, field.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null);
+
+                        // Iterate the filtered fields
+                        foreach (var field in fields)
                         {
-                            var columnName = property.GetUnquotedMappedName();
-                            sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
+                            sqlBulkCopy.ColumnMappings.Add(field.UnquotedName, field.UnquotedName);
                         }
                     }
                     else
                     {
+                        // Iterate the provided mappings
                         foreach (var mapItem in mappings)
                         {
                             sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
@@ -381,10 +419,10 @@ namespace RepoDb.DbOperationProviders
                     await sqlBulkCopy.WriteToServerAsync(reader);
 
                     // Hack the 'SqlBulkCopy' object
-                    var field = GetRowsCopiedField();
+                    var copiedField = GetRowsCopiedField();
 
                     // Set the return value
-                    result = field != null ? (int)field.GetValue(sqlBulkCopy) : reader.RecordsAffected;
+                    result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
                 }
             }
 
@@ -441,10 +479,28 @@ namespace RepoDb.DbOperationProviders
                 {
                     sqlBulkCopy.BatchSize = batchSize.Value;
                 }
-
+                
                 // Add the mappings
-                if (mappings != null)
+                if (mappings == null)
                 {
+                    // Get the actual DB fields
+                    var dbFields = await DbFieldCache.GetAsync(connection, tableName);
+                    var readerFields = Enumerable.Range(0, reader.FieldCount)
+                        .Select((index) => reader.GetName(index));
+
+                    // Filter the fields based on the actual DB fields
+                    readerFields = readerFields
+                        .Where(field => dbFields.FirstOrDefault(dbField => string.Equals(dbField.UnquotedName, field, StringComparison.OrdinalIgnoreCase)) != null);
+
+                    // Iterate the filtered fields
+                    foreach (var field in readerFields)
+                    {
+                        sqlBulkCopy.ColumnMappings.Add(field, field);
+                    }
+                }
+                else
+                {
+                    // Iterate the provided mappings
                     foreach (var mapItem in mappings)
                     {
                         sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
@@ -456,10 +512,10 @@ namespace RepoDb.DbOperationProviders
                 await sqlBulkCopy.WriteToServerAsync(reader);
 
                 // Hack the 'SqlBulkCopy' object
-                var field = GetRowsCopiedField();
+                var copiedField = GetRowsCopiedField();
 
                 // Set the return value
-                result = field != null ? (int)field.GetValue(sqlBulkCopy) : reader.RecordsAffected;
+                result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
             }
 
             // Result

@@ -53,6 +53,20 @@ namespace RepoDb.UnitTests.Interfaces
                     new DbField("Name", false, false, true, typeof(string), null, null, null)
                 };
             }
+
+            public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString, string tableName)
+            {
+                return GetFieldsAsync((DbConnection)null, tableName);
+            }
+
+            public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName) where TDbConnection : IDbConnection
+            {
+                return Task.FromResult<IEnumerable<DbField>>(new[]
+                {
+                    new DbField("Id", true, true, false, typeof(int), null, null, null),
+                    new DbField("Name", false, false, true, typeof(string), null, null, null)
+                });
+            }
         }
 
         private class DbConnectionCustomDbOperationProvider : IDbOperationProvider

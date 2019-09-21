@@ -2,8 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace RepoDb
 {
@@ -28,7 +27,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the cached field definitions of the entity.
+        /// Gets the cached list of <see cref="DbField"/> of the database table based on the data entity mapped name in asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>The cached field definitions of the entity.</returns>
+        public static Task<IEnumerable<DbField>> GetAsync(IDbConnection connection, string tableName)
+        {
+            return GetInternalAsync(connection, tableName);
+        }
+
+        /// <summary>
+        /// Gets the cached list of <see cref="DbField"/> of the database table based on the data entity mapped name.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of the <see cref="IDbConnection"/> object.</typeparam>
         /// <param name="connectionString">The connection string to be used.</param>
@@ -40,6 +50,22 @@ namespace RepoDb
             using (var connection = (TDbConnection)Activator.CreateInstance(typeof(TDbConnection), new object[] { connectionString }))
             {
                 return GetInternal(connection, tableName);
+            }
+        }
+
+        /// <summary>
+        /// Gets the cached list of <see cref="DbField"/> of the database table based on the data entity mapped name in asynchronous way.
+        /// </summary>
+        /// <typeparam name="TDbConnection">The type of the <see cref="IDbConnection"/> object.</typeparam>
+        /// <param name="connectionString">The connection string to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>The cached field definitions of the entity.</returns>
+        public static Task<IEnumerable<DbField>> GetAsync<TDbConnection>(string connectionString, string tableName)
+            where TDbConnection : IDbConnection
+        {
+            using (var connection = (TDbConnection)Activator.CreateInstance(typeof(TDbConnection), new object[] { connectionString }))
+            {
+                return GetInternalAsync(connection, tableName);
             }
         }
 
@@ -74,6 +100,44 @@ namespace RepoDb
             {
                 var dbHelper = DbHelperMapper.Get(type);
                 result = dbHelper?.GetFields(connection, tableName);
+                m_cache.TryAdd(key, result);
+            }
+
+            // Return the value
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the cached field definitions of the entity in an asychronous way.
+        /// </summary>
+        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
+        /// <param name="connection">The instance of the <see cref="IDbConnection"/> object.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>The cached field definitions of the entity.</returns>
+        internal static async Task<IEnumerable<DbField>> GetInternalAsync<TDbConnection>(TDbConnection connection, string tableName)
+            where TDbConnection : IDbConnection
+        {
+            var type = connection.GetType();
+            var key = (long)type.FullName.GetHashCode();
+            var result = (IEnumerable<DbField>)null;
+
+            // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
+            if (!string.IsNullOrEmpty(connection?.Database))
+            {
+                key += connection.Database.GetHashCode();
+            }
+
+            // Add the hashcode of the table name
+            if (string.IsNullOrEmpty(tableName) == false)
+            {
+                key += tableName.GetHashCode();
+            }
+
+            // Try get the value
+            if (m_cache.TryGetValue(key, out result) == false)
+            {
+                var dbHelper = DbHelperMapper.Get(type);
+                result = await dbHelper?.GetFieldsAsync(connection, tableName);
                 m_cache.TryAdd(key, result);
             }
 
