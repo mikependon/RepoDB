@@ -14632,6 +14632,14 @@
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be extracted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
         </member>
+        <member name="M:RepoDb.QueryMultipleExtractor.#ctor(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryMultipleExtractor"/> class.
+            </summary>
+            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be extracted.</param>
+            <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="connectionString">The unaltered connetion string used by the connection object.</param>
+        </member>
         <member name="M:RepoDb.QueryMultipleExtractor.Dispose">
             <summary>
             Disposes the current instance of <see cref="T:RepoDb.QueryMultipleExtractor"/>.
@@ -14641,6 +14649,25 @@
             <summary>
             Gets the position of the <see cref="T:System.Data.Common.DbDataReader"/>.
             </summary>
+        </member>
+        <member name="M:RepoDb.QueryMultipleExtractor.GetDbFieldGetCallsCacheKey``1">
+            <summary>
+            Returns the usable cache key when calling the <see cref="T:RepoDb.DbField"/> operations.
+            </summary>
+            <typeparam name="TEntity">The type of the entity to check.</typeparam>
+            <returns>The key to the cache.</returns>
+        </member>
+        <member name="M:RepoDb.QueryMultipleExtractor.EnsureSingleCallForDbFieldCacheGet``1">
+            <summary>
+            Ensures that the <see cref="M:RepoDb.DbFieldCache.Get(System.Data.IDbConnection,System.String)"/> method is called one.
+            </summary>
+            <typeparam name="TEntity">The type of the entity to check.</typeparam>
+        </member>
+        <member name="M:RepoDb.QueryMultipleExtractor.EnsureSingleCallForDbFieldCacheGeAsynct``1">
+            <summary>
+            Ensures that the <see cref="M:RepoDb.DbFieldCache.GetAsync(System.Data.IDbConnection,System.String)"/> method is called one.
+            </summary>
+            <typeparam name="TEntity">The type of the entity to check.</typeparam>
         </member>
         <member name="M:RepoDb.QueryMultipleExtractor.Extract``1">
             <summary>
