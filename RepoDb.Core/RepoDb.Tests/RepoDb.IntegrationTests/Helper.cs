@@ -118,7 +118,7 @@ namespace RepoDb.IntegrationTests
                 var value1 = propertyOfType1.GetValue(t1);
                 var value2 = propertyOfType2.GetValue(t2);
                 Assert.AreEqual(value1, value2,
-                    $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1}' and '{value2}'.");
+                    $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
             });
         }
 

@@ -56,7 +56,15 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public IEnumerable<TEntity> Extract<TEntity>() where TEntity : class
         {
-            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, false).AsList();
+            // Call the cache first to avoid reusing multiple data readers
+            // TODO: Revisits whether "without" creating a new instance of connection object is possible
+            using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connection.ConnectionString }))
+            {
+                DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+            }
+
+            // Get the result
+            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, true).AsList();
 
             // Move to next result
             NextResult();
@@ -72,7 +80,15 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>() where TEntity : class
         {
-            var result = await DataReader.ToEnumerableAsync<TEntity>(m_reader, m_connection, false);
+            // Call the cache first to avoid reusing multiple data readers
+            // TODO: Revisits whether "without" creating a new instance of connection object is possible
+            using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connection.ConnectionString }))
+            {
+                await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>());
+            }
+
+            // Get the result
+            var result = await DataReader.ToEnumerableAsync<TEntity>(m_reader, m_connection, true);
 
             // Move to next result
             await NextResultAsync();

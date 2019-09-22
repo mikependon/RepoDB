@@ -62,6 +62,7 @@
     <Compile Include="Enumerations\Direction.cs" />
     <Compile Include="EnumPropertyTest.cs" />
     <Compile Include="ExecuteParameterTest.cs" />
+    <Compile Include="ExecuteQueryRawTest.cs" />
     <Compile Include="Models\EnumClasses.cs" />
     <Compile Include="Models\UnorganizedTable.cs" />
     <Compile Include="Models\IdentityTable.cs" />

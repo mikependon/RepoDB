@@ -306,6 +306,10 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck)
             where TEntity : class
         {
+            // Trigger the cache to void reusing the connection
+            DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+
+            // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -389,6 +393,10 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck)
             where TEntity : class
         {
+            // Trigger the cache to void reusing the connection
+            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>());
+
+            // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,

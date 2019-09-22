@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.9.9-beta2</version>
+    <version>1.9.9-beta3</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -11,9 +11,11 @@
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
-      RepoDb v1.9.9-beta2:
-      - Enhancement: Add 'AsFields()' extended methods for the IEnumerable&lt;DbField&gt; #273
-      - Bug: Calling InsertAll With Map Attribute leads to System.NullReferenceException: 'Object reference not set to an instance of an object.' #274
+      RepoDb v1.9.9-beta3:
+      - Enhancement: Add DbFieldCache.GetAsync method. #275
+      - Enhancement: Add DataEntityDataReader into BulkInsert that accepts TableName and Entities #271
+      - Enhancement: Add 'AsFields()' extended methods for the IEnumerable&lt;DbField&gt;
+      - Test: Add IntegrationTests on BulkInsert that accepts DataEntities and TableName.
     </releaseNotes>
     <copyright>Copyright © 2019</copyright>
     <tags>orm sql repo repodb repository</tags>
