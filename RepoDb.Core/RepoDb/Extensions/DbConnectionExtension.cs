@@ -436,6 +436,10 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
+            // As the connection string is being modified by ADO.Net if the (Integrated Security=False), right after opening the connection unless (Persist Security Info=True)
+            var connectionString = connection.ConnectionString;
+
+            // Read the result
             var reader = ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -443,7 +447,9 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 skipCommandArrayParametersCheck: false);
-            return new QueryMultipleExtractor((DbDataReader)reader, connection);
+
+            // Create an extractor class
+            return new QueryMultipleExtractor((DbDataReader)reader, connection, connectionString);
         }
 
         /// <summary>
@@ -466,6 +472,10 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
+            // As the connection string is being modified by ADO.Net if the (Integrated Security=False), right after opening the connection unless (Persist Security Info=True)
+            var connectionString = connection.ConnectionString;
+
+            // Read the result
             var reader = await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -473,7 +483,9 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 skipCommandArrayParametersCheck: false);
-            return new QueryMultipleExtractor((DbDataReader)reader, connection);
+
+            // Create an extractor class
+            return new QueryMultipleExtractor((DbDataReader)reader, connection, connectionString);
         }
 
         #endregion

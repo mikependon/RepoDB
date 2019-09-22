@@ -1,6 +1,7 @@
 using RepoDb.Extensions;
 using RepoDb.Reflection;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -13,8 +14,10 @@ namespace RepoDb
     /// </summary>
     public sealed class QueryMultipleExtractor : IDisposable
     {
+        private static readonly ConcurrentDictionary<int, IEnumerable<DbField>> m_cache = new ConcurrentDictionary<int, IEnumerable<DbField>>();
         private DbDataReader m_reader = null;
         private IDbConnection m_connection = null;
+        private string m_connectionString = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
@@ -22,9 +25,19 @@ namespace RepoDb
         /// <param name="reader">The <see cref="DbDataReader"/> to be extracted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         internal QueryMultipleExtractor(DbDataReader reader, IDbConnection connection)
+            : this(reader, connection, connection.ConnectionString) { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
+        /// </summary>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be extracted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="connectionString">The unaltered connetion string used by the connection object.</param>
+        internal QueryMultipleExtractor(DbDataReader reader, IDbConnection connection, string connectionString)
         {
             m_reader = reader;
             m_connection = connection;
+            m_connectionString = connectionString;
             Position = 0;
         }
 
@@ -45,6 +58,81 @@ namespace RepoDb
 
         #endregion
 
+        #region Methods
+
+        // TODO: Revisits whether "without" creating a new instance of connection object is possible
+        //       This line of code is a dead-end, I could not even refactor due to the feature of this class (multiple extracting).
+        //       Reason why we need to recreate a new connection object is to let us open a new DbDataReader directly to the database
+        //       where the current connection is connected. The variable m_reader is an already opened DbDataReader object which
+        //       prevents us of doing so.
+
+
+        /// <summary>
+        /// Returns the usable cache key when calling the <see cref="DbField"/> operations.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity to check.</typeparam>
+        /// <returns>The key to the cache.</returns>
+        private int GetDbFieldGetCallsCacheKey<TEntity>()
+        {
+            var key = m_connection.GetType().FullName.GetHashCode();
+
+            // Add the entity type hash code
+            key += typeof(TEntity).FullName.GetHashCode();
+
+            // Add the connection string hashcode
+            if (!string.IsNullOrEmpty(m_connectionString))
+            {
+                key += m_connectionString.GetHashCode();
+            }
+
+            // Return the reusable key
+            return key;
+        }
+
+        /// <summary>
+        /// Ensures that the <see cref="DbFieldCache.Get(IDbConnection, string)"/> method is called one.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity to check.</typeparam>
+        private void EnsureSingleCallForDbFieldCacheGet<TEntity>()
+            where TEntity : class
+        {
+            var key = GetDbFieldGetCallsCacheKey<TEntity>();
+            var dbFields = (IEnumerable<DbField>)null;
+
+            // Try get the value
+            if (m_cache.TryGetValue(key, out dbFields) == false)
+            {
+                using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connectionString }))
+                {
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+                    m_cache.TryAdd(key, dbFields);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ensures that the <see cref="DbFieldCache.GetAsync(IDbConnection, string)"/> method is called one.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity to check.</typeparam>
+        private async Task EnsureSingleCallForDbFieldCacheGeAsynct<TEntity>()
+            where TEntity : class
+        {
+            var key = GetDbFieldGetCallsCacheKey<TEntity>();
+            var dbFields = (IEnumerable<DbField>)null;
+
+            // Try get the value
+            if (m_cache.TryGetValue(key, out dbFields) == false)
+            {
+                using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connectionString }))
+                {
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>());
+                    m_cache.TryAdd(key, dbFields);
+                }
+            }
+        }
+
+        #endregion
+
         #region Extract
 
         #region Extract<TEntity>
@@ -57,11 +145,7 @@ namespace RepoDb
         public IEnumerable<TEntity> Extract<TEntity>() where TEntity : class
         {
             // Call the cache first to avoid reusing multiple data readers
-            // TODO: Revisits whether "without" creating a new instance of connection object is possible
-            using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connection.ConnectionString }))
-            {
-                DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
-            }
+            EnsureSingleCallForDbFieldCacheGet<TEntity>();
 
             // Get the result
             var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, true).AsList();
@@ -81,11 +165,7 @@ namespace RepoDb
         public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>() where TEntity : class
         {
             // Call the cache first to avoid reusing multiple data readers
-            // TODO: Revisits whether "without" creating a new instance of connection object is possible
-            using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connection.ConnectionString }))
-            {
-                await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>());
-            }
+            await EnsureSingleCallForDbFieldCacheGeAsynct<TEntity>();
 
             // Get the result
             var result = await DataReader.ToEnumerableAsync<TEntity>(m_reader, m_connection, true);
