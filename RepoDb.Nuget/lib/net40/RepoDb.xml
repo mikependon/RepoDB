@@ -497,13 +497,13 @@
             <summary>
             Validates the type of the <see cref="T:System.Data.IDbConnection"/> object.
             </summary>
-            <param name="connection"></param>
+            <param name="connection">The connection to validate.</param>
         </member>
         <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.ValidateTransaction(System.Data.IDbTransaction)">
             <summary>
             Validates the type of the <see cref="T:System.Data.IDbTransaction"/> object.
             </summary>
-            <param name="transaction"></param>
+            <param name="transaction">The connection to validate.</param>
         </member>
         <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.GetRowsCopiedField">
             <summary>
@@ -511,19 +511,20 @@
             </summary>
             <returns>The actual field.</returns>
         </member>
-        <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.BulkInsert``1(System.Data.IDbConnection,System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.GetDataColumns(System.Data.DataTable)">
             <summary>
-            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database.
+            Returns all the <see cref="T:System.Data.DataTable"/> objects of the <see cref="T:System.Data.DataTable"/>.
             </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used.</param>
-            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-            <param name="options">The bulk-copy options to be used.</param>
-            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-            <param name="batchSize">The size per batch to be used.</param>
-            <param name="transaction">The transaction to be used.</param>
-            <returns>The number of rows affected by the execution.</returns>
+            <param name="dataTable">The instance of <see cref="T:System.Data.DataTable"/> where the list of <see cref="T:System.Data.DataColumn"/> will be extracted.</param>
+            <returns>The list of <see cref="T:System.Data.DataColumn"/> objects.</returns>
+        </member>
+        <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.GetDataRows(System.Data.DataTable,System.Data.DataRowState)">
+            <summary>
+            Returns all the <see cref="T:System.Data.DataRow"/> objects of the <see cref="T:System.Data.DataTable"/> by state.
+            </summary>
+            <param name="dataTable">The instance of <see cref="T:System.Data.DataTable"/> where the list of <see cref="T:System.Data.DataRow"/> will be extracted.</param>
+            <param name="rowState">The state of the <see cref="T:System.Data.DataRow"/> objects to be extracted.</param>
+            <returns>The list of <see cref="T:System.Data.DataRow"/> objects.</returns>
         </member>
         <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.BulkInsert``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
@@ -532,6 +533,20 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.BulkInsert``1(System.Data.IDbConnection,System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
             <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="options">The bulk-copy options to be used.</param>
             <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
@@ -553,13 +568,29 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>The number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.BulkInsertAsync``1(System.Data.IDbConnection,System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.BulkInsert``1(System.Data.IDbConnection,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
-            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database in an asynchronous way.
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
-            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.BulkInsert(System.Data.IDbConnection,System.String,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database.
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="tableName">The target table for bulk-insert operation.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
             <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="options">The bulk-copy options to be used.</param>
             <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
@@ -581,6 +612,20 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>The number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.BulkInsertAsync``1(System.Data.IDbConnection,System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.BulkInsertAsync(System.Data.IDbConnection,System.String,System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database in an asynchronous way.
@@ -588,6 +633,36 @@
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The target table for bulk-insert operation.</param>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.BulkInsertAsync``1(System.Data.IDbConnection,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbOperationProviders.SqlDbOperationProvider.BulkInsertAsync(System.Data.IDbConnection,System.String,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database in an asynchronous way.
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="tableName">The target table for bulk-insert operation.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
             <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="options">The bulk-copy options to be used.</param>
             <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
@@ -2166,6 +2241,36 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>The number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.Interfaces.IDbOperationProvider.BulkInsert``1(System.Data.IDbConnection,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.Interfaces.IDbOperationProvider.BulkInsert(System.Data.IDbConnection,System.String,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database.
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="tableName">The target table for bulk-insert operation.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.Interfaces.IDbOperationProvider.BulkInsertAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Bulk insert a list of data entity objects into the database in an asynchronous way.
@@ -2201,6 +2306,36 @@
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The target table for bulk-insert operation.</param>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.Interfaces.IDbOperationProvider.BulkInsertAsync``1(System.Data.IDbConnection,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.Interfaces.IDbOperationProvider.BulkInsertAsync(System.Data.IDbConnection,System.String,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database in an asynchronous way.
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="tableName">The target table for bulk-insert operation.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
             <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="options">The bulk-copy options to be used.</param>
             <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
@@ -4619,6 +4754,38 @@
             <param name="trace">The trace object to be used.</param>
             <returns>The number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.BulkInsert``1(System.Data.IDbConnection,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.BulkInsert(System.Data.IDbConnection,System.String,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database.
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="tableName">The target table for bulk-insert operation.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.BulkInsertAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
             <summary>
             Bulk insert a list of data entity objects into the database in an asynchronous way.
@@ -4672,6 +4839,38 @@
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The target table for bulk-insert operation.</param>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.BulkInsertAsync``1(System.Data.IDbConnection,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <param name="trace">The trace object to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.BulkInsertAsync(System.Data.IDbConnection,System.String,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.DataTable"/> object into the database in an asynchronous way.
+            </summary>
+            <param name="connection">The connection object to be used.</param>
+            <param name="tableName">The target table for bulk-insert operation.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
             <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="options">The bulk-copy options to be used.</param>
             <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
@@ -10028,6 +10227,32 @@
             <param name="transaction">The transaction to be used.</param>
             <returns>The number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.BulkInsert``1(System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.BulkInsert(System.String,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database.
+            </summary>
+            <param name="tableName">The target table for bulk-insert operation.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbRepository`1.BulkInsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Bulk insert a list of data entity objects into the database in an asynchronous way.
@@ -10055,7 +10280,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.BulkInsertAsync``1(System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
-            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database.
+            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
@@ -10067,10 +10292,36 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.BulkInsertAsync(System.String,System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
-            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database.
+            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database in an asynchronous way.
             </summary>
             <param name="tableName">The target table for bulk-insert operation.</param>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.BulkInsertAsync``1(System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="options">The bulk-copy options to be used.</param>
+            <param name="batchSize">The size per batch to be used.</param>
+            <param name="transaction">The transaction to be used.</param>
+            <returns>The number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.BulkInsertAsync(System.String,System.Data.DataTable,System.Data.DataRowState,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Data.SqlClient.SqlBulkCopyOptions,System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Bulk insert an instance of <see cref="T:System.Data.Common.DbDataReader"/> object into the database in an asynchronous way.
+            </summary>
+            <param name="tableName">The target table for bulk-insert operation.</param>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> object to be used in the bulk-insert operation.</param>
+            <param name="rowState">The state of the rows to be copied to the destination.</param>
             <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="options">The bulk-copy options to be used.</param>
             <param name="batchSize">The size per batch to be used.</param>
