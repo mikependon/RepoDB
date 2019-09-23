@@ -85,37 +85,6 @@ namespace RepoDb.DbOperationProviders
         #region BulkInsert
 
         /// <summary>
-        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="options">The bulk-copy options to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public int BulkInsert<TEntity>(IDbConnection connection,
-            DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            return BulkInsert(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                reader: reader,
-                mappings: mappings,
-                options: options,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                transaction: transaction);
-        }
-
-        /// <summary>
         /// Bulk insert a list of data entity objects into the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
@@ -207,6 +176,37 @@ namespace RepoDb.DbOperationProviders
 
             // Result
             return result;
+        }
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public int BulkInsert<TEntity>(IDbConnection connection,
+            DbDataReader reader,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            return BulkInsert(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                reader: reader,
+                mappings: mappings,
+                options: options,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                transaction: transaction);
         }
 
         /// <summary>
@@ -306,37 +306,6 @@ namespace RepoDb.DbOperationProviders
         #region BulkInsertAsync
 
         /// <summary>
-        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="options">The bulk-copy options to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection,
-            DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            return BulkInsertAsync(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                reader: reader,
-                mappings: mappings,
-                options: options,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                transaction: transaction);
-        }
-
-        /// <summary>
         /// Bulk insert a list of data entity objects into the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
@@ -428,6 +397,37 @@ namespace RepoDb.DbOperationProviders
 
             // Result
             return result;
+        }
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection,
+            DbDataReader reader,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            return BulkInsertAsync(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                reader: reader,
+                mappings: mappings,
+                options: options,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                transaction: transaction);
         }
 
         /// <summary>
