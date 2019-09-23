@@ -33,7 +33,7 @@ namespace RepoDb.DbOperationProviders
         /// <summary>
         /// Validates the type of the <see cref="IDbConnection"/> object.
         /// </summary>
-        /// <param name="connection"></param>
+        /// <param name="connection">The connection to validate.</param>
         private void ValidateConnection(IDbConnection connection)
         {
             if (connection is SqlConnection == false)
@@ -45,15 +45,12 @@ namespace RepoDb.DbOperationProviders
         /// <summary>
         /// Validates the type of the <see cref="IDbTransaction"/> object.
         /// </summary>
-        /// <param name="transaction"></param>
+        /// <param name="transaction">The connection to validate.</param>
         private void ValidateTransaction(IDbTransaction transaction)
         {
-            if (transaction != null)
+            if (transaction != null && transaction is SqlTransaction == false)
             {
-                if (transaction is SqlTransaction == false)
-                {
-                    throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
-                }
+                throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
         }
 
@@ -78,6 +75,33 @@ namespace RepoDb.DbOperationProviders
 
             // Return the value
             return m_bulkInsertRowsCopiedField;
+        }
+
+        /// <summary>
+        /// Returns all the <see cref="DataTable"/> objects of the <see cref="DataTable"/>.
+        /// </summary>
+        /// <param name="dataTable">The instance of <see cref="DataTable"/> where the list of <see cref="DataColumn"/> will be extracted.</param>
+        /// <returns>The list of <see cref="DataColumn"/> objects.</returns>
+        private IEnumerable<DataColumn> GetDataColumns(DataTable dataTable)
+        {
+            foreach (var column in dataTable.Columns.OfType<DataColumn>())
+            {
+                yield return column;
+            }
+        }
+
+        /// <summary>
+        /// Returns all the <see cref="DataRow"/> objects of the <see cref="DataTable"/> by state.
+        /// </summary>
+        /// <param name="dataTable">The instance of <see cref="DataTable"/> where the list of <see cref="DataRow"/> will be extracted.</param>
+        /// <param name="rowState">The state of the <see cref="DataRow"/> objects to be extracted.</param>
+        /// <returns>The list of <see cref="DataRow"/> objects.</returns>
+        private IEnumerable<DataRow> GetDataRows(DataTable dataTable, DataRowState rowState)
+        {
+            foreach (var row in dataTable.Rows.OfType<DataRow>().Where(r => r.RowState == rowState))
+            {
+                yield return row;
+            }
         }
 
         #endregion
@@ -301,6 +325,128 @@ namespace RepoDb.DbOperationProviders
             return result;
         }
 
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DataTable"/> object into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public int BulkInsert<TEntity>(IDbConnection connection,
+            DataTable dataTable,
+            DataRowState rowState = DataRowState.Unchanged,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            return BulkInsert(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                dataTable: dataTable,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DataTable"/> object into the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
+        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public int BulkInsert(IDbConnection connection,
+            string tableName,
+            DataTable dataTable,
+            DataRowState rowState = DataRowState.Unchanged,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            IDbTransaction transaction = null)
+        {
+            // Validate the objects
+            ValidateConnection(connection);
+            ValidateTransaction(transaction);
+            DbConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
+
+            // Variables for the operation
+            var result = 0;
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, options, (SqlTransaction)transaction))
+            {
+                // Set the destinationtable
+                sqlBulkCopy.DestinationTableName = tableName;
+
+                // Set the timeout
+                if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
+                {
+                    sqlBulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
+                }
+
+                // Set the batch szie
+                if (batchSize != null && batchSize.HasValue)
+                {
+                    sqlBulkCopy.BatchSize = batchSize.Value;
+                }
+
+                // Add the mappings
+                if (mappings == null)
+                {
+                    // Get the actual DB fields
+                    var dbFields = DbFieldCache.Get(connection, tableName);
+                    var tableFields = GetDataColumns(dataTable)
+                        .Select(column => column.ColumnName)
+                        .Where(field => dbFields.FirstOrDefault(dbField => string.Equals(dbField.UnquotedName, field, StringComparison.OrdinalIgnoreCase)) != null);
+
+                    // Iterate the filtered fields
+                    foreach (var field in tableFields)
+                    {
+                        sqlBulkCopy.ColumnMappings.Add(field, field);
+                    }
+                }
+                else
+                {
+                    // Iterate the provided mappings
+                    foreach (var mapItem in mappings)
+                    {
+                        sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
+                    }
+                }
+
+                // Open the connection and do the operation
+                connection.EnsureOpen();
+                sqlBulkCopy.WriteToServer(dataTable, rowState);
+
+                // Set the return value
+                result = GetDataRows(dataTable, rowState).Count();
+            }
+
+            // Result
+            return result;
+        }
+
         #endregion
 
         #region BulkInsertAsync
@@ -479,7 +625,7 @@ namespace RepoDb.DbOperationProviders
                 {
                     sqlBulkCopy.BatchSize = batchSize.Value;
                 }
-                
+
                 // Add the mappings
                 if (mappings == null)
                 {
@@ -516,6 +662,128 @@ namespace RepoDb.DbOperationProviders
 
                 // Set the return value
                 result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
+            }
+
+            // Result
+            return result;
+        }
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection,
+            DataTable dataTable,
+            DataRowState rowState = DataRowState.Unchanged,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            return BulkInsertAsync(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                dataTable: dataTable,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
+        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public async Task<int> BulkInsertAsync(IDbConnection connection,
+            string tableName,
+            DataTable dataTable,
+            DataRowState rowState = DataRowState.Unchanged,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            IDbTransaction transaction = null)
+        {
+            // Validate the objects
+            ValidateConnection(connection);
+            ValidateTransaction(transaction);
+            DbConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
+
+            // Variables for the operation
+            var result = 0;
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, options, (SqlTransaction)transaction))
+            {
+                // Set the destinationtable
+                sqlBulkCopy.DestinationTableName = tableName;
+
+                // Set the timeout
+                if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
+                {
+                    sqlBulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
+                }
+
+                // Set the batch szie
+                if (batchSize != null && batchSize.HasValue)
+                {
+                    sqlBulkCopy.BatchSize = batchSize.Value;
+                }
+
+                // Add the mappings
+                if (mappings == null)
+                {
+                    // Get the actual DB fields
+                    var dbFields = DbFieldCache.Get(connection, tableName);
+                    var tableFields = GetDataColumns(dataTable)
+                        .Select(column => column.ColumnName)
+                        .Where(field => dbFields.FirstOrDefault(dbField => string.Equals(dbField.UnquotedName, field, StringComparison.OrdinalIgnoreCase)) != null);
+
+                    // Iterate the filtered fields
+                    foreach (var field in tableFields)
+                    {
+                        sqlBulkCopy.ColumnMappings.Add(field, field);
+                    }
+                }
+                else
+                {
+                    // Iterate the provided mappings
+                    foreach (var mapItem in mappings)
+                    {
+                        sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
+                    }
+                }
+
+                // Open the connection and do the operation
+                connection.EnsureOpen();
+                await sqlBulkCopy.WriteToServerAsync(dataTable, rowState);
+
+                // Set the return value
+                result = GetDataRows(dataTable, rowState).Count();
             }
 
             // Result
