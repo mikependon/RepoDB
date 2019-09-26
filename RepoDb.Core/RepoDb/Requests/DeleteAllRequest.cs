@@ -16,12 +16,15 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public DeleteAllRequest(Type type,
             IDbConnection connection,
+            IDbTransaction transaction,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
+                  transaction,
                   statementBuilder)
         {
             Type = type;
@@ -32,12 +35,15 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public DeleteAllRequest(string name,
             IDbConnection connection,
+            IDbTransaction transaction,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
+                  transaction,
                   statementBuilder)
         { }
 

@@ -140,7 +140,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Check the primary
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
@@ -286,7 +286,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Check the primary
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
@@ -445,7 +445,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var dbFields = DbFieldCache.Get(connection, tableName);
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
 
             // Check the fields
             if (fields?.Any() != true)
@@ -620,21 +620,6 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var dbFields = DbFieldCache.Get(connection, tableName);
-
-            // Check the fields
-            if (fields?.Any() != true)
-            {
-                fields = dbFields?.AsFields();
-            }
-
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
-                qualifiers = primary?.AsField().AsEnumerable();
-            }
-
             // Return the result
             return MergeAllAsyncInternalBase<object>(connection: connection,
                 tableName: tableName,
@@ -692,7 +677,7 @@ namespace RepoDb
             {
                 // Variables needed
                 var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
@@ -752,6 +737,7 @@ namespace RepoDb
                     {
                         mergeAllRequest = new MergeAllRequest(tableName,
                             connection,
+                            transaction,
                             fields,
                             qualifiers,
                             batchSizeValue,
@@ -761,6 +747,7 @@ namespace RepoDb
                     {
                         mergeRequest = new MergeRequest(tableName,
                             connection,
+                            transaction,
                             fields,
                             qualifiers,
                             statementBuilder);
@@ -772,6 +759,7 @@ namespace RepoDb
                     {
                         mergeAllRequest = new MergeAllRequest(typeof(TEntity),
                             connection,
+                            transaction,
                             fields,
                             qualifiers,
                             batchSizeValue,
@@ -781,6 +769,7 @@ namespace RepoDb
                     {
                         mergeRequest = new MergeRequest(typeof(TEntity),
                             connection,
+                            transaction,
                             fields,
                             qualifiers,
                             statementBuilder);
@@ -1008,12 +997,26 @@ namespace RepoDb
             // Validate the batch size
             batchSize = Math.Min(batchSize, count);
 
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+
+            // Check the fields
+            if (fields?.Any() != true)
+            {
+                fields = dbFields?.AsFields();
+            }
+
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
+                qualifiers = primary?.AsField().AsEnumerable();
+            }
+
             // Get the function
             var callback = new Func<int, MergeAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
                 // Variables needed
                 var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
@@ -1073,6 +1076,7 @@ namespace RepoDb
                     {
                         mergeAllRequest = new MergeAllRequest(tableName,
                             connection,
+                            transaction,
                             fields,
                             qualifiers,
                             batchSizeValue,
@@ -1082,6 +1086,7 @@ namespace RepoDb
                     {
                         mergeRequest = new MergeRequest(tableName,
                             connection,
+                            transaction,
                             fields,
                             qualifiers,
                             statementBuilder);
@@ -1093,6 +1098,7 @@ namespace RepoDb
                     {
                         mergeAllRequest = new MergeAllRequest(typeof(TEntity),
                             connection,
+                            transaction,
                             fields,
                             qualifiers,
                             batchSizeValue,
@@ -1102,6 +1108,7 @@ namespace RepoDb
                     {
                         mergeRequest = new MergeRequest(typeof(TEntity),
                             connection,
+                            transaction,
                             fields,
                             qualifiers,
                             statementBuilder);

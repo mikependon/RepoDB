@@ -14,9 +14,11 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="name">The name of request.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public BaseRequest(string name,
             IDbConnection connection,
+            IDbTransaction transaction,
             IStatementBuilder statementBuilder = null)
         {
             Name = name;
@@ -38,6 +40,11 @@ namespace RepoDb.Requests
         /// Gets the connection object.
         /// </summary>
         public IDbConnection Connection { get; }
+
+        /// <summary>
+        /// Gets the transaction object.
+        /// </summary>
+        public IDbTransaction Transaction { get; }
 
         /// <summary>
         /// Gets the statement builder.

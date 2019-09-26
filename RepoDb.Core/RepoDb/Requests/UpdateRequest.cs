@@ -17,19 +17,22 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public UpdateRequest(Type type,
             IDbConnection connection,
+            IDbTransaction transaction,
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
-                  connection,
-                  where,
-                  fields,
-                  statementBuilder)
+                connection,
+                transaction,
+                where,
+                fields,
+                statementBuilder)
         {
             Type = type;
         }
@@ -39,16 +42,19 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public UpdateRequest(string name,
             IDbConnection connection,
+            IDbTransaction transaction,
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
+                  transaction,
                   statementBuilder)
         {
             Where = where;

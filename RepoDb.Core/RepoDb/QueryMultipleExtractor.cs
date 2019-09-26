@@ -17,6 +17,7 @@ namespace RepoDb
         private static readonly ConcurrentDictionary<int, IEnumerable<DbField>> m_cache = new ConcurrentDictionary<int, IEnumerable<DbField>>();
         private DbDataReader m_reader = null;
         private IDbConnection m_connection = null;
+        private IDbTransaction m_transaction = null;
         private string m_connectionString = null;
 
         /// <summary>
@@ -24,19 +25,22 @@ namespace RepoDb
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be extracted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        internal QueryMultipleExtractor(DbDataReader reader, IDbConnection connection)
-            : this(reader, connection, connection.ConnectionString) { }
+        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
+        internal QueryMultipleExtractor(DbDataReader reader, IDbConnection connection, IDbTransaction transaction)
+            : this(reader, connection, transaction, connection.ConnectionString) { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be extracted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
         /// <param name="connectionString">The unaltered connetion string used by the connection object.</param>
-        internal QueryMultipleExtractor(DbDataReader reader, IDbConnection connection, string connectionString)
+        internal QueryMultipleExtractor(DbDataReader reader, IDbConnection connection, IDbTransaction transaction, string connectionString)
         {
             m_reader = reader;
             m_connection = connection;
+            m_transaction = transaction;
             m_connectionString = connectionString;
             Position = 0;
         }
@@ -90,10 +94,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Ensures that the <see cref="DbFieldCache.Get(IDbConnection, string)"/> method is called one.
+        /// Ensures that the <see cref="DbFieldCache.Get(IDbConnection, string, IDbTransaction)"/> method is being called one.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity to check.</typeparam>
-        private void EnsureSingleCallForDbFieldCacheGet<TEntity>()
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        private void EnsureSingleCallForDbFieldCacheGet<TEntity>(IDbTransaction transaction)
             where TEntity : class
         {
             var key = GetDbFieldGetCallsCacheKey<TEntity>();
@@ -104,17 +109,18 @@ namespace RepoDb
             {
                 using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connectionString }))
                 {
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                     m_cache.TryAdd(key, dbFields);
                 }
             }
         }
 
         /// <summary>
-        /// Ensures that the <see cref="DbFieldCache.GetAsync(IDbConnection, string)"/> method is called one.
+        /// Ensures that the <see cref="DbFieldCache.GetAsync(IDbConnection, string, IDbTransaction)"/> method is being called one.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity to check.</typeparam>
-        private async Task EnsureSingleCallForDbFieldCacheGeAsynct<TEntity>()
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        private async Task EnsureSingleCallForDbFieldCacheGeAsync<TEntity>(IDbTransaction transaction)
             where TEntity : class
         {
             var key = GetDbFieldGetCallsCacheKey<TEntity>();
@@ -125,7 +131,7 @@ namespace RepoDb
             {
                 using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connectionString }))
                 {
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>());
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                     m_cache.TryAdd(key, dbFields);
                 }
             }
@@ -145,10 +151,10 @@ namespace RepoDb
         public IEnumerable<TEntity> Extract<TEntity>() where TEntity : class
         {
             // Call the cache first to avoid reusing multiple data readers
-            EnsureSingleCallForDbFieldCacheGet<TEntity>();
+            EnsureSingleCallForDbFieldCacheGet<TEntity>(m_transaction);
 
             // Get the result
-            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, true).AsList();
+            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, m_transaction, true).AsList();
 
             // Move to next result
             NextResult();
@@ -165,10 +171,10 @@ namespace RepoDb
         public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>() where TEntity : class
         {
             // Call the cache first to avoid reusing multiple data readers
-            await EnsureSingleCallForDbFieldCacheGeAsynct<TEntity>();
+            await EnsureSingleCallForDbFieldCacheGeAsync<TEntity>(m_transaction);
 
             // Get the result
-            var result = await DataReader.ToEnumerableAsync<TEntity>(m_reader, m_connection, true);
+            var result = await DataReader.ToEnumerableAsync<TEntity>(m_reader, m_connection, m_transaction, true);
 
             // Move to next result
             await NextResultAsync();

@@ -141,7 +141,7 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>(connection);
+                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
                 qualifiers = primary.AsField().AsEnumerable();
             }
             return UpdateAllInternalBase<TEntity>(connection: connection,
@@ -282,7 +282,7 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>(connection);
+                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
                 qualifiers = primary.AsField().AsEnumerable();
             }
             return UpdateAllAsyncInternalBase<TEntity>(connection: connection,
@@ -435,7 +435,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var dbFields = DbFieldCache.Get(connection, tableName);
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
 
             // Check the fields
             if (fields?.Any() != true)
@@ -601,21 +601,6 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var dbFields = DbFieldCache.Get(connection, tableName);
-
-            // Check the fields
-            if (fields?.Any() != true)
-            {
-                fields = dbFields?.AsFields();
-            }
-
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
-                qualifiers = primary?.AsField().AsEnumerable();
-            }
-
             // Call the method
             return UpdateAllAsyncInternalBase<object>(connection: connection,
                 tableName: tableName,
@@ -670,7 +655,7 @@ namespace RepoDb
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
                 // Variables needed
-                var dbFields = DbFieldCache.Get(connection, tableName);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields
@@ -708,6 +693,7 @@ namespace RepoDb
                 {
                     updateAllRequest = new UpdateAllRequest(tableName,
                         connection,
+                        transaction,
                         fields,
                         qualifiers,
                         batchSizeValue,
@@ -717,6 +703,7 @@ namespace RepoDb
                 {
                     updateAllRequest = new UpdateAllRequest(typeof(TEntity),
                         connection,
+                        transaction,
                         fields,
                         qualifiers,
                         batchSizeValue,
@@ -899,11 +886,26 @@ namespace RepoDb
             // Validate the batch size
             batchSize = Math.Min(batchSize, count);
 
+            // Variables
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+
+            // Check the fields
+            if (fields?.Any() != true)
+            {
+                fields = dbFields?.AsFields();
+            }
+
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
+                qualifiers = primary?.AsField().AsEnumerable();
+            }
+
             // Get the function
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
                 // Variables needed
-                var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields
@@ -941,6 +943,7 @@ namespace RepoDb
                 {
                     updateAllRequest = new UpdateAllRequest(tableName,
                         connection,
+                        transaction,
                         fields,
                         qualifiers,
                         batchSizeValue,
@@ -950,6 +953,7 @@ namespace RepoDb
                 {
                     updateAllRequest = new UpdateAllRequest(typeof(TEntity),
                         connection,
+                        transaction,
                         fields,
                         qualifiers,
                         batchSizeValue,

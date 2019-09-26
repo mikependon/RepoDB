@@ -212,12 +212,6 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Check the fields
-            if (fields == null)
-            {
-                fields = DbFieldCache.Get(connection, tableName)?.AsFields();
-            }
-
             // Return the result
             return InsertAllInternalBase<object>(connection: connection,
                 tableName: tableName,
@@ -292,12 +286,6 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Check the fields
-            if (fields == null)
-            {
-                fields = DbFieldCache.Get(connection, tableName)?.AsFields();
-            }
-
             // Return the result
             return InsertAllAsyncInternalBase<object>(connection: connection,
                 tableName: tableName,
@@ -348,12 +336,19 @@ namespace RepoDb
             // Validate the batch size
             batchSize = Math.Min(batchSize, count);
 
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+
+            // Check the fields
+            if (fields == null)
+            {
+                fields = dbFields?.AsFields();
+            }
+
             // Get the function
             var callback = new Func<int, InsertAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
                 // Variables needed
                 var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName); // TODO: Use the newly introduced DbFieldCache.GetAsync method
                 var inputFields = (IEnumerable<DbField>)null;
                 var outputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
@@ -433,6 +428,7 @@ namespace RepoDb
                     {
                         insertAllRequest = new InsertAllRequest(tableName,
                             connection,
+                            transaction,
                             fields,
                             batchSizeValue,
                             statementBuilder);
@@ -441,6 +437,7 @@ namespace RepoDb
                     {
                         insertRequest = new InsertRequest(tableName,
                             connection,
+                            transaction,
                             fields,
                             statementBuilder);
                     }
@@ -451,6 +448,7 @@ namespace RepoDb
                     {
                         insertAllRequest = new InsertAllRequest(typeof(TEntity),
                             connection,
+                            transaction,
                             fields,
                             batchSizeValue,
                             statementBuilder);
@@ -459,6 +457,7 @@ namespace RepoDb
                     {
                         insertRequest = new InsertRequest(typeof(TEntity),
                             connection,
+                            transaction,
                             fields,
                             statementBuilder);
                     }
@@ -666,12 +665,18 @@ namespace RepoDb
             // Validate the batch size
             batchSize = Math.Min(batchSize, count);
 
+            // Check the fields
+            if (fields == null)
+            {
+                fields = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
+            }
+
             // Get the function
             var callback = new Func<int, InsertAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
                 // Variables needed
                 var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = (IEnumerable<DbField>)null;
                 var outputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
@@ -751,6 +756,7 @@ namespace RepoDb
                     {
                         insertAllRequest = new InsertAllRequest(tableName,
                             connection,
+                            transaction,
                             fields,
                             batchSizeValue,
                             statementBuilder);
@@ -759,6 +765,7 @@ namespace RepoDb
                     {
                         insertRequest = new InsertRequest(tableName,
                             connection,
+                            transaction,
                             fields,
                             statementBuilder);
                     }
@@ -769,6 +776,7 @@ namespace RepoDb
                     {
                         insertAllRequest = new InsertAllRequest(typeof(TEntity),
                             connection,
+                            transaction,
                             fields,
                             batchSizeValue,
                             statementBuilder);
@@ -777,6 +785,7 @@ namespace RepoDb
                     {
                         insertRequest = new InsertRequest(typeof(TEntity),
                             connection,
+                            transaction,
                             fields,
                             statementBuilder);
                     }

@@ -63,6 +63,7 @@ namespace RepoDb
             // Variables
             var request = new CountAllRequest(typeof(TEntity),
                 connection,
+                transaction,
                 hints,
                 statementBuilder);
             var param = (object)null;
@@ -129,6 +130,7 @@ namespace RepoDb
             // Variables
             var request = new CountAllRequest(typeof(TEntity),
                 connection,
+                transaction,
                 hints,
                 statementBuilder);
             var param = (object)null;
@@ -196,6 +198,7 @@ namespace RepoDb
             // Variables
             var request = new CountAllRequest(tableName,
                 connection,
+                transaction,
                 hints,
                 statementBuilder);
             var commandText = CommandTextCache.GetCountAllText(request);
@@ -264,6 +267,7 @@ namespace RepoDb
             // Variables
             var request = new CountAllRequest(tableName,
                 connection,
+                transaction,
                 hints,
                 statementBuilder);
             var commandText = CommandTextCache.GetCountAllText(request);

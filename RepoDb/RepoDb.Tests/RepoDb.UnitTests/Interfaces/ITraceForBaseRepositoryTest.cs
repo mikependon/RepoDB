@@ -50,12 +50,12 @@ namespace RepoDb.UnitTests.Interfaces
         {
             public IResolver<string, Type> DbTypeResolver { get; set; }
 
-            public IEnumerable<DbField> GetFields(string connectionString, string tableName)
+            public IEnumerable<DbField> GetFields(string connectionString, string tableName, IDbTransaction transaction = null)
             {
                 return GetFields((DbConnection)null, tableName);
             }
 
-            public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName) where TDbConnection : IDbConnection
+            public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection
             {
                 if (tableName == ClassMappedNameCache.Get<TraceEntity>())
                 {
@@ -68,12 +68,12 @@ namespace RepoDb.UnitTests.Interfaces
                 return null;
             }
 
-            public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString, string tableName)
+            public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString, string tableName, IDbTransaction transaction = null)
             {
                 return GetFieldsAsync((DbConnection)null, tableName);
             }
 
-            public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName) where TDbConnection : IDbConnection
+            public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection
             {
                 if (tableName == ClassMappedNameCache.Get<TraceEntity>())
                 {

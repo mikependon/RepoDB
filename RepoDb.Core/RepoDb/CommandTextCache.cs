@@ -30,7 +30,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
                 commandText = statementBuilder.CreateBatchQuery(new QueryBuilder(),
                     request.Name,
                     fields,
@@ -148,7 +148,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
                 var primaryField = GetPrimaryField(request);
                 var identityField = GetIdentityField(request);
                 commandText = statementBuilder.CreateInsert(new QueryBuilder(),
@@ -176,7 +176,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
                 var primaryField = GetPrimaryField(request);
                 var identityField = GetIdentityField(request);
                 commandText = statementBuilder.CreateInsertAll(new QueryBuilder(),
@@ -205,7 +205,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
                 var primaryField = GetPrimaryField(request);
                 var identityField = GetIdentityField(request);
                 commandText = statementBuilder.CreateMerge(new QueryBuilder(),
@@ -234,7 +234,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
                 var qualifiers = request.Qualifiers;
                 var primaryField = GetPrimaryField(request);
                 var identityField = GetIdentityField(request);
@@ -265,7 +265,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
                 commandText = statementBuilder.CreateQuery(new QueryBuilder(),
                     request.Name,
                     fields,
@@ -293,7 +293,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
                 commandText = statementBuilder.CreateQueryAll(new QueryBuilder(),
                     request.Name,
                     fields,
@@ -321,7 +321,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
                 commandText = statementBuilder.CreateQuery(new QueryBuilder(),
                     request.Name,
                     fields,
@@ -371,7 +371,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
                 var primaryField = GetPrimaryField(request);
                 var identityField = GetIdentityField(request);
                 commandText = statementBuilder.CreateUpdate(new QueryBuilder(),
@@ -400,7 +400,7 @@ namespace RepoDb
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                var fields = GetActualFields(request.Connection, request.Name, request.Fields);
+                var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
                 var qualifiers = request.Qualifiers;
                 var primaryField = GetPrimaryField(request);
                 var identityField = GetIdentityField(request);
@@ -434,8 +434,9 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="fields">The target name of the table.</param>
         /// <param name="tableName">The list of fields from the data entity object.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The actual list of <see cref="Field"/> objects of the table.</returns>
-        private static IEnumerable<Field> GetActualFields(IDbConnection connection, string tableName, IEnumerable<Field> fields)
+        private static IEnumerable<Field> GetActualFields(IDbConnection connection, string tableName, IEnumerable<Field> fields,IDbTransaction transaction)
         {
             if (fields?.Any() != true)
             {
@@ -443,7 +444,7 @@ namespace RepoDb
             }
 
             // Get all the fields from the database
-            var dbFields = DbFieldCache.Get(connection, tableName);
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
 
             // Return the filtered one
             return dbFields?.Any() == true ?
@@ -473,7 +474,7 @@ namespace RepoDb
                         primaryPropery.PropertyInfo.PropertyType, null, null, null);
                 }
             }
-            return DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsPrimary);
+            return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsPrimary);
         }
 
         /// <summary>
@@ -498,7 +499,7 @@ namespace RepoDb
                         identityProperty.PropertyInfo.PropertyType, null, null, null);
                 }
             }
-            return DbFieldCache.Get(request.Connection, request.Name)?.FirstOrDefault(f => f.IsIdentity);
+            return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsIdentity);
         }
 
         /// <summary>

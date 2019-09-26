@@ -17,22 +17,25 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public UpdateAllRequest(Type type,
             IDbConnection connection,
+            IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
-                  connection,
-                  fields,
-                  qualifiers,
-                  batchSize,
-                  statementBuilder)
+                connection,
+                transaction,
+                fields,
+                qualifiers,
+                batchSize,
+                statementBuilder)
         {
             Type = type;
         }
@@ -42,18 +45,21 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public UpdateAllRequest(string name,
             IDbConnection connection,
+            IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
+                  transaction,
                   statementBuilder)
         {
             Fields = fields;

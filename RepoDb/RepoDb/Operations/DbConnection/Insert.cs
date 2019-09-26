@@ -418,7 +418,7 @@ namespace RepoDb
             {
                 // Variables needed
                 var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
@@ -457,6 +457,7 @@ namespace RepoDb
                 {
                     insertRequest = new InsertRequest(tableName,
                         connection,
+                        transaction,
                         fields,
                         statementBuilder);
                 }
@@ -464,6 +465,7 @@ namespace RepoDb
                 {
                     insertRequest = new InsertRequest(typeof(TEntity),
                         connection,
+                        transaction,
                         fields,
                         statementBuilder);
                 }
@@ -565,12 +567,13 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+
             // Get the function
             var callback = new Func<InsertExecutionContext<TEntity>>(() =>
             {
                 // Variables needed
                 var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
@@ -609,6 +612,7 @@ namespace RepoDb
                 {
                     insertRequest = new InsertRequest(tableName,
                         connection,
+                        transaction,
                         fields,
                         statementBuilder);
                 }
@@ -616,6 +620,7 @@ namespace RepoDb
                 {
                     insertRequest = new InsertRequest(typeof(TEntity),
                         connection,
+                        transaction,
                         fields,
                         statementBuilder);
                 }

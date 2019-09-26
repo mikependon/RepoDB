@@ -16,16 +16,19 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public CountRequest(Type type,
             IDbConnection connection,
+            IDbTransaction transaction,
             QueryGroup where = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
+                  transaction,
                   where,
                   hints,
                   statementBuilder)
@@ -38,16 +41,19 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public CountRequest(string name,
             IDbConnection connection,
+            IDbTransaction transaction,
             QueryGroup where = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
+                  transaction,
                   statementBuilder)
         {
             Where = where;

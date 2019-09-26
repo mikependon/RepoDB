@@ -23,6 +23,11 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
+        /// Gets the type resolver used by this <see cref="SqlDbHelper"/> instance.
+        /// </summary>
+        public IResolver<string, Type> DbTypeResolver { get; }
+
+        /// <summary>
         /// Returns the command text that is being used to extract schema definitions.
         /// </summary>
         /// <returns>The command text.</returns>
@@ -92,13 +97,14 @@ namespace RepoDb.DbHelpers
         /// </summary>
         /// <param name="connectionString">The connection string to connect to.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public IEnumerable<DbField> GetFields(string connectionString, string tableName)
+        public IEnumerable<DbField> GetFields(string connectionString, string tableName, IDbTransaction transaction = null)
         {
             // Open a connection
             using (var connection = new SqlConnection(connectionString))
             {
-                return GetFieldsInternal(connection, tableName);
+                return GetFieldsInternal(connection, tableName, transaction);
             }
         }
 
@@ -107,13 +113,14 @@ namespace RepoDb.DbHelpers
         /// </summary>
         /// <param name="connectionString">The connection string to connect to.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString, string tableName)
+        public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString, string tableName, IDbTransaction transaction = null)
         {
             // Open a connection
             using (var connection = new SqlConnection(connectionString))
             {
-                return GetFieldsAsyncInternal(connection, tableName);
+                return GetFieldsAsyncInternal(connection, tableName, transaction);
             }
         }
 
@@ -123,11 +130,12 @@ namespace RepoDb.DbHelpers
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName)
+        public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            return GetFieldsInternal(connection, tableName);
+            return GetFieldsInternal(connection, tableName, transaction);
         }
 
         /// <summary>
@@ -136,11 +144,12 @@ namespace RepoDb.DbHelpers
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName)
+        public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            return GetFieldsAsyncInternal(connection, tableName);
+            return GetFieldsAsyncInternal(connection, tableName, transaction);
         }
 
         /// <summary>
@@ -149,8 +158,9 @@ namespace RepoDb.DbHelpers
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        internal IEnumerable<DbField> GetFieldsInternal<TDbConnection>(TDbConnection connection, string tableName)
+        internal IEnumerable<DbField> GetFieldsInternal<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
             // Check for the command type
@@ -169,7 +179,7 @@ namespace RepoDb.DbHelpers
             }
 
             // Open a command
-            using (var dbCommand = connection.EnsureOpen().CreateCommand(GetCommandText()))
+            using (var dbCommand = connection.EnsureOpen().CreateCommand(GetCommandText(), transaction: transaction))
             {
                 // Create parameters
                 dbCommand.CreateParameters(new { Schema = schema, TableName = tableName });
@@ -197,8 +207,9 @@ namespace RepoDb.DbHelpers
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        internal async Task<IEnumerable<DbField>> GetFieldsAsyncInternal<TDbConnection>(TDbConnection connection, string tableName)
+        internal async Task<IEnumerable<DbField>> GetFieldsAsyncInternal<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
             // Check for the command type
@@ -217,7 +228,7 @@ namespace RepoDb.DbHelpers
             }
 
             // Open a command
-            using (var dbCommand = ((DbConnection)await connection.EnsureOpenAsync()).CreateCommand(GetCommandText()))
+            using (var dbCommand = ((DbConnection)await connection.EnsureOpenAsync()).CreateCommand(GetCommandText(), transaction: transaction))
             {
                 // Create parameters
                 dbCommand.CreateParameters(new { Schema = schema, TableName = tableName });
@@ -238,10 +249,5 @@ namespace RepoDb.DbHelpers
                 }
             }
         }
-
-        /// <summary>
-        /// Gets the type resolver used by this <see cref="SqlDbHelper"/> instance.
-        /// </summary>
-        public IResolver<string, Type> DbTypeResolver { get; }
     }
 }

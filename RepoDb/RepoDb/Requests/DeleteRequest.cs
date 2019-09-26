@@ -16,14 +16,17 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public DeleteRequest(Type type,
             IDbConnection connection,
+            IDbTransaction transaction,
             QueryGroup where = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
+                  transaction,
                   where,
                   statementBuilder)
         {
@@ -35,14 +38,17 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public DeleteRequest(string name,
             IDbConnection connection,
+            IDbTransaction transaction,
             QueryGroup where = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
+                  transaction,
                   statementBuilder)
         {
             Where = where;

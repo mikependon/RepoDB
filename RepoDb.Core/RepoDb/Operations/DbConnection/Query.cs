@@ -640,7 +640,7 @@ namespace RepoDb
         {
             return Query(connection: connection,
                 tableName: tableName,
-                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -904,7 +904,7 @@ namespace RepoDb
         {
             return QueryAsync(connection: connection,
                 tableName: tableName,
-                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1180,6 +1180,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
             var request = new QueryRequest(typeof(TEntity),
                 connection,
+                transaction,
                 fields,
                 where,
                 orderBy,
@@ -1296,6 +1297,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
             var request = new QueryRequest(typeof(TEntity),
                 connection,
+                transaction,
                 fields,
                 where,
                 orderBy,
@@ -1411,13 +1413,14 @@ namespace RepoDb
             // Check the fields
             if (fields?.Any() != true)
             {
-                fields = DbFieldCache.Get(connection, tableName)?.Select(f => f.AsField());
+                fields = DbFieldCache.Get(connection, tableName, transaction)?.AsFields();
             }
 
             // Variables
             var commandType = CommandType.Text;
             var request = new QueryRequest(tableName,
                 connection,
+                transaction,
                 fields,
                 where,
                 orderBy,
@@ -1533,13 +1536,14 @@ namespace RepoDb
             // Check the fields
             if (fields?.Any() != true)
             {
-                fields = DbFieldCache.Get(connection, tableName)?.Select(f => f.AsField());
+                fields = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
             }
 
             // Variables
             var commandType = CommandType.Text;
             var request = new QueryRequest(tableName,
                 connection,
+                transaction,
                 fields,
                 where,
                 orderBy,

@@ -50,12 +50,12 @@ namespace RepoDb.UnitTests.Interfaces
         {
             public IResolver<string, Type> DbTypeResolver { get; set; }
 
-            public IEnumerable<DbField> GetFields(string connectionString, string tableName)
+            public IEnumerable<DbField> GetFields(string connectionString, string tableName, IDbTransaction transaction = null)
             {
                 return GetFields((DbConnection)null, tableName);
             }
 
-            public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName) where TDbConnection : IDbConnection
+            public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection
             {
                 if (tableName == ClassMappedNameCache.Get<TraceEntity>())
                 {
@@ -68,12 +68,12 @@ namespace RepoDb.UnitTests.Interfaces
                 return null;
             }
 
-            public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString, string tableName)
+            public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString, string tableName, IDbTransaction transaction = null)
             {
                 return GetFieldsAsync((DbConnection)null, tableName);
             }
 
-            public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName) where TDbConnection : IDbConnection
+            public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection
             {
                 if (tableName == ClassMappedNameCache.Get<TraceEntity>())
                 {
@@ -104,6 +104,16 @@ namespace RepoDb.UnitTests.Interfaces
                 return 1;
             }
 
+            public int BulkInsert<TEntity>(IDbConnection connection, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
+            {
+                return 1;
+            }
+
+            public int BulkInsert(IDbConnection connection, string tableName, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
+            {
+                return 1;
+            }
+
             public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
             {
                 return Task.FromResult(1);
@@ -115,6 +125,16 @@ namespace RepoDb.UnitTests.Interfaces
             }
 
             public Task<int> BulkInsertAsync(IDbConnection connection, string tableName, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
+            {
+                return Task.FromResult(1);
+            }
+
+            public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
+            {
+                return Task.FromResult(1);
+            }
+
+            public Task<int> BulkInsertAsync(IDbConnection connection, string tableName, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
             {
                 return Task.FromResult(1);
             }

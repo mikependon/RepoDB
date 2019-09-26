@@ -39,20 +39,22 @@ namespace RepoDb
         /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
         /// <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
         /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
         internal static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader,
             IDbConnection connection,
+            IDbTransaction transaction,
             bool basedOnFields = false)
             where TEntity : class
         {
             if (basedOnFields == false)
             {
-                return GetDataReaderToDataEntityConverterFunctionCache<TEntity>.Get(reader, connection);
+                return GetDataReaderToDataEntityConverterFunctionCache<TEntity>.Get(reader, connection, transaction);
             }
             else
             {
-                return GetFieldBasedDataReaderToDataEntityFunctionCache<TEntity>.Get(reader, connection);
+                return GetFieldBasedDataReaderToDataEntityFunctionCache<TEntity>.Get(reader, connection, transaction);
             }
         }
 
@@ -63,11 +65,11 @@ namespace RepoDb
         {
             private static Func<DbDataReader, TEntity> m_func;
 
-            public static Func<DbDataReader, TEntity> Get(DbDataReader reader, IDbConnection connection)
+            public static Func<DbDataReader, TEntity> Get(DbDataReader reader, IDbConnection connection, IDbTransaction transaction)
             {
                 if (m_func == null)
                 {
-                    m_func = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection);
+                    m_func = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection, transaction);
                 }
                 return m_func;
             }
@@ -82,7 +84,7 @@ namespace RepoDb
         {
             private static ConcurrentDictionary<long, Func<DbDataReader, TEntity>> m_cache = new ConcurrentDictionary<long, Func<DbDataReader, TEntity>>();
 
-            public static Func<DbDataReader, TEntity> Get(DbDataReader reader, IDbConnection connection)
+            public static Func<DbDataReader, TEntity> Get(DbDataReader reader, IDbConnection connection, IDbTransaction transaction)
             {
                 var result = (Func<DbDataReader, TEntity>)null;
                 var fields = Enumerable.Range(0, reader.FieldCount)
@@ -96,7 +98,7 @@ namespace RepoDb
                 }
                 if (m_cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection);
+                    result = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection, transaction);
                     m_cache.TryAdd(key, result);
                 }
                 return result;
@@ -113,10 +115,11 @@ namespace RepoDb
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader)
+        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader, IDbTransaction transaction)
         {
-            return GetDataReaderToExpandoObjectConverterFunction(reader, null, null);
+            return GetDataReaderToExpandoObjectConverterFunction(reader, null, null, transaction);
         }
 
         /// <summary>
@@ -125,12 +128,14 @@ namespace RepoDb
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
         internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader,
             string tableName,
-            IDbConnection connection)
+            IDbConnection connection,
+            IDbTransaction transaction)
         {
-            return GetDataReaderToExpandoObjectConverterFunctionCache.Get(reader, tableName, connection);
+            return GetDataReaderToExpandoObjectConverterFunctionCache.Get(reader, tableName, connection, transaction);
         }
 
         #region GetDataReaderToExpandoObjectConverterFunctionCache
@@ -139,7 +144,7 @@ namespace RepoDb
         {
             private static ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>> m_cache = new ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>>();
 
-            public static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader, string tableName, IDbConnection connection)
+            public static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader, string tableName, IDbConnection connection, IDbTransaction transaction)
             {
                 var result = (Func<DbDataReader, ExpandoObject>)null;
                 var key = (long)Enumerable.Range(0, reader.FieldCount)
@@ -156,7 +161,7 @@ namespace RepoDb
                 }
                 if (m_cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(reader, tableName, connection);
+                    result = FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(reader, tableName, connection, transaction);
                     m_cache.TryAdd(key, result);
                 }
                 return result;

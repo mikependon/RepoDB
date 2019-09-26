@@ -17,18 +17,21 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="orderBy">The list of order fields.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public QueryAllRequest(Type type,
             IDbConnection connection,
+            IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
+                  transaction,
                   fields,
                   orderBy,
                   hints,
@@ -42,18 +45,21 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="orderBy">The list of order fields.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public QueryAllRequest(string name,
             IDbConnection connection,
+            IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
+                  transaction,
                   statementBuilder)
         {
             Fields = fields;

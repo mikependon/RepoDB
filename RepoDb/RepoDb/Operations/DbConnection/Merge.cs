@@ -223,7 +223,7 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>(connection);
+                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
@@ -448,7 +448,7 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>(connection);
+                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
@@ -676,22 +676,6 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                // Get the DB primary
-                var primary = DbFieldCache.Get(connection, tableName).FirstOrDefault(dbField => dbField.IsPrimary);
-
-                // Throw if there is no primary
-                if (primary == null)
-                {
-                    throw new PrimaryFieldNotFoundException($"There is no primary found for '{tableName}'.");
-                }
-
-                // Set the primary as the qualifier
-                qualifiers = primary.AsField().AsEnumerable();
-            }
-
             // Return the result
             return MergeInternalBase<object, TResult>(connection: connection,
                 tableName: tableName,
@@ -907,7 +891,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
-        internal static Task<TResult> MergeAsyncInternal<TResult>(this IDbConnection connection,
+        internal static async Task<TResult> MergeAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
@@ -919,12 +903,12 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var primary = DbFieldCache.Get(connection, tableName).FirstOrDefault(dbField => dbField.IsPrimary);
+                var primary = (await DbFieldCache.GetAsync(connection, tableName, transaction)).FirstOrDefault(dbField => dbField.IsPrimary);
                 qualifiers = primary?.AsField().AsEnumerable();
             }
 
             // Return the result
-            return MergeAsyncInternalBase<object, TResult>(connection: connection,
+            return await MergeAsyncInternalBase<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: entity.AsFields(),
@@ -968,12 +952,29 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                // Get the DB primary
+                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+
+                // Throw if there is no primary
+                if (primary == null)
+                {
+                    throw new PrimaryFieldNotFoundException($"There is no primary found for '{tableName}'.");
+                }
+
+                // Set the primary as the qualifier
+                qualifiers = primary.AsField().AsEnumerable();
+            }
+
             // Get the function
             var callback = new Func<MergeExecutionContext<TEntity>>(() =>
             {
                 // Variables needed
                 var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
@@ -1011,6 +1012,7 @@ namespace RepoDb
                 {
                     mergeRequest = new MergeRequest(tableName,
                         connection,
+                        transaction,
                         fields,
                         qualifiers,
                         statementBuilder);
@@ -1019,6 +1021,7 @@ namespace RepoDb
                 {
                     mergeRequest = new MergeRequest(typeof(TEntity),
                         connection,
+                        transaction,
                         fields,
                         qualifiers,
                         statementBuilder);
@@ -1123,12 +1126,13 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+
             // Get the function
             var callback = new Func<MergeExecutionContext<TEntity>>(() =>
             {
                 // Variables needed
                 var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
@@ -1166,6 +1170,7 @@ namespace RepoDb
                 {
                     mergeRequest = new MergeRequest(tableName,
                         connection,
+                        transaction,
                         fields,
                         qualifiers,
                         statementBuilder);
@@ -1174,6 +1179,7 @@ namespace RepoDb
                 {
                     mergeRequest = new MergeRequest(typeof(TEntity),
                         connection,
+                        transaction,
                         fields,
                         qualifiers,
                         statementBuilder);

@@ -2794,7 +2794,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkInsertAsyncForEntitiesDataReader()
+        public void TestSqlConnectionBulkInsertAsyncForEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2836,7 +2836,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkInsertAsyncForEntitiesDataReaderWithMappings()
+        public void TestSqlConnectionBulkInsertAsyncForEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -15115,7 +15115,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfThePrimaryKeyIsNotFound()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))

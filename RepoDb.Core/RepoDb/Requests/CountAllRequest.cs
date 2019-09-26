@@ -16,14 +16,17 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public CountAllRequest(Type type,
             IDbConnection connection,
+            IDbTransaction transaction,
             string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
+                  transaction,
                   hints,
                   statementBuilder)
         {
@@ -35,14 +38,17 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public CountAllRequest(string name,
             IDbConnection connection,
+            IDbTransaction transaction,
             string hints = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
+                  transaction,
                   statementBuilder)
         {
             Hints = hints;

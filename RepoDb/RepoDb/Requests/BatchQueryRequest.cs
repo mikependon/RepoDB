@@ -17,6 +17,7 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
@@ -26,6 +27,7 @@ namespace RepoDb.Requests
         /// <param name="statementBuilder">The statement builder.</param>
         public BatchQueryRequest(Type type,
             IDbConnection connection,
+            IDbTransaction transaction,
             IEnumerable<Field> fields,
             int page,
             int rowsPerBatch,
@@ -35,6 +37,7 @@ namespace RepoDb.Requests
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
+                  transaction,
                   fields,
                   page,
                   rowsPerBatch,
@@ -51,6 +54,7 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
@@ -60,6 +64,7 @@ namespace RepoDb.Requests
         /// <param name="statementBuilder">The statement builder.</param>
         public BatchQueryRequest(string name,
             IDbConnection connection,
+            IDbTransaction transaction,
             IEnumerable<Field> fields,
             int page,
             int rowsPerBatch,
@@ -69,6 +74,7 @@ namespace RepoDb.Requests
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
+                  transaction,
                   statementBuilder)
         {
             Fields = fields;

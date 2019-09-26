@@ -40,7 +40,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Update<TEntity>(connection: connection,
                 entity: entity,
                 where: ToQueryGroup<TEntity>(primary, entity),
@@ -71,7 +71,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(connection);
+            GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Update<TEntity>(connection: connection,
                 entity: entity,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
@@ -260,7 +260,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: ToQueryGroup<TEntity>(primary, entity),
@@ -291,7 +291,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(connection);
+            GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
@@ -533,7 +533,7 @@ namespace RepoDb
             return Update(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -684,7 +684,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> UpdateAsync(this IDbConnection connection,
+        public static async Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
             int? commandTimeout = null,
@@ -693,7 +693,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Get the primary from the database
-            var primary = DbFieldCache.Get(connection, tableName)?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var primary = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.FirstOrDefault(dbField => dbField.IsPrimary);
             var where = (QueryGroup)null;
 
             // Identity the property via primary
@@ -711,7 +711,7 @@ namespace RepoDb
             }
 
             // Execute the proper method
-            return UpdateAsyncInternal(connection: connection,
+            return await UpdateAsyncInternal(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: where,
@@ -745,7 +745,7 @@ namespace RepoDb
             return UpdateAsync(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -914,7 +914,7 @@ namespace RepoDb
             var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
             {
                 // Variables needed
-                var dbFields = DbFieldCache.Get(connection, tableName);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields
@@ -932,6 +932,7 @@ namespace RepoDb
                 {
                     updateRequest = new UpdateRequest(tableName,
                         connection,
+                        transaction,
                         where,
                         fields,
                         statementBuilder);
@@ -940,6 +941,7 @@ namespace RepoDb
                 {
                     updateRequest = new UpdateRequest(typeof(TEntity),
                         connection,
+                        transaction,
                         where,
                         fields,
                         statementBuilder);
@@ -1047,11 +1049,12 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+
             // Get the function
             var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
             {
                 // Variables needed
-                var dbFields = DbFieldCache.Get(connection, tableName);
                 var inputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields
@@ -1069,6 +1072,7 @@ namespace RepoDb
                 {
                     updateRequest = new UpdateRequest(tableName,
                         connection,
+                        transaction,
                         where,
                         fields,
                         statementBuilder);
@@ -1077,6 +1081,7 @@ namespace RepoDb
                 {
                     updateRequest = new UpdateRequest(typeof(TEntity),
                         connection,
+                        transaction,
                         where,
                         fields,
                         statementBuilder);

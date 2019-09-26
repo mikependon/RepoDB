@@ -33,7 +33,7 @@ namespace RepoDb.DbOperationProviders
         /// <summary>
         /// Validates the type of the <see cref="IDbConnection"/> object.
         /// </summary>
-        /// <param name="connection"></param>
+        /// <param name="connection">The connection to validate.</param>
         private void ValidateConnection(IDbConnection connection)
         {
             if (connection is SqlConnection == false)
@@ -45,15 +45,12 @@ namespace RepoDb.DbOperationProviders
         /// <summary>
         /// Validates the type of the <see cref="IDbTransaction"/> object.
         /// </summary>
-        /// <param name="transaction"></param>
+        /// <param name="transaction">The connection to validate.</param>
         private void ValidateTransaction(IDbTransaction transaction)
         {
-            if (transaction != null)
+            if (transaction != null && transaction is SqlTransaction == false)
             {
-                if (transaction is SqlTransaction == false)
-                {
-                    throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
-                }
+                throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
         }
 
@@ -140,7 +137,7 @@ namespace RepoDb.DbOperationProviders
                     if (mappings == null)
                     {
                         // Get the actual DB fields
-                        var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+                        var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                         var fields = reader.Properties.AsFields();
 
                         // Filter the fields based on the actual DB fields
@@ -263,7 +260,7 @@ namespace RepoDb.DbOperationProviders
                 if (mappings == null)
                 {
                     // Get the actual DB fields
-                    var dbFields = DbFieldCache.Get(connection, tableName);
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                     var readerFields = Enumerable.Range(0, reader.FieldCount)
                         .Select((index) => reader.GetName(index));
 
@@ -361,7 +358,7 @@ namespace RepoDb.DbOperationProviders
                     if (mappings == null)
                     {
                         // Get the actual DB fields
-                        var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>());
+                        var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                         var fields = reader.Properties.AsFields();
 
                         // Filter the fields based on the actual DB fields
@@ -479,12 +476,12 @@ namespace RepoDb.DbOperationProviders
                 {
                     sqlBulkCopy.BatchSize = batchSize.Value;
                 }
-                
+
                 // Add the mappings
                 if (mappings == null)
                 {
                     // Get the actual DB fields
-                    var dbFields = await DbFieldCache.GetAsync(connection, tableName);
+                    var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                     var readerFields = Enumerable.Range(0, reader.FieldCount)
                         .Select((index) => reader.GetName(index));
 

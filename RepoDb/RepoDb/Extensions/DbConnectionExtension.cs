@@ -153,7 +153,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReader.ToEnumerable(reader, tableName, connection).AsList();
+                    return DataReader.ToEnumerable(reader, tableName, connection, transaction).AsList();
                 }
             }
         }
@@ -232,7 +232,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return await DataReader.ToEnumerableAsync(reader, tableName, connection);
+                    return await DataReader.ToEnumerableAsync(reader, tableName, connection, transaction);
                 }
             }
         }
@@ -306,7 +306,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Trigger the cache to void reusing the connection
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+            DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -319,7 +319,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReader.ToEnumerable<TEntity>(reader, connection, basedOnFields).AsList();
+                    return DataReader.ToEnumerable<TEntity>(reader, connection, transaction, basedOnFields).AsList();
                 }
             }
         }
@@ -393,7 +393,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Trigger the cache to void reusing the connection
-            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>());
+            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -406,7 +406,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return await DataReader.ToEnumerableAsync<TEntity>(reader, connection, basedOnFields);
+                    return await DataReader.ToEnumerableAsync<TEntity>(reader, connection, transaction, basedOnFields);
                 }
             }
         }
@@ -448,7 +448,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: false);
 
             // Create an extractor class
-            return new QueryMultipleExtractor((DbDataReader)reader, connection, connectionString);
+            return new QueryMultipleExtractor((DbDataReader)reader, connection, transaction, connectionString);
         }
 
         /// <summary>
@@ -484,7 +484,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: false);
 
             // Create an extractor class
-            return new QueryMultipleExtractor((DbDataReader)reader, connection, connectionString);
+            return new QueryMultipleExtractor((DbDataReader)reader, connection, transaction, connectionString);
         }
 
         #endregion
@@ -1052,14 +1052,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The primary <see cref="ClassProperty"/> of the type.</returns>
-        private static ClassProperty GetAndGuardPrimaryKey<TEntity>(IDbConnection connection)
+        private static ClassProperty GetAndGuardPrimaryKey<TEntity>(IDbConnection connection, IDbTransaction transaction)
             where TEntity : class
         {
             var property = PrimaryCache.Get<TEntity>();
             if (property == null)
             {
-                var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+                var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                 var primary = dbFields.FirstOrDefault(df => df.IsPrimary);
                 if (primary != null)
                 {
@@ -1094,10 +1095,12 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
         private static QueryGroup WhereOrPrimaryKeyToQueryGroup(IDbConnection connection,
             string tableName,
-            object whereOrPrimaryKey)
+            object whereOrPrimaryKey,
+            IDbTransaction transaction)
         {
             if (whereOrPrimaryKey == null)
             {
@@ -1109,7 +1112,7 @@ namespace RepoDb
             }
             else
             {
-                var primary = DbFieldCache.Get(connection, tableName)?.FirstOrDefault(p => p.IsPrimary == true);
+                var primary = DbFieldCache.Get(connection, tableName, transaction)?.FirstOrDefault(p => p.IsPrimary == true);
                 if (primary == null)
                 {
                     throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.",

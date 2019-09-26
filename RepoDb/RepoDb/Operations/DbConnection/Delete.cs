@@ -36,7 +36,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Delete<TEntity>(connection: connection,
                 where: ToQueryGroup<TEntity>(primary, entity),
                 commandTimeout: commandTimeout,
@@ -64,7 +64,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(connection);
+            GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Delete<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
@@ -203,6 +203,7 @@ namespace RepoDb
             // Variables
             var request = new DeleteRequest(typeof(TEntity),
                 connection,
+                transaction,
                 where,
                 statementBuilder);
             var param = (object)null;
@@ -245,7 +246,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection);
+            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return DeleteAsync<TEntity>(connection: connection,
                 where: ToQueryGroup<TEntity>(primary, entity),
                 commandTimeout: commandTimeout,
@@ -273,7 +274,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(connection);
+            GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return DeleteAsync<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
@@ -412,6 +413,7 @@ namespace RepoDb
             // Variables
             var request = new DeleteRequest(typeof(TEntity),
                 connection,
+                transaction,
                 where,
                 statementBuilder);
             var param = (object)null;
@@ -569,6 +571,7 @@ namespace RepoDb
             // Variables
             var request = new DeleteRequest(tableName,
                 connection,
+                transaction,
                 where,
                 statementBuilder);
             var param = (object)null;
@@ -726,6 +729,7 @@ namespace RepoDb
             // Variables
             var request = new DeleteRequest(tableName,
                 connection,
+                transaction,
                 where,
                 statementBuilder);
             var param = (object)null;

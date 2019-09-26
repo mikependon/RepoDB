@@ -429,6 +429,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
             var request = new QueryAllRequest(typeof(TEntity),
                 connection,
+                transaction,
                 FieldCache.Get<TEntity>(),
                 orderBy,
                 hints,
@@ -505,7 +506,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        internal static Task<IEnumerable<TEntity>> QueryAllAsyncInternalBase<TEntity>(this IDbConnection connection,
+        internal static async Task<IEnumerable<TEntity>> QueryAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
@@ -523,7 +524,7 @@ namespace RepoDb
                 var item = cache?.Get(cacheKey, false);
                 if (item != null)
                 {
-                    return Task.FromResult((IEnumerable<TEntity>)item.Value);
+                    return (IEnumerable<TEntity>)item.Value;
                 }
             }
 
@@ -531,6 +532,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
             var request = new QueryAllRequest(typeof(TEntity),
                 connection,
+                transaction,
                 FieldCache.Get<TEntity>(),
                 orderBy,
                 hints,
@@ -539,7 +541,7 @@ namespace RepoDb
             var param = (object)null;
 
             // Database pre-touch for field definitions
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
             // Before Execution
             if (trace != null)
@@ -552,7 +554,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return Task.FromResult<IEnumerable<TEntity>>(null);
+                    return null;
                 }
                 commandText = (cancellableTraceLog.Statement ?? commandText);
                 param = (cancellableTraceLog.Parameter ?? param);
@@ -562,7 +564,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteQueryAsyncInternal<TEntity>(connection: connection,
+            var result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -637,13 +639,14 @@ namespace RepoDb
             // Check the fields
             if (fields?.Any() != true)
             {
-                fields = DbFieldCache.Get(connection, tableName)?.Select(f => f.AsField());
+                fields = DbFieldCache.Get(connection, tableName, transaction)?.AsFields();
             }
 
             // Variables
             var commandType = CommandType.Text;
             var request = new QueryAllRequest(tableName,
                 connection,
+                transaction,
                 fields,
                 orderBy,
                 hints,
@@ -747,13 +750,14 @@ namespace RepoDb
             // Check the fields
             if (fields?.Any() != true)
             {
-                fields = DbFieldCache.Get(connection, tableName)?.Select(f => f.AsField());
+                fields = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
             }
 
             // Variables
             var commandType = CommandType.Text;
             var request = new QueryAllRequest(tableName,
                 connection,
+                transaction,
                 fields,
                 orderBy,
                 hints,

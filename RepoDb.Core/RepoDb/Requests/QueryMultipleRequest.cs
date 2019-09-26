@@ -18,6 +18,7 @@ namespace RepoDb.Requests
         /// <param name="index">The index value.</param>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="orderBy">The list of order fields.</param>
@@ -27,6 +28,7 @@ namespace RepoDb.Requests
         public QueryMultipleRequest(int? index,
             Type type,
             IDbConnection connection,
+            IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -36,6 +38,7 @@ namespace RepoDb.Requests
             : this(index,
                   ClassMappedNameCache.Get(type),
                   connection,
+                  transaction,
                   fields,
                   where,
                   orderBy,
@@ -52,6 +55,7 @@ namespace RepoDb.Requests
         /// <param name="index">The index value.</param>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="orderBy">The list of order fields.</param>
@@ -61,6 +65,7 @@ namespace RepoDb.Requests
         public QueryMultipleRequest(int? index,
             string name,
             IDbConnection connection,
+            IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -69,6 +74,7 @@ namespace RepoDb.Requests
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
+                  transaction,
                   statementBuilder)
         {
             Index = index;

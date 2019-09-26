@@ -117,6 +117,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -129,6 +130,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -177,11 +179,11 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
@@ -321,6 +323,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -333,6 +336,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -345,6 +349,7 @@ namespace RepoDb
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
+                transaction,
                 FieldCache.Get<T3>(),
                 where3,
                 orderBy3,
@@ -394,15 +399,15 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
@@ -568,6 +573,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -580,6 +586,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -592,6 +599,7 @@ namespace RepoDb
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
+                transaction,
                 FieldCache.Get<T3>(),
                 where3,
                 orderBy3,
@@ -604,6 +612,7 @@ namespace RepoDb
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
+                transaction,
                 FieldCache.Get<T4>(),
                 where4,
                 orderBy4,
@@ -654,19 +663,19 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
@@ -856,6 +865,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -868,6 +878,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -880,6 +891,7 @@ namespace RepoDb
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
+                transaction,
                 FieldCache.Get<T3>(),
                 where3,
                 orderBy3,
@@ -892,6 +904,7 @@ namespace RepoDb
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
+                transaction,
                 FieldCache.Get<T4>(),
                 where4,
                 orderBy4,
@@ -904,6 +917,7 @@ namespace RepoDb
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
+                transaction,
                 FieldCache.Get<T5>(),
                 where5,
                 orderBy5,
@@ -955,23 +969,23 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.AsList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
@@ -1185,6 +1199,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -1197,6 +1212,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -1209,6 +1225,7 @@ namespace RepoDb
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
+                transaction,
                 FieldCache.Get<T3>(),
                 where3,
                 orderBy3,
@@ -1221,6 +1238,7 @@ namespace RepoDb
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
+                transaction,
                 FieldCache.Get<T4>(),
                 where4,
                 orderBy4,
@@ -1233,6 +1251,7 @@ namespace RepoDb
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
+                transaction,
                 FieldCache.Get<T5>(),
                 where5,
                 orderBy5,
@@ -1245,6 +1264,7 @@ namespace RepoDb
             var request6 = new QueryMultipleRequest(6,
                 typeof(T6),
                 connection,
+                transaction,
                 FieldCache.Get<T6>(),
                 where6,
                 orderBy6,
@@ -1297,27 +1317,27 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.AsList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection)?.AsList();
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
@@ -1556,6 +1576,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -1568,6 +1589,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -1580,6 +1602,7 @@ namespace RepoDb
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
+                transaction,
                 FieldCache.Get<T3>(),
                 where3,
                 orderBy3,
@@ -1592,6 +1615,7 @@ namespace RepoDb
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
+                transaction,
                 FieldCache.Get<T4>(),
                 where4,
                 orderBy4,
@@ -1604,6 +1628,7 @@ namespace RepoDb
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
+                transaction,
                 FieldCache.Get<T5>(),
                 where5,
                 orderBy5,
@@ -1616,6 +1641,7 @@ namespace RepoDb
             var request6 = new QueryMultipleRequest(6,
                 typeof(T6),
                 connection,
+                transaction,
                 FieldCache.Get<T6>(),
                 where6,
                 orderBy6,
@@ -1628,6 +1654,7 @@ namespace RepoDb
             var request7 = new QueryMultipleRequest(7,
                 typeof(T7),
                 connection,
+                transaction,
                 FieldCache.Get<T7>(),
                 where7,
                 orderBy7,
@@ -1681,31 +1708,31 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.AsList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection)?.AsList();
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the seventh result
                 reader?.NextResult();
-                var item7 = DataReader.ToEnumerable<T7>((DbDataReader)reader, connection)?.AsList();
+                var item7 = DataReader.ToEnumerable<T7>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
@@ -1826,6 +1853,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -1838,6 +1866,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -1886,11 +1915,11 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
@@ -2030,6 +2059,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -2042,6 +2072,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -2054,6 +2085,7 @@ namespace RepoDb
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
+                transaction,
                 FieldCache.Get<T3>(),
                 where3,
                 orderBy3,
@@ -2103,15 +2135,15 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
@@ -2277,6 +2309,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -2289,6 +2322,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -2301,6 +2335,7 @@ namespace RepoDb
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
+                transaction,
                 FieldCache.Get<T3>(),
                 where3,
                 orderBy3,
@@ -2313,6 +2348,7 @@ namespace RepoDb
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
+                transaction,
                 FieldCache.Get<T4>(),
                 where4,
                 orderBy4,
@@ -2363,19 +2399,19 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
@@ -2565,6 +2601,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -2577,6 +2614,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -2589,6 +2627,7 @@ namespace RepoDb
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
+                transaction,
                 FieldCache.Get<T3>(),
                 where3,
                 orderBy3,
@@ -2601,6 +2640,7 @@ namespace RepoDb
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
+                transaction,
                 FieldCache.Get<T4>(),
                 where4,
                 orderBy4,
@@ -2613,6 +2653,7 @@ namespace RepoDb
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
+                transaction,
                 FieldCache.Get<T5>(),
                 where5,
                 orderBy5,
@@ -2664,23 +2705,23 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.AsList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
@@ -2894,6 +2935,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -2906,6 +2948,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -2918,6 +2961,7 @@ namespace RepoDb
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
+                transaction,
                 FieldCache.Get<T3>(),
                 where3,
                 orderBy3,
@@ -2930,6 +2974,7 @@ namespace RepoDb
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
+                transaction,
                 FieldCache.Get<T4>(),
                 where4,
                 orderBy4,
@@ -2942,6 +2987,7 @@ namespace RepoDb
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
+                transaction,
                 FieldCache.Get<T5>(),
                 where5,
                 orderBy5,
@@ -2954,6 +3000,7 @@ namespace RepoDb
             var request6 = new QueryMultipleRequest(6,
                 typeof(T6),
                 connection,
+                transaction,
                 FieldCache.Get<T6>(),
                 where6,
                 orderBy6,
@@ -3006,27 +3053,27 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.AsList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection)?.AsList();
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
@@ -3265,6 +3312,7 @@ namespace RepoDb
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
+                transaction,
                 FieldCache.Get<T1>(),
                 where1,
                 orderBy1,
@@ -3277,6 +3325,7 @@ namespace RepoDb
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
+                transaction,
                 FieldCache.Get<T2>(),
                 where2,
                 orderBy2,
@@ -3289,6 +3338,7 @@ namespace RepoDb
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
+                transaction,
                 FieldCache.Get<T3>(),
                 where3,
                 orderBy3,
@@ -3301,6 +3351,7 @@ namespace RepoDb
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
+                transaction,
                 FieldCache.Get<T4>(),
                 where4,
                 orderBy4,
@@ -3313,6 +3364,7 @@ namespace RepoDb
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
+                transaction,
                 FieldCache.Get<T5>(),
                 where5,
                 orderBy5,
@@ -3325,6 +3377,7 @@ namespace RepoDb
             var request6 = new QueryMultipleRequest(6,
                 typeof(T6),
                 connection,
+                transaction,
                 FieldCache.Get<T6>(),
                 where6,
                 orderBy6,
@@ -3337,6 +3390,7 @@ namespace RepoDb
             var request7 = new QueryMultipleRequest(7,
                 typeof(T7),
                 connection,
+                transaction,
                 FieldCache.Get<T7>(),
                 where7,
                 orderBy7,
@@ -3390,31 +3444,31 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the second result
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the third result
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fourth result
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the fifth result
                 reader?.NextResult();
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.AsList();
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the sixth result
                 reader?.NextResult();
-                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection)?.AsList();
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Extract the seventh result
                 reader?.NextResult();
-                var item7 = DataReader.ToEnumerable<T7>((DbDataReader)reader, connection)?.AsList();
+                var item7 = DataReader.ToEnumerable<T7>((DbDataReader)reader, connection, transaction)?.AsList();
 
                 // Set the result instance
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(

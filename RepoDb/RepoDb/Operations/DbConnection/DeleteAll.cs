@@ -58,6 +58,7 @@ namespace RepoDb
             // Variables
             var request = new DeleteAllRequest(typeof(TEntity),
                 connection,
+                transaction,
                 statementBuilder);
 
             // Return the result
@@ -116,6 +117,7 @@ namespace RepoDb
             // Variables
             var request = new DeleteAllRequest(typeof(TEntity),
                 connection,
+                transaction,
                 statementBuilder);
 
             // Return the result
@@ -175,6 +177,7 @@ namespace RepoDb
             // Variables
             var request = new DeleteAllRequest(tableName,
                 connection,
+                transaction,
                 statementBuilder);
 
             // Return the result
@@ -234,6 +237,7 @@ namespace RepoDb
             // Variables
             var request = new DeleteAllRequest(tableName,
                 connection,
+                transaction,
                 statementBuilder);
 
             // Return the result

@@ -164,7 +164,7 @@ namespace RepoDb.DbOperationProviders
                     if (mappings == null)
                     {
                         // Get the actual DB fields
-                        var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+                        var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                         var fields = reader.Properties.AsFields();
 
                         // Filter the fields based on the actual DB fields
@@ -287,7 +287,7 @@ namespace RepoDb.DbOperationProviders
                 if (mappings == null)
                 {
                     // Get the actual DB fields
-                    var dbFields = DbFieldCache.Get(connection, tableName);
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                     var readerFields = Enumerable.Range(0, reader.FieldCount)
                         .Select((index) => reader.GetName(index));
 
@@ -415,7 +415,7 @@ namespace RepoDb.DbOperationProviders
                 if (mappings == null)
                 {
                     // Get the actual DB fields
-                    var dbFields = DbFieldCache.Get(connection, tableName);
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                     var tableFields = GetDataColumns(dataTable)
                         .Select(column => column.ColumnName)
                         .Where(field => dbFields.FirstOrDefault(dbField => string.Equals(dbField.UnquotedName, field, StringComparison.OrdinalIgnoreCase)) != null);
@@ -507,7 +507,7 @@ namespace RepoDb.DbOperationProviders
                     if (mappings == null)
                     {
                         // Get the actual DB fields
-                        var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>());
+                        var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                         var fields = reader.Properties.AsFields();
 
                         // Filter the fields based on the actual DB fields
@@ -630,7 +630,7 @@ namespace RepoDb.DbOperationProviders
                 if (mappings == null)
                 {
                     // Get the actual DB fields
-                    var dbFields = await DbFieldCache.GetAsync(connection, tableName);
+                    var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                     var readerFields = Enumerable.Range(0, reader.FieldCount)
                         .Select((index) => reader.GetName(index));
 
@@ -758,7 +758,7 @@ namespace RepoDb.DbOperationProviders
                 if (mappings == null)
                 {
                     // Get the actual DB fields
-                    var dbFields = DbFieldCache.Get(connection, tableName);
+                    var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                     var tableFields = GetDataColumns(dataTable)
                         .Select(column => column.ColumnName)
                         .Where(field => dbFields.FirstOrDefault(dbField => string.Equals(dbField.UnquotedName, field, StringComparison.OrdinalIgnoreCase)) != null);

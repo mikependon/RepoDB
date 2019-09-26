@@ -44,13 +44,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", entities, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", entities, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert");
+                        throw new CancelledExecutionException("BulkInsert.Cancelled");
                     }
                     return 0;
                 }
@@ -75,7 +75,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", entities, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -113,13 +113,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", entities, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", entities, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert");
+                        throw new CancelledExecutionException("BulkInsert.Cancelled");
                     }
                     return 0;
                 }
@@ -148,7 +148,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", entities, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -184,13 +184,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", reader, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert");
+                        throw new CancelledExecutionException("BulkInsert.Cancelled");
                     }
                     return 0;
                 }
@@ -215,7 +215,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", reader, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -251,13 +251,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", reader, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert");
+                        throw new CancelledExecutionException("BulkInsert.Cancelled");
                     }
                     return 0;
                 }
@@ -283,7 +283,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", reader, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -323,13 +323,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", entities, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", entities, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert");
+                        throw new CancelledExecutionException("BulkInsert.Cancelled");
                     }
                     return 0;
                 }
@@ -354,7 +354,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", entities, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -392,13 +392,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", entities, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", entities, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert");
+                        throw new CancelledExecutionException("BulkInsert.Cancelled");
                     }
                     return 0;
                 }
@@ -427,7 +427,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", entities, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -463,13 +463,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", reader, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert");
+                        throw new CancelledExecutionException("BulkInsert.Cancelled");
                     }
                     return 0;
                 }
@@ -494,7 +494,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", reader, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -530,13 +530,13 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", reader, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("BulkInsert");
+                        throw new CancelledExecutionException("BulkInsert.Cancelled");
                     }
                     return 0;
                 }
@@ -562,7 +562,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsertAfter", reader, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

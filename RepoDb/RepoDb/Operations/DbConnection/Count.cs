@@ -191,6 +191,7 @@ namespace RepoDb
             // Variables
             var request = new CountRequest(typeof(TEntity),
                 connection,
+                transaction,
                 where,
                 hints,
                 statementBuilder);
@@ -417,6 +418,7 @@ namespace RepoDb
             // Variables
             var request = new CountRequest(typeof(TEntity),
                 connection,
+                transaction,
                 where,
                 hints,
                 statementBuilder);
@@ -589,6 +591,7 @@ namespace RepoDb
             // Variables
             var request = new CountRequest(tableName,
                 connection,
+                transaction,
                 where,
                 hints,
                 statementBuilder);
@@ -791,6 +794,7 @@ namespace RepoDb
             // Variables
             var request = new CountRequest(tableName,
                 connection,
+                transaction,
                 where,
                 hints,
                 statementBuilder);

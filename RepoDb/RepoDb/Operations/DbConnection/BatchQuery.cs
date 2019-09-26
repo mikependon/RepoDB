@@ -1119,6 +1119,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
             var request = new BatchQueryRequest(typeof(TEntity),
                 connection,
+                transaction,
                 FieldCache.Get<TEntity>(),
                 page,
                 rowsPerBatch,
@@ -1211,6 +1212,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
             var request = new BatchQueryRequest(typeof(TEntity),
                 connection,
+                transaction,
                 FieldCache.Get<TEntity>(),
                 page,
                 rowsPerBatch,
@@ -1304,13 +1306,14 @@ namespace RepoDb
             // Check the fields
             if (fields?.Any() != true)
             {
-                fields = DbFieldCache.Get(connection, tableName)?.Select(f => f.AsField());
+                fields = DbFieldCache.Get(connection, tableName, transaction)?.AsFields();
             }
 
             // Variables
             var commandType = CommandType.Text;
             var request = new BatchQueryRequest(tableName,
                 connection,
+                transaction,
                 fields,
                 page,
                 rowsPerBatch,
@@ -1404,13 +1407,14 @@ namespace RepoDb
             // Check the fields
             if (fields?.Any() != true)
             {
-                fields = DbFieldCache.Get(connection, tableName)?.Select(f => f.AsField());
+                fields = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
             }
 
             // Variables
             var commandType = CommandType.Text;
             var request = new BatchQueryRequest(tableName,
                 connection,
+                transaction,
                 fields,
                 page,
                 rowsPerBatch,
