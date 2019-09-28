@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.9.9-beta4</version>
+    <version>1.9.9-beta5</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -11,9 +11,9 @@
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
-      RepoDb v1.9.9-beta4:
-      - To Consider: Enable BulkInsert with System.DataTable #277
-      - v1.9.9 release candidate
+      RepoDb v1.9.9-beta5:
+      - Bug: SqlDbHelper.GetFields is failing if the transaction object is present. #278
+      - Refactoring: Refactor the codes for DbFieldCache to accept IDbTransaction objects. These affected too many chain of calls.
     </releaseNotes>
     <copyright>Copyright © 2019</copyright>
     <tags>orm sql repo repodb repository</tags>

@@ -2362,44 +2362,48 @@
             An interface used to be a helper class on some database related activity.
             </summary>
         </member>
-        <member name="M:RepoDb.Interfaces.IDbHelper.GetFields(System.String,System.String)">
-            <summary>
-            Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
-            </summary>
-            <param name="connectionString">The connection string to connect to.</param>
-            <param name="tableName">The name of the target table.</param>
-            <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
-        </member>
-        <member name="M:RepoDb.Interfaces.IDbHelper.GetFieldsAsync(System.String,System.String)">
-            <summary>
-            Gets the list of <see cref="T:RepoDb.DbField"/> of the table in an asychronous way.
-            </summary>
-            <param name="connectionString">The connection string to connect to.</param>
-            <param name="tableName">The name of the target table.</param>
-            <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
-        </member>
-        <member name="M:RepoDb.Interfaces.IDbHelper.GetFields``1(``0,System.String)">
-            <summary>
-            Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
-            </summary>
-            <typeparam name="TDbConnection">The type of <see cref="T:System.Data.IDbConnection"/> object.</typeparam>
-            <param name="connection">The instance of the connection object.</param>
-            <param name="tableName">The name of the target table.</param>
-            <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
-        </member>
-        <member name="M:RepoDb.Interfaces.IDbHelper.GetFieldsAsync``1(``0,System.String)">
-            <summary>
-            Gets the list of <see cref="T:RepoDb.DbField"/> of the table in an asychronous way.
-            </summary>
-            <typeparam name="TDbConnection">The type of <see cref="T:System.Data.IDbConnection"/> object.</typeparam>
-            <param name="connection">The instance of the connection object.</param>
-            <param name="tableName">The name of the target table.</param>
-            <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
-        </member>
         <member name="P:RepoDb.Interfaces.IDbHelper.DbTypeResolver">
             <summary>
             Gets the type resolver used by this <see cref="T:RepoDb.Interfaces.IDbHelper"/> instance.
             </summary>
+        </member>
+        <member name="M:RepoDb.Interfaces.IDbHelper.GetFields(System.String,System.String,System.Data.IDbTransaction)">
+            <summary>
+            Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
+            </summary>
+            <param name="connectionString">The connection string to connect to.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
+            <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
+        </member>
+        <member name="M:RepoDb.Interfaces.IDbHelper.GetFieldsAsync(System.String,System.String,System.Data.IDbTransaction)">
+            <summary>
+            Gets the list of <see cref="T:RepoDb.DbField"/> of the table in an asychronous way.
+            </summary>
+            <param name="connectionString">The connection string to connect to.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
+            <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
+        </member>
+        <member name="M:RepoDb.Interfaces.IDbHelper.GetFields``1(``0,System.String,System.Data.IDbTransaction)">
+            <summary>
+            Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
+            </summary>
+            <typeparam name="TDbConnection">The type of <see cref="T:System.Data.IDbConnection"/> object.</typeparam>
+            <param name="connection">The instance of the connection object.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
+            <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
+        </member>
+        <member name="M:RepoDb.Interfaces.IDbHelper.GetFieldsAsync``1(``0,System.String,System.Data.IDbTransaction)">
+            <summary>
+            Gets the list of <see cref="T:RepoDb.DbField"/> of the table in an asychronous way.
+            </summary>
+            <typeparam name="TDbConnection">The type of <see cref="T:System.Data.IDbConnection"/> object.</typeparam>
+            <param name="connection">The instance of the connection object.</param>
+            <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
+            <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
         </member>
         <member name="T:RepoDb.Interfaces.IStatementBuilder">
             <summary>
@@ -9790,12 +9794,13 @@
             <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
             <returns>A first occurence value (first column of first row) of the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.GetAndGuardPrimaryKey``1(System.Data.IDbConnection)">
+        <member name="M:RepoDb.DbConnectionExtension.GetAndGuardPrimaryKey``1(System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
             Throws an exception if there is no defined primary key on the data entity type.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>The primary <see cref="T:RepoDb.ClassProperty"/> of the type.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ValidateTransactionConnectionObject(System.Data.IDbConnection,System.Data.IDbTransaction)">
@@ -9805,13 +9810,14 @@
             <param name="connection">The connection object to be validated.</param>
             <param name="transaction">The transaction object to compare.</param>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.WhereOrPrimaryKeyToQueryGroup(System.Data.IDbConnection,System.String,System.Object)">
+        <member name="M:RepoDb.DbConnectionExtension.WhereOrPrimaryKeyToQueryGroup(System.Data.IDbConnection,System.String,System.Object,System.Data.IDbTransaction)">
             <summary>
             Converts the dynamic expression into a <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table.</param>
             <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>An instance of <see cref="T:RepoDb.QueryGroup"/> object.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.WhereOrPrimaryKeyToQueryGroup``1(System.Object)">
@@ -10043,62 +10049,48 @@
             A class used to cache the list of <see cref="T:RepoDb.DbField"/> of the database table.
             </summary>
         </member>
-        <member name="M:RepoDb.DbFieldCache.Get(System.Data.IDbConnection,System.String)">
+        <member name="M:RepoDb.DbFieldCache.Flush">
+            <summary>
+            Flushes all the existing cached enumerable of <see cref="T:RepoDb.DbField"/> objects.
+            </summary>
+        </member>
+        <member name="M:RepoDb.DbFieldCache.Get(System.Data.IDbConnection,System.String,System.Data.IDbTransaction)">
             <summary>
             Gets the cached list of <see cref="T:RepoDb.DbField"/> of the database table based on the data entity mapped name.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>The cached field definitions of the entity.</returns>
         </member>
-        <member name="M:RepoDb.DbFieldCache.GetAsync(System.Data.IDbConnection,System.String)">
+        <member name="M:RepoDb.DbFieldCache.GetAsync(System.Data.IDbConnection,System.String,System.Data.IDbTransaction)">
             <summary>
             Gets the cached list of <see cref="T:RepoDb.DbField"/> of the database table based on the data entity mapped name in asynchronous way.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>The cached field definitions of the entity.</returns>
         </member>
-        <member name="M:RepoDb.DbFieldCache.Get``1(System.String,System.String)">
-            <summary>
-            Gets the cached list of <see cref="T:RepoDb.DbField"/> of the database table based on the data entity mapped name.
-            </summary>
-            <typeparam name="TDbConnection">The type of the <see cref="T:System.Data.IDbConnection"/> object.</typeparam>
-            <param name="connectionString">The connection string to be used.</param>
-            <param name="tableName">The name of the target table.</param>
-            <returns>The cached field definitions of the entity.</returns>
-        </member>
-        <member name="M:RepoDb.DbFieldCache.GetAsync``1(System.String,System.String)">
-            <summary>
-            Gets the cached list of <see cref="T:RepoDb.DbField"/> of the database table based on the data entity mapped name in asynchronous way.
-            </summary>
-            <typeparam name="TDbConnection">The type of the <see cref="T:System.Data.IDbConnection"/> object.</typeparam>
-            <param name="connectionString">The connection string to be used.</param>
-            <param name="tableName">The name of the target table.</param>
-            <returns>The cached field definitions of the entity.</returns>
-        </member>
-        <member name="M:RepoDb.DbFieldCache.GetInternal``1(``0,System.String)">
+        <member name="M:RepoDb.DbFieldCache.GetInternal``1(``0,System.String,System.Data.IDbTransaction)">
             <summary>
             Gets the cached field definitions of the entity.
             </summary>
             <typeparam name="TDbConnection">The type of <see cref="T:System.Data.IDbConnection"/> object.</typeparam>
             <param name="connection">The instance of the <see cref="T:System.Data.IDbConnection"/> object.</param>
             <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>The cached field definitions of the entity.</returns>
         </member>
-        <member name="M:RepoDb.DbFieldCache.GetInternalAsync``1(``0,System.String)">
+        <member name="M:RepoDb.DbFieldCache.GetInternalAsync``1(``0,System.String,System.Data.IDbTransaction)">
             <summary>
             Gets the cached field definitions of the entity in an asychronous way.
             </summary>
             <typeparam name="TDbConnection">The type of <see cref="T:System.Data.IDbConnection"/> object.</typeparam>
             <param name="connection">The instance of the <see cref="T:System.Data.IDbConnection"/> object.</param>
             <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>The cached field definitions of the entity.</returns>
-        </member>
-        <member name="M:RepoDb.DbFieldCache.Flush">
-            <summary>
-            Flushes all the existing cached enumerable of <see cref="T:RepoDb.DbField"/> objects.
-            </summary>
         </member>
         <member name="T:RepoDb.IdentityCache">
             <summary>
@@ -12987,13 +12979,14 @@
             Flushes all the existing cached command texts.
             </summary>
         </member>
-        <member name="M:RepoDb.CommandTextCache.GetActualFields(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field})">
+        <member name="M:RepoDb.CommandTextCache.GetActualFields(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Data.IDbTransaction)">
             <summary>
             Get the actual list of <see cref="T:RepoDb.Field"/> objects of the table based on the actual list of <see cref="T:RepoDb.DbField"/> objects.
             </summary>
             <param name="connection">The connection object to be used.</param>
             <param name="fields">The target name of the table.</param>
             <param name="tableName">The list of fields from the data entity object.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>The actual list of <see cref="T:RepoDb.Field"/> objects of the table.</returns>
         </member>
         <member name="M:RepoDb.CommandTextCache.GetPrimaryField(RepoDb.Requests.BaseRequest)">
@@ -13056,6 +13049,14 @@
             </summary>
             <param name="entities">The list of the data entity object to be used for manipulation.</param>
             <param name="connection">The actual <see cref="T:System.Data.IDbConnection"/> object used.</param>
+        </member>
+        <member name="M:RepoDb.DataEntityDataReader`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.DataEntityDataReader`1"/> object.
+            </summary>
+            <param name="entities">The list of the data entity object to be used for manipulation.</param>
+            <param name="connection">The actual <see cref="T:System.Data.IDbConnection"/> object used.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
         </member>
         <member name="M:RepoDb.DataEntityDataReader`1.GetEnumerator">
             <summary>
@@ -13474,41 +13475,45 @@
             A static classed used to manipulate the <see cref="T:System.Data.Common.DbDataReader"/> object.
             </summary>
         </member>
-        <member name="M:RepoDb.Reflection.DataReader.ToEnumerable``1(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
+        <member name="M:RepoDb.Reflection.DataReader.ToEnumerable``1(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
             Converts the <see cref="T:System.Data.Common.DbDataReader"/> into an enumerable of data entity object.
             </summary>
             <typeparam name="TEntity">The data entity type to convert.</typeparam>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The used <see cref="T:System.Data.IDbTransaction"/> object.</param>
             <returns>An array of data entity objects.</returns>
         </member>
-        <member name="M:RepoDb.Reflection.DataReader.ToEnumerable``1(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Boolean)">
+        <member name="M:RepoDb.Reflection.DataReader.ToEnumerable``1(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Converts the <see cref="T:System.Data.Common.DbDataReader"/> into an enumerable of data entity object.
             </summary>
             <typeparam name="TEntity">The data entity type to convert.</typeparam>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The used <see cref="T:System.Data.IDbTransaction"/> object.</param>
             <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
             <returns>An array of data entity objects.</returns>
         </member>
-        <member name="M:RepoDb.Reflection.DataReader.ToEnumerableAsync``1(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
+        <member name="M:RepoDb.Reflection.DataReader.ToEnumerableAsync``1(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
             Converts the <see cref="T:System.Data.Common.DbDataReader"/> into an enumerable of data entity object in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The data entity type to convert.</typeparam>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The used <see cref="T:System.Data.IDbTransaction"/> object.</param>
             <returns>An array of data entity objects.</returns>
         </member>
-        <member name="M:RepoDb.Reflection.DataReader.ToEnumerableAsync``1(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Boolean)">
+        <member name="M:RepoDb.Reflection.DataReader.ToEnumerableAsync``1(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Converts the <see cref="T:System.Data.Common.DbDataReader"/> into an enumerable of data entity object in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The data entity type to convert.</typeparam>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The used <see cref="T:System.Data.IDbTransaction"/> object.</param>
             <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
             <returns>An array of data entity objects.</returns>
         </member>
@@ -13519,13 +13524,14 @@
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <returns>An array of <see cref="T:System.Dynamic.ExpandoObject"/> objects.</returns>
         </member>
-        <member name="M:RepoDb.Reflection.DataReader.ToEnumerable(System.Data.Common.DbDataReader,System.String,System.Data.IDbConnection)">
+        <member name="M:RepoDb.Reflection.DataReader.ToEnumerable(System.Data.Common.DbDataReader,System.String,System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
             Converts the <see cref="T:System.Data.Common.DbDataReader"/> into an enumerable of <see cref="T:System.Dynamic.ExpandoObject"/> object.
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="tableName">The name of the target table.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The used <see cref="T:System.Data.IDbTransaction"/> object.</param>
             <returns>An array of <see cref="T:System.Dynamic.ExpandoObject"/> objects.</returns>
         </member>
         <member name="M:RepoDb.Reflection.DataReader.ToEnumerableAsync(System.Data.Common.DbDataReader)">
@@ -13535,13 +13541,14 @@
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <returns>An array of <see cref="T:System.Dynamic.ExpandoObject"/> objects.</returns>
         </member>
-        <member name="M:RepoDb.Reflection.DataReader.ToEnumerableAsync(System.Data.Common.DbDataReader,System.String,System.Data.IDbConnection)">
+        <member name="M:RepoDb.Reflection.DataReader.ToEnumerableAsync(System.Data.Common.DbDataReader,System.String,System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
             Converts the <see cref="T:System.Data.Common.DbDataReader"/> into an enumerable of <see cref="T:System.Dynamic.ExpandoObject"/> object in an asynchronous way.
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="tableName">The name of the target table.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The used <see cref="T:System.Data.IDbTransaction"/> object.</param>
             <returns>An array of <see cref="T:System.Dynamic.ExpandoObject"/> objects.</returns>
         </member>
         <member name="T:RepoDb.Reflection.Delegates.DataReaderToDataEntityFunction`1">
@@ -13562,13 +13569,14 @@
             A static factory class used to create a custom function.
             </summary>
         </member>
-        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToDataEntityConverterFunction``1(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToDataEntityConverterFunction``1(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
             Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.
             </summary>
             <typeparam name="TEntity">The data entity object to convert to.</typeparam>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>A compiled function that is used to cover the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.</returns>
         </member>
         <member name="M:RepoDb.Reflection.FunctionFactory.GetMemberAssignmentsForDataEntity``1(System.Linq.Expressions.Expression,System.Linq.Expressions.ParameterExpression,System.Collections.Generic.IEnumerable{RepoDb.DataReaderField},System.Data.IDbConnection)">
@@ -13582,13 +13590,14 @@
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
             <returns>The enumerable list of member assignment and bindings.</returns>
         </member>
-        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(System.Data.Common.DbDataReader,System.String,System.Data.IDbConnection)">
+        <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(System.Data.Common.DbDataReader,System.String,System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
             Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="tableName">The name of the target table.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>A compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.</returns>
         </member>
         <member name="M:RepoDb.Reflection.FunctionFactory.GetElementInitsForDictionary(System.Linq.Expressions.ParameterExpression,System.Collections.Generic.IList{RepoDb.DataReaderField})">
@@ -13659,30 +13668,33 @@
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
             <returns>A compiled function that is used to cover the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.</returns>
         </member>
-        <member name="M:RepoDb.FunctionCache.GetDataReaderToDataEntityFunction``1(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Boolean)">
+        <member name="M:RepoDb.FunctionCache.GetDataReaderToDataEntityFunction``1(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Data.IDbTransaction,System.Boolean)">
             <summary>
             Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.
             </summary>
             <typeparam name="TEntity">The data entity object to convert to.</typeparam>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The used <see cref="T:System.Data.IDbTransaction"/> object.</param>
             <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
             <returns>A compiled function that is used to cover the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of data entity objects.</returns>
         </member>
-        <member name="M:RepoDb.FunctionCache.GetDataReaderToExpandoObjectConverterFunction(System.Data.Common.DbDataReader)">
+        <member name="M:RepoDb.FunctionCache.GetDataReaderToExpandoObjectConverterFunction(System.Data.Common.DbDataReader,System.Data.IDbTransaction)">
             <summary>
             Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
+            <param name="transaction">The used <see cref="T:System.Data.IDbTransaction"/> object.</param>
             <returns>A compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.</returns>
         </member>
-        <member name="M:RepoDb.FunctionCache.GetDataReaderToExpandoObjectConverterFunction(System.Data.Common.DbDataReader,System.String,System.Data.IDbConnection)">
+        <member name="M:RepoDb.FunctionCache.GetDataReaderToExpandoObjectConverterFunction(System.Data.Common.DbDataReader,System.String,System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
             Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <param name="tableName">The name of the target table.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The used <see cref="T:System.Data.IDbTransaction"/> object.</param>
             <returns>A compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into a list of dynamic objects.</returns>
         </member>
         <member name="M:RepoDb.FunctionCache.GetDataEntityDbCommandParameterSetterFunction``1(System.String,System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.DbField})">
@@ -13729,12 +13741,13 @@
             A base class for all operational request.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.BaseRequest.#ctor(System.String,System.Data.IDbConnection,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.BaseRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.BaseRequest"/> object.
             </summary>
             <param name="name">The name of request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
         <member name="P:RepoDb.Requests.BaseRequest.Type">
@@ -13752,6 +13765,11 @@
             Gets the connection object.
             </summary>
         </member>
+        <member name="P:RepoDb.Requests.BaseRequest.Transaction">
+            <summary>
+            Gets the transaction object.
+            </summary>
+        </member>
         <member name="P:RepoDb.Requests.BaseRequest.StatementBuilder">
             <summary>
             Gets the statement builder.
@@ -13762,22 +13780,24 @@
             A class that holds the value of the count operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.CountRequest.#ctor(System.Type,System.Data.IDbConnection,RepoDb.QueryGroup,System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.CountRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,RepoDb.QueryGroup,System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.CountRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="where">The query expression.</param>
             <param name="hints">The hints for the table.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.CountRequest.#ctor(System.String,System.Data.IDbConnection,RepoDb.QueryGroup,System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.CountRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,RepoDb.QueryGroup,System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.CountRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="where">The query expression.</param>
             <param name="hints">The hints for the table.</param>
             <param name="statementBuilder">The statement builder.</param>
@@ -13833,12 +13853,13 @@
             A class that holds the value of the batch query operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.BatchQueryRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},RepoDb.QueryGroup,System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.BatchQueryRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},RepoDb.QueryGroup,System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.BatchQueryRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="page">The page of the batch.</param>
             <param name="rowsPerBatch">The number of rows per batch.</param>
@@ -13847,12 +13868,13 @@
             <param name="hints">The hints for the table.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.BatchQueryRequest.#ctor(System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},RepoDb.QueryGroup,System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.BatchQueryRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},RepoDb.QueryGroup,System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.BatchQueryRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="page">The page of the batch.</param>
             <param name="rowsPerBatch">The number of rows per batch.</param>
@@ -13932,21 +13954,23 @@
             A class that holds the value of the count-all operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.CountAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.CountAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.CountAllRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="hints">The hints for the table.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.CountAllRequest.#ctor(System.String,System.Data.IDbConnection,System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.CountAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.CountAllRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="hints">The hints for the table.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
@@ -13996,22 +14020,24 @@
             A class that holds the value of the insert operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.InsertAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.InsertAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="batchSize">The batch size of the insertion.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.InsertAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.InsertAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.InsertAllRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="batchSize">The batch size of the insertion.</param>
             <param name="statementBuilder">The statement builder.</param>
@@ -14067,23 +14093,25 @@
             A class that holds the value of the merge operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.MergeAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.MergeAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.MergeAllRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="qualifiers">The list of qualifier <see cref="T:RepoDb.Field"/> objects.</param>
             <param name="batchSize">The batch size of the merge operation.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.MergeAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.MergeAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.MergeAllRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="qualifiers">The list of qualifier <see cref="T:RepoDb.Field"/> objects.</param>
             <param name="batchSize">The batch size of the merge operation.</param>
@@ -14145,22 +14173,24 @@
             A class that holds the value of the merge operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.MergeRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.MergeRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.MergeRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="qualifiers">The list of qualifier <see cref="T:RepoDb.Field"/> objects.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.MergeRequest.#ctor(System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.MergeRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.MergeRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="qualifiers">The list of qualifier <see cref="T:RepoDb.Field"/> objects.</param>
             <param name="statementBuilder">The statement builder.</param>
@@ -14216,13 +14246,14 @@
             A class that holds the value of the query multiple operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.QueryMultipleRequest.#ctor(System.Nullable{System.Int32},System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.QueryMultipleRequest.#ctor(System.Nullable{System.Int32},System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.QueryMultipleRequest"/> object.
             </summary>
             <param name="index">The index value.</param>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="where">The query expression.</param>
             <param name="orderBy">The list of order fields.</param>
@@ -14230,13 +14261,14 @@
             <param name="hints">The hints for the table.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.QueryMultipleRequest.#ctor(System.Nullable{System.Int32},System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.QueryMultipleRequest.#ctor(System.Nullable{System.Int32},System.String,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.QueryMultipleRequest"/> object.
             </summary>
             <param name="index">The index value.</param>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="where">The query expression.</param>
             <param name="orderBy">The list of order fields.</param>
@@ -14315,23 +14347,25 @@
             A class that holds the value of the query operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.QueryAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.QueryAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.QueryAllRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="orderBy">The list of order fields.</param>
             <param name="hints">The hints for the table.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.QueryAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.QueryAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.QueryAllRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="orderBy">The list of order fields.</param>
             <param name="hints">The hints for the table.</param>
@@ -14393,20 +14427,22 @@
             A class that holds the value of the truncate operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.TruncateRequest.#ctor(System.Type,System.Data.IDbConnection,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.TruncateRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.TruncateRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.TruncateRequest.#ctor(System.String,System.Data.IDbConnection,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.TruncateRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.TruncateRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
         <member name="M:RepoDb.Requests.TruncateRequest.GetHashCode">
@@ -14450,20 +14486,22 @@
             A class that holds the value of the delete-all operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.DeleteAllRequest.#ctor(System.Type,System.Data.IDbConnection,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.DeleteAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.DeleteAllRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.DeleteAllRequest.#ctor(System.String,System.Data.IDbConnection,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.DeleteAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.DeleteAllRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
         <member name="M:RepoDb.Requests.DeleteAllRequest.GetHashCode">
@@ -14507,23 +14545,25 @@
             A class that holds the value of the update-all operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.UpdateAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.UpdateAllRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.UpdateAllRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="qualifiers">The list of the qualifier <see cref="T:RepoDb.Field"/> objects.</param>
             <param name="batchSize">The batch size of the update operation.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.UpdateAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.UpdateAllRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Int32,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.UpdateAllRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="qualifiers">The list of the qualifier <see cref="T:RepoDb.Field"/> objects.</param>
             <param name="batchSize">The batch size of the update operation.</param>
@@ -14585,22 +14625,24 @@
             A class that holds the value of the update operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.UpdateRequest.#ctor(System.Type,System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.UpdateRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.UpdateRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="where">The query expression.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.UpdateRequest.#ctor(System.String,System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.UpdateRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.UpdateRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="where">The query expression.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="statementBuilder">The statement builder.</param>
@@ -14656,21 +14698,23 @@
             A class that holds the value of the delete operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.DeleteRequest.#ctor(System.Type,System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.DeleteRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,RepoDb.QueryGroup,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.DeleteRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="where">The query expression.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.DeleteRequest.#ctor(System.String,System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.DeleteRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,RepoDb.QueryGroup,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.DeleteRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="where">The query expression.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
@@ -14720,21 +14764,23 @@
             A class that holds the value of the insert operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.InsertRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.InsertRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.InsertRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.InsertRequest.#ctor(System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.InsertRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.InsertRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
@@ -14784,12 +14830,13 @@
             A class that holds the value of the query operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.QueryRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.QueryRequest.#ctor(System.Type,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.QueryRequest"/> object.
             </summary>
             <param name="type">The target type.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="where">The query expression.</param>
             <param name="orderBy">The list of order fields.</param>
@@ -14797,12 +14844,13 @@
             <param name="hints">The hints for the table.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
-        <member name="M:RepoDb.Requests.QueryRequest.#ctor(System.String,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.QueryRequest.#ctor(System.String,System.Data.IDbConnection,System.Data.IDbTransaction,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.QueryRequest"/> object.
             </summary>
             <param name="name">The name of the request.</param>
             <param name="connection">The connection object.</param>
+            <param name="transaction">The transaction object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="where">The query expression.</param>
             <param name="orderBy">The list of order fields.</param>
@@ -14876,19 +14924,21 @@
             A class used to extract the multiple resultsets of the query operation.
             </summary>
         </member>
-        <member name="M:RepoDb.QueryMultipleExtractor.#ctor(System.Data.Common.DbDataReader,System.Data.IDbConnection)">
+        <member name="M:RepoDb.QueryMultipleExtractor.#ctor(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryMultipleExtractor"/> class.
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be extracted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The used <see cref="T:System.Data.IDbTransaction"/> object.</param>
         </member>
-        <member name="M:RepoDb.QueryMultipleExtractor.#ctor(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.String)">
+        <member name="M:RepoDb.QueryMultipleExtractor.#ctor(System.Data.Common.DbDataReader,System.Data.IDbConnection,System.Data.IDbTransaction,System.String)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryMultipleExtractor"/> class.
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be extracted.</param>
             <param name="connection">The used <see cref="T:System.Data.IDbConnection"/> object.</param>
+            <param name="transaction">The used <see cref="T:System.Data.IDbTransaction"/> object.</param>
             <param name="connectionString">The unaltered connetion string used by the connection object.</param>
         </member>
         <member name="M:RepoDb.QueryMultipleExtractor.Dispose">
@@ -14908,17 +14958,19 @@
             <typeparam name="TEntity">The type of the entity to check.</typeparam>
             <returns>The key to the cache.</returns>
         </member>
-        <member name="M:RepoDb.QueryMultipleExtractor.EnsureSingleCallForDbFieldCacheGet``1">
+        <member name="M:RepoDb.QueryMultipleExtractor.EnsureSingleCallForDbFieldCacheGet``1(System.Data.IDbTransaction)">
             <summary>
-            Ensures that the <see cref="M:RepoDb.DbFieldCache.Get(System.Data.IDbConnection,System.String)"/> method is called one.
+            Ensures that the <see cref="M:RepoDb.DbFieldCache.Get(System.Data.IDbConnection,System.String,System.Data.IDbTransaction)"/> method is being called one.
             </summary>
             <typeparam name="TEntity">The type of the entity to check.</typeparam>
+            <param name="transaction">The transaction object that is currently in used.</param>
         </member>
-        <member name="M:RepoDb.QueryMultipleExtractor.EnsureSingleCallForDbFieldCacheGeAsynct``1">
+        <member name="M:RepoDb.QueryMultipleExtractor.EnsureSingleCallForDbFieldCacheGeAsync``1(System.Data.IDbTransaction)">
             <summary>
-            Ensures that the <see cref="M:RepoDb.DbFieldCache.GetAsync(System.Data.IDbConnection,System.String)"/> method is called one.
+            Ensures that the <see cref="M:RepoDb.DbFieldCache.GetAsync(System.Data.IDbConnection,System.String,System.Data.IDbTransaction)"/> method is being called one.
             </summary>
             <typeparam name="TEntity">The type of the entity to check.</typeparam>
+            <param name="transaction">The transaction object that is currently in used.</param>
         </member>
         <member name="M:RepoDb.QueryMultipleExtractor.Extract``1">
             <summary>
@@ -14994,6 +15046,11 @@
             Creates a new instance of <see cref="T:RepoDb.DbHelpers.SqlDbHelper"/> class.
             </summary>
         </member>
+        <member name="P:RepoDb.DbHelpers.SqlDbHelper.DbTypeResolver">
+            <summary>
+            Gets the type resolver used by this <see cref="T:RepoDb.DbHelpers.SqlDbHelper"/> instance.
+            </summary>
+        </member>
         <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetCommandText">
             <summary>
             Returns the command text that is being used to extract schema definitions.
@@ -15007,62 +15064,63 @@
             <param name="reader">The instance of <see cref="T:System.Data.IDataReader"/> object.</param>
             <returns>The instance of converted <see cref="T:RepoDb.DbField"/> object.</returns>
         </member>
-        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFields(System.String,System.String)">
+        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFields(System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
             </summary>
             <param name="connectionString">The connection string to connect to.</param>
             <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
         </member>
-        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFieldsAsync(System.String,System.String)">
+        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFieldsAsync(System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             Gets the list of <see cref="T:RepoDb.DbField"/> of the table in an asychronous way.
             </summary>
             <param name="connectionString">The connection string to connect to.</param>
             <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
         </member>
-        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFields``1(``0,System.String)">
+        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFields``1(``0,System.String,System.Data.IDbTransaction)">
             <summary>
             Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
             </summary>
             <typeparam name="TDbConnection">The type of <see cref="T:System.Data.Common.DbConnection"/> object.</typeparam>
             <param name="connection">The instance of the connection object.</param>
             <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
         </member>
-        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFieldsAsync``1(``0,System.String)">
+        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFieldsAsync``1(``0,System.String,System.Data.IDbTransaction)">
             <summary>
             Gets the list of <see cref="T:RepoDb.DbField"/> of the table in an asychronous way.
             </summary>
             <typeparam name="TDbConnection">The type of <see cref="T:System.Data.Common.DbConnection"/> object.</typeparam>
             <param name="connection">The instance of the connection object.</param>
             <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
         </member>
-        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFieldsInternal``1(``0,System.String)">
+        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFieldsInternal``1(``0,System.String,System.Data.IDbTransaction)">
             <summary>
             Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
             </summary>
             <typeparam name="TDbConnection">The type of <see cref="T:System.Data.Common.DbConnection"/> object.</typeparam>
             <param name="connection">The instance of the connection object.</param>
             <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
         </member>
-        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFieldsAsyncInternal``1(``0,System.String)">
+        <member name="M:RepoDb.DbHelpers.SqlDbHelper.GetFieldsAsyncInternal``1(``0,System.String,System.Data.IDbTransaction)">
             <summary>
             Gets the list of <see cref="T:RepoDb.DbField"/> of the table in an asychronous way.
             </summary>
             <typeparam name="TDbConnection">The type of <see cref="T:System.Data.Common.DbConnection"/> object.</typeparam>
             <param name="connection">The instance of the connection object.</param>
             <param name="tableName">The name of the target table.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
-        </member>
-        <member name="P:RepoDb.DbHelpers.SqlDbHelper.DbTypeResolver">
-            <summary>
-            Gets the type resolver used by this <see cref="T:RepoDb.DbHelpers.SqlDbHelper"/> instance.
-            </summary>
         </member>
         <member name="T:RepoDb.CacheItem">
             <summary>
