@@ -2121,6 +2121,14 @@
             <param name="entities">The list of the data entity object to be used for manipulation.</param>
             <param name="connection">The actual <see cref="T:System.Data.IDbConnection"/> object used.</param>
         </member>
+        <member name="M:RepoDb.DataEntityDataReader`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.DataEntityDataReader`1"/> object.
+            </summary>
+            <param name="entities">The list of the data entity object to be used for manipulation.</param>
+            <param name="connection">The actual <see cref="T:System.Data.IDbConnection"/> object used.</param>
+            <param name="transaction">The transaction object that is currently in used.</param>
+        </member>
         <member name="M:RepoDb.DataEntityDataReader`1.GetEnumerator">
             <summary>
             Returns an enumerator that iterates through a collection of data entity objects.

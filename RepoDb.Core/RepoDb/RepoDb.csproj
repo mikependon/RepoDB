@@ -4,16 +4,27 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.9.9-beta5</Version>
+    <Version>1.9.9</Version>
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid ORM library for .NET.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>RepoDb v1.9.9-beta5:
+    <PackageReleaseNotes>RepoDb v1.9.9:
+- Bug: SqlException: Login failed for user 'xxx'
+- Bug: Calling InsertAll With Map Attribute leads to System.NullReferenceException: 'Object reference not set to an instance of an object.' #274
 - Bug: SqlDbHelper.GetFields is failing if the transaction object is present. #278
-- Refactoring: Refactor the codes for DbFieldCache to accept IDbTransaction objects. These affected too many chain of calls.</PackageReleaseNotes>
+- Enhancement: Remove database streaming when extracting table schema.
+- Enhancement: Add 'AsFields()' extended methods for the IEnumerable of DbField objects
+#273
+- Enhancement: Add DbFieldCache.GetAsync method. #275
+- Enhancement: Add DataEntityDataReader into BulkInsert that accepts TableName and Entities #271
+- Enhancement: Add 'AsFields()' extended methods for the IEnumerable of DbField objects.
+- To Consider: Enable BulkInsert with System.DataTable #277
+- Test: Add IntegrationTests on BulkInsert that accepts DataEntities and TableName.
+- Refactoring: Refactor the codes for DbFieldCache to accept IDbTransaction objects. These affected too many chain of calls.
+- Refactoring: Removed the ToLower() and replaced by StringComparer.OrdinalIgnoreCase.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb</RepositoryUrl>
@@ -21,8 +32,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.9.9.5</AssemblyVersion>
-    <FileVersion>1.9.9.5</FileVersion>
+    <AssemblyVersion>1.9.9.6</AssemblyVersion>
+    <FileVersion>1.9.9.6</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
