@@ -436,7 +436,7 @@ namespace RepoDb
         /// <param name="tableName">The list of fields from the data entity object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The actual list of <see cref="Field"/> objects of the table.</returns>
-        private static IEnumerable<Field> GetActualFields(IDbConnection connection, string tableName, IEnumerable<Field> fields,IDbTransaction transaction)
+        private static IEnumerable<Field> GetActualFields(IDbConnection connection, string tableName, IEnumerable<Field> fields, IDbTransaction transaction)
         {
             if (fields?.Any() != true)
             {
@@ -448,7 +448,7 @@ namespace RepoDb
 
             // Return the filtered one
             return dbFields?.Any() == true ?
-                fields.Where(f => dbFields.FirstOrDefault(df => df.UnquotedName.ToLower() == f.UnquotedName.ToLower()) != null) :
+                fields.Where(f => dbFields.FirstOrDefault(df => string.Equals(df.UnquotedName, f.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null) :
                 fields;
         }
 
@@ -468,7 +468,7 @@ namespace RepoDb
                     var isIdentity = false;
                     if (identityProperty != null)
                     {
-                        isIdentity = identityProperty.GetUnquotedMappedName().ToLower() == primaryPropery.GetUnquotedMappedName().ToLower();
+                        isIdentity = string.Equals(identityProperty.GetUnquotedMappedName(), primaryPropery.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase);
                     }
                     return new DbField(primaryPropery.GetUnquotedMappedName(), true, isIdentity, false,
                         primaryPropery.PropertyInfo.PropertyType, null, null, null);
@@ -493,7 +493,7 @@ namespace RepoDb
                     var isPrimary = false;
                     if (primaryPropery != null)
                     {
-                        isPrimary = primaryPropery.GetUnquotedMappedName().ToLower() == identityProperty.GetUnquotedMappedName().ToLower();
+                        isPrimary = string.Equals(primaryPropery.GetUnquotedMappedName(), identityProperty.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase);
                     }
                     return new DbField(identityProperty.GetUnquotedMappedName(), isPrimary, true, false,
                         identityProperty.PropertyInfo.PropertyType, null, null, null);

@@ -64,9 +64,9 @@ namespace RepoDb
             if (m_orderTextAttribute == null)
             {
                 m_orderTextAttribute = typeof(Order)
-	                .GetMembers()
-	                .First(member => member.Name.ToLower() == Order.ToString().ToLower())
-	                .GetCustomAttribute<TextAttribute>();
+                    .GetMembers()
+                    .First(member => string.Equals(member.Name, Order.ToString(), StringComparison.OrdinalIgnoreCase))
+                    .GetCustomAttribute<TextAttribute>();
             }
             return m_orderTextAttribute.Text;
         }

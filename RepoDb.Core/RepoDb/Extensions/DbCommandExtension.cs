@@ -39,7 +39,7 @@ namespace RepoDb.Extensions
             if (propertiesToSkip?.Any() == true)
             {
                 properties = properties?.Where(p =>
-                    propertiesToSkip.Contains(PropertyMappedNameCache.Get(p.PropertyInfo, false), StringComparer.CurrentCultureIgnoreCase) == false);
+                    propertiesToSkip.Contains(PropertyMappedNameCache.Get(p.PropertyInfo, false), StringComparer.OrdinalIgnoreCase) == false);
             }
 
             // Check if there are properties
@@ -198,7 +198,7 @@ namespace RepoDb.Extensions
                 {
                     properties = PropertyCache.Get(type)
                         .Where(p => propertiesToSkip?.Contains(p.PropertyInfo.Name,
-                            StringComparer.CurrentCultureIgnoreCase) == false);
+                            StringComparer.OrdinalIgnoreCase) == false);
                 }
 
                 // Iterate the properties
@@ -249,7 +249,7 @@ namespace RepoDb.Extensions
         {
             // Variables needed
             var dbType = (DbType?)null;
-            var kvps = dictionary.Where(kvp => propertiesToSkip?.Contains(kvp.Key, StringComparer.CurrentCultureIgnoreCase) != true);
+            var kvps = dictionary.Where(kvp => propertiesToSkip?.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase) != true);
 
             // Iterate the key value pairs
             foreach (var kvp in kvps)
@@ -330,7 +330,7 @@ namespace RepoDb.Extensions
         {
             // Filter the query fields
             var filteredQueryFields = queryFields
-                .Where(qf => propertiesToSkip?.Contains(qf.Field.UnquotedName, StringComparer.CurrentCultureIgnoreCase) != true);
+                .Where(qf => propertiesToSkip?.Contains(qf.Field.UnquotedName, StringComparer.OrdinalIgnoreCase) != true);
 
             // Iterate the filtered query fields
             foreach (var queryField in filteredQueryFields)
@@ -350,7 +350,7 @@ namespace RepoDb.Extensions
             IEnumerable<string> propertiesToSkip)
         {
             // Exclude those to be skipped
-            if (propertiesToSkip?.Contains(queryField.Field.UnquotedName, StringComparer.CurrentCultureIgnoreCase) == true)
+            if (propertiesToSkip?.Contains(queryField.Field.UnquotedName, StringComparer.OrdinalIgnoreCase) == true)
             {
                 return;
             }
@@ -494,7 +494,7 @@ namespace RepoDb.Extensions
                 {
                     properties = PropertyCache.Get(type)
                         .Where(p => propertiesToSkip?.Contains(p.PropertyInfo.Name,
-                            StringComparer.CurrentCultureIgnoreCase) == false);
+                            StringComparer.OrdinalIgnoreCase) == false);
                 }
 
                 // Ensure there are properties
@@ -510,7 +510,7 @@ namespace RepoDb.Extensions
                     // Iterate the parameter instead
                     foreach (var parameter in parameters)
                     {
-                        var property = properties.FirstOrDefault(p => p.GetUnquotedMappedName().ToLower() == parameter.ParameterName.ToLower());
+                        var property = properties.FirstOrDefault(p => string.Equals(p.GetUnquotedMappedName(), parameter.ParameterName, StringComparison.OrdinalIgnoreCase));
 
                         // Skip if null
                         if (property == null)
@@ -580,12 +580,12 @@ namespace RepoDb.Extensions
             var dbType = (DbType?)null;
             var others = (IList<DbParameter>)null;
             var fitered = dictionary
-                .Where(kvp => propertiesToSkip?.Contains(kvp.Key, StringComparer.CurrentCultureIgnoreCase) != true);
+                .Where(kvp => propertiesToSkip?.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase) != true);
 
             // Iterate the parameter instead
             foreach (var parameter in command.Parameters.OfType<DbParameter>())
             {
-                var kvp = fitered.FirstOrDefault(item => item.Key.ToLower() == parameter.ParameterName.ToLower());
+                var kvp = fitered.FirstOrDefault(item => string.Equals(item.Key, parameter.ParameterName, StringComparison.OrdinalIgnoreCase));
 
                 // Skip and add to missing if null
                 if (ReferenceEquals(null, kvp))
@@ -681,12 +681,12 @@ namespace RepoDb.Extensions
             var dbType = (DbType?)null;
             var others = (IList<DbParameter>)null;
             var filtered = queryFields
-                .Where(qf => propertiesToSkip?.Contains(qf.Field.UnquotedName, StringComparer.CurrentCultureIgnoreCase) != true);
+                .Where(qf => propertiesToSkip?.Contains(qf.Field.UnquotedName, StringComparer.OrdinalIgnoreCase) != true);
 
             // Iterate the parameter instead
             foreach (var parameter in command.Parameters.OfType<DbParameter>())
             {
-                var queryField = filtered.FirstOrDefault(qf => qf.Field.UnquotedName.ToLower() == parameter.ParameterName.ToLower());
+                var queryField = filtered.FirstOrDefault(qf => string.Equals(qf.Field.UnquotedName, parameter.ParameterName, StringComparison.OrdinalIgnoreCase));
 
                 // Skip and add to missing if null
                 if (queryField == null)
@@ -747,7 +747,7 @@ namespace RepoDb.Extensions
             bool resetOthers = true)
         {
             // Exclude those to be skipped
-            if (propertiesToSkip?.Contains(queryField.Field.UnquotedName, StringComparer.CurrentCultureIgnoreCase) == true)
+            if (propertiesToSkip?.Contains(queryField.Field.UnquotedName, StringComparer.OrdinalIgnoreCase) == true)
             {
                 return;
             }
@@ -760,7 +760,7 @@ namespace RepoDb.Extensions
 
             // Get the values
             var parameters = command.Parameters.OfType<DbParameter>();
-            var parameter = parameters.FirstOrDefault(p => p.ParameterName.ToLower() == queryField.Field.UnquotedName.ToLower());
+            var parameter = parameters.FirstOrDefault(p => string.Equals(p.ParameterName, queryField.Field.UnquotedName, StringComparison.OrdinalIgnoreCase));
 
             // Get the target parameter
             if (parameter != null)

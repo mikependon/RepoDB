@@ -29,7 +29,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         public DataEntityDataReader(IEnumerable<TEntity> entities) :
-            this(entities, null)
+            this(entities, null, null)
         { }
 
         /// <summary>
@@ -38,6 +38,16 @@ namespace RepoDb
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         /// <param name="connection">The actual <see cref="IDbConnection"/> object used.</param>
         public DataEntityDataReader(IEnumerable<TEntity> entities, IDbConnection connection)
+            : this(entities, connection, null)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DataEntityDataReader{TEntity}"/> object.
+        /// </summary>
+        /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
+        /// <param name="connection">The actual <see cref="IDbConnection"/> object used.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        public DataEntityDataReader(IEnumerable<TEntity> entities, IDbConnection connection, IDbTransaction transaction)
         {
             if (entities == null)
             {
@@ -53,11 +63,11 @@ namespace RepoDb
             // Properties
             if (connection != null)
             {
-                var fields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>());
+                var fields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                 if (fields?.Any() == true)
                 {
                     Properties = PropertyCache.Get<TEntity>()
-                        .Where(p => fields.FirstOrDefault(f => f.UnquotedName.ToLower() == p.GetUnquotedMappedName().ToLower()) != null)
+                        .Where(p => fields.FirstOrDefault(f => string.Equals(f.UnquotedName, p.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase)) != null)
                         .AsList();
                 }
             }

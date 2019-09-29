@@ -262,7 +262,7 @@ namespace RepoDb
             {
                 if (primaryField != identityField)
                 {
-                    var isPresent = fields.FirstOrDefault(f => f.Name.ToLower() == primaryField.Name.ToLower()) != null;
+                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
                     if (isPresent == false)
                     {
                         throw new InvalidOperationException("The non-identity primary field must be present during insert operation.");
@@ -273,7 +273,7 @@ namespace RepoDb
             // Variables needed
             var databaseType = "BIGINT";
             var insertableFields = fields
-                .Where(f => f.Name.ToLower() != identityField?.Name.ToLower());
+                .Where(f => !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
             // Check for the identity
             if (identityField != null)
@@ -351,7 +351,7 @@ namespace RepoDb
             {
                 if (primaryField != identityField)
                 {
-                    var isPresent = fields.FirstOrDefault(f => f.Name.ToLower() == primaryField.Name.ToLower()) != null;
+                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
                     if (isPresent == false)
                     {
                         throw new InvalidOperationException("The non-identity primary field must be present during insert operation.");
@@ -362,7 +362,7 @@ namespace RepoDb
             // Variables needed
             var databaseType = (string)null;
             var insertableFields = fields
-                .Where(f => f.Name.ToLower() != identityField?.Name.ToLower());
+                .Where(f => !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
             // Check for the identity
             if (identityField != null)
@@ -449,7 +449,7 @@ namespace RepoDb
                 // Check if the qualifiers are present in the given fields
                 var unmatchesQualifiers = qualifiers.Where(field =>
                     fields.FirstOrDefault(f =>
-                        field.UnquotedName.ToLower() == f.UnquotedName.ToLower()) == null);
+                        string.Equals(field.UnquotedName, f.UnquotedName, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
@@ -463,7 +463,7 @@ namespace RepoDb
                 if (primaryField != null)
                 {
                     // Make sure that primary is present in the list of fields before qualifying to become a qualifier
-                    var isPresent = fields?.FirstOrDefault(f => f.Name.ToLower() == primaryField.Name.ToLower()) != null;
+                    var isPresent = fields?.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
                     if (isPresent == false)
@@ -484,9 +484,10 @@ namespace RepoDb
 
             // Get the insertable and updateable fields
             var insertableFields = fields
-                .Where(field => field.Name.ToLower() != identityField?.Name.ToLower());
+                .Where(field => !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
             var updateableFields = fields
-                .Where(field => field.Name.ToLower() != primaryField?.Name.ToLower() && field.Name.ToLower() != identityField?.Name.ToLower());
+                .Where(field => !string.Equals(field.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
             // Variables needed
             var databaseType = "BIGINT";
@@ -599,7 +600,7 @@ namespace RepoDb
                 // Check if the qualifiers are present in the given fields
                 var unmatchesQualifiers = qualifiers.Where(field =>
                     fields.FirstOrDefault(f =>
-                        field.UnquotedName.ToLower() == f.UnquotedName.ToLower()) == null);
+                        string.Equals(field.UnquotedName, f.UnquotedName, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
@@ -613,7 +614,7 @@ namespace RepoDb
                 if (primaryField != null)
                 {
                     // Make sure that primary is present in the list of fields before qualifying to become a qualifier
-                    var isPresent = fields?.FirstOrDefault(f => f.Name.ToLower() == primaryField.Name.ToLower()) != null;
+                    var isPresent = fields?.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
                     if (isPresent == false)
@@ -634,9 +635,10 @@ namespace RepoDb
 
             // Get the insertable and updateable fields
             var insertableFields = fields
-                .Where(field => field.Name.ToLower() != identityField?.Name.ToLower());
+                .Where(field => !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
             var updateableFields = fields
-                .Where(field => field.Name.ToLower() != primaryField?.Name.ToLower() && field.Name.ToLower() != identityField?.Name.ToLower());
+                .Where(field => !string.Equals(field.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
             // Variables needed
             var databaseType = (string)null;
@@ -759,7 +761,7 @@ namespace RepoDb
                 // Check if the order fields are present in the given fields
                 var unmatchesOrderFields = orderBy?.Where(orderField =>
                     fields?.FirstOrDefault(f =>
-                        orderField.Name.ToLower() == f.Name.ToLower()) == null);
+                        string.Equals(orderField.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
                 if (unmatchesOrderFields?.Any() == true)
@@ -819,7 +821,7 @@ namespace RepoDb
                 // Check if the order fields are present in the given fields
                 var unmatchesOrderFields = orderBy?.Where(orderField =>
                     fields?.FirstOrDefault(f =>
-                        orderField.Name.ToLower() == f.Name.ToLower()) == null);
+                        string.Equals(orderField.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
                 if (unmatchesOrderFields?.Any() == true)
@@ -903,8 +905,8 @@ namespace RepoDb
 
             // Gets the updatable fields
             var updatableFields = fields
-                .Where(f => f.UnquotedName.ToLower() != primaryField?.UnquotedName.ToLower() &&
-                    f.UnquotedName.ToLower() != identityField?.UnquotedName.ToLower());
+                .Where(f => !string.Equals(f.UnquotedName, primaryField?.UnquotedName, StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(f.UnquotedName, identityField?.UnquotedName, StringComparison.OrdinalIgnoreCase));
 
             // Check if there are updatable fields
             if (updatableFields?.Any() != true)
@@ -966,7 +968,7 @@ namespace RepoDb
                 // Check if the qualifiers are present in the given fields
                 var unmatchesQualifiers = qualifiers?.Where(field =>
                     fields?.FirstOrDefault(f =>
-                        field.UnquotedName.ToLower() == f.UnquotedName.ToLower()) == null);
+                        string.Equals(field.UnquotedName, f.UnquotedName, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
@@ -980,7 +982,7 @@ namespace RepoDb
                 if (primaryField != null)
                 {
                     // Make sure that primary is present in the list of fields before qualifying to become a qualifier
-                    var isPresent = fields?.FirstOrDefault(f => f.UnquotedName.ToLower() == primaryField.UnquotedName.ToLower()) != null;
+                    var isPresent = fields?.FirstOrDefault(f => string.Equals(f.UnquotedName, primaryField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
                     if (isPresent == false)
@@ -1001,9 +1003,9 @@ namespace RepoDb
 
             // Gets the updatable fields
             fields = fields
-                .Where(f => f.UnquotedName.ToLower() != primaryField?.UnquotedName.ToLower() &&
-                    f.UnquotedName.ToLower() != identityField?.UnquotedName.ToLower() &&
-                    qualifiers.FirstOrDefault(q => q.UnquotedName.ToLower() == f.UnquotedName.ToLower()) == null);
+                .Where(f => !string.Equals(f.UnquotedName, primaryField?.UnquotedName, StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(f.UnquotedName, identityField?.UnquotedName, StringComparison.OrdinalIgnoreCase) &&
+                    qualifiers.FirstOrDefault(q => string.Equals(q.UnquotedName, f.UnquotedName, StringComparison.OrdinalIgnoreCase)) == null);
 
             // Check if there are updatable fields
             if (fields?.Any() != true)

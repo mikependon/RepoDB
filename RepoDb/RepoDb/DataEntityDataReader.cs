@@ -67,7 +67,7 @@ namespace RepoDb
                 if (fields?.Any() == true)
                 {
                     Properties = PropertyCache.Get<TEntity>()
-                        .Where(p => fields.FirstOrDefault(f => f.UnquotedName.ToLower() == p.GetUnquotedMappedName().ToLower()) != null)
+                        .Where(p => fields.FirstOrDefault(f => string.Equals(f.UnquotedName, p.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase)) != null)
                         .AsList();
                 }
             }

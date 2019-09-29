@@ -44,10 +44,10 @@ namespace RepoDb.Reflection
                 .Select((index) => reader.GetName(index))
                 .Select((name, ordinal) => new DataReaderField
                 {
-                    Name = name.ToLower(),
+                    Name = name,
                     Ordinal = ordinal,
                     Type = reader.GetFieldType(ordinal),
-                    DbField = dbFields?.FirstOrDefault(f => f.UnquotedName.ToLower() == name.ToLower())
+                    DbField = dbFields?.FirstOrDefault(f => string.Equals(f.UnquotedName, name, StringComparison.OrdinalIgnoreCase))
                 });
 
             // Get the member assignments
@@ -88,25 +88,25 @@ namespace RepoDb.Reflection
             var dataReaderType = typeof(DbDataReader);
             var isDefaultConversion = TypeMapper.ConversionType == ConversionType.Default;
             var properties = PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite);
-            var fieldNames = readerFields.Select(f => f.Name).AsList();
+            var fieldNames = readerFields.Select(f => f.Name.ToLower()).AsList();
 
             // Filter the properties by reader fields
             properties = properties.Where(property =>
                 fieldNames.FirstOrDefault(field =>
-                    field == property.GetUnquotedMappedName().ToLower()) != null);
+                    string.Equals(field, property.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase)) != null);
 
             // Iterate each properties
             foreach (var property in properties)
             {
                 // Gets the mapped name and the ordinal
-                var mappedName = property.GetUnquotedMappedName().ToLower();
-                var ordinal = fieldNames.IndexOf(mappedName);
+                var mappedName = property.GetUnquotedMappedName();
+                var ordinal = fieldNames.IndexOf(mappedName.ToLower());
 
                 // Process only if there is a correct ordinal
                 if (ordinal >= 0)
                 {
                     // Variables needed for the iteration
-                    var readerField = readerFields.First(f => f.Name.ToLower() == mappedName);
+                    var readerField = readerFields.First(f => string.Equals(f.Name, mappedName, StringComparison.OrdinalIgnoreCase));
                     var underlyingType = Nullable.GetUnderlyingType(property.PropertyInfo.PropertyType);
                     var propertyType = underlyingType ?? property.PropertyInfo.PropertyType;
                     var convertType = readerField.Type;
@@ -346,7 +346,7 @@ namespace RepoDb.Reflection
                     Name = name,
                     Ordinal = ordinal,
                     Type = reader.GetFieldType(ordinal),
-                    DbField = dbFields?.FirstOrDefault(f => f.UnquotedName.ToLower() == name.ToLower())
+                    DbField = dbFields?.FirstOrDefault(f => string.Equals(f.UnquotedName, name, StringComparison.OrdinalIgnoreCase))
                 });
 
             // Initialize the elements
@@ -749,7 +749,7 @@ namespace RepoDb.Reflection
                 // Set only for non-image
                 // By default, SQL Server only put (16 size), and that would fail if the user
                 // used this type for their binary columns and assign a much longer values
-                if (field.DatabaseType?.ToLower() != "image")
+                if (!string.Equals(field.DatabaseType, "image", StringComparison.OrdinalIgnoreCase))
                 {
                     // Set the Size
                     if (field.Size != null)
@@ -868,7 +868,7 @@ namespace RepoDb.Reflection
                 }
                 else
                 {
-                    classProperty = entityProperties.First(property => property.GetUnquotedMappedName().ToLower() == propertyName.ToLower());
+                    classProperty = entityProperties.First(property => string.Equals(property.GetUnquotedMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
                     if (classProperty != null)
                     {
                         propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", propertyName));
@@ -1240,7 +1240,7 @@ namespace RepoDb.Reflection
                 // Set only for non-image
                 // By default, SQL Server only put (16 size), and that would fail if the user
                 // used this type for their binary columns and assign a much longer values
-                if (field.DatabaseType?.ToLower() != "image")
+                if (!string.Equals(field.DatabaseType, "image", StringComparison.OrdinalIgnoreCase))
                 {
                     // Set the Size
                     if (field.Size != null)
@@ -1363,7 +1363,7 @@ namespace RepoDb.Reflection
                     }
                     else
                     {
-                        classProperty = entityProperties.FirstOrDefault(property => property.GetUnquotedMappedName().ToLower() == propertyName.ToLower());
+                        classProperty = entityProperties.FirstOrDefault(property => string.Equals(property.GetUnquotedMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
                         if (classProperty != null)
                         {
                             propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", propertyName));

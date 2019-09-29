@@ -570,7 +570,7 @@ namespace RepoDb
             {
                 m_conjuctionTextAttribute = typeof(Conjunction)
                     .GetMembers()
-                    .First(member => member.Name.ToLower() == Conjunction.ToString().ToLower())
+                    .First(member => string.Equals(member.Name, Conjunction.ToString(), StringComparison.OrdinalIgnoreCase))
                     .GetCustomAttribute<TextAttribute>();
             }
             return m_conjuctionTextAttribute.Text;
