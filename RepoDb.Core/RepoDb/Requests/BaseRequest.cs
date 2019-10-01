@@ -23,6 +23,7 @@ namespace RepoDb.Requests
         {
             Name = name;
             Connection = connection;
+            Transaction = transaction;
             StatementBuilder = statementBuilder;
         }
 
