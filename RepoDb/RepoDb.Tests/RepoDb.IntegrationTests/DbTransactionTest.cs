@@ -138,7 +138,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.CountAllAsync<IdentityTable>(transaction: transaction);
+                    connection.CountAllAsync<IdentityTable>(transaction: transaction).Wait();
                 }
             }
         }

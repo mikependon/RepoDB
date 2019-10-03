@@ -37,7 +37,8 @@ namespace RepoDb
                     request.Page,
                     request.RowsPerBatch,
                     request.OrderBy,
-                    request.Where);
+                    request.Where,
+                    request.Hints);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;

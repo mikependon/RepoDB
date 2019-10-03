@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.9.9</version>
+    <version>1.9.10</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -11,20 +11,9 @@
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
-      RepoDb v1.9.9:
-      - Bug: SqlException: Login failed for user 'xxx'
-      - Bug: Calling InsertAll With Map Attribute leads to System.NullReferenceException: 'Object reference not set to an instance of an object.' #274
-      - Bug: SqlDbHelper.GetFields is failing if the transaction object is present. #278
-      - Enhancement: Remove database streaming when extracting table schema.
-      - Enhancement: Add 'AsFields()' extended methods for the IEnumerable of DbField objects
-      #273
-      - Enhancement: Add DbFieldCache.GetAsync method. #275
-      - Enhancement: Add DataEntityDataReader into BulkInsert that accepts TableName and Entities #271
-      - Enhancement: Add 'AsFields()' extended methods for the IEnumerable of DbField objects.
-      - To Consider: Enable BulkInsert with System.DataTable #277
-      - Test: Add IntegrationTests on BulkInsert that accepts DataEntities and TableName.
-      - Refactoring: Refactor the codes for DbFieldCache to accept IDbTransaction objects. These affected too many chain of calls.
-      - Refactoring: Removed the ToLower() and replaced by StringComparer.OrdinalIgnoreCase.
+      RepoDb v1.9.10:
+      - Stable release.
+      - v1.9.9 changes + more Integration Tests for DbConnection.
     </releaseNotes>
     <copyright>Copyright © 2019</copyright>
     <tags>orm sql repo repodb repository</tags>

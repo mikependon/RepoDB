@@ -80,6 +80,43 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
+        public void TestSqlStatementBuilderCreateBatchQueryWithHints()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "[dbo].[Table]";
+            var fields = Field.From("Field1", "Field2");
+            var orderBy = OrderField.Parse(new
+            {
+                Field1 = Order.Ascending
+            });
+
+            // Act
+            var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                page: 0,
+                rowsPerBatch: 10,
+                orderBy: orderBy,
+                where: null,
+                hints: SqlTableHints.NoLock);
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"FROM [dbo].[Table] WITH (NOLOCK) " +
+                $") " +
+                $"SELECT [Field1], [Field2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
+                $"ORDER BY [Field1] ASC ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void TestSqlStatementBuilderCreateBatchQueryWithQuotedTableSchema()
         {
             // Setup
