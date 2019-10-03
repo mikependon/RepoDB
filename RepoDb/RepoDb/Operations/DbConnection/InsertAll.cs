@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace RepoDb
 {
@@ -508,7 +509,7 @@ namespace RepoDb
             var result = 0;
 
             // Make sure to create transaction if there is no passed one
-            var hasTransaction = (transaction != null);
+            var hasTransaction = (transaction != null || Transaction.Current != null);
 
             try
             {
@@ -836,7 +837,7 @@ namespace RepoDb
             var result = 0;
 
             // Make sure to create transaction if there is no passed one
-            var hasTransaction = (transaction != null);
+            var hasTransaction = (transaction != null || Transaction.Current != null);
 
             try
             {
