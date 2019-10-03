@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.9.10</version>
+    <version>1.9.11</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -11,9 +11,10 @@
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</iconUrl>
     <releaseNotes>
-      RepoDb v1.9.10:
+      RepoDb v1.9.11:
       - Stable release.
-      - v1.9.9 changes + more Integration Tests for DbConnection.
+      - Enhancement: Check current transaction (System.Transactions.Transaction.Current) before applying an explicit System.Data.IDbTransaction object. #279
+      - Enhancement: Table Hints is not passing properly in the BatchQuery. #283
     </releaseNotes>
     <copyright>Copyright © 2019</copyright>
     <tags>orm sql repo repodb repository</tags>
