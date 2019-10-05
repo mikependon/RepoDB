@@ -11,7 +11,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateInsert()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -37,7 +37,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateInsertWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -63,7 +63,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateInsertWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -89,7 +89,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateInsertWithPrimary()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -116,7 +116,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateInsertWithIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -143,7 +143,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateInsertWithIdentityAsBigInt()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -170,7 +170,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateInsertWithPrimaryAndIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -198,7 +198,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateInsertWithPrimaryAndIdentityAsBigInt()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -226,7 +226,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfTheNonIdentityPrimaryIsNotCovered()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -244,7 +244,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfThereAreNoFields()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
@@ -260,7 +260,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
 
@@ -276,7 +276,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
 
@@ -292,7 +292,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
@@ -308,7 +308,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -326,7 +326,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");

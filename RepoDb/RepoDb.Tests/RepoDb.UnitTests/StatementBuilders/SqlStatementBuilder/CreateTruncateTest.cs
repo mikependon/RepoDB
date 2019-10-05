@@ -11,7 +11,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateTruncate()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
@@ -28,7 +28,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateTruncateWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
 
@@ -45,7 +45,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateTruncateWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
 
@@ -62,7 +62,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateTruncateIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
 
@@ -75,7 +75,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateTruncateIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
 
@@ -88,7 +88,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateTruncateIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
 

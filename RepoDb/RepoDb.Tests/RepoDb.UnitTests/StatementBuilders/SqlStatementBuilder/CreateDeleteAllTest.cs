@@ -11,7 +11,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateDeleteAll()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
@@ -28,7 +28,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateDeleteAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
 
@@ -45,7 +45,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateDeleteAllWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
 
@@ -62,7 +62,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateDeleteAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
 
@@ -75,7 +75,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateDeleteAllIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
 
@@ -88,7 +88,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateDeleteAllIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
 

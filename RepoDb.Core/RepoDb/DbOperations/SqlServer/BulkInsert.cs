@@ -14,7 +14,7 @@ namespace RepoDb.DbOperationProviders
     /// <summary>
     /// A class that contains the operations for SQL Server database.
     /// </summary>
-    public partial class SqlDbOperationProvider : IDbOperation
+    public partial class SqlServerOperation : IDbOperation
     {
         #region Privates
 
@@ -24,9 +24,9 @@ namespace RepoDb.DbOperationProviders
         #endregion
 
         /// <summary>
-        /// Creates a new instance of <see cref="SqlDbOperationProvider"/>.
+        /// Creates a new instance of <see cref="SqlServerOperation"/>.
         /// </summary>
-        public SqlDbOperationProvider() { }
+        public SqlServerOperation() { }
 
         #region Methods
 

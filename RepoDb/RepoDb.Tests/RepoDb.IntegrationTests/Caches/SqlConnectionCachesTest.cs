@@ -75,7 +75,7 @@ namespace RepoDb.IntegrationTests.Caches
                     (IDbTransaction)null, /* transaction */
                     cache, /* cache */
                     (ITrace)null, /* trace */
-                    new SqlStatementBuilder() /* statementBulder */);
+                    new SqlServerStatementBuilder() /* statementBulder */);
 
                 var item = cache.Get(cacheKey);
 
@@ -252,7 +252,7 @@ namespace RepoDb.IntegrationTests.Caches
                     (IDbTransaction)null, /* transaction */
                     cache, /* cache */
                     (ITrace)null, /* trace */
-                    new SqlStatementBuilder() /* statementBulder */).Result;
+                    new SqlServerStatementBuilder() /* statementBulder */).Result;
 
                 var item = cache.Get(cacheKey);
 

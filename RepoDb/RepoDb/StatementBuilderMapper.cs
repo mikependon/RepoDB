@@ -18,7 +18,7 @@ namespace RepoDb
         static StatementBuilderMapper()
         {
             // Default for SqlConnection
-            Add(typeof(SqlConnection), new SqlStatementBuilder());
+            Add(typeof(SqlConnection), new SqlServerStatementBuilder());
         }
 
         /// <summary>

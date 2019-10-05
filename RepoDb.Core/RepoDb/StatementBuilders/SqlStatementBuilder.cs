@@ -6,7 +6,7 @@ using System;
 using RepoDb.Exceptions;
 using RepoDb.Resolvers;
 
-namespace RepoDb
+namespace RepoDb.StatementBuilders
 {
     /// <summary>
     /// A class used to build a SQL Statement for SQL Server. This is the default statement builder used by the library.
