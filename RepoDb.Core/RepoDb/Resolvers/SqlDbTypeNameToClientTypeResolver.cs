@@ -2,7 +2,7 @@
 using RepoDb.Types;
 using System;
 
-namespace RepoDb
+namespace RepoDb.Resolvers
 {
     /// <summary>
     /// A class used to resolve the SQL Database Types into its equivalent .NET CLR Types.

@@ -9,6 +9,7 @@ using Moq;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
 
 namespace RepoDb.UnitTests.Interfaces

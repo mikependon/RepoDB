@@ -2,6 +2,7 @@
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.Interfaces;
+using RepoDb.StatementBuilders;
 using System;
 using System.Collections.Generic;
 using System.Data;

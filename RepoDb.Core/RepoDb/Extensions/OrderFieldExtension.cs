@@ -22,7 +22,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="orderField">The order field instance to be converted.</param>
         /// <returns>An enumerable list of fields.</returns>
-        internal static string AsField(this OrderField orderField)
+        public static string AsField(this OrderField orderField)
         {
             return string.Concat(orderField.Name, " ", orderField.GetOrderText());
         }
@@ -33,7 +33,7 @@ namespace RepoDb.Extensions
         /// <param name="orderField">The order field to be converted.</param>
         /// <param name="alias">The alias to be used for conversion.</param>
         /// <returns>A string value for the stringified alias-formatted converted string.</returns>
-        internal static string AsAliasField(this OrderField orderField, string alias)
+        public static string AsAliasField(this OrderField orderField, string alias)
         {
             return string.Concat(alias, ".", orderField.Name, " ", orderField.GetOrderText());
         }

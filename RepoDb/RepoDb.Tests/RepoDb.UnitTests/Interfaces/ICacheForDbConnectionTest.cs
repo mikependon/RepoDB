@@ -2,6 +2,7 @@
 using Moq;
 using RepoDb.Attributes;
 using RepoDb.Interfaces;
+using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 using System.Collections.Generic;

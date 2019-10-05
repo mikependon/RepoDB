@@ -1,7 +1,7 @@
 ﻿using RepoDb.Interfaces;
 using System.Data;
 
-namespace RepoDb
+namespace RepoDb.Resolvers
 {
     /// <summary>
     /// A class used to resolve the <see cref="DbType"/> into its equivalent database string name.
