@@ -1645,7 +1645,7 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var result = repository.CountAll(hints: SqlTableHints.NoLock);
+                var result = repository.CountAll(hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -1687,7 +1687,7 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var result = repository.CountAllAsync(hints: SqlTableHints.NoLock).Result;
+                var result = repository.CountAllAsync(hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -6616,7 +6616,7 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var result = repository.QueryAll(hints: SqlTableHints.NoLock);
+                var result = repository.QueryAll(hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6644,7 +6644,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.QueryAll(orderBy: orderBy,
-                    hints: SqlTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6751,7 +6751,7 @@ namespace RepoDb.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var result = repository.QueryAllAsync(hints: SqlTableHints.NoLock).Result;
+                var result = repository.QueryAllAsync(hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6779,7 +6779,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.QueryAllAsync(orderBy: orderBy,
-                    hints: SqlTableHints.NoLock).Result;
+                    hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());

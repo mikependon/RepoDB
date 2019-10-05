@@ -14,7 +14,7 @@ namespace RepoDb
         /// <summary>
         /// Counts all the table data from the database.
         /// </summary>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         public long CountAll(string hints = null,
@@ -31,7 +31,7 @@ namespace RepoDb
         /// <summary>
         /// Counts all the data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<long> CountAllAsync(string hints = null,

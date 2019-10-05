@@ -30,7 +30,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of fields for ordering.</param>
         /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for batch query operation.</returns>
         public string CreateBatchQuery(QueryBuilder queryBuilder,
             string tableName,
@@ -110,7 +110,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for count operation.</returns>
         public string CreateCount(QueryBuilder queryBuilder,
             string tableName,
@@ -145,7 +145,7 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for count-all operation.</returns>
         public string CreateCountAll(QueryBuilder queryBuilder,
             string tableName,
@@ -738,7 +738,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="orderBy">The list of fields for ordering.</param>
         /// <param name="top">The number of rows to be returned.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for query operation.</returns>
         public string CreateQuery(QueryBuilder queryBuilder,
             string tableName,
@@ -800,7 +800,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields.</param>
         /// <param name="orderBy">The list of fields for ordering.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for query operation.</returns>
         public string CreateQueryAll(QueryBuilder queryBuilder,
             string tableName,

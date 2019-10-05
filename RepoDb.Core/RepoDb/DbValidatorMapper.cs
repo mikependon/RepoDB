@@ -1,4 +1,4 @@
-﻿using RepoDb.DbValidators.SqlServer;
+﻿using RepoDb.DbValidators;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;

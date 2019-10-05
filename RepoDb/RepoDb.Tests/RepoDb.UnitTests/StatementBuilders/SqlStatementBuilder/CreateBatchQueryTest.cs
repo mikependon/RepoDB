@@ -101,7 +101,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 rowsPerBatch: 10,
                 orderBy: orderBy,
                 where: null,
-                hints: SqlTableHints.NoLock);
+                hints: SqlServerTableHints.NoLock);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +

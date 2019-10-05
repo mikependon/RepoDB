@@ -146,7 +146,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
-            var hints = SqlTableHints.NoLock;
+            var hints = SqlServerTableHints.NoLock;
 
             // Act
             var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
@@ -174,7 +174,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 Field2 = Order.Descending
             });
             var top = 100;
-            var hints = SqlTableHints.NoLock;
+            var hints = SqlServerTableHints.NoLock;
 
             // Act
             var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,

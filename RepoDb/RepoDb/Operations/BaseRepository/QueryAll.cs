@@ -16,7 +16,7 @@ namespace RepoDb
         /// Query all the data from the database.
         /// </summary>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -42,7 +42,7 @@ namespace RepoDb
         /// Query all the data from the database in an asynchronous way.
         /// </summary>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.

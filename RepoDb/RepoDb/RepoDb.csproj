@@ -222,7 +222,7 @@
     <Compile Include="Resolvers\SqlDbTypeNameToClientTypeResolver.cs" />
     <Compile Include="DbOperationMapper.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
-    <Compile Include="SqlTableHints.cs" />
+    <Compile Include="SqlServerTableHints.cs" />
     <Compile Include="StatementBuilders\SqlServerStatementBuilder.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="TypeMapper.cs" />

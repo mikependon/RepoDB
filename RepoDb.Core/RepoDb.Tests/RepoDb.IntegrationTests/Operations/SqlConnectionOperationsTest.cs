@@ -3264,7 +3264,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.CountAll<IdentityTable>(hints: SqlTableHints.NoLock);
+                var result = connection.CountAll<IdentityTable>(hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -3306,7 +3306,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.CountAllAsync<IdentityTable>(hints: SqlTableHints.NoLock).Result;
+                var result = connection.CountAllAsync<IdentityTable>(hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -3349,7 +3349,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.CountAll(ClassMappedNameCache.Get<IdentityTable>(),
-                    hints: SqlTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -3392,7 +3392,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.CountAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    hints: SqlTableHints.NoLock).Result;
+                    hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -11541,7 +11541,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>(hints: SqlTableHints.NoLock);
+                var result = connection.QueryAll<IdentityTable>(hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -11569,7 +11569,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>(orderBy: orderBy,
-                    hints: SqlTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -11673,7 +11673,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAllAsync<IdentityTable>(hints: SqlTableHints.NoLock).Result;
+                var result = connection.QueryAllAsync<IdentityTable>(hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -11701,7 +11701,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryAllAsync<IdentityTable>(orderBy: orderBy,
-                    hints: SqlTableHints.NoLock).Result;
+                    hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -11823,7 +11823,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
-                    hints: SqlTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -11860,7 +11860,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
                     orderBy: orderBy,
-                    hints: SqlTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -11963,7 +11963,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    hints: SqlTableHints.NoLock).Result;
+                    hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -12000,7 +12000,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     orderBy: orderBy,
-                    hints: SqlTableHints.NoLock).Result;
+                    hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
