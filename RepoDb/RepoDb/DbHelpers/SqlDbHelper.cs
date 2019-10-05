@@ -93,6 +93,48 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
+        /// Gets the actual schema of the table from the database.
+        /// </summary>
+        /// <param name="tableName">The passed table name.</param>
+        /// <returns>The actual table schema.</returns>
+        private string GetSchema(string tableName)
+        {
+            // Get the schema and table name
+            if (tableName.IndexOf(".") > 0)
+            {
+                var splitted = tableName.Split(".".ToCharArray());
+                return splitted[0].AsUnquoted(true);
+            }
+
+            // Return the unquoted
+            return "dbo";
+        }
+
+        /// <summary>
+        /// Gets the actual name of the table from the database.
+        /// </summary>
+        /// <param name="tableName">The passed table name.</param>
+        /// <returns>The actual table name.</returns>
+        private string GetTableName(string tableName)
+        {
+            // Check for the command type
+            var schema = "dbo";
+
+            // Get the schema and table name
+            if (tableName.IndexOf(".") > 0)
+            {
+                var splitted = tableName.Split(".".ToCharArray());
+                schema = splitted[0].AsUnquoted(true);
+
+                // Return the splitted one
+                return splitted[1].AsUnquoted(true);
+            }
+
+            // Return the unquoted
+            return tableName.AsUnquoted();
+        }
+
+        /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table.
         /// </summary>
         /// <param name="connectionString">The connection string to connect to.</param>
@@ -163,26 +205,11 @@ namespace RepoDb.DbHelpers
         internal IEnumerable<DbField> GetFieldsInternal<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            // Check for the command type
-            var schema = "dbo";
-
-            // Get the schema and table name
-            if (tableName.IndexOf(".") > 0)
-            {
-                var splitted = tableName.Split(".".ToCharArray());
-                schema = splitted[0].AsUnquoted(true);
-                tableName = splitted[1].AsUnquoted(true);
-            }
-            else
-            {
-                tableName = tableName.AsUnquoted();
-            }
-
             // Open a command
             using (var dbCommand = connection.EnsureOpen().CreateCommand(GetCommandText(), transaction: transaction))
             {
                 // Create parameters
-                dbCommand.CreateParameters(new { Schema = schema, TableName = tableName });
+                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) });
 
                 // Execute and set the result
                 using (var reader = dbCommand.ExecuteReader())
@@ -212,26 +239,11 @@ namespace RepoDb.DbHelpers
         internal async Task<IEnumerable<DbField>> GetFieldsAsyncInternal<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            // Check for the command type
-            var schema = "dbo";
-
-            // Get the schema and table name
-            if (tableName.IndexOf(".") > 0)
-            {
-                var splitted = tableName.Split(".".ToCharArray());
-                schema = splitted[0].AsUnquoted(true);
-                tableName = splitted[1].AsUnquoted(true);
-            }
-            else
-            {
-                tableName = tableName.AsUnquoted();
-            }
-
             // Open a command
             using (var dbCommand = ((DbConnection)await connection.EnsureOpenAsync()).CreateCommand(GetCommandText(), transaction: transaction))
             {
                 // Create parameters
-                dbCommand.CreateParameters(new { Schema = schema, TableName = tableName });
+                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) });
 
                 // Execute and set the result
                 using (var reader = await ((DbCommand)dbCommand).ExecuteReaderAsync())
