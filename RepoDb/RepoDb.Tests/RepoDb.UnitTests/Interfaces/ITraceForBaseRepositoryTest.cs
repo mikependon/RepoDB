@@ -88,7 +88,7 @@ namespace RepoDb.UnitTests.Interfaces
             }
         }
 
-        private class BaseRepositoryCustomDbOperationProvider : IDbOperationProvider
+        private class BaseRepositoryCustomDbOperationProvider : IDbOperation
         {
             public int BulkInsert<TEntity>(IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
             {

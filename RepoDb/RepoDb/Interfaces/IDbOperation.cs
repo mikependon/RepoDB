@@ -9,7 +9,7 @@ namespace RepoDb.Interfaces
     /// <summary>
     /// An interface used to mark a class to be a database operation provider.
     /// </summary>
-    public interface IDbOperationProvider
+    public interface IDbOperation
     {
         #region BulkInsert
 

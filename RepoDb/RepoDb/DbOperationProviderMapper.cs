@@ -8,11 +8,11 @@ using System.Data.SqlClient;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to map the type of <see cref="DbConnection"/> into an instance of <see cref="IDbOperationProvider"/> object.
+    /// A class that is used to map the type of <see cref="DbConnection"/> into an instance of <see cref="IDbOperation"/> object.
     /// </summary>
     public static class DbOperationProviderMapper
     {
-        private static readonly ConcurrentDictionary<int, IDbOperationProvider> m_maps = new ConcurrentDictionary<int, IDbOperationProvider>();
+        private static readonly ConcurrentDictionary<int, IDbOperation> m_maps = new ConcurrentDictionary<int, IDbOperation>();
         private static Type m_type = typeof(DbConnection);
 
         static DbOperationProviderMapper()
@@ -33,26 +33,26 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the mapped <see cref="IDbOperationProvider"/> from the type of <see cref="DbConnection"/>.
+        /// Gets the mapped <see cref="IDbOperation"/> from the type of <see cref="DbConnection"/>.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
-        /// <returns>An instance of <see cref="IDbOperationProvider"/> defined on the mapping.</returns>
-        public static IDbOperationProvider Get<TDbConnection>()
+        /// <returns>An instance of <see cref="IDbOperation"/> defined on the mapping.</returns>
+        public static IDbOperation Get<TDbConnection>()
             where TDbConnection : DbConnection
         {
             return Get(typeof(TDbConnection));
         }
 
         /// <summary>
-        /// Gets the mapped <see cref="IDbOperationProvider"/> from the type of <see cref="DbConnection"/>.
+        /// Gets the mapped <see cref="IDbOperation"/> from the type of <see cref="DbConnection"/>.
         /// </summary>
         /// <param name="type">The type of <see cref="DbConnection"/>.</param>
-        /// <returns>An instance of <see cref="IDbOperationProvider"/> defined on the mapping.</returns>
-        public static IDbOperationProvider Get(Type type)
+        /// <returns>An instance of <see cref="IDbOperation"/> defined on the mapping.</returns>
+        public static IDbOperation Get(Type type)
         {
             Guard(type);
 
-            var value = (IDbOperationProvider)null;
+            var value = (IDbOperation)null;
 
             if (m_maps.TryGetValue(type.FullName.GetHashCode(), out value))
             {
@@ -63,16 +63,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbOperationProvider"/> object.
+        /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbOperation"/> object.
         /// </summary>
         /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
         /// <param name="statementBuilder">The statement builder to be mapped.</param>
         /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
-        public static void Add(Type type, IDbOperationProvider statementBuilder, bool @override = false)
+        public static void Add(Type type, IDbOperation statementBuilder, bool @override = false)
         {
             Guard(type);
 
-            var value = (IDbOperationProvider)null;
+            var value = (IDbOperation)null;
             var key = type.FullName.GetHashCode();
 
             if (m_maps.TryGetValue(key, out value))

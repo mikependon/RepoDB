@@ -578,7 +578,7 @@ namespace RepoDb
         /// Gets the <see cref="SqlBulkCopy"/> private variable reflected field.
         /// </summary>
         /// <returns>The actual field.</returns>
-        private static IDbOperationProvider GetDbOperationProvider(IDbConnection connection)
+        private static IDbOperation GetDbOperationProvider(IDbConnection connection)
         {
             // Check the connection
             if (connection == null)
