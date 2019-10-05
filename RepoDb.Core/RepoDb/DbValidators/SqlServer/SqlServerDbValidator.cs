@@ -1,7 +1,7 @@
 ﻿using RepoDb.Interfaces;
 using System.Data.SqlClient;
 
-namespace RepoDb.DbValidators.SqlServer
+namespace RepoDb.DbValidators
 {
     /// <summary>
     /// A class that is used to validate the <see cref="SqlConnection"/> extended methods.

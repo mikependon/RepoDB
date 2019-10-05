@@ -29,6 +29,7 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// Returns the command text that is being used to extract schema definitions.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
         /// <returns>The command text.</returns>
         private string GetCommandText(string tableName)
         {
