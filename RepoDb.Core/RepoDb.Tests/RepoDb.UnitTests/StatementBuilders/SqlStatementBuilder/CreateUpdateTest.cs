@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.StatementBuilders;
 using System;
 
 namespace RepoDb.UnitTests.StatementBuilders
@@ -10,7 +11,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdate()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -35,7 +36,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdateWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -60,7 +61,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdateWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -85,7 +86,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdateWithWhereExpression()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -111,7 +112,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdateWithCoveredPrimaryField()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -138,7 +139,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdateWithCoveredIdentityField()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -165,7 +166,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdateWithCoveredPrimaryAsIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -192,7 +193,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionAndWithUncoveredPrimary()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -219,7 +220,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionAndWithUncoveredIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -246,7 +247,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionAndWithUncoveredPrimaryAsIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -273,7 +274,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionButWithCoveredPrimary()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -300,7 +301,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateUpdateWithUncoveredWhereExpressionButWithCoveredIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -327,7 +328,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateUpdateIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -345,7 +346,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateUpdateIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -363,7 +364,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateUpdateIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -381,7 +382,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateUpdateIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -400,7 +401,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateUpdateIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");

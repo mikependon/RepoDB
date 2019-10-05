@@ -1,4 +1,4 @@
-﻿using RepoDb.DbHelpers;
+﻿using RepoDb.DbValidators.SqlServer;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
@@ -8,17 +8,17 @@ using System.Data.SqlClient;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to map a type of <see cref="DbConnection"/> into an instance of <see cref="IDbHelper"/> object.
+    /// A class used to map a type of <see cref="DbConnection"/> into an instance of <see cref="IDbValidator"/> object.
     /// </summary>
-    public static class DbHelperMapper
+    public static class DbValidatorMapper
     {
-        private static readonly ConcurrentDictionary<int, IDbHelper> m_maps = new ConcurrentDictionary<int, IDbHelper>();
+        private static readonly ConcurrentDictionary<int, IDbValidator> m_maps = new ConcurrentDictionary<int, IDbValidator>();
         private static Type m_type = typeof(DbConnection);
 
-        static DbHelperMapper()
+        static DbValidatorMapper()
         {
             // By default, map the Sql
-            Add(typeof(SqlConnection), new SqlServerDbHelper());
+            Add(typeof(SqlConnection), new SqlServerDbValidator());
         }
 
         /// <summary>
@@ -33,28 +33,28 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets an existing <see cref="IDbHelper"/> object that is mapped to type <see cref="DbConnection"/>.
+        /// Gets an existing <see cref="IDbValidator"/> object that is mapped to type <see cref="DbConnection"/>.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
-        /// <returns>An instance of mapped <see cref="IDbHelper"/></returns>
-        public static IDbHelper Get<TDbConnection>()
+        /// <returns>An instance of mapped <see cref="IDbValidator"/></returns>
+        public static IDbValidator Get<TDbConnection>()
             where TDbConnection : DbConnection
         {
             return Get(typeof(TDbConnection));
         }
 
         /// <summary>
-        /// Gets an existing <see cref="IDbHelper"/> object that is mapped to type <see cref="DbConnection"/>.
+        /// Gets an existing <see cref="IDbValidator"/> object that is mapped to type <see cref="DbConnection"/>.
         /// </summary>
         /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
-        /// <returns>An instance of mapped <see cref="IDbHelper"/></returns>
-        public static IDbHelper Get(Type type)
+        /// <returns>An instance of mapped <see cref="IDbValidator"/></returns>
+        public static IDbValidator Get(Type type)
         {
             // Guard the type
             Guard(type);
 
             // Variables for the cache
-            var value = (IDbHelper)null;
+            var value = (IDbValidator)null;
 
             // get the value
             m_maps.TryGetValue(type.FullName.GetHashCode(), out value);
@@ -64,19 +64,19 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbHelper"/> object.
+        /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbValidator"/> object.
         /// </summary>
         /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
-        /// <param name="dbHelper">The instance of <see cref="IDbHelper"/> object to mapped to.</param>
+        /// <param name="dbValidator">The instance of <see cref="IDbValidator"/> object to mapped to.</param>
         /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
-        public static void Add(Type type, IDbHelper dbHelper, bool @override = false)
+        public static void Add(Type type, IDbValidator dbValidator, bool @override = false)
         {
             // Guard the type
             Guard(type);
 
             // Variables for cache
             var key = type.FullName.GetHashCode();
-            var existing = (IDbHelper)null;
+            var existing = (IDbValidator)null;
 
             // Try get the mappings
             if (m_maps.TryGetValue(key, out existing))
@@ -84,18 +84,18 @@ namespace RepoDb
                 if (@override)
                 {
                     // Override the existing one
-                    m_maps.TryUpdate(key, dbHelper, existing);
+                    m_maps.TryUpdate(key, dbValidator, existing);
                 }
                 else
                 {
                     // Throw an exception
-                    throw new InvalidOperationException($"Mapping to provider '{key}' already exists.");
+                    throw new InvalidOperationException($"Mapping to validator '{key}' already exists.");
                 }
             }
             else
             {
                 // Add to mapping
-                m_maps.TryAdd(key, dbHelper);
+                m_maps.TryAdd(key, dbValidator);
             }
         }
     }

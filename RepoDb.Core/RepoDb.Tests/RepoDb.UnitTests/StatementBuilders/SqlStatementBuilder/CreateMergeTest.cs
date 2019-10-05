@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
+using RepoDb.StatementBuilders;
 using System;
 
 namespace RepoDb.UnitTests.StatementBuilders
@@ -11,7 +12,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateMerge()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -42,7 +43,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateMergeWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -73,7 +74,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateMergeWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -104,7 +105,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateMergeWithCoveredPrimary()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -137,7 +138,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateMergeWithCoveredPrimaryAsIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -171,7 +172,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateMergeWithUncoveredPrimary()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -204,7 +205,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateMergeWithCoveredIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -237,7 +238,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateMergeWithUncoveredIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -270,7 +271,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateMergeWithCoveredPrimaryButWithoutQualifiers()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -302,7 +303,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateMergeWithCoveredPrimaryAndWithCoveredIdentityButWithoutQualifiers()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -335,7 +336,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThereAreNoFields()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var qualifiers = Field.From("Id");
@@ -353,7 +354,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThereAreNoPrimaryAndNoQualifiers()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -371,7 +372,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheQualifiersAreNotPresentAtTheGivenFields()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -390,7 +391,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThePrimaryAsQualifierIsNotPresentAtTheGivenFields()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -409,7 +410,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -428,7 +429,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -447,7 +448,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -466,7 +467,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");
@@ -485,7 +486,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
-            var statementBuilder = new SqlStatementBuilder();
+            var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From("Field1", "Field2", "Field3");

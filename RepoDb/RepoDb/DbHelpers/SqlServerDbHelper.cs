@@ -13,18 +13,18 @@ namespace RepoDb.DbHelpers
     /// <summary>
     /// A helper class for database specially for the direct access. This class is only meant for SQL Server.
     /// </summary>
-    public class SqlDbHelper : IDbHelper
+    public class SqlServerDbHelper : IDbHelper
     {
         /// <summary>
-        /// Creates a new instance of <see cref="SqlDbHelper"/> class.
+        /// Creates a new instance of <see cref="SqlServerDbHelper"/> class.
         /// </summary>
-        public SqlDbHelper()
+        public SqlServerDbHelper()
         {
             DbTypeResolver = new SqlDbTypeNameToClientTypeResolver();
         }
 
         /// <summary>
-        /// Gets the type resolver used by this <see cref="SqlDbHelper"/> instance.
+        /// Gets the type resolver used by this <see cref="SqlServerDbHelper"/> instance.
         /// </summary>
         public IResolver<string, Type> DbTypeResolver { get; }
 

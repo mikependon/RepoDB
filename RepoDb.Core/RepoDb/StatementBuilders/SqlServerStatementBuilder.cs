@@ -11,12 +11,12 @@ namespace RepoDb.StatementBuilders
     /// <summary>
     /// A class used to build a SQL Statement for SQL Server. This is the default statement builder used by the library.
     /// </summary>
-    public sealed class SqlStatementBuilder : IStatementBuilder
+    public sealed class SqlServerStatementBuilder : IStatementBuilder
     {
         /// <summary>
-        /// Creates a new instance of <see cref="SqlStatementBuilder"/> object.
+        /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> object.
         /// </summary>
-        public SqlStatementBuilder() { }
+        public SqlServerStatementBuilder() { }
 
         #region CreateBatchQuery
 

@@ -3,6 +3,7 @@ using Moq;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 using System.Collections.Generic;
@@ -16,13 +17,13 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ITraceForDbRepositoryTest
     {
-        private readonly IStatementBuilder m_statementBuilder = new SqlStatementBuilder();
+        private readonly IStatementBuilder m_statementBuilder = new SqlServerStatementBuilder();
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), new DbRepositoryCustomDbHelper(), true);
-            DbOperationProviderMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), new DbRepositoryCustomDbOperationProvider(), true);
+            DbOperationMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), new DbRepositoryCustomDbOperationProvider(), true);
         }
 
         #region SubClasses

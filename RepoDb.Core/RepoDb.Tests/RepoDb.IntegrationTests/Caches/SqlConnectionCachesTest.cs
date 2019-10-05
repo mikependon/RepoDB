@@ -2,6 +2,7 @@
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.Interfaces;
+using RepoDb.StatementBuilders;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -74,7 +75,7 @@ namespace RepoDb.IntegrationTests.Caches
                     (IDbTransaction)null, /* transaction */
                     cache, /* cache */
                     (ITrace)null, /* trace */
-                    new SqlStatementBuilder() /* statementBulder */);
+                    new SqlServerStatementBuilder() /* statementBulder */);
 
                 var item = cache.Get(cacheKey);
 
@@ -251,7 +252,7 @@ namespace RepoDb.IntegrationTests.Caches
                     (IDbTransaction)null, /* transaction */
                     cache, /* cache */
                     (ITrace)null, /* trace */
-                    new SqlStatementBuilder() /* statementBulder */).Result;
+                    new SqlServerStatementBuilder() /* statementBulder */).Result;
 
                 var item = cache.Get(cacheKey);
 

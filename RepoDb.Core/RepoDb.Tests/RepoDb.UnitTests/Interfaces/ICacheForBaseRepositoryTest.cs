@@ -3,6 +3,7 @@ using Moq;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
+using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace RepoDb.UnitTests.Interfaces
                       cache,
                       cacheItemExpiration,
                       null,
-                      new SqlStatementBuilder())
+                      new SqlServerStatementBuilder())
             { }
         }
 

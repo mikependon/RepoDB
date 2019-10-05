@@ -69,8 +69,10 @@
     <Compile Include="Contexts\Execution\InsertExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertAllExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertExecutionContextCache.cs" />
+    <Compile Include="DbValidatorMapper.cs" />
     <Compile Include="DbHelperMapper.cs" />
-    <Compile Include="DbOperationProviders\SqlServer\BulkInsert.cs" />
+    <Compile Include="DbOperations\SqlServer\BulkInsert.cs" />
+    <Compile Include="DbValidators\SqlServer\SqlServerDbValidator.cs" />
     <Compile Include="Enumerations\ConversionType.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="Contexts\Execution\InsertAllExecutionContextCache.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Extensions\DbFieldExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Interfaces\IDbOperation.cs" />
+    <Compile Include="Interfaces\IDbValidator.cs" />
     <Compile Include="Interfaces\IResolver.cs" />
     <Compile Include="Operations\BaseRepository\CountAll.cs" />
     <Compile Include="Operations\BaseRepository\InsertAll.cs" />
@@ -176,7 +179,7 @@
     <Compile Include="Requests\InsertRequest.cs" />
     <Compile Include="Requests\QueryRequest.cs" />
     <Compile Include="QueryMultipleExtractor.cs" />
-    <Compile Include="DbHelpers\SqlDbHelper.cs" />
+    <Compile Include="DbHelpers\SqlServerDbHelper.cs" />
     <Compile Include="CacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />
     <Compile Include="Extensions\ArrayExtension.cs" />
@@ -217,15 +220,17 @@
     <Compile Include="Resolvers\SqlDbTypeToStringNameResolver.cs" />
     <Compile Include="Resolvers\ClientTypeToSqlDbTypeResolver.cs" />
     <Compile Include="Resolvers\SqlDbTypeNameToClientTypeResolver.cs" />
-    <Compile Include="DbOperationProviderMapper.cs" />
+    <Compile Include="DbOperationMapper.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="SqlTableHints.cs" />
-    <Compile Include="StatementBuilders\SqlStatementBuilder.cs" />
+    <Compile Include="StatementBuilders\SqlServerStatementBuilder.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="TypeMapper.cs" />
     <Compile Include="Types\SqlVariant.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DbOperationProviders\SqlServer\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -19,7 +19,7 @@ namespace RepoDb
         static DbHelperMapper()
         {
             // By default, map the Sql
-            Add(typeof(SqlConnection), new SqlDbHelper());
+            Add(typeof(SqlConnection), new SqlServerDbHelper());
         }
 
         /// <summary>

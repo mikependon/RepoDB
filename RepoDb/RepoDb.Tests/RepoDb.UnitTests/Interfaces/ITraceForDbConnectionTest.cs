@@ -17,13 +17,13 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ITraceForDbConnectionTest
     {
-        private readonly IStatementBuilder m_statementBuilder = new SqlStatementBuilder();
+        private readonly IStatementBuilder m_statementBuilder = new SqlServerStatementBuilder();
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbConnectionITrace), new CustomerDbConnectionDbHelper(), true);
-            DbOperationProviderMapper.Add(typeof(CustomDbConnectionForDbConnectionITrace), new DbConnectionCustomDbOperationProvider(), true);
+            DbOperationMapper.Add(typeof(CustomDbConnectionForDbConnectionITrace), new DbConnectionCustomDbOperationProvider(), true);
         }
 
         #region SubClasses

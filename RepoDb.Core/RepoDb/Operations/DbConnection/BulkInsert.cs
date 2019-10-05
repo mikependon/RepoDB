@@ -587,7 +587,7 @@ namespace RepoDb
             }
 
             // Get the provider
-            var provider = DbOperationProviderMapper.Get(connection.GetType());
+            var provider = DbOperationMapper.Get(connection.GetType());
 
             // Check the presence
             if (provider == null)

@@ -4,22 +4,21 @@ using System;
 using System.Collections.Concurrent;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Reflection;
 
 namespace RepoDb
 {
     /// <summary>
     /// A class that is used to map the type of <see cref="DbConnection"/> into an instance of <see cref="IDbOperation"/> object.
     /// </summary>
-    public static class DbOperationProviderMapper
+    public static class DbOperationMapper
     {
         private static readonly ConcurrentDictionary<int, IDbOperation> m_maps = new ConcurrentDictionary<int, IDbOperation>();
         private static Type m_type = typeof(DbConnection);
 
-        static DbOperationProviderMapper()
+        static DbOperationMapper()
         {
             // Default for SqlConnection
-            Add(typeof(SqlConnection), new SqlDbOperationProvider());
+            Add(typeof(SqlConnection), new SqlServerOperation());
         }
 
         /// <summary>
@@ -27,7 +26,7 @@ namespace RepoDb
         /// </summary>
         private static void Guard(Type type)
         {
-            if (type.GetTypeInfo().IsSubclassOf(m_type) == false)
+            if (type.IsSubclassOf(m_type) == false)
             {
                 throw new InvalidOperationException($"Type must be a subclass of '{m_type.FullName}'.");
             }

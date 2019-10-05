@@ -21,7 +21,7 @@ namespace RepoDb.UnitTests.Interfaces
         public static void ClassInitialize(TestContext context)
         {
             DbHelperMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), new BaseRepositoryCustomDbHelper(), true);
-            DbOperationProviderMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), new BaseRepositoryCustomDbOperationProvider(), true);
+            DbOperationMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), new BaseRepositoryCustomDbOperationProvider(), true);
         }
 
         #region SubClasses
@@ -43,7 +43,7 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace,
-                new SqlStatementBuilder())
+                new SqlServerStatementBuilder())
             { }
         }
 
