@@ -105,6 +105,20 @@ namespace RepoDb.Interfaces
 
         #endregion
 
+        #region Insert
+
+        /// <summary>
+        /// Validates the InsertAll extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateInsertAll();
+
+        /// <summary>
+        /// Validates the InsertAllAsync extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateInsertAllAsync();
+
+        #endregion
+
         #region Merge
 
         /// <summary>

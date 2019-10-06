@@ -837,6 +837,9 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
+            // Validate
+            InvokeValidatorValidateCount(connection);
+
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetCountText(request);
@@ -902,6 +905,9 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
+            // Validate
+            InvokeValidatorValidateCountAsync(connection);
+
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetCountText(request);
@@ -944,6 +950,28 @@ namespace RepoDb
 
             // Result
             return result;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateCount"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateCount(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateCount();
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateCountAsync"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateCountAsync(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateCountAsync();
         }
 
         #endregion

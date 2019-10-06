@@ -910,6 +910,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Validate
+            InvokeValidatorValidateUpdate(connection);
+
             // Get the function
             var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
             {
@@ -1049,6 +1052,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Validate
+            InvokeValidatorValidateUpdateAsync(connection);
+
+            // Get the database fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
 
             // Get the function
@@ -1158,6 +1165,28 @@ namespace RepoDb
 
             // Return the result
             return result;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateUpdate"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateUpdate(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateUpdate();
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateUpdateAsync"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateUpdateAsync(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateUpdateAsync();
         }
 
         #endregion

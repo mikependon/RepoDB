@@ -267,6 +267,9 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
+            // Validate
+            InvokeValidatorValidateDeleteAll(connection);
+
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetDeleteAllText(request);
@@ -329,6 +332,9 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
+            // Validate
+            InvokeValidatorValidateDeleteAllAsync(connection);
+
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetDeleteAllText(request);
@@ -370,6 +376,28 @@ namespace RepoDb
 
             // Result
             return result;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateDeleteAll"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateDeleteAll(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateDeleteAll();
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateDeleteAllAsync"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateDeleteAllAsync(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateDeleteAllAsync();
         }
 
         #endregion

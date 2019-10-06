@@ -76,6 +76,7 @@
     <Compile Include="Enumerations\ConversionType.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="Contexts\Execution\InsertAllExecutionContextCache.cs" />
+    <Compile Include="Exceptions\EmptyException.cs" />
     <Compile Include="Exceptions\MissingMappingException.cs" />
     <Compile Include="Expressions\ClassExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />

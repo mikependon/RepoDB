@@ -39,7 +39,11 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            var provider = GetDbOperationProvider(connection);
+            // Validate
+            InvokeValidatorValidateBulkInsert(connection);
+
+            // Get the provider
+            var provider = GetDbOperation(connection);
 
             // Before Execution
             if (trace != null)
@@ -108,7 +112,11 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            var provider = GetDbOperationProvider(connection);
+            // Validate
+            InvokeValidatorValidateBulkInsert(connection);
+
+            // Get the provider
+            var provider = GetDbOperation(connection);
 
             // Before Execution
             if (trace != null)
@@ -179,7 +187,11 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            var provider = GetDbOperationProvider(connection);
+            // Validate
+            InvokeValidatorValidateBulkInsert(connection);
+
+            // Get the provider
+            var provider = GetDbOperation(connection);
 
             // Before Execution
             if (trace != null)
@@ -246,7 +258,11 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            var provider = GetDbOperationProvider(connection);
+            // Validate
+            InvokeValidatorValidateBulkInsert(connection);
+
+            // Get the provider
+            var provider = GetDbOperation(connection);
 
             // Before Execution
             if (trace != null)
@@ -318,7 +334,11 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            var provider = GetDbOperationProvider(connection);
+            // Validate
+            InvokeValidatorValidateBulkInsertAsync(connection);
+
+            // Get the provider
+            var provider = GetDbOperation(connection);
 
             // Before Execution
             if (trace != null)
@@ -387,7 +407,11 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            var provider = GetDbOperationProvider(connection);
+            // Validate
+            InvokeValidatorValidateBulkInsertAsync(connection);
+
+            // Get the provider
+            var provider = GetDbOperation(connection);
 
             // Before Execution
             if (trace != null)
@@ -458,7 +482,11 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            var provider = GetDbOperationProvider(connection);
+            // Validate
+            InvokeValidatorValidateBulkInsertAsync(connection);
+
+            // Get the provider
+            var provider = GetDbOperation(connection);
 
             // Before Execution
             if (trace != null)
@@ -525,7 +553,11 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            var provider = GetDbOperationProvider(connection);
+            // Validate
+            InvokeValidatorValidateBulkInsertAsync(connection);
+
+            // Get the provider
+            var provider = GetDbOperation(connection);
 
             // Before Execution
             if (trace != null)
@@ -562,7 +594,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog("BulkInsertAfter", reader, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", reader, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -572,31 +604,24 @@ namespace RepoDb
 
         #endregion
 
-        #region Methods
+        #region Helpers
 
         /// <summary>
-        /// Gets the <see cref="SqlBulkCopy"/> private variable reflected field.
+        /// Invokes the <see cref="IDbValidator.ValidateBulkInsert"/> method.
         /// </summary>
-        /// <returns>The actual field.</returns>
-        private static IDbOperation GetDbOperationProvider(IDbConnection connection)
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateBulkInsert(IDbConnection connection)
         {
-            // Check the connection
-            if (connection == null)
-            {
-                throw new NullReferenceException("The connection object cannot be null.");
-            }
+            GetDbValidator(connection)?.ValidateBulkInsert();
+        }
 
-            // Get the provider
-            var provider = DbOperationMapper.Get(connection.GetType());
-
-            // Check the presence
-            if (provider == null)
-            {
-                throw new MissingMappingException($"There is no database operation provider mapping found for '{connection.GetType().FullName}'.");
-            }
-
-            // Return the provider
-            return provider;
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateBulkInsertAsync"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateBulkInsertAsync(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateBulkInsertAsync();
         }
 
         #endregion

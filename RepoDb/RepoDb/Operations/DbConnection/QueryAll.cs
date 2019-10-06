@@ -415,6 +415,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Validate
+            InvokeValidatorValidateQueryAll(connection);
+
             // Get Cache
             if (cacheKey != null)
             {
@@ -518,6 +521,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Validate
+            InvokeValidatorValidateQueryAllAsync(connection);
+
             // Get Cache
             if (cacheKey != null)
             {
@@ -626,6 +632,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
+            // Validate
+            InvokeValidatorValidateQueryAll(connection);
+
             // Get Cache
             if (cacheKey != null)
             {
@@ -737,6 +746,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
+            // Validate
+            InvokeValidatorValidateQueryAllAsync(connection);
+
             // Get Cache
             if (cacheKey != null)
             {
@@ -810,6 +822,28 @@ namespace RepoDb
 
             // Result
             return result;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateQueryAll"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateQueryAll(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateQueryAll();
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateQueryAllAsync"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateQueryAllAsync(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateQueryAllAsync();
         }
 
         #endregion

@@ -106,6 +106,20 @@ namespace RepoDb.DbValidators
 
         #endregion
 
+        #region InsertAll
+
+        /// <summary>
+        /// Validates the InsertAll extended method of the <see cref="SQLiteConnection"/> object.
+        /// </summary>
+        public void ValidateInsertAll() { /* This is supported. */ }
+
+        /// <summary>
+        /// Validates the InsertAllAsync extended method of the <see cref="SQLiteConnection"/> object.
+        /// </summary>
+        public void ValidateInsertAllAsync() { /* This is supported. */ }
+
+        #endregion
+
         #region Merge
 
         /// <summary>

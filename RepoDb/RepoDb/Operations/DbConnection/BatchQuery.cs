@@ -1,4 +1,5 @@
-﻿using RepoDb.Exceptions;
+﻿using RepoDb.DbValidators;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -1115,6 +1116,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Validate this method
+            InvokeValidatorValidateBatchQuery(connection);
+
             // Variables
             var commandType = CommandType.Text;
             var request = new BatchQueryRequest(typeof(TEntity),
@@ -1208,6 +1212,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Validate this method
+            InvokeValidatorValidateBatchQueryAsync(connection);
+
             // Variables
             var commandType = CommandType.Text;
             var request = new BatchQueryRequest(typeof(TEntity),
@@ -1303,6 +1310,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
+            // Validate this method
+            InvokeValidatorValidateBatchQuery(connection);
+
             // Check the fields
             if (fields?.Any() != true)
             {
@@ -1404,6 +1414,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
+            // Validate this method
+            InvokeValidatorValidateBatchQueryAsync(connection);
+
             // Check the fields
             if (fields?.Any() != true)
             {
@@ -1470,6 +1483,28 @@ namespace RepoDb
 
             // Result
             return result;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateBatchQuery"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateBatchQuery(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateBatchQuery();
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateBatchQueryAsync"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateBatchQueryAsync(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateBatchQueryAsync();
         }
 
         #endregion

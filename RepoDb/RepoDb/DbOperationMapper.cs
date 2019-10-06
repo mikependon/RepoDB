@@ -18,7 +18,7 @@ namespace RepoDb
         static DbOperationMapper()
         {
             // Default for SqlConnection
-            Add(typeof(SqlConnection), new SqlServerOperation());
+            Add(typeof(SqlConnection), new SqlServerDbOperation());
         }
 
         /// <summary>

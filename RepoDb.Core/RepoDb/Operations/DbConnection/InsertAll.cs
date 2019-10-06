@@ -330,11 +330,14 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            // Validate
+            InvokeValidatorValidateInsertAll(connection);
+
             // Guard the parameters
-            var count = GuardInsertAll(entities);
+            GuardInsertAll(entities);
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, count);
+            batchSize = Math.Min(batchSize, entities.Count());
 
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
 
@@ -659,11 +662,14 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            // Validate
+            InvokeValidatorValidateInsertAllAsync(connection);
+
             // Guard the parameters
-            var count = GuardInsertAll(entities);
+            GuardInsertAll(entities);
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, count);
+            batchSize = Math.Min(batchSize, entities.Count());
 
             // Check the fields
             if (fields == null)
@@ -957,14 +963,40 @@ namespace RepoDb
 
         #region Helpers
 
-        private static int GuardInsertAll<TEntity>(IEnumerable<TEntity> entities)
+        /// <summary>
+        /// Throws an exception if the entities argument is null or empty.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entities">The enumerable list of entity objects.</param>
+        private static void GuardInsertAll<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : class
         {
-            var count = entities?.Count();
-            if (count <= 0)
+            if (entities == null)
             {
-                throw new InvalidOperationException("The entities must not be empty or null.");
+                throw new NullReferenceException("The entities must not be null.");
             }
-            return count.Value;
+            if (entities.Any() == false)
+            {
+                throw new EmptyException("The entities must not be empty.");
+            }
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateInsertAll"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateInsertAll(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateInsertAll();
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateInsertAllAsync"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateInsertAllAsync(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateInsertAllAsync();
         }
 
         #endregion

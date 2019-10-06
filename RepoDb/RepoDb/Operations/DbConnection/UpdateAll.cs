@@ -646,11 +646,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Validate
+            InvokeValidatorValidateUpdateAll(connection);
+
             // Guard the parameters
-            var count = GuardUpdateAll(entities);
+            GuardUpdateAll(entities);
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, count);
+            batchSize = Math.Min(batchSize, entities.Count());
 
             // Get the function
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
@@ -881,11 +884,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Validate
+            InvokeValidatorValidateUpdateAllAsync(connection);
+
             // Guard the parameters
-            var count = GuardUpdateAll(entities);
+            GuardUpdateAll(entities);
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, count);
+            batchSize = Math.Min(batchSize, entities.Count());
 
             // Variables
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
@@ -1104,14 +1110,40 @@ namespace RepoDb
 
         #region Helpers
 
-        private static int GuardUpdateAll<TEntity>(IEnumerable<TEntity> entities)
+        /// <summary>
+        /// Throws an exception if the entities argument is null or empty.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entities">The enumerable list of entity objects.</param>
+        private static void GuardUpdateAll<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : class
         {
-            var count = entities?.Count();
-            if (count <= 0)
+            if (entities == null)
             {
-                throw new InvalidOperationException("The entities must not be empty or null.");
+                throw new NullReferenceException("The entities must not be null.");
             }
-            return count.Value;
+            if (entities.Any() == false)
+            {
+                throw new EmptyException("The entities must not be empty.");
+            }
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateUpdateAll"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateUpdateAll(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateUpdateAll();
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateUpdateAllAsync"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateUpdateAllAsync(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateUpdateAllAsync();
         }
 
         #endregion

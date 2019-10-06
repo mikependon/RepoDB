@@ -14,7 +14,7 @@ namespace RepoDb.DbOperationProviders
     /// <summary>
     /// A class that contains the operations for SQL Server database.
     /// </summary>
-    public partial class SqlServerDbOperation : IDbOperation
+    internal partial class SqlServerDbOperation : IDbOperation
     {
         #region Privates
 

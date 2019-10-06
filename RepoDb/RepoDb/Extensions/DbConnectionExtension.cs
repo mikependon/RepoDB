@@ -1,5 +1,7 @@
-﻿using RepoDb.Exceptions;
+﻿using RepoDb.DbValidators;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Reflection;
 using System;
 using System.Collections.Generic;
@@ -1045,7 +1047,48 @@ namespace RepoDb
 
         #region Helper Methods
 
-        // GuardPrimaryKey
+        /// <summary>
+        /// Gets the associated <see cref="IDbValidator"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
+        /// By default, the <see cref="SqlServerDbValidator"/> is being used.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <returns>An instance of the mapped <see cref="IDbValidator"/> object.</returns>
+        private static IDbValidator GetDbValidator(IDbConnection connection)
+        {
+            // Check the connection
+            if (connection == null)
+            {
+                throw new NullReferenceException("The connection object cannot be null.");
+            }
+
+            // Return the validator
+            return DbValidatorMapper.Get(connection.GetType()) ?? new SqlServerDbValidator();
+        }
+
+        /// <summary>
+        /// Gets the associated <see cref="IDbOperation"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
+        /// </summary>
+        /// <returns>The actual field.</returns>
+        private static IDbOperation GetDbOperation(IDbConnection connection)
+        {
+            // Check the connection
+            if (connection == null)
+            {
+                throw new NullReferenceException("The connection object cannot be null.");
+            }
+
+            // Get the provider
+            var provider = DbOperationMapper.Get(connection.GetType());
+
+            // Check the presence
+            if (provider == null)
+            {
+                throw new MissingMappingException($"There is no database operation provider mapping found for '{connection.GetType().FullName}'.");
+            }
+
+            // Return the provider
+            return provider;
+        }
 
         /// <summary>
         /// Throws an exception if there is no defined primary key on the data entity type.

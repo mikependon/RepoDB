@@ -413,6 +413,9 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            // Validate
+            InvokeValidatorValidateInsert(connection);
+
             // Get the function
             var callback = new Func<InsertExecutionContext<TEntity>>(() =>
             {
@@ -566,6 +569,10 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            // Validate
+            InvokeValidatorValidateInsertAsync(connection);
+
+            // Get the database fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
 
             // Get the function
@@ -689,6 +696,28 @@ namespace RepoDb
 
             // Return the result
             return result;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateInsert"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateInsert(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateInsert();
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="IDbValidator.ValidateInsertAsync"/> method.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        private static void InvokeValidatorValidateInsertAsync(IDbConnection connection)
+        {
+            GetDbValidator(connection)?.ValidateInsertAsync();
         }
 
         #endregion
