@@ -1,5 +1,6 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Data;
@@ -16,9 +17,12 @@ namespace RepoDb
         /// Creates a new instance of <see cref="ClassProperty"/> object.
         /// </summary>
         /// <param name="property">The wrapped property.</param>
-        public ClassProperty(PropertyInfo property)
+        /// <param name="dbSetting">The database setting to be used.</param>
+        public ClassProperty(PropertyInfo property,
+            IDbSetting dbSetting)
         {
             PropertyInfo = property;
+            DbSetting = dbSetting;
         }
 
         #region Properties
@@ -26,10 +30,12 @@ namespace RepoDb
         /// <summary>
         /// Gets the wrapped property of this object.
         /// </summary>
-        public PropertyInfo PropertyInfo
-        {
-            get;
-        }
+        public PropertyInfo PropertyInfo { get; }
+
+        /// <summary>
+        /// Gets the database setting that is currently in used.
+        /// </summary>
+        public IDbSetting DbSetting { get; }
 
         #endregion
 
@@ -53,7 +59,7 @@ namespace RepoDb
             }
 
             // Set the properties
-            m_field = new Field(GetUnquotedMappedName(), PropertyInfo.PropertyType);
+            m_field = new Field(GetUnquotedMappedName(), PropertyInfo.PropertyType, DbSetting);
 
             // Return the value
             return m_field;
@@ -138,7 +144,7 @@ namespace RepoDb
             }
 
             // Mapping.Name + Id
-            m_isPrimary = string.Equals(PropertyInfo.Name, string.Concat(ClassMappedNameCache.Get(PropertyInfo.DeclaringType), "id"), StringComparison.OrdinalIgnoreCase);
+            m_isPrimary = string.Equals(PropertyInfo.Name, string.Concat(ClassMappedNameCache.Get(PropertyInfo.DeclaringType, true, DbSetting), "id"), StringComparison.OrdinalIgnoreCase);
             if (m_isPrimary == true)
             {
                 return m_isPrimary;
@@ -170,7 +176,7 @@ namespace RepoDb
         /*
          * GetDbType
          */
-        private ClientTypeToSqlDbTypeResolver m_clientTypeToSqlDbTypeResolver = new ClientTypeToSqlDbTypeResolver();
+        private ClientTypeToDbTypeResolver m_clientTypeToSqlDbTypeResolver = new ClientTypeToDbTypeResolver();
         private bool m_isDbTypeWasSet;
         private DbType? m_dbType;
 
@@ -223,7 +229,7 @@ namespace RepoDb
             {
                 return m_quotedMappedName;
             }
-            return m_quotedMappedName = PropertyMappedNameCache.Get(PropertyInfo);
+            return m_quotedMappedName = PropertyMappedNameCache.Get(PropertyInfo, true, DbSetting);
         }
 
         /*
@@ -242,7 +248,7 @@ namespace RepoDb
             {
                 return m_unquotedMappedName;
             }
-            return m_unquotedMappedName = PropertyMappedNameCache.Get(PropertyInfo, false);
+            return m_unquotedMappedName = PropertyMappedNameCache.Get(PropertyInfo, false, DbSetting);
         }
 
         /// <summary>
@@ -251,7 +257,7 @@ namespace RepoDb
         /// <returns>The unquoted name.</returns>
         public override string ToString()
         {
-            return m_quotedMappedName ?? base.ToString();
+            return string.Concat(m_quotedMappedName ?? PropertyInfo.Name, " (", PropertyInfo.PropertyType.Name, ")");
         }
 
         #endregion

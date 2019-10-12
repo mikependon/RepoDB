@@ -386,7 +386,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateTruncate(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateTruncate();
+            connection.GetDbValidator()?.ValidateTruncate();
         }
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateTruncateAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateTruncateAsync();
+            connection.GetDbValidator()?.ValidateTruncateAsync();
         }
 
         #endregion

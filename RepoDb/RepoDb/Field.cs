@@ -2,6 +2,7 @@
 using System.Linq;
 using System;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -16,8 +17,10 @@ namespace RepoDb
         /// Creates a new instance of <see cref="Field"/> object.
         /// </summary>
         /// <param name="name">The name of the field.</param>
-        public Field(string name) :
-            this(name, null)
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        public Field(string name,
+            IDbSetting dbSetting) :
+            this(name, null, dbSetting)
         { }
 
         /// <summary>
@@ -25,8 +28,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="name">The name of the field.</param>
         /// <param name="type">The type of the field.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         public Field(string name,
-            Type type)
+        Type type,
+        IDbSetting dbSetting)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -35,17 +40,24 @@ namespace RepoDb
             }
 
             // Set the name
-            Name = name.AsQuoted(true, null);
-            UnquotedName = name.AsUnquoted(true, null);
+            Name = name.AsQuoted(true, true, dbSetting);
+            UnquotedName = name.AsUnquoted(true, dbSetting);
 
             // Set the type
             Type = type;
+
+            // Set the DbSetting
+            DbSetting = dbSetting;
 
             // Set the hashcode
             m_hashCode = Name.GetHashCode();
             if (type != null)
             {
                 m_hashCode += type.GetHashCode();
+            }
+            if (dbSetting != null)
+            {
+                m_hashCode += dbSetting.GetHashCode();
             }
         }
 
@@ -65,6 +77,11 @@ namespace RepoDb
         public Type Type { get; }
 
         /// <summary>
+        /// Gets the database setting currently in used.
+        /// </summary>
+        public IDbSetting DbSetting { get; }
+
+        /// <summary>
         /// Stringify the current field object.
         /// </summary>
         /// <returns>The string value equivalent to the name of the field.</returns>
@@ -77,8 +94,10 @@ namespace RepoDb
         /// Creates an enumerable of <see cref="Field"/> objects that derived from the given array of string values.
         /// </summary>
         /// <param name="fields">The array of string values that signifies the name of the fields (for each item).</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable of <see cref="Field"/> object.</returns>
-        public static IEnumerable<Field> From(params string[] fields)
+        public static IEnumerable<Field> From(string[] fields,
+            IDbSetting dbSetting)
         {
             if (fields == null)
             {
@@ -90,7 +109,7 @@ namespace RepoDb
             }
             foreach (var field in fields)
             {
-                yield return new Field(field);
+                yield return new Field(field, dbSetting);
             }
         }
 
@@ -99,11 +118,13 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="entity">An object to be parsed.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> Parse<TEntity>(TEntity entity)
+        internal static IEnumerable<Field> Parse<TEntity>(TEntity entity,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            foreach (var property in PropertyCache.Get<TEntity>())
+            foreach (var property in PropertyCache.Get<TEntity>(dbSetting))
             {
                 yield return property.AsField();
             }
@@ -113,16 +134,18 @@ namespace RepoDb
         /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> Parse(object obj)
+        internal static IEnumerable<Field> Parse(object obj,
+            IDbSetting dbSetting)
         {
             foreach (var property in obj?.GetType().GetProperties())
             {
-                yield return property.AsField();
+                yield return property.AsField(dbSetting);
             }
         }
 
-        // Equality and comparers
+        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="Field"/>.
@@ -178,5 +201,7 @@ namespace RepoDb
         {
             return (objA == objB) == false;
         }
+
+        #endregion
     }
 }

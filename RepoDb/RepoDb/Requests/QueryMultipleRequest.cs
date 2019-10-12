@@ -36,7 +36,7 @@ namespace RepoDb.Requests
             string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(index,
-                  ClassMappedNameCache.Get(type),
+                  ClassMappedNameCache.Get(type, true, connection.GetDbSetting()),
                   connection,
                   transaction,
                   fields,

@@ -7,9 +7,9 @@ using System.Data;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class used to resolve the .NET CLR Types into SQL Database Types.
+    /// A class used to resolve the .NET CLR Types into its equivalent SQL Server <see cref="DbType"/> value.
     /// </summary>
-    public class ClientTypeToSqlDbTypeResolver : IResolver<Type, DbType?>
+    public class ClientTypeToDbTypeResolver : IResolver<Type, DbType?>
     {
         /*
          * Taken:
@@ -17,7 +17,7 @@ namespace RepoDb.Resolvers
          */
 
         /// <summary>
-        /// Returns the equivalent <see cref="DbType"/> of the .NET CLR Types.
+        /// Returns the equivalent <see cref="DbType"/> of the target .NET CLR Type.
         /// </summary>
         /// <param name="type">The .NET CLR Type.</param>
         /// <returns>The equivalent <see cref="DbType"/> Type.</returns>

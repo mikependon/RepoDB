@@ -430,10 +430,11 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
             var request = new QueryAllRequest(typeof(TEntity),
                 connection,
                 transaction,
-                FieldCache.Get<TEntity>(),
+                FieldCache.Get<TEntity>(dbSetting),
                 orderBy,
                 hints,
                 statementBuilder);
@@ -536,10 +537,11 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
             var request = new QueryAllRequest(typeof(TEntity),
                 connection,
                 transaction,
-                FieldCache.Get<TEntity>(),
+                FieldCache.Get<TEntity>(dbSetting),
                 orderBy,
                 hints,
                 statementBuilder);
@@ -547,7 +549,7 @@ namespace RepoDb
             var param = (object)null;
 
             // Database pre-touch for field definitions
-            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(dbSetting), transaction);
 
             // Before Execution
             if (trace != null)
@@ -834,7 +836,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateQueryAll(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateQueryAll();
+            connection.GetDbValidator()?.ValidateQueryAll();
         }
 
         /// <summary>
@@ -843,7 +845,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateQueryAllAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateQueryAllAsync();
+            connection.GetDbValidator()?.ValidateQueryAllAsync();
         }
 
         #endregion

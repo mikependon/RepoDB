@@ -14,7 +14,9 @@ namespace RepoDb
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
         /// <param name="mappedToType">The parent type where this parameter is mapped.</param>
-        public CommandParameter(string name, object value, Type mappedToType)
+        public CommandParameter(string name,
+            object value,
+            Type mappedToType)
         {
             Name = name;
             Value = value;

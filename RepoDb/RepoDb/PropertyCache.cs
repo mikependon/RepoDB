@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoDb.Interfaces;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,17 +19,24 @@ namespace RepoDb
         /// Gets the cached list of <see cref="ClassProperty"/> objects of the data entity.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> Get<TEntity>()
+        public static IEnumerable<ClassProperty> Get<TEntity>(IDbSetting dbSetting)
             where TEntity : class
         {
             var properties = (IEnumerable<ClassProperty>)null;
             var key = typeof(TEntity).FullName.GetHashCode();
 
+            // Add the DbSetting hashcode
+            if (dbSetting != null)
+            {
+                key += dbSetting.GetHashCode();
+            }
+
             // Try get the value
             if (m_cache.TryGetValue(key, out properties) == false)
             {
-                properties = ClassExpression.GetProperties<TEntity>();
+                properties = ClassExpression.GetProperties<TEntity>(dbSetting);
                 m_cache.TryAdd(key, properties);
             }
 
@@ -40,16 +48,24 @@ namespace RepoDb
         /// Gets the cached list of <see cref="ClassProperty"/> objects of the data entity.
         /// </summary>
         /// <param name="type">The type of the target entity.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> Get(Type type)
+        public static IEnumerable<ClassProperty> Get(Type type,
+            IDbSetting dbSetting)
         {
             var properties = (IEnumerable<ClassProperty>)null;
             var key = type.FullName.GetHashCode();
 
+            // Add the DbSetting hashcode
+            if (dbSetting != null)
+            {
+                key += dbSetting.GetHashCode();
+            }
+
             // Try get the value
             if (m_cache.TryGetValue(key, out properties) == false)
             {
-                properties = type.GetProperties().Select(p => new ClassProperty(p));
+                properties = type.GetProperties().Select(p => new ClassProperty(p, dbSetting));
                 m_cache.TryAdd(key, properties);
             }
 

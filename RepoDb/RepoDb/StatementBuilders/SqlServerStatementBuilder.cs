@@ -5,6 +5,8 @@ using System.Linq;
 using System;
 using RepoDb.Exceptions;
 using RepoDb.Resolvers;
+using RepoDb.DbSettings;
+using System.Data.SqlClient;
 
 namespace RepoDb.StatementBuilders
 {
@@ -13,6 +15,15 @@ namespace RepoDb.StatementBuilders
     /// </summary>
     public sealed class SqlServerStatementBuilder : IStatementBuilder
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets the database setting object that is currently in used.
+        /// </summary>
+        private IDbSetting DbSetting => DbSettingMapper.Get(typeof(SqlConnection));
+
+        #endregion
+
         /// <summary>
         /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> object.
         /// </summary>
@@ -84,7 +95,7 @@ namespace RepoDb.StatementBuilders
                 .As("[RowNumber],")
                 .FieldsFrom(fields)
                 .From()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .WhereFrom(where)
                 .CloseParen()
@@ -127,7 +138,7 @@ namespace RepoDb.StatementBuilders
                 .CountBig()
                 .WriteText("(1) AS [Counted]")
                 .From()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .WhereFrom(where)
                 .End();
@@ -161,7 +172,7 @@ namespace RepoDb.StatementBuilders
                 .CountBig()
                 .WriteText("(1) AS [Counted]")
                 .From()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .End();
 
@@ -192,7 +203,7 @@ namespace RepoDb.StatementBuilders
                 .Clear()
                 .Delete()
                 .From()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .WhereFrom(where)
                 .End();
 
@@ -221,7 +232,7 @@ namespace RepoDb.StatementBuilders
                 .Clear()
                 .Delete()
                 .From()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .End();
 
             // Return the query
@@ -279,10 +290,10 @@ namespace RepoDb.StatementBuilders
             // Check for the identity
             if (identityField != null)
             {
-                var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
                 }
             }
 
@@ -291,20 +302,20 @@ namespace RepoDb.StatementBuilders
                 .Clear()
                 .Insert()
                 .Into()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .OpenParen()
                 .FieldsFrom(insertableFields)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .ParametersFrom(insertableFields)
+                .ParametersFrom(insertableFields, 0, DbSetting)
                 .CloseParen()
                 .End();
 
             // Set the return value
             var result = identityField != null ?
                 string.Concat("CONVERT(", databaseType, ", SCOPE_IDENTITY())") :
-                    primaryField != null ? primaryField.Name.AsParameter() : "NULL";
+                    primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -368,10 +379,10 @@ namespace RepoDb.StatementBuilders
             // Check for the identity
             if (identityField != null)
             {
-                var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
                 }
             }
 
@@ -384,20 +395,20 @@ namespace RepoDb.StatementBuilders
             {
                 queryBuilder.Insert()
                     .Into()
-                    .TableNameFrom(tableName)
+                    .TableNameFrom(tableName, DbSetting)
                     .OpenParen()
                     .FieldsFrom(insertableFields)
                     .CloseParen()
                     .Values()
                     .OpenParen()
-                    .ParametersFrom(insertableFields, index)
+                    .ParametersFrom(insertableFields, index, DbSetting)
                     .CloseParen()
                     .End();
 
                 // Set the return field
                 if (identityField != null)
                 {
-                    var returnValue = string.Concat(identityField.UnquotedName.AsParameter(index), " = ",
+                    var returnValue = string.Concat(identityField.UnquotedName.AsParameter(index, DbSetting), " = ",
                         string.IsNullOrEmpty(databaseType) ?
                             "SCOPE_IDENTITY()" :
                             "CONVERT(", databaseType, ", SCOPE_IDENTITY())");
@@ -496,10 +507,10 @@ namespace RepoDb.StatementBuilders
             // Check for the identity
             if (identityField != null)
             {
-                var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
                 }
             }
 
@@ -508,12 +519,12 @@ namespace RepoDb.StatementBuilders
                 .Clear()
                 // MERGE T USING S
                 .Merge()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .As("T")
                 .Using()
                 .OpenParen()
                 .Select()
-                .ParametersAsFieldsFrom(fields)
+                .ParametersAsFieldsFrom(fields, 0, DbSetting)
                 .CloseParen()
                 .As("S")
                 // QUALIFIERS
@@ -647,18 +658,18 @@ namespace RepoDb.StatementBuilders
             // Check for the identity
             if (identityField != null)
             {
-                var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(identityField.Type);
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
                 }
             }
             else if (primaryField != null)
             {
-                var dbType = new ClientTypeToSqlDbTypeResolver().Resolve(primaryField.Type);
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(primaryField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new SqlDbTypeToStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
                 }
             }
 
@@ -671,12 +682,12 @@ namespace RepoDb.StatementBuilders
             {
                 // MERGE T USING S
                 queryBuilder.Merge()
-                    .TableNameFrom(tableName)
+                    .TableNameFrom(tableName, DbSetting)
                     .As("T")
                     .Using()
                     .OpenParen()
                     .Select()
-                    .ParametersAsFieldsFrom(fields, index)
+                    .ParametersAsFieldsFrom(fields, index, DbSetting)
                     .CloseParen()
                     .As("S")
                     // QUALIFIERS
@@ -779,7 +790,7 @@ namespace RepoDb.StatementBuilders
                 .TopFrom(top)
                 .FieldsFrom(fields)
                 .From()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .WhereFrom(where)
                 .OrderByFrom(orderBy)
@@ -838,7 +849,7 @@ namespace RepoDb.StatementBuilders
                 .Select()
                 .FieldsFrom(fields)
                 .From()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .OrderByFrom(orderBy)
                 .End();
@@ -868,7 +879,7 @@ namespace RepoDb.StatementBuilders
                 .Clear()
                 .Truncate()
                 .Table()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .End();
 
             // Return the query
@@ -919,9 +930,9 @@ namespace RepoDb.StatementBuilders
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Update()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .Set()
-                .FieldsAndParametersFrom(updatableFields)
+                .FieldsAndParametersFrom(updatableFields, 0, DbSetting)
                 .WhereFrom(where)
                 .End();
 
@@ -1023,10 +1034,10 @@ namespace RepoDb.StatementBuilders
             {
                 queryBuilder
                     .Update()
-                    .TableNameFrom(tableName)
+                    .TableNameFrom(tableName, DbSetting)
                     .Set()
-                    .FieldsAndParametersFrom(fields, index)
-                    .WhereFrom(qualifiers, index)
+                    .FieldsAndParametersFrom(fields, index, DbSetting)
+                    .WhereFrom(qualifiers, index, DbSetting)
                     .End();
             }
 

@@ -84,7 +84,9 @@ namespace RepoDb
         {
             private static ConcurrentDictionary<long, Func<DbDataReader, TEntity>> m_cache = new ConcurrentDictionary<long, Func<DbDataReader, TEntity>>();
 
-            public static Func<DbDataReader, TEntity> Get(DbDataReader reader, IDbConnection connection, IDbTransaction transaction)
+            public static Func<DbDataReader, TEntity> Get(DbDataReader reader,
+                IDbConnection connection,
+                IDbTransaction transaction)
             {
                 var result = (Func<DbDataReader, TEntity>)null;
                 var fields = Enumerable.Range(0, reader.FieldCount)
@@ -117,7 +119,8 @@ namespace RepoDb
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader, IDbTransaction transaction)
+        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader,
+            IDbTransaction transaction)
         {
             return GetDataReaderToExpandoObjectConverterFunction(reader, null, null, transaction);
         }
@@ -144,7 +147,10 @@ namespace RepoDb
         {
             private static ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>> m_cache = new ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>>();
 
-            public static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader, string tableName, IDbConnection connection, IDbTransaction transaction)
+            public static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader,
+                string tableName,
+                IDbConnection connection,
+                IDbTransaction transaction)
             {
                 var result = (Func<DbDataReader, ExpandoObject>)null;
                 var key = (long)Enumerable.Range(0, reader.FieldCount)

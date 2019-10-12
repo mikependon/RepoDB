@@ -10,7 +10,8 @@
         /// </summary>
         /// <param name="sourceColumn">The name of the source column.</param>
         /// <param name="destinationColumn">The name of the destination column.</param>
-        public BulkInsertMapItem(string sourceColumn, string destinationColumn)
+        public BulkInsertMapItem(string sourceColumn,
+            string destinationColumn)
         {
             SourceColumn = sourceColumn;
             DestinationColumn = destinationColumn;

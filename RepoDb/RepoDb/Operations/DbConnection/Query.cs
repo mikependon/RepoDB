@@ -53,7 +53,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey, connection.GetDbSetting()),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -101,7 +101,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: ToQueryGroup(where),
+                where: ToQueryGroup(where, connection.GetDbSetting()),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -149,7 +149,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: ToQueryGroup(where),
+                where: ToQueryGroup(where, connection.GetDbSetting()),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -196,7 +196,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null) where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: ToQueryGroup(where),
+                where: ToQueryGroup(where, connection.GetDbSetting()),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -292,7 +292,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryInternalBase<TEntity>(connection: connection,
-                fields: FieldCache.Get<TEntity>(),
+                fields: FieldCache.Get<TEntity>(connection.GetDbSetting()),
                 where: where,
                 orderBy: orderBy,
                 top: top,
@@ -345,7 +345,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey, connection.GetDbSetting()),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -393,7 +393,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup(where),
+                where: ToQueryGroup(where, connection.GetDbSetting()),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -441,7 +441,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup(where),
+                where: ToQueryGroup(where, connection.GetDbSetting()),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -488,7 +488,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null) where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup(where),
+                where: ToQueryGroup(where, connection.GetDbSetting()),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -584,7 +584,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsyncInternalBase<TEntity>(connection: connection,
-                fields: FieldCache.Get<TEntity>(),
+                fields: FieldCache.Get<TEntity>(connection.GetDbSetting()),
                 where: where,
                 orderBy: orderBy,
                 top: top,
@@ -692,7 +692,7 @@ namespace RepoDb
         {
             return Query(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where),
+                where: ToQueryGroup(where, connection.GetDbSetting()),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -744,7 +744,7 @@ namespace RepoDb
         {
             return Query(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where),
+                where: ToQueryGroup(where, connection.GetDbSetting()),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -956,7 +956,7 @@ namespace RepoDb
         {
             return QueryAsync(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where),
+                where: ToQueryGroup(where, connection.GetDbSetting()),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1008,7 +1008,7 @@ namespace RepoDb
         {
             return QueryAsync(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where),
+                where: ToQueryGroup(where, connection.GetDbSetting()),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1628,7 +1628,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateQuery(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateQuery();
+            connection.GetDbValidator()?.ValidateQuery();
         }
 
         /// <summary>
@@ -1637,7 +1637,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateQueryAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateQueryAsync();
+            connection.GetDbValidator()?.ValidateQueryAsync();
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoDb.Interfaces;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -68,16 +69,18 @@ namespace RepoDb.Extensions
         /// Gets the name of the <see cref="MemberInfo"/> defines on the current instance of <see cref="BinaryExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="BinaryExpression"/> to be checked.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
-        public static string GetName(this BinaryExpression expression)
+        public static string GetName(this BinaryExpression expression,
+            IDbSetting dbSetting)
         {
             if (expression.Left.IsMember())
             {
-                return expression.Left.ToMember().Member.GetMappedName();
+                return expression.Left.ToMember().Member.GetMappedName(dbSetting);
             }
             else if (expression.Left.IsUnary())
             {
-                return expression.Left.ToUnary().GetName();
+                return expression.Left.ToUnary().GetName(dbSetting);
             }
             throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
         }
@@ -86,12 +89,14 @@ namespace RepoDb.Extensions
         /// Gets the name of the operand defines on the current instance of <see cref="UnaryExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="UnaryExpression"/> to be checked.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The name of the operand.</returns>
-        public static string GetName(this UnaryExpression expression)
+        public static string GetName(this UnaryExpression expression,
+            IDbSetting dbSetting)
         {
             if (expression.Operand.IsMethodCall())
             {
-                return expression.Operand.ToMethodCall().GetName();
+                return expression.Operand.ToMethodCall().GetName(dbSetting);
             }
             throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
         }
@@ -100,12 +105,14 @@ namespace RepoDb.Extensions
         /// Gets the name of the operand defines on the current instance of <see cref="MethodCallExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="MethodCallExpression"/> to be checked.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The name of the operand.</returns>
-        public static string GetName(this MethodCallExpression expression)
+        public static string GetName(this MethodCallExpression expression,
+            IDbSetting dbSetting)
         {
             if (expression.Object?.IsMember() == true)
             {
-                return expression.Object.ToMember().GetName();
+                return expression.Object.ToMember().GetName(dbSetting);
             }
             else
             {
@@ -115,7 +122,7 @@ namespace RepoDb.Extensions
                     var last = expression.Arguments?.Last();
                     if (last?.IsMember() == true)
                     {
-                        return last.ToMember().Member.GetMappedName();
+                        return last.ToMember().Member.GetMappedName(dbSetting);
                     }
                 }
             }
@@ -126,10 +133,12 @@ namespace RepoDb.Extensions
         /// Gets the name of the <see cref="MemberInfo"/> defines on the current instance of <see cref="MemberExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="MemberExpression"/> to be checked.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
-        public static string GetName(this MemberExpression expression)
+        public static string GetName(this MemberExpression expression,
+            IDbSetting dbSetting)
         {
-            return expression.Member.GetMappedName();
+            return expression.Member.GetMappedName(dbSetting);
         }
 
         #region GetValue

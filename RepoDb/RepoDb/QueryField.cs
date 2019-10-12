@@ -2,6 +2,7 @@
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -25,11 +26,14 @@ namespace RepoDb
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         public QueryField(string fieldName,
-            object value)
+            object value,
+            IDbSetting dbSetting)
             : this(fieldName,
                   Operation.Equal,
-                  value)
+                  value,
+                  dbSetting)
         {
         }
 
@@ -39,13 +43,16 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         public QueryField(string fieldName,
             Operation operation,
-            object value)
+            object value,
+            IDbSetting dbSetting)
             : this(fieldName,
                   operation,
                   value,
-                  false)
+                  false,
+                  dbSetting)
         {
         }
 
@@ -54,12 +61,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         public QueryField(Field field,
-            object value)
+            object value,
+            IDbSetting dbSetting)
             : this(field,
                   Operation.Equal,
                   value,
-                  false)
+                  false,
+                  dbSetting)
         {
         }
 
@@ -69,13 +79,16 @@ namespace RepoDb
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         public QueryField(Field field,
             Operation operation,
-            object value)
+            object value,
+            IDbSetting dbSetting)
             : this(field,
                   operation,
                   value,
-                  false)
+                  false,
+                  dbSetting)
         {
         }
 
@@ -85,17 +98,18 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="appendUnderscore">
-        /// The value to identify whether the underscore prefix will be appended to the parameter name.
-        /// </param>
+        /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal QueryField(string fieldName,
             Operation operation,
             object value,
-            bool appendUnderscore)
-            : this(new Field(fieldName),
+            bool appendUnderscore,
+            IDbSetting dbSetting)
+            : this(new Field(fieldName, dbSetting),
                   operation,
                   value,
-                  false)
+                  false,
+                  dbSetting)
         {
         }
 
@@ -105,20 +119,21 @@ namespace RepoDb
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="appendUnderscore">
-        /// The value to identify whether the underscore prefix will be appended to the parameter name.
-        /// </param>
+        /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal QueryField(Field field,
             Operation operation,
             object value,
-            bool appendUnderscore)
+            bool appendUnderscore,
+            IDbSetting dbSetting)
         {
+            DbSetting = dbSetting;
             Field = field;
             Operation = operation;
-            Parameter = new Parameter(field.UnquotedName, value, appendUnderscore);
+            Parameter = new Parameter(field.UnquotedName, value, appendUnderscore, dbSetting);
         }
 
-        // Properties
+        #region Properties
 
         /// <summary>
         /// Gets the associated field object.
@@ -135,7 +150,14 @@ namespace RepoDb
         /// </summary>
         public Parameter Parameter { get; }
 
-        // Methods
+        /// <summary>
+        /// Gets the database setting currently in used.
+        /// </summary>
+        public IDbSetting DbSetting { get; }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Prepend an underscore on the bound parameter object.
@@ -150,7 +172,7 @@ namespace RepoDb
         /// </summary>
         public void Reset()
         {
-            Parameter?.SetName(Field.UnquotedName);
+            Parameter?.SetName(Field.UnquotedName, DbSetting);
             m_operationTextAttribute = null;
             m_hashCode = null;
         }
@@ -180,17 +202,19 @@ namespace RepoDb
             return string.Concat(Field.ToString(), " = ", Parameter.ToString());
         }
 
-        // Static Methods
+        #endregion
 
-        #region Parse (Expression)
+        #region Static Methods
 
         /// <summary>
         /// Parse an instance of <see cref="BinaryExpression"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The target entity type</typeparam>
         /// <param name="expression">The instance of <see cref="BinaryExpression"/> to be parsed.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of <see cref="QueryField"/> object.</returns>
-        internal static QueryField Parse<TEntity>(BinaryExpression expression) where TEntity : class
+        internal static QueryField Parse<TEntity>(BinaryExpression expression,
+            IDbSetting dbSetting) where TEntity : class
         {
             // Only support the following expression type
             if (expression.IsExtractable() == false)
@@ -199,8 +223,8 @@ namespace RepoDb
             }
 
             // Name
-            var fieldName = expression.GetName();
-            if (PropertyCache.Get<TEntity>().Any(property => PropertyMappedNameCache.Get(property.PropertyInfo, false) == fieldName) == false)
+            var fieldName = expression.GetName(dbSetting);
+            if (PropertyCache.Get<TEntity>(dbSetting).Any(property => PropertyMappedNameCache.Get(property.PropertyInfo, false, dbSetting) == fieldName) == false)
             {
                 throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
@@ -212,7 +236,7 @@ namespace RepoDb
             var operation = GetOperation(expression.NodeType);
 
             // Return the value
-            return new QueryField(fieldName, operation, value);
+            return new QueryField(fieldName, operation, value, dbSetting);
         }
 
         // GetOperation
@@ -239,7 +263,7 @@ namespace RepoDb
 
         #endregion
 
-        // Equality and comparers
+        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="QueryField"/>.
@@ -257,6 +281,10 @@ namespace RepoDb
 
             // Set in the combination of the properties
             hashCode += (Field.GetHashCode() + (int)Operation + Parameter.GetHashCode());
+            if (DbSetting != null)
+            {
+                hashCode += DbSetting.GetHashCode();
+            }
 
             // The (IS NULL) affects the uniqueness of the object
             if (Operation == Operation.Equal && ReferenceEquals(null, Parameter.Value))
@@ -327,5 +355,7 @@ namespace RepoDb
         {
             return (objA == objB) == false;
         }
+
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Exceptions;
+using RepoDb.Interfaces;
 using RepoDb.StatementBuilders;
 using System;
 using System.Collections.Concurrent;
@@ -50,16 +51,17 @@ namespace RepoDb
         /// <returns>An instance of <see cref="IStatementBuilder"/> defined on the mapping.</returns>
         public static IStatementBuilder Get(Type type)
         {
+            // Guard the type
             Guard(type);
 
+            // Variables for the cache
             var value = (IStatementBuilder)null;
 
-            if (m_maps.TryGetValue(type.FullName.GetHashCode(), out value))
-            {
-                return value;
-            }
+            // get the value
+            m_maps.TryGetValue(type.FullName.GetHashCode(), out value);
 
-            throw new InvalidOperationException($"There is no existing statement builder mapping for '{type.FullName}'.");
+            // Return the value
+            return value;
         }
 
         /// <summary>
@@ -70,24 +72,30 @@ namespace RepoDb
         /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
         public static void Add(Type type, IStatementBuilder statementBuilder, bool @override = false)
         {
+            // Guard the type
             Guard(type);
 
-            var value = (IStatementBuilder)null;
+            // Variables for cache
             var key = type.FullName.GetHashCode();
+            var existing = (IStatementBuilder)null;
 
-            if (m_maps.TryGetValue(key, out value))
+            // Try get the mappings
+            if (m_maps.TryGetValue(key, out existing))
             {
                 if (@override)
                 {
-                    m_maps.TryUpdate(key, statementBuilder, value);
+                    // Override the existing one
+                    m_maps.TryUpdate(key, statementBuilder, existing);
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Statement builder mapping already exists ('{type.Name}' = '{value?.GetType().Name}').");
+                    // Throw an exception
+                    throw new MappingAlreadyExistsException($"The statement builder to provider '{type.FullName}' already exists.");
                 }
             }
             else
             {
+                // Add to mapping
                 m_maps.TryAdd(key, statementBuilder);
             }
         }

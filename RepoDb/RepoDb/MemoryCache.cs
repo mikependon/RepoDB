@@ -4,6 +4,7 @@ using RepoDb.Interfaces;
 using System.Linq;
 using System.Collections;
 using System.Collections.Concurrent;
+using RepoDb.Exceptions;
 
 namespace RepoDb
 {
@@ -29,7 +30,10 @@ namespace RepoDb
         /// <param name="value">The value of the cache.</param>
         /// <param name="expiration">The expiration in minutes of the cache item.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
-        public void Add(string key, object value, int expiration = Constant.DefaultCacheItemExpirationInMinutes, bool throwException = true)
+        public void Add(string key,
+            object value,
+            int expiration = Constant.DefaultCacheItemExpirationInMinutes,
+            bool throwException = true)
         {
             Add(new CacheItem(key, value, expiration), throwException);
         }
@@ -39,7 +43,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="item">The cache item to be added in the collection.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
-        public void Add(CacheItem item, bool throwException = true)
+        public void Add(CacheItem item,
+            bool throwException = true)
         {
             var cacheItem = GetItem(item.Key, false);
             if (cacheItem == null)
@@ -84,7 +89,8 @@ namespace RepoDb
         /// <param name="key">The key of the cache object to be retrieved.</param>
         /// <returns>A cached item object from the cache collection based on the given key.</returns>
         /// <param name="throwException">Throws an exception if the item is not found.</param>
-        public CacheItem Get(string key, bool throwException = true)
+        public CacheItem Get(string key,
+            bool throwException = true)
         {
             var item = GetItem(key, throwException);
             if (item != null && !item.IsExpired())
@@ -120,12 +126,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="key">The key of the item to be removed from the cache collection.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to remove an item.</param>
-        public void Remove(string key, bool throwException = true)
+        public void Remove(string key,
+            bool throwException = true)
         {
             var item = (CacheItem)null;
             if (m_cache.TryRemove(key, out item) == false && throwException == true)
             {
-                throw new InvalidOperationException($"Failed to remove an item with key '{key}'.");
+                throw new ItemNotFoundException($"Failed to remove an item with key '{key}'.");
             }
         }
 
@@ -135,12 +142,13 @@ namespace RepoDb
         /// <param name="key">The key of the cached item.</param>
         /// <returns>The cached item based on the given key.</returns>
         /// <param name="throwException">Throws an exception if the item is not found.</param>
-        protected CacheItem GetItem(string key, bool throwException = true)
+        protected CacheItem GetItem(string key,
+            bool throwException = true)
         {
             var value = (CacheItem)null;
             if (m_cache.TryGetValue(key, out value) == false && throwException == true)
             {
-                throw new InvalidOperationException($"No item found with key '{key}'.");
+                throw new ItemNotFoundException($"No item found with key '{key}'.");
             }
             return value;
         }

@@ -38,7 +38,7 @@ namespace RepoDb.Reflection
             var newEntityExpression = Expression.New(typeof(TEntity));
 
             // DB Variables
-            var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+            var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(connection.GetDbSetting()), transaction);
 
             // Matching the fields
             var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -88,7 +88,7 @@ namespace RepoDb.Reflection
             var memberAssignments = new List<MemberAssignment>();
             var dataReaderType = typeof(DbDataReader);
             var isDefaultConversion = TypeMapper.ConversionType == ConversionType.Default;
-            var properties = PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite);
+            var properties = PropertyCache.Get<TEntity>(connection.GetDbSetting()).Where(property => property.PropertyInfo.CanWrite);
             var fieldNames = readerFields.Select(f => f.Name.ToLower()).AsList();
 
             // Filter the properties by reader fields
@@ -477,7 +477,7 @@ namespace RepoDb.Reflection
             var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
 
             // Variables for types
-            var entityProperties = PropertyCache.Get<TEntity>();
+            var entityProperties = PropertyCache.Get<TEntity>(inputFields?.First()?.DbSetting);
 
             // Variables for DbCommand
             var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
@@ -501,7 +501,7 @@ namespace RepoDb.Reflection
             var propertyInfoGetValueMethod = typeOfPropertyInfo.GetMethod("GetValue", new[] { typeOfObject });
 
             // Other variables
-            var dbTypeResolver = new ClientTypeToSqlDbTypeResolver();
+            var dbTypeResolver = new ClientTypeToDbTypeResolver();
 
             // Reusable function for input/output fields
             var func = new Func<Expression, ParameterExpression, DbField, ClassProperty, bool, ParameterDirection, Expression>((Expression instance,
@@ -515,7 +515,7 @@ namespace RepoDb.Reflection
                 var parameterAssignments = new List<Expression>();
 
                 // Parameter variables
-                var parameterName = field.UnquotedName.AsAlphaNumeric();
+                var parameterName = field.UnquotedName.AsAlphaNumeric(true);
                 var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", parameterName));
                 var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                 parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
@@ -963,7 +963,7 @@ namespace RepoDb.Reflection
             var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
 
             // Variables for types
-            var entityProperties = PropertyCache.Get<TEntity>();
+            var entityProperties = PropertyCache.Get<TEntity>(inputFields?.First()?.DbSetting);
 
             // Variables for DbCommand
             var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
@@ -990,7 +990,7 @@ namespace RepoDb.Reflection
             var listIndexerMethod = typeOfListEntity.GetMethod("get_Item", new[] { typeOfInt });
 
             // Other variables
-            var dbTypeResolver = new ClientTypeToSqlDbTypeResolver();
+            var dbTypeResolver = new ClientTypeToDbTypeResolver();
 
             // Reusable function for input/output fields
             var func = new Func<int, Expression, ParameterExpression, DbField, ClassProperty, bool, ParameterDirection, Expression>((int entityIndex,
@@ -1005,7 +1005,7 @@ namespace RepoDb.Reflection
                 var parameterAssignments = new List<Expression>();
 
                 // Parameter variables
-                var parameterName = field.UnquotedName.AsAlphaNumeric();
+                var parameterName = field.UnquotedName.AsAlphaNumeric(true);
                 var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", parameterName));
                 var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                 parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
@@ -1454,8 +1454,8 @@ namespace RepoDb.Reflection
             var dbParameterValueProperty = typeOfDbParameter.GetProperty("Value");
 
             // Get the entity property
-            var propertyName = field.UnquotedName.AsAlphaNumeric();
-            var property = (typeOfEntity.GetProperty(propertyName) ?? typeOfEntity.GetPropertyByMapping(propertyName)?.PropertyInfo)?.SetMethod;
+            var propertyName = field.UnquotedName.AsAlphaNumeric(true);
+            var property = (typeOfEntity.GetProperty(propertyName) ?? typeOfEntity.GetPropertyByMapping(propertyName, field.DbSetting)?.PropertyInfo)?.SetMethod;
 
             // Get the command parameter
             var name = parameterName ?? propertyName;
@@ -1495,7 +1495,7 @@ namespace RepoDb.Reflection
             var valueParameter = Expression.Parameter(typeOfObject, "value");
 
             // Get the entity property
-            var property = (typeOfEntity.GetProperty(field.UnquotedName) ?? typeOfEntity.GetPropertyByMapping(field.UnquotedName)?.PropertyInfo)?.SetMethod;
+            var property = (typeOfEntity.GetProperty(field.UnquotedName) ?? typeOfEntity.GetPropertyByMapping(field.UnquotedName, field.DbSetting)?.PropertyInfo)?.SetMethod;
 
             // Assign the value into DataEntity.Property
             var propertyAssignment = Expression.Call(entityParameter, property,
@@ -1523,7 +1523,7 @@ namespace RepoDb.Reflection
             int batchSize)
         {
             // Variables
-            var dbTypeResolver = new ClientTypeToSqlDbTypeResolver();
+            var dbTypeResolver = new ClientTypeToDbTypeResolver();
             var typeOfBytes = typeof(byte[]);
 
             // Clear the parameters
@@ -1536,7 +1536,7 @@ namespace RepoDb.Reflection
              {
                  // Create the parameter
                  var parameter = command.CreateParameter();
-                 var name = field.UnquotedName.AsAlphaNumeric();
+                 var name = field.UnquotedName.AsAlphaNumeric(true);
 
                  // Set the property
                  parameter.ParameterName = index > 0 ? string.Concat(name, "_", index) : name;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -60,11 +61,14 @@ namespace RepoDb.Extensions
         /// <typeparam name="TEntity">The type of the object.</typeparam>
         /// <param name="obj">The object to be merged.</param>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to be merged.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        internal static object Merge<TEntity>(this TEntity obj, QueryGroup queryGroup)
+        internal static object Merge<TEntity>(this TEntity obj,
+            QueryGroup queryGroup,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            return Merge(obj, PropertyCache.Get<TEntity>().Select(p => p.PropertyInfo), queryGroup);
+            return Merge(obj, PropertyCache.Get<TEntity>(dbSetting).Select(p => p.PropertyInfo), queryGroup, dbSetting);
         }
 
         /// <summary>
@@ -72,10 +76,13 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="obj">The object where the <see cref="QueryGroup"/> object will be merged.</param>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>A dynamic object with the merged fields from <see cref="QueryGroup"/>.</returns>
-        internal static object Merge(this object obj, QueryGroup queryGroup)
+        internal static object Merge(this object obj,
+            QueryGroup queryGroup,
+            IDbSetting dbSetting)
         {
-            return Merge(obj, obj?.GetType().GetProperties(), queryGroup);
+            return Merge(obj, obj?.GetType().GetProperties(), queryGroup, dbSetting);
         }
 
         /// <summary>
@@ -84,17 +91,21 @@ namespace RepoDb.Extensions
         /// <param name="obj">The object where the <see cref="QueryGroup"/> object will be merged.</param>
         /// <param name="properties">The list of <see cref="PropertyInfo"/> objects.</param>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The object instance itself with the merged values.</returns>
-        internal static object Merge(this object obj, IEnumerable<PropertyInfo> properties, QueryGroup queryGroup)
+        internal static object Merge(this object obj,
+            IEnumerable<PropertyInfo> properties,
+            QueryGroup queryGroup,
+            IDbSetting dbSetting)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             foreach (var property in properties)
             {
-                expandObject[PropertyMappedNameCache.Get(property, false)] = property.GetValue(obj);
+                expandObject[PropertyMappedNameCache.Get(property, false, dbSetting)] = property.GetValue(obj);
             }
             if (queryGroup != null)
             {
-                foreach (var queryField in queryGroup?.Fix().GetFields())
+                foreach (var queryField in queryGroup?.Fix().GetFields(true))
                 {
                     expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
                 }
@@ -106,24 +117,28 @@ namespace RepoDb.Extensions
         /// Converts the data entity object into a dynamic object.
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        internal static object AsObject(this object obj)
+        internal static object AsObject(this object obj,
+            IDbSetting dbSetting)
         {
-            return Merge(obj, null);
+            return Merge(obj, null, dbSetting);
         }
 
         /// <summary>
         /// Converts an instance of an object into an enumerable list of query fields.
         /// </summary>
         /// <param name="obj">The instance of the object to be converted.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable list of query fields.</returns>
-        internal static IEnumerable<QueryField> AsQueryFields(this object obj)
+        internal static IEnumerable<QueryField> AsQueryFields(this object obj,
+            IDbSetting dbSetting)
         {
             var expandoObject = obj as ExpandoObject;
             if (expandoObject != null)
             {
                 var dictionary = (IDictionary<string, object>)expandoObject;
-                var fields = dictionary.Select(item => new QueryField(item.Key, item.Value)).Cast<QueryField>();
+                var fields = dictionary.Select(item => new QueryField(item.Key, item.Value, dbSetting)).AsList();
                 foreach (var field in fields)
                 {
                     yield return field;
@@ -134,7 +149,7 @@ namespace RepoDb.Extensions
                 var properties = obj.GetType().GetProperties();
                 foreach (var property in properties)
                 {
-                    yield return new QueryField(property.Name, property.GetValue(obj));
+                    yield return new QueryField(property.Name, property.GetValue(obj), dbSetting);
                 }
             }
         }
@@ -144,31 +159,37 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="entity">The instance to be converted.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable list of fields.</returns>
-        internal static IEnumerable<Field> AsFields<TEntity>(this TEntity entity)
+        internal static IEnumerable<Field> AsFields<TEntity>(this TEntity entity,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            return FieldCache.Get<TEntity>();
+            return FieldCache.Get<TEntity>(dbSetting);
         }
 
         /// <summary>
         /// Converts an instance of an object into an enumerable list of field.
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable list of fields.</returns>
-        internal static IEnumerable<Field> AsFields(this object obj)
+        internal static IEnumerable<Field> AsFields(this object obj,
+            IDbSetting dbSetting)
         {
-            return Field.Parse(obj);
+            return Field.Parse(obj, dbSetting);
         }
 
         /// <summary>
         /// Converts an instance of an object into an enumerable list of order fields.
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable list of order fields.</returns>
-        internal static IEnumerable<OrderField> AsOrderFields(this object obj)
+        internal static IEnumerable<OrderField> AsOrderFields(this object obj,
+            IDbSetting dbSetting)
         {
-            return OrderField.Parse(obj);
+            return OrderField.Parse(obj, dbSetting);
         }
 
         /// <summary>
@@ -177,7 +198,8 @@ namespace RepoDb.Extensions
         /// <param name="obj">The current object.</param>
         /// <param name="parameters">The list of parameters.</param>
         /// <returns>The first non-null object.</returns>
-        internal static object Coalesce(this object obj, params object[] parameters)
+        internal static object Coalesce(this object obj,
+            params object[] parameters)
         {
             return parameters.First(param => param != null);
         }
@@ -189,7 +211,8 @@ namespace RepoDb.Extensions
         /// <param name="obj">The current object.</param>
         /// <param name="parameters">The list of parameters.</param>
         /// <returns>The first non-defaulted object.</returns>
-        internal static T Coalesce<T>(this object obj, params T[] parameters)
+        internal static T Coalesce<T>(this object obj,
+            params T[] parameters)
         {
             return parameters.First(param => Equals(param, default(T)) == false);
         }

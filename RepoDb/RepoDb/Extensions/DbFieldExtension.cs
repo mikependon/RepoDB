@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RepoDb.Interfaces;
+using System.Collections.Generic;
 
 namespace RepoDb.Extensions
 {
@@ -24,7 +25,7 @@ namespace RepoDb.Extensions
         /// <returns>An instance of <see cref="Field"/> object.</returns>
         public static Field AsField(this DbField dbField)
         {
-            return new Field(dbField.UnquotedName, dbField.Type);
+            return new Field(dbField.UnquotedName, dbField.Type, dbField.DbSetting);
         }
 
         /// <summary>

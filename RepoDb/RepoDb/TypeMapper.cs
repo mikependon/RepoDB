@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Data;
 using System.Data.Common;
 using RepoDb.Enumerations;
+using RepoDb.Exceptions;
 
 namespace RepoDb
 {
@@ -29,7 +30,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The .NET CLR Type to be mapped.</param>
         /// <param name="dbType">The database type where to map the .NET CLR Type.</param>
-        public static void Map(Type type, DbType dbType)
+        public static void Map(Type type,
+            DbType dbType)
         {
             Map(type, dbType, false);
         }
@@ -40,7 +42,9 @@ namespace RepoDb
         /// <param name="type">The .NET CLR Type to be mapped.</param>
         /// <param name="dbType">The database type where to map the .NET CLR Type.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Map(Type type, DbType dbType, bool force = false)
+        public static void Map(Type type,
+            DbType dbType,
+            bool force)
         {
             var key = type.FullName.GetHashCode();
             var value = (DbType?)null;
@@ -56,7 +60,7 @@ namespace RepoDb
                 else
                 {
                     // Throws an exception
-                    throw new InvalidOperationException($"Mapping to provider '{key}' already exists.");
+                    throw new MissingMappingException($"Mapping to '{type.FullName}' already exists.");
                 }
             }
             else

@@ -1,13 +1,12 @@
 ﻿using RepoDb.Interfaces;
-using System;
 using System.Data;
 
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class used to resolve the <see cref="DbType"/> into its equivalent database string name.
+    /// A class used to resolve the <see cref="DbType"/> into its equivalent SQL Server database string name.
     /// </summary>
-    public class SqlDbTypeToClientTypeResolver : IResolver<DbType, Type>
+    public class DbTypeToSqlServerStringNameResolver : IResolver<DbType, string>
     {
         /*
          * Taken:
@@ -19,54 +18,54 @@ namespace RepoDb.Resolvers
         /// </summary>
         /// <param name="dbType">The type of the database.</param>
         /// <returns>The equivalent string name.</returns>
-        public Type Resolve(DbType dbType)
+        public string Resolve(DbType dbType)
         {
             switch (dbType)
             {
                 case DbType.Int64:
-                    return typeof(long);
+                    return "BIGINT";
                 case DbType.Binary:
-                    return typeof(byte[]);
+                    return "BINARY";
                 case DbType.Boolean:
-                    return typeof(bool);
+                    return "BIT";
                 case DbType.String:
-                    return typeof(string);
+                    return "NVARCHAR";
                 case DbType.Date:
-                    return typeof(DateTime);
+                    return "DATE";
                 case DbType.DateTime:
-                    return typeof(DateTime);
+                    return "DATETIME";
                 case DbType.DateTime2:
-                    return typeof(DateTime);
+                    return "DATETIME2";
                 case DbType.DateTimeOffset:
-                    return typeof(DateTimeOffset);
+                    return "DATETIMEOFFSET";
                 case DbType.Decimal:
-                    return typeof(decimal);
+                    return "DECIMAL(18,2)";
                 case DbType.Single:
-                    return typeof(Single);
+                    return "REAL";
                 case DbType.Double:
-                    return typeof(double);
+                    return "FLOAT";
                 case DbType.Int32:
-                    return typeof(int);
+                    return "INT";
                 case DbType.Int16:
-                    return typeof(short);
+                    return "SMALLINT";
                 case DbType.Time:
-                    return typeof(TimeSpan);
+                    return "TIME";
                 case DbType.Byte:
-                    return typeof(byte);
+                    return "TINYINT";
                 case DbType.Guid:
-                    return typeof(Guid);
+                    return "UNIQUEIDENTIFIER";
                 case DbType.AnsiString:
-                    return typeof(string);
+                    return "VARCHAR";
                 case DbType.AnsiStringFixedLength:
-                    return typeof(string);
+                    return "CHAR";
                 case DbType.StringFixedLength:
-                    return typeof(string);
+                    return "NCHAR";
                 case DbType.Object:
-                    return typeof(object);
-                //case DbType.Xml:
-                //    return "XML";
+                    return "OBJECT";
+                case DbType.Xml:
+                    return "XML";
                 default:
-                    return typeof(string);
+                    return "NVARCHAR";
             }
         }
     }

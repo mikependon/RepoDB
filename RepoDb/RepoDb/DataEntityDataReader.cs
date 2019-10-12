@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Collections;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -28,8 +29,10 @@ namespace RepoDb
         /// Creates a new instance of <see cref="DataEntityDataReader{TEntity}"/> object.
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
-        public DataEntityDataReader(IEnumerable<TEntity> entities) :
-            this(entities, null, null)
+        public DataEntityDataReader(IEnumerable<TEntity> entities)
+            : this(entities,
+                null,
+                null)
         { }
 
         /// <summary>
@@ -37,8 +40,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         /// <param name="connection">The actual <see cref="IDbConnection"/> object used.</param>
-        public DataEntityDataReader(IEnumerable<TEntity> entities, IDbConnection connection)
-            : this(entities, connection, null)
+        public DataEntityDataReader(IEnumerable<TEntity> entities,
+            IDbConnection connection)
+            : this(entities,
+                  connection,
+                  null)
         { }
 
         /// <summary>
@@ -47,7 +53,9 @@ namespace RepoDb
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         /// <param name="connection">The actual <see cref="IDbConnection"/> object used.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
-        public DataEntityDataReader(IEnumerable<TEntity> entities, IDbConnection connection, IDbTransaction transaction)
+        public DataEntityDataReader(IEnumerable<TEntity> entities,
+            IDbConnection connection,
+            IDbTransaction transaction)
         {
             if (entities == null)
             {
@@ -60,20 +68,23 @@ namespace RepoDb
             m_position = -1;
             m_recordsAffected = -1;
 
+            // DbSetting
+            DbSetting = connection?.GetDbSetting();
+
             // Properties
             if (connection != null)
             {
-                var fields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+                var fields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(DbSetting), transaction);
                 if (fields?.Any() == true)
                 {
-                    Properties = PropertyCache.Get<TEntity>()
+                    Properties = PropertyCache.Get<TEntity>(DbSetting)
                         .Where(p => fields.FirstOrDefault(f => string.Equals(f.UnquotedName, p.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase)) != null)
                         .AsList();
                 }
             }
             if (Properties == null)
             {
-                Properties = PropertyCache.Get<TEntity>().AsList();
+                Properties = PropertyCache.Get<TEntity>(DbSetting).AsList();
             }
             Enumerator = entities.GetEnumerator();
             Entities = entities;
@@ -88,6 +99,11 @@ namespace RepoDb
         {
             return Entities?.GetEnumerator();
         }
+
+        /// <summary>
+        /// Returns the database setting that is currently in used.
+        /// </summary>
+        private IDbSetting DbSetting { get; }
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection of data entity objects.
@@ -439,7 +455,7 @@ namespace RepoDb
             {
                 throw new InvalidOperationException($"The length of the array must be equals to the number of fields of the data entity (it should be {FieldCount}).");
             }
-            var extracted = ClassExpression.GetPropertiesAndValues(Enumerator.Current).ToArray();
+            var extracted = ClassExpression.GetPropertiesAndValues(Enumerator.Current, DbSetting).ToArray();
             for (var i = 0; i < Properties.Count; i++)
             {
                 values[i] = extracted[i].Value;

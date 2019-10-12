@@ -1,5 +1,4 @@
 ﻿using RepoDb.Interfaces;
-using System.Data.SQLite;
 
 namespace RepoDb.DbValidators
 {

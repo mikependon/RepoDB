@@ -27,7 +27,7 @@ namespace RepoDb.Requests
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
             IStatementBuilder statementBuilder = null)
-            : this(ClassMappedNameCache.Get(type),
+            : this(ClassMappedNameCache.Get(type, true, connection.GetDbSetting()),
                   connection,
                   transaction,
                   fields,

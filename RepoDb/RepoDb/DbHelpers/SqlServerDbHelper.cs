@@ -1,4 +1,5 @@
-﻿using RepoDb.Extensions;
+﻿using RepoDb.DbSettings;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
@@ -15,12 +16,14 @@ namespace RepoDb.DbHelpers
     /// </summary>
     public class SqlServerDbHelper : IDbHelper
     {
+        private IDbSetting m_dbSetting = new SqlServerDbSetting();
+
         /// <summary>
         /// Creates a new instance of <see cref="SqlServerDbHelper"/> class.
         /// </summary>
         public SqlServerDbHelper()
         {
-            DbTypeResolver = new SqlDbTypeNameToClientTypeResolver();
+            DbTypeResolver = new SqlServerTypeNameToClientTypeResolver();
         }
 
         /// <summary>
@@ -90,7 +93,8 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
                 reader.IsDBNull(6) ? (byte?)0 : reader.GetByte(6),
                 reader.IsDBNull(7) ? (byte?)0 : reader.GetByte(7),
-                reader.IsDBNull(7) ? "text" : reader.GetString(4));
+                reader.IsDBNull(7) ? "text" : reader.GetString(4),
+                m_dbSetting);
         }
 
         /// <summary>
@@ -101,14 +105,14 @@ namespace RepoDb.DbHelpers
         private string GetSchema(string tableName)
         {
             // Get the schema and table name
-            if (tableName.IndexOf(".") > 0)
+            if (tableName.IndexOf(m_dbSetting.SchemaSeparator) > 0)
             {
-                var splitted = tableName.Split(".".ToCharArray());
-                return splitted[0].AsUnquoted(true);
+                var splitted = tableName.Split(m_dbSetting.SchemaSeparator.ToCharArray());
+                return splitted[0].AsUnquoted(true, m_dbSetting);
             }
 
             // Return the unquoted
-            return "dbo";
+            return m_dbSetting.DefaultSchema;
         }
 
         /// <summary>
@@ -119,20 +123,20 @@ namespace RepoDb.DbHelpers
         private string GetTableName(string tableName)
         {
             // Check for the command type
-            var schema = "dbo";
+            var schema = m_dbSetting.DefaultSchema;
 
             // Get the schema and table name
-            if (tableName.IndexOf(".") > 0)
+            if (tableName.IndexOf(m_dbSetting.SchemaSeparator) > 0)
             {
-                var splitted = tableName.Split(".".ToCharArray());
-                schema = splitted[0].AsUnquoted(true);
+                var splitted = tableName.Split(m_dbSetting.SchemaSeparator.ToCharArray());
+                schema = splitted[0].AsUnquoted(true, m_dbSetting);
 
                 // Return the splitted one
-                return splitted[1].AsUnquoted(true);
+                return splitted[1].AsUnquoted(true, m_dbSetting);
             }
 
             // Return the unquoted
-            return tableName.AsUnquoted();
+            return tableName.AsUnquoted(m_dbSetting);
         }
 
         /// <summary>
@@ -142,7 +146,9 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public IEnumerable<DbField> GetFields(string connectionString, string tableName, IDbTransaction transaction = null)
+        public IEnumerable<DbField> GetFields(string connectionString,
+            string tableName,
+            IDbTransaction transaction = null)
         {
             // Open a connection
             using (var connection = new SqlConnection(connectionString))
@@ -158,7 +164,9 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString, string tableName, IDbTransaction transaction = null)
+        public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString,
+            string tableName,
+            IDbTransaction transaction = null)
         {
             // Open a connection
             using (var connection = new SqlConnection(connectionString))
@@ -175,7 +183,9 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
+        public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection,
+            string tableName,
+            IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
             return GetFieldsInternal(connection, tableName, transaction);
@@ -189,7 +199,9 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
+        public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection,
+            string tableName,
+            IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
             return GetFieldsAsyncInternal(connection, tableName, transaction);
@@ -203,14 +215,16 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        internal IEnumerable<DbField> GetFieldsInternal<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
+        internal IEnumerable<DbField> GetFieldsInternal<TDbConnection>(TDbConnection connection,
+            string tableName,
+            IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
             // Open a command
             using (var dbCommand = connection.EnsureOpen().CreateCommand(GetCommandText(), transaction: transaction))
             {
                 // Create parameters
-                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) });
+                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) }, connection.GetDbSetting());
 
                 // Execute and set the result
                 using (var reader = dbCommand.ExecuteReader())
@@ -237,14 +251,16 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        internal async Task<IEnumerable<DbField>> GetFieldsAsyncInternal<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
+        internal async Task<IEnumerable<DbField>> GetFieldsAsyncInternal<TDbConnection>(TDbConnection connection,
+            string tableName,
+            IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
             // Open a command
             using (var dbCommand = ((DbConnection)await connection.EnsureOpenAsync()).CreateCommand(GetCommandText(), transaction: transaction))
             {
                 // Create parameters
-                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) });
+                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) }, connection.GetDbSetting());
 
                 // Execute and set the result
                 using (var reader = await ((DbCommand)dbCommand).ExecuteReaderAsync())

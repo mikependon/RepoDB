@@ -16,7 +16,8 @@ namespace RepoDb.Extensions
         /// <param name="value">The actual enumerable instance.</param>
         /// <param name="sizePerSplit">The sizes of the items per split.</param>
         /// <returns>An enumerable of enumerables.</returns>
-        public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> value, int sizePerSplit)
+        public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> value,
+            int sizePerSplit)
         {
             var itemCount = value.Count();
             var batchCount = Convert.ToInt32(itemCount / sizePerSplit) + (itemCount % sizePerSplit);

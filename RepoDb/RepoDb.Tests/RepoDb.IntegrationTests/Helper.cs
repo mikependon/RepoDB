@@ -4,6 +4,7 @@ using RepoDb.IntegrationTests.Enumerations;
 using RepoDb.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
@@ -578,11 +579,14 @@ namespace RepoDb.IntegrationTests
         public static Tuple<List<dynamic>, IEnumerable<Field>> CreateDynamicIdentityTablesWithLimitedColumns(int count)
         {
             var tables = new List<dynamic>();
-            var fields = Field.From(
-                "RowGuid",
-                "ColumnBit",
-                "ColumnDateTime2",
-                "ColumnNVarChar");
+            var fields = Field.From(new[]
+                {
+                    "RowGuid",
+                    "ColumnBit",
+                    "ColumnDateTime2",
+                    "ColumnNVarChar"
+                },
+                DbSettingMapper.Get(typeof(SqlConnection)));
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;
@@ -656,11 +660,14 @@ namespace RepoDb.IntegrationTests
         public static Tuple<List<dynamic>, IEnumerable<Field>> CreateDynamicNonIdentityTablesWithLimitedColumns(int count)
         {
             var tables = new List<dynamic>();
-            var fields = Field.From(
-                "Id",
-                "ColumnBit",
-                "ColumnDateTime2",
-                "ColumnNVarChar");
+            var fields = Field.From(new[]
+                {
+                    "RowGuid",
+                    "ColumnBit",
+                    "ColumnDateTime2",
+                    "ColumnNVarChar"
+                },
+                DbSettingMapper.Get(typeof(SqlConnection)));
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;

@@ -1,4 +1,5 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 
 namespace RepoDb
@@ -10,15 +11,15 @@ namespace RepoDb
     {
         private int m_hashCode = 0;
 
-        /// <summary>
-        /// Creates a new instance of <see cref="Parameter"/> object.
-        /// </summary>
-        /// <param name="name">The name of the parameter.</param>
-        /// <param name="value">The value of the parameter.</param>
-        public Parameter(string name, object value)
-            : this(name, value, false)
-        {
-        }
+        ///// <summary>
+        ///// Creates a new instance of <see cref="Parameter"/> object.
+        ///// </summary>
+        ///// <param name="name">The name of the parameter.</param>
+        ///// <param name="value">The value of the parameter.</param>
+        //public Parameter(string name, object value)
+        //    : this(name, value, false)
+        //{
+        //}
 
         /// <summary>
         /// Creates a new instance of <see cref="Parameter"/> object.
@@ -26,7 +27,11 @@ namespace RepoDb
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
         /// <param name="prependUnderscore">The value to identify whether the underscope prefix will be prepended.</param>
-        internal Parameter(string name, object value, bool prependUnderscore)
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        internal Parameter(string name,
+            object value,
+            bool prependUnderscore,
+            IDbSetting dbSetting)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -35,6 +40,7 @@ namespace RepoDb
             }
 
             // Set the properties
+            DbSetting = dbSetting;
             Name = name.AsAlphaNumeric(true);
             Value = value;
             if (prependUnderscore)
@@ -44,7 +50,13 @@ namespace RepoDb
 
             // Set the hashcode
             m_hashCode = Name.GetHashCode();
+            if (dbSetting != null)
+            {
+                m_hashCode += dbSetting.GetHashCode();
+            }
         }
+
+        #region Properties
 
         /// <summary>
         /// Gets the name of the parameter.
@@ -55,6 +67,15 @@ namespace RepoDb
         /// Gets the value of the parameter.
         /// </summary>
         public object Value { get; }
+
+        /// <summary>
+        /// Gets the database setting currently in used.
+        /// </summary>
+        public IDbSetting DbSetting { get; }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Prepend an underscore on the current parameter object.
@@ -71,9 +92,11 @@ namespace RepoDb
         /// Set the name of the parameter.
         /// </summary>
         /// <param name="name">The new name.</param>
-        internal void SetName(string name)
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        internal void SetName(string name,
+            IDbSetting dbSetting)
         {
-            Name = name.AsUnquoted(true);
+            Name = name.AsUnquoted(true, dbSetting);
         }
 
         /// <summary>
@@ -85,7 +108,9 @@ namespace RepoDb
             return string.Concat("@", Name, " (", Value, ")");
         }
 
-        // Equality and comparers
+        #endregion
+
+        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="Parameter"/>.
@@ -141,5 +166,7 @@ namespace RepoDb
         {
             return (objA == objB) == false;
         }
+
+        #endregion
     }
 }

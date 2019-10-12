@@ -71,12 +71,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            var dbSetting = connection.GetDbSetting();
+
             // Return the result
             return InsertAllInternalBase<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
                 entities: entities,
                 batchSize: batchSize,
-                fields: FieldCache.Get<TEntity>(),
+                fields: FieldCache.Get<TEntity>(dbSetting),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -139,12 +141,12 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Return the result
+            var dbSetting = connection.GetDbSetting();
             return InsertAllAsyncInternalBase<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
                 entities: entities,
                 batchSize: batchSize,
-                fields: FieldCache.Get<TEntity>(),
+                fields: FieldCache.Get<TEntity>(dbSetting),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -360,10 +362,11 @@ namespace RepoDb
                 // Set the identity value
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
+                    var dbSetting = connection.GetDbSetting();
+                    identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
                             string.Equals(field.UnquotedName, identityDbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
                     }
                 }
@@ -691,10 +694,11 @@ namespace RepoDb
                 // Set the identity value
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
+                    var dbSetting = connection.GetDbSetting();
+                    identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
                             string.Equals(field.UnquotedName, identityDbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
                     }
                 }
@@ -988,7 +992,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateInsertAll(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateInsertAll();
+            connection.GetDbValidator()?.ValidateInsertAll();
         }
 
         /// <summary>
@@ -997,7 +1001,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateInsertAllAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateInsertAllAsync();
+            connection.GetDbValidator()?.ValidateInsertAllAsync();
         }
 
         #endregion

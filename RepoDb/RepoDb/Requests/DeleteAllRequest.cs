@@ -22,7 +22,7 @@ namespace RepoDb.Requests
             IDbConnection connection,
             IDbTransaction transaction,
             IStatementBuilder statementBuilder = null)
-            : this(ClassMappedNameCache.Get(type),
+            : this(ClassMappedNameCache.Get(type, true, connection.GetDbSetting()),
                   connection,
                   transaction,
                   statementBuilder)

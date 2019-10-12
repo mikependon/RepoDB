@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
@@ -16,11 +17,13 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The target type of the data entity.</typeparam>
         /// <param name="reader">The data reader object to be converted.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> AsEnumerable<TEntity>(this IDataReader reader)
+        public static IEnumerable<TEntity> AsEnumerable<TEntity>(this IDataReader reader,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            var properties = PropertyCache.Get<TEntity>()
+            var properties = PropertyCache.Get<TEntity>(dbSetting)
                 .Where(property => property.PropertyInfo.CanWrite);
             var dictionary = new Dictionary<int, ClassProperty>();
             for (var i = 0; i < reader.FieldCount; i++)

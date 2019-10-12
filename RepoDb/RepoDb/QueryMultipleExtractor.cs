@@ -26,8 +26,13 @@ namespace RepoDb
         /// <param name="reader">The <see cref="DbDataReader"/> to be extracted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
-        internal QueryMultipleExtractor(DbDataReader reader, IDbConnection connection, IDbTransaction transaction)
-            : this(reader, connection, transaction, connection.ConnectionString) { }
+        internal QueryMultipleExtractor(DbDataReader reader,
+            IDbConnection connection,
+            IDbTransaction transaction)
+            : this(reader,
+                  connection,
+                  transaction,
+                  connection.ConnectionString) { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
@@ -36,7 +41,10 @@ namespace RepoDb
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
         /// <param name="connectionString">The unaltered connetion string used by the connection object.</param>
-        internal QueryMultipleExtractor(DbDataReader reader, IDbConnection connection, IDbTransaction transaction, string connectionString)
+        internal QueryMultipleExtractor(DbDataReader reader,
+            IDbConnection connection,
+            IDbTransaction transaction,
+            string connectionString)
         {
             m_reader = reader;
             m_connection = connection;
@@ -109,7 +117,7 @@ namespace RepoDb
             {
                 using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connectionString }))
                 {
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(connection.GetDbSetting()), transaction);
                     m_cache.TryAdd(key, dbFields);
                 }
             }
@@ -131,7 +139,7 @@ namespace RepoDb
             {
                 using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connectionString }))
                 {
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(connection.GetDbSetting()), transaction);
                     m_cache.TryAdd(key, dbFields);
                 }
             }
@@ -148,7 +156,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity to be extracted.</typeparam>
         /// <returns>An enumerable of extracted data entity.</returns>
-        public IEnumerable<TEntity> Extract<TEntity>() where TEntity : class
+        public IEnumerable<TEntity> Extract<TEntity>()
+            where TEntity : class
         {
             // Call the cache first to avoid reusing multiple data readers
             EnsureSingleCallForDbFieldCacheGet<TEntity>(m_transaction);
@@ -168,7 +177,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity to be extracted.</typeparam>
         /// <returns>An enumerable of extracted data entity.</returns>
-        public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>() where TEntity : class
+        public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>()
+            where TEntity : class
         {
             // Call the cache first to avoid reusing multiple data readers
             await EnsureSingleCallForDbFieldCacheGeAsync<TEntity>(m_transaction);

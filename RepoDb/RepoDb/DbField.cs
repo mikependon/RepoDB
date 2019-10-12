@@ -1,4 +1,5 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 
 namespace RepoDb
@@ -13,28 +14,16 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <see cref="DbField"/> object.
         /// </summary>
-        public DbField(string name,
-            bool isPrimary,
-            bool isIdentity,
-            bool isNullable,
-            Type type,
-            int? size,
-            byte? precision,
-            byte? scale)
-            : this(name,
-                  isPrimary,
-                  isIdentity,
-                  isNullable,
-                  type,
-                  size,
-                  precision,
-                  scale,
-                  null)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DbField"/> object.
-        /// </summary>
+        /// <param name="name">The name of the field.</param>
+        /// <param name="isPrimary">The value that indicates whether the field is primary.</param>
+        /// <param name="isIdentity">The value that indicates whether the field is identity.</param>
+        /// <param name="isNullable">The value that indicates whether the field is nullable.</param>
+        /// <param name="type">The equivalent .NET CLR type of the field.</param>
+        /// <param name="size">The size of the field.</param>
+        /// <param name="precision">The precision of the field.</param>
+        /// <param name="scale">The scale of the field.</param>
+        /// <param name="databaseType">The database type of the field.</param>
+        /// <param name="dbSetting">The database setting to be used.</param>
         public DbField(string name,
             bool isPrimary,
             bool isIdentity,
@@ -43,7 +32,8 @@ namespace RepoDb
             int? size,
             byte? precision,
             byte? scale,
-            string databaseType)
+            string databaseType,
+            IDbSetting dbSetting)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -52,8 +42,8 @@ namespace RepoDb
             }
 
             // Set the properties
-            Name = name.AsQuoted(true);
-            UnquotedName = name.AsUnquoted(true);
+            Name = name.AsQuoted(true, true, dbSetting);
+            UnquotedName = name.AsUnquoted(true, dbSetting);
             IsPrimary = isPrimary;
             IsIdentity = isIdentity;
             IsNullable = isNullable;
@@ -62,6 +52,7 @@ namespace RepoDb
             Precision = precision;
             Scale = scale;
             DatabaseType = databaseType;
+            DbSetting = dbSetting;
 
             // Set the hashcode
             m_hashCode = name.GetHashCode() + isPrimary.GetHashCode() + isIdentity.GetHashCode() + isNullable.GetHashCode();
@@ -84,6 +75,10 @@ namespace RepoDb
             if (databaseType != null)
             {
                 m_hashCode += databaseType.GetHashCode();
+            }
+            if (dbSetting != null)
+            {
+                m_hashCode += dbSetting.GetHashCode();
             }
         }
 
@@ -137,6 +132,11 @@ namespace RepoDb
         /// </summary>
         public string DatabaseType { get; }
 
+        /// <summary>
+        /// Gets the database setting currently in used.
+        /// </summary>
+        public IDbSetting DbSetting { get; }
+
         // Methods
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace RepoDb
             return string.Concat(Name, " (", m_hashCode, ")");
         }
 
-        // Equality and comparers
+        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="DbField"/>.
@@ -204,5 +204,7 @@ namespace RepoDb
         {
             return (objA == objB) == false;
         }
+
+        #endregion
     }
 }

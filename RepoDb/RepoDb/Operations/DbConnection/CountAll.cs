@@ -428,7 +428,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateCountAll(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateCountAll();
+            connection.GetDbValidator()?.ValidateCountAll();
         }
 
         /// <summary>
@@ -437,7 +437,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateCountAllAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateCountAllAsync();
+            connection.GetDbValidator()?.ValidateCountAllAsync();
         }
 
         #endregion

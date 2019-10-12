@@ -26,7 +26,7 @@ namespace RepoDb.Requests
             QueryGroup where = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
-            : this(ClassMappedNameCache.Get(type),
+            : this(ClassMappedNameCache.Get(type, true, connection.GetDbSetting()),
                   connection,
                   transaction,
                   where,

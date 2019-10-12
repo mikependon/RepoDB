@@ -57,9 +57,10 @@ namespace RepoDb
             where T1 : class
             where T2 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleInternal<T1, T2>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -112,16 +113,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -134,7 +136,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -252,10 +254,11 @@ namespace RepoDb
             where T2 : class
             where T3 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleInternal<T1, T2, T3>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
-                where3: QueryGroup.Parse<T3>(where3),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
+                where3: QueryGroup.Parse<T3>(where3, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -321,16 +324,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -343,7 +347,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -356,7 +360,7 @@ namespace RepoDb
                 typeof(T3),
                 connection,
                 transaction,
-                FieldCache.Get<T3>(),
+                FieldCache.Get<T3>(dbSetting),
                 where3,
                 orderBy3,
                 top3,
@@ -490,11 +494,12 @@ namespace RepoDb
             where T3 : class
             where T4 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleInternal<T1, T2, T3, T4>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
-                where3: QueryGroup.Parse<T3>(where3),
-                where4: QueryGroup.Parse<T4>(where4),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
+                where3: QueryGroup.Parse<T3>(where3, dbSetting),
+                where4: QueryGroup.Parse<T4>(where4, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -574,16 +579,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -596,7 +602,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -609,7 +615,7 @@ namespace RepoDb
                 typeof(T3),
                 connection,
                 transaction,
-                FieldCache.Get<T3>(),
+                FieldCache.Get<T3>(dbSetting),
                 where3,
                 orderBy3,
                 top3,
@@ -622,7 +628,7 @@ namespace RepoDb
                 typeof(T4),
                 connection,
                 transaction,
-                FieldCache.Get<T4>(),
+                FieldCache.Get<T4>(dbSetting),
                 where4,
                 orderBy4,
                 top4,
@@ -771,12 +777,13 @@ namespace RepoDb
             where T4 : class
             where T5 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleInternal<T1, T2, T3, T4, T5>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
-                where3: QueryGroup.Parse<T3>(where3),
-                where4: QueryGroup.Parse<T4>(where4),
-                where5: QueryGroup.Parse<T5>(where5),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
+                where3: QueryGroup.Parse<T3>(where3, dbSetting),
+                where4: QueryGroup.Parse<T4>(where4, dbSetting),
+                where5: QueryGroup.Parse<T5>(where5, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -869,16 +876,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -891,7 +899,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -904,7 +912,7 @@ namespace RepoDb
                 typeof(T3),
                 connection,
                 transaction,
-                FieldCache.Get<T3>(),
+                FieldCache.Get<T3>(dbSetting),
                 where3,
                 orderBy3,
                 top3,
@@ -917,7 +925,7 @@ namespace RepoDb
                 typeof(T4),
                 connection,
                 transaction,
-                FieldCache.Get<T4>(),
+                FieldCache.Get<T4>(dbSetting),
                 where4,
                 orderBy4,
                 top4,
@@ -930,7 +938,7 @@ namespace RepoDb
                 typeof(T5),
                 connection,
                 transaction,
-                FieldCache.Get<T5>(),
+                FieldCache.Get<T5>(dbSetting),
                 where5,
                 orderBy5,
                 top5,
@@ -1094,13 +1102,14 @@ namespace RepoDb
             where T5 : class
             where T6 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleInternal<T1, T2, T3, T4, T5, T6>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
-                where3: QueryGroup.Parse<T3>(where3),
-                where4: QueryGroup.Parse<T4>(where4),
-                where5: QueryGroup.Parse<T5>(where5),
-                where6: QueryGroup.Parse<T6>(where6),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
+                where3: QueryGroup.Parse<T3>(where3, dbSetting),
+                where4: QueryGroup.Parse<T4>(where4, dbSetting),
+                where5: QueryGroup.Parse<T5>(where5, dbSetting),
+                where6: QueryGroup.Parse<T6>(where6, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -1206,16 +1215,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -1228,7 +1238,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -1241,7 +1251,7 @@ namespace RepoDb
                 typeof(T3),
                 connection,
                 transaction,
-                FieldCache.Get<T3>(),
+                FieldCache.Get<T3>(dbSetting),
                 where3,
                 orderBy3,
                 top3,
@@ -1254,7 +1264,7 @@ namespace RepoDb
                 typeof(T4),
                 connection,
                 transaction,
-                FieldCache.Get<T4>(),
+                FieldCache.Get<T4>(dbSetting),
                 where4,
                 orderBy4,
                 top4,
@@ -1267,7 +1277,7 @@ namespace RepoDb
                 typeof(T5),
                 connection,
                 transaction,
-                FieldCache.Get<T5>(),
+                FieldCache.Get<T5>(dbSetting),
                 where5,
                 orderBy5,
                 top5,
@@ -1280,7 +1290,7 @@ namespace RepoDb
                 typeof(T6),
                 connection,
                 transaction,
-                FieldCache.Get<T6>(),
+                FieldCache.Get<T6>(dbSetting),
                 where6,
                 orderBy6,
                 top6,
@@ -1460,14 +1470,15 @@ namespace RepoDb
             where T6 : class
             where T7 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleInternal<T1, T2, T3, T4, T5, T6, T7>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
-                where3: QueryGroup.Parse<T3>(where3),
-                where4: QueryGroup.Parse<T4>(where4),
-                where5: QueryGroup.Parse<T5>(where5),
-                where6: QueryGroup.Parse<T6>(where6),
-                where7: QueryGroup.Parse<T7>(where7),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
+                where3: QueryGroup.Parse<T3>(where3, dbSetting),
+                where4: QueryGroup.Parse<T4>(where4, dbSetting),
+                where5: QueryGroup.Parse<T5>(where5, dbSetting),
+                where6: QueryGroup.Parse<T6>(where6, dbSetting),
+                where7: QueryGroup.Parse<T7>(where7, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -1586,16 +1597,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -1608,7 +1620,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -1621,7 +1633,7 @@ namespace RepoDb
                 typeof(T3),
                 connection,
                 transaction,
-                FieldCache.Get<T3>(),
+                FieldCache.Get<T3>(dbSetting),
                 where3,
                 orderBy3,
                 top3,
@@ -1634,7 +1646,7 @@ namespace RepoDb
                 typeof(T4),
                 connection,
                 transaction,
-                FieldCache.Get<T4>(),
+                FieldCache.Get<T4>(dbSetting),
                 where4,
                 orderBy4,
                 top4,
@@ -1647,7 +1659,7 @@ namespace RepoDb
                 typeof(T5),
                 connection,
                 transaction,
-                FieldCache.Get<T5>(),
+                FieldCache.Get<T5>(dbSetting),
                 where5,
                 orderBy5,
                 top5,
@@ -1660,7 +1672,7 @@ namespace RepoDb
                 typeof(T6),
                 connection,
                 transaction,
-                FieldCache.Get<T6>(),
+                FieldCache.Get<T6>(dbSetting),
                 where6,
                 orderBy6,
                 top6,
@@ -1673,7 +1685,7 @@ namespace RepoDb
                 typeof(T7),
                 connection,
                 transaction,
-                FieldCache.Get<T7>(),
+                FieldCache.Get<T7>(dbSetting),
                 where7,
                 orderBy7,
                 top7,
@@ -1811,9 +1823,10 @@ namespace RepoDb
             where T1 : class
             where T2 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleAsyncInternal<T1, T2>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -1866,16 +1879,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -1888,7 +1902,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -2006,10 +2020,11 @@ namespace RepoDb
             where T2 : class
             where T3 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleAsyncInternal<T1, T2, T3>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
-                where3: QueryGroup.Parse<T3>(where3),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
+                where3: QueryGroup.Parse<T3>(where3, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -2075,16 +2090,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -2097,7 +2113,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -2110,7 +2126,7 @@ namespace RepoDb
                 typeof(T3),
                 connection,
                 transaction,
-                FieldCache.Get<T3>(),
+                FieldCache.Get<T3>(dbSetting),
                 where3,
                 orderBy3,
                 top3,
@@ -2244,11 +2260,12 @@ namespace RepoDb
             where T3 : class
             where T4 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleAsyncInternal<T1, T2, T3, T4>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
-                where3: QueryGroup.Parse<T3>(where3),
-                where4: QueryGroup.Parse<T4>(where4),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
+                where3: QueryGroup.Parse<T3>(where3, dbSetting),
+                where4: QueryGroup.Parse<T4>(where4, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -2328,16 +2345,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -2350,7 +2368,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -2363,7 +2381,7 @@ namespace RepoDb
                 typeof(T3),
                 connection,
                 transaction,
-                FieldCache.Get<T3>(),
+                FieldCache.Get<T3>(dbSetting),
                 where3,
                 orderBy3,
                 top3,
@@ -2376,7 +2394,7 @@ namespace RepoDb
                 typeof(T4),
                 connection,
                 transaction,
-                FieldCache.Get<T4>(),
+                FieldCache.Get<T4>(dbSetting),
                 where4,
                 orderBy4,
                 top4,
@@ -2525,12 +2543,13 @@ namespace RepoDb
             where T4 : class
             where T5 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleAsyncInternal<T1, T2, T3, T4, T5>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
-                where3: QueryGroup.Parse<T3>(where3),
-                where4: QueryGroup.Parse<T4>(where4),
-                where5: QueryGroup.Parse<T5>(where5),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
+                where3: QueryGroup.Parse<T3>(where3, dbSetting),
+                where4: QueryGroup.Parse<T4>(where4, dbSetting),
+                where5: QueryGroup.Parse<T5>(where5, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -2623,16 +2642,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -2645,7 +2665,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -2658,7 +2678,7 @@ namespace RepoDb
                 typeof(T3),
                 connection,
                 transaction,
-                FieldCache.Get<T3>(),
+                FieldCache.Get<T3>(dbSetting),
                 where3,
                 orderBy3,
                 top3,
@@ -2671,7 +2691,7 @@ namespace RepoDb
                 typeof(T4),
                 connection,
                 transaction,
-                FieldCache.Get<T4>(),
+                FieldCache.Get<T4>(dbSetting),
                 where4,
                 orderBy4,
                 top4,
@@ -2684,7 +2704,7 @@ namespace RepoDb
                 typeof(T5),
                 connection,
                 transaction,
-                FieldCache.Get<T5>(),
+                FieldCache.Get<T5>(dbSetting),
                 where5,
                 orderBy5,
                 top5,
@@ -2848,13 +2868,14 @@ namespace RepoDb
             where T5 : class
             where T6 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
-                where3: QueryGroup.Parse<T3>(where3),
-                where4: QueryGroup.Parse<T4>(where4),
-                where5: QueryGroup.Parse<T5>(where5),
-                where6: QueryGroup.Parse<T6>(where6),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
+                where3: QueryGroup.Parse<T3>(where3, dbSetting),
+                where4: QueryGroup.Parse<T4>(where4, dbSetting),
+                where5: QueryGroup.Parse<T5>(where5, dbSetting),
+                where6: QueryGroup.Parse<T6>(where6, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -2960,16 +2981,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -2982,7 +3004,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -2995,7 +3017,7 @@ namespace RepoDb
                 typeof(T3),
                 connection,
                 transaction,
-                FieldCache.Get<T3>(),
+                FieldCache.Get<T3>(dbSetting),
                 where3,
                 orderBy3,
                 top3,
@@ -3008,7 +3030,7 @@ namespace RepoDb
                 typeof(T4),
                 connection,
                 transaction,
-                FieldCache.Get<T4>(),
+                FieldCache.Get<T4>(dbSetting),
                 where4,
                 orderBy4,
                 top4,
@@ -3021,7 +3043,7 @@ namespace RepoDb
                 typeof(T5),
                 connection,
                 transaction,
-                FieldCache.Get<T5>(),
+                FieldCache.Get<T5>(dbSetting),
                 where5,
                 orderBy5,
                 top5,
@@ -3034,7 +3056,7 @@ namespace RepoDb
                 typeof(T6),
                 connection,
                 transaction,
-                FieldCache.Get<T6>(),
+                FieldCache.Get<T6>(dbSetting),
                 where6,
                 orderBy6,
                 top6,
@@ -3214,14 +3236,15 @@ namespace RepoDb
             where T6 : class
             where T7 : class
         {
+            var dbSetting = connection.GetDbSetting();
             return QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6, T7>(connection: connection,
-                where1: QueryGroup.Parse<T1>(where1),
-                where2: QueryGroup.Parse<T2>(where2),
-                where3: QueryGroup.Parse<T3>(where3),
-                where4: QueryGroup.Parse<T4>(where4),
-                where5: QueryGroup.Parse<T5>(where5),
-                where6: QueryGroup.Parse<T6>(where6),
-                where7: QueryGroup.Parse<T7>(where7),
+                where1: QueryGroup.Parse<T1>(where1, dbSetting),
+                where2: QueryGroup.Parse<T2>(where2, dbSetting),
+                where3: QueryGroup.Parse<T3>(where3, dbSetting),
+                where4: QueryGroup.Parse<T4>(where4, dbSetting),
+                where5: QueryGroup.Parse<T5>(where5, dbSetting),
+                where6: QueryGroup.Parse<T6>(where6, dbSetting),
+                where7: QueryGroup.Parse<T7>(where7, dbSetting),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
@@ -3340,16 +3363,17 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
+            var dbSetting = connection.GetDbSetting();
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 }, dbSetting);
 
             // T1 Variables
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
                 transaction,
-                FieldCache.Get<T1>(),
+                FieldCache.Get<T1>(dbSetting),
                 where1,
                 orderBy1,
                 top1,
@@ -3362,7 +3386,7 @@ namespace RepoDb
                 typeof(T2),
                 connection,
                 transaction,
-                FieldCache.Get<T2>(),
+                FieldCache.Get<T2>(dbSetting),
                 where2,
                 orderBy2,
                 top2,
@@ -3375,7 +3399,7 @@ namespace RepoDb
                 typeof(T3),
                 connection,
                 transaction,
-                FieldCache.Get<T3>(),
+                FieldCache.Get<T3>(dbSetting),
                 where3,
                 orderBy3,
                 top3,
@@ -3388,7 +3412,7 @@ namespace RepoDb
                 typeof(T4),
                 connection,
                 transaction,
-                FieldCache.Get<T4>(),
+                FieldCache.Get<T4>(dbSetting),
                 where4,
                 orderBy4,
                 top4,
@@ -3401,7 +3425,7 @@ namespace RepoDb
                 typeof(T5),
                 connection,
                 transaction,
-                FieldCache.Get<T5>(),
+                FieldCache.Get<T5>(dbSetting),
                 where5,
                 orderBy5,
                 top5,
@@ -3414,7 +3438,7 @@ namespace RepoDb
                 typeof(T6),
                 connection,
                 transaction,
-                FieldCache.Get<T6>(),
+                FieldCache.Get<T6>(dbSetting),
                 where6,
                 orderBy6,
                 top6,
@@ -3427,7 +3451,7 @@ namespace RepoDb
                 typeof(T7),
                 connection,
                 transaction,
-                FieldCache.Get<T7>(),
+                FieldCache.Get<T7>(dbSetting),
                 where7,
                 orderBy7,
                 top7,
@@ -3534,7 +3558,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateQueryMultiple(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateQueryMultiple();
+            connection.GetDbValidator()?.ValidateQueryMultiple();
         }
 
         /// <summary>
@@ -3543,7 +3567,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateQueryMultipleAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateQueryMultipleAsync();
+            connection.GetDbValidator()?.ValidateQueryMultipleAsync();
         }
 
         #endregion

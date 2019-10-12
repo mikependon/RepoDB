@@ -69,14 +69,18 @@
     <Compile Include="Contexts\Execution\InsertExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertAllExecutionContext.cs" />
     <Compile Include="Contexts\Execution\InsertExecutionContextCache.cs" />
+    <Compile Include="DbSettings\SqlServerDbSetting.cs" />
+    <Compile Include="DbSettingMapper.cs" />
     <Compile Include="DbValidatorMapper.cs" />
     <Compile Include="DbHelperMapper.cs" />
     <Compile Include="DbOperations\SqlServer\BulkInsert.cs" />
-    <Compile Include="DbValidators\SqlServer\SqlServerDbValidator.cs" />
+    <Compile Include="DbValidators\SqlServerDbValidator.cs" />
     <Compile Include="Enumerations\ConversionType.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="Contexts\Execution\InsertAllExecutionContextCache.cs" />
     <Compile Include="Exceptions\EmptyException.cs" />
+    <Compile Include="Exceptions\ItemNotFoundException.cs" />
+    <Compile Include="Exceptions\MappingAlreadyExistsException.cs" />
     <Compile Include="Exceptions\MissingMappingException.cs" />
     <Compile Include="Expressions\ClassExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
@@ -88,6 +92,7 @@
     <Compile Include="Extensions\DbFieldExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Interfaces\IDbOperation.cs" />
+    <Compile Include="Interfaces\IDbSetting.cs" />
     <Compile Include="Interfaces\IDbValidator.cs" />
     <Compile Include="Interfaces\IResolver.cs" />
     <Compile Include="Operations\BaseRepository\CountAll.cs" />
@@ -217,10 +222,10 @@
     <Compile Include="QueryField.cs" />
     <Compile Include="CancellableTraceLog.cs" />
     <Compile Include="ObjectConverter.cs" />
-    <Compile Include="Resolvers\SqlDbTypeToClientTypeResolver.cs" />
-    <Compile Include="Resolvers\SqlDbTypeToStringNameResolver.cs" />
-    <Compile Include="Resolvers\ClientTypeToSqlDbTypeResolver.cs" />
-    <Compile Include="Resolvers\SqlDbTypeNameToClientTypeResolver.cs" />
+    <Compile Include="Resolvers\DbTypeToClientTypeResolver.cs" />
+    <Compile Include="Resolvers\DbTypeToSqlServerStringNameResolver.cs" />
+    <Compile Include="Resolvers\ClientTypeToDbTypeResolver.cs" />
+    <Compile Include="Resolvers\SqlServerTypeNameToClientTypeResolver.cs" />
     <Compile Include="DbOperationMapper.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="SqlServerTableHints.cs" />
@@ -229,9 +234,7 @@
     <Compile Include="TypeMapper.cs" />
     <Compile Include="Types\SqlVariant.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DbOperationProviders\SqlServer\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

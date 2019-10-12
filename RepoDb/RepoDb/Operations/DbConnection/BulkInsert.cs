@@ -43,7 +43,7 @@ namespace RepoDb
             InvokeValidatorValidateBulkInsert(connection);
 
             // Get the provider
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -116,7 +116,7 @@ namespace RepoDb
             InvokeValidatorValidateBulkInsert(connection);
 
             // Get the provider
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -191,7 +191,7 @@ namespace RepoDb
             InvokeValidatorValidateBulkInsert(connection);
 
             // Get the provider
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -262,7 +262,7 @@ namespace RepoDb
             InvokeValidatorValidateBulkInsert(connection);
 
             // Get the provider
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -332,7 +332,7 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -402,7 +402,7 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -479,7 +479,7 @@ namespace RepoDb
             InvokeValidatorValidateBulkInsertAsync(connection);
 
             // Get the provider
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -552,7 +552,7 @@ namespace RepoDb
             InvokeValidatorValidateBulkInsertAsync(connection);
 
             // Get the provider
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -627,7 +627,7 @@ namespace RepoDb
             InvokeValidatorValidateBulkInsertAsync(connection);
 
             // Get the provider
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -698,7 +698,7 @@ namespace RepoDb
             InvokeValidatorValidateBulkInsertAsync(connection);
 
             // Get the provider
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -768,7 +768,7 @@ namespace RepoDb
             ITrace trace = null)
             where TEntity : class
         {
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -838,7 +838,7 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            var provider = GetDbOperation(connection);
+            var provider = connection.GetDbOperation();
 
             // Before Execution
             if (trace != null)
@@ -894,7 +894,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateBulkInsert(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateBulkInsert();
+            connection.GetDbValidator()?.ValidateBulkInsert();
         }
 
         /// <summary>
@@ -903,7 +903,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateBulkInsertAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateBulkInsertAsync();
+            connection.GetDbValidator()?.ValidateBulkInsertAsync();
         }
 
         #endregion

@@ -142,6 +142,7 @@ namespace RepoDb
         {
             // Check the primary
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
+            var dbSetting = connection.GetDbSetting();
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
@@ -151,11 +152,11 @@ namespace RepoDb
 
             // Return the result
             return MergeAllInternalBase<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
-                fields: FieldCache.Get<TEntity>(),
+                fields: FieldCache.Get<TEntity>(dbSetting),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -287,6 +288,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Check the primary
+            var dbSetting = connection.GetDbSetting();
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
 
             // Check the qualifiers
@@ -297,11 +299,11 @@ namespace RepoDb
 
             // Return the result
             return MergeAllAsyncInternalBase<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
-                fields: FieldCache.Get<TEntity>(),
+                fields: FieldCache.Get<TEntity>(dbSetting),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -688,10 +690,11 @@ namespace RepoDb
                 // Set the identity value
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
+                    var dbSetting = connection.GetDbSetting();
+                    identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
                             string.Equals(field.UnquotedName, identityDbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
                     }
                 }
@@ -1030,10 +1033,11 @@ namespace RepoDb
                 // Set the identity value
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
+                    var dbSetting = connection.GetDbSetting();
+                    identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
                             string.Equals(field.UnquotedName, identityDbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
                     }
                 }
@@ -1332,7 +1336,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateMergeAll(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateMergeAll();
+            connection.GetDbValidator()?.ValidateMergeAll();
         }
 
         /// <summary>
@@ -1341,7 +1345,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateMergeAllAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateMergeAllAsync();
+            connection.GetDbValidator()?.ValidateMergeAllAsync();
         }
 
         #endregion

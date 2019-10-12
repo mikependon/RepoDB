@@ -24,18 +24,26 @@ namespace RepoDb.Extensions
         /// <returns>An enumerable list of fields.</returns>
         public static string AsField(this OrderField orderField)
         {
-            return string.Concat(orderField.Name, " ", orderField.GetOrderText());
+            return AsField(orderField, null);
         }
 
         /// <summary>
-        /// Converts an instance of order field into an stringified alias-formatted string.
+        /// Converts an instance of order field into an enumerable list of fields.
         /// </summary>
-        /// <param name="orderField">The order field to be converted.</param>
+        /// <param name="orderField">The order field instance to be converted.</param>
         /// <param name="alias">The alias to be used for conversion.</param>
-        /// <returns>A string value for the stringified alias-formatted converted string.</returns>
-        public static string AsAliasField(this OrderField orderField, string alias)
+        /// <returns>An enumerable list of fields.</returns>
+        public static string AsField(this OrderField orderField,
+            string alias)
         {
-            return string.Concat(alias, ".", orderField.Name, " ", orderField.GetOrderText());
+            if (string.IsNullOrEmpty(alias))
+            {
+                return string.Concat(orderField.Name, " ", orderField.GetOrderText());
+            }
+            else
+            {
+                return string.Concat(alias, ".", orderField.Name, " ", orderField.GetOrderText());
+            }
         }
     }
 }

@@ -462,17 +462,25 @@ namespace RepoDb
         {
             if (request.Type != null && request.Type != typeof(object))
             {
-                var primaryPropery = PrimaryCache.Get(request.Type);
-                if (primaryPropery != null)
+                var primaryProperty = PrimaryCache.Get(request.Type, DbConnectionExtension.GetDbSetting(request.Connection));
+                if (primaryProperty != null)
                 {
-                    var identityProperty = IdentityCache.Get(request.Type);
+                    var identityProperty = IdentityCache.Get(request.Type, DbConnectionExtension.GetDbSetting(request.Connection));
                     var isIdentity = false;
                     if (identityProperty != null)
                     {
-                        isIdentity = string.Equals(identityProperty.GetUnquotedMappedName(), primaryPropery.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase);
+                        isIdentity = string.Equals(identityProperty.GetUnquotedMappedName(), primaryProperty.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase);
                     }
-                    return new DbField(primaryPropery.GetUnquotedMappedName(), true, isIdentity, false,
-                        primaryPropery.PropertyInfo.PropertyType, null, null, null);
+                    return new DbField(primaryProperty.GetUnquotedMappedName(),
+                        true,
+                        isIdentity,
+                        false,
+                        primaryProperty.PropertyInfo.PropertyType,
+                        null,
+                        null,
+                        null,
+                        null,
+                        request.Connection.GetDbSetting());
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsPrimary);
@@ -487,17 +495,25 @@ namespace RepoDb
         {
             if (request.Type != null && request.Type != typeof(object))
             {
-                var identityProperty = IdentityCache.Get(request.Type);
+                var identityProperty = IdentityCache.Get(request.Type, DbConnectionExtension.GetDbSetting(request.Connection));
                 if (identityProperty != null)
                 {
-                    var primaryPropery = PrimaryCache.Get(request.Type);
+                    var primaryProperty = PrimaryCache.Get(request.Type, DbConnectionExtension.GetDbSetting(request.Connection));
                     var isPrimary = false;
-                    if (primaryPropery != null)
+                    if (primaryProperty != null)
                     {
-                        isPrimary = string.Equals(primaryPropery.GetUnquotedMappedName(), identityProperty.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase);
+                        isPrimary = string.Equals(primaryProperty.GetUnquotedMappedName(), identityProperty.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase);
                     }
-                    return new DbField(identityProperty.GetUnquotedMappedName(), isPrimary, true, false,
-                        identityProperty.PropertyInfo.PropertyType, null, null, null);
+                    return new DbField(identityProperty.GetUnquotedMappedName(),
+                        isPrimary,
+                        true,
+                        false,
+                        identityProperty.PropertyInfo.PropertyType,
+                        null,
+                        null,
+                        null,
+                        null,
+                        request.Connection.GetDbSetting());
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsIdentity);

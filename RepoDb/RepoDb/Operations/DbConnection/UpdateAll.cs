@@ -140,16 +140,17 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            var dbSetting = connection.GetDbSetting();
             if (qualifiers?.Any() != true)
             {
                 var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
                 qualifiers = primary.AsField().AsEnumerable();
             }
             return UpdateAllInternalBase<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
                 entities: entities,
                 batchSize: batchSize,
-                fields: FieldCache.Get<TEntity>(),
+                fields: FieldCache.Get<TEntity>(dbSetting),
                 qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -281,16 +282,17 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            var dbSetting = connection.GetDbSetting();
             if (qualifiers?.Any() != true)
             {
                 var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
                 qualifiers = primary.AsField().AsEnumerable();
             }
             return UpdateAllAsyncInternalBase<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
                 entities: entities,
                 batchSize: batchSize,
-                fields: FieldCache.Get<TEntity>(),
+                fields: FieldCache.Get<TEntity>(dbSetting),
                 qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1134,7 +1136,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateUpdateAll(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateUpdateAll();
+            connection.GetDbValidator()?.ValidateUpdateAll();
         }
 
         /// <summary>
@@ -1143,7 +1145,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateUpdateAllAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateUpdateAllAsync();
+            connection.GetDbValidator()?.ValidateUpdateAllAsync();
         }
 
         #endregion

@@ -1,4 +1,5 @@
 ﻿using RepoDb.DbValidators;
+using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
@@ -18,7 +19,7 @@ namespace RepoDb
         static DbValidatorMapper()
         {
             // By default, map the Sql
-            Add(typeof(SqlConnection), new SqlServerDbValidator());
+            Add(typeof(SqlConnection), new SqlServerDbValidator(), true);
         }
 
         /// <summary>
@@ -69,7 +70,9 @@ namespace RepoDb
         /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
         /// <param name="dbValidator">The instance of <see cref="IDbValidator"/> object to mapped to.</param>
         /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
-        public static void Add(Type type, IDbValidator dbValidator, bool @override = false)
+        public static void Add(Type type,
+            IDbValidator dbValidator,
+            bool @override)
         {
             // Guard the type
             Guard(type);
@@ -89,7 +92,7 @@ namespace RepoDb
                 else
                 {
                     // Throw an exception
-                    throw new InvalidOperationException($"Mapping to validator '{key}' already exists.");
+                    throw new MappingAlreadyExistsException($"The database validator to provider '{type.FullName}' already exists.");
                 }
             }
             else

@@ -29,7 +29,7 @@ namespace RepoDb.Requests
             IEnumerable<Field> qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
             IStatementBuilder statementBuilder = null)
-            : this(ClassMappedNameCache.Get(type),
+            : this(ClassMappedNameCache.Get(type, true, connection.GetDbSetting()),
                 connection,
                 transaction,
                 fields,

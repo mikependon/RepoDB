@@ -12,7 +12,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="values">The values of the parameter.</param>
-        public CommandArrayParameter(string parameterName, IEnumerable<object> values)
+        public CommandArrayParameter(string parameterName,
+            IEnumerable<object> values)
         {
             ParameterName = parameterName;
             Values = values;
