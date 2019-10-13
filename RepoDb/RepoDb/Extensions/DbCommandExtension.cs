@@ -31,7 +31,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object instance to be used.</param>
         /// <param name="properties">The target list of properties.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParametersFromClassProperties(this IDbCommand command,
             IEnumerable<ClassProperty> properties,
@@ -93,7 +93,7 @@ namespace RepoDb.Extensions
             var parameter = command.CreateParameter();
 
             // Set the values
-            parameter.ParameterName = string.Concat(dbSetting.ParameterPrefix, name);
+            parameter.ParameterName = !name.StartsWith(dbSetting.ParameterPrefix) ? string.Concat(dbSetting.ParameterPrefix, name) : name;
             parameter.Value = value ?? DBNull.Value;
 
             // The DB Type is auto set when setting the values (so check properly Time/DateTime problem)
@@ -150,7 +150,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParameters(this IDbCommand command,
             object param,
@@ -254,7 +254,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParameters(this IDbCommand command,
             IDictionary<string, object> dictionary,
@@ -323,7 +323,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParameters(this IDbCommand command,
             QueryGroup queryGroup,
@@ -339,7 +339,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParameters(this IDbCommand command,
             IEnumerable<QueryField> queryFields,
@@ -362,7 +362,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParameters(this IDbCommand command,
             QueryField queryField,
@@ -446,7 +446,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The instance of where the parameter values will be set.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void SetParameters(this IDbCommand command,
@@ -593,7 +593,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void SetParameters(this IDbCommand command,
@@ -680,7 +680,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void SetParameters(this IDbCommand command,
@@ -698,7 +698,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void SetParameters(this IDbCommand command,
@@ -769,7 +769,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skpped.</param>
+        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void SetParameters(this IDbCommand command,

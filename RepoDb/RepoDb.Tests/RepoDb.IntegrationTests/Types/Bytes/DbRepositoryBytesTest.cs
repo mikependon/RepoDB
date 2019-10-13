@@ -307,7 +307,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 var id = repository.Insert(entity);
 
                 // Act Query
-                var data = repository.Query(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+                var data = repository.Query(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id }).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -334,10 +334,10 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var id = repository.Insert(ClassMappedNameCache.Get<BytesClass>(), entity);
+                var id = repository.Insert(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), entity);
 
                 // Act Query
-                var data = repository.Query(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+                var data = repository.Query(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id }).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -366,11 +366,11 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
+                var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), entity);
                 var id = insertResult.Result;
 
                 // Act Query
-                var queryResult = repository.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id });
+                var queryResult = repository.QueryAsync(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id });
                 var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
@@ -398,11 +398,11 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
+                var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), entity);
                 var id = insertResult.Result;
 
                 // Act Query
-                var queryResult = repository.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id });
+                var queryResult = repository.QueryAsync(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id });
                 var data = queryResult.Result.FirstOrDefault();
 
                 // Assert

@@ -87,25 +87,41 @@ namespace RepoDb
         /// <returns>The string value equivalent to the name of the field.</returns>
         public override string ToString()
         {
-            return Name;
+            return string.Concat(Name, ", ", Type?.FullName, " (", m_hashCode, ")");
+        }
+
+        /// <summary>
+        /// Creates an enumerable of <see cref="Field"/> objects that derived from the string value.
+        /// </summary>
+        /// <param name="name">The enumerable of string values that signifies the name of the fields (for each item).</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <returns>An enumerable of <see cref="Field"/> object.</returns>
+        public static IEnumerable<Field> From(string name,
+            IDbSetting dbSetting)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new NullReferenceException("The field name must be null or empty.");
+            }
+            return From(name.AsEnumerable(), dbSetting);
         }
 
         /// <summary>
         /// Creates an enumerable of <see cref="Field"/> objects that derived from the given array of string values.
         /// </summary>
-        /// <param name="fields">The array of string values that signifies the name of the fields (for each item).</param>
+        /// <param name="fields">The enumerable of string values that signifies the name of the fields (for each item).</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable of <see cref="Field"/> object.</returns>
-        public static IEnumerable<Field> From(string[] fields,
+        public static IEnumerable<Field> From(IEnumerable<string> fields,
             IDbSetting dbSetting)
         {
             if (fields == null)
             {
-                throw new NullReferenceException($"List of fields must not be null.");
+                throw new NullReferenceException("The list of fields must not be null.");
             }
             if (fields.Any(field => string.IsNullOrEmpty(field?.Trim())))
             {
-                throw new NullReferenceException($"Field name must not be null.");
+                throw new NullReferenceException("The field name must be null or empty.");
             }
             foreach (var field in fields)
             {

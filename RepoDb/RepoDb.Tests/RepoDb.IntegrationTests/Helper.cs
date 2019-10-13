@@ -662,7 +662,7 @@ namespace RepoDb.IntegrationTests
             var tables = new List<dynamic>();
             var fields = Field.From(new[]
                 {
-                    "RowGuid",
+                    "Id",
                     "ColumnBit",
                     "ColumnDateTime2",
                     "ColumnNVarChar"

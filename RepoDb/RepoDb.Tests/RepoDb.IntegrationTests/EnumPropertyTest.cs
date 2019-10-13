@@ -126,7 +126,7 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
-                var queryResult = connection.Query<EnumCompleteTable>(new QueryField("ColumnNVarChar", Direction.West));
+                var queryResult = connection.Query<EnumCompleteTable>(new QueryField("ColumnNVarChar", Direction.West, DbSettingMapper.Get(typeof(SqlConnection))));
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -146,7 +146,7 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
-                var queryResult = connection.Query<EnumCompleteTable>(new QueryField("ColumnNVarChar", Direction.West).AsEnumerable());
+                var queryResult = connection.Query<EnumCompleteTable>(new QueryField("ColumnNVarChar", Direction.West, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable());
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -166,7 +166,7 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
-                var queryResult = connection.Query<EnumCompleteTable>(new QueryGroup(new QueryField("ColumnNVarChar", Direction.West)));
+                var queryResult = connection.Query<EnumCompleteTable>(new QueryGroup(new QueryField("ColumnNVarChar", Direction.West, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection))));
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());

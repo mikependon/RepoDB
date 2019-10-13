@@ -145,7 +145,7 @@ namespace RepoDb
         /// <returns>The string that represents the instance of this <see cref="DbField"/> object.</returns>
         public override string ToString()
         {
-            return string.Concat(Name, " (", m_hashCode, ")");
+            return string.Concat(Name, ", ", IsPrimary.ToString(), " (", m_hashCode, ")");
         }
 
         #region Equality and comparers

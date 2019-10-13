@@ -1362,7 +1362,7 @@ namespace RepoDb
             ValidateTransactionConnectionObject(connection, transaction);
 
             // Get the DB setting
-            var dbSetting = DbSettingMapper.Get(connection.GetType());
+            var dbSetting = connection.GetDbSetting();
 
             // Process the array parameters
             var commandArrayParameters = (IEnumerable<CommandArrayParameter>)null;

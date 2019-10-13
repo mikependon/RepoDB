@@ -205,7 +205,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Act Query
-                var data = connection.Query<MappedIdentityTable>(new QueryField("Id", id)).FirstOrDefault();
+                var data = connection.Query<MappedIdentityTable>(new QueryField("Id", id, connection.GetDbSetting())).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -231,7 +231,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Act Query
-                var data = connection.Query<MappedIdentityTable>(new QueryField("Id", id).AsEnumerable()).FirstOrDefault();
+                var data = connection.Query<MappedIdentityTable>(new QueryField("Id", id, connection.GetDbSetting()).AsEnumerable()).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
@@ -256,7 +256,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Act Query
-                var data = connection.Query<MappedIdentityTable>(new QueryGroup(new QueryField("Id", id).AsEnumerable())).FirstOrDefault();
+                var data = connection.Query<MappedIdentityTable>(new QueryGroup(new QueryField("Id", id, connection.GetDbSetting()), connection.GetDbSetting())).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -356,7 +356,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Setup
-                var field = new QueryField("Id", id);
+                var field = new QueryField("Id", id, connection.GetDbSetting());
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
@@ -393,7 +393,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Setup
-                var fields = new QueryField("Id", id).AsEnumerable();
+                var fields = new QueryField("Id", id, connection.GetDbSetting()).AsEnumerable();
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
@@ -430,7 +430,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Setup
-                var queryGroup = new QueryGroup(new QueryField("Id", id).AsEnumerable());
+                var queryGroup = new QueryGroup(new QueryField("Id", id, connection.GetDbSetting()), connection.GetDbSetting());
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
@@ -474,7 +474,7 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Merged)";
 
                 // Act Update
-                var mergeResult = connection.Merge<MappedIdentityTable>(entity, Field.From("Id"));
+                var mergeResult = connection.Merge<MappedIdentityTable>(entity, Field.From(new[] { "Id" }, connection.GetDbSetting()));
 
                 // Assert
                 Assert.AreEqual(entity.IdMapped, mergeResult);
@@ -651,7 +651,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Act Query
-                var data = connection.Query<MappedCompleteTable>(new QueryField("SessionId", id)).FirstOrDefault();
+                var data = connection.Query<MappedCompleteTable>(new QueryField("SessionId", id, connection.GetDbSetting())).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -676,7 +676,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Act Query
-                var data = connection.Query<MappedCompleteTable>(new QueryField("SessionId", id).AsEnumerable()).FirstOrDefault();
+                var data = connection.Query<MappedCompleteTable>(new QueryField("SessionId", id, connection.GetDbSetting()).AsEnumerable()).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -701,7 +701,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Act Query
-                var data = connection.Query<MappedCompleteTable>(new QueryGroup(new QueryField("SessionId", id).AsEnumerable())).FirstOrDefault();
+                var data = connection.Query<MappedCompleteTable>(new QueryGroup(new QueryField("SessionId", id, connection.GetDbSetting()), connection.GetDbSetting())).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -798,7 +798,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Setup
-                var field = new QueryField("SessionId", id);
+                var field = new QueryField("SessionId", id, connection.GetDbSetting());
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
@@ -834,7 +834,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Setup
-                var fields = new QueryField("SessionId", id).AsEnumerable();
+                var fields = new QueryField("SessionId", id, connection.GetDbSetting()).AsEnumerable();
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
@@ -870,7 +870,7 @@ namespace RepoDb.IntegrationTests
                 var id = connection.Insert(entity);
 
                 // Setup
-                var queryGroup = new QueryGroup(new QueryField("SessionId", id).AsEnumerable());
+                var queryGroup = new QueryGroup(new QueryField("SessionId", id, connection.GetDbSetting()), connection.GetDbSetting());
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
@@ -913,7 +913,7 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Merged)";
 
                 // Act Update
-                var mergeResult = connection.Merge<MappedCompleteTable>(entity, Field.From("SessionId"));
+                var mergeResult = connection.Merge<MappedCompleteTable>(entity, Field.From(new[] { "SessionId" }, connection.GetDbSetting()));
 
                 // Assert
                 Assert.AreEqual(entity.SessionIdMapped, mergeResult);
