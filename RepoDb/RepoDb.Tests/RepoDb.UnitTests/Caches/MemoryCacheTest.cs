@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Exceptions;
 using System;
 using System.Linq;
 
@@ -172,7 +173,7 @@ namespace RepoDb.UnitTests.Caches
             cache.Add("Key", "Value", -1);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(ItemNotFoundException))]
         public void ThrowExceptionAtMemoryCacheOnRemovingAKeyThatIsNotPresent()
         {
             // Prepare

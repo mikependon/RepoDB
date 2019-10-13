@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.StatementBuilders;
+using RepoDb.UnitTests.Setup;
 using System;
 
 namespace RepoDb.UnitTests.StatementBuilders
@@ -15,11 +16,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2");
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Ascending
-            });
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending }, Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -51,11 +49,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2");
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Ascending
-            });
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending }, Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -87,11 +82,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
-            var fields = Field.From("Field1", "Field2");
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Ascending
-            });
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending }, Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -124,11 +116,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
-            var fields = Field.From("Field1", "Field2");
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Ascending
-            });
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending }, Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -160,11 +149,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
-            var fields = Field.From("Field1", "Field2");
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Ascending
-            });
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending }, Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -196,12 +182,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2");
-            var where = new QueryGroup(new QueryField("Field1", Operation.NotEqual, 1));
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Ascending
-            });
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
+            var where = new QueryGroup(new QueryField("Field1", Operation.NotEqual, 1, Helper.DbSetting), Helper.DbSetting);
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending }, Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -234,12 +217,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2");
-            var where = new QueryGroup(new QueryField("Id", Operation.NotEqual, 1));
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Ascending
-            });
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
+            var where = new QueryGroup(new QueryField("Id", Operation.NotEqual, 1, Helper.DbSetting), Helper.DbSetting);
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending }, Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -272,7 +252,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
-            var fields = Field.From("Field1", "Field2");
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
 
             // Act/Assert
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -291,7 +271,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
-            var fields = Field.From("Field1", "Field2");
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
 
             // Act/Assert
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -310,7 +290,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
-            var fields = Field.From("Field1", "Field2");
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
 
             // Act/Assert
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -329,10 +309,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Ascending
-            });
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending }, Helper.DbSetting);
 
             // Act/Assert
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -351,7 +328,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2");
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
 
             // Act/Assert
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -370,11 +347,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2");
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Ascending
-            });
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending }, Helper.DbSetting);
 
             // Act/Assert
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,
@@ -393,11 +367,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2");
-            var orderBy = OrderField.Parse(new
-            {
-                Field1 = Order.Ascending
-            });
+            var fields = Field.From(new[] { "Field1", "Field2" }, Helper.DbSetting);
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending }, Helper.DbSetting);
 
             // Act/Assert
             statementBuilder.CreateBatchQuery(queryBuilder: queryBuilder,

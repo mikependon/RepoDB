@@ -71,6 +71,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Attributes\MapAttributeTest.cs" />
+    <Compile Include="Caches\MemoryCacheTest.cs" />
     <Compile Include="CustomObjects\CustomDbCommand.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -80,55 +81,16 @@
     <Compile Include="CustomObjects\CustomDbDataReader.cs" />
     <Compile Include="CustomObjects\CustomDbParameter.cs" />
     <Compile Include="CustomObjects\CustomDbParameterCollection.cs" />
-    <Compile Include="Caches\MemoryCacheTest.cs" />
     <Compile Include="CustomObjects\CustomDbTransaction.cs" />
-    <Compile Include="DbHelpers\DbHelperTest.cs" />
     <Compile Include="Enumerations\ConjunctionTextTest.cs" />
     <Compile Include="Enumerations\OperationTextTest.cs" />
     <Compile Include="Enumerations\OrderTextTest.cs" />
-    <Compile Include="Equalities\FieldEqualityTest.cs" />
-    <Compile Include="Equalities\OrderFieldEqualityTest.cs" />
-    <Compile Include="Equalities\ParameterEqualityTest.cs" />
-    <Compile Include="Equalities\QueryFieldEqualityTest.cs" />
-    <Compile Include="Equalities\QueryGroupEqualityTest.cs" />
-    <Compile Include="Fields\FieldTest.cs" />
-    <Compile Include="Fields\OrderFieldTest.cs" />
-    <Compile Include="Interfaces\ICacheForBaseRepositoryTest.cs" />
-    <Compile Include="Interfaces\ICacheForDbConnectionTest.cs" />
-    <Compile Include="Interfaces\ICacheForDbRepositoryTest.cs" />
-    <Compile Include="Interfaces\IStatementBuilderForBaseRepositoryTest.cs" />
-    <Compile Include="Interfaces\IStatementBuilderForDbConnectionTest.cs" />
-    <Compile Include="Interfaces\IStatementBuilderForDbRepositoryTest.cs" />
-    <Compile Include="Interfaces\ITraceForBaseRepositoryTest.cs" />
-    <Compile Include="Interfaces\ITraceForDbConnectionTest.cs" />
-    <Compile Include="Interfaces\ITraceForDbRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryGroups\QueryGroupOperationInAndNotIn.cs" />
-    <Compile Include="QueryGroups\QueryGroupOperationLikeAndNotLike.cs" />
-    <Compile Include="QueryGroups\QueryGroupOperationBetweenAndNotBetween.cs" />
-    <Compile Include="QueryGroups\QueryGroupCommonTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseDynamicCommonTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseDynamicValuesTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionClassesTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionCommonTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForAllMethodTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForAnyMethodTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForBooleanTypeTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForByteTypeTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForContainsMethodTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForDateTimeTypeTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForDoubleTypeTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForEndsWithMethodTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForGuidTypeTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForIntTypeTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForSingleTypeTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForStartsWithMethodTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionForStringTypeTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionOperationsTest.cs" />
-    <Compile Include="QueryGroups\QueryGroupParseExpressionValuesTest.cs" />
-    <Compile Include="Resolvers\SqlDbTypeToStringNameResolverTest.cs" />
-    <Compile Include="Resolvers\SqlDbTypeNameToClientTypeResolverTest.cs" />
-    <Compile Include="Resolvers\ClientTypeToSqlDbTypeResolverTest.cs" />
+    <Compile Include="Resolvers\ClientTypeToDbTypeResolverTest.cs" />
+    <Compile Include="Resolvers\SqlServerTypeNameToClientTypeResolverTest.cs" />
+    <Compile Include="Resolvers\DbTypeToSqlServerStringNameResolverTest.cs" />
+    <Compile Include="Setup\CustomDbSetting.cs" />
+    <Compile Include="Setup\Helper.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateBatchQueryTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateCountAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateCountTest.cs" />
@@ -143,7 +105,6 @@
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateTruncateTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateUpdateAllTest.cs" />
     <Compile Include="StatementBuilders\SqlStatementBuilder\CreateUpdateTest.cs" />
-    <Compile Include="Others\QuotationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb\RepoDb.csproj">

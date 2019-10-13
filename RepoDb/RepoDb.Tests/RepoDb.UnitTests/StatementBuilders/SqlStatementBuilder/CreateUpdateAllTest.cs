@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using RepoDb.StatementBuilders;
+using RepoDb.UnitTests.Setup;
 using System;
 
 namespace RepoDb.UnitTests.StatementBuilders
@@ -15,8 +16,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Field1");
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Field1", Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -42,8 +43,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Field1");
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Field1", Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -69,8 +70,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Field1");
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Field1", Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -96,8 +97,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var field = new DbField("Field1", true, true, false, typeof(int), null, null, null);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var field = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -123,9 +124,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Field1");
-            var field = new DbField("Field1", true, true, false, typeof(int), null, null, null);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Field1", Helper.DbSetting);
+            var field = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -151,9 +152,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Field1");
-            var field = new DbField("Field1", true, true, false, typeof(int), null, null, null);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Field1", Helper.DbSetting);
+            var field = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -179,8 +180,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Field1");
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Field1", Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -212,8 +213,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Field1");
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Field1", Helper.DbSetting);
 
             // Act
             statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -232,8 +233,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Field1");
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Field1", Helper.DbSetting);
 
             // Act
             statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -252,8 +253,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Field1");
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Field1", Helper.DbSetting);
 
             // Act
             statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -272,9 +273,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Field1", Helper.DbSetting);
+            var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null, Helper.DbSetting);
 
             // Act
             statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -293,9 +294,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Field1");
-            var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Field1", Helper.DbSetting);
+            var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null, Helper.DbSetting);
 
             // Act
             statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -314,8 +315,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2", "Field3");
-            var qualifiers = Field.From("Id");
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var qualifiers = Field.From("Id", Helper.DbSetting);
 
             // Act
             statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
@@ -334,7 +335,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From("Field1", "Field2", "Field3");
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
 
             // Act
             statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,

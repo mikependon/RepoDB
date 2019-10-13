@@ -29,7 +29,7 @@ namespace RepoDb.Extensions
         /// <param name="value">The string value where the non-alphanumeric characters will be removed.</param>
         /// <param name="trim">The boolean value that indicates whether to trim the string before removing the non-alphanumeric characters.</param>
         /// <returns>The alphanumeric string.</returns>
-        internal static string AsAlphaNumeric(this string value,
+        public static string AsAlphaNumeric(this string value,
             bool trim)
         {
             if (trim)
@@ -45,7 +45,7 @@ namespace RepoDb.Extensions
         /// <param name="value">The string value to be unqouted.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The unquoted string.</returns>
-        internal static string AsUnquoted(this string value,
+        public static string AsUnquoted(this string value,
             IDbSetting dbSetting)
         {
             if (dbSetting == null)
@@ -64,7 +64,7 @@ namespace RepoDb.Extensions
         /// <param name="trim">The boolean value that indicates whether to trim the string before unquoting.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The unquoted string.</returns>
-        internal static string AsUnquoted(this string value,
+        public static string AsUnquoted(this string value,
             bool trim,
             IDbSetting dbSetting)
         {
@@ -89,7 +89,7 @@ namespace RepoDb.Extensions
         /// <param name="value">The string value to be quoted.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The quoted string.</returns>
-        internal static string AsQuoted(this string value,
+        public static string AsQuoted(this string value,
             IDbSetting dbSetting)
         {
             if (dbSetting == null)
@@ -114,7 +114,7 @@ namespace RepoDb.Extensions
         /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The quoted string.</returns>
-        internal static string AsQuoted(this string value,
+        public static string AsQuoted(this string value,
             bool trim,
             IDbSetting dbSetting)
         {
@@ -129,7 +129,7 @@ namespace RepoDb.Extensions
         /// <param name="ignoreSchema">The boolean value that indicates whether to ignore the schema.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The quoted string.</returns>
-        internal static string AsQuoted(this string value,
+        public static string AsQuoted(this string value,
             bool trim,
             bool ignoreSchema,
             IDbSetting dbSetting)

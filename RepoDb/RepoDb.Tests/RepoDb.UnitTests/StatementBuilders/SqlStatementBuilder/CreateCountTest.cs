@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.StatementBuilders;
+using RepoDb.UnitTests.Setup;
 using System;
 
 namespace RepoDb.UnitTests.StatementBuilders
@@ -32,7 +33,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var where = new QueryGroup(new QueryField("Id", 1));
+            var where = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting), Helper.DbSetting);
 
             // Act
             var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
@@ -73,7 +74,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var where = new QueryGroup(new QueryField("Id", 1));
+            var where = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting), Helper.DbSetting);
             var hints = "WITH (NOLOCK)";
 
             // Act
