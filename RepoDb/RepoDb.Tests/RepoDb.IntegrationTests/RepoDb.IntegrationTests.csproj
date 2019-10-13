@@ -56,6 +56,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Caches\BaseRepositoryCachesTest.cs" />
+    <Compile Include="Caches\DbRepositoryCachesTest.cs" />
+    <Compile Include="Caches\SqlConnectionCachesTest.cs" />
     <Compile Include="DbTransactionTest.cs" />
     <Compile Include="DifferentPrimaryTest.cs" />
     <Compile Include="Enumerations\BooleanValue.cs" />
