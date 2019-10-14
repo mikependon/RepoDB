@@ -4,6 +4,10 @@ namespace RepoDb.UnitTests.Setup
 {
     public static class Helper
     {
-        public static IDbSetting DbSetting => new CustomDbSetting();
+        static Helper()
+        {
+            DbSetting = new CustomDbSetting();
+        }
+        public static IDbSetting DbSetting { get; }
     }
 }

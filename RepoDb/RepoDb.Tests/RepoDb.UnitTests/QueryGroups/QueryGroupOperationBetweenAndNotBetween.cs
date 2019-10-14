@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
+using RepoDb.UnitTests.Setup;
 
 namespace RepoDb.UnitTests
 {
@@ -11,7 +12,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupOperationBetween()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Between, new[] { 1, 100 }));
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Between, new[] { 1, 100 }, Helper.DbSetting), Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -27,9 +28,10 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Between, new[] { 1, 100 }),
-                new QueryField("Field2", Operation.Between, new[] { 500, 1000 })
-            });
+                new QueryField("Field1", Operation.Between, new[] { 1, 100 }, Helper.DbSetting),
+                new QueryField("Field2", Operation.Between, new[] { 500, 1000 }, Helper.DbSetting)
+            },
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -45,9 +47,10 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Between, new[] { 1, 100 }),
-                new QueryField("Field1", Operation.Between, new[] { 500, 1000 })
-            });
+                new QueryField("Field1", Operation.Between, new[] { 1, 100 }, Helper.DbSetting),
+                new QueryField("Field1", Operation.Between, new[] { 500, 1000 }, Helper.DbSetting)
+            },
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -63,10 +66,11 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Between, new[] { 1, 100 }),
-                new QueryField("Field1", Operation.Between, new[] { 500, 1000 })
+                new QueryField("Field1", Operation.Between, new[] { 1, 100 }, Helper.DbSetting),
+                new QueryField("Field1", Operation.Between, new[] { 500, 1000 }, Helper.DbSetting)
             },
-            Conjunction.Or);
+            Conjunction.Or,
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -84,7 +88,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupOperationNotBetween()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }));
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }, Helper.DbSetting), Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -100,9 +104,10 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }),
-                new QueryField("Field2", Operation.NotBetween, new[] { 500, 1000 })
-            });
+                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }, Helper.DbSetting),
+                new QueryField("Field2", Operation.NotBetween, new[] { 500, 1000 }, Helper.DbSetting)
+            },
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -118,9 +123,10 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }),
-                new QueryField("Field1", Operation.NotBetween, new[] { 500, 1000 })
-            });
+                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }, Helper.DbSetting),
+                new QueryField("Field1", Operation.NotBetween, new[] { 500, 1000 }, Helper.DbSetting)
+            },
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -136,10 +142,11 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }),
-                new QueryField("Field1", Operation.NotBetween, new[] { 500, 1000 })
+                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }, Helper.DbSetting),
+                new QueryField("Field1", Operation.NotBetween, new[] { 500, 1000 }, Helper.DbSetting)
             },
-            Conjunction.Or);
+            Conjunction.Or,
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();

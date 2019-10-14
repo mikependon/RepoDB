@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.UnitTests.Setup;
 
 namespace RepoDb.UnitTests
 {
@@ -10,7 +11,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionEndsWithAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("A"));
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("A"), Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -24,7 +25,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionNotEndsWithAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.EndsWith("A"));
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.EndsWith("A"), Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -38,7 +39,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionEndsWithEqualsTrueAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("A") == true);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("A") == true, Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -52,7 +53,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionEndsWithEqualsFalseAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("A") == false);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("A") == false, Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -66,7 +67,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionEndsWithForMappedProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString.EndsWith("A"));
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString.EndsWith("A"), Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -80,7 +81,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionEndsWithForQuotedProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString.EndsWith("A"));
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString.EndsWith("A"), Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -94,7 +95,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionEndsWithForUnorganizedProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.UnorganizedPropertyString.EndsWith("A"));
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.UnorganizedPropertyString.EndsWith("A"), Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();

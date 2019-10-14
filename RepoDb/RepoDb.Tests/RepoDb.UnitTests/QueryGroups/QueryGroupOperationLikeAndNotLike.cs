@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
+using RepoDb.UnitTests.Setup;
 
 namespace RepoDb.UnitTests
 {
@@ -11,7 +12,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupOperationLike()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Like, "A%"));
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Like, "A%", Helper.DbSetting), Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -27,9 +28,10 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Like, "A%"),
-                new QueryField("Field2", Operation.Like, "B%")
-            });
+                new QueryField("Field1", Operation.Like, "A%", Helper.DbSetting),
+                new QueryField("Field2", Operation.Like, "B%", Helper.DbSetting)
+            },
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -45,9 +47,10 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Like, "A%"),
-                new QueryField("Field1", Operation.Like, "B%")
-            });
+                new QueryField("Field1", Operation.Like, "A%", Helper.DbSetting),
+                new QueryField("Field1", Operation.Like, "B%", Helper.DbSetting)
+            },
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -63,10 +66,11 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Like, "A%"),
-                new QueryField("Field1", Operation.Like, "B%")
+                new QueryField("Field1", Operation.Like, "A%", Helper.DbSetting),
+                new QueryField("Field1", Operation.Like, "B%", Helper.DbSetting)
             },
-            Conjunction.Or);
+            Conjunction.Or,
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -84,7 +88,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupOperationNotLike()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotLike, "A%"));
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotLike, "A%", Helper.DbSetting), Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -100,9 +104,10 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotLike, "A%"),
-                new QueryField("Field2", Operation.NotLike, "B%")
-            });
+                new QueryField("Field1", Operation.NotLike, "A%", Helper.DbSetting),
+                new QueryField("Field2", Operation.NotLike, "B%", Helper.DbSetting)
+            },
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -118,9 +123,10 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotLike, "A%"),
-                new QueryField("Field1", Operation.NotLike, "B%")
-            });
+                new QueryField("Field1", Operation.NotLike, "A%", Helper.DbSetting),
+                new QueryField("Field1", Operation.NotLike, "B%", Helper.DbSetting)
+            },
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();
@@ -136,10 +142,11 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotLike, "A%"),
-                new QueryField("Field1", Operation.NotLike, "B%")
+                new QueryField("Field1", Operation.NotLike, "A%", Helper.DbSetting),
+                new QueryField("Field1", Operation.NotLike, "B%", Helper.DbSetting)
             },
-            Conjunction.Or);
+            Conjunction.Or,
+            Helper.DbSetting);
 
             // Act
             var actual = queryGroup.GetString();

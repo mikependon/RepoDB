@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.UnitTests.Setup;
 
 namespace RepoDb.UnitTests
 {
@@ -10,7 +11,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionBooleanConstant()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == true).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == true, Helper.DbSetting).GetString();
             var expected = "([PropertyBoolean] = @PropertyBoolean)";
 
             // Assert
@@ -24,7 +25,7 @@ namespace RepoDb.UnitTests
             var value = true;
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == value).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == value, Helper.DbSetting).GetString();
             var expected = "([PropertyBoolean] = @PropertyBoolean)";
 
             // Assert
@@ -41,7 +42,7 @@ namespace RepoDb.UnitTests
             };
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == value.PropertyBoolean).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == value.PropertyBoolean, Helper.DbSetting).GetString();
             var expected = "([PropertyBoolean] = @PropertyBoolean)";
 
             // Assert
@@ -52,7 +53,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionBooleanMethodCall()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == GetBooleanValueForParseExpression()).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == GetBooleanValueForParseExpression(), Helper.DbSetting).GetString();
             var expected = "([PropertyBoolean] = @PropertyBoolean)";
 
             // Assert
@@ -66,7 +67,7 @@ namespace RepoDb.UnitTests
             var value = GetBooleanValueForParseExpression();
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == value).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == value, Helper.DbSetting).GetString();
             var expected = "([PropertyBoolean] = @PropertyBoolean)";
 
             // Assert

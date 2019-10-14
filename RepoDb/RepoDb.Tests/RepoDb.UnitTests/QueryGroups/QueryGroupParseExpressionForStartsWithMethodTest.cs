@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.UnitTests.Setup;
 
 namespace RepoDb.UnitTests
 {
@@ -10,7 +11,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A"));
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A"), Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -24,7 +25,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionNotStartsWithAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.StartsWith("A"));
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.StartsWith("A"), Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -38,7 +39,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithEqualsTrueAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A") == true);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A") == true, Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -52,7 +53,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithEqualsFalseAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A") == false);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A") == false, Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -66,7 +67,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithForMappedProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString.StartsWith("A"));
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString.StartsWith("A"), Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -80,7 +81,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithForQuotedProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString.StartsWith("A"));
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString.StartsWith("A"), Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
@@ -94,7 +95,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithForUnorganizedProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.UnorganizedPropertyString.StartsWith("A"));
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.UnorganizedPropertyString.StartsWith("A"), Helper.DbSetting);
 
             // Act
             var actual = parsed.GetString();
