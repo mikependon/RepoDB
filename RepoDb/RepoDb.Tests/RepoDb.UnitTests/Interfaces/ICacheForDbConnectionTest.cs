@@ -4,6 +4,7 @@ using RepoDb.Attributes;
 using RepoDb.Interfaces;
 using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
+using RepoDb.UnitTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,6 +15,13 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ICacheForDbConnectionTest
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            DbSettingMapper.Add(typeof(CustomDbConnectionForDbConnectionICache), Helper.DbSetting, true);
+            DbValidatorMapper.Add(typeof(CustomDbConnectionForDbConnectionICache), Helper.DbValidator, true);
+        }
+
         #region SubClasses
 
         private class CustomDbConnectionForDbConnectionICache : CustomDbConnection { }

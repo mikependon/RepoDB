@@ -5,6 +5,7 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
+using RepoDb.UnitTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,6 +23,8 @@ namespace RepoDb.UnitTests.Interfaces
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
+            DbSettingMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), Helper.DbSetting, true);
+            DbValidatorMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), Helper.DbValidator, true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), new DbRepositoryCustomDbHelper(), true);
             DbOperationMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), new DbRepositoryCustomDbOperationProvider(), true);
         }
@@ -50,8 +53,8 @@ namespace RepoDb.UnitTests.Interfaces
             {
                 return new[]
                 {
-                    new DbField("Id", true, true, false, typeof(int), null, null, null),
-                    new DbField("Name", false, false, true, typeof(string), null, null, null)
+                    new DbField("Id", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting),
+                    new DbField("Name", false, false, true, typeof(string), null, null, null, null, Helper.DbSetting)
                 };
             }
 
@@ -64,8 +67,8 @@ namespace RepoDb.UnitTests.Interfaces
             {
                 return Task.FromResult<IEnumerable<DbField>>(new[]
                 {
-                    new DbField("Id", true, true, false, typeof(int), null, null, null),
-                    new DbField("Name", false, false, true, typeof(string), null, null, null)
+                    new DbField("Id", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting),
+                    new DbField("Name", false, false, true, typeof(string), null, null, null, null, Helper.DbSetting)
                 });
             }
         }
@@ -144,7 +147,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.BatchQuery<TraceEntity>(0,
                 10,
-                OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
+                OrderField.Ascending<TraceEntity>(t => t.Id, Helper.DbSetting).AsEnumerable(),
                 (object)null);
 
             // Assert
@@ -166,7 +169,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.BatchQuery<TraceEntity>(0,
                 10,
-                OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
+                OrderField.Ascending<TraceEntity>(t => t.Id, Helper.DbSetting).AsEnumerable(),
                 (object)null);
 
             // Assert
@@ -192,7 +195,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.BatchQueryAsync<TraceEntity>(0,
                 10,
-                OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
+                OrderField.Ascending<TraceEntity>(t => t.Id, Helper.DbSetting).AsEnumerable(),
                 (object)null).Wait();
 
             // Assert
@@ -214,7 +217,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.BatchQueryAsync<TraceEntity>(0,
                 10,
-                OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
+                OrderField.Ascending<TraceEntity>(t => t.Id, Helper.DbSetting).AsEnumerable(),
                 (object)null).Wait();
 
             // Assert
@@ -356,7 +359,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Count(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.Count(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 (object)null);
 
             // Assert
@@ -376,7 +379,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Count(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.Count(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 (object)null);
 
             // Assert
@@ -438,7 +441,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.CountAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 (object)null).Wait();
 
             // Assert
@@ -458,7 +461,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.CountAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 (object)null).Wait();
 
             // Assert
@@ -524,7 +527,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.CountAll(ClassMappedNameCache.Get<TraceEntity>());
+            repository.CountAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting));
 
             // Assert
             trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -543,7 +546,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.CountAll(ClassMappedNameCache.Get<TraceEntity>());
+            repository.CountAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting));
 
             // Assert
             trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Once);
@@ -604,7 +607,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
+            repository.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting)).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -623,7 +626,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
+            repository.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting)).Wait();
 
             // Assert
             trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Once);
@@ -688,7 +691,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Delete(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 0 });
+            repository.Delete(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Id = 0 });
 
             // Assert
             trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -707,7 +710,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Delete(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 0 });
+            repository.Delete(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Id = 0 });
 
             // Assert
             trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Once);
@@ -768,7 +771,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 0 }).Wait();
+            repository.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Id = 0 }).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -787,7 +790,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 0 }).Wait();
+            repository.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Id = 0 }).Wait();
 
             // Assert
             trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Once);
@@ -852,7 +855,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.DeleteAll(ClassMappedNameCache.Get<TraceEntity>());
+            repository.DeleteAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting));
 
             // Assert
             trace.Verify(t => t.BeforeDeleteAll(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -871,7 +874,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.DeleteAll(ClassMappedNameCache.Get<TraceEntity>());
+            repository.DeleteAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting));
 
             // Assert
             trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Once);
@@ -932,7 +935,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
+            repository.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting)).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeDeleteAll(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -951,7 +954,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
+            repository.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting)).Wait();
 
             // Assert
             trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Once);
@@ -1016,7 +1019,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Insert(ClassMappedNameCache.Get<TraceEntity>(), new { Name = "Name" });
+            repository.Insert(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Name = "Name" });
 
             // Assert
             trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -1035,7 +1038,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Insert(ClassMappedNameCache.Get<TraceEntity>(), new { Name = "Name" });
+            repository.Insert(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Name = "Name" });
 
             // Assert
             trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Once);
@@ -1096,7 +1099,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Name = "Name" }).Wait();
+            repository.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Name = "Name" }).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -1115,7 +1118,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Name = "Name" }).Wait();
+            repository.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Name = "Name" }).Wait();
 
             // Assert
             trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Once);
@@ -1180,9 +1183,9 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.InsertAll(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.InsertAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 new[] { new { Name = "Name" } },
-                fields: Field.From("Name"));
+                fields: Field.From("Name", Helper.DbSetting));
 
             // Assert
             trace.Verify(t => t.BeforeInsertAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
@@ -1201,9 +1204,9 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.InsertAll(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.InsertAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 new[] { new { Name = "Name" } },
-                fields: Field.From("Name"));
+                fields: Field.From("Name", Helper.DbSetting));
 
             // Assert
             trace.Verify(t => t.AfterInsertAll(It.IsAny<TraceLog>()), Times.Exactly(1));
@@ -1264,9 +1267,9 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 new[] { new { Name = "Name" } },
-                fields: Field.From("Name")).Wait();
+                fields: Field.From("Name", Helper.DbSetting)).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeInsertAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
@@ -1285,9 +1288,9 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 new[] { new { Name = "Name" } },
-                fields: Field.From("Name")).Wait();
+                fields: Field.From("Name", Helper.DbSetting)).Wait();
 
             // Assert
             trace.Verify(t => t.AfterInsertAll(It.IsAny<TraceLog>()), Times.Exactly(1));
@@ -1352,7 +1355,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Merge(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 1, Name = "Name" });
+            repository.Merge(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Id = 1, Name = "Name" });
 
             // Assert
             trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -1371,7 +1374,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Merge(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 1, Name = "Name" });
+            repository.Merge(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Id = 1, Name = "Name" });
 
             // Assert
             trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Once);
@@ -1432,7 +1435,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 1, Name = "Name" }).Wait();
+            repository.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Id = 1, Name = "Name" }).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -1451,7 +1454,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 1, Name = "Name" }).Wait();
+            repository.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new { Id = 1, Name = "Name" }).Wait();
 
             // Assert
             trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Once);
@@ -1516,7 +1519,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MergeAll(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } });
+            repository.MergeAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new[] { new { Id = 1, Name = "Name" } });
 
             // Assert
             trace.Verify(t => t.BeforeMergeAll(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -1535,7 +1538,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MergeAll(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } });
+            repository.MergeAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new[] { new { Id = 1, Name = "Name" } });
 
             // Assert
             trace.Verify(t => t.AfterMergeAll(It.IsAny<TraceLog>()), Times.Once);
@@ -1596,7 +1599,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } }).Wait();
+            repository.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new[] { new { Id = 1, Name = "Name" } }).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeMergeAll(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -1615,7 +1618,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } }).Wait();
+            repository.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new[] { new { Id = 1, Name = "Name" } }).Wait();
 
             // Assert
             trace.Verify(t => t.AfterMergeAll(It.IsAny<TraceLog>()), Times.Once);
@@ -1948,7 +1951,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Truncate(ClassMappedNameCache.Get<TraceEntity>());
+            repository.Truncate(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting));
 
             // Assert
             trace.Verify(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -1967,7 +1970,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Truncate(ClassMappedNameCache.Get<TraceEntity>());
+            repository.Truncate(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting));
 
             // Assert
             trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Once);
@@ -2028,7 +2031,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
+            repository.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting)).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -2047,7 +2050,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
+            repository.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting)).Wait();
 
             // Assert
             trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Once);
@@ -2116,7 +2119,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Update(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.Update(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 new { Name = "Name" },
                 new { Id = 1 });
 
@@ -2137,7 +2140,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Update(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.Update(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 new { Name = "Name" },
                 new { Id = 1 });
 
@@ -2204,7 +2207,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 new { Name = "Name" },
                 new { Id = 1 }).Wait();
 
@@ -2225,7 +2228,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
                 new { Name = "Name" },
                 new { Id = 1 }).Wait();
 
@@ -2292,7 +2295,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } });
+            repository.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new[] { new { Id = 1, Name = "Name" } });
 
             // Assert
             trace.Verify(t => t.BeforeUpdateAll(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -2311,7 +2314,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } });
+            repository.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new[] { new { Id = 1, Name = "Name" } });
 
             // Assert
             trace.Verify(t => t.AfterUpdateAll(It.IsAny<TraceLog>()), Times.Once);
@@ -2372,7 +2375,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } }).Wait();
+            repository.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new[] { new { Id = 1, Name = "Name" } }).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeUpdateAll(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -2391,7 +2394,7 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } }).Wait();
+            repository.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting), new[] { new { Id = 1, Name = "Name" } }).Wait();
 
             // Assert
             trace.Verify(t => t.AfterUpdateAll(It.IsAny<TraceLog>()), Times.Once);

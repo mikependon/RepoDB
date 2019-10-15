@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
+using RepoDb.UnitTests.Setup;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -21,8 +22,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityForDynamics()
         {
             // Prepare
-            var objA = QueryGroup.Parse(new { Id = 1 });
-            var objB = QueryGroup.Parse(new { Id = 2 });
+            var objA = QueryGroup.Parse(new { Id = 1 }, Helper.DbSetting);
+            var objB = QueryGroup.Parse(new { Id = 2 }, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -35,8 +36,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityForQueryFields()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable());
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable());
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -49,8 +50,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityForQueryFieldsWithSameConjunction()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.Or);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Conjunction.Or, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Conjunction.Or, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -63,8 +64,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityForQueryFieldsWithDifferentConjunction()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Conjunction.Or, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -77,8 +78,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityForQueryFieldsWithSameIsNot()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), true);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -91,8 +92,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityForQueryFieldsWithDifferentIsNot()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), false);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), false, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -105,8 +106,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityForExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -119,8 +120,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityForExpressionsWithDifferentUnaryValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"));
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2"));
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"), Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2"), Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -133,8 +134,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityForExpressionsWithDifferentBooleanValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == false);
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2") == true);
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == false, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2") == true, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -147,8 +148,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityWithMultipleFieldsForDynamics()
         {
             // Prepare
-            var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" });
-            var objB = QueryGroup.Parse(new { Id = 2, Name = "Name2" });
+            var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" }, Helper.DbSetting);
+            var objB = QueryGroup.Parse(new { Id = 2, Name = "Name2" }, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -163,14 +164,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            });
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            });
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -185,14 +186,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, Conjunction.And);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, Conjunction.And);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -207,14 +208,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, Conjunction.And);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, Conjunction.Or);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Conjunction.Or, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -229,14 +230,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, true);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, true);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, true, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -251,14 +252,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, true);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, false);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, false, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -271,8 +272,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityWithMultipleFieldsForExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name == "Name1");
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name == "Name2");
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name == "Name1", Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name == "Name2", Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -285,8 +286,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityWithMultipleFieldsForExpressionsWithDifferentUnaryValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"));
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2"));
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"), Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2"), Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -299,8 +300,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityWithMultipleFieldsForExpressionsWithDifferentBooleanValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == false);
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2") == true);
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == false, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2") == true, Helper.DbSetting);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -317,8 +318,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityForDynamics()
         {
             // Prepare
-            var objA = QueryGroup.Parse(new { Id = 1 });
-            var objB = QueryGroup.Parse(new { Id = 2 });
+            var objA = QueryGroup.Parse(new { Id = 1 }, Helper.DbSetting);
+            var objB = QueryGroup.Parse(new { Id = 2 }, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -331,8 +332,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityForQueryFields()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable());
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable());
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -345,8 +346,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityForQueryFieldsWithSameConjunction()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.And);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -359,8 +360,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityForQueryFieldsWithDifferentConjunction()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Conjunction.Or, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -373,8 +374,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityForQueryFieldsWithSameIsNot()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), true);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -387,8 +388,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityForQueryFieldsWithDifferentIsNot()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), false);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), false, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -401,8 +402,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityForExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -415,8 +416,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityForExpressionsWithDifferentUnaryValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => !e.Name.Contains("Name1"));
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Name.Contains("Name2"));
+            var objA = QueryGroup.Parse<EntityClass>(e => !e.Name.Contains("Name1"), Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Name.Contains("Name2"), Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -429,8 +430,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityForExpressionsWithDifferentBooleanValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Name.Contains("Name1") == true);
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Name.Contains("Name2") == false);
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Name.Contains("Name1") == true, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Name.Contains("Name2") == false, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -443,8 +444,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityWithMultipleFieldsForDynamics()
         {
             // Prepare
-            var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" });
-            var objB = QueryGroup.Parse(new { Id = 2, Name = "Name2" });
+            var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" }, Helper.DbSetting);
+            var objB = QueryGroup.Parse(new { Id = 2, Name = "Name2" }, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -459,14 +460,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            });
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            });
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -481,14 +482,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, Conjunction.And);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, Conjunction.And);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -503,14 +504,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, Conjunction.And);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, Conjunction.Or);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Conjunction.Or, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -525,14 +526,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, true);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, true);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, true, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -547,14 +548,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, true);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, false);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, false, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -567,8 +568,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityWithMultipleFieldsForExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name == "Name1");
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name == "Name2");
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name == "Name1", Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name == "Name2", Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -581,8 +582,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityWithMultipleFieldsForExpressionsWithDifferentUnaryValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"));
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2"));
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"), Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2"), Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -595,8 +596,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityWithMultipleFieldsForExpressionsWithDifferentBooleanValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == true);
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2") == false);
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == true, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2") == false, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -613,8 +614,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodForDynamics()
         {
             // Prepare
-            var objA = QueryGroup.Parse(new { Id = 1 });
-            var objB = QueryGroup.Parse(new { Id = 2 });
+            var objA = QueryGroup.Parse(new { Id = 1 }, Helper.DbSetting);
+            var objB = QueryGroup.Parse(new { Id = 2 }, Helper.DbSetting);
 
             // Act
             var equal = (objA == objB);
@@ -627,8 +628,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodForQueryFields()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable());
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable());
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -641,8 +642,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodForQueryFieldsWithSameConjuntion()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.And);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -655,8 +656,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodForQueryFieldsWithDifferentConjuntion()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Conjunction.Or, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -669,8 +670,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodForQueryFieldsWithSameIsNot()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), true);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -683,8 +684,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodForQueryFieldsWithDifferentIsNot()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), false);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), false, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -697,8 +698,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodForExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -711,8 +712,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodForExpressionsWithDifferentUnaryValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => !c.Name.Contains("Name1"));
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2"));
+            var objA = QueryGroup.Parse<EntityClass>(c => !c.Name.Contains("Name1"), Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2"), Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -725,8 +726,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodForExpressionsWithDifferentBooleanValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name1") == true);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2") == false);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name1") == true, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2") == false, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -739,8 +740,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodWithMultipleFieldsForDynamics()
         {
             // Prepare
-            var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" });
-            var objB = QueryGroup.Parse(new { Id = 2, Name = "Name2" });
+            var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" }, Helper.DbSetting);
+            var objB = QueryGroup.Parse(new { Id = 2, Name = "Name2" }, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -755,14 +756,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            });
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            });
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -777,14 +778,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, Conjunction.And);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, Conjunction.And);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -799,14 +800,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, Conjunction.And);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, Conjunction.Or);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Conjunction.Or, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -821,14 +822,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, true);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, true);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, true, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -843,14 +844,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, true);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, false);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, false, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -863,8 +864,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodWithMultipleFieldsForExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name == "Name1");
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name == "Name2");
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name == "Name1", Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name == "Name2", Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -877,8 +878,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodWithMultipleFieldsForExpressionsWithDifferentUnaryValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"));
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2"));
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"), Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2"), Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -891,8 +892,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualMethodWithMultipleFieldsForExpressionsWithDifferentBooleanValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == true);
-            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2") == false);
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == true, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2") == false, Helper.DbSetting);
 
             // Act
             var equal = Equals(objA, objB);
@@ -909,8 +910,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityForDynamics()
         {
             // Prepare
-            var objA = QueryGroup.Parse(new { Id = 1 });
-            var objB = QueryGroup.Parse(new { Id = 2 });
+            var objA = QueryGroup.Parse(new { Id = 1 }, Helper.DbSetting);
+            var objB = QueryGroup.Parse(new { Id = 2 }, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -925,8 +926,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityForQueryFields()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable());
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable());
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -941,8 +942,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityForQueryFieldsWithSameConjunction()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.And);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -957,8 +958,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityForQueryFieldsWithDifferentConjunction()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Conjunction.Or, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -973,8 +974,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityForQueryFieldsWithSameIsNot()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), true);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -989,8 +990,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityForQueryFieldsWithDifferentIsNot()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), false);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), false, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1005,8 +1006,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityForExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1021,8 +1022,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityForExpressionsWithDifferentUnaryValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => !c.Name.Contains("Name1"));
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2"));
+            var objA = QueryGroup.Parse<EntityClass>(c => !c.Name.Contains("Name1"), Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2"), Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1037,8 +1038,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityForExpressionsWithDifferentBooleanValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name1") == true);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2") == false);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name1") == true, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2") == false, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1053,8 +1054,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityWithMultipleMultipleFieldsForDynamics()
         {
             // Prepare
-            var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" });
-            var objB = QueryGroup.Parse(new { Id = 2, Name = "Name2" });
+            var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" }, Helper.DbSetting);
+            var objB = QueryGroup.Parse(new { Id = 2, Name = "Name2" }, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1071,14 +1072,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            });
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            });
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1095,14 +1096,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, Conjunction.And);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, Conjunction.And);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1119,14 +1120,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, Conjunction.And);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, Conjunction.Or);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Conjunction.Or, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1143,14 +1144,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, true);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, true);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1167,14 +1168,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, true);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, false);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, false, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1189,8 +1190,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityWithMultipleMultipleFieldsForExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Name == "Name1");
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name == "Name2");
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Name == "Name1", Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name == "Name2", Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1205,8 +1206,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityWithMultipleMultipleFieldsForExpressionsWithDifferentUnaryValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && !c.Name.Contains("Name1"));
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2"));
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && !c.Name.Contains("Name1"), Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2"), Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1221,8 +1222,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityWithMultipleMultipleFieldsForExpressionsWithDifferentBooleanValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Name.Contains("Name1") == true);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2") == false);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Name.Contains("Name1") == true, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2") == false, Helper.DbSetting);
             var list = new ArrayList();
 
             // Act
@@ -1241,8 +1242,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityForDynamics()
         {
             // Prepare
-            var objA = QueryGroup.Parse(new { Id = 1 });
-            var objB = QueryGroup.Parse(new { Id = 2 });
+            var objA = QueryGroup.Parse(new { Id = 1 }, Helper.DbSetting);
+            var objB = QueryGroup.Parse(new { Id = 2 }, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1257,8 +1258,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityForQueryFields()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable());
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable());
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1273,8 +1274,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityForQueryFieldsWithSameConjunction()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.And);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1289,8 +1290,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityForQueryFieldsWithDifferentConjunction()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), Conjunction.And, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), Conjunction.Or, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1305,8 +1306,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityForQueryFieldsWithSameIsNot()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), true);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1321,8 +1322,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityForQueryFieldsWithDifferentIsNot()
         {
             // Prepare
-            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
-            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), false);
+            var objA = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting).AsEnumerable(), true, Helper.DbSetting);
+            var objB = new QueryGroup(new QueryField("Id", 2, Helper.DbSetting).AsEnumerable(), false, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1337,8 +1338,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityForExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1353,8 +1354,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityForExpressionsWithDifferentUnaryValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => !c.Name.Contains("Name1"));
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2"));
+            var objA = QueryGroup.Parse<EntityClass>(c => !c.Name.Contains("Name1"), Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2"), Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1369,8 +1370,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityForExpressionsWithDifferentBooleanValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name1") == true);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2") == false);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name1") == true, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2") == false, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1385,8 +1386,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityWithMultipleMultipleFieldsForDynamics()
         {
             // Prepare
-            var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" });
-            var objB = QueryGroup.Parse(new { Id = 2, Name = "Name2" });
+            var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" }, Helper.DbSetting);
+            var objB = QueryGroup.Parse(new { Id = 2, Name = "Name2" }, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1403,14 +1404,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            });
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            });
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1427,14 +1428,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, Conjunction.And);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, Conjunction.And);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1451,14 +1452,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, Conjunction.And);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, Conjunction.And, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, Conjunction.Or);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, Conjunction.Or, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1475,14 +1476,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, true);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, true);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1499,14 +1500,14 @@ namespace RepoDb.UnitTests.Equalities
             // Prepare
             var objA = new QueryGroup(new[]
             {
-                new QueryField("Id", 1),
-                new QueryField("Name", "Name1")
-            }, true);
+                new QueryField("Id", 1, Helper.DbSetting),
+                new QueryField("Name", "Name1", Helper.DbSetting)
+            }, true, Helper.DbSetting);
             var objB = new QueryGroup(new[]
             {
-                new QueryField("Id", 2),
-                new QueryField("Name", "Name2")
-            }, false);
+                new QueryField("Id", 2, Helper.DbSetting),
+                new QueryField("Name", "Name2", Helper.DbSetting)
+            }, false, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1521,8 +1522,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityWithMultipleMultipleFieldsForExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Name == "Name1");
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name == "Name2");
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Name == "Name1", Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name == "Name2", Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1537,8 +1538,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityWithMultipleMultipleFieldsForExpressionsWithDifferentUnaryValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && !c.Name.Contains("Name1"));
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2"));
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && !c.Name.Contains("Name1"), Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2"), Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act
@@ -1553,8 +1554,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityWithMultipleMultipleFieldsForExpressionsWithDifferentBooleanValue()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Name.Contains("Name1") == true);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2") == false);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Name.Contains("Name1") == true, Helper.DbSetting);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2") == false, Helper.DbSetting);
             var list = new List<QueryGroup>();
 
             // Act

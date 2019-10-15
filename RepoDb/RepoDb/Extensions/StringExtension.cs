@@ -72,6 +72,10 @@ namespace RepoDb.Extensions
             {
                 value = value.Trim();
             }
+            if (dbSetting == null)
+            {
+                return value;
+            }
             if (string.IsNullOrEmpty(dbSetting?.SchemaSeparator) || value.IndexOf(dbSetting?.SchemaSeparator) < 0)
             {
                 return value.AsUnquoted(dbSetting);
@@ -138,14 +142,18 @@ namespace RepoDb.Extensions
             {
                 value = value.Trim();
             }
-            if (ignoreSchema || value.IndexOf(dbSetting?.SchemaSeparator) < 0)
+            if (dbSetting == null)
+            {
+                return value;
+            }
+            if (ignoreSchema || value.IndexOf(dbSetting.SchemaSeparator) < 0)
             {
                 return value.AsQuoted(dbSetting);
             }
             else
             {
-                var splitted = value.Split(dbSetting?.SchemaSeparator?.ToCharArray());
-                return splitted.Select(s => s.AsQuoted(dbSetting)).Join(dbSetting?.SchemaSeparator);
+                var splitted = value.Split(dbSetting?.SchemaSeparator.ToCharArray());
+                return splitted.Select(s => s.AsQuoted(dbSetting)).Join(dbSetting.SchemaSeparator);
             }
         }
 

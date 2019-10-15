@@ -11,16 +11,6 @@ namespace RepoDb
     {
         private int m_hashCode = 0;
 
-        ///// <summary>
-        ///// Creates a new instance of <see cref="Parameter"/> object.
-        ///// </summary>
-        ///// <param name="name">The name of the parameter.</param>
-        ///// <param name="value">The value of the parameter.</param>
-        //public Parameter(string name, object value)
-        //    : this(name, value, false)
-        //{
-        //}
-
         /// <summary>
         /// Creates a new instance of <see cref="Parameter"/> object.
         /// </summary>
@@ -28,7 +18,7 @@ namespace RepoDb
         /// <param name="value">The value of the parameter.</param>
         /// <param name="prependUnderscore">The value to identify whether the underscope prefix will be prepended.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
-        internal Parameter(string name,
+        public Parameter(string name,
             object value,
             bool prependUnderscore,
             IDbSetting dbSetting)
@@ -50,10 +40,10 @@ namespace RepoDb
 
             // Set the hashcode
             m_hashCode = Name.GetHashCode();
-            if (dbSetting != null)
-            {
-                m_hashCode += dbSetting.GetHashCode();
-            }
+            //if (dbSetting != null)
+            //{
+            //    m_hashCode += dbSetting.GetHashCode();
+            //}
         }
 
         #region Properties
@@ -128,6 +118,15 @@ namespace RepoDb
         /// <returns>True if the instances are equals.</returns>
         public override bool Equals(object obj)
         {
+            //var hashCode = obj?.GetHashCode();
+            //if (obj is string)
+            //{
+            //    if (DbSetting != null)
+            //    {
+            //        hashCode += DbSetting.GetHashCode();
+            //    }
+            //}
+            //return hashCode == GetHashCode();
             return obj?.GetHashCode() == GetHashCode();
         }
 

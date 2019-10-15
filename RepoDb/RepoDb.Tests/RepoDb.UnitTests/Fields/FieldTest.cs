@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
+using RepoDb.UnitTests.Setup;
 using System;
 using System.Linq;
 
@@ -12,7 +13,7 @@ namespace RepoDb.UnitTests.Fields
         public void TestFieldQuotes()
         {
             // Prepare
-            var objA = new Field("FieldName");
+            var objA = new Field("FieldName", Helper.DbSetting);
 
             // Act
             var equal = Equals("[FieldName]", objA.Name);
@@ -30,11 +31,11 @@ namespace RepoDb.UnitTests.Fields
             var fields = new[] { "Field1", "Field2", "Field3" };
 
             // Act
-            var parsed = Field.From(fields);
+            var parsed = Field.From(fields, Helper.DbSetting);
 
             // Assert
             Assert.AreEqual(3, parsed.Count());
-            Assert.IsTrue(parsed.All(field => fields.Select(f => f.AsQuoted()).Contains(field.Name)));
+            Assert.IsTrue(parsed.All(field => fields.Select(f => f.AsQuoted(Helper.DbSetting)).Contains(field.Name)));
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -44,7 +45,7 @@ namespace RepoDb.UnitTests.Fields
             var fields = (string)null;
 
             // Act/Assert
-            Field.From(fields).ToList();
+            Field.From(fields, Helper.DbSetting).ToList();
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -54,7 +55,7 @@ namespace RepoDb.UnitTests.Fields
             var fields = new[] { "" };
 
             // Act/Assert
-            Field.From(fields).ToList();
+            Field.From(fields, Helper.DbSetting).ToList();
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -64,7 +65,7 @@ namespace RepoDb.UnitTests.Fields
             var fields = new[] { " " };
 
             // Act/Assert
-            Field.From(fields).ToList();
+            Field.From(fields, Helper.DbSetting).ToList();
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -74,7 +75,7 @@ namespace RepoDb.UnitTests.Fields
             var fields = new[] { "Field1", null, "Field3" };
 
             // Act/Assert
-            Field.From(fields).ToList();
+            Field.From(fields, Helper.DbSetting).ToList();
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -84,7 +85,7 @@ namespace RepoDb.UnitTests.Fields
             var fields = new[] { "Field1", "", "Field3" };
 
             // Act/Assert
-            Field.From(fields).ToList();
+            Field.From(fields, Helper.DbSetting).ToList();
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -94,7 +95,7 @@ namespace RepoDb.UnitTests.Fields
             var fields = new[] { "Field1", " ", "Field3" };
 
             // Act/Assert
-            Field.From(fields).ToList();
+            Field.From(fields, Helper.DbSetting).ToList();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
@@ -476,8 +477,15 @@ namespace RepoDb.Reflection
             var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
             var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
 
+            // Variables for DbSetting
+            var dbSetting = (IDbSetting)null;
+            if (inputFields?.Any() == true)
+            {
+                dbSetting = inputFields?.First().DbSetting;
+            }
+
             // Variables for types
-            var entityProperties = PropertyCache.Get<TEntity>(inputFields?.First()?.DbSetting);
+            var entityProperties = PropertyCache.Get<TEntity>(dbSetting);
 
             // Variables for DbCommand
             var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
@@ -962,8 +970,15 @@ namespace RepoDb.Reflection
             var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
             var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
 
+            // Variables for DbSetting
+            var dbSetting = (IDbSetting)null;
+            if (inputFields?.Any() == true)
+            {
+                dbSetting = inputFields?.First().DbSetting;
+            }
+
             // Variables for types
-            var entityProperties = PropertyCache.Get<TEntity>(inputFields?.First()?.DbSetting);
+            var entityProperties = PropertyCache.Get<TEntity>(dbSetting);
 
             // Variables for DbCommand
             var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");

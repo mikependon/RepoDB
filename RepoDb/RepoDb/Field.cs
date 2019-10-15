@@ -55,10 +55,10 @@ namespace RepoDb
             {
                 m_hashCode += type.GetHashCode();
             }
-            if (dbSetting != null)
-            {
-                m_hashCode += dbSetting.GetHashCode();
-            }
+            //if (dbSetting != null)
+            //{
+            //    m_hashCode += dbSetting.GetHashCode();
+            //}
         }
 
         /// <summary>
@@ -179,6 +179,15 @@ namespace RepoDb
         /// <returns>True if the instances are equals.</returns>
         public override bool Equals(object obj)
         {
+            //var hashCode = obj?.GetHashCode();
+            //if (obj is string)
+            //{
+            //    if (DbSetting != null)
+            //    {
+            //        hashCode += DbSetting.GetHashCode();
+            //    }
+            //}
+            //return hashCode == GetHashCode();
             return obj?.GetHashCode() == GetHashCode();
         }
 

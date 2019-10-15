@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
+using RepoDb.UnitTests.Setup;
 using System;
 using System.Linq;
 
@@ -18,7 +19,7 @@ namespace RepoDb.UnitTests.Fields
         public void TestOrderFieldQuotes()
         {
             // Prepare
-            var objA = new OrderField("FieldName", Order.Ascending);
+            var objA = new OrderField("FieldName", Order.Ascending, Helper.DbSetting);
 
             // Act
             var equal = Equals("[FieldName]", objA.Name);
@@ -31,7 +32,7 @@ namespace RepoDb.UnitTests.Fields
         public void TestOrderFieldParseExpressionForAscending()
         {
             // Act
-            var parsed = OrderField.Parse<OrderFieldTestClass>(p => p.Id, Order.Ascending);
+            var parsed = OrderField.Parse<OrderFieldTestClass>(p => p.Id, Order.Ascending, Helper.DbSetting);
 
             // Assert
             Assert.AreEqual(Order.Ascending, parsed.Order);
@@ -41,7 +42,7 @@ namespace RepoDb.UnitTests.Fields
         public void TestOrderFieldParseExpressionForDescending()
         {
             // Act
-            var parsed = OrderField.Parse<OrderFieldTestClass>(p => p.Id, Order.Descending);
+            var parsed = OrderField.Parse<OrderFieldTestClass>(p => p.Id, Order.Descending, Helper.DbSetting);
 
             // Assert
             Assert.AreEqual(Order.Descending, parsed.Order);
@@ -54,7 +55,7 @@ namespace RepoDb.UnitTests.Fields
             var orderBy = new { Id = Order.Ascending };
 
             // Act
-            var orderField = OrderField.Parse(orderBy);
+            var orderField = OrderField.Parse(orderBy, Helper.DbSetting);
 
             // Assert
             Assert.AreEqual(Order.Ascending, orderField.First().Order);
@@ -67,7 +68,7 @@ namespace RepoDb.UnitTests.Fields
             var orderBy = new { Id = Order.Descending };
 
             // Act
-            var orderField = OrderField.Parse(orderBy);
+            var orderField = OrderField.Parse(orderBy, Helper.DbSetting);
 
             // Assert
             Assert.AreEqual(Order.Descending, orderField.First().Order);
@@ -80,7 +81,7 @@ namespace RepoDb.UnitTests.Fields
             var orderBy = new { Id = Order.Ascending, Value = Order.Descending };
 
             // Act
-            var orderField = OrderField.Parse(orderBy);
+            var orderField = OrderField.Parse(orderBy, Helper.DbSetting);
 
             // Assert
             Assert.AreEqual(Order.Ascending, orderField.First().Order);
@@ -91,7 +92,7 @@ namespace RepoDb.UnitTests.Fields
         public void ThrowExceptionOnOrderFieldIfTheParseLinqExpressionHasNoProperty()
         {
             // Act/Assert
-            OrderField.Parse<OrderFieldTestClass>(p => "A", Order.Ascending);
+            OrderField.Parse<OrderFieldTestClass>(p => "A", Order.Ascending, Helper.DbSetting);
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
@@ -101,7 +102,7 @@ namespace RepoDb.UnitTests.Fields
             var orderBy = new { Id = "NotAnOrderType" };
 
             // Act/Assert
-            OrderField.Parse(orderBy);
+            OrderField.Parse(orderBy, Helper.DbSetting);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -111,7 +112,7 @@ namespace RepoDb.UnitTests.Fields
             var orderBy = (object)null;
 
             // Act/Assert
-            OrderField.Parse(orderBy);
+            OrderField.Parse(orderBy, Helper.DbSetting);
         }
     }
 }
