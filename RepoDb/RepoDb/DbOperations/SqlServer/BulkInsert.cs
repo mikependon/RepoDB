@@ -165,7 +165,7 @@ namespace RepoDb.DbOperationProviders
                     // Add the mappings
                     if (mappings == null)
                     {
-                        // Get the actual DB fields
+                        // Variables needed
                         var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(dbSetting), transaction);
                         var fields = reader.Properties.AsFields();
                         var filteredFields = new List<Tuple<string, string>>();
@@ -173,10 +173,11 @@ namespace RepoDb.DbOperationProviders
                         // To fix the casing problem of the bulk inserts
                         foreach (var dbField in dbFields)
                         {
-                            var field = fields.FirstOrDefault(f => string.Equals(f.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                            var field = fields.FirstOrDefault(f =>
+                                string.Equals(f.Name, dbField.Name, StringComparison.OrdinalIgnoreCase));
                             if (field != null)
                             {
-                                filteredFields.Add(new Tuple<string, string>(field.UnquotedName, dbField.UnquotedName));
+                                filteredFields.Add(new Tuple<string, string>(field.Name, dbField.Name));
                             }
                         }
 
@@ -295,7 +296,8 @@ namespace RepoDb.DbOperationProviders
                 // Add the mappings
                 if (mappings == null)
                 {
-                    // Get the actual DB fields
+                    // Variables needed
+                    var dbSetting = connection.GetDbSetting();
                     var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                     var fields = Enumerable.Range(0, reader.FieldCount).Select((index) => reader.GetName(index));
                     var filteredFields = new List<Tuple<string, string>>();
@@ -303,10 +305,11 @@ namespace RepoDb.DbOperationProviders
                     // To fix the casing problem of the bulk inserts
                     foreach (var dbField in dbFields)
                     {
-                        var readerField = fields.FirstOrDefault(field => string.Equals(field, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                        var readerField = fields.FirstOrDefault(field =>
+                            string.Equals(field, dbField.Name.AsUnquoted(dbSetting), StringComparison.OrdinalIgnoreCase));
                         if (!string.IsNullOrEmpty(readerField))
                         {
-                            filteredFields.Add(new Tuple<string, string>(readerField, dbField.UnquotedName));
+                            filteredFields.Add(new Tuple<string, string>(readerField, dbField.Name.AsUnquoted(dbSetting)));
                         }
                     }
 
@@ -429,7 +432,8 @@ namespace RepoDb.DbOperationProviders
                 // Add the mappings
                 if (mappings == null)
                 {
-                    // Get the actual DB fields
+                    // Variables needed
+                    var dbSetting = connection.GetDbSetting();
                     var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                     var fields = GetDataColumns(dataTable).Select(column => column.ColumnName);
                     var filteredFields = new List<Tuple<string, string>>();
@@ -437,10 +441,11 @@ namespace RepoDb.DbOperationProviders
                     // To fix the casing problem of the bulk inserts
                     foreach (var dbField in dbFields)
                     {
-                        var field = fields.FirstOrDefault(f => string.Equals(f, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                        var field = fields.FirstOrDefault(f =>
+                            string.Equals(f, dbField.Name.AsUnquoted(dbSetting), StringComparison.OrdinalIgnoreCase));
                         if (field != null)
                         {
-                            filteredFields.Add(new Tuple<string, string>(field, dbField.UnquotedName));
+                            filteredFields.Add(new Tuple<string, string>(field, dbField.Name.AsUnquoted(dbSetting)));
                         }
                     }
 
@@ -532,7 +537,7 @@ namespace RepoDb.DbOperationProviders
                     // Add the mappings
                     if (mappings == null)
                     {
-                        // Get the actual DB fields
+                        // Variables needed
                         var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(dbSetting), transaction);
                         var fields = reader.Properties.AsFields();
                         var filteredFields = new List<Tuple<string, string>>();
@@ -540,10 +545,11 @@ namespace RepoDb.DbOperationProviders
                         // To fix the casing problem of the bulk inserts
                         foreach (var dbField in dbFields)
                         {
-                            var field = fields.FirstOrDefault(f => string.Equals(f.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                            var field = fields.FirstOrDefault(f =>
+                                string.Equals(f.Name, dbField.Name, StringComparison.OrdinalIgnoreCase));
                             if (field != null)
                             {
-                                filteredFields.Add(new Tuple<string, string>(field.UnquotedName, dbField.UnquotedName));
+                                filteredFields.Add(new Tuple<string, string>(field.Name, dbField.Name));
                             }
                         }
 
@@ -662,7 +668,8 @@ namespace RepoDb.DbOperationProviders
                 // Add the mappings
                 if (mappings == null)
                 {
-                    // Get the actual DB fields
+                    // Variables needed
+                    var dbSetting = connection.GetDbSetting();
                     var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                     var fields = Enumerable.Range(0, reader.FieldCount).Select((index) => reader.GetName(index));
                     var filteredFields = new List<Tuple<string, string>>();
@@ -670,10 +677,11 @@ namespace RepoDb.DbOperationProviders
                     // To fix the casing problem of the bulk inserts
                     foreach (var dbField in dbFields)
                     {
-                        var readerField = fields.FirstOrDefault(field => string.Equals(field, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                        var readerField = fields.FirstOrDefault(field =>
+                            string.Equals(field, dbField.Name.AsUnquoted(dbSetting), StringComparison.OrdinalIgnoreCase));
                         if (!string.IsNullOrEmpty(readerField))
                         {
-                            filteredFields.Add(new Tuple<string, string>(readerField, dbField.UnquotedName));
+                            filteredFields.Add(new Tuple<string, string>(readerField, dbField.Name.AsUnquoted(dbSetting)));
                         }
                     }
 
@@ -796,7 +804,8 @@ namespace RepoDb.DbOperationProviders
                 // Add the mappings
                 if (mappings == null)
                 {
-                    // Get the actual DB fields
+                    // Variables needed
+                    var dbSetting = connection.GetDbSetting();
                     var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                     var fields = GetDataColumns(dataTable).Select(column => column.ColumnName);
                     var filteredFields = new List<Tuple<string, string>>();
@@ -804,10 +813,11 @@ namespace RepoDb.DbOperationProviders
                     // To fix the casing problem of the bulk inserts
                     foreach (var dbField in dbFields)
                     {
-                        var field = fields.FirstOrDefault(f => string.Equals(f, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                        var field = fields.FirstOrDefault(f =>
+                            string.Equals(f, dbField.Name.AsUnquoted(dbSetting), StringComparison.OrdinalIgnoreCase));
                         if (field != null)
                         {
-                            filteredFields.Add(new Tuple<string, string>(field, dbField.UnquotedName));
+                            filteredFields.Add(new Tuple<string, string>(field, dbField.Name.AsUnquoted(dbSetting)));
                         }
                     }
 

@@ -987,23 +987,23 @@ namespace RepoDb
                 var identity = (Field)null;
                 var inputFields = new List<DbField>();
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity field
                 if (skipIdentityCheck == false)
                 {
-                    var dbSetting = connection.GetDbSetting();
                     identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
                     if (identity == null && identityDbField != null)
                     {
                         identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
-                            string.Equals(field.UnquotedName, identityDbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
                     }
                 }
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the entity action
@@ -1046,7 +1046,8 @@ namespace RepoDb
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".Merge"),
                         inputFields?.AsList(),
-                        null),
+                        null,
+                        dbSetting),
                     IdentityPropertySetterFunc = identityPropertySetter
                 };
             });
@@ -1150,23 +1151,23 @@ namespace RepoDb
                 var identity = (Field)null;
                 var inputFields = new List<DbField>();
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity field
                 if (skipIdentityCheck == false)
                 {
-                    var dbSetting = connection.GetDbSetting();
                     identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
                     if (identity == null && identityDbField != null)
                     {
                         identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
-                            string.Equals(field.UnquotedName, identityDbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
                     }
                 }
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the entity action
@@ -1209,7 +1210,8 @@ namespace RepoDb
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".Merge"),
                         inputFields?.AsList(),
-                        null),
+                        null,
+                        dbSetting),
                     IdentityPropertySetterFunc = identityPropertySetter
                 };
             });

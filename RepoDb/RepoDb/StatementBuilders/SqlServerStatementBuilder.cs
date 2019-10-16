@@ -408,7 +408,7 @@ namespace RepoDb.StatementBuilders
                 // Set the return field
                 if (identityField != null)
                 {
-                    var returnValue = string.Concat(identityField.UnquotedName.AsParameter(index, DbSetting), " = ",
+                    var returnValue = string.Concat(identityField.Name.AsUnquoted(DbSetting).AsParameter(index, DbSetting), " = ",
                         string.IsNullOrEmpty(databaseType) ?
                             "SCOPE_IDENTITY()" :
                             "CONVERT(", databaseType, ", SCOPE_IDENTITY())");
@@ -461,7 +461,7 @@ namespace RepoDb.StatementBuilders
                 // Check if the qualifiers are present in the given fields
                 var unmatchesQualifiers = qualifiers.Where(field =>
                     fields.FirstOrDefault(f =>
-                        string.Equals(field.UnquotedName, f.UnquotedName, StringComparison.OrdinalIgnoreCase)) == null);
+                        string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
@@ -612,7 +612,7 @@ namespace RepoDb.StatementBuilders
                 // Check if the qualifiers are present in the given fields
                 var unmatchesQualifiers = qualifiers.Where(field =>
                     fields.FirstOrDefault(f =>
-                        string.Equals(field.UnquotedName, f.UnquotedName, StringComparison.OrdinalIgnoreCase)) == null);
+                        string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
@@ -917,8 +917,8 @@ namespace RepoDb.StatementBuilders
 
             // Gets the updatable fields
             var updatableFields = fields
-                .Where(f => !string.Equals(f.UnquotedName, primaryField?.UnquotedName, StringComparison.OrdinalIgnoreCase) &&
-                    !string.Equals(f.UnquotedName, identityField?.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                .Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
             // Check if there are updatable fields
             if (updatableFields?.Any() != true)
@@ -980,7 +980,7 @@ namespace RepoDb.StatementBuilders
                 // Check if the qualifiers are present in the given fields
                 var unmatchesQualifiers = qualifiers?.Where(field =>
                     fields?.FirstOrDefault(f =>
-                        string.Equals(field.UnquotedName, f.UnquotedName, StringComparison.OrdinalIgnoreCase)) == null);
+                        string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
@@ -994,7 +994,8 @@ namespace RepoDb.StatementBuilders
                 if (primaryField != null)
                 {
                     // Make sure that primary is present in the list of fields before qualifying to become a qualifier
-                    var isPresent = fields?.FirstOrDefault(f => string.Equals(f.UnquotedName, primaryField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null;
+                    var isPresent = fields?.FirstOrDefault(f =>
+                        string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
                     if (isPresent == false)
@@ -1015,9 +1016,9 @@ namespace RepoDb.StatementBuilders
 
             // Gets the updatable fields
             fields = fields
-                .Where(f => !string.Equals(f.UnquotedName, primaryField?.UnquotedName, StringComparison.OrdinalIgnoreCase) &&
-                    !string.Equals(f.UnquotedName, identityField?.UnquotedName, StringComparison.OrdinalIgnoreCase) &&
-                    qualifiers.FirstOrDefault(q => string.Equals(q.UnquotedName, f.UnquotedName, StringComparison.OrdinalIgnoreCase)) == null);
+                .Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) &&
+                    qualifiers.FirstOrDefault(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
             // Check if there are updatable fields
             if (fields?.Any() != true)

@@ -1,4 +1,5 @@
 ﻿using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
@@ -437,19 +438,23 @@ namespace RepoDb
         /// <param name="tableName">The list of fields from the data entity object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The actual list of <see cref="Field"/> objects of the table.</returns>
-        private static IEnumerable<Field> GetActualFields(IDbConnection connection, string tableName, IEnumerable<Field> fields, IDbTransaction transaction)
+        private static IEnumerable<Field> GetActualFields(IDbConnection connection,
+            string tableName,
+            IEnumerable<Field> fields,
+            IDbTransaction transaction)
         {
             if (fields?.Any() != true)
             {
                 return null;
             }
 
-            // Get all the fields from the database
+            // Get all the fields from the database, and the setting
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var dbSetting = connection.GetDbSetting();
 
             // Return the filtered one
             return dbFields?.Any() == true ?
-                fields.Where(f => dbFields.FirstOrDefault(df => string.Equals(df.UnquotedName, f.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null) :
+                fields.Where(f => dbFields.FirstOrDefault(df => string.Equals(df.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != null) :
                 fields;
         }
 
@@ -479,8 +484,7 @@ namespace RepoDb
                         null,
                         null,
                         null,
-                        null,
-                        request.Connection.GetDbSetting());
+                        null);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsPrimary);
@@ -512,8 +516,7 @@ namespace RepoDb
                         null,
                         null,
                         null,
-                        null,
-                        request.Connection.GetDbSetting());
+                        null);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsIdentity);
@@ -525,7 +528,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to identified.</param>
         /// <param name="builder">The builder to be checked.</param>
         /// <returns>The instance of available statement builder.</returns>
-        private static IStatementBuilder EnsureStatementBuilder(IDbConnection connection, IStatementBuilder builder)
+        private static IStatementBuilder EnsureStatementBuilder(IDbConnection connection,
+            IStatementBuilder builder)
         {
             builder = builder ?? StatementBuilderMapper.Get(connection.GetType());
             if (builder == null)

@@ -47,7 +47,7 @@ namespace RepoDb
             // Set the properties
             DbSetting = dbSetting;
             Name = name.AsQuoted(true, dbSetting);
-            UnquotedName = name.AsUnquoted(true, dbSetting);
+            UnquotedName = name.AsUnquoted(dbSetting);
             Order = order;
 
             // Set the hashcode here

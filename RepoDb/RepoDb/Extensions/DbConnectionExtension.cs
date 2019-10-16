@@ -1149,7 +1149,8 @@ namespace RepoDb
                 if (primary != null)
                 {
                     var properties = PropertyCache.Get<TEntity>(dbSetting);
-                    property = properties.FirstOrDefault(p => string.Equals(p.GetUnquotedMappedName(), primary.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                    property = properties.FirstOrDefault(p =>
+                        string.Equals(p.GetUnquotedMappedName(), primary.Name.AsUnquoted(dbSetting), StringComparison.OrdinalIgnoreCase));
                 }
             }
             if (property == null)
@@ -1190,7 +1191,7 @@ namespace RepoDb
             {
                 return null;
             }
-            var dbSetting = DbSettingMapper.Get(connection.GetType());
+            var dbSetting = connection.GetDbSetting();
             if (whereOrPrimaryKey.GetType().IsGenericType)
             {
                 return QueryGroup.Parse(whereOrPrimaryKey, dbSetting);
@@ -1205,7 +1206,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    var field = new Field(primary.UnquotedName, primary.Type, dbSetting);
+                    var field = new Field(primary.Name, primary.Type);
                     var queryField = new QueryField(field, whereOrPrimaryKey, dbSetting);
                     return new QueryGroup(queryField, dbSetting);
                 }
@@ -1596,7 +1597,7 @@ namespace RepoDb
                 }
 
                 // Replace the target parameters
-                var parameter = AsCommandArrayParameter(field.Field.UnquotedName,
+                var parameter = AsCommandArrayParameter(field.Field.Name,
                     ((Array)field.Parameter.Value).AsEnumerable(),
                     dbSetting,
                     ref commandText);
@@ -1636,7 +1637,7 @@ namespace RepoDb
             var commandArrayParameters = new List<CommandArrayParameter>();
 
             // Replace the target parameters
-            var parameter = AsCommandArrayParameter(queryField.Field.UnquotedName,
+            var parameter = AsCommandArrayParameter(queryField.Field.Name,
                 ((Array)queryField.Parameter.Value).AsEnumerable(),
                 dbSetting,
                 ref commandText);

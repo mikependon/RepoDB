@@ -1,5 +1,4 @@
-﻿using RepoDb.Extensions;
-using RepoDb.Interfaces;
+﻿using RepoDb.Interfaces;
 using System;
 
 namespace RepoDb
@@ -9,7 +8,7 @@ namespace RepoDb
     /// </summary>
     public class DbField : IEquatable<DbField>
     {
-        private int m_hashCode = 0;
+        private int? m_hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="DbField"/> object.
@@ -23,7 +22,6 @@ namespace RepoDb
         /// <param name="precision">The precision of the field.</param>
         /// <param name="scale">The scale of the field.</param>
         /// <param name="databaseType">The database type of the field.</param>
-        /// <param name="dbSetting">The database setting to be used.</param>
         public DbField(string name,
             bool isPrimary,
             bool isIdentity,
@@ -32,8 +30,7 @@ namespace RepoDb
             int? size,
             byte? precision,
             byte? scale,
-            string databaseType,
-            IDbSetting dbSetting)
+            string databaseType)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -42,8 +39,7 @@ namespace RepoDb
             }
 
             // Set the properties
-            Name = name.AsQuoted(true, true, dbSetting);
-            UnquotedName = name.AsUnquoted(true, dbSetting);
+            Name = name;
             IsPrimary = isPrimary;
             IsIdentity = isIdentity;
             IsNullable = isNullable;
@@ -52,45 +48,12 @@ namespace RepoDb
             Precision = precision;
             Scale = scale;
             DatabaseType = databaseType;
-            DbSetting = dbSetting;
-
-            // Set the hashcode
-            m_hashCode = name.GetHashCode() + isPrimary.GetHashCode() + isIdentity.GetHashCode() + isNullable.GetHashCode();
-            if (type != null)
-            {
-                m_hashCode += type.GetHashCode();
-            }
-            if (size != null)
-            {
-                m_hashCode += size.GetHashCode();
-            }
-            if (precision != null)
-            {
-                m_hashCode += precision.GetHashCode();
-            }
-            if (scale != null)
-            {
-                m_hashCode += scale.GetHashCode();
-            }
-            if (databaseType != null)
-            {
-                m_hashCode += databaseType.GetHashCode();
-            }
-            if (dbSetting != null)
-            {
-                m_hashCode += dbSetting.GetHashCode();
-            }
         }
 
         /// <summary>
         /// Gets the quoted name of the database field.
         /// </summary>
         public string Name { get; }
-
-        /// <summary>
-        /// Gets the unquoted name of the database field.
-        /// </summary>
-        public string UnquotedName { get; }
 
         /// <summary>
         /// Gets the value whether the column is a primary column.
@@ -132,11 +95,6 @@ namespace RepoDb
         /// </summary>
         public string DatabaseType { get; }
 
-        /// <summary>
-        /// Gets the database setting currently in used.
-        /// </summary>
-        public IDbSetting DbSetting { get; }
-
         // Methods
 
         /// <summary>
@@ -156,7 +114,41 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            return m_hashCode;
+            if (m_hashCode != null)
+            {
+                return m_hashCode.Value;
+            }
+
+            var hashCode = 0;
+
+            // Set the hashcode
+            hashCode = Name.GetHashCode() + IsPrimary.GetHashCode() + IsIdentity.GetHashCode() + IsNullable.GetHashCode();
+            if (Type != null)
+            {
+                hashCode += Type.GetHashCode();
+            }
+            if (Size != null)
+            {
+                hashCode += Size.GetHashCode();
+            }
+            if (Precision != null)
+            {
+                hashCode += Precision.GetHashCode();
+            }
+            if (Scale != null)
+            {
+                hashCode += Scale.GetHashCode();
+            }
+            if (DatabaseType != null)
+            {
+                hashCode += DatabaseType.GetHashCode();
+            }
+
+            // Set the hashcode
+            m_hashCode = hashCode;
+
+            // Return the hashcode
+            return hashCode;
         }
 
         /// <summary>

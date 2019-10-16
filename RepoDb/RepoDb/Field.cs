@@ -11,16 +11,14 @@ namespace RepoDb
     /// </summary>
     public class Field : IEquatable<Field>
     {
-        private int m_hashCode = 0;
+        private int? m_hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="Field"/> object.
         /// </summary>
         /// <param name="name">The name of the field.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
-        public Field(string name,
-            IDbSetting dbSetting) :
-            this(name, null, dbSetting)
+        public Field(string name) :
+            this(name, null)
         { }
 
         /// <summary>
@@ -28,10 +26,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="name">The name of the field.</param>
         /// <param name="type">The type of the field.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         public Field(string name,
-        Type type,
-        IDbSetting dbSetting)
+        Type type)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -40,37 +36,17 @@ namespace RepoDb
             }
 
             // Set the name
-            Name = name.AsQuoted(true, true, dbSetting);
-            UnquotedName = name.AsUnquoted(true, dbSetting);
+            Name = name;
 
             // Set the type
             Type = type;
-
-            // Set the DbSetting
-            DbSetting = dbSetting;
-
-            // Set the hashcode
-            m_hashCode = Name.GetHashCode();
-            if (type != null)
-            {
-                m_hashCode += type.GetHashCode();
-            }
-            //if (dbSetting != null)
-            //{
-            //    m_hashCode += dbSetting.GetHashCode();
-            //}
         }
 
         /// <summary>
         /// Gets the quoted name of the field.
         /// </summary>
         public string Name { get; }
-
-        /// <summary>
-        /// Gets the unquoted name of the field.
-        /// </summary>
-        public string UnquotedName { get; }
-
+        
         /// <summary>
         /// Gets the type of the field.
         /// </summary>
@@ -103,17 +79,15 @@ namespace RepoDb
             {
                 throw new NullReferenceException("The field name must be null or empty.");
             }
-            return From(name.AsEnumerable(), dbSetting);
+            return From(name);
         }
 
         /// <summary>
         /// Creates an enumerable of <see cref="Field"/> objects that derived from the given array of string values.
         /// </summary>
         /// <param name="fields">The enumerable of string values that signifies the name of the fields (for each item).</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable of <see cref="Field"/> object.</returns>
-        public static IEnumerable<Field> From(IEnumerable<string> fields,
-            IDbSetting dbSetting)
+        public static IEnumerable<Field> From(params string[] fields)
         {
             if (fields == null)
             {
@@ -125,7 +99,7 @@ namespace RepoDb
             }
             foreach (var field in fields)
             {
-                yield return new Field(field, dbSetting);
+                yield return new Field(field);
             }
         }
 
@@ -169,7 +143,25 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            return m_hashCode;
+            if (m_hashCode != null)
+            {
+                return m_hashCode.Value;
+            }
+
+            var hashCode = 0;
+
+            // Set the hash code
+            hashCode = Name.GetHashCode();
+            if (Type != null)
+            {
+                hashCode += Type.GetHashCode();
+            }
+
+            // Set the hash code
+            m_hashCode = hashCode;
+
+            // Return the value
+            return hashCode;
         }
 
         /// <summary>
@@ -179,15 +171,6 @@ namespace RepoDb
         /// <returns>True if the instances are equals.</returns>
         public override bool Equals(object obj)
         {
-            //var hashCode = obj?.GetHashCode();
-            //if (obj is string)
-            //{
-            //    if (DbSetting != null)
-            //    {
-            //        hashCode += DbSetting.GetHashCode();
-            //    }
-            //}
-            //return hashCode == GetHashCode();
             return obj?.GetHashCode() == GetHashCode();
         }
 

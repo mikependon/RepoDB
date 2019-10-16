@@ -30,8 +30,8 @@ namespace RepoDb.Extensions
             int index,
             IDbSetting dbSetting)
         {
-            return index > 0 ? string.Concat(dbSetting.ParameterPrefix, field.UnquotedName.AsAlphaNumeric(true), "_", index) :
-                string.Concat(dbSetting.ParameterPrefix, field.UnquotedName.AsAlphaNumeric(true));
+            var name = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric(true);
+            return index > 0 ? string.Concat(dbSetting.ParameterPrefix, name, "_", index) : string.Concat(dbSetting.ParameterPrefix, name);
         }
 
         // AsAliasField

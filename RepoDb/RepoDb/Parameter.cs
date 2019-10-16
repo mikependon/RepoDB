@@ -86,7 +86,7 @@ namespace RepoDb
         internal void SetName(string name,
             IDbSetting dbSetting)
         {
-            Name = name.AsUnquoted(true, dbSetting);
+            Name = name.AsUnquoted(dbSetting);
         }
 
         /// <summary>

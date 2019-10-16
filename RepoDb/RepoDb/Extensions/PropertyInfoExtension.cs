@@ -86,7 +86,7 @@ namespace RepoDb.Extensions
         {
             var attribute = (MapAttribute)GetCustomAttribute(property, typeof(MapAttribute));
             var name = (attribute?.Name ?? property.Name);
-            return quoted == true ? name.AsQuoted(true, dbSetting) : name.AsUnquoted(true, dbSetting);
+            return quoted == true ? name.AsQuoted(true, dbSetting) : name.AsUnquoted(dbSetting);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace RepoDb.Extensions
             bool appendUnderscore,
             IDbSetting dbSetting)
         {
-            var field = new Field(PropertyMappedNameCache.Get(property, true, dbSetting), property.PropertyType.GetUnderlyingType(), dbSetting);
+            var field = new Field(PropertyMappedNameCache.Get(property, true, dbSetting), property.PropertyType.GetUnderlyingType());
             return new QueryField(field, Operation.Equal, property.GetValue(entity), appendUnderscore, dbSetting);
         }
 
@@ -270,7 +270,7 @@ namespace RepoDb.Extensions
         public static Field AsField(this PropertyInfo property,
             IDbSetting dbSetting)
         {
-            return new Field(PropertyMappedNameCache.Get(property, false, dbSetting), property.PropertyType.GetUnderlyingType(), dbSetting);
+            return new Field(PropertyMappedNameCache.Get(property, false, dbSetting), property.PropertyType.GetUnderlyingType());
         }
 
         /// <summary>

@@ -602,7 +602,7 @@ namespace RepoDb
             IDbSetting dbSetting)
         {
             return (fields?.Any() == true) ? Append(string.Concat("WHERE (",
-                fields.Select(f => f.UnquotedName.AsFieldAndParameter(index, dbSetting)).Join(" AND "), ")")) : this;
+                fields.Select(f => f.Name.AsFieldAndParameter(index, dbSetting)).Join(" AND "), ")")) : this;
         }
 
         /// <summary>

@@ -484,18 +484,18 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Get the primary from the database
+            // Variables needed
             var primary = DbFieldCache.Get(connection, tableName, transaction)?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var dbSetting = connection.GetDbSetting();
             var where = (QueryGroup)null;
 
             // Identity the property via primary
             if (primary != null)
             {
-                var property = entity?.GetType().GetProperty(primary.UnquotedName, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
+                var property = entity?.GetType().GetProperty(primary.Name.AsUnquoted(dbSetting), BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
                 if (property != null)
                 {
-                    var dbSetting = connection.GetDbSetting();
-                    var field = new Field(property.Name, property.PropertyType, dbSetting);
+                    var field = new Field(property.Name, property.PropertyType);
                     var queryField = new QueryField(field, property.GetValue(entity), dbSetting);
                     where = new QueryGroup(queryField, dbSetting);
                 }
@@ -699,18 +699,18 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Get the primary from the database
+            // Variables needed
             var primary = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var dbSetting = connection.GetDbSetting();
             var where = (QueryGroup)null;
 
             // Identity the property via primary
             if (primary != null)
             {
-                var property = entity?.GetType().GetProperty(primary.UnquotedName, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
+                var property = entity?.GetType().GetProperty(primary.Name.AsUnquoted(dbSetting), BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
                 if (property != null)
                 {
-                    var dbSetting = connection.GetDbSetting();
-                    var field = new Field(property.Name, property.PropertyType, dbSetting);
+                    var field = new Field(property.Name, property.PropertyType);
                     var queryField = new QueryField(field, property.GetValue(entity), dbSetting);
                     where = new QueryGroup(queryField, dbSetting);
                 }
@@ -923,6 +923,9 @@ namespace RepoDb
             // Validate
             InvokeValidatorValidateUpdate(connection);
 
+            // Get the database setting
+            var dbSetting = connection.GetDbSetting();
+
             // Get the function
             var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
             {
@@ -934,7 +937,7 @@ namespace RepoDb
                 inputFields = dbFields?
                     .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Identify the requests
@@ -968,7 +971,8 @@ namespace RepoDb
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".Update"),
                         inputFields?.AsList(),
-                        null)
+                        null,
+                        dbSetting)
                 };
             });
 
@@ -1008,7 +1012,6 @@ namespace RepoDb
                 // Add the fields from the query group
                 if (where != null)
                 {
-                    var dbSetting = connection.GetDbSetting();
                     foreach (var queryField in where.GetFields(true))
                     {
                         // Create a parameter
@@ -1066,6 +1069,9 @@ namespace RepoDb
             // Validate
             InvokeValidatorValidateUpdateAsync(connection);
 
+            // Get the database setting
+            var dbSetting = connection.GetDbSetting();
+
             // Get the database fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
 
@@ -1079,7 +1085,7 @@ namespace RepoDb
                 inputFields = dbFields?
                     .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Identify the requests
@@ -1113,7 +1119,8 @@ namespace RepoDb
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".Update"),
                         inputFields?.AsList(),
-                        null)
+                        null,
+                        dbSetting)
                 };
             });
 
@@ -1153,7 +1160,6 @@ namespace RepoDb
                 // Add the fields from the query group
                 if (where != null)
                 {
-                    var dbSetting = connection.GetDbSetting();
                     foreach (var queryField in where.GetFields(true))
                     {
                         // Create a parameter

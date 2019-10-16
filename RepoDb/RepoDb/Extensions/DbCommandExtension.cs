@@ -348,7 +348,7 @@ namespace RepoDb.Extensions
         {
             // Filter the query fields
             var filteredQueryFields = queryFields
-                .Where(qf => propertiesToSkip?.Contains(qf.Field.UnquotedName, StringComparer.OrdinalIgnoreCase) != true);
+                .Where(qf => propertiesToSkip?.Contains(qf.Field.Name, StringComparer.OrdinalIgnoreCase) != true);
 
             // Iterate the filtered query fields
             foreach (var queryField in filteredQueryFields)
@@ -370,7 +370,7 @@ namespace RepoDb.Extensions
             IDbSetting dbSetting)
         {
             // Exclude those to be skipped
-            if (propertiesToSkip?.Contains(queryField.Field.UnquotedName, StringComparer.OrdinalIgnoreCase) == true)
+            if (propertiesToSkip?.Contains(queryField.Field.Name, StringComparer.OrdinalIgnoreCase) == true)
             {
                 return;
             }
@@ -711,12 +711,12 @@ namespace RepoDb.Extensions
             var dbType = (DbType?)null;
             var others = (IList<DbParameter>)null;
             var filtered = queryFields
-                .Where(qf => propertiesToSkip?.Contains(qf.Field.UnquotedName, StringComparer.OrdinalIgnoreCase) != true);
+                .Where(qf => propertiesToSkip?.Contains(qf.Field.Name, StringComparer.OrdinalIgnoreCase) != true);
 
             // Iterate the parameter instead
             foreach (var parameter in command.Parameters.OfType<DbParameter>())
             {
-                var queryField = filtered.FirstOrDefault(qf => string.Equals(qf.Field.UnquotedName, parameter.ParameterName, StringComparison.OrdinalIgnoreCase));
+                var queryField = filtered.FirstOrDefault(qf => string.Equals(qf.Field.Name, parameter.ParameterName, StringComparison.OrdinalIgnoreCase));
 
                 // Skip and add to missing if null
                 if (queryField == null)
@@ -779,7 +779,7 @@ namespace RepoDb.Extensions
             IDbSetting dbSetting)
         {
             // Exclude those to be skipped
-            if (propertiesToSkip?.Contains(queryField.Field.UnquotedName, StringComparer.OrdinalIgnoreCase) == true)
+            if (propertiesToSkip?.Contains(queryField.Field.Name, StringComparer.OrdinalIgnoreCase) == true)
             {
                 return;
             }
@@ -792,7 +792,7 @@ namespace RepoDb.Extensions
 
             // Get the values
             var parameters = command.Parameters.OfType<DbParameter>();
-            var parameter = parameters.FirstOrDefault(p => string.Equals(p.ParameterName, queryField.Field.UnquotedName, StringComparison.OrdinalIgnoreCase));
+            var parameter = parameters.FirstOrDefault(p => string.Equals(p.ParameterName, queryField.Field.Name, StringComparison.OrdinalIgnoreCase));
 
             // Get the target parameter
             if (parameter != null)

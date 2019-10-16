@@ -1,4 +1,5 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Reflection;
 using System;
 using System.Collections.Concurrent;
@@ -187,13 +188,15 @@ namespace RepoDb
         /// <param name="cacheKey">The key to the cache.</param>
         /// <param name="inputFields">The list of the input <see cref="DbField"/> objects to be used.</param>
         /// <param name="outputFields">The list of the ouput <see cref="DbField"/> objects to be used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The compiled function.</returns>
         internal static Action<DbCommand, TEntity> GetDataEntityDbCommandParameterSetterFunction<TEntity>(string cacheKey,
             IEnumerable<DbField> inputFields,
-            IEnumerable<DbField> outputFields)
+            IEnumerable<DbField> outputFields,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            return GetDataEntityDbCommandParameterSetterFunctionCache<TEntity>.Get(cacheKey, inputFields, outputFields);
+            return GetDataEntityDbCommandParameterSetterFunctionCache<TEntity>.Get(cacheKey, inputFields, outputFields, dbSetting);
         }
 
         #region GetDataEntityDbCommandParameterSetterFunctionCache
@@ -205,7 +208,8 @@ namespace RepoDb
 
             public static Action<DbCommand, TEntity> Get(string cacheKey,
                 IEnumerable<DbField> inputFields,
-                IEnumerable<DbField> outputFields)
+                IEnumerable<DbField> outputFields,
+                IDbSetting dbSetting)
             {
                 var key = (long)cacheKey.GetHashCode();
                 var func = (Action<DbCommand, TEntity>)null;
@@ -225,7 +229,7 @@ namespace RepoDb
                 }
                 if (m_cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.GetDataEntityDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields);
+                    func = FunctionFactory.GetDataEntityDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, dbSetting);
                     m_cache.TryAdd(key, func);
                 }
                 return func;
@@ -246,14 +250,16 @@ namespace RepoDb
         /// <param name="inputFields">The list of the input <see cref="DbField"/> objects to be used.</param>
         /// <param name="outputFields">The list of the output <see cref="DbField"/> objects to be used.</param>
         /// <param name="batchSize">The batch size of the entities to be passed.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The compiled function.</returns>
         internal static Action<DbCommand, IList<TEntity>> GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
-            int batchSize)
+            int batchSize,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            return DataEntitiesDbCommandParameterSetterFunctionCache<TEntity>.Get(cacheKey, inputFields, outputFields, batchSize);
+            return DataEntitiesDbCommandParameterSetterFunctionCache<TEntity>.Get(cacheKey, inputFields, outputFields, batchSize, dbSetting);
         }
 
         #region DataEntitiesDbCommandParameterSetterFunctionCache
@@ -266,7 +272,8 @@ namespace RepoDb
             public static Action<DbCommand, IList<TEntity>> Get(string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
-                int batchSize)
+                int batchSize,
+                IDbSetting dbSetting)
             {
                 var key = (long)cacheKey.GetHashCode() + batchSize.GetHashCode();
                 if (inputFields?.Any() == true)
@@ -286,7 +293,7 @@ namespace RepoDb
                 var func = (Action<DbCommand, IList<TEntity>>)null;
                 if (m_cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, batchSize);
+                    func = FunctionFactory.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, batchSize, dbSetting);
                     m_cache.TryAdd(key, func);
                 }
                 return func;
@@ -306,13 +313,15 @@ namespace RepoDb
         /// <param name="field">The target <see cref="Field"/>.</param>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="index">The index of the batches.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.</returns>
         internal static Action<TEntity, DbCommand> GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(Field field,
             string parameterName,
-            int index = 0)
+            int index,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            return GetDataEntityPropertySetterFromDbCommandParameterFunctionCache<TEntity>.Get(field, parameterName, index);
+            return GetDataEntityPropertySetterFromDbCommandParameterFunctionCache<TEntity>.Get(field, parameterName, index, dbSetting);
         }
 
         #region GetDataEntityPropertySetterFromDbCommandParameterFunctionCache
@@ -324,14 +333,15 @@ namespace RepoDb
 
             public static Action<TEntity, DbCommand> Get(Field field,
                 string parameterName,
-                int index)
+                int index,
+                IDbSetting dbSetting)
             {
                 var key = (long)typeof(TEntity).FullName.GetHashCode() + field.GetHashCode() +
                     parameterName.GetHashCode() + index.GetHashCode();
                 var func = (Action<TEntity, DbCommand>)null;
                 if (m_cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(field, parameterName, index);
+                    func = FunctionFactory.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(field, parameterName, index, dbSetting);
                     m_cache.TryAdd(key, func);
                 }
                 return func;
@@ -365,7 +375,7 @@ namespace RepoDb
 
             public static Action<TEntity, object> Get(Field field)
             {
-                var key = (long)typeof(TEntity).FullName.GetHashCode() + field.UnquotedName.GetHashCode();
+                var key = (long)typeof(TEntity).FullName.GetHashCode() + field.Name.GetHashCode();
                 var func = (Action<TEntity, object>)null;
                 if (m_cache.TryGetValue(key, out func) == false)
                 {

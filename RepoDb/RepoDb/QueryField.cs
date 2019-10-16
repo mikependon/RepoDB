@@ -105,7 +105,7 @@ namespace RepoDb
             object value,
             bool appendUnderscore,
             IDbSetting dbSetting)
-            : this(new Field(fieldName, dbSetting),
+            : this(new Field(fieldName),
                   operation,
                   value,
                   false,
@@ -130,7 +130,7 @@ namespace RepoDb
             DbSetting = dbSetting;
             Field = field;
             Operation = operation;
-            Parameter = new Parameter(field.UnquotedName, value, appendUnderscore, dbSetting);
+            Parameter = new Parameter(field.Name, value, appendUnderscore, dbSetting);
         }
 
         #region Properties
@@ -172,7 +172,7 @@ namespace RepoDb
         /// </summary>
         public void Reset()
         {
-            Parameter?.SetName(Field.UnquotedName, DbSetting);
+            Parameter?.SetName(Field.Name, DbSetting);
             m_operationTextAttribute = null;
             m_hashCode = null;
         }

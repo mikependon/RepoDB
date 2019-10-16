@@ -48,13 +48,7 @@ namespace RepoDb.Extensions
         public static string AsUnquoted(this string value,
             IDbSetting dbSetting)
         {
-            if (dbSetting == null)
-            {
-                return value;
-            }
-            return value
-                .Replace(dbSetting.OpeningQuote, string.Empty)
-                .Replace(dbSetting.ClosingQuote, string.Empty);
+            return AsUnquoted(value, true, dbSetting);
         }
 
         /// <summary>
@@ -68,23 +62,43 @@ namespace RepoDb.Extensions
             bool trim,
             IDbSetting dbSetting)
         {
-            if (trim)
-            {
-                value = value.Trim();
-            }
             if (dbSetting == null)
             {
                 return value;
             }
             if (string.IsNullOrEmpty(dbSetting?.SchemaSeparator) || value.IndexOf(dbSetting?.SchemaSeparator) < 0)
             {
-                return value.AsUnquoted(dbSetting);
+                return value.AsUnquotedInternal(trim, dbSetting);
             }
             else
             {
                 var splitted = value.Split(dbSetting?.SchemaSeparator.ToCharArray());
-                return splitted.Select(s => s.AsUnquoted(dbSetting)).Join(dbSetting?.SchemaSeparator);
+                return splitted.Select(s => s.AsUnquotedInternal(trim, dbSetting)).Join(dbSetting?.SchemaSeparator);
             }
+        }
+
+        /// <summary>
+        /// Unquotes a string.
+        /// </summary>
+        /// <param name="value">The string value to be unqouted.</param>
+        /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <returns>The unquoted string.</returns>
+        public static string AsUnquotedInternal(this string value,
+            bool trim,
+            IDbSetting dbSetting)
+        {
+            if (dbSetting == null)
+            {
+                return value;
+            }
+            if (trim)
+            {
+                value = value.Trim();
+            }
+            return value
+                .Replace(dbSetting.OpeningQuote, string.Empty)
+                .Replace(dbSetting.ClosingQuote, string.Empty);
         }
 
         /// <summary>
@@ -96,19 +110,7 @@ namespace RepoDb.Extensions
         public static string AsQuoted(this string value,
             IDbSetting dbSetting)
         {
-            if (dbSetting == null)
-            {
-                return value;
-            }
-            if (!value.StartsWith(dbSetting.OpeningQuote))
-            {
-                value = string.Concat(dbSetting.OpeningQuote, value);
-            }
-            if (!value.EndsWith(dbSetting.ClosingQuote))
-            {
-                value = string.Concat(value, dbSetting.ClosingQuote);
-            }
-            return value;
+            return AsQuoted(value, true, false, dbSetting);
         }
 
         /// <summary>
@@ -138,23 +140,49 @@ namespace RepoDb.Extensions
             bool ignoreSchema,
             IDbSetting dbSetting)
         {
-            if (trim)
-            {
-                value = value.Trim();
-            }
             if (dbSetting == null)
             {
                 return value;
             }
             if (ignoreSchema || value.IndexOf(dbSetting.SchemaSeparator) < 0)
             {
-                return value.AsQuoted(dbSetting);
+                return value.AsQuotedInternal(trim, dbSetting);
             }
             else
             {
                 var splitted = value.Split(dbSetting?.SchemaSeparator.ToCharArray());
-                return splitted.Select(s => s.AsQuoted(dbSetting)).Join(dbSetting.SchemaSeparator);
+                return splitted.Select(s => s.AsQuotedInternal(trim, dbSetting)).Join(dbSetting.SchemaSeparator);
             }
+        }
+
+        /// <summary>
+        /// Quotes a string.
+        /// </summary>
+        /// <param name="value">The string value to be quoted.</param>
+        /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
+        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <returns>The quoted string.</returns>
+        internal static string AsQuotedInternal(this string value,
+            bool trim,
+            IDbSetting dbSetting)
+        {
+            if (dbSetting == null)
+            {
+                return value;
+            }
+            if (trim)
+            {
+                value = value.Trim();
+            }
+            if (!value.StartsWith(dbSetting.OpeningQuote))
+            {
+                value = string.Concat(dbSetting.OpeningQuote, value);
+            }
+            if (!value.EndsWith(dbSetting.ClosingQuote))
+            {
+                value = string.Concat(value, dbSetting.ClosingQuote);
+            }
+            return value;
         }
 
         // AsEnumerable

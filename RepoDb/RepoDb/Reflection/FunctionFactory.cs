@@ -39,7 +39,8 @@ namespace RepoDb.Reflection
             var newEntityExpression = Expression.New(typeof(TEntity));
 
             // DB Variables
-            var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(connection.GetDbSetting()), transaction);
+            var dbSetting = connection.GetDbSetting();
+            var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(dbSetting), transaction);
 
             // Matching the fields
             var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -49,7 +50,7 @@ namespace RepoDb.Reflection
                     Name = name,
                     Ordinal = ordinal,
                     Type = reader.GetFieldType(ordinal),
-                    DbField = dbFields?.FirstOrDefault(f => string.Equals(f.UnquotedName, name, StringComparison.OrdinalIgnoreCase))
+                    DbField = dbFields?.FirstOrDefault(dbField => string.Equals(dbField.Name.AsUnquoted(dbSetting), name, StringComparison.OrdinalIgnoreCase))
                 });
 
             // Get the member assignments
@@ -338,6 +339,7 @@ namespace RepoDb.Reflection
             var newObjectExpression = Expression.New(typeof(ExpandoObject));
 
             // DB Variables
+            var dbSetting = connection.GetDbSetting();
             var dbFields = tableName != null ? DbFieldCache.Get(connection, tableName, transaction) : null;
 
             // Matching the fields
@@ -348,7 +350,7 @@ namespace RepoDb.Reflection
                     Name = name,
                     Ordinal = ordinal,
                     Type = reader.GetFieldType(ordinal),
-                    DbField = dbFields?.FirstOrDefault(f => string.Equals(f.UnquotedName, name, StringComparison.OrdinalIgnoreCase))
+                    DbField = dbFields?.FirstOrDefault(dbField => string.Equals(dbField.Name.AsUnquoted(dbSetting), name, StringComparison.OrdinalIgnoreCase))
                 });
 
             // Initialize the elements
@@ -446,9 +448,11 @@ namespace RepoDb.Reflection
         /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
         /// <param name="inputFields">The list of the input <see cref="DbField"/> objects.</param>
         /// <param name="outputFields">The list of the output <see cref="DbField"/> objects.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The compiled function.</returns>
         public static Action<DbCommand, TEntity> GetDataEntityDbCommandParameterSetterFunction<TEntity>(IEnumerable<DbField> inputFields,
-            IEnumerable<DbField> outputFields)
+            IEnumerable<DbField> outputFields,
+            IDbSetting dbSetting)
             where TEntity : class
         {
             // Get the types
@@ -476,13 +480,6 @@ namespace RepoDb.Reflection
             // Variables for arguments
             var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
             var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
-
-            // Variables for DbSetting
-            var dbSetting = (IDbSetting)null;
-            if (inputFields?.Any() == true)
-            {
-                dbSetting = inputFields?.First().DbSetting;
-            }
 
             // Variables for types
             var entityProperties = PropertyCache.Get<TEntity>(dbSetting);
@@ -523,7 +520,7 @@ namespace RepoDb.Reflection
                 var parameterAssignments = new List<Expression>();
 
                 // Parameter variables
-                var parameterName = field.UnquotedName.AsAlphaNumeric(true);
+                var parameterName = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric(true);
                 var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", parameterName));
                 var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                 parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
@@ -635,8 +632,8 @@ namespace RepoDb.Reflection
 
                         // Set the propert value
                         valueBlock = Expression.Block(new[] { valueVariable },
-                            Expression.Assign(valueVariable, value),
-                            Expression.Condition(valueIsNull, dbNullValue, valueVariable));
+                    Expression.Assign(valueVariable, value),
+                    Expression.Condition(valueIsNull, dbNullValue, valueVariable));
                     }
                     else
                     {
@@ -694,13 +691,13 @@ namespace RepoDb.Reflection
                 {
                     // Identity the conversion
                     if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
-                        propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
-                        propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
-                        propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
-                        propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
-                        propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
-                        propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
-                        propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
+                propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
+                propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
+                propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
+                propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
+                propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
+                propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
+                propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
                     {
                         fieldOrPropertyType = propertyType;
                     }
@@ -861,7 +858,7 @@ namespace RepoDb.Reflection
                 var propertyVariable = (ParameterExpression)null;
                 var propertyInstance = (Expression)null;
                 var classProperty = (ClassProperty)null;
-                var propertyName = field.UnquotedName;
+                var propertyName = field.Name.AsUnquoted(dbSetting);
 
                 // Set the proper assignments (property)
                 if (typeOfEntity == typeOfObject)
@@ -938,10 +935,12 @@ namespace RepoDb.Reflection
         /// <param name="inputFields">The list of the input <see cref="DbField"/> objects.</param>
         /// <param name="outputFields">The list of the input <see cref="DbField"/> objects.</param>
         /// <param name="batchSize">The batch size of the entity to be passed.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The compiled function.</returns>
         public static Action<DbCommand, IList<TEntity>> GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
-            int batchSize)
+            int batchSize,
+            IDbSetting dbSetting)
             where TEntity : class
         {
             // Get the types
@@ -969,13 +968,6 @@ namespace RepoDb.Reflection
             // Variables for arguments
             var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
             var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
-
-            // Variables for DbSetting
-            var dbSetting = (IDbSetting)null;
-            if (inputFields?.Any() == true)
-            {
-                dbSetting = inputFields?.First().DbSetting;
-            }
 
             // Variables for types
             var entityProperties = PropertyCache.Get<TEntity>(dbSetting);
@@ -1020,14 +1012,14 @@ namespace RepoDb.Reflection
                 var parameterAssignments = new List<Expression>();
 
                 // Parameter variables
-                var parameterName = field.UnquotedName.AsAlphaNumeric(true);
+                var parameterName = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric(true);
                 var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", parameterName));
                 var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                 parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
 
                 // Set the name
                 var nameAssignment = Expression.Call(parameterVariable, dbParameterParameterNameSetMethod,
-                    Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
+            Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
                 parameterAssignments.Add(nameAssignment);
 
                 // Property instance
@@ -1133,8 +1125,8 @@ namespace RepoDb.Reflection
 
                         // Set the propert value
                         valueBlock = Expression.Block(new[] { valueVariable },
-                                                    Expression.Assign(valueVariable, value),
-                                                    Expression.Condition(valueIsNull, dbNullValue, valueVariable));
+                                            Expression.Assign(valueVariable, value),
+                                            Expression.Condition(valueIsNull, dbNullValue, valueVariable));
                     }
                     else
                     {
@@ -1192,13 +1184,13 @@ namespace RepoDb.Reflection
                 {
                     // Identity the conversion
                     if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
-                        propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
-                        propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
-                        propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
-                        propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
-                        propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
-                        propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
-                        propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
+                propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
+                propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
+                propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
+                propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
+                propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
+                propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
+                propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
                     {
                         fieldOrPropertyType = propertyType;
                     }
@@ -1363,7 +1355,7 @@ namespace RepoDb.Reflection
                     var propertyVariable = (ParameterExpression)null;
                     var propertyInstance = (Expression)null;
                     var classProperty = (ClassProperty)null;
-                    var propertyName = field.UnquotedName;
+                    var propertyName = field.Name.AsUnquoted(dbSetting);
 
                     // Set the proper assignments (property)
                     if (typeOfEntity == typeOfObject)
@@ -1442,10 +1434,12 @@ namespace RepoDb.Reflection
         /// <param name="field">The target <see cref="Field"/>.</param>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="index">The index of the batches.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.</returns>
         public static Action<TEntity, DbCommand> GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(Field field,
             string parameterName,
-            int index)
+            int index,
+            IDbSetting dbSetting)
             where TEntity : class
         {
             // Variables for type
@@ -1469,7 +1463,7 @@ namespace RepoDb.Reflection
             var dbParameterValueProperty = typeOfDbParameter.GetProperty("Value");
 
             // Get the entity property
-            var propertyName = field.UnquotedName.AsAlphaNumeric(true);
+            var propertyName = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric(true);
             var property = (typeOfEntity.GetProperty(propertyName) ?? typeOfEntity.GetPropertyByMapping(propertyName, field.DbSetting)?.PropertyInfo)?.SetMethod;
 
             // Get the command parameter
@@ -1510,7 +1504,7 @@ namespace RepoDb.Reflection
             var valueParameter = Expression.Parameter(typeOfObject, "value");
 
             // Get the entity property
-            var property = (typeOfEntity.GetProperty(field.UnquotedName) ?? typeOfEntity.GetPropertyByMapping(field.UnquotedName, field.DbSetting)?.PropertyInfo)?.SetMethod;
+            var property = (typeOfEntity.GetProperty(field.Name) ?? typeOfEntity.GetPropertyByMapping(field.Name, field.DbSetting)?.PropertyInfo)?.SetMethod;
 
             // Assign the value into DataEntity.Property
             var propertyAssignment = Expression.Call(entityParameter, property,
@@ -1540,6 +1534,7 @@ namespace RepoDb.Reflection
             // Variables
             var dbTypeResolver = new ClientTypeToDbTypeResolver();
             var typeOfBytes = typeof(byte[]);
+            var dbSetting = command.Connection.GetDbSetting();
 
             // Clear the parameters
             command.Parameters.Clear();
@@ -1551,7 +1546,7 @@ namespace RepoDb.Reflection
              {
                  // Create the parameter
                  var parameter = command.CreateParameter();
-                 var name = field.UnquotedName.AsAlphaNumeric(true);
+                 var name = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric(true);
 
                  // Set the property
                  parameter.ParameterName = index > 0 ? string.Concat(name, "_", index) : name;
