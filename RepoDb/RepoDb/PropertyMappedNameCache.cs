@@ -19,27 +19,17 @@ namespace RepoDb
         /// </summary>
         /// <param name="property">The target property.</param>
         /// <param name="quoted">True whether the string is quoted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The cached mapped-name of the property.</returns>
-        public static string Get(PropertyInfo property,
-            bool quoted,
-            IDbSetting dbSetting)
+        public static string Get(PropertyInfo property)
         {
             var key = property.DeclaringType.FullName.GetHashCode() +
-                property.Name.GetHashCode() +
-                quoted.GetHashCode();
+                property.Name.GetHashCode();
             var result = (string)null;
-
-            // Add the DbSetting hashcode
-            if (dbSetting != null)
-            {
-                key += dbSetting.GetHashCode();
-            }
 
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = PropertyInfoExtension.GetMappedName(property, quoted, dbSetting);
+                result = PropertyInfoExtension.GetMappedName(property);
                 m_cache.TryAdd(key, result);
             }
 

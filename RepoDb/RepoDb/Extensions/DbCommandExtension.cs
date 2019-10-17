@@ -42,7 +42,7 @@ namespace RepoDb.Extensions
             if (propertiesToSkip?.Any() == true)
             {
                 properties = properties?.Where(p =>
-                    propertiesToSkip.Contains(PropertyMappedNameCache.Get(p.PropertyInfo, false, dbSetting), StringComparer.OrdinalIgnoreCase) == false);
+                    propertiesToSkip.Contains(PropertyMappedNameCache.Get(p.PropertyInfo), StringComparer.OrdinalIgnoreCase) == false);
             }
 
             // Check if there are properties
@@ -65,7 +65,7 @@ namespace RepoDb.Extensions
                     }
 
                     // Create the parameter
-                    var name = PropertyMappedNameCache.Get(property.PropertyInfo, false, dbSetting);
+                    var name = PropertyMappedNameCache.Get(property.PropertyInfo);
                     var parameter = CreateParameter(command, name, null, dbType, dbSetting);
 
                     // Add the parameter

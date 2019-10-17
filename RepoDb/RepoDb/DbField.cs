@@ -50,6 +50,8 @@ namespace RepoDb
             DatabaseType = databaseType;
         }
 
+        #region Properties
+
         /// <summary>
         /// Gets the quoted name of the database field.
         /// </summary>
@@ -95,7 +97,9 @@ namespace RepoDb
         /// </summary>
         public string DatabaseType { get; }
 
-        // Methods
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Gets the string that represents the instance of this <see cref="DbField"/> object.
@@ -105,6 +109,8 @@ namespace RepoDb
         {
             return string.Concat(Name, ", ", IsPrimary.ToString(), " (", m_hashCode, ")");
         }
+
+        #endregion
 
         #region Equality and comparers
 
@@ -119,36 +125,31 @@ namespace RepoDb
                 return m_hashCode.Value;
             }
 
-            var hashCode = 0;
-
             // Set the hashcode
-            hashCode = Name.GetHashCode() + IsPrimary.GetHashCode() + IsIdentity.GetHashCode() + IsNullable.GetHashCode();
+            m_hashCode = Name.GetHashCode() + IsPrimary.GetHashCode() + IsIdentity.GetHashCode() + IsNullable.GetHashCode();
             if (Type != null)
             {
-                hashCode += Type.GetHashCode();
+                m_hashCode += Type.GetHashCode();
             }
             if (Size != null)
             {
-                hashCode += Size.GetHashCode();
+                m_hashCode += Size.GetHashCode();
             }
             if (Precision != null)
             {
-                hashCode += Precision.GetHashCode();
+                m_hashCode += Precision.GetHashCode();
             }
             if (Scale != null)
             {
-                hashCode += Scale.GetHashCode();
+                m_hashCode += Scale.GetHashCode();
             }
             if (DatabaseType != null)
             {
-                hashCode += DatabaseType.GetHashCode();
+                m_hashCode += DatabaseType.GetHashCode();
             }
 
-            // Set the hashcode
-            m_hashCode = hashCode;
-
             // Return the hashcode
-            return hashCode;
+            return m_hashCode.Value;
         }
 
         /// <summary>

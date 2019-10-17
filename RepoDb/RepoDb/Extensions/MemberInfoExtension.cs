@@ -13,13 +13,11 @@ namespace RepoDb.Extensions
         /// mapped name of the property.
         /// </summary>
         /// <param name="member">The member where to retrieve a name.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
-        internal static string GetMappedName(this MemberInfo member,
-            IDbSetting dbSetting)
+        internal static string GetMappedName(this MemberInfo member)
         {
             return member.IsPropertyInfo() ?
-                PropertyMappedNameCache.Get(member.ToPropertyInfo(), false, dbSetting) : member.Name;
+                PropertyMappedNameCache.Get(member.ToPropertyInfo()) : member.Name;
         }
 
         /// <summary>

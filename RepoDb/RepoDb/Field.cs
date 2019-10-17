@@ -42,11 +42,13 @@ namespace RepoDb
             Type = type;
         }
 
+        #region Properties
+
         /// <summary>
         /// Gets the quoted name of the field.
         /// </summary>
         public string Name { get; }
-        
+
         /// <summary>
         /// Gets the type of the field.
         /// </summary>
@@ -56,6 +58,10 @@ namespace RepoDb
         /// Gets the database setting currently in used.
         /// </summary>
         public IDbSetting DbSetting { get; }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Stringify the current field object.
@@ -135,6 +141,8 @@ namespace RepoDb
             }
         }
 
+        #endregion
+
         #region Equality and comparers
 
         /// <summary>
@@ -148,20 +156,15 @@ namespace RepoDb
                 return m_hashCode.Value;
             }
 
-            var hashCode = 0;
-
             // Set the hash code
-            hashCode = Name.GetHashCode();
+            m_hashCode = Name.GetHashCode();
             if (Type != null)
             {
-                hashCode += Type.GetHashCode();
+                m_hashCode += Type.GetHashCode();
             }
 
-            // Set the hash code
-            m_hashCode = hashCode;
-
             // Return the value
-            return hashCode;
+            return m_hashCode.Value;
         }
 
         /// <summary>

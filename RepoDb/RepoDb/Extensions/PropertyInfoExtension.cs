@@ -77,16 +77,12 @@ namespace RepoDb.Extensions
         /// Gets the mapped name of the propery.
         /// </summary>
         /// <param name="property">The property where the mapped name will be retrieved.</param>
-        /// <param name="quoted">True whether the string is quoted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>A string containing the mapped name.</returns>
-        public static string GetMappedName(this PropertyInfo property,
-            bool quoted,
-            IDbSetting dbSetting)
+        public static string GetMappedName(this PropertyInfo property)
         {
             var attribute = (MapAttribute)GetCustomAttribute(property, typeof(MapAttribute));
             var name = (attribute?.Name ?? property.Name);
-            return quoted == true ? name.AsQuoted(true, dbSetting) : name.AsUnquoted(dbSetting);
+            return name;
         }
 
         /// <summary>
@@ -126,7 +122,7 @@ namespace RepoDb.Extensions
             bool appendUnderscore,
             IDbSetting dbSetting)
         {
-            var field = new Field(PropertyMappedNameCache.Get(property, true, dbSetting), property.PropertyType.GetUnderlyingType());
+            var field = new Field(PropertyMappedNameCache.Get(property), property.PropertyType.GetUnderlyingType());
             return new QueryField(field, Operation.Equal, property.GetValue(entity), appendUnderscore, dbSetting);
         }
 
@@ -134,14 +130,12 @@ namespace RepoDb.Extensions
         /// Converts a <see cref="PropertyInfo"/> into a mapped name.
         /// </summary>
         /// <param name="property">The instance of the property to be converted.</param>
-        /// <param name="quoted">True whether the string is quoted.</param>
         /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>A instance of string containing the value of a mapped name.</returns>
         internal static string AsFieldAsString(this PropertyInfo property,
-            bool quoted,
             IDbSetting dbSetting)
         {
-            return PropertyMappedNameCache.Get(property, quoted, dbSetting);
+            return PropertyMappedNameCache.Get(property).AsQuoted(dbSetting);
         }
 
         /// <summary>
@@ -153,7 +147,7 @@ namespace RepoDb.Extensions
         internal static string AsParameterAsString(this PropertyInfo property,
             IDbSetting dbSetting)
         {
-            return string.Concat(dbSetting.ParameterPrefix, PropertyMappedNameCache.Get(property, false, dbSetting));
+            return string.Concat(dbSetting.ParameterPrefix, PropertyMappedNameCache.Get(property));
         }
 
         /// <summary>
@@ -165,7 +159,7 @@ namespace RepoDb.Extensions
         internal static string AsParameterAsFieldAsString(this PropertyInfo property,
             IDbSetting dbSetting)
         {
-            return string.Concat(AsParameterAsString(property, dbSetting), " AS ", AsFieldAsString(property, true, dbSetting));
+            return string.Concat(AsParameterAsString(property, dbSetting), " AS ", AsFieldAsString(property, dbSetting));
         }
 
         /// <summary>
@@ -177,7 +171,7 @@ namespace RepoDb.Extensions
         internal static string AsFieldAndParameterAsString(this PropertyInfo property,
             IDbSetting dbSetting)
         {
-            return string.Concat(AsFieldAsString(property, true, dbSetting), " = ", AsParameterAsString(property, dbSetting));
+            return string.Concat(AsFieldAsString(property, dbSetting), " = ", AsParameterAsString(property, dbSetting));
         }
 
         /// <summary>
@@ -191,7 +185,7 @@ namespace RepoDb.Extensions
             string alias,
             IDbSetting dbSetting)
         {
-            return string.Concat(AsFieldAsString(property, true, dbSetting), " = ", alias, dbSetting.SchemaSeparator, AsFieldAsString(property, true, dbSetting));
+            return string.Concat(AsFieldAsString(property, dbSetting), " = ", alias, dbSetting.SchemaSeparator, AsFieldAsString(property, dbSetting));
         }
 
         /* IEnumerable<PropertyInfo> */
@@ -207,7 +201,7 @@ namespace RepoDb.Extensions
         {
             foreach (var property in properties)
             {
-                yield return property.AsFieldAsString(true, dbSetting);
+                yield return property.AsFieldAsString(dbSetting);
             }
         }
 
@@ -270,7 +264,7 @@ namespace RepoDb.Extensions
         public static Field AsField(this PropertyInfo property,
             IDbSetting dbSetting)
         {
-            return new Field(PropertyMappedNameCache.Get(property, false, dbSetting), property.PropertyType.GetUnderlyingType());
+            return new Field(PropertyMappedNameCache.Get(property), property.PropertyType.GetUnderlyingType());
         }
 
         /// <summary>

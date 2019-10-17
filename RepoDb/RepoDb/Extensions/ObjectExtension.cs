@@ -101,7 +101,7 @@ namespace RepoDb.Extensions
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             foreach (var property in properties)
             {
-                expandObject[PropertyMappedNameCache.Get(property, false, dbSetting)] = property.GetValue(obj);
+                expandObject[PropertyMappedNameCache.Get(property)] = property.GetValue(obj);
             }
             if (queryGroup != null)
             {
@@ -184,12 +184,10 @@ namespace RepoDb.Extensions
         /// Converts an instance of an object into an enumerable list of order fields.
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable list of order fields.</returns>
-        internal static IEnumerable<OrderField> AsOrderFields(this object obj,
-            IDbSetting dbSetting)
+        internal static IEnumerable<OrderField> AsOrderFields(this object obj)
         {
-            return OrderField.Parse(obj, dbSetting);
+            return OrderField.Parse(obj);
         }
 
         /// <summary>

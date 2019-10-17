@@ -229,7 +229,7 @@ namespace RepoDb
             {
                 return m_quotedMappedName;
             }
-            return m_quotedMappedName = PropertyMappedNameCache.Get(PropertyInfo, true, DbSetting);
+            return m_quotedMappedName = PropertyMappedNameCache.Get(PropertyInfo);
         }
 
         /*
@@ -248,7 +248,7 @@ namespace RepoDb
             {
                 return m_unquotedMappedName;
             }
-            return m_unquotedMappedName = PropertyMappedNameCache.Get(PropertyInfo, false, DbSetting);
+            return m_unquotedMappedName = PropertyMappedNameCache.Get(PropertyInfo);
         }
 
         /// <summary>

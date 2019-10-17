@@ -130,7 +130,7 @@ namespace RepoDb
             DbSetting = dbSetting;
             Field = field;
             Operation = operation;
-            Parameter = new Parameter(field.Name, value, appendUnderscore, dbSetting);
+            Parameter = new Parameter(field.Name, value, appendUnderscore);
         }
 
         #region Properties
@@ -223,8 +223,8 @@ namespace RepoDb
             }
 
             // Name
-            var fieldName = expression.GetName(dbSetting);
-            if (PropertyCache.Get<TEntity>(dbSetting).Any(property => PropertyMappedNameCache.Get(property.PropertyInfo, false, dbSetting) == fieldName) == false)
+            var fieldName = expression.GetName();
+            if (PropertyCache.Get<TEntity>(dbSetting).Any(property => PropertyMappedNameCache.Get(property.PropertyInfo) == fieldName) == false)
             {
                 throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }

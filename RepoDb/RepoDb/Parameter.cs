@@ -9,7 +9,7 @@ namespace RepoDb
     /// </summary>
     public sealed class Parameter : IEquatable<Parameter>
     {
-        private int m_hashCode = 0;
+        private int? m_hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="Parameter"/> object.
@@ -17,11 +17,9 @@ namespace RepoDb
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
         /// <param name="prependUnderscore">The value to identify whether the underscope prefix will be prepended.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         public Parameter(string name,
             object value,
-            bool prependUnderscore,
-            IDbSetting dbSetting)
+            bool prependUnderscore)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -30,20 +28,12 @@ namespace RepoDb
             }
 
             // Set the properties
-            DbSetting = dbSetting;
             Name = name.AsAlphaNumeric(true);
             Value = value;
             if (prependUnderscore)
             {
                 PrependAnUnderscore();
             }
-
-            // Set the hashcode
-            m_hashCode = Name.GetHashCode();
-            //if (dbSetting != null)
-            //{
-            //    m_hashCode += dbSetting.GetHashCode();
-            //}
         }
 
         #region Properties
@@ -57,11 +47,6 @@ namespace RepoDb
         /// Gets the value of the parameter.
         /// </summary>
         public object Value { get; }
-
-        /// <summary>
-        /// Gets the database setting currently in used.
-        /// </summary>
-        public IDbSetting DbSetting { get; }
 
         #endregion
 
@@ -108,7 +93,16 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            return m_hashCode;
+            if (m_hashCode != null)
+            {
+                return m_hashCode.Value;
+            }
+
+            // Set the hashcode
+            m_hashCode = Name.GetHashCode();
+
+            // Return the hashcode
+            return m_hashCode.Value;
         }
 
         /// <summary>

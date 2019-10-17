@@ -906,7 +906,7 @@ namespace RepoDb
                 }
 
                 // Create a new field
-                var field = new QueryField(expression.Member.GetMappedName(dbSetting),
+                var field = new QueryField(expression.Member.GetMappedName(),
                     QueryField.GetOperation(expressionType),
                     value,
                     dbSetting);
@@ -1060,7 +1060,7 @@ namespace RepoDb
                 var operation = QueryField.GetOperation(binary.NodeType);
                 foreach (var value in (Array)values)
                 {
-                    var queryField = new QueryField(PropertyMappedNameCache.Get(property, false, dbSetting), operation, value, dbSetting);
+                    var queryField = new QueryField(PropertyMappedNameCache.Get(property), operation, value, dbSetting);
                     queryFields.Add(queryField);
                 }
             }
@@ -1131,7 +1131,7 @@ namespace RepoDb
 
             // Add to query fields
             var operation = (isNot == false && isEqualsTo == true) ? Operation.In : Operation.NotIn;
-            var queryField = new QueryField(PropertyMappedNameCache.Get(property, false, dbSetting), operation, values, dbSetting);
+            var queryField = new QueryField(PropertyMappedNameCache.Get(property), operation, values, dbSetting);
 
             // Return the result
             var queryGroup = new QueryGroup(queryField, dbSetting);
@@ -1182,7 +1182,7 @@ namespace RepoDb
 
             // Add to query fields
             var operation = (isNot == isEqualsTo) ? Operation.NotLike : Operation.Like;
-            var queryField = new QueryField(PropertyMappedNameCache.Get(property, false, dbSetting),
+            var queryField = new QueryField(PropertyMappedNameCache.Get(property),
                 operation,
                 ConvertToLikeableValue(expression.Method.Name, value),
                 dbSetting);
@@ -1246,7 +1246,7 @@ namespace RepoDb
             foreach (var property in type.GetProperties())
             {
                 var value = property.GetValue(obj);
-                fields.Add(new QueryField(PropertyMappedNameCache.Get(property, false, dbSetting), value, dbSetting));
+                fields.Add(new QueryField(PropertyMappedNameCache.Get(property), value, dbSetting));
             }
 
             // Return
