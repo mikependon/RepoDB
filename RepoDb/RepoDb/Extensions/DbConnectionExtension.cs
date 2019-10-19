@@ -309,7 +309,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Trigger the cache to void reusing the connection
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(connection.GetDbSetting()), transaction);
+            DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -396,7 +396,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Trigger the cache to void reusing the connection
-            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(connection.GetDbSetting()), transaction);
+            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -1140,17 +1140,16 @@ namespace RepoDb
             IDbTransaction transaction)
             where TEntity : class
         {
-            var dbSetting = connection.GetDbSetting();
-            var property = PrimaryCache.Get<TEntity>(dbSetting);
+            var property = PrimaryCache.Get<TEntity>();
             if (property == null)
             {
-                var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(dbSetting), transaction);
+                var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                 var primary = dbFields.FirstOrDefault(df => df.IsPrimary);
                 if (primary != null)
                 {
-                    var properties = PropertyCache.Get<TEntity>(dbSetting);
+                    var properties = PropertyCache.Get<TEntity>();
                     property = properties.FirstOrDefault(p =>
-                        string.Equals(p.GetUnquotedMappedName(), primary.Name.AsUnquoted(dbSetting), StringComparison.OrdinalIgnoreCase));
+                        string.Equals(p.GetMappedName(), primary.Name, StringComparison.OrdinalIgnoreCase));
                 }
             }
             if (property == null)
@@ -1191,24 +1190,20 @@ namespace RepoDb
             {
                 return null;
             }
-            var dbSetting = connection.GetDbSetting();
             if (whereOrPrimaryKey.GetType().IsGenericType)
             {
-                return QueryGroup.Parse(whereOrPrimaryKey, dbSetting);
+                return QueryGroup.Parse(whereOrPrimaryKey);
             }
             else
             {
                 var primary = DbFieldCache.Get(connection, tableName, transaction)?.FirstOrDefault(p => p.IsPrimary == true);
                 if (primary == null)
                 {
-                    throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.",
-                        tableName));
+                    throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", tableName));
                 }
                 else
                 {
-                    var field = new Field(primary.Name, primary.Type);
-                    var queryField = new QueryField(field, whereOrPrimaryKey, dbSetting);
-                    return new QueryGroup(queryField, dbSetting);
+                    return new QueryGroup(new QueryField(new Field(primary.Name, primary.Type), whereOrPrimaryKey));
                 }
             }
         }
@@ -1218,10 +1213,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup WhereOrPrimaryKeyToQueryGroup<TEntity>(object whereOrPrimaryKey,
-            IDbSetting dbSetting)
+        private static QueryGroup WhereOrPrimaryKeyToQueryGroup<TEntity>(object whereOrPrimaryKey)
             where TEntity : class
         {
             if (whereOrPrimaryKey == null)
@@ -1230,19 +1223,18 @@ namespace RepoDb
             }
             if (whereOrPrimaryKey.GetType().IsGenericType)
             {
-                return QueryGroup.Parse(whereOrPrimaryKey, dbSetting);
+                return QueryGroup.Parse(whereOrPrimaryKey);
             }
             else
             {
-                var primary = PrimaryCache.Get<TEntity>(dbSetting);
+                var primary = PrimaryCache.Get<TEntity>();
                 if (primary == null)
                 {
                     throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", typeof(TEntity).Name));
                 }
                 else
                 {
-                    var queryField = new QueryField(primary.GetUnquotedMappedName(), whereOrPrimaryKey, dbSetting);
-                    return new QueryGroup(queryField, dbSetting);
+                    return new QueryGroup(new QueryField(primary.GetMappedName(), whereOrPrimaryKey));
                 }
             }
         }
@@ -1251,10 +1243,8 @@ namespace RepoDb
         /// Converts an object into a <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="where">The dynamic expression.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup ToQueryGroup(object where,
-            IDbSetting dbSetting)
+        private static QueryGroup ToQueryGroup(object where)
         {
             if (where == null)
             {
@@ -1262,11 +1252,11 @@ namespace RepoDb
             }
             if (where.GetType().IsGenericType)
             {
-                return QueryGroup.Parse(where, dbSetting);
+                return QueryGroup.Parse(where);
             }
             else
             {
-                throw new InvalidOperationException("Only dynamic object is supported in the 'where' expression.");
+                throw new InvalidQueryExpressionException("Only dynamic object is supported in the 'where' expression.");
             }
         }
 
@@ -1275,17 +1265,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup ToQueryGroup<TEntity>(Expression<Func<TEntity, bool>> where,
-            IDbSetting dbSetting)
+        private static QueryGroup ToQueryGroup<TEntity>(Expression<Func<TEntity, bool>> where)
             where TEntity : class
         {
             if (where == null)
             {
                 return null;
             }
-            return QueryGroup.Parse<TEntity>(where, dbSetting);
+            return QueryGroup.Parse<TEntity>(where);
         }
 
         /// <summary>
@@ -1294,50 +1282,44 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="property">The instance of <see cref="ClassProperty"/> to be converted.</param>
         /// <param name="entity">The instance of the actual entity.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
         private static QueryGroup ToQueryGroup<TEntity>(ClassProperty property,
-            TEntity entity,
-            IDbSetting dbSetting)
+            TEntity entity)
             where TEntity : class
         {
             if (property == null)
             {
                 return null;
             }
-            return new QueryGroup(property.PropertyInfo.AsQueryField(entity, dbSetting), dbSetting);
+            return new QueryGroup(property.PropertyInfo.AsQueryField(entity));
         }
 
         /// <summary>
         /// Converts the <see cref="QueryField"/> to become a <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="field">The instance of <see cref="QueryField"/> to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup ToQueryGroup(QueryField field,
-            IDbSetting dbSetting)
+        private static QueryGroup ToQueryGroup(QueryField field)
         {
             if (field == null)
             {
                 return null;
             }
-            return new QueryGroup(field, dbSetting);
+            return new QueryGroup(field);
         }
 
         /// <summary>
         /// Converts the <see cref="QueryField"/> to become a <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="fields">The list of <see cref="QueryField"/> objects to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup ToQueryGroup(IEnumerable<QueryField> fields,
-            IDbSetting dbSetting)
+        private static QueryGroup ToQueryGroup(IEnumerable<QueryField> fields)
         {
             if (fields == null)
             {
                 return null;
             }
-            return new QueryGroup(fields, dbSetting);
+            return new QueryGroup(fields);
         }
 
         /// <summary>
@@ -1362,28 +1344,25 @@ namespace RepoDb
             // Check Transaction
             ValidateTransactionConnectionObject(connection, transaction);
 
-            // Get the DB setting
-            var dbSetting = connection.GetDbSetting();
-
             // Process the array parameters
             var commandArrayParameters = (IEnumerable<CommandArrayParameter>)null;
 
             // Check the array parameters
             if (skipCommandArrayParametersCheck == false)
             {
-                commandArrayParameters = AsCommandArrayParameters(param, dbSetting, ref commandText);
+                commandArrayParameters = AsCommandArrayParameters(param, connection.GetDbSetting(), ref commandText);
             }
 
             // Command object initialization
             var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction);
 
             // Add the parameters
-            command.CreateParameters(param, commandArrayParameters?.Select(cap => cap.ParameterName), dbSetting);
+            command.CreateParameters(param, commandArrayParameters?.Select(cap => cap.ParameterName));
 
             // Identify target statement, for now, only support array with single parameters
             if (commandArrayParameters != null)
             {
-                command.CreateParametersFromArray(commandArrayParameters, dbSetting);
+                command.CreateParametersFromArray(commandArrayParameters);
             }
 
             // Return the command
@@ -1396,7 +1375,7 @@ namespace RepoDb
         /// <param name="commandText">The current command text where the raw sql parameters will be replaced.</param>
         /// <param name="parameterName">The name of the parameter to be replaced.</param>
         /// <param name="values">The array of the values.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The raw SQL with array parameters.</returns>
         private static string ToRawSqlWithArrayParams(string commandText,
             string parameterName,
@@ -1430,7 +1409,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="param">The parameter passed.</param>
         /// <param name="commandText">The command text to be replaced.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(object param,
             IDbSetting dbSetting,
@@ -1501,7 +1480,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(IDictionary<string, object> dictionary,
             IDbSetting dbSetting,
@@ -1550,7 +1529,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryGroup queryGroup,
             IDbSetting dbSetting,
@@ -1564,7 +1543,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
         /// <param name="commandText">The command text to be replaced.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(IEnumerable<QueryField> queryFields,
             IDbSetting dbSetting,
@@ -1612,7 +1591,7 @@ namespace RepoDb
         /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
         /// </summary>
         /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryField queryField,
@@ -1652,7 +1631,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="name">The target name of the <see cref="CommandArrayParameter"/> object.</param>
         /// <param name="values">The array value of the <see cref="CommandArrayParameter"/> object.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
         /// <returns>An instance of <see cref="CommandArrayParameter"/> object.</returns>
         private static CommandArrayParameter AsCommandArrayParameter(string name,

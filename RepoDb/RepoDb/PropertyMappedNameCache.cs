@@ -18,7 +18,6 @@ namespace RepoDb
         /// Gets the cached mapped-name of the property.
         /// </summary>
         /// <param name="property">The target property.</param>
-        /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>The cached mapped-name of the property.</returns>
         public static string Get(PropertyInfo property)
         {

@@ -28,7 +28,7 @@ namespace RepoDb
             }
 
             // Set the properties
-            Name = name.AsAlphaNumeric(true);
+            Name = name.AsAlphaNumeric();
             Value = value;
             if (prependUnderscore)
             {
@@ -67,11 +67,9 @@ namespace RepoDb
         /// Set the name of the parameter.
         /// </summary>
         /// <param name="name">The new name.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
-        internal void SetName(string name,
-            IDbSetting dbSetting)
+        internal void SetName(string name)
         {
-            Name = name.AsUnquoted(dbSetting);
+            Name = name;
         }
 
         /// <summary>
@@ -98,11 +96,13 @@ namespace RepoDb
                 return m_hashCode.Value;
             }
 
-            // Set the hashcode
-            m_hashCode = Name.GetHashCode();
+            var hashCode = 0;
 
-            // Return the hashcode
-            return m_hashCode.Value;
+            // Set the hashcode
+            hashCode = Name.GetHashCode();
+
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>
@@ -112,15 +112,6 @@ namespace RepoDb
         /// <returns>True if the instances are equals.</returns>
         public override bool Equals(object obj)
         {
-            //var hashCode = obj?.GetHashCode();
-            //if (obj is string)
-            //{
-            //    if (DbSetting != null)
-            //    {
-            //        hashCode += DbSetting.GetHashCode();
-            //    }
-            //}
-            //return hashCode == GetHashCode();
             return obj?.GetHashCode() == GetHashCode();
         }
 

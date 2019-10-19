@@ -17,12 +17,9 @@ namespace RepoDb
         /// Creates a new instance of <see cref="ClassProperty"/> object.
         /// </summary>
         /// <param name="property">The wrapped property.</param>
-        /// <param name="dbSetting">The database setting to be used.</param>
-        public ClassProperty(PropertyInfo property,
-            IDbSetting dbSetting)
+        public ClassProperty(PropertyInfo property)
         {
             PropertyInfo = property;
-            DbSetting = dbSetting;
         }
 
         #region Properties
@@ -31,11 +28,6 @@ namespace RepoDb
         /// Gets the wrapped property of this object.
         /// </summary>
         public PropertyInfo PropertyInfo { get; }
-
-        /// <summary>
-        /// Gets the database setting that is currently in used.
-        /// </summary>
-        public IDbSetting DbSetting { get; }
 
         #endregion
 
@@ -59,7 +51,7 @@ namespace RepoDb
             }
 
             // Set the properties
-            m_field = new Field(GetUnquotedMappedName(), PropertyInfo.PropertyType);
+            m_field = new Field(GetMappedName(), PropertyInfo.PropertyType);
 
             // Return the value
             return m_field;
@@ -144,7 +136,7 @@ namespace RepoDb
             }
 
             // Mapping.Name + Id
-            m_isPrimary = string.Equals(PropertyInfo.Name, string.Concat(ClassMappedNameCache.Get(PropertyInfo.DeclaringType, true, DbSetting), "id"), StringComparison.OrdinalIgnoreCase);
+            m_isPrimary = string.Equals(PropertyInfo.Name, string.Concat(ClassMappedNameCache.Get(PropertyInfo.DeclaringType), "id"), StringComparison.OrdinalIgnoreCase);
             if (m_isPrimary == true)
             {
                 return m_isPrimary;
@@ -214,41 +206,22 @@ namespace RepoDb
         }
 
         /*
-         * GetQuotedMappedName
+         * GetName
          */
 
-        private string m_quotedMappedName;
+        private string m_mappedName;
 
         /// <summary>
-        /// Gets the quoted mapped-name for the current property.
+        /// Gets the mapped-name for the current property.
         /// </summary>
-        /// <returns>The quoted mapped-name value.</returns>
-        public string GetQuotedMappedName()
+        /// <returns>The mapped-name value.</returns>
+        public string GetMappedName()
         {
-            if (m_quotedMappedName != null)
+            if (m_mappedName != null)
             {
-                return m_quotedMappedName;
+                return m_mappedName;
             }
-            return m_quotedMappedName = PropertyMappedNameCache.Get(PropertyInfo);
-        }
-
-        /*
-         * GetUnquotedMappedName
-         */
-
-        private string m_unquotedMappedName;
-
-        /// <summary>
-        /// Gets the unquoted mapped-name for the current property.
-        /// </summary>
-        /// <returns>The unquoted mapped-name value.</returns>
-        public string GetUnquotedMappedName()
-        {
-            if (m_unquotedMappedName != null)
-            {
-                return m_unquotedMappedName;
-            }
-            return m_unquotedMappedName = PropertyMappedNameCache.Get(PropertyInfo);
+            return m_mappedName = PropertyMappedNameCache.Get(PropertyInfo);
         }
 
         /// <summary>
@@ -257,7 +230,7 @@ namespace RepoDb
         /// <returns>The unquoted name.</returns>
         public override string ToString()
         {
-            return string.Concat(m_quotedMappedName ?? PropertyInfo.Name, " (", PropertyInfo.PropertyType.Name, ")");
+            return string.Concat(GetMappedName(), " (", PropertyInfo.PropertyType.Name, ")");
         }
 
         #endregion

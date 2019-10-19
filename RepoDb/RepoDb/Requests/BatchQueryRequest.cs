@@ -29,13 +29,13 @@ namespace RepoDb.Requests
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields,
-            int page,
-            int rowsPerBatch,
+            int? page,
+            int? rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryGroup where = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
-            : this(ClassMappedNameCache.Get(type, true, connection.GetDbSetting()),
+            : this(ClassMappedNameCache.Get(type),
                   connection,
                   transaction,
                   fields,
@@ -66,8 +66,8 @@ namespace RepoDb.Requests
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields,
-            int page,
-            int rowsPerBatch,
+            int? page,
+            int? rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryGroup where = null,
             string hints = null,
@@ -98,12 +98,12 @@ namespace RepoDb.Requests
         /// <summary>
         /// Gets the filter for the rows.
         /// </summary>
-        public int Page { get; }
+        public int? Page { get; }
 
         /// <summary>
         /// Gets the number of rows per batch.
         /// </summary>
-        public int RowsPerBatch { get; }
+        public int? RowsPerBatch { get; }
 
         /// <summary>
         /// Gets the list of the order fields.
@@ -115,7 +115,7 @@ namespace RepoDb.Requests
         /// </summary>
         public string Hints { get; }
 
-        // Equality and comparers
+        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="BatchQueryRequest"/>.
@@ -124,7 +124,7 @@ namespace RepoDb.Requests
         public override int GetHashCode()
         {
             // Make sure to return if it is already provided
-            if (!ReferenceEquals(null, m_hashCode))
+            if (m_hashCode != null)
             {
                 return m_hashCode.Value;
             }
@@ -142,25 +142,13 @@ namespace RepoDb.Requests
             }
 
             // Add the expression
-            if (!ReferenceEquals(null, Where))
+            if (Where != null)
             {
                 hashCode += Where.GetHashCode();
             }
 
-            // Add the filter
-            if (!ReferenceEquals(null, Page))
-            {
-                hashCode += Page.GetHashCode();
-            }
-
-            // Add the filter
-            if (!ReferenceEquals(null, RowsPerBatch))
-            {
-                hashCode += RowsPerBatch.GetHashCode();
-            }
-
             // Add the order fields
-            if (!ReferenceEquals(null, OrderBy))
+            if (OrderBy != null)
             {
                 foreach (var orderField in OrderBy)
                 {
@@ -168,17 +156,26 @@ namespace RepoDb.Requests
                 }
             }
 
+            // Add the page
+            if (Page != null)
+            {
+                hashCode += (int)Page;
+            }
+
+            // Add the rows per batch
+            if (RowsPerBatch != null)
+            {
+                hashCode += (int)RowsPerBatch;
+            }
+
             // Add the hints
-            if (!ReferenceEquals(null, Hints))
+            if (!string.IsNullOrEmpty(Hints))
             {
                 hashCode += Hints.GetHashCode();
             }
 
-            // Set back the hash code value
-            m_hashCode = hashCode;
-
-            // Return the actual value
-            return hashCode;
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>
@@ -226,5 +223,7 @@ namespace RepoDb.Requests
         {
             return (objA == objB) == false;
         }
+
+        #endregion
     }
 }

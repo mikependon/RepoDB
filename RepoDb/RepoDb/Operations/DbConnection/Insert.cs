@@ -94,11 +94,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var dbSetting = connection.GetDbSetting();
             return InsertInternalBase<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                fields: FieldCache.Get<TEntity>(dbSetting),
+                fields: FieldCache.Get<TEntity>(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -185,11 +184,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var dbSetting = connection.GetDbSetting();
             return InsertAsyncInternalBase<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                fields: FieldCache.Get<TEntity>(dbSetting),
+                fields: FieldCache.Get<TEntity>(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -282,7 +280,7 @@ namespace RepoDb
             return InsertInternalBase<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: Field.Parse(entity, DbSettingMapper.Get(connection.GetType())),
+                fields: Field.Parse(entity),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -375,7 +373,7 @@ namespace RepoDb
             return InsertAsyncInternalBase<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: Field.Parse(entity, connection.GetDbSetting()),
+                fields: Field.Parse(entity),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -429,10 +427,10 @@ namespace RepoDb
                 // Set the identity field
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
+                    identity = IdentityCache.Get<TEntity>()?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
                             string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
                     }
                 }
@@ -590,10 +588,10 @@ namespace RepoDb
                 // Set the identity field
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
+                    identity = IdentityCache.Get<TEntity>()?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
                             string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
                     }
                 }

@@ -38,7 +38,7 @@ namespace RepoDb
         {
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Delete<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(primary, entity, connection.GetDbSetting()),
+                where: ToQueryGroup<TEntity>(primary, entity),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -66,7 +66,7 @@ namespace RepoDb
         {
             GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Delete<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey, connection.GetDbSetting()),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -93,7 +93,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -120,7 +120,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -147,7 +147,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -248,7 +248,7 @@ namespace RepoDb
         {
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return DeleteAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(primary, entity, connection.GetDbSetting()),
+                where: ToQueryGroup<TEntity>(primary, entity),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -276,7 +276,7 @@ namespace RepoDb
         {
             GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return DeleteAsync<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey, connection.GetDbSetting()),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -303,7 +303,7 @@ namespace RepoDb
             where TEntity : class
         {
             return DeleteAsync<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -330,7 +330,7 @@ namespace RepoDb
             where TEntity : class
         {
             return DeleteAsync<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -357,7 +357,7 @@ namespace RepoDb
             where TEntity : class
         {
             return DeleteAsync<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -458,7 +458,7 @@ namespace RepoDb
         {
             return Delete(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -486,7 +486,7 @@ namespace RepoDb
         {
             return Delete(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -514,7 +514,7 @@ namespace RepoDb
         {
             return Delete(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -616,7 +616,7 @@ namespace RepoDb
         {
             return DeleteAsync(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -644,7 +644,7 @@ namespace RepoDb
         {
             return DeleteAsync(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -672,7 +672,7 @@ namespace RepoDb
         {
             return DeleteAsync(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,

@@ -74,17 +74,17 @@ namespace RepoDb
             // Properties
             if (connection != null)
             {
-                var fields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(DbSetting), transaction);
+                var fields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                 if (fields?.Any() == true)
                 {
-                    Properties = PropertyCache.Get<TEntity>(DbSetting)
-                        .Where(p => fields.FirstOrDefault(f => string.Equals(f.Name.AsQuoted(DbSetting), p.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase)) != null)
+                    Properties = PropertyCache.Get<TEntity>()
+                        .Where(p => fields.FirstOrDefault(f => string.Equals(f.Name.AsQuoted(DbSetting), p.GetMappedName(), StringComparison.OrdinalIgnoreCase)) != null)
                         .AsList();
                 }
             }
             if (Properties == null)
             {
-                Properties = PropertyCache.Get<TEntity>(DbSetting).AsList();
+                Properties = PropertyCache.Get<TEntity>().AsList();
             }
             Enumerator = entities.GetEnumerator();
             Entities = entities;
@@ -393,7 +393,7 @@ namespace RepoDb
         public override string GetName(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Properties[i].GetUnquotedMappedName();
+            return Properties[i].GetMappedName();
         }
 
         /// <summary>
@@ -404,7 +404,7 @@ namespace RepoDb
         public override int GetOrdinal(string name)
         {
             ThrowExceptionIfNotAvailable();
-            return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetUnquotedMappedName() == name));
+            return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetMappedName() == name));
         }
 
         /// <summary>
@@ -453,9 +453,9 @@ namespace RepoDb
             }
             if (values.Length != FieldCount)
             {
-                throw new InvalidOperationException($"The length of the array must be equals to the number of fields of the data entity (it should be {FieldCount}).");
+                throw new ArgumentOutOfRangeException($"The length of the array must be equals to the number of fields of the data entity (it should be {FieldCount}).");
             }
-            var extracted = ClassExpression.GetPropertiesAndValues(Enumerator.Current, DbSetting).ToArray();
+            var extracted = ClassExpression.GetPropertiesAndValues(Enumerator.Current).ToArray();
             for (var i = 0; i < Properties.Count; i++)
             {
                 values[i] = extracted[i].Value;

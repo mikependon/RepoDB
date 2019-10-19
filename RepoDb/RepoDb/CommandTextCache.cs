@@ -450,7 +450,6 @@ namespace RepoDb
 
             // Get all the fields from the database, and the setting
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var dbSetting = connection.GetDbSetting();
 
             // Return the filtered one
             return dbFields?.Any() == true ?
@@ -467,16 +466,16 @@ namespace RepoDb
         {
             if (request.Type != null && request.Type != typeof(object))
             {
-                var primaryProperty = PrimaryCache.Get(request.Type, DbConnectionExtension.GetDbSetting(request.Connection));
+                var primaryProperty = PrimaryCache.Get(request.Type);
                 if (primaryProperty != null)
                 {
-                    var identityProperty = IdentityCache.Get(request.Type, DbConnectionExtension.GetDbSetting(request.Connection));
+                    var identityProperty = IdentityCache.Get(request.Type);
                     var isIdentity = false;
                     if (identityProperty != null)
                     {
-                        isIdentity = string.Equals(identityProperty.GetUnquotedMappedName(), primaryProperty.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase);
+                        isIdentity = string.Equals(identityProperty.GetMappedName(), primaryProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase);
                     }
-                    return new DbField(primaryProperty.GetUnquotedMappedName(),
+                    return new DbField(primaryProperty.GetMappedName(),
                         true,
                         isIdentity,
                         false,
@@ -499,16 +498,16 @@ namespace RepoDb
         {
             if (request.Type != null && request.Type != typeof(object))
             {
-                var identityProperty = IdentityCache.Get(request.Type, DbConnectionExtension.GetDbSetting(request.Connection));
+                var identityProperty = IdentityCache.Get(request.Type);
                 if (identityProperty != null)
                 {
-                    var primaryProperty = PrimaryCache.Get(request.Type, DbConnectionExtension.GetDbSetting(request.Connection));
+                    var primaryProperty = PrimaryCache.Get(request.Type);
                     var isPrimary = false;
                     if (primaryProperty != null)
                     {
-                        isPrimary = string.Equals(primaryProperty.GetUnquotedMappedName(), identityProperty.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase);
+                        isPrimary = string.Equals(primaryProperty.GetMappedName(), identityProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase);
                     }
-                    return new DbField(identityProperty.GetUnquotedMappedName(),
+                    return new DbField(identityProperty.GetMappedName(),
                         isPrimary,
                         true,
                         false,

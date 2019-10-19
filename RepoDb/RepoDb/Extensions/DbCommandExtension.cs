@@ -32,11 +32,9 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object instance to be used.</param>
         /// <param name="properties">The target list of properties.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParametersFromClassProperties(this IDbCommand command,
             IEnumerable<ClassProperty> properties,
-            IEnumerable<string> propertiesToSkip,
-            IDbSetting dbSetting)
+            IEnumerable<string> propertiesToSkip)
         {
             // Filter the target properties
             if (propertiesToSkip?.Any() == true)
@@ -66,7 +64,7 @@ namespace RepoDb.Extensions
 
                     // Create the parameter
                     var name = PropertyMappedNameCache.Get(property.PropertyInfo);
-                    var parameter = CreateParameter(command, name, null, dbType, dbSetting);
+                    var parameter = CreateParameter(command, name, null, dbType);
 
                     // Add the parameter
                     command.Parameters.Add(parameter);
@@ -81,19 +79,17 @@ namespace RepoDb.Extensions
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
         /// <param name="dbType">The database type of the parameter.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of the newly created parameter object.</returns>
         public static IDbDataParameter CreateParameter(this IDbCommand command,
             string name,
             object value,
-            DbType? dbType,
-            IDbSetting dbSetting)
+            DbType? dbType)
         {
             // Create the parameter
             var parameter = command.CreateParameter();
 
             // Set the values
-            parameter.ParameterName = !name.StartsWith(dbSetting.ParameterPrefix) ? string.Concat(dbSetting.ParameterPrefix, name) : name;
+            parameter.ParameterName = name.AsParameter(command.Connection.GetDbSetting());
             parameter.Value = value ?? DBNull.Value;
 
             // The DB Type is auto set when setting the values (so check properly Time/DateTime problem)
@@ -111,15 +107,14 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object instance to be used.</param>
         /// <param name="commandArrayParameters">The list of <see cref="CommandArrayParameter"/> to be used for replacement.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParametersFromArray(this IDbCommand command,
-            IEnumerable<CommandArrayParameter> commandArrayParameters,
-            IDbSetting dbSetting)
+            IEnumerable<CommandArrayParameter> commandArrayParameters)
         {
-            if (commandArrayParameters == null)
+            if (commandArrayParameters?.Any() != true)
             {
                 return;
             }
+            var dbSetting = command.Connection.GetDbSetting();
             for (var i = 0; i < commandArrayParameters.Count(); i++)
             {
                 var commandArrayParameter = commandArrayParameters.ElementAt(i);
@@ -127,7 +122,7 @@ namespace RepoDb.Extensions
                 {
                     var name = string.Concat(commandArrayParameter.ParameterName, c).AsParameter(dbSetting);
                     var value = commandArrayParameter.Values.ElementAt(c);
-                    command.Parameters.Add(command.CreateParameter(name, value, null, dbSetting));
+                    command.Parameters.Add(command.CreateParameter(name, value, null));
                 }
             }
         }
@@ -137,12 +132,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParameters(this IDbCommand command,
-            object param,
-            IDbSetting dbSetting)
+            object param)
         {
-            CreateParameters(command, param, null, dbSetting);
+            CreateParameters(command, param, null);
         }
 
         /// <summary>
@@ -151,11 +144,9 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParameters(this IDbCommand command,
             object param,
-            IEnumerable<string> propertiesToSkip,
-            IDbSetting dbSetting)
+            IEnumerable<string> propertiesToSkip)
         {
             // Check for presence
             if (param == null)
@@ -166,25 +157,25 @@ namespace RepoDb.Extensions
             // Supporting the IDictionary<string, object>
             if (param is ExpandoObject || param is IDictionary<string, object>)
             {
-                CreateParameters(command, (IDictionary<string, object>)param, propertiesToSkip, dbSetting);
+                CreateParameters(command, (IDictionary<string, object>)param, propertiesToSkip);
             }
 
             // Supporting the QueryField
             else if (param is QueryField)
             {
-                CreateParameters(command, (QueryField)param, propertiesToSkip, dbSetting);
+                CreateParameters(command, (QueryField)param, propertiesToSkip);
             }
 
             // Supporting the IEnumerable<QueryField>
             else if (param is IEnumerable<QueryField>)
             {
-                CreateParameters(command, (IEnumerable<QueryField>)param, propertiesToSkip, dbSetting);
+                CreateParameters(command, (IEnumerable<QueryField>)param, propertiesToSkip);
             }
 
             // Supporting the QueryGroup
             else if (param is QueryGroup)
             {
-                CreateParameters(command, (QueryGroup)param, propertiesToSkip, dbSetting);
+                CreateParameters(command, (QueryGroup)param, propertiesToSkip);
             }
 
             // Otherwise, iterate the properties
@@ -195,7 +186,7 @@ namespace RepoDb.Extensions
                 // Check the validity of the type
                 if (type.IsGenericType && type.GetGenericTypeDefinition() == m_dictionaryType)
                 {
-                    throw new InvalidOperationException("Invalid parameters passed. The supported type of dictionary object must be typeof(IDictionary<string, object>).");
+                    throw new InvalidParameterException("The supported type of dictionary object must be of type IDictionary<string, object>.");
                 }
 
                 // Variables for properties
@@ -204,11 +195,11 @@ namespace RepoDb.Extensions
                 // Add this check for performance
                 if (propertiesToSkip == null)
                 {
-                    properties = PropertyCache.Get(type, dbSetting);
+                    properties = PropertyCache.Get(type);
                 }
                 else
                 {
-                    properties = PropertyCache.Get(type, dbSetting)
+                    properties = PropertyCache.Get(type)
                         .Where(p => propertiesToSkip?.Contains(p.PropertyInfo.Name,
                             StringComparer.OrdinalIgnoreCase) == false);
                 }
@@ -217,7 +208,7 @@ namespace RepoDb.Extensions
                 foreach (var property in properties)
                 {
                     // Get the property vaues
-                    var name = property.GetUnquotedMappedName();
+                    var name = property.GetMappedName();
                     var value = property.PropertyInfo.GetValue(param);
 
                     // Get property db type
@@ -244,7 +235,7 @@ namespace RepoDb.Extensions
                     }
 
                     // Add the new parameter
-                    command.Parameters.Add(command.CreateParameter(name, value, dbType, dbSetting));
+                    command.Parameters.Add(command.CreateParameter(name, value, dbType));
                 }
             }
         }
@@ -255,11 +246,9 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParameters(this IDbCommand command,
             IDictionary<string, object> dictionary,
-            IEnumerable<string> propertiesToSkip,
-            IDbSetting dbSetting)
+            IEnumerable<string> propertiesToSkip)
         {
             // Variables needed
             var dbType = (DbType?)null;
@@ -314,7 +303,7 @@ namespace RepoDb.Extensions
                 }
 
                 // Add the parameter
-                command.Parameters.Add(command.CreateParameter(kvp.Key, value, dbType, dbSetting));
+                command.Parameters.Add(command.CreateParameter(kvp.Key, value, dbType));
             }
         }
 
@@ -324,14 +313,12 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParameters(this IDbCommand command,
             QueryGroup queryGroup,
-            IEnumerable<string> propertiesToSkip,
-            IDbSetting dbSetting)
+            IEnumerable<string> propertiesToSkip)
         {
             // Call the overloaded methods for the query fields
-            CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip, dbSetting);
+            CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip);
         }
 
         /// <summary>
@@ -340,11 +327,9 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParameters(this IDbCommand command,
             IEnumerable<QueryField> queryFields,
-            IEnumerable<string> propertiesToSkip,
-            IDbSetting dbSetting)
+            IEnumerable<string> propertiesToSkip)
         {
             // Filter the query fields
             var filteredQueryFields = queryFields
@@ -353,7 +338,7 @@ namespace RepoDb.Extensions
             // Iterate the filtered query fields
             foreach (var queryField in filteredQueryFields)
             {
-                CreateParameters(command, queryField, null, dbSetting);
+                CreateParameters(command, queryField, null);
             }
         }
 
@@ -363,11 +348,9 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void CreateParameters(this IDbCommand command,
             QueryField queryField,
-            IEnumerable<string> propertiesToSkip,
-            IDbSetting dbSetting)
+            IEnumerable<string> propertiesToSkip)
         {
             // Exclude those to be skipped
             if (propertiesToSkip?.Contains(queryField.Field.Name, StringComparer.OrdinalIgnoreCase) == true)
@@ -400,7 +383,7 @@ namespace RepoDb.Extensions
             }
 
             // Create the parameter
-            command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType, dbSetting));
+            command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType));
         }
 
         #endregion
@@ -414,22 +397,29 @@ namespace RepoDb.Extensions
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
         /// <param name="dbType">The database type of the parameter.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The instance of updated parameter.</returns>
         public static IDbDataParameter SetParameter(this IDbCommand command,
             string name,
             object value,
-            DbType? dbType,
-            IDbSetting dbSetting)
+            DbType? dbType)
         {
+            // Check the name
+            if (name == null)
+            {
+                throw new NullReferenceException("The name must not be null.");
+            }
+
             // Check the presence
             if (command.Parameters.Contains(name) == false)
             {
                 throw new ParameterNotFoundException($"Parameter '{name}' is not found.");
             }
 
-            // Get the parameter
-            var parameter = (DbParameter)command.Parameters[string.Concat(dbSetting.ParameterPrefix, name)];
+            // Parameterized the name
+            name = name.AsParameter(command.Connection.GetDbSetting());
+
+            // Get the paramete
+            var parameter = (DbParameter)command.Parameters[name];
 
             // Set the properties
             parameter.Value = value ?? DBNull.Value;
@@ -448,12 +438,10 @@ namespace RepoDb.Extensions
         /// <param name="param">The instance of where the parameter values will be set.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void SetParameters(this IDbCommand command,
             object param,
             IEnumerable<string> propertiesToSkip,
-            bool resetOthers,
-            IDbSetting dbSetting)
+            bool resetOthers)
         {
             // Do nothing if there is no parameter
             if (command.Parameters.Count == 0)
@@ -474,25 +462,25 @@ namespace RepoDb.Extensions
             // Supporting the IDictionary<string, object>
             else if (param is ExpandoObject || param is IDictionary<string, object>)
             {
-                SetParameters(command, (IDictionary<string, object>)param, propertiesToSkip, resetOthers, dbSetting);
+                SetParameters(command, (IDictionary<string, object>)param, propertiesToSkip, resetOthers);
             }
 
             // Supporting the QueryField
             else if (param is QueryField)
             {
-                SetParameters(command, (QueryField)param, propertiesToSkip, resetOthers, dbSetting);
+                SetParameters(command, (QueryField)param, propertiesToSkip, resetOthers);
             }
 
             // Supporting the IEnumerable<QueryField>
             else if (param is IEnumerable<QueryField>)
             {
-                SetParameters(command, (IEnumerable<QueryField>)param, propertiesToSkip, resetOthers, dbSetting);
+                SetParameters(command, (IEnumerable<QueryField>)param, propertiesToSkip, resetOthers);
             }
 
             // Supporting the QueryGroup
             else if (param is QueryGroup)
             {
-                SetParameters(command, (QueryGroup)param, propertiesToSkip, resetOthers, dbSetting);
+                SetParameters(command, (QueryGroup)param, propertiesToSkip, resetOthers);
             }
 
             // Otherwise, iterate the properties
@@ -503,7 +491,7 @@ namespace RepoDb.Extensions
                 // Check the validity of the type
                 if (type.IsGenericType && type.GetGenericTypeDefinition() == m_dictionaryType)
                 {
-                    throw new InvalidOperationException("Invalid parameters passed. The supported type of dictionary object must be typeof(IDictionary<string, object>).");
+                    throw new InvalidParameterException("The supported type of dictionary object must be of type IDictionary<string, object>.");
                 }
 
                 // variables for properties
@@ -512,11 +500,11 @@ namespace RepoDb.Extensions
                 // Add this check for performance
                 if (propertiesToSkip == null)
                 {
-                    properties = PropertyCache.Get(type, dbSetting);
+                    properties = PropertyCache.Get(type);
                 }
                 else
                 {
-                    properties = PropertyCache.Get(type, dbSetting)
+                    properties = PropertyCache.Get(type)
                         .Where(p => propertiesToSkip?.Contains(p.PropertyInfo.Name,
                             StringComparer.OrdinalIgnoreCase) == false);
                 }
@@ -524,7 +512,7 @@ namespace RepoDb.Extensions
                 // Ensure there are properties
                 if (resetOthers == true && properties.Any() != true)
                 {
-                    SetParameters(command, (object)null, propertiesToSkip, true, dbSetting);
+                    SetParameters(command, (object)null, propertiesToSkip, true);
                 }
                 else
                 {
@@ -534,7 +522,7 @@ namespace RepoDb.Extensions
                     // Iterate the parameter instead
                     foreach (var parameter in parameters)
                     {
-                        var property = properties.FirstOrDefault(p => string.Equals(p.GetUnquotedMappedName(), parameter.ParameterName, StringComparison.OrdinalIgnoreCase));
+                        var property = properties.FirstOrDefault(p => string.Equals(p.GetMappedName(), parameter.ParameterName, StringComparison.OrdinalIgnoreCase));
 
                         // Skip if null
                         if (property == null)
@@ -595,12 +583,10 @@ namespace RepoDb.Extensions
         /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void SetParameters(this IDbCommand command,
             IDictionary<string, object> dictionary,
             IEnumerable<string> propertiesToSkip,
-            bool resetOthers,
-            IDbSetting dbSetting)
+            bool resetOthers)
         {
             // Variables needed
             var dbType = (DbType?)null;
@@ -682,15 +668,13 @@ namespace RepoDb.Extensions
         /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void SetParameters(this IDbCommand command,
             QueryGroup queryGroup,
             IEnumerable<string> propertiesToSkip,
-            bool resetOthers,
-            IDbSetting dbSetting)
+            bool resetOthers)
         {
             // Call the overloaded methods for the query fields
-            SetParameters(command, queryGroup?.GetFields(true), propertiesToSkip, resetOthers, dbSetting);
+            SetParameters(command, queryGroup?.GetFields(true), propertiesToSkip, resetOthers);
         }
 
         /// <summary>
@@ -700,12 +684,10 @@ namespace RepoDb.Extensions
         /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void SetParameters(this IDbCommand command,
             IEnumerable<QueryField> queryFields,
             IEnumerable<string> propertiesToSkip,
-            bool resetOthers,
-            IDbSetting dbSetting)
+            bool resetOthers)
         {
             // Variables needed
             var dbType = (DbType?)null;
@@ -771,12 +753,10 @@ namespace RepoDb.Extensions
         /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
         /// <param name="resetOthers">True to reset the other parameter object. This will ignore the skipped properties.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static void SetParameters(this IDbCommand command,
             QueryField queryField,
             IEnumerable<string> propertiesToSkip,
-            bool resetOthers,
-            IDbSetting dbSetting)
+            bool resetOthers)
         {
             // Exclude those to be skipped
             if (propertiesToSkip?.Contains(queryField.Field.Name, StringComparer.OrdinalIgnoreCase) == true)

@@ -220,8 +220,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var dbSetting = connection.GetDbSetting();
-
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
@@ -231,9 +229,9 @@ namespace RepoDb
 
             // Return the result
             return MergeInternalBase<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                fields: entity.AsFields(dbSetting),
+                fields: entity.AsFields(),
                 qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -447,8 +445,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var dbSetting = connection.GetDbSetting();
-
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
@@ -458,9 +454,9 @@ namespace RepoDb
 
             // Return the result
             return MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                fields: entity.AsFields(dbSetting),
+                fields: entity.AsFields(),
                 qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -684,7 +680,7 @@ namespace RepoDb
             return MergeInternalBase<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: entity.AsFields(connection.GetDbSetting()),
+                fields: entity.AsFields(),
                 qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -904,8 +900,6 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var dbSetting = connection.GetDbSetting();
-
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
@@ -917,7 +911,7 @@ namespace RepoDb
             return await MergeAsyncInternalBase<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: entity.AsFields(dbSetting),
+                fields: entity.AsFields(),
                 qualifiers: qualifiers,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -992,10 +986,10 @@ namespace RepoDb
                 // Set the identity field
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
+                    identity = IdentityCache.Get<TEntity>()?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
                             string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
                     }
                 }
@@ -1156,10 +1150,10 @@ namespace RepoDb
                 // Set the identity field
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
+                    identity = IdentityCache.Get<TEntity>()?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
                             string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
                     }
                 }

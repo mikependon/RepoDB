@@ -29,7 +29,7 @@ namespace RepoDb
         {
             if (type.IsSubclassOf(m_type) == false)
             {
-                throw new InvalidOperationException($"Type must be a subclass of '{m_type.FullName}'.");
+                throw new InvalidTypeException($"Type must be a subclass of '{m_type.FullName}'.");
             }
         }
 
@@ -60,7 +60,7 @@ namespace RepoDb
                 return value;
             }
 
-            throw new InvalidOperationException($"There is no existing database operation provider mapping for '{type.FullName}'.");
+            throw new MissingMappingException($"There is no existing database operation provider mapping for '{type.FullName}'.");
         }
 
         /// <summary>

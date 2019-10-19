@@ -79,14 +79,16 @@
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="Contexts\Execution\InsertAllExecutionContextCache.cs" />
     <Compile Include="Exceptions\EmptyException.cs" />
+    <Compile Include="Exceptions\InvalidParameterException.cs" />
+    <Compile Include="Exceptions\InvalidQualifierFieldsException.cs" />
     <Compile Include="Exceptions\ItemNotFoundException.cs" />
     <Compile Include="Exceptions\MappingAlreadyExistsException.cs" />
     <Compile Include="Exceptions\MissingMappingException.cs" />
+    <Compile Include="Exceptions\InvalidTypeException.cs" />
     <Compile Include="Expressions\ClassExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
     <Compile Include="ClassProperty.cs" />
     <Compile Include="DataReaderField.cs" />
-    <Compile Include="Exceptions\InvalidQualifierFieldsException.cs" />
     <Compile Include="Exceptions\ParameterNotFoundException.cs" />
     <Compile Include="Extensions\DataEntityExtension.cs" />
     <Compile Include="Extensions\DbFieldExtension.cs" />
@@ -154,7 +156,7 @@
     <Compile Include="CommandTextCache.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="Enumerations\ConnectionPersistency.cs" />
-    <Compile Include="Exceptions\NoMatchedFieldsException.cs" />
+    <Compile Include="Exceptions\MissingFieldsException.cs" />
     <Compile Include="Exceptions\InvalidQueryExpressionException.cs" />
     <Compile Include="DataEntityDataReader.cs" />
     <Compile Include="Extensions\MemberInfoExtension.cs" />
@@ -204,7 +206,6 @@
     <Compile Include="Enumerations\Conjunction.cs" />
     <Compile Include="Enumerations\Order.cs" />
     <Compile Include="Enumerations\Operation.cs" />
-    <Compile Include="Exceptions\DuplicateTypeMapException.cs" />
     <Compile Include="Extensions\DataReaderExtension.cs" />
     <Compile Include="Extensions\DbCommandExtension.cs" />
     <Compile Include="Extensions\DbConnectionExtension.cs" />

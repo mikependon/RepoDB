@@ -51,14 +51,14 @@ namespace RepoDb
             {
                 if (m_cache.TryAdd(item.Key, item) == false && throwException == true)
                 {
-                    throw new InvalidOperationException($"Fail to add an item into the cache for the key {item.Key}.");
+                    throw new Exception($"Fail to add an item into the cache for the key {item.Key}.");
                 }
             }
             else
             {
                 if (!cacheItem.IsExpired())
                 {
-                    throw new InvalidOperationException($"An existing cache for key '{item.Key}' already exists.");
+                    throw new MappingAlreadyExistsException($"An existing cache for key '{item.Key}' already exists.");
                 }
                 cacheItem.UpdateFrom(item);
             }

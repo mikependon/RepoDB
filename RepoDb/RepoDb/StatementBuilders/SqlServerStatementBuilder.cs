@@ -46,8 +46,8 @@ namespace RepoDb.StatementBuilders
         public string CreateBatchQuery(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
-            int page,
-            int rowsPerBatch,
+            int? page,
+            int? rowsPerBatch,
             IEnumerable<OrderField> orderBy = null,
             QueryGroup where = null,
             string hints = null)
@@ -64,19 +64,19 @@ namespace RepoDb.StatementBuilders
             // Validate order by
             if (orderBy == null || orderBy?.Any() != true)
             {
-                throw new InvalidOperationException("The argument 'orderBy' is required.");
+                throw new EmptyException("The argument 'orderBy' is required.");
             }
 
             // Validate the page
-            if (page < 0)
+            if (page == null || page < 0)
             {
-                throw new InvalidOperationException("The page must be equals or greater than 0.");
+                throw new ArgumentOutOfRangeException("The page must be equals or greater than 0.");
             }
 
             // Validate the page
-            if (rowsPerBatch < 1)
+            if (rowsPerBatch == null || rowsPerBatch < 1)
             {
-                throw new InvalidOperationException($"The rows per batch must be equals or greater than 1.");
+                throw new ArgumentOutOfRangeException($"The rows per batch must be equals or greater than 1.");
             }
 
             // Build the query
@@ -97,7 +97,7 @@ namespace RepoDb.StatementBuilders
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
-                .WhereFrom(where)
+                .WhereFrom(where, DbSetting)
                 .CloseParen()
                 .Select()
                 .FieldsFrom(fields)
@@ -140,7 +140,7 @@ namespace RepoDb.StatementBuilders
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
-                .WhereFrom(where)
+                .WhereFrom(where, DbSetting)
                 .End();
 
             // Return the query
@@ -204,7 +204,7 @@ namespace RepoDb.StatementBuilders
                 .Delete()
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .WhereFrom(where)
+                .WhereFrom(where, DbSetting)
                 .End();
 
             // Return the query
@@ -277,7 +277,7 @@ namespace RepoDb.StatementBuilders
                     var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
                     if (isPresent == false)
                     {
-                        throw new InvalidOperationException("The non-identity primary field must be present during insert operation.");
+                        throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
                     }
                 }
             }
@@ -366,7 +366,7 @@ namespace RepoDb.StatementBuilders
                     var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
                     if (isPresent == false)
                     {
-                        throw new InvalidOperationException("The non-identity primary field must be present during insert operation.");
+                        throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
                     }
                 }
             }
@@ -778,7 +778,7 @@ namespace RepoDb.StatementBuilders
                 // Throw an error we found any unmatches
                 if (unmatchesOrderFields?.Any() == true)
                 {
-                    throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.Name).Join(", ")}' are not " +
+                    throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
@@ -792,7 +792,7 @@ namespace RepoDb.StatementBuilders
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
-                .WhereFrom(where)
+                .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy)
                 .End();
 
@@ -838,7 +838,7 @@ namespace RepoDb.StatementBuilders
                 // Throw an error we found any unmatches
                 if (unmatchesOrderFields?.Any() == true)
                 {
-                    throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                    throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField()).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
@@ -923,7 +923,7 @@ namespace RepoDb.StatementBuilders
             // Check if there are updatable fields
             if (updatableFields?.Any() != true)
             {
-                throw new InvalidOperationException("The list of updatable fields cannot be null or empty.");
+                throw new EmptyException("The list of updatable fields cannot be null or empty.");
             }
 
             // Build the query
@@ -933,7 +933,7 @@ namespace RepoDb.StatementBuilders
                 .TableNameFrom(tableName, DbSetting)
                 .Set()
                 .FieldsAndParametersFrom(updatableFields, 0, DbSetting)
-                .WhereFrom(where)
+                .WhereFrom(where, DbSetting)
                 .End();
 
             // Return the query
@@ -971,7 +971,7 @@ namespace RepoDb.StatementBuilders
             // Ensure the fields
             if (fields?.Any() != true)
             {
-                throw new InvalidOperationException($"The list of fields cannot be null or empty.");
+                throw new EmptyException($"The list of fields cannot be null or empty.");
             }
 
             // Check the qualifiers
@@ -1023,7 +1023,7 @@ namespace RepoDb.StatementBuilders
             // Check if there are updatable fields
             if (fields?.Any() != true)
             {
-                throw new InvalidOperationException("The list of updatable fields cannot be null or empty.");
+                throw new EmptyException("The list of updatable fields cannot be null or empty.");
             }
 
             // Build the query

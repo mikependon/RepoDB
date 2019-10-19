@@ -142,7 +142,6 @@ namespace RepoDb
         {
             // Check the primary
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            var dbSetting = connection.GetDbSetting();
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
@@ -152,11 +151,11 @@ namespace RepoDb
 
             // Return the result
             return MergeAllInternalBase<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
-                fields: FieldCache.Get<TEntity>(dbSetting),
+                fields: FieldCache.Get<TEntity>(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -288,7 +287,6 @@ namespace RepoDb
             where TEntity : class
         {
             // Check the primary
-            var dbSetting = connection.GetDbSetting();
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
 
             // Check the qualifiers
@@ -299,11 +297,11 @@ namespace RepoDb
 
             // Return the result
             return MergeAllAsyncInternalBase<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
-                fields: FieldCache.Get<TEntity>(dbSetting),
+                fields: FieldCache.Get<TEntity>(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -691,10 +689,10 @@ namespace RepoDb
                 // Set the identity value
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
+                    identity = IdentityCache.Get<TEntity>()?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
                             string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
                     }
                 }
@@ -1036,10 +1034,10 @@ namespace RepoDb
                 // Set the identity value
                 if (skipIdentityCheck == false)
                 {
-                    identity = IdentityCache.Get<TEntity>(dbSetting)?.AsField();
+                    identity = IdentityCache.Get<TEntity>()?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>(dbSetting).FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
                             string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
                     }
                 }

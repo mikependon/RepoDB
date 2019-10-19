@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -15,12 +14,10 @@ namespace RepoDb.Extensions
         /// Converts all properties of the type into an array of <see cref="Field"/> objects.
         /// </summary>
         /// <param name="type">The current type.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>A list of <see cref="string"/> objects.</returns>
-        internal static IEnumerable<Field> AsFields(this Type type,
-            IDbSetting dbSetting)
+        internal static IEnumerable<Field> AsFields(this Type type)
         {
-            return PropertyCache.Get(type, dbSetting).AsFields();
+            return PropertyCache.Get(type).AsFields();
         }
 
         /// <summary>
@@ -38,14 +35,12 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <param name="mappedName">The name of the property mapping.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The instance of <see cref="ClassProperty"/>.</returns>
         internal static ClassProperty GetPropertyByMapping(this Type type,
-            string mappedName,
-            IDbSetting dbSetting)
+            string mappedName)
         {
-            return PropertyCache.Get(type, dbSetting)
-                .FirstOrDefault(p => string.Equals(p.GetUnquotedMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
+            return PropertyCache.Get(type)
+                .FirstOrDefault(p => string.Equals(p.GetMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

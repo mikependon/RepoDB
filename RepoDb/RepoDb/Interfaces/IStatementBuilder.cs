@@ -26,8 +26,8 @@ namespace RepoDb.Interfaces
         string CreateBatchQuery(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
-            int page,
-            int rowsPerBatch,
+            int? page,
+            int? rowsPerBatch,
             IEnumerable<OrderField> orderBy = null,
             QueryGroup where = null,
             string hints = null);

@@ -54,11 +54,6 @@ namespace RepoDb
         /// </summary>
         public Type Type { get; }
 
-        /// <summary>
-        /// Gets the database setting currently in used.
-        /// </summary>
-        public IDbSetting DbSetting { get; }
-
         #endregion
 
         #region Methods
@@ -76,7 +71,7 @@ namespace RepoDb
         /// Creates an enumerable of <see cref="Field"/> objects that derived from the string value.
         /// </summary>
         /// <param name="name">The enumerable of string values that signifies the name of the fields (for each item).</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>An enumerable of <see cref="Field"/> object.</returns>
         public static IEnumerable<Field> From(string name,
             IDbSetting dbSetting)
@@ -114,13 +109,11 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="entity">An object to be parsed.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> Parse<TEntity>(TEntity entity,
-            IDbSetting dbSetting)
+        internal static IEnumerable<Field> Parse<TEntity>(TEntity entity)
             where TEntity : class
         {
-            foreach (var property in PropertyCache.Get<TEntity>(dbSetting))
+            foreach (var property in PropertyCache.Get<TEntity>())
             {
                 yield return property.AsField();
             }
@@ -130,14 +123,12 @@ namespace RepoDb
         /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> Parse(object obj,
-            IDbSetting dbSetting)
+        internal static IEnumerable<Field> Parse(object obj)
         {
             foreach (var property in obj?.GetType().GetProperties())
             {
-                yield return property.AsField(dbSetting);
+                yield return property.AsField();
             }
         }
 
@@ -156,15 +147,17 @@ namespace RepoDb
                 return m_hashCode.Value;
             }
 
+            var hashCode = 0;
+
             // Set the hash code
-            m_hashCode = Name.GetHashCode();
+            hashCode = Name.GetHashCode();
             if (Type != null)
             {
-                m_hashCode += Type.GetHashCode();
+                hashCode += Type.GetHashCode();
             }
 
-            // Return the value
-            return m_hashCode.Value;
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>

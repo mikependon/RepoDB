@@ -29,7 +29,7 @@ namespace RepoDb
         {
             if (type.IsSubclassOf(m_type) == false)
             {
-                throw new InvalidOperationException($"Type must be a subclass of '{m_type.FullName}'.");
+                throw new InvalidTypeException($"Type must be a subclass of '{m_type.FullName}'.");
             }
         }
 

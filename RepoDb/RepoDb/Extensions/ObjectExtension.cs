@@ -61,14 +61,12 @@ namespace RepoDb.Extensions
         /// <typeparam name="TEntity">The type of the object.</typeparam>
         /// <param name="obj">The object to be merged.</param>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to be merged.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of converted dynamic object.</returns>
         internal static object Merge<TEntity>(this TEntity obj,
-            QueryGroup queryGroup,
-            IDbSetting dbSetting)
+            QueryGroup queryGroup)
             where TEntity : class
         {
-            return Merge(obj, PropertyCache.Get<TEntity>(dbSetting).Select(p => p.PropertyInfo), queryGroup, dbSetting);
+            return Merge(obj, PropertyCache.Get<TEntity>().Select(p => p.PropertyInfo), queryGroup);
         }
 
         /// <summary>
@@ -76,13 +74,11 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="obj">The object where the <see cref="QueryGroup"/> object will be merged.</param>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>A dynamic object with the merged fields from <see cref="QueryGroup"/>.</returns>
         internal static object Merge(this object obj,
-            QueryGroup queryGroup,
-            IDbSetting dbSetting)
+            QueryGroup queryGroup)
         {
-            return Merge(obj, obj?.GetType().GetProperties(), queryGroup, dbSetting);
+            return Merge(obj, obj?.GetType().GetProperties(), queryGroup);
         }
 
         /// <summary>
@@ -91,12 +87,10 @@ namespace RepoDb.Extensions
         /// <param name="obj">The object where the <see cref="QueryGroup"/> object will be merged.</param>
         /// <param name="properties">The list of <see cref="PropertyInfo"/> objects.</param>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The object instance itself with the merged values.</returns>
         internal static object Merge(this object obj,
             IEnumerable<PropertyInfo> properties,
-            QueryGroup queryGroup,
-            IDbSetting dbSetting)
+            QueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             foreach (var property in properties)
@@ -117,28 +111,24 @@ namespace RepoDb.Extensions
         /// Converts the data entity object into a dynamic object.
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        internal static object AsObject(this object obj,
-            IDbSetting dbSetting)
+        internal static object AsObject(this object obj)
         {
-            return Merge(obj, null, dbSetting);
+            return Merge(obj, null);
         }
 
         /// <summary>
         /// Converts an instance of an object into an enumerable list of query fields.
         /// </summary>
         /// <param name="obj">The instance of the object to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable list of query fields.</returns>
-        internal static IEnumerable<QueryField> AsQueryFields(this object obj,
-            IDbSetting dbSetting)
+        internal static IEnumerable<QueryField> AsQueryFields(this object obj)
         {
             var expandoObject = obj as ExpandoObject;
             if (expandoObject != null)
             {
                 var dictionary = (IDictionary<string, object>)expandoObject;
-                var fields = dictionary.Select(item => new QueryField(item.Key, item.Value, dbSetting)).AsList();
+                var fields = dictionary.Select(item => new QueryField(item.Key, item.Value)).AsList();
                 foreach (var field in fields)
                 {
                     yield return field;
@@ -149,7 +139,7 @@ namespace RepoDb.Extensions
                 var properties = obj.GetType().GetProperties();
                 foreach (var property in properties)
                 {
-                    yield return new QueryField(property.Name, property.GetValue(obj), dbSetting);
+                    yield return new QueryField(property.Name, property.GetValue(obj));
                 }
             }
         }
@@ -159,25 +149,21 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="entity">The instance to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable list of fields.</returns>
-        internal static IEnumerable<Field> AsFields<TEntity>(this TEntity entity,
-            IDbSetting dbSetting)
+        internal static IEnumerable<Field> AsFields<TEntity>(this TEntity entity)
             where TEntity : class
         {
-            return FieldCache.Get<TEntity>(dbSetting);
+            return FieldCache.Get<TEntity>();
         }
 
         /// <summary>
         /// Converts an instance of an object into an enumerable list of field.
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable list of fields.</returns>
-        internal static IEnumerable<Field> AsFields(this object obj,
-            IDbSetting dbSetting)
+        internal static IEnumerable<Field> AsFields(this object obj)
         {
-            return Field.Parse(obj, dbSetting);
+            return Field.Parse(obj);
         }
 
         /// <summary>

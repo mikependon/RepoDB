@@ -20,7 +20,35 @@ namespace RepoDb.Extensions
         public static string Join(this IEnumerable<string> strings,
             string separator)
         {
+            return Join(strings, separator, true);
+        }
+
+        /// <summary>
+        /// Joins an array string with a given separator.
+        /// </summary>
+        /// <param name="strings">The enumerable list of strings.</param>
+        /// <param name="separator">The separator to be used.</param>
+        /// <param name="trim">The boolean value that indicates whether to trim each string before joining.</param>
+        /// <returns>A joined string from a given array of strings separated by the defined separator.</returns>
+        public static string Join(this IEnumerable<string> strings,
+            string separator,
+            bool trim)
+        {
+            if (trim)
+            {
+                strings = strings.Select(s => s.Trim());
+            }
             return string.Join(separator, strings);
+        }
+
+        /// <summary>
+        /// Removes the non-alphanumeric characters.
+        /// </summary>
+        /// <param name="value">The string value where the non-alphanumeric characters will be removed.</param>
+        /// <returns>The alphanumeric string.</returns>
+        public static string AsAlphaNumeric(this string value)
+        {
+            return AsAlphaNumeric(value, true);
         }
 
         /// <summary>
@@ -43,7 +71,7 @@ namespace RepoDb.Extensions
         /// Unquotes a string.
         /// </summary>
         /// <param name="value">The string value to be unqouted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The unquoted string.</returns>
         public static string AsUnquoted(this string value,
             IDbSetting dbSetting)
@@ -56,7 +84,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value">The string value to be unqouted.</param>
         /// <param name="trim">The boolean value that indicates whether to trim the string before unquoting.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The unquoted string.</returns>
         public static string AsUnquoted(this string value,
             bool trim,
@@ -82,9 +110,9 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value">The string value to be unqouted.</param>
         /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The unquoted string.</returns>
-        public static string AsUnquotedInternal(this string value,
+        internal static string AsUnquotedInternal(this string value,
             bool trim,
             IDbSetting dbSetting)
         {
@@ -105,7 +133,7 @@ namespace RepoDb.Extensions
         /// Quotes a string.
         /// </summary>
         /// <param name="value">The string value to be quoted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The quoted string.</returns>
         public static string AsQuoted(this string value,
             IDbSetting dbSetting)
@@ -118,7 +146,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value">The string value to be quoted.</param>
         /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The quoted string.</returns>
         public static string AsQuoted(this string value,
             bool trim,
@@ -133,7 +161,7 @@ namespace RepoDb.Extensions
         /// <param name="value">The string value to be quoted.</param>
         /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
         /// <param name="ignoreSchema">The boolean value that indicates whether to ignore the schema.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The quoted string.</returns>
         public static string AsQuoted(this string value,
             bool trim,
@@ -160,7 +188,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value">The string value to be quoted.</param>
         /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The quoted string.</returns>
         internal static string AsQuotedInternal(this string value,
             bool trim,
@@ -219,8 +247,11 @@ namespace RepoDb.Extensions
             int index,
             IDbSetting dbSetting)
         {
-            return index > 0 ? string.Concat(dbSetting.ParameterPrefix, value.AsUnquoted(dbSetting), "_", index) :
-                string.Concat(dbSetting.ParameterPrefix, value.AsUnquoted(dbSetting));
+            if (value.StartsWith(dbSetting.ParameterPrefix) == false)
+            {
+                value = string.Concat(dbSetting.ParameterPrefix, value.AsUnquoted(dbSetting));
+            }
+            return index > 0 ? string.Concat(value, "_", index) : value;
         }
 
         // AsAliasField

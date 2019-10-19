@@ -14,7 +14,7 @@ namespace RepoDb
     /// <summary>
     /// A class used to cache the compiled functions.
     /// </summary>
-    public static class FunctionCache
+    internal static class FunctionCache
     {
         private static ConcurrentDictionary<string, Action<DbCommand, object>> m_cache = new ConcurrentDictionary<string, Action<DbCommand, object>>();
 

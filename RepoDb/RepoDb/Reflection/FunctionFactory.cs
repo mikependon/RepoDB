@@ -40,7 +40,7 @@ namespace RepoDb.Reflection
 
             // DB Variables
             var dbSetting = connection.GetDbSetting();
-            var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(dbSetting), transaction);
+            var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
             // Matching the fields
             var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -59,7 +59,7 @@ namespace RepoDb.Reflection
             // Throw an error if there are no matching atleast one
             if (memberAssignments.Any() != true)
             {
-                throw new NoMatchedFieldsException($"There are no matching fields between the result set of the data reader and the type '{typeof(TEntity).FullName}'.");
+                throw new MissingFieldsException($"There are no matching fields between the result set of the data reader and the type '{typeof(TEntity).FullName}'.");
             }
 
             // Initialize the members
@@ -90,19 +90,19 @@ namespace RepoDb.Reflection
             var memberAssignments = new List<MemberAssignment>();
             var dataReaderType = typeof(DbDataReader);
             var isDefaultConversion = TypeMapper.ConversionType == ConversionType.Default;
-            var properties = PropertyCache.Get<TEntity>(connection.GetDbSetting()).Where(property => property.PropertyInfo.CanWrite);
+            var properties = PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite);
             var fieldNames = readerFields.Select(f => f.Name.ToLower()).AsList();
 
             // Filter the properties by reader fields
             properties = properties.Where(property =>
                 fieldNames.FirstOrDefault(field =>
-                    string.Equals(field, property.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase)) != null);
+                    string.Equals(field, property.GetMappedName(), StringComparison.OrdinalIgnoreCase)) != null);
 
             // Iterate each properties
             foreach (var property in properties)
             {
                 // Gets the mapped name and the ordinal
-                var mappedName = property.GetUnquotedMappedName();
+                var mappedName = property.GetMappedName();
                 var ordinal = fieldNames.IndexOf(mappedName.ToLower());
 
                 // Process only if there is a correct ordinal
@@ -359,7 +359,7 @@ namespace RepoDb.Reflection
             // Throw an error if there are no matching atleast one
             if (elementInits.Any() != true)
             {
-                throw new NoMatchedFieldsException($"There are no elements initialization found.");
+                throw new EmptyException($"There are no elements initialization found.");
             }
 
             // Initialize the members
@@ -482,7 +482,7 @@ namespace RepoDb.Reflection
             var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
 
             // Variables for types
-            var entityProperties = PropertyCache.Get<TEntity>(dbSetting);
+            var entityProperties = PropertyCache.Get<TEntity>();
 
             // Variables for DbCommand
             var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
@@ -520,7 +520,7 @@ namespace RepoDb.Reflection
                 var parameterAssignments = new List<Expression>();
 
                 // Parameter variables
-                var parameterName = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric(true);
+                var parameterName = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric();
                 var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", parameterName));
                 var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                 parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
@@ -874,7 +874,7 @@ namespace RepoDb.Reflection
                 }
                 else
                 {
-                    classProperty = entityProperties.First(property => string.Equals(property.GetUnquotedMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
+                    classProperty = entityProperties.First(property => string.Equals(property.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
                     if (classProperty != null)
                     {
                         propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", propertyName));
@@ -970,7 +970,7 @@ namespace RepoDb.Reflection
             var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
 
             // Variables for types
-            var entityProperties = PropertyCache.Get<TEntity>(dbSetting);
+            var entityProperties = PropertyCache.Get<TEntity>();
 
             // Variables for DbCommand
             var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
@@ -1012,7 +1012,7 @@ namespace RepoDb.Reflection
                 var parameterAssignments = new List<Expression>();
 
                 // Parameter variables
-                var parameterName = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric(true);
+                var parameterName = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric();
                 var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", parameterName));
                 var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                 parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
@@ -1371,7 +1371,7 @@ namespace RepoDb.Reflection
                     }
                     else
                     {
-                        classProperty = entityProperties.FirstOrDefault(property => string.Equals(property.GetUnquotedMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
+                        classProperty = entityProperties.FirstOrDefault(property => string.Equals(property.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
                         if (classProperty != null)
                         {
                             propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", propertyName));
@@ -1463,8 +1463,8 @@ namespace RepoDb.Reflection
             var dbParameterValueProperty = typeOfDbParameter.GetProperty("Value");
 
             // Get the entity property
-            var propertyName = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric(true);
-            var property = (typeOfEntity.GetProperty(propertyName) ?? typeOfEntity.GetPropertyByMapping(propertyName, field.DbSetting)?.PropertyInfo)?.SetMethod;
+            var propertyName = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric();
+            var property = (typeOfEntity.GetProperty(propertyName) ?? typeOfEntity.GetPropertyByMapping(propertyName)?.PropertyInfo)?.SetMethod;
 
             // Get the command parameter
             var name = parameterName ?? propertyName;
@@ -1504,7 +1504,7 @@ namespace RepoDb.Reflection
             var valueParameter = Expression.Parameter(typeOfObject, "value");
 
             // Get the entity property
-            var property = (typeOfEntity.GetProperty(field.Name) ?? typeOfEntity.GetPropertyByMapping(field.Name, field.DbSetting)?.PropertyInfo)?.SetMethod;
+            var property = (typeOfEntity.GetProperty(field.Name) ?? typeOfEntity.GetPropertyByMapping(field.Name)?.PropertyInfo)?.SetMethod;
 
             // Assign the value into DataEntity.Property
             var propertyAssignment = Expression.Call(entityParameter, property,
@@ -1546,10 +1546,9 @@ namespace RepoDb.Reflection
              {
                  // Create the parameter
                  var parameter = command.CreateParameter();
-                 var name = field.Name.AsUnquoted(dbSetting).AsAlphaNumeric(true);
 
                  // Set the property
-                 parameter.ParameterName = index > 0 ? string.Concat(name, "_", index) : name;
+                 parameter.ParameterName = field.Name.AsParameter(index, dbSetting);
 
                  // Set the Direction
                  parameter.Direction = direction;

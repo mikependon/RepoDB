@@ -430,11 +430,10 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
-            var dbSetting = connection.GetDbSetting();
             var request = new QueryAllRequest(typeof(TEntity),
                 connection,
                 transaction,
-                FieldCache.Get<TEntity>(dbSetting),
+                FieldCache.Get<TEntity>(),
                 orderBy,
                 hints,
                 statementBuilder);
@@ -537,11 +536,10 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
-            var dbSetting = connection.GetDbSetting();
             var request = new QueryAllRequest(typeof(TEntity),
                 connection,
                 transaction,
-                FieldCache.Get<TEntity>(dbSetting),
+                FieldCache.Get<TEntity>(),
                 orderBy,
                 hints,
                 statementBuilder);
@@ -549,7 +547,7 @@ namespace RepoDb
             var param = (object)null;
 
             // Database pre-touch for field definitions
-            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(dbSetting), transaction);
+            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
             // Before Execution
             if (trace != null)

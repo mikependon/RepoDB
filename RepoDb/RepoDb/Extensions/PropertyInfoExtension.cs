@@ -100,13 +100,11 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="property">The instance of <see cref="PropertyInfo"/> to be converted.</param>
         /// <param name="entity">The entity object where the value of the property will be retrieved.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of query field object that holds the converted name and values of the property.</returns>
         public static QueryField AsQueryField(this PropertyInfo property,
-            object entity,
-            IDbSetting dbSetting)
+            object entity)
         {
-            return AsQueryField(property, entity, false, dbSetting);
+            return AsQueryField(property, entity, false);
         }
 
         /// <summary>
@@ -116,21 +114,19 @@ namespace RepoDb.Extensions
         /// <param name="entity">The entity object where the value of the property will be retrieved.</param>
         /// <returns>An instance of query field object that holds the converted name and values of the property.</returns>
         /// <param name="appendUnderscore">The value to identify whether the underscope prefix will be appended to the parameter name.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal static QueryField AsQueryField(this PropertyInfo property,
             object entity,
-            bool appendUnderscore,
-            IDbSetting dbSetting)
+            bool appendUnderscore)
         {
             var field = new Field(PropertyMappedNameCache.Get(property), property.PropertyType.GetUnderlyingType());
-            return new QueryField(field, Operation.Equal, property.GetValue(entity), appendUnderscore, dbSetting);
+            return new QueryField(field, Operation.Equal, property.GetValue(entity), appendUnderscore);
         }
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a mapped name.
         /// </summary>
         /// <param name="property">The instance of the property to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A instance of string containing the value of a mapped name.</returns>
         internal static string AsFieldAsString(this PropertyInfo property,
             IDbSetting dbSetting)
@@ -142,7 +138,7 @@ namespace RepoDb.Extensions
         /// Converts a <see cref="PropertyInfo"/> into a parameterized name.
         /// </summary>
         /// <param name="property">The instance of the property to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A instance of string containing the value of a parameterized name.</returns>
         internal static string AsParameterAsString(this PropertyInfo property,
             IDbSetting dbSetting)
@@ -154,7 +150,7 @@ namespace RepoDb.Extensions
         /// Converts a <see cref="PropertyInfo"/> into a parameterized (as field) name.
         /// </summary>
         /// <param name="property">The instance of the property to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A instance of string containing the value of a parameterized (as field) name.</returns>
         internal static string AsParameterAsFieldAsString(this PropertyInfo property,
             IDbSetting dbSetting)
@@ -166,7 +162,7 @@ namespace RepoDb.Extensions
         /// Converts a <see cref="PropertyInfo"/> into a field and parameter name.
         /// </summary>
         /// <param name="property">The instance of the property to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A instance of string containing the value of a field and parameter name.</returns>
         internal static string AsFieldAndParameterAsString(this PropertyInfo property,
             IDbSetting dbSetting)
@@ -179,7 +175,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="property">The instance of the property to be converted.</param>
         /// <param name="alias">The alias to be used.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A instance of string containing the value of a field (and its alias) name.</returns>
         internal static string AsFieldAndAliasField(this PropertyInfo property,
             string alias,
@@ -194,7 +190,7 @@ namespace RepoDb.Extensions
         /// Converts an enumerable array of <see cref="PropertyInfo"/> objects into an enumerable array of string (as field).
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>An enumerable array of strings containing the converted values of the given properties (as field).</returns>
         internal static IEnumerable<string> AsFieldsAsStrings(this IEnumerable<PropertyInfo> properties,
             IDbSetting dbSetting)
@@ -209,7 +205,7 @@ namespace RepoDb.Extensions
         /// Converts an enumerable array of <see cref="PropertyInfo"/> objects into an enumerable array of string (as parameters).
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>An enumerable array of strings containing the converted values of the given properties (as parameters).</returns>
         internal static IEnumerable<string> AsParameters(this IEnumerable<PropertyInfo> properties,
             IDbSetting dbSetting)
@@ -221,7 +217,7 @@ namespace RepoDb.Extensions
         /// Converts an enumerable array of <see cref="PropertyInfo"/> objects into an enumerable array of string (as parameters as fields).
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>An enumerable array of strings containing the converted values of the given properties (as parameters as fields).</returns>
         internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<PropertyInfo> properties,
             IDbSetting dbSetting)
@@ -233,7 +229,7 @@ namespace RepoDb.Extensions
         /// Converts an enumerable array of <see cref="PropertyInfo"/> objects into an enumerable array of string (as field and parameters).
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>An enumerable array of strings containing the converted values of the given properties (as field and parameters).</returns>
         internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<PropertyInfo> properties,
             IDbSetting dbSetting)
@@ -246,7 +242,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
         /// <param name="alias">The alias to be used.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>An enumerable array of strings containing the converted values of the given properties (as field and its alias).</returns>
         internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<PropertyInfo> properties,
             string alias,
@@ -259,10 +255,8 @@ namespace RepoDb.Extensions
         /// Converts an instance of <see cref="PropertyInfo"/> object into <see cref="Field"/> object.
         /// </summary>
         /// <param name="property">The instance of <see cref="PropertyInfo"/> object to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The converted instance of <see cref="Field"/> object.</returns>
-        public static Field AsField(this PropertyInfo property,
-            IDbSetting dbSetting)
+        public static Field AsField(this PropertyInfo property)
         {
             return new Field(PropertyMappedNameCache.Get(property), property.PropertyType.GetUnderlyingType());
         }
@@ -271,14 +265,12 @@ namespace RepoDb.Extensions
         /// Converts an enumerable of <see cref="PropertyInfo"/> objects into an enumerable array of <see cref="Field"/>.
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable array of <see cref="Field"/>.</returns>
-        public static IEnumerable<Field> AsFields(this IEnumerable<PropertyInfo> properties,
-            IDbSetting dbSetting)
+        public static IEnumerable<Field> AsFields(this IEnumerable<PropertyInfo> properties)
         {
             foreach (var property in properties)
             {
-                yield return property.AsField(dbSetting);
+                yield return property.AsField();
             }
         }
 
@@ -286,14 +278,12 @@ namespace RepoDb.Extensions
         /// Converts an array of <see cref="PropertyInfo"/> objects into an enumerable array of <see cref="Field"/>.
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An enumerable array of <see cref="Field"/>.</returns>
-        public static IEnumerable<Field> AsFields(this PropertyInfo[] properties,
-            IDbSetting dbSetting)
+        public static IEnumerable<Field> AsFields(this PropertyInfo[] properties)
         {
             foreach (var property in properties)
             {
-                yield return property.AsField(dbSetting);
+                yield return property.AsField();
             }
         }
     }

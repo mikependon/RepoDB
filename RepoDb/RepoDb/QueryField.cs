@@ -26,14 +26,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         public QueryField(string fieldName,
-            object value,
-            IDbSetting dbSetting)
+            object value)
             : this(fieldName,
                   Operation.Equal,
-                  value,
-                  dbSetting)
+                  value)
         {
         }
 
@@ -43,16 +40,13 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         public QueryField(string fieldName,
             Operation operation,
-            object value,
-            IDbSetting dbSetting)
+            object value)
             : this(fieldName,
                   operation,
                   value,
-                  false,
-                  dbSetting)
+                  false)
         {
         }
 
@@ -61,15 +55,12 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         public QueryField(Field field,
-            object value,
-            IDbSetting dbSetting)
+            object value)
             : this(field,
                   Operation.Equal,
                   value,
-                  false,
-                  dbSetting)
+                  false)
         {
         }
 
@@ -79,16 +70,13 @@ namespace RepoDb
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         public QueryField(Field field,
             Operation operation,
-            object value,
-            IDbSetting dbSetting)
+            object value)
             : this(field,
                   operation,
                   value,
-                  false,
-                  dbSetting)
+                  false)
         {
         }
 
@@ -99,17 +87,14 @@ namespace RepoDb
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal QueryField(string fieldName,
             Operation operation,
             object value,
-            bool appendUnderscore,
-            IDbSetting dbSetting)
+            bool appendUnderscore)
             : this(new Field(fieldName),
                   operation,
                   value,
-                  false,
-                  dbSetting)
+                  false)
         {
         }
 
@@ -120,14 +105,11 @@ namespace RepoDb
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         internal QueryField(Field field,
             Operation operation,
             object value,
-            bool appendUnderscore,
-            IDbSetting dbSetting)
+            bool appendUnderscore)
         {
-            DbSetting = dbSetting;
             Field = field;
             Operation = operation;
             Parameter = new Parameter(field.Name, value, appendUnderscore);
@@ -150,11 +132,6 @@ namespace RepoDb
         /// </summary>
         public Parameter Parameter { get; }
 
-        /// <summary>
-        /// Gets the database setting currently in used.
-        /// </summary>
-        public IDbSetting DbSetting { get; }
-
         #endregion
 
         #region Methods
@@ -172,7 +149,7 @@ namespace RepoDb
         /// </summary>
         public void Reset()
         {
-            Parameter?.SetName(Field.Name, DbSetting);
+            Parameter?.SetName(Field.Name);
             m_operationTextAttribute = null;
             m_hashCode = null;
         }
@@ -211,10 +188,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target entity type</typeparam>
         /// <param name="expression">The instance of <see cref="BinaryExpression"/> to be parsed.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>An instance of <see cref="QueryField"/> object.</returns>
-        internal static QueryField Parse<TEntity>(BinaryExpression expression,
-            IDbSetting dbSetting) where TEntity : class
+        internal static QueryField Parse<TEntity>(BinaryExpression expression) where TEntity : class
         {
             // Only support the following expression type
             if (expression.IsExtractable() == false)
@@ -224,7 +199,7 @@ namespace RepoDb
 
             // Name
             var fieldName = expression.GetName();
-            if (PropertyCache.Get<TEntity>(dbSetting).Any(property => PropertyMappedNameCache.Get(property.PropertyInfo) == fieldName) == false)
+            if (PropertyCache.Get<TEntity>().Any(property => PropertyMappedNameCache.Get(property.PropertyInfo) == fieldName) == false)
             {
                 throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
@@ -236,7 +211,7 @@ namespace RepoDb
             var operation = GetOperation(expression.NodeType);
 
             // Return the value
-            return new QueryField(fieldName, operation, value, dbSetting);
+            return new QueryField(fieldName, operation, value);
         }
 
         // GetOperation
@@ -271,43 +246,35 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (!ReferenceEquals(null, m_hashCode))
+            if (m_hashCode != null)
             {
                 return m_hashCode.Value;
             }
 
-            // Use the non nullable for perf purposes
             var hashCode = 0;
 
             // Set in the combination of the properties
             hashCode += (Field.GetHashCode() + (int)Operation + Parameter.GetHashCode());
-            if (DbSetting != null)
-            {
-                hashCode += DbSetting.GetHashCode();
-            }
 
             // The (IS NULL) affects the uniqueness of the object
-            if (Operation == Operation.Equal && ReferenceEquals(null, Parameter.Value))
+            if (Operation == Operation.Equal && Parameter.Value == null)
             {
                 hashCode += HASHCODE_ISNULL;
             }
             // The (IS NOT NULL) affects the uniqueness of the object
-            else if (Operation == Operation.NotEqual && ReferenceEquals(null, Parameter.Value))
+            else if (Operation == Operation.NotEqual && Parameter.Value == null)
             {
                 hashCode += HASHCODE_ISNOTNULL;
             }
             // The parameter's length affects the uniqueness of the object
             else if ((Operation == Operation.In || Operation == Operation.NotIn) &&
-                !ReferenceEquals(null, Parameter.Value) && Parameter.Value is Array)
+                Parameter.Value != null && Parameter.Value is Array)
             {
                 hashCode += ((Array)Parameter.Value).Length.GetHashCode();
             }
 
-            // Set back the value
-            m_hashCode = hashCode;
-
-            // Return the value
-            return hashCode;
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>

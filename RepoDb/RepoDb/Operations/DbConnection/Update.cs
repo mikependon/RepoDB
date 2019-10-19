@@ -43,7 +43,7 @@ namespace RepoDb
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(primary, entity, connection.GetDbSetting()),
+                where: ToQueryGroup<TEntity>(primary, entity),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -74,7 +74,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey, connection.GetDbSetting()),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -104,7 +104,7 @@ namespace RepoDb
         {
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -134,7 +134,7 @@ namespace RepoDb
         {
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: where != null ? new QueryGroup(where.AsEnumerable(), connection.GetDbSetting()) : null,
+                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -164,7 +164,7 @@ namespace RepoDb
         {
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -222,17 +222,15 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var dbSetting = connection.GetDbSetting();
-
             // Append the prefixes
             where?.PrependAnUnderscoreAtTheParameters();
 
             // Return the result
             return UpdateInternalBase<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: where,
-                fields: entity.AsFields(dbSetting),
+                fields: entity.AsFields(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -265,7 +263,7 @@ namespace RepoDb
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(primary, entity, connection.GetDbSetting()),
+                where: ToQueryGroup<TEntity>(primary, entity),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -296,7 +294,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey, connection.GetDbSetting()),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -326,7 +324,7 @@ namespace RepoDb
         {
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -356,7 +354,7 @@ namespace RepoDb
         {
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: where != null ? new QueryGroup(where.AsEnumerable(), connection.GetDbSetting()) : null,
+                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -386,7 +384,7 @@ namespace RepoDb
         {
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -444,17 +442,15 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var dbSetting = connection.GetDbSetting();
-
             // Append the prefixes
             where?.PrependAnUnderscoreAtTheParameters();
 
             // Return the result
             return UpdateAsyncInternalBase<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(dbSetting),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: where,
-                fields: entity.AsFields(dbSetting),
+                fields: entity.AsFields(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -486,18 +482,15 @@ namespace RepoDb
         {
             // Variables needed
             var primary = DbFieldCache.Get(connection, tableName, transaction)?.FirstOrDefault(dbField => dbField.IsPrimary);
-            var dbSetting = connection.GetDbSetting();
             var where = (QueryGroup)null;
 
             // Identity the property via primary
             if (primary != null)
             {
-                var property = entity?.GetType().GetProperty(primary.Name.AsUnquoted(dbSetting), BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
+                var property = entity?.GetType().GetProperty(primary.Name, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
                 if (property != null)
                 {
-                    var field = new Field(property.Name, property.PropertyType);
-                    var queryField = new QueryField(field, property.GetValue(entity), dbSetting);
-                    where = new QueryGroup(queryField, dbSetting);
+                    where = new QueryGroup(new QueryField(new Field(property.Name, property.PropertyType), property.GetValue(entity)));
                 }
                 else
                 {
@@ -571,7 +564,7 @@ namespace RepoDb
             return Update(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -602,7 +595,7 @@ namespace RepoDb
             return Update(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -669,7 +662,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: where,
-                fields: entity?.AsFields(connection.GetDbSetting()),
+                fields: entity?.AsFields(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -701,18 +694,15 @@ namespace RepoDb
         {
             // Variables needed
             var primary = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.FirstOrDefault(dbField => dbField.IsPrimary);
-            var dbSetting = connection.GetDbSetting();
             var where = (QueryGroup)null;
 
             // Identity the property via primary
             if (primary != null)
             {
-                var property = entity?.GetType().GetProperty(primary.Name.AsUnquoted(dbSetting), BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
+                var property = entity?.GetType().GetProperty(primary.Name, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
                 if (property != null)
                 {
-                    var field = new Field(property.Name, property.PropertyType);
-                    var queryField = new QueryField(field, property.GetValue(entity), dbSetting);
-                    where = new QueryGroup(queryField, dbSetting);
+                    where = new QueryGroup(new QueryField(new Field(property.Name, property.PropertyType), property.GetValue(entity)));
                 }
                 else
                 {
@@ -786,7 +776,7 @@ namespace RepoDb
             return UpdateAsync(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -817,7 +807,7 @@ namespace RepoDb
             return UpdateAsync(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -884,7 +874,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: where,
-                fields: entity?.AsFields(connection.GetDbSetting()),
+                fields: entity?.AsFields(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -923,15 +913,13 @@ namespace RepoDb
             // Validate
             InvokeValidatorValidateUpdate(connection);
 
-            // Get the database setting
-            var dbSetting = connection.GetDbSetting();
-
             // Get the function
             var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
             {
                 // Variables needed
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = new List<DbField>();
+                var dbSetting = connection.GetDbSetting();
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
@@ -1015,7 +1003,7 @@ namespace RepoDb
                     foreach (var queryField in where.GetFields(true))
                     {
                         // Create a parameter
-                        var parameter = command.CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null, dbSetting);
+                        var parameter = command.CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null);
 
                         // Add to the command object
                         command.Parameters.Add(parameter);
@@ -1069,9 +1057,6 @@ namespace RepoDb
             // Validate
             InvokeValidatorValidateUpdateAsync(connection);
 
-            // Get the database setting
-            var dbSetting = connection.GetDbSetting();
-
             // Get the database fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
 
@@ -1080,6 +1065,7 @@ namespace RepoDb
             {
                 // Variables needed
                 var inputFields = new List<DbField>();
+                var dbSetting = connection.GetDbSetting();
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
@@ -1163,7 +1149,7 @@ namespace RepoDb
                     foreach (var queryField in where.GetFields(true))
                     {
                         // Create a parameter
-                        var parameter = command.CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null, dbSetting);
+                        var parameter = command.CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null);
 
                         // Add to the command object
                         command.Parameters.Add(parameter);

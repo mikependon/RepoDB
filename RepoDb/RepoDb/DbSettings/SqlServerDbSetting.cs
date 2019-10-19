@@ -52,7 +52,7 @@ namespace RepoDb.DbSettings
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (!ReferenceEquals(null, m_hashCode))
+            if (m_hashCode != null)
             {
                 return m_hashCode.Value;
             }
@@ -90,11 +90,8 @@ namespace RepoDb.DbSettings
                 hashCode += DefaultSchema.GetHashCode();
             }
 
-            // Set back the value
-            m_hashCode = hashCode;
-
-            // Return the value
-            return hashCode;
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>

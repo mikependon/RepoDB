@@ -223,7 +223,7 @@ namespace RepoDb.DbHelpers
             using (var dbCommand = connection.EnsureOpen().CreateCommand(GetCommandText(), transaction: transaction))
             {
                 // Create parameters
-                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) }, connection.GetDbSetting());
+                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) });
 
                 // Execute and set the result
                 using (var reader = dbCommand.ExecuteReader())
@@ -259,7 +259,7 @@ namespace RepoDb.DbHelpers
             using (var dbCommand = ((DbConnection)await connection.EnsureOpenAsync()).CreateCommand(GetCommandText(), transaction: transaction))
             {
                 // Create parameters
-                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) }, connection.GetDbSetting());
+                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) });
 
                 // Execute and set the result
                 using (var reader = await ((DbCommand)dbCommand).ExecuteReaderAsync())

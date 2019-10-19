@@ -24,7 +24,7 @@ namespace RepoDb.Requests
             IDbTransaction transaction,
             string hints = null,
             IStatementBuilder statementBuilder = null)
-            : this(ClassMappedNameCache.Get(type, true, connection.GetDbSetting()),
+            : this(ClassMappedNameCache.Get(type),
                   connection,
                   transaction,
                   hints,
@@ -59,7 +59,7 @@ namespace RepoDb.Requests
         /// </summary>
         public string Hints { get; }
 
-        // Equality and comparers
+        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="CountAllRequest"/>.
@@ -68,7 +68,7 @@ namespace RepoDb.Requests
         public override int GetHashCode()
         {
             // Make sure to return if it is already provided
-            if (!ReferenceEquals(null, m_hashCode))
+            if (m_hashCode != null)
             {
                 return m_hashCode.Value;
             }
@@ -77,16 +77,13 @@ namespace RepoDb.Requests
             var hashCode = string.Concat(Name, ".CountAll").GetHashCode();
 
             // Add the hints
-            if (!ReferenceEquals(null, Hints))
+            if (!string.IsNullOrEmpty(Hints))
             {
                 hashCode += Hints.GetHashCode();
             }
 
-            // Set back the hash code value
-            m_hashCode = hashCode;
-
-            // Return the actual value
-            return hashCode;
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>
@@ -134,5 +131,7 @@ namespace RepoDb.Requests
         {
             return (objA == objB) == false;
         }
+
+        #endregion
     }
 }

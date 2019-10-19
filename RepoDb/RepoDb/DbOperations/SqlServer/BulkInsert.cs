@@ -145,10 +145,8 @@ namespace RepoDb.DbOperationProviders
             {
                 using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, options, (SqlTransaction)transaction))
                 {
-                    var dbSetting = connection.GetDbSetting();
-
                     // Set the destinationtable
-                    sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>(dbSetting);
+                    sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
 
                     // Set the timeout
                     if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
@@ -166,7 +164,7 @@ namespace RepoDb.DbOperationProviders
                     if (mappings == null)
                     {
                         // Variables needed
-                        var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(dbSetting), transaction);
+                        var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                         var fields = reader.Properties.AsFields();
                         var filteredFields = new List<Tuple<string, string>>();
 
@@ -234,7 +232,7 @@ namespace RepoDb.DbOperationProviders
             where TEntity : class
         {
             return BulkInsert(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(connection.GetDbSetting()),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
                 mappings: mappings,
                 options: options,
@@ -367,7 +365,7 @@ namespace RepoDb.DbOperationProviders
             where TEntity : class
         {
             return BulkInsert(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(connection.GetDbSetting()),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 dataTable: dataTable,
                 rowState: rowState,
                 mappings: mappings,
@@ -517,10 +515,8 @@ namespace RepoDb.DbOperationProviders
             {
                 using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection, options, (SqlTransaction)transaction))
                 {
-                    var dbSetting = connection.GetDbSetting();
-
                     // Set the destinationtable
-                    sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>(dbSetting);
+                    sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
 
                     // Set the timeout
                     if (bulkCopyTimeout != null && bulkCopyTimeout.HasValue)
@@ -538,7 +534,7 @@ namespace RepoDb.DbOperationProviders
                     if (mappings == null)
                     {
                         // Variables needed
-                        var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(dbSetting), transaction);
+                        var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
                         var fields = reader.Properties.AsFields();
                         var filteredFields = new List<Tuple<string, string>>();
 
@@ -606,7 +602,7 @@ namespace RepoDb.DbOperationProviders
             where TEntity : class
         {
             return BulkInsertAsync(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(connection.GetDbSetting()),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
                 mappings: mappings,
                 options: options,
@@ -739,7 +735,7 @@ namespace RepoDb.DbOperationProviders
             where TEntity : class
         {
             return BulkInsertAsync(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(connection.GetDbSetting()),
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 dataTable: dataTable,
                 rowState: rowState,
                 mappings: mappings,

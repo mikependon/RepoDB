@@ -39,7 +39,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Count<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -69,7 +69,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Count<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -99,7 +99,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Count<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -129,7 +129,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Count<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -266,7 +266,7 @@ namespace RepoDb
             where TEntity : class
         {
             return CountAsync<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -296,7 +296,7 @@ namespace RepoDb
             where TEntity : class
         {
             return CountAsync<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -326,7 +326,7 @@ namespace RepoDb
             where TEntity : class
         {
             return CountAsync<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -356,7 +356,7 @@ namespace RepoDb
             where TEntity : class
         {
             return CountAsync<TEntity>(connection: connection,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -466,7 +466,7 @@ namespace RepoDb
         {
             return Count(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -497,7 +497,7 @@ namespace RepoDb
         {
             return Count(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -528,7 +528,7 @@ namespace RepoDb
         {
             return Count(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -669,7 +669,7 @@ namespace RepoDb
         {
             return CountAsync(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -700,7 +700,7 @@ namespace RepoDb
         {
             return CountAsync(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -731,7 +731,7 @@ namespace RepoDb
         {
             return CountAsync(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where, connection.GetDbSetting()),
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,

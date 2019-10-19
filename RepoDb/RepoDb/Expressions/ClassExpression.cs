@@ -18,12 +18,11 @@ namespace RepoDb
         /// Gets the properties of the class.
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The properties of the class.</returns>
-        public static IEnumerable<ClassProperty> GetProperties<TEntity>(IDbSetting dbSetting)
+        public static IEnumerable<ClassProperty> GetProperties<TEntity>()
             where TEntity : class
         {
-            return GetPropertiesCache<TEntity>.Do(dbSetting);
+            return GetPropertiesCache<TEntity>.Do();
         }
 
         private static class GetPropertiesCache<T>
@@ -31,19 +30,19 @@ namespace RepoDb
         {
             private static Func<IEnumerable<ClassProperty>> m_func;
 
-            private static Func<IEnumerable<ClassProperty>> GetFunc(IDbSetting dbSetting)
+            private static Func<IEnumerable<ClassProperty>> GetFunc()
             {
-                var body = Expression.Constant(DataEntityExtension.GetProperties<T>(dbSetting));
+                var body = Expression.Constant(DataEntityExtension.GetProperties<T>());
                 return Expression
                     .Lambda<Func<IEnumerable<ClassProperty>>>(body)
                     .Compile();
             }
 
-            public static IEnumerable<ClassProperty> Do(IDbSetting dbSetting)
+            public static IEnumerable<ClassProperty> Do()
             {
                 if (m_func == null)
                 {
-                    m_func = GetFunc(dbSetting);
+                    m_func = GetFunc();
                 }
                 return m_func();
             }
@@ -58,13 +57,11 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target type of the class.</typeparam>
         /// <param name="obj">The object to be extracted.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>A list of <see cref="PropertyValue"/> object with extracted values.</returns>
-        public static IEnumerable<PropertyValue> GetPropertiesAndValues<TEntity>(TEntity obj,
-            IDbSetting dbSetting)
+        public static IEnumerable<PropertyValue> GetPropertiesAndValues<TEntity>(TEntity obj)
             where TEntity : class
         {
-            return GetPropertiesValuesCache<TEntity>.Do(obj, dbSetting);
+            return GetPropertiesValuesCache<TEntity>.Do(obj);
         }
 
         private static class GetPropertiesValuesCache<TEntity>
@@ -89,7 +86,7 @@ namespace RepoDb
                     Expression.New(typeof(List<PropertyValue>)),
                     properties.Select(property =>
                     {
-                        var name = Expression.Constant(property.GetUnquotedMappedName());
+                        var name = Expression.Constant(property.GetMappedName());
                         var value = Expression.Convert(Expression.Property(obj, property.PropertyInfo), typeof(object));
                         var propertyValue = Expression.New(constructor,
                             name,
@@ -104,12 +101,11 @@ namespace RepoDb
                     .Compile();
             }
 
-            public static IEnumerable<PropertyValue> Do(TEntity obj,
-                IDbSetting dbSetting)
+            public static IEnumerable<PropertyValue> Do(TEntity obj)
             {
                 if (m_func == null)
                 {
-                    m_func = GetFunc(PropertyCache.Get<TEntity>(dbSetting));
+                    m_func = GetFunc(PropertyCache.Get<TEntity>());
                 }
                 return m_func(obj);
             }

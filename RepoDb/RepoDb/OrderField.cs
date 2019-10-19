@@ -2,7 +2,6 @@
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,9 +35,6 @@ namespace RepoDb
             // Set the properties
             Name = name;
             Order = order;
-
-            // Set the hashcode here
-            m_hashCode = name.GetHashCode() + (int)order;
         }
 
         #region Properties
@@ -47,11 +43,6 @@ namespace RepoDb
         /// Gets the quoted name of the order field.
         /// </summary>
         public string Name { get; }
-
-        /// <summary>
-        /// Gets the unquoted name of the order field.
-        /// </summary>
-        public string UnquotedName { get; }
 
         /// <summary>
         /// Gets the order direction of the field.
@@ -160,7 +151,7 @@ namespace RepoDb
             {
                 if (property.PropertyType != typeof(Order))
                 {
-                    throw new InvalidOperationException($"The type of field '{property.Name}' must be of '{typeof(Order).FullName}'.");
+                    throw new InvalidTypeException($"The type of field '{property.Name}' must be of '{typeof(Order).FullName}'.");
                 }
                 var order = (Order)property.GetValue(obj);
                 list.Add(new OrderField(property.Name, order));
@@ -183,11 +174,13 @@ namespace RepoDb
                 return m_hashCode.Value;
             }
 
-            // Set the hashcode
-            m_hashCode = Name.GetHashCode() + (int)Order;
+            var hashCode = 0;
 
-            // Return the hashcode
-            return m_hashCode.Value;
+            // Set the hashcode
+            hashCode = Name.GetHashCode() + (int)Order;
+
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>

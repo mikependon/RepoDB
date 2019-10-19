@@ -19,36 +19,27 @@ namespace RepoDb
         /// Gets the cached list of <see cref="Field"/> objects of the data entity.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The cached list <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Get<TEntity>(IDbSetting dbSetting)
+        public static IEnumerable<Field> Get<TEntity>()
             where TEntity : class
         {
-            return Get(typeof(TEntity), dbSetting);
+            return Get(typeof(TEntity));
         }
 
         /// <summary>
         /// Gets the cached list of <see cref="Field"/> objects of the data entity.
         /// </summary>
         /// <param name="type">The type of the target entity.</param>
-        /// <param name="dbSetting">The database setting that is currently in used.</param>
         /// <returns>The cached list <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Get(Type type,
-            IDbSetting dbSetting)
+        public static IEnumerable<Field> Get(Type type)
         {
             var key = type.FullName.GetHashCode();
             var result = (IEnumerable<Field>)null;
 
-            // Add the DbSetting hashcode
-            if (dbSetting != null)
-            {
-                key += dbSetting.GetHashCode();
-            }
-
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = type.AsFields(dbSetting);
+                result = type.AsFields();
                 m_cache.TryAdd(key, result);
             }
 
