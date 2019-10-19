@@ -131,7 +131,7 @@ namespace RepoDb.Extensions
         internal static string AsFieldAsString(this PropertyInfo property,
             IDbSetting dbSetting)
         {
-            return PropertyMappedNameCache.Get(property).AsQuoted(dbSetting);
+            return PropertyMappedNameCache.Get(property).AsQuoted(true, dbSetting);
         }
 
         /// <summary>

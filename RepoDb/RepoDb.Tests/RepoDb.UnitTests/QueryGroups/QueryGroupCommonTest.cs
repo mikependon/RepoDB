@@ -15,10 +15,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupConstructorForQueryField()
         {
             // Setup
-            var queryField = new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting);
+            var queryField = new QueryField("Field1", Operation.Equal, 1);
 
             // Act
-            var queryGroup = new QueryGroup(queryField, Helper.DbSetting);
+            var queryGroup = new QueryGroup(queryField);
 
             // Assert
             Assert.AreEqual(1, queryGroup.QueryFields.Count());
@@ -28,10 +28,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupConstructorForQueryGroup()
         {
             // Setup
-            var queryField = new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting);
+            var queryField = new QueryField("Field1", Operation.Equal, 1);
 
             // Act
-            var queryGroup = new QueryGroup(new QueryGroup(queryField, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryGroup(queryField));
 
             // Assert
             Assert.AreEqual(null, queryGroup.QueryFields);
@@ -42,10 +42,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupConstructorForQueryFields()
         {
             // Setup
-            var queryField = new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting);
+            var queryField = new QueryField("Field1", Operation.Equal, 1);
 
             // Act
-            var queryGroup = new QueryGroup(queryField, Helper.DbSetting);
+            var queryGroup = new QueryGroup(queryField.AsEnumerable());
 
             // Assert
             Assert.AreEqual(1, queryGroup.QueryFields.Count());
@@ -55,10 +55,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupConstructorForQueryGroups()
         {
             // Setup
-            var queryField = new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting);
+            var queryField = new QueryField("Field1", Operation.Equal, 1);
 
             // Act
-            var queryGroup = new QueryGroup(new QueryGroup(queryField, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryGroup(queryField).AsEnumerable());
 
             // Assert
             Assert.AreEqual(null, queryGroup.QueryFields);
@@ -69,11 +69,11 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupConstructorForQueryFieldAndQueryGroup()
         {
             // Setup
-            var queryFieldA = new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting);
-            var queryFieldB = new QueryField("Field2", Operation.Equal, 2, Helper.DbSetting);
+            var queryFieldA = new QueryField("Field1", Operation.Equal, 1);
+            var queryFieldB = new QueryField("Field2", Operation.Equal, 2);
 
             // Act
-            var queryGroup = new QueryGroup(queryFieldA, new QueryGroup(queryFieldB, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(queryFieldA, new QueryGroup(queryFieldB));
 
             // Assert
             Assert.AreEqual(1, queryGroup.QueryFields.Count());
@@ -84,11 +84,11 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupConstructorForQueryFieldsAndQueryGroup()
         {
             // Setup
-            var queryFieldA = new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting);
-            var queryFieldB = new QueryField("Field2", Operation.Equal, 2, Helper.DbSetting);
+            var queryFieldA = new QueryField("Field1", Operation.Equal, 1);
+            var queryFieldB = new QueryField("Field2", Operation.Equal, 2);
 
             // Act
-            var queryGroup = new QueryGroup(queryFieldA, new QueryGroup(queryFieldB, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(queryFieldA.AsEnumerable(), new QueryGroup(queryFieldB));
 
             // Assert
             Assert.AreEqual(1, queryGroup.QueryFields.Count());
@@ -99,11 +99,11 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupConstructorForQueryFieldAndQueryGroups()
         {
             // Setup
-            var queryFieldA = new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting);
-            var queryFieldB = new QueryField("Field2", Operation.Equal, 2, Helper.DbSetting);
+            var queryFieldA = new QueryField("Field1", Operation.Equal, 1);
+            var queryFieldB = new QueryField("Field2", Operation.Equal, 2);
 
             // Act
-            var queryGroup = new QueryGroup(queryFieldA, new QueryGroup(queryFieldB, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(queryFieldA, new QueryGroup(queryFieldB).AsEnumerable());
 
             // Assert
             Assert.AreEqual(1, queryGroup.QueryFields.Count());
@@ -114,11 +114,11 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupConstructorForQueryFieldsAndQueryGroups()
         {
             // Setup
-            var queryFieldA = new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting);
-            var queryFieldB = new QueryField("Field2", Operation.Equal, 2, Helper.DbSetting);
+            var queryFieldA = new QueryField("Field1", Operation.Equal, 1);
+            var queryFieldB = new QueryField("Field2", Operation.Equal, 2);
 
             // Act
-            var queryGroup = new QueryGroup(queryFieldA, new QueryGroup(queryFieldB, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(queryFieldA.AsEnumerable(), new QueryGroup(queryFieldB).AsEnumerable());
 
             // Assert
             Assert.AreEqual(1, queryGroup.QueryFields.Count());
@@ -133,10 +133,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupEqual()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Equal, 1));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1)";
 
             // Assert
@@ -147,10 +147,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupNotEqual()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotEqual, 1, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotEqual, 1));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] <> @Field1)";
 
             // Assert
@@ -161,10 +161,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupLessThan()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.LessThan, 1, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.LessThan, 1));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] < @Field1)";
 
             // Assert
@@ -175,10 +175,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupGreaterThan()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.GreaterThan, 1, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.GreaterThan, 1));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] > @Field1)";
 
             // Assert
@@ -189,10 +189,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupLessThanOrEqual()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.LessThanOrEqual, 1, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.LessThanOrEqual, 1));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] <= @Field1)";
 
             // Assert
@@ -203,10 +203,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupGreaterThanOrEqual()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.GreaterThanOrEqual, 1, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.GreaterThanOrEqual, 1));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] >= @Field1)";
 
             // Assert
@@ -217,10 +217,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupLike()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Like, "A", Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Like, "A"));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] LIKE @Field1)";
 
             // Assert
@@ -231,10 +231,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupNotLike()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotLike, "A", Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotLike, "A"));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] NOT LIKE @Field1)";
 
             // Assert
@@ -245,10 +245,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupBetween()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Between, "A", Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Between, "A"));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right)";
 
             // Assert
@@ -259,10 +259,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupNotBetween()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotBetween, "A", Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotBetween, "A"));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right)";
 
             // Assert
@@ -273,10 +273,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupIn()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.In, new[] { 1, 2, 3 }, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.In, new[] { 1, 2, 3 }));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] IN (@Field1_In_0, @Field1_In_1, @Field1_In_2))";
 
             // Assert
@@ -287,10 +287,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupNotIn()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotIn, new[] { 1, 2, 3 }, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotIn, new[] { 1, 2, 3 }));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] NOT IN (@Field1_In_0, @Field1_In_1, @Field1_In_2))";
 
             // Assert
@@ -307,13 +307,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field2", Operation.Equal, 2, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field2", Operation.Equal, 2)
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
@@ -326,13 +325,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field1", Operation.Equal, 2, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field1", Operation.Equal, 2)
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field1] = @Field1_1)";
 
             // Assert
@@ -349,13 +347,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, "Value1", Helper.DbSetting),
-                new QueryField("Field2", Operation.Equal, "Value2", Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, "Value1"),
+                new QueryField("Field2", Operation.Equal, "Value2")
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
@@ -368,14 +365,13 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, "Value1", Helper.DbSetting),
-                new QueryField("Field2", Operation.Equal, "Value2", Helper.DbSetting)
+                new QueryField("Field1", Operation.Equal, "Value1"),
+                new QueryField("Field2", Operation.Equal, "Value2")
             },
-            Conjunction.And,
-            Helper.DbSetting);
+            Conjunction.And);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
@@ -388,14 +384,13 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, "Value1", Helper.DbSetting),
-                new QueryField("Field2", Operation.Equal, "Value2", Helper.DbSetting)
+                new QueryField("Field1", Operation.Equal, "Value1"),
+                new QueryField("Field2", Operation.Equal, "Value2")
             },
-            Conjunction.Or,
-            Helper.DbSetting);
+            Conjunction.Or);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 OR [Field2] = @Field2)";
 
             // Assert
@@ -412,13 +407,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, "Value1", Helper.DbSetting),
-                new QueryField("Field2", Operation.Equal, "Value2", Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, "Value1"),
+                new QueryField("Field2", Operation.Equal, "Value2")
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
@@ -431,14 +425,13 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, "Value1", Helper.DbSetting),
-                new QueryField("Field2", Operation.Equal, "Value2", Helper.DbSetting)
+                new QueryField("Field1", Operation.Equal, "Value1"),
+                new QueryField("Field2", Operation.Equal, "Value2")
             },
-            false,
-            Helper.DbSetting);
+            false);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
@@ -451,14 +444,13 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, "Value1", Helper.DbSetting),
-                new QueryField("Field2", Operation.Equal, "Value2", Helper.DbSetting)
+                new QueryField("Field1", Operation.Equal, "Value1"),
+                new QueryField("Field2", Operation.Equal, "Value2")
             },
-            true,
-            Helper.DbSetting);
+            true);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "NOT ([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
@@ -475,14 +467,13 @@ namespace RepoDb.UnitTests
             // Setup
             var childQueryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field2", Operation.Equal, 2, Helper.DbSetting)
-            },
-            Helper.DbSetting);
-            var queryGroup = new QueryGroup(childQueryGroup, Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field2", Operation.Equal, 2)
+            });
+            var queryGroup = new QueryGroup(childQueryGroup);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "(([Field1] = @Field1 AND [Field2] = @Field2))";
 
             // Assert
@@ -495,14 +486,13 @@ namespace RepoDb.UnitTests
             // Setup
             var childQueryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field1", Operation.Equal, 2, Helper.DbSetting)
-            },
-            Helper.DbSetting);
-            var queryGroup = new QueryGroup(childQueryGroup, Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field1", Operation.Equal, 2)
+            });
+            var queryGroup = new QueryGroup(childQueryGroup);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "(([Field1] = @Field1 AND [Field1] = @Field1_1))";
 
             // Assert
@@ -515,14 +505,14 @@ namespace RepoDb.UnitTests
             // Setup
             var childQueryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field2", Operation.Equal, 2, Helper.DbSetting),
-                new QueryField("Field3", Operation.Equal, 3, Helper.DbSetting)
-            },
-            Helper.DbSetting);
-            var queryGroup = new QueryGroup(new QueryField("Field1", 1, Helper.DbSetting), childQueryGroup, Helper.DbSetting);
+                new QueryField("Field2", Operation.Equal, 2),
+                new QueryField("Field3", Operation.Equal, 3)
+            });
+            var queryGroup = new QueryGroup(new QueryField("Field1", 1).AsEnumerable(),
+                childQueryGroup.AsEnumerable());
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND ([Field2] = @Field2 AND [Field3] = @Field3))";
 
             // Assert
@@ -535,14 +525,14 @@ namespace RepoDb.UnitTests
             // Setup
             var childQueryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field2", Operation.Equal, 2, Helper.DbSetting),
-                new QueryField("Field2", Operation.Equal, 3, Helper.DbSetting)
-            },
-            Helper.DbSetting);
-            var queryGroup = new QueryGroup(new QueryField("Field1", 1, Helper.DbSetting), childQueryGroup, Helper.DbSetting);
+                new QueryField("Field2", Operation.Equal, 2),
+                new QueryField("Field2", Operation.Equal, 3)
+            });
+            var queryGroup = new QueryGroup(new QueryField("Field1", 1).AsEnumerable(),
+                childQueryGroup.AsEnumerable());
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND ([Field2] = @Field2 AND [Field2] = @Field2_1))";
 
             // Assert
@@ -555,14 +545,14 @@ namespace RepoDb.UnitTests
             // Setup
             var childQueryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 2, Helper.DbSetting),
-                new QueryField("Field1", Operation.Equal, 3, Helper.DbSetting)
-            },
-            Helper.DbSetting);
-            var queryGroup = new QueryGroup(new QueryField("Field1", 1, Helper.DbSetting), childQueryGroup, Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 2),
+                new QueryField("Field1", Operation.Equal, 3)
+            });
+            var queryGroup = new QueryGroup(new QueryField("Field1", 1).AsEnumerable(),
+                childQueryGroup.AsEnumerable());
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND ([Field1] = @Field1_1 AND [Field1] = @Field1_2))";
 
             // Assert
@@ -575,17 +565,15 @@ namespace RepoDb.UnitTests
             // Setup
             var childQueryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field2", Operation.Equal, 2, Helper.DbSetting),
-                new QueryField("Field3", Operation.Equal, 3, Helper.DbSetting)
-            },
-            Helper.DbSetting);
-            var queryGroup = new QueryGroup(new QueryField("Field1", 1, Helper.DbSetting).AsEnumerable(),
+                new QueryField("Field2", Operation.Equal, 2),
+                new QueryField("Field3", Operation.Equal, 3)
+            });
+            var queryGroup = new QueryGroup(new QueryField("Field1", 1).AsEnumerable(),
                 childQueryGroup.AsEnumerable(),
-                Conjunction.Or,
-                Helper.DbSetting);
+                Conjunction.Or);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 OR ([Field2] = @Field2 AND [Field3] = @Field3))";
 
             // Assert
@@ -598,15 +586,15 @@ namespace RepoDb.UnitTests
             // Setup
             var childQueryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field2", Operation.Equal, 2, Helper.DbSetting),
-                new QueryField("Field3", Operation.Equal, 3, Helper.DbSetting)
+                new QueryField("Field2", Operation.Equal, 2),
+                new QueryField("Field3", Operation.Equal, 3)
             },
-            Conjunction.Or,
-            Helper.DbSetting);
-            var queryGroup = new QueryGroup(new QueryField("Field1", 1, Helper.DbSetting), childQueryGroup, Helper.DbSetting);
+            Conjunction.Or);
+            var queryGroup = new QueryGroup(new QueryField("Field1", 1).AsEnumerable(),
+                childQueryGroup.AsEnumerable());
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND ([Field2] = @Field2 OR [Field3] = @Field3))";
 
             // Assert
@@ -619,18 +607,16 @@ namespace RepoDb.UnitTests
             // Setup
             var childQueryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field2", Operation.Equal, 2, Helper.DbSetting),
-                new QueryField("Field3", Operation.Equal, 3, Helper.DbSetting)
+                new QueryField("Field2", Operation.Equal, 2),
+                new QueryField("Field3", Operation.Equal, 3)
             },
-            Conjunction.Or,
-            Helper.DbSetting);
-            var queryGroup = new QueryGroup(new QueryField("Field1", 1, Helper.DbSetting).AsEnumerable(),
+            Conjunction.Or);
+            var queryGroup = new QueryGroup(new QueryField("Field1", 1).AsEnumerable(),
                 childQueryGroup.AsEnumerable(),
-                Conjunction.Or,
-                Helper.DbSetting);
+            Conjunction.Or);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 OR ([Field2] = @Field2 OR [Field3] = @Field3))";
 
             // Assert
@@ -643,22 +629,20 @@ namespace RepoDb.UnitTests
             // Setup
             var childQueryGroup1 = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotLike, "%B%", Helper.DbSetting),
-                new QueryField("Field1", Operation.NotLike, "%C%", Helper.DbSetting),
-                new QueryField("Field1", Operation.NotLike, "%D%", Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.NotLike, "%B%"),
+                new QueryField("Field1", Operation.NotLike, "%C%"),
+                new QueryField("Field1", Operation.NotLike, "%D%")
+            });
             var childQueryGroup2 = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, "A", Helper.DbSetting)
-            },
-            Helper.DbSetting);
-            var parentChildqueryGroup = new QueryGroup(new[] { childQueryGroup1, childQueryGroup2 }, Conjunction.Or, Helper.DbSetting);
-            var queryGroup = new QueryGroup(new QueryField("Field2", "E", Helper.DbSetting).AsEnumerable(),
-                parentChildqueryGroup.AsEnumerable(), Conjunction.Or, Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, "A")
+            });
+            var parentChildqueryGroup = new QueryGroup(new[] { childQueryGroup1, childQueryGroup2 }, Conjunction.Or);
+            var queryGroup = new QueryGroup(new QueryField("Field2", "E").AsEnumerable(),
+                parentChildqueryGroup.AsEnumerable(), Conjunction.Or);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field2] = @Field2 OR (([Field1] NOT LIKE @Field1 AND [Field1] NOT LIKE @Field1_1 AND [Field1] NOT LIKE @Field1_2) OR ([Field1] = @Field1_3)))";
 
             // Assert
@@ -675,13 +659,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field2", Operation.NotEqual, 1, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field2", Operation.NotEqual, 1)
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field2] <> @Field2)";
 
             // Assert
@@ -694,13 +677,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field1", Operation.NotEqual, 1, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field1", Operation.NotEqual, 1)
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field1] <> @Field1_1)";
 
             // Assert
@@ -713,13 +695,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field2", Operation.Between, new [] { 1, 2 }, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field2", Operation.Between, new [] { 1, 2 })
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field2] BETWEEN @Field2_Left AND @Field2_Right)";
 
             // Assert
@@ -732,13 +713,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field1", Operation.Between, new [] { 1, 2 }, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field1", Operation.Between, new [] { 1, 2 })
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field1] BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
@@ -751,13 +731,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field2", Operation.Like, "A", Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field2", Operation.Like, "A")
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field2] LIKE @Field2)";
 
             // Assert
@@ -770,13 +749,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field2", Operation.Like, "A", Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field2", Operation.Like, "A")
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field2] LIKE @Field2)";
 
             // Assert
@@ -789,13 +767,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field2", Operation.In, new [] { 1, 2, 3 }, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field2", Operation.In, new [] { 1, 2, 3 })
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field2] IN (@Field2_In_0, @Field2_In_1, @Field2_In_2))";
 
             // Assert
@@ -808,13 +785,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Equal, 1, Helper.DbSetting),
-                new QueryField("Field1", Operation.In, new [] { 1, 2, 3 }, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Equal, 1),
+                new QueryField("Field1", Operation.In, new [] { 1, 2, 3 })
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] = @Field1 AND [Field1] IN (@Field1_1_In_0, @Field1_1_In_1, @Field1_1_In_2))";
 
             // Assert
@@ -829,10 +805,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupWithSpace()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field 1", Operation.Equal, 1, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field 1", Operation.Equal, 1));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field 1] = @Field_1)";
 
             // Assert
@@ -843,10 +819,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupWithSpaces()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Date Of Birth", Operation.Equal, 1, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Date Of Birth", Operation.Equal, 1));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Date Of Birth] = @Date_Of_Birth)";
 
             // Assert
@@ -858,10 +834,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupWithInvalidChars()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Date.Of.Birth/BirthDay", Operation.Equal, 1, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Date.Of.Birth/BirthDay", Operation.Equal, 1));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Date.Of.Birth/BirthDay] = @Date_Of_Birth_BirthDay)";
 
             // Assert

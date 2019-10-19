@@ -47,7 +47,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueIntConstant()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -62,7 +62,7 @@ namespace RepoDb.UnitTests
         {
             // Setup
             var value = 1;
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -80,7 +80,7 @@ namespace RepoDb.UnitTests
             {
                 PropertyInt = 1
             };
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value.PropertyInt, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value.PropertyInt);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -94,7 +94,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueIntMethodCall()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == GetIntValueForParseExpression(), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == GetIntValueForParseExpression());
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -109,7 +109,7 @@ namespace RepoDb.UnitTests
         {
             // Setup
             var value = GetIntValueForParseExpression();
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -123,7 +123,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueWithIntMathOperations()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == (1 + 1), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == (1 + 1));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -137,7 +137,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueWithIntNewClassInstance()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == new Random().Next(int.MaxValue), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == new Random().Next(int.MaxValue));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value.GetType();
@@ -151,7 +151,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueWithIntMethodClass()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == Convert.ToInt32("1000"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == Convert.ToInt32("1000"));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -164,7 +164,7 @@ namespace RepoDb.UnitTests
         private QueryGroup TestParseExpressionValueWithIntArgumentParameterMethod<TEntity>(int value) where TEntity : QueryGroupTestExpressionClass
         {
             // Act
-            var actual = QueryGroup.Parse<TEntity>(e => e.PropertyInt == value, Helper.DbSetting);
+            var actual = QueryGroup.Parse<TEntity>(e => e.PropertyInt == value);
 
             // Return
             return actual;
@@ -188,7 +188,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueStringConstant()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == "ABC", Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == "ABC");
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -203,7 +203,7 @@ namespace RepoDb.UnitTests
         {
             // Setup
             var value = Guid.NewGuid().ToString();
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -221,7 +221,7 @@ namespace RepoDb.UnitTests
             {
                 PropertyString = Guid.NewGuid().ToString()
             };
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value.PropertyString, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value.PropertyString);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -235,7 +235,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueStringMethodCall()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == GetStringValueForParseExpression(), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == GetStringValueForParseExpression());
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value.GetType();
@@ -250,7 +250,7 @@ namespace RepoDb.UnitTests
         {
             // Setup
             var value = GetStringValueForParseExpression();
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -264,7 +264,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueWithStringConcatenation()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == ("A" + "B" + "C"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == ("A" + "B" + "C"));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -278,7 +278,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueWithStringNewClassInstance()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (new QueryGroupTestExpressionClass() { PropertyString = "ABC" }).PropertyString, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (new QueryGroupTestExpressionClass() { PropertyString = "ABC" }).PropertyString);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -292,7 +292,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueWithStringMethodClass()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == Convert.ToString("ABC"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == Convert.ToString("ABC"));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -305,7 +305,7 @@ namespace RepoDb.UnitTests
         private QueryGroup TestParseExpressionValueWithStringArgumentParameterMethod<TEntity>(string value) where TEntity : QueryGroupTestExpressionClass
         {
             // Act
-            var actual = QueryGroup.Parse<TEntity>(e => e.PropertyString == value, Helper.DbSetting);
+            var actual = QueryGroup.Parse<TEntity>(e => e.PropertyString == value);
 
             // Return
             return actual;
@@ -330,7 +330,7 @@ namespace RepoDb.UnitTests
         {
             // Setup
             var member = new QueryGroupTestExpressionClassMember() { PropertyString = "ABC" };
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (new QueryGroupTestExpressionClass() { Member = member }).Member.PropertyString, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (new QueryGroupTestExpressionClass() { Member = member }).Member.PropertyString);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -344,7 +344,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueWithStringNewClassInstanceMemberSetInstance()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (new QueryGroupTestExpressionClass() { Member = new QueryGroupTestExpressionClassMember() { PropertyString = "ABC" } }).Member.PropertyString, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (new QueryGroupTestExpressionClass() { Member = new QueryGroupTestExpressionClassMember() { PropertyString = "ABC" } }).Member.PropertyString);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -359,7 +359,7 @@ namespace RepoDb.UnitTests
         {
             // Setup
             var value = "ABC";
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (value != null ? value : null), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (value != null ? value : null));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -373,7 +373,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueWithStringConditionalCheckingOpposite()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == (1 == 2 ? 1 : 2), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == (1 == 2 ? 1 : 2));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -387,7 +387,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithDefaultValue()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == default(int), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == default(int));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -405,7 +405,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForStringPropertyContains()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A"));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -419,7 +419,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForStringPropertyContainsWhereValueHasWildcardsAtLeft()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("%A"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("%A"));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -433,7 +433,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForStringPropertyContainsWhereValueHasWildcardsAtRight()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A%"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A%"));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -447,7 +447,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForStringPropertyStartsWith()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A"));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -461,7 +461,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForStringPropertyStartsWithWhereValueHasWildcardsAtRight()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A%"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A%"));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -475,7 +475,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForStringPropertyEndsWith()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("A"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("A"));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -489,7 +489,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForStringPropertyEndsWithWhereValueHasWildcardsAtLeft()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("%A"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("%A"));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -503,7 +503,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayContains()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { "A", "B" }).Contains(e.PropertyString), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { "A", "B" }).Contains(e.PropertyString));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -518,7 +518,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayNotContains()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { "A", "B" }).Contains(e.PropertyString), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { "A", "B" }).Contains(e.PropertyString));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -533,7 +533,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayContainsEqualsFalse()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { "A", "B" }).Contains(e.PropertyString) == false, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { "A", "B" }).Contains(e.PropertyString) == false);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -548,7 +548,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayNotContainsEqualsFalse()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { "A", "B" }).Contains(e.PropertyString) == false, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { "A", "B" }).Contains(e.PropertyString) == false);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -567,7 +567,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayAll()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s != p.PropertyString), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s != p.PropertyString));
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -582,7 +582,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayAllEqualsFalse()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s != p.PropertyString) == false, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s != p.PropertyString) == false);
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -597,7 +597,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayAllEqualsTrue()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s != p.PropertyString) == true, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s != p.PropertyString) == true);
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -612,7 +612,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayNotAll()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => !(new[] { "A", "B" }).All(s => s == p.PropertyString), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => !(new[] { "A", "B" }).All(s => s == p.PropertyString));
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -626,7 +626,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayNotAllEqualsFalse()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s == p.PropertyString) == false, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s == p.PropertyString) == false);
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -641,7 +641,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayNotAllEqualsTrue()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s == p.PropertyString) == true, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s == p.PropertyString) == true);
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -660,7 +660,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayAny()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s != p.PropertyString), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s != p.PropertyString));
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -675,7 +675,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayAnyEqualsFalse()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s != p.PropertyString) == false, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s != p.PropertyString) == false);
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -690,7 +690,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayAnyEqualsTrue()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s != p.PropertyString) == true, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s != p.PropertyString) == true);
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -705,7 +705,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayNotAny()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => !(new[] { "A", "B" }).Any(s => s == p.PropertyString), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => !(new[] { "A", "B" }).Any(s => s == p.PropertyString));
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -719,7 +719,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayNotAnyEqualsFalse()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s == p.PropertyString) == false, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s == p.PropertyString) == false);
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -734,7 +734,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForArrayNotAnyEqualsTrue()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s == p.PropertyString) == true, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s == p.PropertyString) == true);
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -753,7 +753,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForEnum()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == Direction.East, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == Direction.East);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -766,7 +766,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForEnums()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == Direction.East || p.Direction == Direction.West, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == Direction.East || p.Direction == Direction.West);
 
             // Act
             var actual1 = parsed.QueryGroups.First().QueryFields.First().Parameter.Value;
@@ -782,7 +782,7 @@ namespace RepoDb.UnitTests
         {
             // Setup
             var direction = Direction.East;
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == direction, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == direction);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -795,7 +795,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForEnumFromStaticClassMethod()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == StaticEnumClass.GetDirection(), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == StaticEnumClass.GetDirection());
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -808,7 +808,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForEnumFromStaticClassProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == StaticEnumClass.Direction, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == StaticEnumClass.Direction);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -821,7 +821,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForEnumFromNonStaticClassMethod()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == new NonStaticEnumClass().GetDirection(), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == new NonStaticEnumClass().GetDirection());
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -834,7 +834,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueForEnumFromNonStaticClassProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == new NonStaticEnumClass().Direction, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => p.Direction == new NonStaticEnumClass().Direction);
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;

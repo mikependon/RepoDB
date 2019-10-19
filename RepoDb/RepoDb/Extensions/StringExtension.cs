@@ -76,7 +76,7 @@ namespace RepoDb.Extensions
         public static string AsUnquoted(this string value,
             IDbSetting dbSetting)
         {
-            return AsUnquoted(value, true, dbSetting);
+            return AsUnquoted(value, false, dbSetting);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace RepoDb.Extensions
         public static string AsQuoted(this string value,
             IDbSetting dbSetting)
         {
-            return AsQuoted(value, true, false, dbSetting);
+            return AsQuoted(value, false, false, dbSetting);
         }
 
         /// <summary>
@@ -225,14 +225,14 @@ namespace RepoDb.Extensions
             string rightAlias,
             IDbSetting dbSetting)
         {
-            return string.Concat(leftAlias, dbSetting.SchemaSeparator, value.AsQuoted(dbSetting), " = ", rightAlias, dbSetting.SchemaSeparator, value.AsQuoted(dbSetting));
+            return string.Concat(leftAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, dbSetting), " = ", rightAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, dbSetting));
         }
 
         // AsField
         internal static string AsField(this string value,
             IDbSetting dbSetting)
         {
-            return value.AsQuoted(dbSetting);
+            return value.AsQuoted(true, dbSetting);
         }
 
         // AsParameter
@@ -249,7 +249,7 @@ namespace RepoDb.Extensions
         {
             if (value.StartsWith(dbSetting.ParameterPrefix) == false)
             {
-                value = string.Concat(dbSetting.ParameterPrefix, value.AsUnquoted(dbSetting));
+                value = string.Concat(dbSetting.ParameterPrefix, value.AsUnquoted(true, dbSetting));
             }
             return index > 0 ? string.Concat(value, "_", index) : value;
         }
@@ -259,7 +259,7 @@ namespace RepoDb.Extensions
             string alias,
             IDbSetting dbSetting)
         {
-            return string.Concat(alias, dbSetting.SchemaSeparator, value.AsQuoted(dbSetting));
+            return string.Concat(alias, dbSetting.SchemaSeparator, value.AsQuoted(true, dbSetting));
         }
 
         // AsParameterAsField

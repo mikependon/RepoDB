@@ -10,7 +10,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseDynamicValueForNullField()
         {
             // Setup
-            var parsed = QueryGroup.Parse(new { Field1 = (object)null }, Helper.DbSetting);
+            var parsed = QueryGroup.Parse(new { Field1 = (object)null });
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseDynamicValueForSingleField()
         {
             // Setup
-            var parsed = QueryGroup.Parse(new { Field1 = 1 }, Helper.DbSetting);
+            var parsed = QueryGroup.Parse(new { Field1 = 1 });
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
@@ -36,7 +36,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseDynamicValueForMultipleFields()
         {
             // Setup
-            var parsed = QueryGroup.Parse(new { Field1 = 1, Field2 = 2 }, Helper.DbSetting);
+            var parsed = QueryGroup.Parse(new { Field1 = 1, Field2 = 2 });
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;
@@ -51,7 +51,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseDynamicValueForEnums()
         {
             // Setup
-            var parsed = QueryGroup.Parse(new { Field1 = Direction.West, Field2 = Direction.East }, Helper.DbSetting);
+            var parsed = QueryGroup.Parse(new { Field1 = Direction.West, Field2 = Direction.East });
 
             // Act
             var actual1 = parsed.QueryFields.First().Parameter.Value;

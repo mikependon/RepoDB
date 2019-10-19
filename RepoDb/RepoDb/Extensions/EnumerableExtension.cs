@@ -40,7 +40,7 @@ namespace RepoDb.Extensions
         /// <returns>The converted <see cref="IList{T}"/> object.</returns>
         public static List<T> AsList<T>(this IEnumerable<T> value)
         {
-            return value is List<T> ? (List<T>)value : value.ToList();
+            return value is List<T> ? (List<T>)value : value?.ToList();
         }
 
         /// <summary>

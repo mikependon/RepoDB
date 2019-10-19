@@ -152,7 +152,7 @@ namespace RepoDb.UnitTests.Caches
             Assert.AreEqual(expirationInMinutes, (actual.Expiration - actual.CreatedDate).TotalMinutes);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(MappingExistsException))]
         public void ThrowExceptionOnAddingNewItemAtMemoryCacheWithTheSameKey()
         {
             // Prepare

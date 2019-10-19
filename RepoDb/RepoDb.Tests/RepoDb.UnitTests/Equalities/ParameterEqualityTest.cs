@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.UnitTests.Setup;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -12,7 +11,7 @@ namespace RepoDb.UnitTests.Equalities
         public void TestParameterEqualityFromString()
         {
             // Prepare
-            var objA = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
+            var objA = new Parameter("ParameterName", new object(), false);
 
             // Act
             var equal = Equals(objA, "ParameterName");
@@ -25,7 +24,7 @@ namespace RepoDb.UnitTests.Equalities
         public void TestParameterEqualityToImproperString()
         {
             // Prepare
-            var objA = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
+            var objA = new Parameter("ParameterName", new object(), false);
 
             // Act
             var equal = Equals(objA, "Parametername");
@@ -38,8 +37,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestParameterHashCodeEquality()
         {
             // Prepare
-            var objA = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
-            var objB = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
+            var objA = new Parameter("ParameterName", new object(), false);
+            var objB = new Parameter("ParameterName", new object(), false);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -52,7 +51,7 @@ namespace RepoDb.UnitTests.Equalities
         public void TestParameterHashCodeEqualityFromString()
         {
             // Prepare
-            var objA = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
+            var objA = new Parameter("ParameterName", new object(), false);
 
             // Act
             var equal = (objA.GetHashCode() == "ParameterName".GetHashCode());
@@ -65,7 +64,7 @@ namespace RepoDb.UnitTests.Equalities
         public void TestParameterHashCodeEqualityFromImproperString()
         {
             // Prepare
-            var objA = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
+            var objA = new Parameter("ParameterName", new object(), false);
 
             // Act
             var equal = (objA.GetHashCode() == "Parametername".GetHashCode());
@@ -78,8 +77,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestParameterObjectEquality()
         {
             // Prepare
-            var objA = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
-            var objB = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
+            var objA = new Parameter("ParameterName", new object(), false);
+            var objB = new Parameter("ParameterName", new object(), false);
 
             // Act
             var equal = (objA == objB);
@@ -92,8 +91,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestParameterObjectEqualityFromEqualsMethod()
         {
             // Prepare
-            var objA = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
-            var objB = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
+            var objA = new Parameter("ParameterName", new object(), false);
+            var objB = new Parameter("ParameterName", new object(), false);
 
             // Act
             var equal = Equals(objA, objB);
@@ -106,8 +105,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestParameterArrayListContainability()
         {
             // Prepare
-            var objA = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
-            var objB = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
+            var objA = new Parameter("ParameterName", new object(), false);
+            var objB = new Parameter("ParameterName", new object(), false);
             var list = new ArrayList();
 
             // Act
@@ -122,8 +121,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestParameterGenericListContainability()
         {
             // Prepare
-            var objA = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
-            var objB = new Parameter("ParameterName", new object(), false, Helper.DbSetting);
+            var objA = new Parameter("ParameterName", new object(), false);
+            var objB = new Parameter("ParameterName", new object(), false);
             var list = new List<Parameter>();
 
             // Act

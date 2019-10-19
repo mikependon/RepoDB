@@ -16,8 +16,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -48,8 +48,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -80,8 +80,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -112,9 +112,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -146,10 +146,10 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
-            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting);
-            var identifyField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+            var identifyField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -181,9 +181,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
-            var primaryField = new DbField("Id", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+            var primaryField = new DbField("Id", true, true, false, typeof(int), null, null, null, null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -215,9 +215,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -249,9 +249,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
-            var identityField = new DbField("Id", false, true, false, typeof(int), null, null, null, null, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+            var identityField = new DbField("Id", false, true, false, typeof(int), null, null, null, null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -283,8 +283,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -316,9 +316,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null, Helper.DbSetting);
-            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -350,9 +350,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -402,7 +402,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var qualifiers = Field.From("Id", Helper.DbSetting);
+            var qualifiers = Field.From("Id");
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -421,7 +421,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -433,15 +433,15 @@ namespace RepoDb.UnitTests.StatementBuilders
                 identityField: null);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifierFieldsException))]
+        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
         public void ThrowExceptionOnSqlStatementBuilderCreateMergeAllIfTheQualifiersAreNotPresentAtTheGivenFields()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Id", Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Id");
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -453,15 +453,15 @@ namespace RepoDb.UnitTests.StatementBuilders
                 identityField: null);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifierFieldsException))]
+        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
         public void ThrowExceptionOnSqlStatementBuilderCreateMergeAllIfThePrimaryAsQualifierIsNotPresentAtTheGivenFields()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null);
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -480,8 +480,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -500,8 +500,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -520,8 +520,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -540,8 +540,8 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -560,9 +560,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var qualifiers = Field.From("Field1", Helper.DbSetting);
-            var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+            var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,

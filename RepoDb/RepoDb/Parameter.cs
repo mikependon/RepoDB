@@ -1,5 +1,4 @@
 ﻿using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using System;
 
 namespace RepoDb
@@ -28,7 +27,8 @@ namespace RepoDb
             }
 
             // Set the properties
-            Name = name.AsAlphaNumeric();
+            OriginalName = name.AsAlphaNumeric();
+            Name = OriginalName;
             Value = value;
             if (prependUnderscore)
             {
@@ -42,6 +42,11 @@ namespace RepoDb
         /// Gets the name of the parameter.
         /// </summary>
         public string Name { get; private set; }
+
+        /// <summary>
+        /// Gets the original name of the parameter.
+        /// </summary>
+        private string OriginalName { get; }
 
         /// <summary>
         /// Gets the value of the parameter.
@@ -78,7 +83,7 @@ namespace RepoDb
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Concat("@", Name, " (", Value, ")");
+            return string.Concat(Name, " (", Value, ")");
         }
 
         #endregion
@@ -99,7 +104,7 @@ namespace RepoDb
             var hashCode = 0;
 
             // Set the hashcode
-            hashCode = Name.GetHashCode();
+            hashCode = OriginalName.GetHashCode();
 
             // Set and return the hashcode
             return (m_hashCode = hashCode).Value;

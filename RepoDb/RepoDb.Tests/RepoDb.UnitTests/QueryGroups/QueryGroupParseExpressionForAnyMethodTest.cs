@@ -12,10 +12,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionAny()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => new int[] { 1, 2 }.Any(p => p == e.PropertyInt), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => new int[] { 1, 2 }.Any(p => p == e.PropertyInt));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
@@ -26,10 +26,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionNotAny()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => new int[] { 1, 2 }.Any(p => p != e.PropertyInt), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => new int[] { 1, 2 }.Any(p => p != e.PropertyInt));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyInt] <> @PropertyInt OR [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
@@ -41,10 +41,10 @@ namespace RepoDb.UnitTests
         {
             // Setup
             var list = new int[] { 1, 2 };
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => list.Any(p => p == e.PropertyInt), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => list.Any(p => p == e.PropertyInt));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
@@ -56,10 +56,10 @@ namespace RepoDb.UnitTests
         {
             // Setup
             var list = new int[] { 1, 2 };
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => list.Any(p => p != e.PropertyInt), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => list.Any(p => p != e.PropertyInt));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyInt] <> @PropertyInt OR [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
@@ -74,10 +74,10 @@ namespace RepoDb.UnitTests
             {
                 PropertyInt = 500
             };
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { @class.PropertyInt, @class.PropertyInt }).Any(p => p == e.PropertyInt), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { @class.PropertyInt, @class.PropertyInt }).Any(p => p == e.PropertyInt));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
@@ -92,10 +92,10 @@ namespace RepoDb.UnitTests
             {
                 PropertyInt = 500
             };
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { @class.PropertyInt, @class.PropertyInt }).Any(p => p == e.PropertyInt), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { @class.PropertyInt, @class.PropertyInt }).Any(p => p == e.PropertyInt));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "NOT ([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
@@ -110,10 +110,10 @@ namespace RepoDb.UnitTests
             {
                 PropertyInt = 500
             };
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { @class.PropertyInt, @class.PropertyInt }).Any(p => p == e.PropertyInt) == false, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { @class.PropertyInt, @class.PropertyInt }).Any(p => p == e.PropertyInt) == false);
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "NOT ([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
@@ -128,10 +128,10 @@ namespace RepoDb.UnitTests
             {
                 PropertyInt = 500
             };
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { @class.PropertyInt, @class.PropertyInt }).Any(p => p == e.PropertyInt) == true, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { @class.PropertyInt, @class.PropertyInt }).Any(p => p == e.PropertyInt) == true);
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
@@ -142,10 +142,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionAnyFromClassMethod()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
@@ -156,10 +156,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionNotAnyFromClassMethod()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "NOT ([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
@@ -170,10 +170,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionAnyEqualsFalseFromClassMethod()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt) == false, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt) == false);
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "NOT ([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
@@ -184,10 +184,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionAnyEqualsTrueFromClassMethod()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
@@ -198,10 +198,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionNotAnyEqualsFalseFromClassMethod()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt) == false, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt) == false);
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
@@ -212,10 +212,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionNotAnyEqualsTrueFromClassMethod()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "NOT ([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert

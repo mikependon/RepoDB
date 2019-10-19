@@ -234,8 +234,8 @@ namespace RepoDb
             bool isNot)
         {
             Conjunction = conjunction;
-            QueryFields = queryFields;
-            QueryGroups = queryGroups;
+            QueryFields = queryFields?.AsList();
+            QueryGroups = queryGroups.AsList();
             IsNot = isNot;
         }
 

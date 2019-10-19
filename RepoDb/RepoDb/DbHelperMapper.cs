@@ -92,7 +92,7 @@ namespace RepoDb
                 else
                 {
                     // Throw an exception
-                    throw new MappingAlreadyExistsException($"The database helper mapping to provider '{type.FullName}' already exists.");
+                    throw new MappingExistsException($"The database helper mapping to provider '{type.FullName}' already exists.");
                 }
             }
             else

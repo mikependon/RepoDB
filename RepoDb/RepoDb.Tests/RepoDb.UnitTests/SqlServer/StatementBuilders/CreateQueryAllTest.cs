@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
+using RepoDb.Exceptions;
 using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.Setup;
 using System;
@@ -7,19 +8,19 @@ using System;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateQueryTest
+    public class SqlStatementBuilderCreateQueryAllTest
     {
         [TestMethod]
-        public void TestSqlStatementBuilderCreateQuery()
+        public void TestSqlStatementBuilderCreateQueryAll()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields);
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [Table] ;";
@@ -29,16 +30,16 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateQueryWithQuotedTableSchema()
+        public void TestSqlStatementBuilderCreateQueryAllWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields);
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [dbo].[Table] ;";
@@ -48,16 +49,16 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateQueryWithUnquotedTableSchema()
+        public void TestSqlStatementBuilderCreateQueryAllWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields);
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [dbo].[Table] ;";
@@ -67,41 +68,17 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateQueryWithWhereExpression()
+        public void TestSqlStatementBuilderCreateQueryAllWithOrderBy()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var where = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting), Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending, Field2 = Order.Descending });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                where: where);
-            var expected = $"" +
-                $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [Table] " +
-                $"WHERE ([Id] = @Id) ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestSqlStatementBuilderCreateQueryWithOrderBy()
-        {
-            // Setup
-            var statementBuilder = new SqlServerStatementBuilder();
-            var queryBuilder = new QueryBuilder();
-            var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending, Field2 = Order.Descending }, Helper.DbSetting);
-
-            // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 orderBy: orderBy);
@@ -115,38 +92,17 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateQueryWithTop()
+        public void TestSqlStatementBuilderCreateQueryAllWithHints()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var top = 100;
-
-            // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                top: top);
-            var expected = "SELECT TOP (100) [Field1], [Field2], [Field3] FROM [Table] ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestSqlStatementBuilderCreateQueryWithHints()
-        {
-            // Setup
-            var statementBuilder = new SqlServerStatementBuilder();
-            var queryBuilder = new QueryBuilder();
-            var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var hints = SqlServerTableHints.NoLock;
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 hints: hints);
@@ -157,55 +113,50 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateQueryWithWhereAndWithOrderByAndWithTopAndWithHints()
+        public void TestSqlStatementBuilderCreateQueryAllWithOrderByAndWithHints()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var where = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting), Helper.DbSetting);
-            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending, Field2 = Order.Descending }, Helper.DbSetting);
-            var top = 100;
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending, Field2 = Order.Descending });
             var hints = SqlServerTableHints.NoLock;
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                where: where,
                 orderBy: orderBy,
-                top: top,
                 hints: hints);
             var expected = $"" +
-                $"SELECT TOP (100) [Field1], [Field2], [Field3] " +
+                $"SELECT [Field1], [Field2], [Field3] " +
                 $"FROM [Table] WITH (NOLOCK) " +
-                $"WHERE ([Id] = @Id) " +
                 $"ORDER BY [Field1] ASC, [Field2] DESC ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateQueryIfTheOrderFieldIsNotCovered()
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateQueryAllIfTheOrderFieldIsNotCovered()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
-            var orderBy = OrderField.Parse(new { Id = Order.Ascending, Field1 = Order.Ascending }, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var orderBy = OrderField.Parse(new { Id = Order.Ascending, Field1 = Order.Ascending });
 
             // Act
-            statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 orderBy: orderBy);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateQueryIfThereAreNoFields()
+        public void ThrowExceptionOnSqlStatementBuilderCreateQueryAllIfThereAreNoFields()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
@@ -213,52 +164,52 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
 
             // Act
-            statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateQueryIfTheTableIsNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateQueryAllIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateQueryIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlStatementBuilderCreateQueryAllIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateQueryIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlStatementBuilderCreateQueryAllIfTheTableIsWhitespace()
         {
             // Setup
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" }, Helper.DbSetting);
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields);
         }

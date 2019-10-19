@@ -11,10 +11,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A"));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
@@ -25,10 +25,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionNotStartsWithAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.StartsWith("A"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.StartsWith("A"));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
@@ -39,10 +39,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithEqualsTrueAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A") == true, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A") == true);
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
@@ -53,10 +53,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithEqualsFalseAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A") == false, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A") == false);
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
@@ -67,10 +67,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithForMappedProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString.StartsWith("A"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString.StartsWith("A"));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
@@ -81,10 +81,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithForQuotedProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString.StartsWith("A"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString.StartsWith("A"));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
@@ -95,10 +95,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStartsWithForUnorganizedProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.UnorganizedPropertyString.StartsWith("A"), Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.UnorganizedPropertyString.StartsWith("A"));
 
             // Act
-            var actual = parsed.GetString();
+            var actual = parsed.GetString(Helper.DbSetting);
             var expected = "([Property / . String] LIKE @Property_____String)";
 
             // Assert

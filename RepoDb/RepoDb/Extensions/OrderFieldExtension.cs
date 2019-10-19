@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RepoDb.Interfaces;
+using System.Collections.Generic;
 
 namespace RepoDb.Extensions
 {
@@ -21,10 +22,12 @@ namespace RepoDb.Extensions
         /// Converts an instance of order field into an enumerable list of fields.
         /// </summary>
         /// <param name="orderField">The order field instance to be converted.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>An enumerable list of fields.</returns>
-        public static string AsField(this OrderField orderField)
+        public static string AsField(this OrderField orderField,
+            IDbSetting dbSetting)
         {
-            return AsField(orderField, null);
+            return AsField(orderField, null, dbSetting);
         }
 
         /// <summary>
@@ -32,17 +35,19 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="orderField">The order field instance to be converted.</param>
         /// <param name="alias">The alias to be used for conversion.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>An enumerable list of fields.</returns>
         public static string AsField(this OrderField orderField,
-            string alias)
+            string alias,
+            IDbSetting dbSetting)
         {
             if (string.IsNullOrEmpty(alias))
             {
-                return string.Concat(orderField.Name, " ", orderField.GetOrderText());
+                return string.Concat(orderField.Name.AsField(dbSetting), " ", orderField.GetOrderText());
             }
             else
             {
-                return string.Concat(alias, ".", orderField.Name, " ", orderField.GetOrderText());
+                return string.Concat(orderField.Name.AsAliasField(alias, dbSetting), " ", orderField.GetOrderText());
             }
         }
     }

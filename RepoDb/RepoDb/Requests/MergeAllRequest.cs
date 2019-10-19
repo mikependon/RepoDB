@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -62,8 +63,8 @@ namespace RepoDb.Requests
                   transaction,
                   statementBuilder)
         {
-            Fields = fields;
-            Qualifiers = qualifiers;
+            Fields = fields?.AsList();
+            Qualifiers = qualifiers?.AsList();
             BatchSize = batchSize;
         }
 

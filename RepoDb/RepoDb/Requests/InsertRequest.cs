@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -52,7 +53,7 @@ namespace RepoDb.Requests
                   transaction,
                   statementBuilder)
         {
-            Fields = fields;
+            Fields = fields?.AsList();
         }
 
         /// <summary>

@@ -147,18 +147,19 @@ namespace RepoDb
         public QueryBuilder FieldsFrom<TEntity>(IDbSetting dbSetting)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
-            return Append(fields?.AsFields(dbSetting).Join(", "));
+            return FieldsFrom(PropertyCache.Get<TEntity>()?.AsFields(), dbSetting);
         }
 
         /// <summary>
         /// Append a stringified fields to the SQL Query Statement.
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsFrom(IEnumerable<Field> fields)
+        public QueryBuilder FieldsFrom(IEnumerable<Field> fields,
+            IDbSetting dbSetting)
         {
-            return Append(fields?.Select(f => f.Name).Join(", "));
+            return Append(fields?.Select(f => f.Name).AsFields(dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -209,11 +210,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder FieldsAndAliasFieldsFrom(IEnumerable<Field> fields,
-            string alias)
+            string alias,
+            IDbSetting dbSetting)
         {
-            return Append(fields?.AsFieldsAndAliasFields(alias).Join(", "));
+            return Append(fields?.AsFieldsAndAliasFields(alias, dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -236,11 +239,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder AsAliasFieldsFrom(IEnumerable<Field> fields,
-            string alias)
+            string alias,
+            IDbSetting dbSetting)
         {
-            return Append(fields?.AsAliasFields(alias).Join(", "));
+            return Append(fields?.AsAliasFields(alias, dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -256,10 +261,12 @@ namespace RepoDb
         /// Appends a word GROUP BY and a stringified fields to the SQL Query Statement.
         /// </summary>
         /// <param name="fields">The fields to be stringified.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder GroupByFrom(IEnumerable<Field> fields)
+        public QueryBuilder GroupByFrom(IEnumerable<Field> fields,
+            IDbSetting dbSetting)
         {
-            return Append(string.Concat("GROUP BY ", fields?.AsFields().Join(", ")));
+            return Append(string.Concat("GROUP BY ", fields?.AsFields(dbSetting).Join(", ")));
         }
 
         /// <summary>
@@ -325,10 +332,12 @@ namespace RepoDb
         /// Appends a word ORDER BY and the stringified fields to the SQL Query Statement with aliases.
         /// </summary>
         /// <param name="orderBy">The list of order fields to be stringified.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder OrderByFrom(IEnumerable<OrderField> orderBy)
+        public QueryBuilder OrderByFrom(IEnumerable<OrderField> orderBy,
+            IDbSetting dbSetting)
         {
-            return OrderByFrom(orderBy, null);
+            return OrderByFrom(orderBy, null, dbSetting);
         }
 
         /// <summary>
@@ -336,12 +345,14 @@ namespace RepoDb
         /// </summary>
         /// <param name="orderBy">The list of order fields to be stringified.</param>
         /// <param name="alias">The aliases to be prepended for each field.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder OrderByFrom(IEnumerable<OrderField> orderBy,
-            string alias)
+            string alias,
+            IDbSetting dbSetting)
         {
             return orderBy?.Any() == true ?
-                Append(string.Concat("ORDER BY ", orderBy.Select(orderField => orderField.AsField(alias)).Join(", "))) :
+                Append(string.Concat("ORDER BY ", orderBy.Select(orderField => orderField.AsField(alias, dbSetting)).Join(", "))) :
                 this;
         }
 
@@ -397,12 +408,14 @@ namespace RepoDb
         /// <param name="field">The field to be stringified.</param>
         /// <param name="leftAlias">The left alias.</param>
         /// <param name="rightAlias">The right alias.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder JoinQualifiersFrom(Field field,
             string leftAlias,
-            string rightAlias)
+            string rightAlias,
+            IDbSetting dbSetting)
         {
-            return Append(field.AsJoinQualifier(leftAlias, rightAlias));
+            return Append(field.AsJoinQualifier(leftAlias, rightAlias, dbSetting));
         }
 
         /// <summary>
@@ -444,7 +457,7 @@ namespace RepoDb
         public QueryBuilder TableNameFrom(string tableName,
             IDbSetting dbSetting)
         {
-            return Append(tableName?.AsQuoted(dbSetting));
+            return Append(tableName?.AsQuoted(true, dbSetting));
         }
 
         /// <summary>

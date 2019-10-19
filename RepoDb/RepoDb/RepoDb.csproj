@@ -80,9 +80,9 @@
     <Compile Include="Contexts\Execution\InsertAllExecutionContextCache.cs" />
     <Compile Include="Exceptions\EmptyException.cs" />
     <Compile Include="Exceptions\InvalidParameterException.cs" />
-    <Compile Include="Exceptions\InvalidQualifierFieldsException.cs" />
+    <Compile Include="Exceptions\InvalidQualifiersException.cs" />
     <Compile Include="Exceptions\ItemNotFoundException.cs" />
-    <Compile Include="Exceptions\MappingAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\MappingExistsException.cs" />
     <Compile Include="Exceptions\MissingMappingException.cs" />
     <Compile Include="Exceptions\InvalidTypeException.cs" />
     <Compile Include="Expressions\ClassExpression.cs" />

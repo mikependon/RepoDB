@@ -39,6 +39,7 @@ namespace RepoDb
         {
             var command = connection.CreateCommand();
             command.CommandText = commandText;
+            command.Connection = connection;
             if (commandType != null)
             {
                 command.CommandType = commandType.Value;

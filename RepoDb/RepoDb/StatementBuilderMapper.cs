@@ -90,7 +90,7 @@ namespace RepoDb
                 else
                 {
                     // Throw an exception
-                    throw new MappingAlreadyExistsException($"The statement builder to provider '{type.FullName}' already exists.");
+                    throw new MappingExistsException($"The statement builder to provider '{type.FullName}' already exists.");
                 }
             }
             else

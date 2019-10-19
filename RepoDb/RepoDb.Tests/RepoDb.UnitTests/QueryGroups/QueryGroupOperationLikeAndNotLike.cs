@@ -12,10 +12,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupOperationLike()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Like, "A%", Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Like, "A%"));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] LIKE @Field1)";
 
             // Assert
@@ -28,13 +28,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Like, "A%", Helper.DbSetting),
-                new QueryField("Field2", Operation.Like, "B%", Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Like, "A%"),
+                new QueryField("Field2", Operation.Like, "B%")
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] LIKE @Field1 AND [Field2] LIKE @Field2)";
 
             // Assert
@@ -47,13 +46,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Like, "A%", Helper.DbSetting),
-                new QueryField("Field1", Operation.Like, "B%", Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Like, "A%"),
+                new QueryField("Field1", Operation.Like, "B%")
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] LIKE @Field1 AND [Field1] LIKE @Field1_1)";
 
             // Assert
@@ -66,14 +64,13 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Like, "A%", Helper.DbSetting),
-                new QueryField("Field1", Operation.Like, "B%", Helper.DbSetting)
+                new QueryField("Field1", Operation.Like, "A%"),
+                new QueryField("Field1", Operation.Like, "B%")
             },
-            Conjunction.Or,
-            Helper.DbSetting);
+            Conjunction.Or);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] LIKE @Field1 OR [Field1] LIKE @Field1_1)";
 
             // Assert
@@ -88,10 +85,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupOperationNotLike()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotLike, "A%", Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotLike, "A%"));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] NOT LIKE @Field1)";
 
             // Assert
@@ -104,13 +101,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotLike, "A%", Helper.DbSetting),
-                new QueryField("Field2", Operation.NotLike, "B%", Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.NotLike, "A%"),
+                new QueryField("Field2", Operation.NotLike, "B%")
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] NOT LIKE @Field1 AND [Field2] NOT LIKE @Field2)";
 
             // Assert
@@ -123,13 +119,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotLike, "A%", Helper.DbSetting),
-                new QueryField("Field1", Operation.NotLike, "B%", Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.NotLike, "A%"),
+                new QueryField("Field1", Operation.NotLike, "B%")
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] NOT LIKE @Field1 AND [Field1] NOT LIKE @Field1_1)";
 
             // Assert
@@ -142,14 +137,13 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotLike, "A%", Helper.DbSetting),
-                new QueryField("Field1", Operation.NotLike, "B%", Helper.DbSetting)
+                new QueryField("Field1", Operation.NotLike, "A%"),
+                new QueryField("Field1", Operation.NotLike, "B%")
             },
-            Conjunction.Or,
-            Helper.DbSetting);
+            Conjunction.Or);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] NOT LIKE @Field1 OR [Field1] NOT LIKE @Field1_1)";
 
             // Assert

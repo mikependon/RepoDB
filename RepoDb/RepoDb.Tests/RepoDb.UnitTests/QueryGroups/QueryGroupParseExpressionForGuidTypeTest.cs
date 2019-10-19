@@ -12,7 +12,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionGuidConstant()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == Guid.NewGuid(), Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == Guid.NewGuid()).GetString(Helper.DbSetting);
             var expected = "([PropertyGuid] = @PropertyGuid)";
 
             // Assert
@@ -26,7 +26,7 @@ namespace RepoDb.UnitTests
             var value = Guid.NewGuid();
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == value, Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == value).GetString(Helper.DbSetting);
             var expected = "([PropertyGuid] = @PropertyGuid)";
 
             // Assert
@@ -43,7 +43,7 @@ namespace RepoDb.UnitTests
             };
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == value.PropertyGuid, Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == value.PropertyGuid).GetString(Helper.DbSetting);
             var expected = "([PropertyGuid] = @PropertyGuid)";
 
             // Assert
@@ -54,7 +54,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionGuidMethodCall()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == GetGuidValueForParseExpression(), Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == GetGuidValueForParseExpression()).GetString(Helper.DbSetting);
             var expected = "([PropertyGuid] = @PropertyGuid)";
 
             // Assert
@@ -68,7 +68,7 @@ namespace RepoDb.UnitTests
             var value = GetGuidValueForParseExpression();
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == value, Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == value).GetString(Helper.DbSetting);
             var expected = "([PropertyGuid] = @PropertyGuid)";
 
             // Assert

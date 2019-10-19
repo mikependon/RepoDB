@@ -107,7 +107,7 @@ namespace RepoDb.DbHelpers
             if (tableName.IndexOf(m_dbSetting.SchemaSeparator) > 0)
             {
                 var splitted = tableName.Split(m_dbSetting.SchemaSeparator.ToCharArray());
-                return splitted[0].AsUnquoted(m_dbSetting);
+                return splitted[0].AsUnquoted(true, m_dbSetting);
             }
 
             // Return the unquoted
@@ -128,10 +128,10 @@ namespace RepoDb.DbHelpers
             if (tableName.IndexOf(m_dbSetting.SchemaSeparator) > 0)
             {
                 var splitted = tableName.Split(m_dbSetting.SchemaSeparator.ToCharArray());
-                schema = splitted[0].AsUnquoted(m_dbSetting);
+                schema = splitted[0].AsUnquoted(true, m_dbSetting);
 
                 // Return the splitted one
-                return splitted[1].AsUnquoted(m_dbSetting);
+                return splitted[1].AsUnquoted(true, m_dbSetting);
             }
 
             // Return the unquoted

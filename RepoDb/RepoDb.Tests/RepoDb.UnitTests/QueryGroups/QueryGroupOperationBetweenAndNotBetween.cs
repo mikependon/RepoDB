@@ -12,10 +12,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupOperationBetween()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Between, new[] { 1, 100 }, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Between, new[] { 1, 100 }));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right)";
 
             // Assert
@@ -28,13 +28,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Between, new[] { 1, 100 }, Helper.DbSetting),
-                new QueryField("Field2", Operation.Between, new[] { 500, 1000 }, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Between, new[] { 1, 100 }),
+                new QueryField("Field2", Operation.Between, new[] { 500, 1000 })
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right AND [Field2] BETWEEN @Field2_Left AND @Field2_Right)";
 
             // Assert
@@ -47,13 +46,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Between, new[] { 1, 100 }, Helper.DbSetting),
-                new QueryField("Field1", Operation.Between, new[] { 500, 1000 }, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.Between, new[] { 1, 100 }),
+                new QueryField("Field1", Operation.Between, new[] { 500, 1000 })
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right AND [Field1] BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
@@ -66,14 +64,13 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.Between, new[] { 1, 100 }, Helper.DbSetting),
-                new QueryField("Field1", Operation.Between, new[] { 500, 1000 }, Helper.DbSetting)
+                new QueryField("Field1", Operation.Between, new[] { 1, 100 }),
+                new QueryField("Field1", Operation.Between, new[] { 500, 1000 })
             },
-            Conjunction.Or,
-            Helper.DbSetting);
+            Conjunction.Or);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right OR [Field1] BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
@@ -88,10 +85,10 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupOperationNotBetween()
         {
             // Setup
-            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }, Helper.DbSetting), Helper.DbSetting);
+            var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }));
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right)";
 
             // Assert
@@ -104,13 +101,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }, Helper.DbSetting),
-                new QueryField("Field2", Operation.NotBetween, new[] { 500, 1000 }, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }),
+                new QueryField("Field2", Operation.NotBetween, new[] { 500, 1000 })
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right AND [Field2] NOT BETWEEN @Field2_Left AND @Field2_Right)";
 
             // Assert
@@ -123,13 +119,12 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }, Helper.DbSetting),
-                new QueryField("Field1", Operation.NotBetween, new[] { 500, 1000 }, Helper.DbSetting)
-            },
-            Helper.DbSetting);
+                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }),
+                new QueryField("Field1", Operation.NotBetween, new[] { 500, 1000 })
+            });
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right AND [Field1] NOT BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
@@ -142,14 +137,13 @@ namespace RepoDb.UnitTests
             // Setup
             var queryGroup = new QueryGroup(new[]
             {
-                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }, Helper.DbSetting),
-                new QueryField("Field1", Operation.NotBetween, new[] { 500, 1000 }, Helper.DbSetting)
+                new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }),
+                new QueryField("Field1", Operation.NotBetween, new[] { 500, 1000 })
             },
-            Conjunction.Or,
-            Helper.DbSetting);
+            Conjunction.Or);
 
             // Act
-            var actual = queryGroup.GetString();
+            var actual = queryGroup.GetString(Helper.DbSetting);
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right OR [Field1] NOT BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert

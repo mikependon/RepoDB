@@ -58,7 +58,7 @@ namespace RepoDb
             {
                 if (!cacheItem.IsExpired())
                 {
-                    throw new MappingAlreadyExistsException($"An existing cache for key '{item.Key}' already exists.");
+                    throw new MappingExistsException($"An existing cache for key '{item.Key}' already exists.");
                 }
                 cacheItem.UpdateFrom(item);
             }

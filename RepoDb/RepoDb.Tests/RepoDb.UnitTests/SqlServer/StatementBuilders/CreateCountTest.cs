@@ -33,7 +33,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var where = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting), Helper.DbSetting);
+            var where = new QueryGroup(new QueryField("Id", 1));
 
             // Act
             var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
@@ -74,7 +74,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlServerStatementBuilder();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
-            var where = new QueryGroup(new QueryField("Id", 1, Helper.DbSetting), Helper.DbSetting);
+            var where = new QueryGroup(new QueryField("Id", 1));
             var hints = "WITH (NOLOCK)";
 
             // Act

@@ -36,9 +36,10 @@ namespace RepoDb.Extensions
         }
 
         // AsField
-        internal static string AsField(this QueryField queryField)
+        internal static string AsField(this QueryField queryField,
+            IDbSetting dbSetting)
         {
-            return queryField.Field.Name;
+            return queryField.Field.Name.AsField(dbSetting);
         }
 
         // AsParameter
@@ -50,9 +51,11 @@ namespace RepoDb.Extensions
         }
 
         // AsParameterAsField
-        internal static string AsParameterAsField(this QueryField queryField)
+        internal static string AsParameterAsField(this QueryField queryField,
+            int index,
+            IDbSetting dbSetting)
         {
-            return string.Concat(queryField.Parameter.Name, " AS ", queryField.Field.Name);
+            return string.Concat(queryField.AsParameter(index, dbSetting), " AS ", queryField.AsField(dbSetting));
         }
 
         // AsBetweenParameter
@@ -84,25 +87,25 @@ namespace RepoDb.Extensions
         {
             if (queryField.Operation == Operation.Equal && queryField.Parameter.Value == null)
             {
-                return string.Concat(queryField.AsField(), " IS NULL");
+                return string.Concat(queryField.AsField(dbSetting), " IS NULL");
             }
             else if (queryField.Operation == Operation.NotEqual && queryField.Parameter.Value == null)
             {
-                return string.Concat(queryField.AsField(), " IS NOT NULL");
+                return string.Concat(queryField.AsField(dbSetting), " IS NOT NULL");
             }
             else
             {
                 if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                 {
-                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsBetweenParameter(index, dbSetting));
+                    return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsBetweenParameter(index, dbSetting));
                 }
                 else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
                 {
-                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsInParameter(index, dbSetting));
+                    return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsInParameter(index, dbSetting));
                 }
                 else
                 {
-                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsParameter(index, dbSetting));
+                    return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsParameter(index, dbSetting));
                 }
             }
         }

@@ -90,21 +90,21 @@ namespace RepoDb.StatementBuilders
                 .RowNumber()
                 .Over()
                 .OpenParen()
-                .OrderByFrom(orderBy)
+                .OrderByFrom(orderBy, DbSetting)
                 .CloseParen()
                 .As("[RowNumber],")
-                .FieldsFrom(fields)
+                .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .CloseParen()
                 .Select()
-                .FieldsFrom(fields)
+                .FieldsFrom(fields, DbSetting)
                 .From()
                 .WriteText("CTE")
                 .WriteText(string.Concat("WHERE ([RowNumber] BETWEEN ", (page * rowsPerBatch) + 1, " AND ", (page + 1) * rowsPerBatch, ")"))
-                .OrderByFrom(orderBy)
+                .OrderByFrom(orderBy, DbSetting)
                 .End();
 
             // Return the query
@@ -304,7 +304,7 @@ namespace RepoDb.StatementBuilders
                 .Into()
                 .TableNameFrom(tableName, DbSetting)
                 .OpenParen()
-                .FieldsFrom(insertableFields)
+                .FieldsFrom(insertableFields, DbSetting)
                 .CloseParen()
                 .Values()
                 .OpenParen()
@@ -397,7 +397,7 @@ namespace RepoDb.StatementBuilders
                     .Into()
                     .TableNameFrom(tableName, DbSetting)
                     .OpenParen()
-                    .FieldsFrom(insertableFields)
+                    .FieldsFrom(insertableFields, DbSetting)
                     .CloseParen()
                     .Values()
                     .OpenParen()
@@ -408,7 +408,7 @@ namespace RepoDb.StatementBuilders
                 // Set the return field
                 if (identityField != null)
                 {
-                    var returnValue = string.Concat(identityField.Name.AsUnquoted(DbSetting).AsParameter(index, DbSetting), " = ",
+                    var returnValue = string.Concat(identityField.Name.AsUnquoted(true, DbSetting).AsParameter(index, DbSetting), " = ",
                         string.IsNullOrEmpty(databaseType) ?
                             "SCOPE_IDENTITY()" :
                             "CONVERT(", databaseType, ", SCOPE_IDENTITY())");
@@ -466,7 +466,7 @@ namespace RepoDb.StatementBuilders
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
                 {
-                    throw new InvalidQualifierFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
+                    throw new InvalidQualifiersException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
@@ -480,7 +480,7 @@ namespace RepoDb.StatementBuilders
                     // Throw if not present
                     if (isPresent == false)
                     {
-                        throw new InvalidQualifierFieldsException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
+                        throw new InvalidQualifiersException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
                             $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                     }
 
@@ -532,7 +532,7 @@ namespace RepoDb.StatementBuilders
                 .OpenParen()
                 .WriteText(qualifiers?
                     .Select(
-                        field => field.AsJoinQualifier("S", "T"))
+                        field => field.AsJoinQualifier("S", "T", DbSetting))
                             .Join(" AND "))
                 .CloseParen()
                 // WHEN NOT MATCHED THEN INSERT VALUES
@@ -542,11 +542,11 @@ namespace RepoDb.StatementBuilders
                 .Then()
                 .Insert()
                 .OpenParen()
-                .FieldsFrom(insertableFields)
+                .FieldsFrom(insertableFields, DbSetting)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .AsAliasFieldsFrom(insertableFields, "S")
+                .AsAliasFieldsFrom(insertableFields, "S", DbSetting)
                 .CloseParen()
                 // WHEN MATCHED THEN UPDATE SET
                 .When()
@@ -554,14 +554,14 @@ namespace RepoDb.StatementBuilders
                 .Then()
                 .Update()
                 .Set()
-                .FieldsAndAliasFieldsFrom(updateableFields, "S");
+                .FieldsAndAliasFieldsFrom(updateableFields, "S", DbSetting);
 
             // Set the output
             var outputField = identityField ?? primaryField;
             if (outputField != null)
             {
                 queryBuilder
-                    .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name))
+                    .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name.AsField(DbSetting)))
                     .As("[Result]");
             }
 
@@ -617,7 +617,7 @@ namespace RepoDb.StatementBuilders
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
                 {
-                    throw new InvalidQualifierFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
+                    throw new InvalidQualifiersException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
@@ -631,7 +631,7 @@ namespace RepoDb.StatementBuilders
                     // Throw if not present
                     if (isPresent == false)
                     {
-                        throw new InvalidQualifierFieldsException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
+                        throw new InvalidQualifiersException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
                             $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                     }
 
@@ -695,7 +695,7 @@ namespace RepoDb.StatementBuilders
                     .OpenParen()
                     .WriteText(qualifiers?
                         .Select(
-                            field => field.AsJoinQualifier("S", "T"))
+                            field => field.AsJoinQualifier("S", "T", DbSetting))
                                 .Join(" AND "))
                     .CloseParen()
                     // WHEN NOT MATCHED THEN INSERT VALUES
@@ -705,11 +705,11 @@ namespace RepoDb.StatementBuilders
                     .Then()
                     .Insert()
                     .OpenParen()
-                    .FieldsFrom(insertableFields)
+                    .FieldsFrom(insertableFields, DbSetting)
                     .CloseParen()
                     .Values()
                     .OpenParen()
-                    .AsAliasFieldsFrom(insertableFields, "S")
+                    .AsAliasFieldsFrom(insertableFields, "S", DbSetting)
                     .CloseParen()
                     // WHEN MATCHED THEN UPDATE SET
                     .When()
@@ -717,14 +717,14 @@ namespace RepoDb.StatementBuilders
                     .Then()
                     .Update()
                     .Set()
-                    .FieldsAndAliasFieldsFrom(updateableFields, "S");
+                    .FieldsAndAliasFieldsFrom(updateableFields, "S", DbSetting);
 
                 // Set the output
                 var outputField = identityField ?? primaryField;
                 if (outputField != null)
                 {
                     queryBuilder
-                        .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name))
+                        .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name.AsField(DbSetting)))
                         .As("[Result]");
                 }
 
@@ -788,12 +788,12 @@ namespace RepoDb.StatementBuilders
                 .Clear()
                 .Select()
                 .TopFrom(top)
-                .FieldsFrom(fields)
+                .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
-                .OrderByFrom(orderBy)
+                .OrderByFrom(orderBy, DbSetting)
                 .End();
 
             // Return the query
@@ -838,7 +838,7 @@ namespace RepoDb.StatementBuilders
                 // Throw an error we found any unmatches
                 if (unmatchesOrderFields?.Any() == true)
                 {
-                    throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                    throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField(DbSetting)).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
@@ -847,11 +847,11 @@ namespace RepoDb.StatementBuilders
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .FieldsFrom(fields)
+                .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
-                .OrderByFrom(orderBy)
+                .OrderByFrom(orderBy, DbSetting)
                 .End();
 
             // Return the query
@@ -985,7 +985,7 @@ namespace RepoDb.StatementBuilders
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers?.Any() == true)
                 {
-                    throw new InvalidQualifierFieldsException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
+                    throw new InvalidQualifiersException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
@@ -1000,7 +1000,7 @@ namespace RepoDb.StatementBuilders
                     // Throw if not present
                     if (isPresent == false)
                     {
-                        throw new InvalidQualifierFieldsException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
+                        throw new InvalidQualifiersException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
                             $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                     }
 

@@ -11,7 +11,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionSingleConstant()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == 1, Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == 1).GetString(Helper.DbSetting);
             var expected = "([PropertySingle] = @PropertySingle)";
 
             // Assert
@@ -25,7 +25,7 @@ namespace RepoDb.UnitTests
             var value = 1;
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == value, Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == value).GetString(Helper.DbSetting);
             var expected = "([PropertySingle] = @PropertySingle)";
 
             // Assert
@@ -42,7 +42,7 @@ namespace RepoDb.UnitTests
             };
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == value.PropertySingle, Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == value.PropertySingle).GetString(Helper.DbSetting);
             var expected = "([PropertySingle] = @PropertySingle)";
 
             // Assert
@@ -53,7 +53,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionSingleMethodCall()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == GetSingleValueForParseExpression(), Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == GetSingleValueForParseExpression()).GetString(Helper.DbSetting);
             var expected = "([PropertySingle] = @PropertySingle)";
 
             // Assert
@@ -67,7 +67,7 @@ namespace RepoDb.UnitTests
             var value = GetSingleValueForParseExpression();
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == value, Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == value).GetString(Helper.DbSetting);
             var expected = "([PropertySingle] = @PropertySingle)";
 
             // Assert

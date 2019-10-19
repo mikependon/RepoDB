@@ -61,12 +61,12 @@ namespace RepoDb.UnitTests.Interfaces
 
             public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection
             {
-                if (tableName == ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting))
+                if (tableName == ClassMappedNameCache.Get<TraceEntity>())
                 {
                     return new[]
                     {
-                        new DbField("Id", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting),
-                        new DbField("Name", false, false, true, typeof(string), null, null, null, null, Helper.DbSetting)
+                        new DbField("Id", true, true, false, typeof(int), null, null, null, null),
+                        new DbField("Name", false, false, true, typeof(string), null, null, null, null)
                     };
                 }
                 return null;
@@ -79,12 +79,12 @@ namespace RepoDb.UnitTests.Interfaces
 
             public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection
             {
-                if (tableName == ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting))
+                if (tableName == ClassMappedNameCache.Get<TraceEntity>())
                 {
                     return Task.FromResult<IEnumerable<DbField>>(new[]
                     {
-                        new DbField("Id", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting),
-                        new DbField("Name", false, false, true, typeof(string), null, null, null, null, Helper.DbSetting)
+                        new DbField("Id", true, true, false, typeof(int), null, null, null, null),
+                        new DbField("Name", false, false, true, typeof(string), null, null, null, null)
                     });
                 }
                 return null;
@@ -160,7 +160,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.BatchQuery(0,
                 10,
-                OrderField.Parse(new { Id = Order.Ascending }, Helper.DbSetting),
+                OrderField.Parse(new { Id = Order.Ascending }),
                 (object)null);
 
             // Assert
@@ -177,7 +177,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.BatchQuery(0,
                 10,
-                OrderField.Parse(new { Id = Order.Ascending }, Helper.DbSetting),
+                OrderField.Parse(new { Id = Order.Ascending }),
                 (object)null);
 
             // Assert
@@ -198,7 +198,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.BatchQueryAsync(0,
                 10,
-                OrderField.Parse(new { Id = Order.Ascending }, Helper.DbSetting),
+                OrderField.Parse(new { Id = Order.Ascending }),
                 (object)null).Wait();
 
             // Assert
@@ -215,7 +215,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             repository.BatchQueryAsync(0,
                 10,
-                OrderField.Parse(new { Id = Order.Ascending }, Helper.DbSetting),
+                OrderField.Parse(new { Id = Order.Ascending }),
                 (object)null).Wait();
 
             // Assert

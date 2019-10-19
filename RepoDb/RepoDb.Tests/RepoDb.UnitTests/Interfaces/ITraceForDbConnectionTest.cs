@@ -53,8 +53,8 @@ namespace RepoDb.UnitTests.Interfaces
             {
                 return new[]
                 {
-                    new DbField("Id", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting),
-                    new DbField("Name", false, false, true, typeof(string), null, null, null, null, Helper.DbSetting)
+                    new DbField("Id", true, true, false, typeof(int), null, null, null, null),
+                    new DbField("Name", false, false, true, typeof(string), null, null, null, null)
                 };
             }
 
@@ -67,8 +67,8 @@ namespace RepoDb.UnitTests.Interfaces
             {
                 return Task.FromResult<IEnumerable<DbField>>(new[]
                 {
-                    new DbField("Id", true, true, false, typeof(int), null, null, null, null, Helper.DbSetting),
-                    new DbField("Name", false, false, true, typeof(string), null, null, null, null, Helper.DbSetting)
+                    new DbField("Id", true, true, false, typeof(int), null, null, null, null),
+                    new DbField("Name", false, false, true, typeof(string), null, null, null, null)
                 });
             }
         }
@@ -142,7 +142,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             connection.BatchQuery<TraceEntity>(0,
                 10,
-                OrderField.Ascending<TraceEntity>(t => t.Id, Helper.DbSetting).AsEnumerable(),
+                OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -161,7 +161,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             connection.BatchQuery<TraceEntity>(0,
                 10,
-                OrderField.Ascending<TraceEntity>(t => t.Id, Helper.DbSetting).AsEnumerable(),
+                OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -184,7 +184,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             connection.BatchQueryAsync<TraceEntity>(0,
                 10,
-                OrderField.Ascending<TraceEntity>(t => t.Id, Helper.DbSetting).AsEnumerable(),
+                OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
@@ -203,7 +203,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             connection.BatchQueryAsync<TraceEntity>(0,
                 10,
-                OrderField.Ascending<TraceEntity>(t => t.Id, Helper.DbSetting).AsEnumerable(),
+                OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
@@ -336,7 +336,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Count(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Count(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -353,7 +353,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Count(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Count(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -406,7 +406,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
@@ -423,7 +423,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
@@ -478,7 +478,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.CountAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.CountAll(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 
@@ -494,7 +494,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.CountAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.CountAll(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 
@@ -544,7 +544,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
 
@@ -560,7 +560,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
 
@@ -616,7 +616,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Delete(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Delete(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Id = 1
@@ -636,7 +636,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Delete(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Delete(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Id = 1
@@ -692,7 +692,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Id = 1
@@ -712,7 +712,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Id = 1
@@ -770,7 +770,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.DeleteAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.DeleteAll(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 
@@ -786,7 +786,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.DeleteAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.DeleteAll(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 
@@ -836,7 +836,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
 
@@ -852,7 +852,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
 
@@ -910,7 +910,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Insert(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Insert(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -927,7 +927,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Insert(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Insert(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -982,7 +982,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
@@ -999,7 +999,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
@@ -1056,9 +1056,9 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.InsertAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.InsertAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
-                fields: Field.From("Name", Helper.DbSetting),
+                fields: Field.From("Name"),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 
@@ -1074,9 +1074,9 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.InsertAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.InsertAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
-                fields: Field.From("Name", Helper.DbSetting),
+                fields: Field.From("Name"),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 
@@ -1128,9 +1128,9 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
-                fields: Field.From("Name", Helper.DbSetting),
+                fields: Field.From("Name"),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
 
@@ -1146,9 +1146,9 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
-                fields: Field.From("Name", Helper.DbSetting),
+                fields: Field.From("Name"),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
 
@@ -1206,7 +1206,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Merge(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Merge(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -1223,7 +1223,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Merge(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Merge(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -1278,7 +1278,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
@@ -1295,7 +1295,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
@@ -1354,7 +1354,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.MergeAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.MergeAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -1371,7 +1371,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.MergeAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.MergeAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -1426,7 +1426,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
@@ -1443,7 +1443,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
@@ -1726,7 +1726,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Truncate(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Truncate(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 
@@ -1742,7 +1742,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Truncate(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Truncate(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
 
@@ -1792,7 +1792,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
 
@@ -1808,7 +1808,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
 
@@ -1876,7 +1876,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Update(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Update(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Name = "Name"
@@ -1900,7 +1900,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.Update(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.Update(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Name = "Name"
@@ -1972,7 +1972,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Name = "Name"
@@ -1996,7 +1996,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Name = "Name"
@@ -2062,7 +2062,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -2079,7 +2079,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder);
@@ -2134,7 +2134,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();
@@ -2151,7 +2151,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new CustomDbConnectionForDbConnectionITrace();
 
             // Act
-            connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(Helper.DbSetting),
+            connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
                 trace: trace.Object,
                 statementBuilder: m_statementBuilder).Wait();

@@ -60,7 +60,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateBatchQuery(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
@@ -82,7 +82,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateBatchQuery(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
@@ -110,7 +110,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(1));
 
@@ -125,7 +125,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(0));
         }
@@ -149,7 +149,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateCountAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
@@ -163,7 +163,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateCountAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
@@ -186,7 +186,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<QueryGroup>()), Times.Exactly(1));
 
             // Prepare
@@ -200,7 +200,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<QueryGroup>()), Times.Exactly(0));
         }
 
@@ -223,7 +223,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting))), Times.Exactly(1));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -236,7 +236,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting))), Times.Exactly(0));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(0));
         }
 
         #endregion
@@ -263,7 +263,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
@@ -282,7 +282,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
@@ -313,7 +313,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateInsertAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.Is<int>(v => v > 1),
                     It.IsAny<DbField>(),
@@ -335,7 +335,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateInsertAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.Is<int>(v => v > 1),
                     It.IsAny<DbField>(),
@@ -363,7 +363,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
@@ -384,7 +384,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
@@ -409,13 +409,13 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Name = "Name"
                 },
-                new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting));
+                new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
@@ -431,13 +431,13 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Name = "Name"
                 },
-                new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting));
+                new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
@@ -465,13 +465,13 @@ namespace RepoDb.UnitTests.Interfaces
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name2" },
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name3" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting));
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateMergeAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
@@ -489,13 +489,13 @@ namespace RepoDb.UnitTests.Interfaces
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name2" },
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name3" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting));
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateMergeAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
@@ -518,14 +518,14 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name1" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting),
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)),
                 batchSize: 1);
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
@@ -540,14 +540,14 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name1" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting),
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)),
                 batchSize: 1);
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
@@ -573,7 +573,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateQuery(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<IEnumerable<OrderField>>(),
@@ -591,7 +591,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateQuery(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<IEnumerable<OrderField>>(),
@@ -658,7 +658,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateTruncate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting))), Times.Exactly(1));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -671,7 +671,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateTruncate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting))), Times.Exactly(0));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(0));
         }
 
         #endregion
@@ -699,7 +699,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<DbField>(),
@@ -721,7 +721,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<DbField>(),
@@ -749,13 +749,13 @@ namespace RepoDb.UnitTests.Interfaces
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name2" },
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name3" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting));
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateUpdateAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
@@ -773,13 +773,13 @@ namespace RepoDb.UnitTests.Interfaces
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name2" },
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name3" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting));
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)));
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateUpdateAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
@@ -813,7 +813,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateBatchQuery(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
@@ -835,7 +835,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateBatchQuery(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
@@ -863,7 +863,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(1));
 
@@ -878,7 +878,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateCount(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Exactly(0));
         }
@@ -902,7 +902,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateCountAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
@@ -916,7 +916,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateCountAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
@@ -939,7 +939,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<QueryGroup>()), Times.Exactly(1));
 
             // Prepare
@@ -953,7 +953,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<QueryGroup>()), Times.Exactly(0));
         }
 
@@ -976,7 +976,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting))), Times.Exactly(1));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -989,7 +989,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting))), Times.Exactly(0));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(0));
         }
 
         #endregion
@@ -1016,7 +1016,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
@@ -1035,7 +1035,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
@@ -1066,7 +1066,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateInsertAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.Is<int>(v => v > 1),
                     It.IsAny<DbField>(),
@@ -1088,7 +1088,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateInsertAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.Is<int>(v => v > 1),
                     It.IsAny<DbField>(),
@@ -1115,7 +1115,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(1));
@@ -1136,7 +1136,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateInsert(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
                     It.IsAny<DbField>()), Times.Exactly(0));
@@ -1161,13 +1161,13 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Name = "Name"
                 },
-                new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting)).Wait();
+                new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id))).Wait();
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
@@ -1183,13 +1183,13 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Name = "Name"
                 },
-                new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting)).Wait();
+                new Field(nameof(DataEntityForBaseRepositoryStatementBuilder.Id))).Wait();
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
@@ -1217,13 +1217,13 @@ namespace RepoDb.UnitTests.Interfaces
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name2" },
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name3" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting)).Wait();
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id))).Wait();
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateMergeAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
@@ -1241,13 +1241,13 @@ namespace RepoDb.UnitTests.Interfaces
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name2" },
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name3" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting)).Wait();
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id))).Wait();
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateMergeAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
@@ -1270,14 +1270,14 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name1" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting),
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)),
                 batchSize: 1).Wait();
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
@@ -1292,14 +1292,14 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name1" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting),
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id)),
                 batchSize: 1).Wait();
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateMerge(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
@@ -1325,7 +1325,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateQuery(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<IEnumerable<OrderField>>(),
@@ -1343,7 +1343,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateQuery(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<IEnumerable<OrderField>>(),
@@ -1410,7 +1410,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateTruncate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting))), Times.Exactly(1));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1423,7 +1423,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateTruncate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting))), Times.Exactly(0));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>())), Times.Exactly(0));
         }
 
         #endregion
@@ -1451,7 +1451,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<DbField>(),
@@ -1473,7 +1473,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateUpdate(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<DbField>(),
@@ -1501,13 +1501,13 @@ namespace RepoDb.UnitTests.Interfaces
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name2" },
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name3" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting)).Wait();
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id))).Wait();
 
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateUpdateAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
@@ -1525,13 +1525,13 @@ namespace RepoDb.UnitTests.Interfaces
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name2" },
                     new DataEntityForBaseRepositoryStatementBuilder { Name = "Name3" }
                 },
-                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id), Helper.DbSetting)).Wait();
+                Field.From(nameof(DataEntityForBaseRepositoryStatementBuilder.Id))).Wait();
 
             // Assert
             statementBuilderNever.Verify(builder =>
                 builder.CreateUpdateAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>(Helper.DbSetting)),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),

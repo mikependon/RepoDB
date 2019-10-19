@@ -304,10 +304,10 @@ namespace RepoDb.DbOperationProviders
                     foreach (var dbField in dbFields)
                     {
                         var readerField = fields.FirstOrDefault(field =>
-                            string.Equals(field, dbField.Name.AsUnquoted(dbSetting), StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field, dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                         if (!string.IsNullOrEmpty(readerField))
                         {
-                            filteredFields.Add(new Tuple<string, string>(readerField, dbField.Name.AsUnquoted(dbSetting)));
+                            filteredFields.Add(new Tuple<string, string>(readerField, dbField.Name.AsUnquoted(true, dbSetting)));
                         }
                     }
 
@@ -440,10 +440,10 @@ namespace RepoDb.DbOperationProviders
                     foreach (var dbField in dbFields)
                     {
                         var field = fields.FirstOrDefault(f =>
-                            string.Equals(f, dbField.Name.AsUnquoted(dbSetting), StringComparison.OrdinalIgnoreCase));
+                            string.Equals(f, dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                         if (field != null)
                         {
-                            filteredFields.Add(new Tuple<string, string>(field, dbField.Name.AsUnquoted(dbSetting)));
+                            filteredFields.Add(new Tuple<string, string>(field, dbField.Name.AsUnquoted(true, dbSetting)));
                         }
                     }
 
@@ -674,10 +674,10 @@ namespace RepoDb.DbOperationProviders
                     foreach (var dbField in dbFields)
                     {
                         var readerField = fields.FirstOrDefault(field =>
-                            string.Equals(field, dbField.Name.AsUnquoted(dbSetting), StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field, dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                         if (!string.IsNullOrEmpty(readerField))
                         {
-                            filteredFields.Add(new Tuple<string, string>(readerField, dbField.Name.AsUnquoted(dbSetting)));
+                            filteredFields.Add(new Tuple<string, string>(readerField, dbField.Name.AsUnquoted(true, dbSetting)));
                         }
                     }
 
@@ -810,10 +810,10 @@ namespace RepoDb.DbOperationProviders
                     foreach (var dbField in dbFields)
                     {
                         var field = fields.FirstOrDefault(f =>
-                            string.Equals(f, dbField.Name.AsUnquoted(dbSetting), StringComparison.OrdinalIgnoreCase));
+                            string.Equals(f, dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                         if (field != null)
                         {
-                            filteredFields.Add(new Tuple<string, string>(field, dbField.Name.AsUnquoted(dbSetting)));
+                            filteredFields.Add(new Tuple<string, string>(field, dbField.Name.AsUnquoted(true, dbSetting)));
                         }
                     }
 

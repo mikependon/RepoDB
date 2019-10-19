@@ -13,7 +13,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithNameAtLeft()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1, Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1);
 
             // Act
             var actual = parsed.QueryFields.First().Field.Name;
@@ -27,7 +27,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWhereNameHasMapping()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString == "ABC", Helper.DbSetting);
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString == "ABC");
 
             // Act
             var actual = parsed.QueryFields.First().Field.Name;
@@ -41,7 +41,7 @@ namespace RepoDb.UnitTests
         public void ThrowExceptionOnParseExpressionWithNameAtRight()
         {
             // Act
-            QueryGroup.Parse<QueryGroupTestExpressionClass>(e => 1 == e.PropertyInt, Helper.DbSetting);
+            QueryGroup.Parse<QueryGroupTestExpressionClass>(e => 1 == e.PropertyInt);
         }
 
         #endregion
@@ -52,7 +52,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithDoubleSameFieldsForAnd()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 && e.PropertyInt == 2, Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 && e.PropertyInt == 2).GetString(Helper.DbSetting);
             var expected = "(([PropertyInt] = @PropertyInt) AND ([PropertyInt] = @PropertyInt_1))";
 
             // Assert
@@ -63,7 +63,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithDoubleSameFieldsForOr()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 || e.PropertyInt == 2, Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 || e.PropertyInt == 2).GetString(Helper.DbSetting);
             var expected = "(([PropertyInt] = @PropertyInt) OR ([PropertyInt] = @PropertyInt_1))";
 
             // Assert
@@ -78,7 +78,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithSingleGroupForAnd()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 && e.PropertyString == "A", Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 && e.PropertyString == "A").GetString(Helper.DbSetting);
             var expected = "(([PropertyInt] = @PropertyInt) AND ([PropertyString] = @PropertyString))";
 
             // Assert
@@ -89,7 +89,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithSingleGroupForOr()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 || e.PropertyString == "A", Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 || e.PropertyString == "A").GetString(Helper.DbSetting);
             var expected = "(([PropertyInt] = @PropertyInt) OR ([PropertyString] = @PropertyString))";
 
             // Assert
@@ -100,7 +100,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithSingleGroupForOrAndSingleFieldForAnd()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 || e.PropertyDouble == 2) && e.PropertyString == "A", Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 || e.PropertyDouble == 2) && e.PropertyString == "A").GetString(Helper.DbSetting);
             var expected = "((([PropertyInt] = @PropertyInt) OR ([PropertyDouble] = @PropertyDouble)) AND ([PropertyString] = @PropertyString))";
 
             // Assert
@@ -111,7 +111,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithSingleGroupForAndAndSingleFieldForOr()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 && e.PropertyDouble == 2) || e.PropertyString == "A", Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 && e.PropertyDouble == 2) || e.PropertyString == "A").GetString(Helper.DbSetting);
             var expected = "((([PropertyInt] = @PropertyInt) AND ([PropertyDouble] = @PropertyDouble)) OR ([PropertyString] = @PropertyString))";
 
             // Assert
@@ -122,7 +122,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithDoubleGroupForAnd()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 && e.PropertyDouble == 2) && (e.PropertyString == "A" && e.PropertySingle == 1), Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 && e.PropertyDouble == 2) && (e.PropertyString == "A" && e.PropertySingle == 1)).GetString(Helper.DbSetting);
             var expected = "((([PropertyInt] = @PropertyInt) AND ([PropertyDouble] = @PropertyDouble)) AND (([PropertyString] = @PropertyString) AND ([PropertySingle] = @PropertySingle)))";
 
             // Assert
@@ -133,7 +133,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithDoubleGroupForOr()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 || e.PropertyDouble == 2) || (e.PropertyString == "A" || e.PropertySingle == 1), Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 || e.PropertyDouble == 2) || (e.PropertyString == "A" || e.PropertySingle == 1)).GetString(Helper.DbSetting);
             var expected = "((([PropertyInt] = @PropertyInt) OR ([PropertyDouble] = @PropertyDouble)) OR (([PropertyString] = @PropertyString) OR ([PropertySingle] = @PropertySingle)))";
 
             // Assert
@@ -148,7 +148,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionForMappedProperty()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString == "A", Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.MappedPropertyString == "A").GetString(Helper.DbSetting);
             var expected = "([PropertyString] = @PropertyString)";
 
             // Assert
@@ -163,7 +163,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionForQuotedProperty()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString == "A", Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString == "A").GetString(Helper.DbSetting);
             var expected = "([PropertyString] = @PropertyString)";
 
             // Assert
@@ -178,7 +178,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionForUnorganizedProperty()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.UnorganizedPropertyString == "A", Helper.DbSetting).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.UnorganizedPropertyString == "A").GetString(Helper.DbSetting);
             var expected = "([Property / . String] = @Property_____String)";
 
             // Assert
