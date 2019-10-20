@@ -174,7 +174,7 @@ namespace RepoDb.Reflection
             IDbConnection connection,
             IDbTransaction transaction)
         {
-            var list = (List<dynamic>)null;
+            var list = new List<dynamic>();
             if (reader != null && reader.HasRows)
             {
                 var func = FunctionCache.GetDataReaderToExpandoObjectConverterFunction(reader,
@@ -183,10 +183,6 @@ namespace RepoDb.Reflection
                     transaction);
                 while (await reader.ReadAsync())
                 {
-                    if (list == null)
-                    {
-                        list = new List<dynamic>();
-                    }
                     list.Add(func(reader));
                 }
             }
