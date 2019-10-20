@@ -61,10 +61,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.UnitTests", "RepoDb.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.IntegrationTests", "RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj", "{EECB6031-487B-4E8A-9034-71402FF2E5B2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Wiki", "RepoDb.Wiki", "{B28A3244-C010-41C4-9BBB-63C5141AD643}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Wiki", "RepoDb.Wiki", "{AE033D7F-CBBE-41EB-A7DA-8CDFAB326A73}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{CB794D5C-68C5-40BD-BF5F-52EF82A63F40}"
 	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.Wiki\Features.md = ..\RepoDb.Wiki\Features.md
-		..\RepoDb.Wiki\Trivias.md = ..\RepoDb.Wiki\Trivias.md
+		..\RepoDb.Wiki\Files\HLA.pptx = ..\RepoDb.Wiki\Files\HLA.pptx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{9FADAF02-04D5-4808-8AE3-CFD4E7E50187}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Wiki\Images\HLA.PNG = ..\RepoDb.Wiki\Images\HLA.PNG
 	EndProjectSection
 EndProject
 Global
@@ -93,6 +99,8 @@ Global
 		{5C628DB7-16F4-4D3A-ACB3-B2ADB140A58B} = {6837AEC8-8A8C-48EE-9338-62D972BC4DB0}
 		{4EF9CD35-0848-4461-99DA-1586FBD5ADF8} = {98D41360-3B1C-408D-A273-DABD2E20DC3B}
 		{EECB6031-487B-4E8A-9034-71402FF2E5B2} = {98D41360-3B1C-408D-A273-DABD2E20DC3B}
+		{CB794D5C-68C5-40BD-BF5F-52EF82A63F40} = {AE033D7F-CBBE-41EB-A7DA-8CDFAB326A73}
+		{9FADAF02-04D5-4808-8AE3-CFD4E7E50187} = {AE033D7F-CBBE-41EB-A7DA-8CDFAB326A73}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2CDDAD3-7C25-4343-AFC6-0FF7CAD1B560}

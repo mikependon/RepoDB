@@ -132,7 +132,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
-        internal static void CreateParameters(this IDbCommand command,
+        public static void CreateParameters(this IDbCommand command,
             object param)
         {
             CreateParameters(command, param, null);

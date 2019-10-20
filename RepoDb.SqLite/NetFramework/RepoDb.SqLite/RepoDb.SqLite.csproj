@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbHelpers\SqLiteDbHelper.cs" />
+    <Compile Include="DbSettings\SqLiteDbSetting.cs" />
     <Compile Include="DbValidators\SqLiteDbValidator.cs" />
     <Compile Include="Initializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

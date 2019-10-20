@@ -15,19 +15,19 @@ namespace RepoDb.StatementBuilders
     /// </summary>
     internal sealed class SqlServerStatementBuilder : IStatementBuilder
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> object.
+        /// </summary>
+        public SqlServerStatementBuilder() { }
+
         #region Properties
 
         /// <summary>
         /// Gets the database setting object that is currently in used.
         /// </summary>
-        private IDbSetting DbSetting => DbSettingMapper.Get(typeof(SqlConnection));
+        private IDbSetting DbSetting => DbSettingMapper.Get<SqlConnection>();
 
         #endregion
-
-        /// <summary>
-        /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> object.
-        /// </summary>
-        public SqlServerStatementBuilder() { }
 
         #region CreateBatchQuery
 

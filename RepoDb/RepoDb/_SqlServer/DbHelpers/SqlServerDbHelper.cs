@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace RepoDb.DbHelpers
@@ -15,7 +16,7 @@ namespace RepoDb.DbHelpers
     /// </summary>
     internal sealed class SqlServerDbHelper : IDbHelper
     {
-        private IDbSetting m_dbSetting = new SqlServerDbSetting();
+        private IDbSetting m_dbSetting = DbSettingMapper.Get<SqlConnection>();
 
         /// <summary>
         /// Creates a new instance of <see cref="SqlServerDbHelper"/> class.

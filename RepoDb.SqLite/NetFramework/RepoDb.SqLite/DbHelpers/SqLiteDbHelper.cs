@@ -1,5 +1,4 @@
-﻿using RepoDb;
-using RepoDb.Extensions;
+﻿using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
@@ -13,6 +12,8 @@ namespace RepoDb.DbHelpers
 {
     public class SqLiteDbHelper : IDbHelper
     {
+        private IDbSetting m_dbSetting = DbSettingMapper.Get<SQLiteConnection>();
+
         /// <summary>
         /// Creates a new instance of <see cref="SqlDbHelper"/> class.
         /// </summary>
@@ -61,12 +62,15 @@ namespace RepoDb.DbHelpers
         /// <returns>The actual table schema.</returns>
         private string GetSchema(string tableName)
         {
-            if (tableName.IndexOf(".") > 0)
+            // Get the schema and table name
+            if (tableName.IndexOf(m_dbSetting.SchemaSeparator) > 0)
             {
-                var splitted = tableName.Split(".".ToCharArray());
-                return splitted[0].AsUnquoted(true);
+                var splitted = tableName.Split(m_dbSetting.SchemaSeparator.ToCharArray());
+                return splitted[0].AsUnquoted(true, m_dbSetting);
             }
-            return "dbo"; // TODO: Research the default schema of SqLite
+
+            // Return the unquoted
+            return m_dbSetting.DefaultSchema;
         }
 
         /// <summary>
@@ -76,12 +80,15 @@ namespace RepoDb.DbHelpers
         /// <returns>The actual table name.</returns>
         private string GetTableName(string tableName)
         {
-            if (tableName.IndexOf(".") > 0)
+            // Get the schema and table name
+            if (tableName.IndexOf(m_dbSetting.SchemaSeparator) > 0)
             {
-                var splitted = tableName.Split(".".ToCharArray());
-                return splitted[1].AsUnquoted(true);
+                var splitted = tableName.Split(m_dbSetting.SchemaSeparator.ToCharArray());
+                return splitted[1].AsUnquoted(true, m_dbSetting);
             }
-            return tableName.AsUnquoted();
+
+            // Return the unquoted
+            return tableName.AsUnquoted(true, m_dbSetting);
         }
 
         /// <summary>

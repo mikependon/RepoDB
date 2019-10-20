@@ -11,7 +11,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestInitialize]
         public void Initialize()
         {
-            RepoDb.SqLite.Initializer.Initialize();
+            Initializer.Initialize();
             //Database.Initialize();
             Cleanup();
         }

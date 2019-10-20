@@ -2,64 +2,263 @@
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 
 namespace RepoDb.StatementBuilders
 {
-    public class SqLiteStatementBuilder : IStatementBuilder
+    /// <summary>
+    /// A class used to build a SQL Statement for SQLite.
+    /// </summary>
+    internal sealed class SqLiteStatementBuilder : IStatementBuilder
     {
-        public string CreateBatchQuery(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
+        /// <summary>
+        /// Creates a new instance of <see cref="SqLiteStatementBuilder"/> object.
+        /// </summary>
+        public SqLiteStatementBuilder() { }
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the database setting object that is currently in used.
+        /// </summary>
+        private IDbSetting DbSetting => DbSettingMapper.Get(typeof(SQLiteConnection));
+
+        #endregion
+
+        #region CreateBatchQuery
+
+        /// <summary>
+        /// Creates a SQL Statement for batch query operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="page">The page of the batch.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for batch query operation.</returns>
+        public string CreateBatchQuery(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            int? page,
+            int? rowsPerBatch,
+            IEnumerable<OrderField> orderBy = null,
+            QueryGroup where = null,
+            string hints = null)
         {
             throw new NotImplementedException();
         }
 
-        public string CreateCount(QueryBuilder queryBuilder, string tableName, QueryGroup where = null, string hints = null)
+        #endregion
+
+        #region CreateCount
+
+        /// <summary>
+        /// Creates a SQL Statement for count operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for count operation.</returns>
+        public string CreateCount(QueryBuilder queryBuilder,
+            string tableName,
+            QueryGroup where = null,
+            string hints = null)
         {
             throw new NotImplementedException();
         }
 
-        public string CreateCountAll(QueryBuilder queryBuilder, string tableName, string hints = null)
+        #endregion
+
+        #region CreateCountAll
+
+        /// <summary>
+        /// Creates a SQL Statement for count-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for count-all operation.</returns>
+        public string CreateCountAll(QueryBuilder queryBuilder,
+            string tableName,
+            string hints = null)
         {
             throw new NotImplementedException();
         }
 
-        public string CreateDelete(QueryBuilder queryBuilder, string tableName, QueryGroup where = null)
+        #endregion
+
+        #region CreateDelete
+
+        /// <summary>
+        /// Creates a SQL Statement for delete operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <returns>A sql statement for delete operation.</returns>
+        public string CreateDelete(QueryBuilder queryBuilder,
+            string tableName,
+            QueryGroup where = null)
         {
             throw new NotImplementedException();
         }
 
-        public string CreateDeleteAll(QueryBuilder queryBuilder, string tableName)
+        #endregion
+
+        #region CreateDeleteAll
+
+        /// <summary>
+        /// Creates a SQL Statement for delete-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A sql statement for delete-all operation.</returns>
+        public string CreateDeleteAll(QueryBuilder queryBuilder,
+            string tableName)
         {
             throw new NotImplementedException();
         }
 
-        public string CreateInsert(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields = null, DbField primaryField = null, DbField identityField = null)
+        #endregion
+
+        #region CreateInsert
+
+        /// <summary>
+        /// Creates a SQL Statement for insert operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        public string CreateInsert(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
+            DbField primaryField = null,
+            DbField identityField = null)
         {
             throw new NotImplementedException();
         }
 
-        public string CreateInsertAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null)
+        #endregion
+
+        #region CreateInsertAll
+
+        /// <summary>
+        /// Creates a SQL Statement for insert-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        public string CreateInsertAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
+            int batchSize = 10,
+            DbField primaryField = null,
+            DbField identityField = null)
         {
             throw new NotImplementedException();
         }
 
-        public string CreateMerge(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, DbField primaryField = null, DbField identityField = null)
+        #endregion
+
+        #region CreateMerge
+
+        /// <summary>
+        /// Creates a SQL Statement for merge operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be merged.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for merge operation.</returns>
+        public string CreateMerge(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers = null,
+            DbField primaryField = null,
+            DbField identityField = null)
         {
             throw new NotImplementedException();
         }
 
-        public string CreateMergeAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField primaryField = null, DbField identityField = null)
+        #endregion
+
+        #region CreateMergeAll
+
+        /// <summary>
+        /// Creates a SQL Statement for merge-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be merged.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for merge operation.</returns>
+        public string CreateMergeAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            int batchSize = 10,
+            DbField primaryField = null,
+            DbField identityField = null)
         {
             throw new NotImplementedException();
         }
 
-        public string CreateQuery(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, QueryGroup where = null, IEnumerable<OrderField> orderBy = null, int? top = null, string hints = null)
+        #endregion
+
+        #region CreateQuery
+
+        /// <summary>
+        /// Creates a SQL Statement for query operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="top">The number of rows to be returned.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for query operation.</returns>
+        public string CreateQuery(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            QueryGroup where = null,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = null,
+            string hints = null)
         {
             throw new NotImplementedException();
         }
 
-        #region QueryAll
+        #endregion
 
+        #region CreateQueryAll
+
+        /// <summary>
+        /// Creates a SQL Statement for query-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for query operation.</returns>
         public string CreateQueryAll(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
@@ -85,7 +284,7 @@ namespace RepoDb.StatementBuilders
                 // Throw an error we found any unmatches
                 if (unmatchesOrderFields?.Any() == true)
                 {
-                    throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                    throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField(DbSetting)).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
@@ -94,11 +293,11 @@ namespace RepoDb.StatementBuilders
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .FieldsFrom(fields)
+                .FieldsFrom(fields, DbSetting)
                 .From()
-                .TableNameFrom(tableName)
+                .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
-                .OrderByFrom(orderBy)
+                .OrderByFrom(orderBy, DbSetting)
                 .End();
 
             // Return the query
@@ -107,20 +306,71 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        public string CreateTruncate(QueryBuilder queryBuilder, string tableName)
+        #region CreateTruncate
+
+        /// <summary>
+        /// Creates a SQL Statement for truncate operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A sql statement for truncate operation.</returns>
+        public string CreateTruncate(QueryBuilder queryBuilder,
+            string tableName)
         {
             throw new NotImplementedException();
         }
 
-        public string CreateUpdate(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, QueryGroup where = null, DbField primaryField = null, DbField identityField = null)
+        #endregion
+
+        #region CreateUpdate
+
+        /// <summary>
+        /// Creates a SQL Statement for update operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be updated.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for update operation.</returns>
+        public string CreateUpdate(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            QueryGroup where = null,
+            DbField primaryField = null,
+            DbField identityField = null)
         {
             throw new NotImplementedException();
         }
 
-        public string CreateUpdateAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField primaryField = null, DbField identityField = null)
+        #endregion
+
+        #region CreateUpdateAll
+
+        /// <summary>
+        /// Creates a SQL Statement for update-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be updated.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for update-all operation.</returns>
+        public string CreateUpdateAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            int batchSize = 10,
+            DbField primaryField = null,
+            DbField identityField = null)
         {
             throw new NotImplementedException();
         }
+
+        #endregion
 
         #region Helper
 

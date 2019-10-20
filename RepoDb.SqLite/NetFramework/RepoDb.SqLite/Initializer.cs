@@ -1,5 +1,6 @@
 ﻿using RepoDb.DbHelpers;
 using RepoDb.DbValidators;
+using RepoDb.SqLite.DbSettings;
 using RepoDb.StatementBuilders;
 using System.Data.SQLite;
 
@@ -13,16 +14,20 @@ namespace RepoDb.SqLite
 
         public static void Initialize()
         {
+            // Map the Statement Builder
+            StatementBuilderMapper.Add(typeof(SQLiteConnection), new SqLiteStatementBuilder(), true);
+
             // Map the DbHelper
             DbHelperMapper.Add(typeof(SQLiteConnection), new SqLiteDbHelper(), true);
 
             // Map the DbValidator
             DbValidatorMapper.Add(typeof(SQLiteConnection), new SqLiteDbValidator(), true);
 
-            // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(SQLiteConnection), new SqLiteStatementBuilder(), true);
+            // Map the DbSetting
+            DbSettingMapper.Add(typeof(SQLiteConnection), new SqLiteDbSetting(), true);
 
-            // Map the Setting
+            // Map the DbOperation
+            //DbSettingMapper.Add(typeof(SQLiteConnection), new SqLiteDbOperation(), true);
         }
     }
 }
