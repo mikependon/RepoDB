@@ -81,6 +81,9 @@
     <Compile Include="ObjectMappingTest.cs" />
     <Compile Include="ObjectNameCasingTest.cs" />
     <Compile Include="ObjectQuotationTest.cs" />
+    <Compile Include="Operations\BaseRepositoryOperationsTest.cs" />
+    <Compile Include="Operations\DbRepositoryOperationsTest.cs" />
+    <Compile Include="Operations\SqlConnectionOperationsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup\Database.cs" />
     <Compile Include="SpecialOperationTest.cs" />

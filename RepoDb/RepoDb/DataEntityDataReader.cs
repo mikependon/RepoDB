@@ -78,11 +78,11 @@ namespace RepoDb
                 if (fields?.Any() == true)
                 {
                     Properties = PropertyCache.Get<TEntity>()
-                        .Where(p => fields.FirstOrDefault(f => string.Equals(f.Name.AsQuoted(DbSetting), p.GetMappedName(), StringComparison.OrdinalIgnoreCase)) != null)
+                        .Where(p => fields.FirstOrDefault(f => string.Equals(f.Name.AsQuoted(DbSetting), p.GetMappedName().AsQuoted(DbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                         .AsList();
                 }
             }
-            if (Properties == null)
+            if (Properties?.Any() != true)
             {
                 Properties = PropertyCache.Get<TEntity>().AsList();
             }

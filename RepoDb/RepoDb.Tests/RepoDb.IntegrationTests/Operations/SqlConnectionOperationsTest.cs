@@ -53,7 +53,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -81,7 +81,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
                     transaction: null,
                     trace: null,
@@ -108,7 +108,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -136,7 +136,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -164,7 +164,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     commandTimeout: 0,
                     transaction: null,
@@ -192,7 +192,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
                     commandTimeout: 0,
                     transaction: null,
@@ -220,7 +220,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     commandTimeout: 0,
                     transaction: null,
@@ -248,7 +248,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     commandTimeout: 0,
                     transaction: null,
@@ -276,7 +276,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new { ColumnInt = 3 },
                     commandTimeout: 0,
                     transaction: null,
@@ -293,7 +293,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -304,7 +304,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: field,
                     commandTimeout: 0,
                     transaction: null,
@@ -324,8 +324,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -337,7 +337,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: fields,
                     commandTimeout: 0,
                     transaction: null,
@@ -357,10 +357,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -371,7 +371,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: queryGroup,
                     commandTimeout: 0,
                     transaction: null,
@@ -403,7 +403,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new { ColumnInt = 3 },
                     commandTimeout: 0,
                     transaction: null,
@@ -420,7 +420,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -431,7 +431,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: field,
                     commandTimeout: 0,
                     transaction: null,
@@ -451,8 +451,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -464,7 +464,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: fields,
                     commandTimeout: 0,
                     transaction: null,
@@ -484,10 +484,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -498,7 +498,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: queryGroup,
                     commandTimeout: 0,
                     transaction: null,
@@ -530,7 +530,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -558,7 +558,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
                     transaction: null,
                     trace: null,
@@ -585,7 +585,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -613,7 +613,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -641,7 +641,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     commandTimeout: 0,
                     transaction: null,
@@ -669,7 +669,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
                     commandTimeout: 0,
                     transaction: null,
@@ -697,7 +697,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     commandTimeout: 0,
                     transaction: null,
@@ -725,7 +725,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
                     commandTimeout: 0,
                     transaction: null,
@@ -753,7 +753,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new { ColumnInt = 3 },
                     commandTimeout: 0,
                     transaction: null,
@@ -770,7 +770,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -781,7 +781,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: field,
                     commandTimeout: 0,
                     transaction: null,
@@ -801,8 +801,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -814,7 +814,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: fields,
                     commandTimeout: 0,
                     transaction: null,
@@ -834,10 +834,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -848,7 +848,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<IdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: queryGroup,
                     commandTimeout: 0,
                     transaction: null,
@@ -880,7 +880,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new { ColumnInt = 3 },
                     commandTimeout: 0,
                     transaction: null,
@@ -897,7 +897,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -908,7 +908,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: field,
                     commandTimeout: 0,
                     transaction: null,
@@ -928,8 +928,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -941,7 +941,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: fields,
                     commandTimeout: 0,
                     transaction: null,
@@ -961,10 +961,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -975,7 +975,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: queryGroup,
                     commandTimeout: 0,
                     transaction: null,
@@ -1004,10 +1004,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -1032,10 +1032,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -1060,10 +1060,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -1088,10 +1088,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -1116,14 +1116,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new[]
                     {
-                        new QueryField("ColumnInt", Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
                     },
                     commandTimeout: 0,
                     transaction: null,
@@ -1148,14 +1148,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: new[]
                     {
-                        new QueryField("ColumnInt", Operation.GreaterThanOrEqual, 1, DbSettingMapper.Get(typeof(SqlConnection))),
-                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                        new QueryField("ColumnInt", Operation.GreaterThanOrEqual, 1),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 10)
                     },
                     commandTimeout: 0,
                     transaction: null,
@@ -1180,14 +1180,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new[]
                     {
-                        new QueryField("ColumnInt", Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
                     },
                     commandTimeout: 0,
                     transaction: null,
@@ -1212,14 +1212,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: new[]
                     {
-                        new QueryField("ColumnInt", Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
                     },
                     commandTimeout: 0,
                     transaction: null,
@@ -1244,10 +1244,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new { ColumnInt = 3 },
                     commandTimeout: 0,
                     transaction: null,
@@ -1264,7 +1264,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1272,10 +1272,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: field,
                     commandTimeout: 0,
                     transaction: null,
@@ -1295,8 +1295,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1305,10 +1305,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: fields,
                     commandTimeout: 0,
                     transaction: null,
@@ -1328,10 +1328,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1339,10 +1339,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: queryGroup,
                     commandTimeout: 0,
                     transaction: null,
@@ -1371,10 +1371,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -1399,10 +1399,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -1427,10 +1427,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -1455,10 +1455,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
@@ -1483,14 +1483,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new[]
                     {
-                        new QueryField("ColumnInt", Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
                     },
                     commandTimeout: 0,
                     transaction: null,
@@ -1515,14 +1515,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: new[]
                     {
-                        new QueryField("ColumnInt", Operation.GreaterThanOrEqual, 1, DbSettingMapper.Get(typeof(SqlConnection))),
-                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                        new QueryField("ColumnInt", Operation.GreaterThanOrEqual, 1),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 10)
                     },
                     commandTimeout: 0,
                     transaction: null,
@@ -1547,14 +1547,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new[]
                     {
-                        new QueryField("ColumnInt", Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
                     },
                     commandTimeout: 0,
                     transaction: null,
@@ -1579,14 +1579,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Descending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: new[]
                     {
-                        new QueryField("ColumnInt", Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                        new QueryField("ColumnInt", Operation.GreaterThan, 10),
+                        new QueryField("ColumnInt", Operation.LessThanOrEqual, 20)
                     },
                     commandTimeout: 0,
                     transaction: null,
@@ -1611,10 +1611,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new { ColumnInt = 3 },
                     commandTimeout: 0,
                     transaction: null,
@@ -1631,7 +1631,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1639,10 +1639,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: field,
                     commandTimeout: 0,
                     transaction: null,
@@ -1662,8 +1662,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1672,10 +1672,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: fields,
                     commandTimeout: 0,
                     transaction: null,
@@ -1695,10 +1695,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(20);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1706,10 +1706,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection))),
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: queryGroup,
                     commandTimeout: 0,
                     transaction: null,
@@ -2161,7 +2161,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -2200,7 +2200,7 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -2248,7 +2248,7 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -2297,7 +2297,7 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -2388,7 +2388,7 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), table);
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), table);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -2441,7 +2441,7 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), table, DataRowState.Unchanged, mappings);
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -2495,7 +2495,7 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), table, DataRowState.Unchanged, mappings);
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -3015,7 +3015,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -3054,7 +3054,7 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (DbDataReader)reader).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader).Result;
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -3102,7 +3102,7 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (DbDataReader)reader, mappings).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings).Result;
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -3151,7 +3151,7 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (DbDataReader)reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings);
 
                         // Trigger
                         var result = bulkInsertResult.Result;
@@ -3248,7 +3248,7 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), table).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), table).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -3301,7 +3301,7 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), table, DataRowState.Unchanged, mappings).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -3355,7 +3355,7 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), table, DataRowState.Unchanged, mappings);
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings);
 
                             // Trigger
                             var result = bulkInsertResult.Result;
@@ -3507,7 +3507,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3529,8 +3529,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3553,10 +3553,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3637,7 +3637,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3659,8 +3659,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3683,10 +3683,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3717,7 +3717,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null);
 
                 // Assert
@@ -3737,7 +3737,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
                     new { ColumnInt = 1 });
 
                 // Assert
@@ -3750,7 +3750,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3758,7 +3758,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
                     field);
 
                 // Assert
@@ -3773,8 +3773,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3783,7 +3783,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
                     fields);
 
                 // Assert
@@ -3798,10 +3798,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3809,7 +3809,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup);
 
                 // Assert
@@ -3833,7 +3833,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null).Result;
 
                 // Assert
@@ -3865,7 +3865,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3873,7 +3873,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     field).Result;
 
                 // Assert
@@ -3888,8 +3888,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -3898,7 +3898,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     fields).Result;
 
                 // Assert
@@ -3913,10 +3913,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -3924,7 +3924,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup).Result;
 
                 // Assert
@@ -4036,7 +4036,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.CountAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var result = connection.CountAll(ClassMappedNameCache.Get<IdentityTable>());
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -4055,7 +4055,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.CountAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.CountAll(ClassMappedNameCache.Get<IdentityTable>(),
                     hints: SqlServerTableHints.NoLock);
 
                 // Assert
@@ -4079,7 +4079,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.CountAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var result = connection.CountAllAsync(ClassMappedNameCache.Get<IdentityTable>()).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -4098,7 +4098,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.CountAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.CountAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
@@ -4233,7 +4233,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Delete<IdentityTable>(new QueryField(nameof(IdentityTable.ColumnInt), 6, DbSettingMapper.Get(typeof(SqlConnection))));
+                var result = connection.Delete<IdentityTable>(new QueryField(nameof(IdentityTable.ColumnInt), 6));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -4248,8 +4248,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4273,10 +4273,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4409,7 +4409,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), 6, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 6);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4432,8 +4432,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4457,10 +4457,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4492,7 +4492,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null);
 
                 // Assert
@@ -4513,7 +4513,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(),
                     new { ColumnInt = 6 });
 
                 // Assert
@@ -4534,8 +4534,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
-                    new QueryField(nameof(IdentityTable.ColumnInt), 6, DbSettingMapper.Get(typeof(SqlConnection))));
+                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(),
+                    new QueryField(nameof(IdentityTable.ColumnInt), 6));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -4550,8 +4550,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4560,7 +4560,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(),
                     fields);
 
                 // Assert
@@ -4576,10 +4576,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4587,7 +4587,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup);
 
                 // Assert
@@ -4612,7 +4612,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null);
 
                 // Assert
@@ -4633,7 +4633,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new { ColumnInt = 6 }).Result;
 
                 // Assert
@@ -4647,7 +4647,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), 6, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 6);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4655,7 +4655,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     field).Result;
 
                 // Assert
@@ -4671,8 +4671,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -4681,7 +4681,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     fields).Result;
 
                 // Assert
@@ -4697,10 +4697,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -4708,7 +4708,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup).Result;
 
                 // Assert
@@ -4785,7 +4785,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var result = connection.DeleteAll(ClassMappedNameCache.Get<IdentityTable>());
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -4809,7 +4809,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>()).Result;
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -5040,7 +5040,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 tables.ForEach(item =>
                 {
-                    item.Id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item);
+                    item.Id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(), item);
                 });
 
                 // Act
@@ -5064,7 +5064,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var item = Helper.CreateIdentityTable();
 
                 // Act
-                item.Id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                item.Id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
                     item);
 
                 // Act
@@ -5085,7 +5085,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var item = Helper.CreateNonIdentityTable();
 
                 // Act
-                var value = connection.Insert<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var value = connection.Insert<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     item);
 
                 // Act
@@ -5107,14 +5107,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var insertResult = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item);
+                var insertResult = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(), item);
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);
-                Assert.AreEqual(1, connection.CountAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(1, connection.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult.First());
@@ -5136,7 +5136,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 tables.ForEach(item =>
                 {
-                    item.Id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item).Result;
+                    item.Id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(), item).Result;
                 });
 
                 // Act
@@ -5160,7 +5160,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var item = Helper.CreateIdentityTable();
 
                 // Act
-                item.Id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                item.Id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
                     item).Result;
 
                 // Act
@@ -5181,7 +5181,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var item = Helper.CreateNonIdentityTable();
 
                 // Act
-                var value = connection.InsertAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var value = connection.InsertAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     item).Result;
 
                 // Act
@@ -5203,14 +5203,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var insertResult = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item).Result;
+                var insertResult = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(), item).Result;
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);
-                Assert.AreEqual(1, connection.CountAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(1, connection.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult.First());
@@ -5549,7 +5549,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -5568,7 +5568,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables, 1);
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables, 1);
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -5587,7 +5587,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables.Item1, fields: tables.Item2);
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, fields: tables.Item2);
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -5606,7 +5606,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables.Item1, 1, fields: tables.Item2);
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, 1, fields: tables.Item2);
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -5625,7 +5625,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -5644,7 +5644,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables, 1);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables, 1);
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -5663,7 +5663,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables.Item1, fields: tables.Item2);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, fields: tables.Item2);
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -5682,7 +5682,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables.Item1, 1, fields: tables.Item2);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, 1, fields: tables.Item2);
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -5706,14 +5706,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var insertAllResult = connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                var insertAllResult = connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(tables.Length, insertAllResult);
-                Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
 
                 // Assert
                 tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
@@ -5734,7 +5734,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -5753,7 +5753,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables, 1).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables, 1).Wait();
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -5772,7 +5772,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables.Item1, Constant.DefaultBatchOperationSize, tables.Item2).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, Constant.DefaultBatchOperationSize, tables.Item2).Wait();
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -5791,7 +5791,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables.Item1, 1, fields: tables.Item2).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, 1, fields: tables.Item2).Wait();
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -5810,7 +5810,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Wait();
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -5829,7 +5829,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables, 1).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables, 1).Wait();
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -5848,7 +5848,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables.Item1, Constant.DefaultBatchOperationSize, tables.Item2).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, Constant.DefaultBatchOperationSize, tables.Item2).Wait();
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -5867,7 +5867,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables.Item1, 1, fields: tables.Item2).Wait();
+                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, 1, fields: tables.Item2).Wait();
 
                 // Act
                 var result = connection.CountAll<NonIdentityTable>();
@@ -5891,14 +5891,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var insertAllResult = connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables).Result;
+                var insertAllResult = connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Length, insertAllResult);
-                Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<IdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
 
                 // Assert
                 tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
@@ -5969,7 +5969,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -5992,7 +5992,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6016,7 +6016,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable>(item,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6040,7 +6040,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = connection.Merge<NonIdentityTable>(item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6109,7 +6109,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6132,7 +6132,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6156,7 +6156,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable, long>(item,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6180,7 +6180,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = connection.Merge<NonIdentityTable, Guid>(item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6258,7 +6258,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<IdentityTable>(item);
 
                 // Act
-                var mergeResult = connection.Merge<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6284,7 +6284,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<NonIdentityTable>(item);
 
                 // Act
-                var mergeResult = connection.Merge<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6311,7 +6311,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = connection.Merge<IdentityTable>(item,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6338,7 +6338,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = connection.Merge<NonIdentityTable>(item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6416,7 +6416,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<IdentityTable>(item);
 
                 // Act
-                var mergeResult = connection.Merge<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6442,7 +6442,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<NonIdentityTable>(item);
 
                 // Act
-                var mergeResult = connection.Merge<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6469,7 +6469,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = connection.Merge<IdentityTable, long>(item,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6496,7 +6496,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = connection.Merge<NonIdentityTable, Guid>(item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6622,7 +6622,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6645,7 +6645,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6669,7 +6669,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = connection.MergeAsync<IdentityTable>(item,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6693,7 +6693,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = connection.MergeAsync<NonIdentityTable>(item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6762,7 +6762,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6785,7 +6785,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6809,7 +6809,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = connection.MergeAsync<IdentityTable, long>(item,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6833,7 +6833,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6911,7 +6911,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<IdentityTable>(item);
 
                 // Act
-                var mergeResult = connection.MergeAsync<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6937,7 +6937,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<NonIdentityTable>(item);
 
                 // Act
-                var mergeResult = connection.MergeAsync<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6964,7 +6964,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = connection.MergeAsync<IdentityTable>(item,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -6991,7 +6991,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = connection.MergeAsync<NonIdentityTable>(item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -7069,7 +7069,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<IdentityTable>(item);
 
                 // Act
-                var mergeResult = connection.MergeAsync<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -7095,7 +7095,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<NonIdentityTable>(item);
 
                 // Act
-                var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -7122,7 +7122,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = connection.MergeAsync<IdentityTable, long>(item,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -7149,7 +7149,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = connection.MergeAsync<NonIdentityTable, Guid>(item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -7229,14 +7229,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7252,15 +7252,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7276,15 +7276,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7300,14 +7300,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7323,15 +7323,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7347,15 +7347,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7371,17 +7371,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7397,18 +7397,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7424,18 +7424,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7451,17 +7451,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7477,18 +7477,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7504,18 +7504,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7531,14 +7531,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item);
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), item);
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
-                Assert.AreEqual(1, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(1, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7554,7 +7554,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Merge(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Merge(ClassMappedNameCache.Get<IdentityTable>(), (object)item);
             }
         }
 
@@ -7571,14 +7571,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7594,15 +7594,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7618,15 +7618,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7642,14 +7642,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item).Result;
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7665,15 +7665,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7689,15 +7689,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7713,17 +7713,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7739,18 +7739,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7766,18 +7766,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7793,17 +7793,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item).Result;
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7819,18 +7819,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7846,18 +7846,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7873,14 +7873,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item).Result;
+                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), item).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
-                Assert.AreEqual(1, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(1, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -7896,7 +7896,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item).Wait();
+                connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(), (object)item).Wait();
             }
         }
 
@@ -7941,7 +7941,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAll<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -7966,7 +7966,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = connection.MergeAll<IdentityTable>(tables,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8020,7 +8020,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll<IdentityTable>(tables);
 
                 // Act
-                var mergeAllResult = connection.MergeAll<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeAllResult = connection.MergeAll<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8048,7 +8048,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = connection.MergeAll<IdentityTable>(tables,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8096,7 +8096,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8121,7 +8121,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8175,7 +8175,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll<NonIdentityTable>(tables);
 
                 // Act
-                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8203,7 +8203,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8355,7 +8355,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8380,7 +8380,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8434,7 +8434,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll<IdentityTable>(tables);
 
                 // Act
-                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8462,7 +8462,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = connection.MergeAllAsync<IdentityTable>(tables,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8510,7 +8510,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8535,7 +8535,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8589,7 +8589,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll<NonIdentityTable>(tables);
 
                 // Act
-                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8617,7 +8617,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8745,14 +8745,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -8769,15 +8769,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -8794,15 +8794,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -8819,17 +8819,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
 
                 // Act
-                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -8846,18 +8846,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
 
                 // Act
-                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -8874,18 +8874,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
 
                 // Act
-                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection))));
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -8907,14 +8907,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(tables.Length, mergeAllResult);
-                Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
@@ -8931,7 +8931,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                connection.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
             }
         }
 
@@ -9048,14 +9048,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables).Result;
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -9072,15 +9072,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -9097,15 +9097,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -9122,17 +9122,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
 
                 // Act
-                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables).Result;
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -9149,18 +9149,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
 
                 // Act
-                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt), DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -9177,18 +9177,18 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables);
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
 
                 // Act
-                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
-                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Count, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ForEach(item => Helper.AssertMembersEquality(item,
@@ -9210,14 +9210,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables).Result;
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Length, mergeAllResult);
-                Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))));
+                Assert.AreEqual(tables.Length, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>());
 
                 // Assert
                 tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
@@ -9234,7 +9234,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables).Wait();
+                connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
             }
         }
 
@@ -9401,7 +9401,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9424,7 +9424,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9519,7 +9519,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query<IdentityTable>(new QueryField(nameof(IdentityTable.Id), last.Id, DbSettingMapper.Get(typeof(SqlConnection))));
+                var result = connection.Query<IdentityTable>(new QueryField(nameof(IdentityTable.Id), last.Id));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -9534,8 +9534,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -9564,8 +9564,8 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -9593,10 +9593,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9619,11 +9619,11 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9648,10 +9648,10 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 6, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), 6)
             };
-            var queryGroup = new QueryGroup(fields, Conjunction.Or, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9679,10 +9679,10 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9709,11 +9709,11 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -9736,12 +9736,12 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -10356,7 +10356,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -10379,7 +10379,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -10474,7 +10474,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(new QueryField(nameof(IdentityTable.Id), last.Id, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var result = connection.QueryAsync<IdentityTable>(new QueryField(nameof(IdentityTable.Id), last.Id)).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -10489,8 +10489,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -10519,8 +10519,8 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -10548,10 +10548,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -10574,11 +10574,11 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -10603,10 +10603,10 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 6, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), 6)
             };
-            var queryGroup = new QueryGroup(fields, Conjunction.Or, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -10634,10 +10634,10 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -10664,11 +10664,11 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -10691,12 +10691,12 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -11268,7 +11268,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null);
 
                 // Assert
@@ -11300,9 +11300,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    Field.From(new[] { "Id", "RowGuid", "ColumnFloat" }, DbSettingMapper.Get(typeof(SqlConnection))));
+                    Field.From(new[] { "Id", "RowGuid", "ColumnFloat" }));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -11329,7 +11329,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     whereOrPrimaryKey: null,
                     top: top);
 
@@ -11348,7 +11348,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -11356,7 +11356,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     whereOrPrimaryKey: null,
                     orderBy: orderBy.AsEnumerable());
 
@@ -11372,7 +11372,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -11380,7 +11380,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     whereOrPrimaryKey: null,
                     top: top,
                     orderBy: orderBy.AsEnumerable());
@@ -11405,7 +11405,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
                     last.Id);
 
                 // Assert
@@ -11427,7 +11427,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     new { last.Id });
 
                 // Assert
@@ -11449,8 +11449,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
-                    new QueryField(nameof(IdentityTable.Id), last.Id, DbSettingMapper.Get(typeof(SqlConnection))));
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    new QueryField(nameof(IdentityTable.Id), last.Id));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -11465,8 +11465,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -11475,7 +11475,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     fields);
 
                 // Assert
@@ -11496,8 +11496,8 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -11506,7 +11506,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     fields,
                     top: top);
 
@@ -11527,10 +11527,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -11538,7 +11538,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     fields,
                     orderBy: orderBy.AsEnumerable());
 
@@ -11555,11 +11555,11 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -11567,7 +11567,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     fields,
                     orderBy: orderBy.AsEnumerable(), top: top);
 
@@ -11586,10 +11586,10 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 6, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), 6)
             };
-            var queryGroup = new QueryGroup(fields, Conjunction.Or, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -11597,7 +11597,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup);
 
                 // Assert
@@ -11618,10 +11618,10 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -11629,7 +11629,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup,
                     top: top);
 
@@ -11650,11 +11650,11 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -11662,7 +11662,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup,
                     orderBy: orderBy.AsEnumerable());
 
@@ -11679,12 +11679,12 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -11692,7 +11692,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup,
                     orderBy: orderBy.AsEnumerable(),
                     top: top);
@@ -11710,7 +11710,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Query(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
                     1);
             }
         }
@@ -11731,7 +11731,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null).Result;
 
                 // Assert
@@ -11763,9 +11763,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    Field.From(new[] { "Id", "RowGuid", "ColumnFloat" }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                    Field.From(new[] { "Id", "RowGuid", "ColumnFloat" })).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -11792,7 +11792,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     whereOrPrimaryKey: null,
                     top: top).Result;
 
@@ -11811,7 +11811,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -11819,7 +11819,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     whereOrPrimaryKey: null,
                     orderBy: orderBy.AsEnumerable()).Result;
 
@@ -11835,7 +11835,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -11843,7 +11843,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     whereOrPrimaryKey: null,
                     top: top,
                     orderBy: orderBy.AsEnumerable()).Result;
@@ -11868,7 +11868,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     last.Id).Result;
 
                 // Assert
@@ -11890,7 +11890,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new { last.Id }).Result;
 
                 // Assert
@@ -11912,8 +11912,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
-                    new QueryField(nameof(IdentityTable.Id), last.Id, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new QueryField(nameof(IdentityTable.Id), last.Id)).Result;
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -11928,8 +11928,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -11938,7 +11938,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     fields).Result;
 
                 // Assert
@@ -11959,8 +11959,8 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -11969,7 +11969,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     fields,
                     top: top).Result;
 
@@ -11990,10 +11990,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12001,7 +12001,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     fields,
                     orderBy: orderBy.AsEnumerable()).Result;
 
@@ -12018,11 +12018,11 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12030,7 +12030,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     fields,
                     orderBy: orderBy.AsEnumerable(), top: top).Result;
 
@@ -12049,10 +12049,10 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 6, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), 6)
             };
-            var queryGroup = new QueryGroup(fields, Conjunction.Or, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12060,7 +12060,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup).Result;
 
                 // Assert
@@ -12081,10 +12081,10 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 2;
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12092,7 +12092,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup,
                     top: top).Result;
 
@@ -12113,11 +12113,11 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12125,7 +12125,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup,
                     orderBy: orderBy.AsEnumerable()).Result;
 
@@ -12142,12 +12142,12 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThanOrEqual, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
             var top = 3;
-            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12155,7 +12155,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup,
                     orderBy: orderBy.AsEnumerable(),
                     top: top).Result;
@@ -12173,7 +12173,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     1).Wait();
             }
         }
@@ -12214,7 +12214,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12261,7 +12261,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12340,7 +12340,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12387,7 +12387,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12450,7 +12450,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>());
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -12474,7 +12474,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12482,7 +12482,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
                     orderBy: orderBy);
 
                 // Assert
@@ -12514,7 +12514,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
                     hints: SqlServerTableHints.NoLock);
 
                 // Assert
@@ -12539,7 +12539,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12547,7 +12547,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
                     orderBy: orderBy,
                     hints: SqlServerTableHints.NoLock);
 
@@ -12584,7 +12584,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>()).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -12608,7 +12608,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12616,7 +12616,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     orderBy: orderBy).Result;
 
                 // Assert
@@ -12648,7 +12648,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
@@ -12673,7 +12673,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var orderBy = OrderField.Parse(new { Id = Order.Ascending }, DbSettingMapper.Get(typeof(SqlConnection)));
+            var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -12681,7 +12681,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     orderBy: orderBy,
                     hints: SqlServerTableHints.NoLock).Result;
 
@@ -13539,7 +13539,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                connection.Truncate(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                connection.Truncate(ClassMappedNameCache.Get<IdentityTable>());
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -13565,7 +13565,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var task = connection.TruncateAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))));
+                var task = connection.TruncateAsync(ClassMappedNameCache.Get<IdentityTable>());
                 task.Wait();
 
                 // Act
@@ -13729,7 +13729,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -13764,8 +13764,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -13802,10 +13802,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -13951,7 +13951,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -13989,8 +13989,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -14030,10 +14030,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -14214,7 +14214,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -14249,8 +14249,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -14287,10 +14287,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -14436,7 +14436,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -14474,8 +14474,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -14515,10 +14515,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -14578,7 +14578,7 @@ namespace RepoDb.IntegrationTests.Operations
                     };
 
                     // Update each
-                    var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                    var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
                         data);
 
                     // Assert
@@ -14607,7 +14607,7 @@ namespace RepoDb.IntegrationTests.Operations
                     item.ColumnDecimal = item.ColumnDecimal * 100;
 
                     // Update each
-                    var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                    var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
                         item,
                         item.Id);
 
@@ -14637,7 +14637,7 @@ namespace RepoDb.IntegrationTests.Operations
                     item.ColumnDecimal = item.ColumnDecimal * 100;
 
                     // Update each
-                    var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                    var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(),
                         item,
                         new { item.Id });
 
@@ -14659,7 +14659,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -14672,7 +14672,7 @@ namespace RepoDb.IntegrationTests.Operations
                 last.ColumnDecimal = last.ColumnDecimal * 100;
 
                 // Act
-                var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(),
                     last,
                     field);
 
@@ -14696,8 +14696,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -14712,7 +14712,7 @@ namespace RepoDb.IntegrationTests.Operations
                 last.ColumnDecimal = last.ColumnDecimal * 100;
 
                 // Act
-                var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(),
                     last,
                     fields);
 
@@ -14736,10 +14736,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -14753,7 +14753,7 @@ namespace RepoDb.IntegrationTests.Operations
                 last.ColumnDecimal = last.ColumnDecimal * 100;
 
                 // Act
-                var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(),
                     last,
                     queryGroup);
 
@@ -14779,14 +14779,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (object)item);
+                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), (Guid)item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -14802,16 +14802,16 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), item);
 
                 // Act
-                var updateResult = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item);
+                var updateResult = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), item);
 
                 // Assert
                 Assert.AreEqual(1, updateResult);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -14828,11 +14828,11 @@ namespace RepoDb.IntegrationTests.Operations
                     ColumnInt = 1,
                     ColumnDecimal = 2
                 };
-                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), data);
+                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(EmptyException))]
         public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfTheFieldsAreNotFound()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -14842,7 +14842,7 @@ namespace RepoDb.IntegrationTests.Operations
                     Id = 1,
                     AnyField = 1
                 };
-                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), data);
+                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
             }
         }
 
@@ -14874,7 +14874,7 @@ namespace RepoDb.IntegrationTests.Operations
                     };
 
                     // Update each
-                    var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                    var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                         data).Result;
 
                     // Assert
@@ -14903,7 +14903,7 @@ namespace RepoDb.IntegrationTests.Operations
                     item.ColumnDecimal = item.ColumnDecimal * 100;
 
                     // Update each
-                    var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                    var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     item,
                     item.Id).Result;
 
@@ -14933,7 +14933,7 @@ namespace RepoDb.IntegrationTests.Operations
                     item.ColumnDecimal = item.ColumnDecimal * 100;
 
                     // Update each
-                    var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                    var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     item,
                     new { item.Id }).Result;
 
@@ -14955,7 +14955,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)));
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -14968,7 +14968,7 @@ namespace RepoDb.IntegrationTests.Operations
                 last.ColumnDecimal = last.ColumnDecimal * 100;
 
                 // Act
-                var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     last,
                     field).Result;
 
@@ -14992,8 +14992,8 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -15008,7 +15008,7 @@ namespace RepoDb.IntegrationTests.Operations
                 last.ColumnDecimal = last.ColumnDecimal * 100;
 
                 // Act
-                var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     last,
                     fields).Result;
 
@@ -15032,10 +15032,10 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var fields = new[]
             {
-                new QueryField(nameof(IdentityTable.ColumnBit), true, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField(nameof(IdentityTable.ColumnInt), 10, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField(nameof(IdentityTable.ColumnBit), true),
+                new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
-            var queryGroup = new QueryGroup(fields, DbSettingMapper.Get(typeof(SqlConnection)));
+            var queryGroup = new QueryGroup(fields);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -15049,7 +15049,7 @@ namespace RepoDb.IntegrationTests.Operations
                 last.ColumnDecimal = last.ColumnDecimal * 100;
 
                 // Act
-                var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))),
+                var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     last,
                     queryGroup).Result;
 
@@ -15075,16 +15075,16 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item);
+                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), item);
 
                 // Act
-                var updateResult = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item).Result;
+                var updateResult = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), item).Result;
 
                 // Assert
                 Assert.AreEqual(1, updateResult);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), item.Id).First();
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), item.Id).First();
 
                 // Assert
                 Helper.AssertMembersEquality(item, queryResult);
@@ -15101,7 +15101,7 @@ namespace RepoDb.IntegrationTests.Operations
                     ColumnInt = 1,
                     ColumnDecimal = 2
                 };
-                connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), data).Wait();
+                connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), data).Wait();
             }
         }
 
@@ -15115,7 +15115,7 @@ namespace RepoDb.IntegrationTests.Operations
                     Id = 1,
                     AnyField = 1
                 };
-                connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), data).Wait();
+                connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), data).Wait();
             }
         }
 
@@ -15218,7 +15218,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAll(tables, Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }, DbSettingMapper.Get(typeof(SqlConnection))));
+                var affectedRows = connection.UpdateAll(tables, Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -15253,7 +15253,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAll(tables, Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }, DbSettingMapper.Get(typeof(SqlConnection))), 1);
+                var affectedRows = connection.UpdateAll(tables, Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }), 1);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -15362,7 +15362,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAllAsync(tables, Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var affectedRows = connection.UpdateAllAsync(tables, Field.From(new[] { "ColumnFloat", "ColumnNVarChar" })).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -15397,7 +15397,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAllAsync(tables, Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }, DbSettingMapper.Get(typeof(SqlConnection))), 1).Result;
+                var affectedRows = connection.UpdateAllAsync(tables, Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }), 1).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -15441,7 +15441,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), items);
+                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(), items);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -15474,7 +15474,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables, 1);
+                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables, 1);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -15507,8 +15507,8 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }, DbSettingMapper.Get(typeof(SqlConnection))));
+                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -15541,8 +15541,8 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }, DbSettingMapper.Get(typeof(SqlConnection))), 1);
+                var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }), 1);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -15579,7 +15579,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), items).Result;
+                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), items).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -15612,7 +15612,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables, 1).Result;
+                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables, 1).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -15645,8 +15645,8 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }, DbSettingMapper.Get(typeof(SqlConnection)))).Result;
+                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(new[] { "ColumnFloat", "ColumnNVarChar" })).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -15679,8 +15679,8 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Update each
-                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(DbSettingMapper.Get(typeof(SqlConnection))), tables,
-                    Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }, DbSettingMapper.Get(typeof(SqlConnection))), 1).Result;
+                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
+                    Field.From(new[] { "ColumnFloat", "ColumnNVarChar" }), 1).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -16459,10 +16459,9 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnFloat", last.ColumnFloat, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnInt", last.ColumnInt, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnFloat", last.ColumnFloat),
+                new QueryField("ColumnInt", last.ColumnInt)
+            });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -16486,8 +16485,8 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var param = new[]
             {
-                new QueryField("ColumnFloat", last.ColumnFloat, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnInt", last.ColumnInt, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnFloat", last.ColumnFloat),
+                new QueryField("ColumnInt", last.ColumnInt)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -16510,7 +16509,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
-            var param = new QueryField("ColumnFloat", last.ColumnFloat, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnFloat", last.ColumnFloat);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -16526,7 +16525,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfTheParameterAreInvalidTypeDictionaryObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -16545,7 +16544,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
-                var param = new QueryField("Id", Operation.NotEqual, 1, DbSettingMapper.Get(typeof(SqlConnection)));
+                var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
                 connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
@@ -16814,10 +16813,9 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnFloat", last.ColumnFloat, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnInt", last.ColumnInt, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnFloat", last.ColumnFloat),
+                new QueryField("ColumnInt", last.ColumnInt)
+            });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -16841,8 +16839,8 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var param = new[]
             {
-                new QueryField("ColumnFloat", last.ColumnFloat, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnInt", last.ColumnInt, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnFloat", last.ColumnFloat),
+                new QueryField("ColumnInt", last.ColumnInt)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -16865,7 +16863,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
-            var param = new QueryField("ColumnFloat", last.ColumnFloat, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnFloat", last.ColumnFloat);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -16910,7 +16908,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
-                var param = new QueryField("Id", Operation.NotEqual, 1, DbSettingMapper.Get(typeof(SqlConnection)));
+                var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
                 var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
