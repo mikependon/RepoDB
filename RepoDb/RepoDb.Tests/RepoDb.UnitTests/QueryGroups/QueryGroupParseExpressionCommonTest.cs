@@ -17,7 +17,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.QueryFields.First().Field.Name;
-            var expected = "[PropertyInt]";
+            var expected = "PropertyInt";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -31,7 +31,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.QueryFields.First().Field.Name;
-            var expected = "[PropertyString]";
+            var expected = "PropertyString";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -164,7 +164,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.QuotedPropertyString == "A").GetString(Helper.DbSetting);
-            var expected = "([PropertyString] = @PropertyString)";
+            var expected = "([PropertyString] = @_PropertyString_)";
 
             // Assert
             Assert.AreEqual(expected, actual);

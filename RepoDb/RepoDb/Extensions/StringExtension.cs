@@ -225,14 +225,14 @@ namespace RepoDb.Extensions
             string rightAlias,
             IDbSetting dbSetting)
         {
-            return string.Concat(leftAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, dbSetting), " = ", rightAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, dbSetting));
+            return string.Concat(leftAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting), " = ", rightAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting));
         }
 
         // AsField
         internal static string AsField(this string value,
             IDbSetting dbSetting)
         {
-            return value.AsQuoted(true, dbSetting);
+            return value.AsQuoted(true, true, dbSetting);
         }
 
         // AsParameter
@@ -259,7 +259,7 @@ namespace RepoDb.Extensions
             string alias,
             IDbSetting dbSetting)
         {
-            return string.Concat(alias, dbSetting.SchemaSeparator, value.AsQuoted(true, dbSetting));
+            return string.Concat(alias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting));
         }
 
         // AsParameterAsField

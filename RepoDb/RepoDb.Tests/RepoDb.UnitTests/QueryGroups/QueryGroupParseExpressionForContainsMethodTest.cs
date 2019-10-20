@@ -425,7 +425,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString(Helper.DbSetting);
-            var expected = "([PropertyString] LIKE @PropertyString)";
+            var expected = "([PropertyString] LIKE @_PropertyString_)";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -630,7 +630,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString(Helper.DbSetting);
-            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+            var expected = "([PropertyString] IN (@_PropertyString__In_0, @_PropertyString__In_1))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -645,7 +645,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString(Helper.DbSetting);
-            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+            var expected = "([PropertyString] IN (@_PropertyString__In_0, @_PropertyString__In_1))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -865,7 +865,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString(Helper.DbSetting);
-            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+            var expected = "([PropertyString] IN (@_PropertyString__In_0, @_PropertyString__In_1))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -880,7 +880,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString(Helper.DbSetting);
-            var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
+            var expected = "([PropertyString] IN (@_PropertyString__In_0, @_PropertyString__In_1))";
 
             // Assert
             Assert.AreEqual(expected, actual);

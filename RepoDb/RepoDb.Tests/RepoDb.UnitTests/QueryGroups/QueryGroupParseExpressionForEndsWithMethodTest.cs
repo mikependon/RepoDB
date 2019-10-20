@@ -85,7 +85,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString(Helper.DbSetting);
-            var expected = "([PropertyString] LIKE @PropertyString)";
+            var expected = "([PropertyString] LIKE @_PropertyString_)";
 
             // Assert
             Assert.AreEqual(expected, actual);
