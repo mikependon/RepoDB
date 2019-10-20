@@ -44,11 +44,6 @@ namespace RepoDb.UnitTests.Interfaces
         {
             public IResolver<string, Type> DbTypeResolver { get; set; }
 
-            public IEnumerable<DbField> GetFields(string connectionString, string tableName, IDbTransaction transaction = null)
-            {
-                return GetFields((DbConnection)null, tableName);
-            }
-
             public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection
             {
                 return new[]
@@ -56,11 +51,6 @@ namespace RepoDb.UnitTests.Interfaces
                     new DbField("Id", true, true, false, typeof(int), null, null, null, null),
                     new DbField("Name", false, false, true, typeof(string), null, null, null, null)
                 };
-            }
-
-            public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString, string tableName, IDbTransaction transaction = null)
-            {
-                return GetFieldsAsync((DbConnection)null, tableName);
             }
 
             public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection

@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace RepoDb.DbHelpers
@@ -130,42 +129,6 @@ namespace RepoDb.DbHelpers
 
             // Return the unquoted
             return tableName.AsUnquoted(true, m_dbSetting);
-        }
-
-        /// <summary>
-        /// Gets the list of <see cref="DbField"/> of the table.
-        /// </summary>
-        /// <param name="connectionString">The connection string to connect to.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public IEnumerable<DbField> GetFields(string connectionString,
-            string tableName,
-            IDbTransaction transaction = null)
-        {
-            // Open a connection
-            using (var connection = new SqlConnection(connectionString))
-            {
-                return GetFieldsInternal(connection, tableName, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Gets the list of <see cref="DbField"/> of the table in an asychronous way.
-        /// </summary>
-        /// <param name="connectionString">The connection string to connect to.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString,
-            string tableName,
-            IDbTransaction transaction = null)
-        {
-            // Open a connection
-            using (var connection = new SqlConnection(connectionString))
-            {
-                return GetFieldsAsyncInternal(connection, tableName, transaction);
-            }
         }
 
         /// <summary>
