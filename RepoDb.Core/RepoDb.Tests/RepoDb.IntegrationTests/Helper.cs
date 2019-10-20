@@ -2,8 +2,10 @@
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Enumerations;
 using RepoDb.IntegrationTests.Models;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
@@ -17,8 +19,14 @@ namespace RepoDb.IntegrationTests
     {
         static Helper()
         {
+            StatementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             EpocDate = new DateTime(1970, 1, 1, 0, 0, 0);
         }
+
+        /// <summary>
+        /// Gets the instance of <see cref="IStatementBuilder"/> object.
+        /// </summary>
+        public static IStatementBuilder StatementBuilder { get; }
 
         /// <summary>
         /// Gets the value of the Epoc date.
@@ -578,11 +586,13 @@ namespace RepoDb.IntegrationTests
         public static Tuple<List<dynamic>, IEnumerable<Field>> CreateDynamicIdentityTablesWithLimitedColumns(int count)
         {
             var tables = new List<dynamic>();
-            var fields = Field.From(
-                "RowGuid",
-                "ColumnBit",
-                "ColumnDateTime2",
-                "ColumnNVarChar");
+            var fields = Field.From(new[]
+                {
+                    "RowGuid",
+                    "ColumnBit",
+                    "ColumnDateTime2",
+                    "ColumnNVarChar"
+                });
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;
@@ -656,11 +666,13 @@ namespace RepoDb.IntegrationTests
         public static Tuple<List<dynamic>, IEnumerable<Field>> CreateDynamicNonIdentityTablesWithLimitedColumns(int count)
         {
             var tables = new List<dynamic>();
-            var fields = Field.From(
-                "Id",
-                "ColumnBit",
-                "ColumnDateTime2",
-                "ColumnNVarChar");
+            var fields = Field.From(new[]
+                {
+                    "Id",
+                    "ColumnBit",
+                    "ColumnDateTime2",
+                    "ColumnNVarChar"
+                });
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;

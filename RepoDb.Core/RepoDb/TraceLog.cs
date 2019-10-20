@@ -7,7 +7,17 @@ namespace RepoDb
     /// </summary>
     public class TraceLog
     {
-        internal TraceLog(string statement, object parameter, object result, TimeSpan? executionTime)
+        /// <summary>
+        /// Creates an instance of <see cref="TraceLog"/> class.
+        /// </summary>
+        /// <param name="statement">The command text in used.</param>
+        /// <param name="parameter">The parameters passed.</param>
+        /// <param name="result">The actual result if present.</param>
+        /// <param name="executionTime">The elapsed time of the execution.</param>
+        internal TraceLog(string statement,
+            object parameter,
+            object result,
+            TimeSpan? executionTime)
         {
             Statement = statement;
             Parameter = parameter;

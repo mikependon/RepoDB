@@ -51,7 +51,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             repository.Query<CacheEntity>(where: (QueryGroup)null,
@@ -83,7 +83,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             repository.Query<CacheEntity>((object)null, /* whereOrPrimaryKey */
@@ -115,7 +115,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             repository.Query<CacheEntity>(where: (QueryField)null,
@@ -147,7 +147,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             repository.Query<CacheEntity>(where: (IEnumerable<QueryField>)null,
@@ -179,7 +179,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             repository.Query<CacheEntity>(where: (Expression<Func<CacheEntity, bool>>)null,
@@ -211,7 +211,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             repository.Query<CacheEntity>(where: (QueryGroup)null,
@@ -247,7 +247,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>(where: (QueryGroup)null,
@@ -279,7 +279,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>((object)null, /* whereOrPrimaryKey */
@@ -311,7 +311,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>(where: (QueryField)null,
@@ -343,7 +343,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>(where: (IEnumerable<QueryField>)null,
@@ -375,7 +375,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>(where: (Expression<Func<CacheEntity, bool>>)null,
@@ -407,7 +407,7 @@ namespace RepoDb.UnitTests.Interfaces
                 cache.Object,
                 cacheItemExpiration,
                 null,
-                new SqlServerStatementBuilder());
+                Helper.StatementBuilder);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>(where: (QueryGroup)null,

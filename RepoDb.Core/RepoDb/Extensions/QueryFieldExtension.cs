@@ -4,6 +4,7 @@ using System.Data;
 using System.Dynamic;
 using System.Linq;
 using RepoDb.Enumerations;
+using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {
@@ -22,89 +23,113 @@ namespace RepoDb.Extensions
             yield return queryField;
         }
 
-        // AsField
-        internal static string AsField(this QueryField queryField)
+        /// <summary>
+        /// Resets all the instances of <see cref="QueryField"/>.
+        /// </summary>
+        /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
+        public static void ResetAll(this IEnumerable<QueryField> queryFields)
         {
-            return queryField.Field.Name;
+            foreach (var queryField in queryFields)
+            {
+                queryField.Reset();
+            }
+        }
+
+        // AsField
+        internal static string AsField(this QueryField queryField,
+            IDbSetting dbSetting)
+        {
+            return queryField.Field.Name.AsField(dbSetting);
         }
 
         // AsParameter
-        internal static string AsParameter(this QueryField queryField, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        internal static string AsParameter(this QueryField queryField,
+            int index,
+            IDbSetting dbSetting)
         {
-            return queryField.Parameter.Name.AsParameter(index, prefix);
+            return queryField.Parameter.Name.AsParameter(index, dbSetting);
         }
 
         // AsParameterAsField
-        internal static string AsParameterAsField(this QueryField queryField)
+        internal static string AsParameterAsField(this QueryField queryField,
+            int index,
+            IDbSetting dbSetting)
         {
-            return string.Concat(queryField.Parameter.Name, " AS ", queryField.Field.Name);
+            return string.Concat(queryField.AsParameter(index, dbSetting), " AS ", queryField.AsField(dbSetting));
         }
 
         // AsBetweenParameter
-        internal static string AsBetweenParameter(this QueryField queryField, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        internal static string AsBetweenParameter(this QueryField queryField,
+            int index,
+            IDbSetting dbSetting)
         {
-            return string.Concat(queryField.Parameter.Name.AsParameter(index, prefix), "_Left AND ", queryField.Parameter.Name.AsParameter(index, prefix), "_Right");
+            return string.Concat(queryField.Parameter.Name.AsParameter(index, dbSetting), "_Left AND ", queryField.Parameter.Name.AsParameter(index, dbSetting), "_Right");
         }
 
         // AsInParameter
-        internal static string AsInParameter(this QueryField queryField, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        internal static string AsInParameter(this QueryField queryField,
+            int index,
+            IDbSetting dbSetting)
         {
             var array = ((Array)queryField.Parameter.Value);
             var values = array
                 .OfType<object>()
                 .Select((value, valueIndex) =>
-                    string.Concat(queryField.Parameter.Name.AsParameter(index, prefix), "_In_", valueIndex))
+                    string.Concat(queryField.Parameter.Name.AsParameter(index, dbSetting), "_In_", valueIndex))
                 .Join(", ");
             return string.Concat("(", values, ")");
         }
 
         // AsFieldAndParameter
-        internal static string AsFieldAndParameter(this QueryField queryField, int index = 0)
+        internal static string AsFieldAndParameter(this QueryField queryField,
+            int index,
+            IDbSetting dbSetting)
         {
             if (queryField.Operation == Operation.Equal && queryField.Parameter.Value == null)
             {
-                return string.Concat(queryField.AsField(), " IS NULL");
+                return string.Concat(queryField.AsField(dbSetting), " IS NULL");
             }
             else if (queryField.Operation == Operation.NotEqual && queryField.Parameter.Value == null)
             {
-                return string.Concat(queryField.AsField(), " IS NOT NULL");
+                return string.Concat(queryField.AsField(dbSetting), " IS NOT NULL");
             }
             else
             {
                 if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                 {
-                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsBetweenParameter(index));
+                    return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsBetweenParameter(index, dbSetting));
                 }
                 else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
                 {
-                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsInParameter(index));
+                    return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsInParameter(index, dbSetting));
                 }
                 else
                 {
-                    return string.Concat(queryField.AsField(), " ", queryField.GetOperationText(), " ", queryField.AsParameter(index));
+                    return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsParameter(index, dbSetting));
                 }
             }
         }
 
         // AsDbParameter
-        internal static IDbDataParameter AsDbParameter(this QueryField queryField, IDbCommand command)
+        internal static IDbDataParameter AsDbParameter(this QueryField queryField,
+            IDbCommand command)
         {
             return AsDbParameter(queryField, command.CreateParameter());
         }
 
-        internal static IDbDataParameter AsDbParameter(this QueryField queryField, IDbDataParameter parameter)
+        internal static IDbDataParameter AsDbParameter(this QueryField queryField,
+            IDbDataParameter parameter)
         {
             parameter.ParameterName = queryField.Field.Name;
             parameter.Value = queryField.Parameter.Value ?? DBNull.Value;
             return parameter;
         }
 
-        /* IEnumerable<QueryField> */
-
         // AsFieldsAndParameters
-        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<QueryField> queryFields)
+        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<QueryField> queryFields,
+            IDbSetting dbSetting)
         {
-            return queryFields.Select(field => field.AsFieldAndParameter());
+            return queryFields.Select(field => field.AsFieldAndParameter(0, dbSetting));
         }
 
         // AsObject
@@ -116,20 +141,6 @@ namespace RepoDb.Extensions
                 expandoObject.Add(queryField.Field.Name, queryField.Parameter.Value);
             }
             return expandoObject;
-        }
-
-        // ResetAll
-
-        /// <summary>
-        /// Resets all the instances of <see cref="QueryField"/>.
-        /// </summary>
-        /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
-        public static void ResetAll(this IEnumerable<QueryField> queryFields)
-        {
-            foreach (var queryField in queryFields)
-            {
-                queryField.Reset();
-            }
         }
     }
 }

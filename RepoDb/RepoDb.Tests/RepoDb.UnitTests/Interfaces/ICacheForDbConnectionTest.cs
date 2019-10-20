@@ -56,7 +56,7 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null,
                 cache: cache.Object,
                 trace: null,
-                statementBuilder: new SqlServerStatementBuilder());
+                statementBuilder: Helper.StatementBuilder);
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
@@ -86,7 +86,7 @@ namespace RepoDb.UnitTests.Interfaces
                 (IDbTransaction)null, /* transaction */
                 cache.Object, /* cache */
                 (ITrace)null, /* trace */
-                new SqlServerStatementBuilder() /* statementBulder */);
+                Helper.StatementBuilder /* statementBulder */);
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
@@ -116,7 +116,7 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null,
                 cache: cache.Object,
                 trace: null,
-                statementBuilder: new SqlServerStatementBuilder());
+                statementBuilder: Helper.StatementBuilder);
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
@@ -146,7 +146,7 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null,
                 cache: cache.Object,
                 trace: null,
-                statementBuilder: new SqlServerStatementBuilder());
+                statementBuilder: Helper.StatementBuilder);
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
@@ -176,7 +176,7 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null,
                 cache: cache.Object,
                 trace: null,
-                statementBuilder: new SqlServerStatementBuilder());
+                statementBuilder: Helper.StatementBuilder);
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
@@ -206,7 +206,7 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null,
                 cache: cache.Object,
                 trace: null,
-                statementBuilder: new SqlServerStatementBuilder());
+                statementBuilder: Helper.StatementBuilder);
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
@@ -240,7 +240,7 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null,
                 cache: cache.Object,
                 trace: null,
-                statementBuilder: new SqlServerStatementBuilder()).Result;
+                statementBuilder: Helper.StatementBuilder).Result;
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
@@ -270,7 +270,7 @@ namespace RepoDb.UnitTests.Interfaces
                 (IDbTransaction)null, /* transaction */
                 cache.Object, /* cache */
                 (ITrace)null, /* trace */
-                new SqlServerStatementBuilder() /* statementBulder */).Result;
+                Helper.StatementBuilder /* statementBulder */).Result;
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
@@ -300,7 +300,7 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null,
                 cache: cache.Object,
                 trace: null,
-                statementBuilder: new SqlServerStatementBuilder()).Result;
+                statementBuilder: Helper.StatementBuilder).Result;
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
@@ -330,7 +330,7 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null,
                 cache: cache.Object,
                 trace: null,
-                statementBuilder: new SqlServerStatementBuilder()).Result;
+                statementBuilder: Helper.StatementBuilder).Result;
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
@@ -360,7 +360,7 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null,
                 cache: cache.Object,
                 trace: null,
-                statementBuilder: new SqlServerStatementBuilder()).Result;
+                statementBuilder: Helper.StatementBuilder).Result;
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
@@ -390,7 +390,7 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null,
                 cache: cache.Object,
                 trace: null,
-                statementBuilder: new SqlServerStatementBuilder()).Result;
+                statementBuilder: Helper.StatementBuilder).Result;
 
             // Assert
             cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),

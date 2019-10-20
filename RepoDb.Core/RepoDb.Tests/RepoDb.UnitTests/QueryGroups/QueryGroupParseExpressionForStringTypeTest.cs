@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.UnitTests.Setup;
 
 namespace RepoDb.UnitTests
 {
@@ -10,7 +11,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStringConstant()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == "A").GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == "A").GetString(Helper.DbSetting);
             var expected = "([PropertyString] = @PropertyString)";
 
             // Assert
@@ -24,7 +25,7 @@ namespace RepoDb.UnitTests
             var value = "A";
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value).GetString(Helper.DbSetting);
             var expected = "([PropertyString] = @PropertyString)";
 
             // Assert
@@ -41,7 +42,7 @@ namespace RepoDb.UnitTests
             };
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value.PropertyString).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value.PropertyString).GetString(Helper.DbSetting);
             var expected = "([PropertyString] = @PropertyString)";
 
             // Assert
@@ -52,7 +53,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionStringMethodCall()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == GetStringValueForParseExpression()).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == GetStringValueForParseExpression()).GetString(Helper.DbSetting);
             var expected = "([PropertyString] = @PropertyString)";
 
             // Assert
@@ -66,7 +67,7 @@ namespace RepoDb.UnitTests
             var value = GetStringValueForParseExpression();
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == value).GetString(Helper.DbSetting);
             var expected = "([PropertyString] = @PropertyString)";
 
             // Assert

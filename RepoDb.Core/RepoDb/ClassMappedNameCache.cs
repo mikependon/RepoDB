@@ -21,36 +21,23 @@ namespace RepoDb
         public static string Get<TEntity>()
             where TEntity : class
         {
-            return Get<TEntity>(true);
-        }
-
-        /// <summary>
-        /// Gets the cached mapped-name for the entity.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
-        /// <param name="quoted">True whether the string is quoted.</param>
-        /// <returns>The cached mapped name of the entity.</returns>
-        public static string Get<TEntity>(bool quoted = true)
-            where TEntity : class
-        {
-            return Get(typeof(TEntity), quoted);
+            return Get(typeof(TEntity));
         }
 
         /// <summary>
         /// Gets the cached mapped-name for the entity.
         /// </summary>
         /// <param name="type">The type of the target entity.</param>
-        /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>The cached mapped name of the entity.</returns>
-        internal static string Get(Type type, bool quoted = true)
+        internal static string Get(Type type)
         {
-            var key = type.FullName.GetHashCode() + quoted.GetHashCode();
+            var key = type.FullName.GetHashCode();
             var result = (string)null;
 
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = DataEntityExtension.GetMappedName(type, quoted);
+                result = DataEntityExtension.GetMappedName(type);
                 m_cache.TryAdd(key, result);
             }
 

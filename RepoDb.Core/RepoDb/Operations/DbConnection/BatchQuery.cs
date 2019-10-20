@@ -1495,7 +1495,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateBatchQuery(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateBatchQuery();
+            connection.GetDbValidator()?.ValidateBatchQuery();
         }
 
         /// <summary>
@@ -1504,7 +1504,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateBatchQueryAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateBatchQueryAsync();
+            connection.GetDbValidator()?.ValidateBatchQueryAsync();
         }
 
         #endregion

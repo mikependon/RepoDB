@@ -1,7 +1,7 @@
-﻿using System;
+﻿using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -36,10 +36,11 @@ namespace RepoDb.Extensions
         /// <param name="type">The current type.</param>
         /// <param name="mappedName">The name of the property mapping.</param>
         /// <returns>The instance of <see cref="ClassProperty"/>.</returns>
-        internal static ClassProperty GetPropertyByMapping(this Type type, string mappedName)
+        internal static ClassProperty GetPropertyByMapping(this Type type,
+            string mappedName)
         {
             return PropertyCache.Get(type)
-                .FirstOrDefault(p => string.Equals(p.GetUnquotedMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(p => string.Equals(p.GetMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

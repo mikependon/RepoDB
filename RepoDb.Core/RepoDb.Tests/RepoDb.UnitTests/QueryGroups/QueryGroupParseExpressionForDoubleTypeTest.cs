@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.UnitTests.Setup;
 
 namespace RepoDb.UnitTests
 {
@@ -10,7 +11,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionDoubleConstant()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDouble == 1.0).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDouble == 1.0).GetString(Helper.DbSetting);
             var expected = "([PropertyDouble] = @PropertyDouble)";
 
             // Assert
@@ -24,7 +25,7 @@ namespace RepoDb.UnitTests
             var value = 1.0;
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDouble == value).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDouble == value).GetString(Helper.DbSetting);
             var expected = "([PropertyDouble] = @PropertyDouble)";
 
             // Assert
@@ -41,7 +42,7 @@ namespace RepoDb.UnitTests
             };
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDouble == value.PropertyDouble).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDouble == value.PropertyDouble).GetString(Helper.DbSetting);
             var expected = "([PropertyDouble] = @PropertyDouble)";
 
             // Assert
@@ -52,7 +53,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionDoubleMethodCall()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDouble == GetDoubleValueForParseExpression()).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDouble == GetDoubleValueForParseExpression()).GetString(Helper.DbSetting);
             var expected = "([PropertyDouble] = @PropertyDouble)";
 
             // Assert
@@ -66,7 +67,7 @@ namespace RepoDb.UnitTests
             var value = GetDoubleValueForParseExpression();
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDouble == value).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDouble == value).GetString(Helper.DbSetting);
             var expected = "([PropertyDouble] = @PropertyDouble)";
 
             // Assert

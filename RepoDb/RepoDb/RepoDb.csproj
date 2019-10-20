@@ -73,7 +73,7 @@
     <Compile Include="DbSettingMapper.cs" />
     <Compile Include="DbValidatorMapper.cs" />
     <Compile Include="DbHelperMapper.cs" />
-    <Compile Include="_SqlServer\DbOperations\BulkInsert.cs" />
+    <Compile Include="_SqlServer\DbOperations\SqlServerDbOperation.BulkInsert.cs" />
     <Compile Include="_SqlServer\DbValidators\SqlServerDbValidator.cs" />
     <Compile Include="Enumerations\ConversionType.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
@@ -229,7 +229,7 @@
     <Compile Include="_SqlServer\Resolvers\SqlServerTypeNameToClientTypeResolver.cs" />
     <Compile Include="DbOperationMapper.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
-    <Compile Include="SqlServerTableHints.cs" />
+    <Compile Include="_SqlServer\SqlServerTableHints.cs" />
     <Compile Include="_SqlServer\StatementBuilders\SqlServerStatementBuilder.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="TypeMapper.cs" />

@@ -2,6 +2,7 @@
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Enumerations;
 using RepoDb.IntegrationTests.Models;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -18,8 +19,14 @@ namespace RepoDb.IntegrationTests
     {
         static Helper()
         {
+            StatementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             EpocDate = new DateTime(1970, 1, 1, 0, 0, 0);
         }
+
+        /// <summary>
+        /// Gets the instance of <see cref="IStatementBuilder"/> object.
+        /// </summary>
+        public static IStatementBuilder StatementBuilder { get; }
 
         /// <summary>
         /// Gets the value of the Epoc date.

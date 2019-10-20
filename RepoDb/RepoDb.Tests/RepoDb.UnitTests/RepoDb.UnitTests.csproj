@@ -132,6 +132,7 @@
     <Compile Include="Resolvers\SqlServerTypeNameToClientTypeResolverTest.cs" />
     <Compile Include="Setup\CustomDbSetting.cs" />
     <Compile Include="Setup\CustomDbValidator.cs" />
+    <Compile Include="Setup\CustomStatementBuilder.cs" />
     <Compile Include="Setup\Helper.cs" />
     <Compile Include="SqlServer\StatementBuilders\CreateBatchQueryTest.cs" />
     <Compile Include="SqlServer\StatementBuilders\CreateCountAllTest.cs" />

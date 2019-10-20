@@ -1,4 +1,5 @@
 ﻿using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
@@ -437,19 +438,24 @@ namespace RepoDb
         /// <param name="tableName">The list of fields from the data entity object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The actual list of <see cref="Field"/> objects of the table.</returns>
-        private static IEnumerable<Field> GetActualFields(IDbConnection connection, string tableName, IEnumerable<Field> fields, IDbTransaction transaction)
+        private static IEnumerable<Field> GetActualFields(IDbConnection connection,
+            string tableName,
+            IEnumerable<Field> fields,
+            IDbTransaction transaction)
         {
             if (fields?.Any() != true)
             {
                 return null;
             }
 
-            // Get all the fields from the database
+            // Get all the fields from the database, and the setting
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var dbSetting = connection.GetDbSetting();
 
             // Return the filtered one
             return dbFields?.Any() == true ?
-                fields.Where(f => dbFields.FirstOrDefault(df => string.Equals(df.UnquotedName, f.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null) :
+                fields.Where(f => dbFields.FirstOrDefault(df =>
+                    string.Equals(df.Name.AsUnquoted(true, dbSetting), f.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null) :
                 fields;
         }
 
@@ -462,17 +468,24 @@ namespace RepoDb
         {
             if (request.Type != null && request.Type != typeof(object))
             {
-                var primaryPropery = PrimaryCache.Get(request.Type);
-                if (primaryPropery != null)
+                var primaryProperty = PrimaryCache.Get(request.Type);
+                if (primaryProperty != null)
                 {
                     var identityProperty = IdentityCache.Get(request.Type);
                     var isIdentity = false;
                     if (identityProperty != null)
                     {
-                        isIdentity = string.Equals(identityProperty.GetUnquotedMappedName(), primaryPropery.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase);
+                        isIdentity = string.Equals(identityProperty.GetMappedName(), primaryProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase);
                     }
-                    return new DbField(primaryPropery.GetUnquotedMappedName(), true, isIdentity, false,
-                        primaryPropery.PropertyInfo.PropertyType, null, null, null);
+                    return new DbField(primaryProperty.GetMappedName(),
+                        true,
+                        isIdentity,
+                        false,
+                        primaryProperty.PropertyInfo.PropertyType,
+                        null,
+                        null,
+                        null,
+                        null);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsPrimary);
@@ -490,14 +503,21 @@ namespace RepoDb
                 var identityProperty = IdentityCache.Get(request.Type);
                 if (identityProperty != null)
                 {
-                    var primaryPropery = PrimaryCache.Get(request.Type);
+                    var primaryProperty = PrimaryCache.Get(request.Type);
                     var isPrimary = false;
-                    if (primaryPropery != null)
+                    if (primaryProperty != null)
                     {
-                        isPrimary = string.Equals(primaryPropery.GetUnquotedMappedName(), identityProperty.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase);
+                        isPrimary = string.Equals(primaryProperty.GetMappedName(), identityProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase);
                     }
-                    return new DbField(identityProperty.GetUnquotedMappedName(), isPrimary, true, false,
-                        identityProperty.PropertyInfo.PropertyType, null, null, null);
+                    return new DbField(identityProperty.GetMappedName(),
+                        isPrimary,
+                        true,
+                        false,
+                        identityProperty.PropertyInfo.PropertyType,
+                        null,
+                        null,
+                        null,
+                        null);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsIdentity);
@@ -509,7 +529,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to identified.</param>
         /// <param name="builder">The builder to be checked.</param>
         /// <returns>The instance of available statement builder.</returns>
-        private static IStatementBuilder EnsureStatementBuilder(IDbConnection connection, IStatementBuilder builder)
+        private static IStatementBuilder EnsureStatementBuilder(IDbConnection connection,
+            IStatementBuilder builder)
         {
             builder = builder ?? StatementBuilderMapper.Get(connection.GetType());
             if (builder == null)

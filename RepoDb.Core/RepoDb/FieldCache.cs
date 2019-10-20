@@ -1,4 +1,5 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -32,14 +33,18 @@ namespace RepoDb
         /// <returns>The cached list <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Get(Type type)
         {
-			var key = type.FullName.GetHashCode();
-            var fields = (IEnumerable<Field>)null;
-            if (m_cache.TryGetValue(key, out fields) == false)
+            var key = type.FullName.GetHashCode();
+            var result = (IEnumerable<Field>)null;
+
+            // Try get the value
+            if (m_cache.TryGetValue(key, out result) == false)
             {
-                fields = type.AsFields();
-                m_cache.TryAdd(key, fields);
+                result = type.AsFields();
+                m_cache.TryAdd(key, result);
             }
-            return fields;
+
+            // Return the value
+            return result;
         }
 
         #endregion

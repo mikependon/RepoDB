@@ -284,7 +284,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
@@ -327,7 +327,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>

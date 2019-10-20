@@ -683,6 +683,7 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity value
                 if (skipIdentityCheck == false)
@@ -691,14 +692,14 @@ namespace RepoDb
                     if (identity == null && identityDbField != null)
                     {
                         identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.UnquotedName, identityDbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     }
                 }
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the context
@@ -718,7 +719,8 @@ namespace RepoDb
                     singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".MergeAll"),
                         inputFields?.AsList(),
-                        null);
+                        null,
+                        dbSetting);
                 }
                 else
                 {
@@ -726,7 +728,8 @@ namespace RepoDb
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".MergeAll"),
                         inputFields?.AsList(),
                         null,
-                        batchSizeValue);
+                        batchSizeValue,
+                        dbSetting);
                 }
 
                 // Identify the requests
@@ -1025,6 +1028,7 @@ namespace RepoDb
                 var identity = (Field)null;
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity value
                 if (skipIdentityCheck == false)
@@ -1033,14 +1037,14 @@ namespace RepoDb
                     if (identity == null && identityDbField != null)
                     {
                         identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.UnquotedName, identityDbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     }
                 }
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the context
@@ -1060,7 +1064,8 @@ namespace RepoDb
                     singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".MergeAll"),
                         inputFields?.AsList(),
-                        null);
+                        null,
+                        dbSetting);
                 }
                 else
                 {
@@ -1068,7 +1073,8 @@ namespace RepoDb
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".MergeAll"),
                         inputFields?.AsList(),
                         null,
-                        batchSizeValue);
+                        batchSizeValue,
+                        dbSetting);
                 }
 
                 // Identify the requests
@@ -1331,7 +1337,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateMergeAll(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateMergeAll();
+            connection.GetDbValidator()?.ValidateMergeAll();
         }
 
         /// <summary>
@@ -1340,7 +1346,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateMergeAllAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateMergeAllAsync();
+            connection.GetDbValidator()?.ValidateMergeAllAsync();
         }
 
         #endregion

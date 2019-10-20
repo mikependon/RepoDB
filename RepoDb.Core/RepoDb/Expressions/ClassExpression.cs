@@ -1,4 +1,5 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,12 +29,7 @@ namespace RepoDb
         private static class GetPropertiesCache<T>
             where T : class
         {
-            private static readonly Func<IEnumerable<ClassProperty>> m_func;
-
-            static GetPropertiesCache()
-            {
-                m_func = GetFunc();
-            }
+            private static Func<IEnumerable<ClassProperty>> m_func;
 
             private static Func<IEnumerable<ClassProperty>> GetFunc()
             {
@@ -45,6 +41,10 @@ namespace RepoDb
 
             public static IEnumerable<ClassProperty> Do()
             {
+                if (m_func == null)
+                {
+                    m_func = GetFunc();
+                }
                 return m_func();
             }
         }
@@ -68,12 +68,7 @@ namespace RepoDb
         private static class GetPropertiesValuesCache<TEntity>
             where TEntity : class
         {
-            private static readonly Func<TEntity, IEnumerable<PropertyValue>> m_func;
-
-            static GetPropertiesValuesCache()
-            {
-                m_func = GetFunc(PropertyCache.Get<TEntity>());
-            }
+            private static Func<TEntity, IEnumerable<PropertyValue>> m_func;
 
             private static Func<TEntity, IEnumerable<PropertyValue>> GetFunc(IEnumerable<ClassProperty> properties)
             {
@@ -92,7 +87,7 @@ namespace RepoDb
                     Expression.New(typeof(List<PropertyValue>)),
                     properties.Select(property =>
                     {
-                        var name = Expression.Constant(property.GetUnquotedMappedName());
+                        var name = Expression.Constant(property.GetMappedName());
                         var value = Expression.Convert(Expression.Property(obj, property.PropertyInfo), typeof(object));
                         var propertyValue = Expression.New(constructor,
                             name,
@@ -109,6 +104,10 @@ namespace RepoDb
 
             public static IEnumerable<PropertyValue> Do(TEntity obj)
             {
+                if (m_func == null)
+                {
+                    m_func = GetFunc(PropertyCache.Get<TEntity>());
+                }
                 return m_func(obj);
             }
         }

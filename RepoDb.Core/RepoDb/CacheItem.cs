@@ -12,10 +12,12 @@ namespace RepoDb
         /// </summary>
         /// <param name="key">The key of the cache.</param>
         /// <param name="value">The value of the cache.</param>
-        public CacheItem(string key, object value)
-            : this(key, value, Constant.DefaultCacheItemExpirationInMinutes)
-        {
-        }
+        public CacheItem(string key,
+            object value)
+            : this(key,
+                  value,
+                  Constant.DefaultCacheItemExpirationInMinutes)
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="CacheItem"/> object.
@@ -23,7 +25,9 @@ namespace RepoDb
         /// <param name="key">The key of the cache item.</param>
         /// <param name="value">The value of the cache item.</param>
         /// <param name="expiration">The expiration in minutes of the cache item.</param>
-        public CacheItem(string key, object value, int expiration = Constant.DefaultCacheItemExpirationInMinutes)
+        public CacheItem(string key,
+            object value,
+            int expiration = Constant.DefaultCacheItemExpirationInMinutes)
         {
             if (expiration < 0)
             {

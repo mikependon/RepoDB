@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Collections;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -28,8 +29,10 @@ namespace RepoDb
         /// Creates a new instance of <see cref="DataEntityDataReader{TEntity}"/> object.
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
-        public DataEntityDataReader(IEnumerable<TEntity> entities) :
-            this(entities, null, null)
+        public DataEntityDataReader(IEnumerable<TEntity> entities)
+            : this(entities,
+                null,
+                null)
         { }
 
         /// <summary>
@@ -37,8 +40,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         /// <param name="connection">The actual <see cref="IDbConnection"/> object used.</param>
-        public DataEntityDataReader(IEnumerable<TEntity> entities, IDbConnection connection)
-            : this(entities, connection, null)
+        public DataEntityDataReader(IEnumerable<TEntity> entities,
+            IDbConnection connection)
+            : this(entities,
+                  connection,
+                  null)
         { }
 
         /// <summary>
@@ -47,7 +53,9 @@ namespace RepoDb
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         /// <param name="connection">The actual <see cref="IDbConnection"/> object used.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
-        public DataEntityDataReader(IEnumerable<TEntity> entities, IDbConnection connection, IDbTransaction transaction)
+        public DataEntityDataReader(IEnumerable<TEntity> entities,
+            IDbConnection connection,
+            IDbTransaction transaction)
         {
             if (entities == null)
             {
@@ -60,6 +68,9 @@ namespace RepoDb
             m_position = -1;
             m_recordsAffected = -1;
 
+            // DbSetting
+            DbSetting = connection?.GetDbSetting();
+
             // Properties
             if (connection != null)
             {
@@ -67,11 +78,11 @@ namespace RepoDb
                 if (fields?.Any() == true)
                 {
                     Properties = PropertyCache.Get<TEntity>()
-                        .Where(p => fields.FirstOrDefault(f => string.Equals(f.UnquotedName, p.GetUnquotedMappedName(), StringComparison.OrdinalIgnoreCase)) != null)
+                        .Where(p => fields.FirstOrDefault(f => string.Equals(f.Name.AsQuoted(DbSetting), p.GetMappedName().AsQuoted(DbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                         .AsList();
                 }
             }
-            if (Properties == null)
+            if (Properties?.Any() != true)
             {
                 Properties = PropertyCache.Get<TEntity>().AsList();
             }
@@ -88,6 +99,11 @@ namespace RepoDb
         {
             return Entities?.GetEnumerator();
         }
+
+        /// <summary>
+        /// Returns the database setting that is currently in used.
+        /// </summary>
+        private IDbSetting DbSetting { get; }
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection of data entity objects.
@@ -377,7 +393,7 @@ namespace RepoDb
         public override string GetName(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Properties[i].GetUnquotedMappedName();
+            return Properties[i].GetMappedName();
         }
 
         /// <summary>
@@ -388,7 +404,7 @@ namespace RepoDb
         public override int GetOrdinal(string name)
         {
             ThrowExceptionIfNotAvailable();
-            return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetUnquotedMappedName() == name));
+            return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetMappedName() == name));
         }
 
         /// <summary>
@@ -437,7 +453,7 @@ namespace RepoDb
             }
             if (values.Length != FieldCount)
             {
-                throw new InvalidOperationException($"The length of the array must be equals to the number of fields of the data entity (it should be {FieldCount}).");
+                throw new ArgumentOutOfRangeException($"The length of the array must be equals to the number of fields of the data entity (it should be {FieldCount}).");
             }
             var extracted = ClassExpression.GetPropertiesAndValues(Enumerator.Current).ToArray();
             for (var i = 0; i < Properties.Count; i++)

@@ -388,7 +388,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateDeleteAll(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateDeleteAll();
+            connection.GetDbValidator()?.ValidateDeleteAll();
         }
 
         /// <summary>
@@ -397,7 +397,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateDeleteAllAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateDeleteAllAsync();
+            connection.GetDbValidator()?.ValidateDeleteAllAsync();
         }
 
         #endregion

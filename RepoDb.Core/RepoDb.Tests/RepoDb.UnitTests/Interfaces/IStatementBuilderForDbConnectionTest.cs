@@ -5,6 +5,7 @@ using RepoDb.Contexts.Execution;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
+using RepoDb.UnitTests.Setup;
 using System.Collections.Generic;
 
 namespace RepoDb.UnitTests.Interfaces
@@ -12,6 +13,13 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class IStatementBuilderForDbConnectionTest
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            DbSettingMapper.Add(typeof(CustomDbConnectionForDbConnectionIStatementBuilder), Helper.DbSetting, true);
+            DbValidatorMapper.Add(typeof(CustomDbConnectionForDbConnectionIStatementBuilder), Helper.DbValidator, true);
+        }
+
         #region SubClasses
 
         private class CustomDbConnectionForDbConnectionIStatementBuilder : CustomDbConnection { }

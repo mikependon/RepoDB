@@ -981,6 +981,7 @@ namespace RepoDb
                 var identity = (Field)null;
                 var inputFields = new List<DbField>();
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity field
                 if (skipIdentityCheck == false)
@@ -989,14 +990,14 @@ namespace RepoDb
                     if (identity == null && identityDbField != null)
                     {
                         identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.UnquotedName, identityDbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     }
                 }
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the entity action
@@ -1039,7 +1040,8 @@ namespace RepoDb
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".Merge"),
                         inputFields?.AsList(),
-                        null),
+                        null,
+                        dbSetting),
                     IdentityPropertySetterFunc = identityPropertySetter
                 };
             });
@@ -1143,6 +1145,7 @@ namespace RepoDb
                 var identity = (Field)null;
                 var inputFields = new List<DbField>();
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity field
                 if (skipIdentityCheck == false)
@@ -1151,14 +1154,14 @@ namespace RepoDb
                     if (identity == null && identityDbField != null)
                     {
                         identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.UnquotedName, identityDbField.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     }
                 }
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the entity action
@@ -1201,7 +1204,8 @@ namespace RepoDb
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".Merge"),
                         inputFields?.AsList(),
-                        null),
+                        null,
+                        dbSetting),
                     IdentityPropertySetterFunc = identityPropertySetter
                 };
             });
@@ -1270,7 +1274,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateMerge(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateMerge();
+            connection.GetDbValidator()?.ValidateMerge();
         }
 
         /// <summary>
@@ -1279,7 +1283,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateMergeAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateMergeAsync();
+            connection.GetDbValidator()?.ValidateMergeAsync();
         }
 
         #endregion

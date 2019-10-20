@@ -15,13 +15,13 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod]
-        public void TestOrderFieldQuotes()
+        public void TestOrderFieldNameAndStringEquality()
         {
             // Prepare
-            var objA = new OrderField("FieldName", Order.Ascending);
+            var orderField = new OrderField("FieldName", Order.Ascending);
 
             // Act
-            var equal = Equals("[FieldName]", objA.Name);
+            var equal = Equals("FieldName", orderField.Name);
 
             // Assert
             Assert.IsTrue(equal);
@@ -94,7 +94,7 @@ namespace RepoDb.UnitTests.Fields
             OrderField.Parse<OrderFieldTestClass>(p => "A", Order.Ascending);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
         public void ThrowExceptionOnOrderFieldIfTheParseDynamicObjectFieldValueIsNotAnOrderType()
         {
             // Prepare

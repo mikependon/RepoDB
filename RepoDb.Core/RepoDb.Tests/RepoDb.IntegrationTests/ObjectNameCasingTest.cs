@@ -216,13 +216,13 @@ namespace RepoDb.IntegrationTests
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
 
-            using (var repository = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var id = repository.Insert("COMPLETETABLE", entity);
+                var id = connection.Insert("COMPLETETABLE", entity);
 
                 // Act Query
-                var data = repository.Query("COMPLETETABLE", new { SessionId = (Guid)id }).FirstOrDefault();
+                var data = connection.Query("COMPLETETABLE", new { SessionId = (Guid)id }).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -250,15 +250,15 @@ namespace RepoDb.IntegrationTests
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
 
-            using (var repository = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var id = repository.InsertAll("COMPLETETABLE",
+                var id = connection.InsertAll("COMPLETETABLE",
                     new[] { entity },
                     fields: entity.GetType().GetProperties().AsFields());
 
                 // Act Query
-                var data = repository.Query("COMPLETETABLE", new { SessionId = entity.SESSIONID }).FirstOrDefault();
+                var data = connection.Query("COMPLETETABLE", new { SessionId = entity.SESSIONID }).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

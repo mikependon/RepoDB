@@ -1,4 +1,5 @@
 ﻿using RepoDb.DbOperationProviders;
+using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
@@ -19,7 +20,7 @@ namespace RepoDb
         static DbOperationMapper()
         {
             // Default for SqlConnection
-            Add(typeof(SqlConnection), new SqlServerDbOperation());
+            Add(typeof(SqlConnection), new SqlServerDbOperation(), true);
         }
 
         /// <summary>
@@ -29,7 +30,7 @@ namespace RepoDb
         {
             if (type.GetTypeInfo().IsSubclassOf(m_type) == false)
             {
-                throw new InvalidOperationException($"Type must be a subclass of '{m_type.FullName}'.");
+                throw new InvalidTypeException($"Type must be a subclass of '{m_type.FullName}'.");
             }
         }
 
@@ -60,7 +61,7 @@ namespace RepoDb
                 return value;
             }
 
-            throw new InvalidOperationException($"There is no existing database operation provider mapping for '{type.FullName}'.");
+            throw new MissingMappingException($"There is no existing database operation provider mapping for '{type.FullName}'.");
         }
 
         /// <summary>
@@ -69,26 +70,34 @@ namespace RepoDb
         /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
         /// <param name="statementBuilder">The statement builder to be mapped.</param>
         /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
-        public static void Add(Type type, IDbOperation statementBuilder, bool @override = false)
+        public static void Add(Type type,
+            IDbOperation statementBuilder,
+            bool @override)
         {
+            // Guard the type
             Guard(type);
 
+            // Variables
             var value = (IDbOperation)null;
             var key = type.FullName.GetHashCode();
 
+            // Try get the mappings
             if (m_maps.TryGetValue(key, out value))
             {
                 if (@override)
                 {
+                    // Override the existing one
                     m_maps.TryUpdate(key, statementBuilder, value);
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Database operation provider mapping already exists ('{type.Name}' = '{value?.GetType().Name}').");
+                    // Throw an exception
+                    throw new MappingExistsException($"The database operation mapping to provider '{type.FullName}' already exists.");
                 }
             }
             else
             {
+                // Add to mapping
                 m_maps.TryAdd(key, statementBuilder);
             }
         }

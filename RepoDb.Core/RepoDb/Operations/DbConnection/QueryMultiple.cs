@@ -3534,7 +3534,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateQueryMultiple(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateQueryMultiple();
+            connection.GetDbValidator()?.ValidateQueryMultiple();
         }
 
         /// <summary>
@@ -3543,7 +3543,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateQueryMultipleAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateQueryMultipleAsync();
+            connection.GetDbValidator()?.ValidateQueryMultipleAsync();
         }
 
         #endregion

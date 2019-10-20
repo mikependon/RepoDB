@@ -18,7 +18,7 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ITraceForDbRepositoryTest
     {
-        private readonly IStatementBuilder m_statementBuilder = new SqlServerStatementBuilder();
+        private readonly IStatementBuilder m_statementBuilder = Helper.StatementBuilder;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)

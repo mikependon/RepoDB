@@ -34,7 +34,9 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        public static IEnumerable<DbField> Get(IDbConnection connection, string tableName, IDbTransaction transaction = null)
+        public static IEnumerable<DbField> Get(IDbConnection connection,
+            string tableName,
+            IDbTransaction transaction)
         {
             return GetInternal(connection, tableName, transaction);
         }
@@ -46,7 +48,9 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        public static Task<IEnumerable<DbField>> GetAsync(IDbConnection connection, string tableName, IDbTransaction transaction = null)
+        public static Task<IEnumerable<DbField>> GetAsync(IDbConnection connection,
+            string tableName,
+            IDbTransaction transaction)
         {
             return GetInternalAsync(connection, tableName, transaction);
         }
@@ -59,7 +63,9 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        internal static IEnumerable<DbField> GetInternal<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
+        internal static IEnumerable<DbField> GetInternal<TDbConnection>(TDbConnection connection,
+            string tableName,
+            IDbTransaction transaction)
             where TDbConnection : IDbConnection
         {
             var type = connection.GetType();

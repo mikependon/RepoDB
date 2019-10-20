@@ -14,10 +14,5 @@
         /// The default value of the cache expiration in minutes.
         /// </summary>
         public const int DefaultCacheItemExpirationInMinutes = 180;
-
-        /// <summary>
-        /// The default prefix to the parameters.
-        /// </summary>
-        public const string DefaultParameterPrefix = "@";
     }
 }

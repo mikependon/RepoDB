@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -78,9 +79,9 @@ namespace RepoDb.Requests
                   statementBuilder)
         {
             Index = index;
-            Fields = fields;
+            Fields = fields?.AsList();
             Where = where;
-            OrderBy = orderBy;
+            OrderBy = orderBy?.AsList();
             Top = top;
             Hints = hints;
         }
@@ -115,7 +116,7 @@ namespace RepoDb.Requests
         /// </summary>
         public string Hints { get; }
 
-        // Equality and comparers
+        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="QueryMultipleRequest"/>.
@@ -124,7 +125,7 @@ namespace RepoDb.Requests
         public override int GetHashCode()
         {
             // Make sure to return if it is already provided
-            if (!ReferenceEquals(null, m_hashCode))
+            if (m_hashCode != null)
             {
                 return m_hashCode.Value;
             }
@@ -133,7 +134,7 @@ namespace RepoDb.Requests
             var hashCode = string.Concat(Name, ".QueryMultiple").GetHashCode();
 
             // Add the index
-            if (!ReferenceEquals(null, Index))
+            if (Index != null)
             {
                 hashCode += Index.GetHashCode();
             }
@@ -148,13 +149,13 @@ namespace RepoDb.Requests
             }
 
             // Add the expression
-            if (!ReferenceEquals(null, Where))
+            if (Where != null)
             {
                 hashCode += Where.GetHashCode();
             }
 
             // Add the order fields
-            if (!ReferenceEquals(null, OrderBy))
+            if (OrderBy != null)
             {
                 foreach (var orderField in OrderBy)
                 {
@@ -163,22 +164,19 @@ namespace RepoDb.Requests
             }
 
             // Add the filter
-            if (!ReferenceEquals(null, Top))
+            if (Top != null)
             {
                 hashCode += Top.GetHashCode();
             }
 
             // Add the hints
-            if (!ReferenceEquals(null, Hints))
+            if (!string.IsNullOrEmpty(Hints))
             {
                 hashCode += Hints.GetHashCode();
             }
 
-            // Set back the hash code value
-            m_hashCode = hashCode;
-
-            // Return the actual value
-            return hashCode;
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>
@@ -226,5 +224,7 @@ namespace RepoDb.Requests
         {
             return (objA == objB) == false;
         }
+
+        #endregion
     }
 }

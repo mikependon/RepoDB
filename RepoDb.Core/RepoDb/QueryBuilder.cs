@@ -2,6 +2,7 @@
 using RepoDb.Extensions;
 using System.Linq;
 using System.Text;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -141,22 +142,24 @@ namespace RepoDb
         /// Appends a stringified fields to the SQL Query Statement.
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsFrom<TEntity>()
+        public QueryBuilder FieldsFrom<TEntity>(IDbSetting dbSetting)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
-            return Append(fields?.AsFields().Join(", "));
+            return FieldsFrom(PropertyCache.Get<TEntity>()?.AsFields(), dbSetting);
         }
 
         /// <summary>
         /// Append a stringified fields to the SQL Query Statement.
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsFrom(IEnumerable<Field> fields)
+        public QueryBuilder FieldsFrom(IEnumerable<Field> fields,
+            IDbSetting dbSetting)
         {
-            return Append(fields?.Select(f => f.Name).Join(", "));
+            return Append(fields?.Select(f => f.Name).AsFields(dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -164,12 +167,13 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
         /// <param name="index">The parameter index.</param>
-        /// <param name="prefix">The prefix to the parameters.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndParametersFrom<TEntity>(int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder FieldsAndParametersFrom<TEntity>(int index,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            return Append(FieldCache.Get<TEntity>()?.AsFieldsAndParameters(index, prefix).Join(", "));
+            return Append(FieldCache.Get<TEntity>()?.AsFieldsAndParameters(index, dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -177,11 +181,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="index">The parameter index.</param>
-        /// <param name="prefix">The prefix to the parameters.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndParametersFrom(IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder FieldsAndParametersFrom(IEnumerable<Field> fields,
+            int index,
+            IDbSetting dbSetting)
         {
-            return Append(fields?.AsFieldsAndParameters(index, prefix).Join(", "));
+            return Append(fields?.AsFieldsAndParameters(index, dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -189,12 +195,14 @@ namespace RepoDb
         /// </summary>
         /// <param name="alias">The alias to be prepended for each field.</param>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndAliasFieldsFrom<TEntity>(string alias)
+        public QueryBuilder FieldsAndAliasFieldsFrom<TEntity>(string alias,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
-            return Append(fields?.AsFieldsAndAliasFields(alias).Join(", "));
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
+            return Append(fields?.AsFieldsAndAliasFields(alias, dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -202,10 +210,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndAliasFieldsFrom(IEnumerable<Field> fields, string alias)
+        public QueryBuilder FieldsAndAliasFieldsFrom(IEnumerable<Field> fields,
+            string alias,
+            IDbSetting dbSetting)
         {
-            return Append(fields?.AsFieldsAndAliasFields(alias).Join(", "));
+            return Append(fields?.AsFieldsAndAliasFields(alias, dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -213,12 +224,14 @@ namespace RepoDb
         /// </summary>
         /// <param name="alias">The alias to be prepended for each field.</param>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder AsAliasFieldsFrom<TEntity>(string alias)
+        public QueryBuilder AsAliasFieldsFrom<TEntity>(string alias,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
-            return Append(fields?.AsAliasFields(alias).Join(", "));
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
+            return Append(fields?.AsAliasFields(alias, dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -226,10 +239,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder AsAliasFieldsFrom(IEnumerable<Field> fields, string alias)
+        public QueryBuilder AsAliasFieldsFrom(IEnumerable<Field> fields,
+            string alias,
+            IDbSetting dbSetting)
         {
-            return Append(fields?.AsAliasFields(alias).Join(", "));
+            return Append(fields?.AsAliasFields(alias, dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -245,10 +261,12 @@ namespace RepoDb
         /// Appends a word GROUP BY and a stringified fields to the SQL Query Statement.
         /// </summary>
         /// <param name="fields">The fields to be stringified.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder GroupByFrom(IEnumerable<Field> fields)
+        public QueryBuilder GroupByFrom(IEnumerable<Field> fields,
+            IDbSetting dbSetting)
         {
-            return Append(string.Concat("GROUP BY ", fields?.AsFields().Join(", ")));
+            return Append(string.Concat("GROUP BY ", fields?.AsFields(dbSetting).Join(", ")));
         }
 
         /// <summary>
@@ -256,11 +274,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryField">The conditional field object used for composition.</param>
         /// <param name="index">The parameter index.</param>
-        /// <param name="prefix">The prefix to the parameters.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder HavingCountFrom(QueryField queryField, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder HavingCountFrom(QueryField queryField,
+            int index,
+            IDbSetting dbSetting)
         {
-            return Append(string.Concat("HAVING COUNT(", queryField.Field.Name, ") ", queryField.GetOperationText(), ", ", queryField.AsParameter(index, prefix)));
+            return Append(string.Concat("HAVING COUNT(", queryField.Field.Name, ") ", queryField.GetOperationText(), ", ", queryField.AsParameter(index, dbSetting)));
         }
 
         /// <summary>
@@ -312,13 +332,37 @@ namespace RepoDb
         /// Appends a word ORDER BY and the stringified fields to the SQL Query Statement with aliases.
         /// </summary>
         /// <param name="orderBy">The list of order fields to be stringified.</param>
-        /// <param name="alias">The aliases to be prepended for each field.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder OrderByFrom(IEnumerable<OrderField> orderBy = null, string alias = null)
+        public QueryBuilder OrderByFrom(IEnumerable<OrderField> orderBy,
+            IDbSetting dbSetting)
         {
-            return (orderBy != null && orderBy.Any()) ?
-                Append(string.Concat("ORDER BY ", orderBy.Select(orderField => orderField.AsField()).Join(", "))) :
+            return OrderByFrom(orderBy, null, dbSetting);
+        }
+
+        /// <summary>
+        /// Appends a word ORDER BY and the stringified fields to the SQL Query Statement with aliases.
+        /// </summary>
+        /// <param name="orderBy">The list of order fields to be stringified.</param>
+        /// <param name="alias">The aliases to be prepended for each field.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder OrderByFrom(IEnumerable<OrderField> orderBy,
+            string alias,
+            IDbSetting dbSetting)
+        {
+            return orderBy?.Any() == true ?
+                Append(string.Concat("ORDER BY ", orderBy.Select(orderField => orderField.AsField(alias, dbSetting)).Join(", "))) :
                 this;
+        }
+
+        /// <summary>
+        /// Appends a word AS to the SQL Query Statement with alias.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder As()
+        {
+            return As(null);
         }
 
         /// <summary>
@@ -326,7 +370,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="alias">The alias to be prepended.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder As(string alias = null)
+        public QueryBuilder As(string alias)
         {
             return string.IsNullOrEmpty(alias) ? Append("AS") : Append(string.Concat("AS ", alias));
         }
@@ -364,10 +408,14 @@ namespace RepoDb
         /// <param name="field">The field to be stringified.</param>
         /// <param name="leftAlias">The left alias.</param>
         /// <param name="rightAlias">The right alias.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder JoinQualifiersFrom(Field field, string leftAlias, string rightAlias)
+        public QueryBuilder JoinQualifiersFrom(Field field,
+            string leftAlias,
+            string rightAlias,
+            IDbSetting dbSetting)
         {
-            return Append(field.AsJoinQualifier(leftAlias, rightAlias));
+            return Append(field.AsJoinQualifier(leftAlias, rightAlias, dbSetting));
         }
 
         /// <summary>
@@ -389,24 +437,27 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Appends the target name to the SQL Query Statement.
-        /// </summary>
-        /// <param name="tableName">The name of the table.</param>
-        /// <returns>The current instance.</returns>
-        public QueryBuilder TableNameFrom(string tableName)
-        {
-            return Append(tableName?.AsQuoted(true));
-        }
-
-        /// <summary>
         /// Appends the mapped entity name to the SQL Query Statement.
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder TableNameFrom<TEntity>()
+        public QueryBuilder TableNameFrom<TEntity>(IDbSetting dbSetting)
             where TEntity : class
         {
-            return Append(ClassMappedNameCache.Get<TEntity>());
+            return TableNameFrom(ClassMappedNameCache.Get<TEntity>(), dbSetting);
+        }
+
+        /// <summary>
+        /// Appends the target name to the SQL Query Statement.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder TableNameFrom(string tableName,
+            IDbSetting dbSetting)
+        {
+            return Append(tableName?.AsQuoted(true, dbSetting));
         }
 
         /// <summary>
@@ -414,12 +465,13 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
         /// <param name="index">The parameter index.</param>
-        /// <param name="prefix">The prefix to the parameters.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersFrom<TEntity>(int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder ParametersFrom<TEntity>(int index,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            return ParametersFrom(FieldCache.Get<TEntity>(), index, prefix);
+            return ParametersFrom(FieldCache.Get<TEntity>(), index, dbSetting);
         }
 
         /// <summary>
@@ -427,11 +479,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
         /// <param name="index">The parameter index.</param>
-        /// <param name="prefix">The prefix to the parameters.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersFrom(IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder ParametersFrom(IEnumerable<Field> fields,
+            int index,
+            IDbSetting dbSetting)
         {
-            return Append(fields?.AsParameters(index, prefix).Join(", "));
+            return Append(fields?.AsParameters(index, dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -439,13 +493,14 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
         /// <param name="index">The parameter index.</param>
-        /// <param name="prefix">The prefix to the parameters.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersAsFieldsFrom<TEntity>(int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder ParametersAsFieldsFrom<TEntity>(int index,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetUnquotedMappedName());
-            return Append(fields?.AsParametersAsFields(index, prefix).Join(", "));
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName()).AsFields();
+            return ParametersAsFieldsFrom(fields, index, dbSetting);
         }
 
         /// <summary>
@@ -453,11 +508,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
         /// <param name="index">The parameter index.</param>
-        /// <param name="prefix">The prefix to the parameters.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersAsFieldsFrom(IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        public QueryBuilder ParametersAsFieldsFrom(IEnumerable<Field> fields,
+            int index,
+            IDbSetting dbSetting)
         {
-            return Append(fields?.AsParametersAsFields(index, prefix).Join(", "));
+            return Append(fields?.AsParametersAsFields(index, dbSetting).Join(", "));
         }
 
         /// <summary>
@@ -501,7 +558,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="rows">The row number to be appended.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder TopFrom(int? rows = 0)
+        public QueryBuilder TopFrom(int? rows)
         {
             return rows > 0 ? Append(string.Concat("TOP (", rows, ")")) : this;
         }
@@ -528,11 +585,26 @@ namespace RepoDb
         /// Appends a word WHERE and the stringified values of the <see cref="QueryGroup"/> to the SQL Query Statement.
         /// </summary>
         /// <param name="queryGroup">The query group to be stringified.</param>
-        /// <param name="index">The parameter index.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder WhereFrom(QueryGroup queryGroup, int index = 0)
+        public QueryBuilder WhereFrom(QueryGroup queryGroup,
+            IDbSetting dbSetting)
         {
-            return (queryGroup != null) ? Append(string.Concat("WHERE ", queryGroup.GetString(index))) : this;
+            return WhereFrom(queryGroup, 0, dbSetting);
+        }
+
+        /// <summary>
+        /// Appends a word WHERE and the stringified values of the <see cref="QueryGroup"/> to the SQL Query Statement.
+        /// </summary>
+        /// <param name="queryGroup">The query group to be stringified.</param>
+        /// <param name="index">The parameter index.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder WhereFrom(QueryGroup queryGroup,
+            int index,
+            IDbSetting dbSetting)
+        {
+            return (queryGroup != null) ? Append(string.Concat("WHERE ", queryGroup.GetString(index, dbSetting))) : this;
         }
 
         /// <summary>
@@ -540,11 +612,14 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
         /// <param name="index">The parameter index.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder WhereFrom(IEnumerable<Field> fields, int index = 0)
+        public QueryBuilder WhereFrom(IEnumerable<Field> fields,
+            int index,
+            IDbSetting dbSetting)
         {
             return (fields?.Any() == true) ? Append(string.Concat("WHERE (",
-                fields.Select(f => f.UnquotedName.AsFieldAndParameter(index)).Join(" AND "), ")")) : this;
+                fields.Select(f => f.Name.AsFieldAndParameter(index, dbSetting)).Join(" AND "), ")")) : this;
         }
 
         /// <summary>
@@ -748,6 +823,5 @@ namespace RepoDb
         {
             return field != null ? Append(string.Concat("AVG(", field.Name, ")")) : this;
         }
-
     }
 }

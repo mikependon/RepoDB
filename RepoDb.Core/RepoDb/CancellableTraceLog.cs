@@ -11,10 +11,14 @@
         /// <param name="statement">A SQL statement that was used in the trace operation.</param>
         /// <param name="parameter">An object that was used as a parameter in the operation.</param>
         /// <param name="result">A result of the operation.</param>
-        internal CancellableTraceLog(string statement, object parameter, object result)
-            : base(statement, parameter, result, null)
-        {
-        }
+        internal CancellableTraceLog(string statement,
+            object parameter,
+            object result)
+            : base(statement,
+                  parameter,
+                  result,
+                  null)
+        { }
 
         /// <summary>
         /// Gets a value whether the operation is cancelled.

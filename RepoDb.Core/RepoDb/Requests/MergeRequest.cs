@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -57,8 +58,8 @@ namespace RepoDb.Requests
                   transaction,
                   statementBuilder)
         {
-            Fields = fields;
-            Qualifiers = qualifiers;
+            Fields = fields?.AsList();
+            Qualifiers = qualifiers?.AsList();
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace RepoDb.Requests
         /// </summary>
         public IEnumerable<Field> Qualifiers { get; set; }
 
-        // Equality and comparers
+        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="MergeRequest"/>.
@@ -80,7 +81,7 @@ namespace RepoDb.Requests
         public override int GetHashCode()
         {
             // Make sure to return if it is already provided
-            if (!ReferenceEquals(null, m_hashCode))
+            if (m_hashCode != null)
             {
                 return m_hashCode.Value;
             }
@@ -106,11 +107,8 @@ namespace RepoDb.Requests
                 }
             }
 
-            // Set back the hash code value
-            m_hashCode = hashCode;
-
-            // Return the actual value
-            return hashCode;
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>
@@ -158,5 +156,7 @@ namespace RepoDb.Requests
         {
             return (objA == objB) == false;
         }
+
+        #endregion
     }
 }

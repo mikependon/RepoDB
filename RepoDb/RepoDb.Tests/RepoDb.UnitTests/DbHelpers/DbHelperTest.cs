@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             DbSettingMapper.Add(typeof(CustomDbConnectionForDbHelper), Helper.DbSetting, true);
             DbValidatorMapper.Add(typeof(CustomDbConnectionForDbHelper), Helper.DbValidator, true);
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
+            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), Helper.StatementBuilder, true);
         }
 
         #region SubClasses

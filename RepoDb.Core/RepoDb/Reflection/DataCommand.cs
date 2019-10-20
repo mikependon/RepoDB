@@ -52,7 +52,8 @@ namespace RepoDb.Reflection
             var func = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(tableName,
                 inputFields,
                 outputFields,
-                entities.Count());
+                entities.Count(),
+                command.Connection.GetDbSetting());
 
             // Execute the function
             func(command, entities.AsList());

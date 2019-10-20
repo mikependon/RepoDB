@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.UnitTests.Setup;
 using System;
 
 namespace RepoDb.UnitTests
@@ -11,7 +12,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionIntConstant()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1).GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
@@ -25,7 +26,7 @@ namespace RepoDb.UnitTests
             var value = 1;
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value).GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
@@ -42,7 +43,7 @@ namespace RepoDb.UnitTests
             };
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value.PropertyInt).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value.PropertyInt).GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
@@ -53,7 +54,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionIntMethodCall()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == GetIntValueForParseExpression()).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == GetIntValueForParseExpression()).GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
@@ -67,7 +68,7 @@ namespace RepoDb.UnitTests
             var value = GetIntValueForParseExpression();
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value).GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
@@ -80,7 +81,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithIntMathOperations()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == (1 + 1)).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == (1 + 1)).GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
@@ -91,7 +92,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithIntNewClassInstance()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == new Random().Next(int.MaxValue)).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == new Random().Next(int.MaxValue)).GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
@@ -102,7 +103,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithIntMethodClass()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == Convert.ToInt32("1000")).GetString();
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == Convert.ToInt32("1000")).GetString(Helper.DbSetting);
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
@@ -112,7 +113,7 @@ namespace RepoDb.UnitTests
         private string TestParseExpressionWithIntArgumentParameterMethod<TEntity>(int value) where TEntity : QueryGroupTestExpressionClass
         {
             // Act
-            var actual = QueryGroup.Parse<TEntity>(e => e.PropertyInt == value).GetString();
+            var actual = QueryGroup.Parse<TEntity>(e => e.PropertyInt == value).GetString(Helper.DbSetting);
 
             // Return
             return actual;

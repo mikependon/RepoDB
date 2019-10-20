@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
@@ -25,7 +26,7 @@ namespace RepoDb.Extensions
             var dictionary = new Dictionary<int, ClassProperty>();
             for (var i = 0; i < reader.FieldCount; i++)
             {
-                var property = properties.FirstOrDefault(p => string.Equals(p.GetUnquotedMappedName(), reader.GetName(i), StringComparison.OrdinalIgnoreCase));
+                var property = properties.FirstOrDefault(p => string.Equals(p.GetMappedName(), reader.GetName(i), StringComparison.OrdinalIgnoreCase));
                 if (property != null)
                 {
                     dictionary.Add(i, property);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
+using RepoDb.UnitTests.Setup;
 
 namespace RepoDb.UnitTests
 {
@@ -14,8 +15,8 @@ namespace RepoDb.UnitTests
             // Setup
             var text = "Value";
 
-            // Act
-            var actual = text.AsQuoted();
+            //  
+            var actual = text.AsQuoted(Helper.DbSetting);
             var expected = "[Value]";
 
             // Assert
@@ -29,7 +30,7 @@ namespace RepoDb.UnitTests
             var text = " Field Value ";
 
             // Act
-            var actual = text.AsQuoted();
+            var actual = text.AsQuoted(Helper.DbSetting);
             var expected = "[ Field Value ]";
 
             // Assert
@@ -43,7 +44,7 @@ namespace RepoDb.UnitTests
             var text = " Field Value ";
 
             // Act
-            var actual = text.AsQuoted(true);
+            var actual = text.AsQuoted(true, Helper.DbSetting);
             var expected = "[Field Value]";
 
             // Assert
@@ -57,7 +58,7 @@ namespace RepoDb.UnitTests
             var text = "Database.Schema.Name";
 
             // Act
-            var actual = text.AsQuoted(true);
+            var actual = text.AsQuoted(true, Helper.DbSetting);
             var expected = "[Database].[Schema].[Name]";
 
             // Assert
@@ -75,7 +76,7 @@ namespace RepoDb.UnitTests
             var text = "[Value]";
 
             // Act
-            var actual = text.AsUnquoted();
+            var actual = text.AsUnquoted(Helper.DbSetting);
             var expected = "Value";
 
             // Assert
@@ -89,7 +90,7 @@ namespace RepoDb.UnitTests
             var text = " [Field Value] ";
 
             // Act
-            var actual = text.AsUnquoted();
+            var actual = text.AsUnquoted(Helper.DbSetting);
             var expected = " Field Value ";
 
             // Assert
@@ -103,7 +104,7 @@ namespace RepoDb.UnitTests
             var text = " [Field Value] ";
 
             // Act
-            var actual = text.AsUnquoted(true);
+            var actual = text.AsUnquoted(true, Helper.DbSetting);
             var expected = "Field Value";
 
             // Assert
@@ -117,7 +118,7 @@ namespace RepoDb.UnitTests
             var text = "[Database].[Schema].[Name]";
 
             // Act
-            var actual = text.AsUnquoted(true);
+            var actual = text.AsUnquoted(true, Helper.DbSetting);
             var expected = "Database.Schema.Name";
 
             // Assert

@@ -2,6 +2,7 @@
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -85,9 +86,7 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="appendUnderscore">
-        /// The value to identify whether the underscore prefix will be appended to the parameter name.
-        /// </param>
+        /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
         internal QueryField(string fieldName,
             Operation operation,
             object value,
@@ -105,9 +104,7 @@ namespace RepoDb
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="appendUnderscore">
-        /// The value to identify whether the underscore prefix will be appended to the parameter name.
-        /// </param>
+        /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
         internal QueryField(Field field,
             Operation operation,
             object value,
@@ -115,10 +112,10 @@ namespace RepoDb
         {
             Field = field;
             Operation = operation;
-            Parameter = new Parameter(field.UnquotedName, value, appendUnderscore);
+            Parameter = new Parameter(field.Name, value, appendUnderscore);
         }
 
-        // Properties
+        #region Properties
 
         /// <summary>
         /// Gets the associated field object.
@@ -135,7 +132,9 @@ namespace RepoDb
         /// </summary>
         public Parameter Parameter { get; }
 
-        // Methods
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Prepend an underscore on the bound parameter object.
@@ -150,7 +149,7 @@ namespace RepoDb
         /// </summary>
         public void Reset()
         {
-            Parameter?.SetName(Field.UnquotedName);
+            Parameter?.SetName(Field.Name);
             m_operationTextAttribute = null;
             m_hashCode = null;
         }
@@ -180,9 +179,9 @@ namespace RepoDb
             return string.Concat(Field.ToString(), " = ", Parameter.ToString());
         }
 
-        // Static Methods
+        #endregion
 
-        #region Parse (Expression)
+        #region Static Methods
 
         /// <summary>
         /// Parse an instance of <see cref="BinaryExpression"/> object.
@@ -200,7 +199,7 @@ namespace RepoDb
 
             // Name
             var fieldName = expression.GetName();
-            if (PropertyCache.Get<TEntity>().Any(property => PropertyMappedNameCache.Get(property.PropertyInfo, false) == fieldName) == false)
+            if (PropertyCache.Get<TEntity>().Any(property => PropertyMappedNameCache.Get(property.PropertyInfo) == fieldName) == false)
             {
                 throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
@@ -239,7 +238,7 @@ namespace RepoDb
 
         #endregion
 
-        // Equality and comparers
+        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="QueryField"/>.
@@ -247,39 +246,35 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (!ReferenceEquals(null, m_hashCode))
+            if (m_hashCode != null)
             {
                 return m_hashCode.Value;
             }
 
-            // Use the non nullable for perf purposes
             var hashCode = 0;
 
             // Set in the combination of the properties
             hashCode += (Field.GetHashCode() + (int)Operation + Parameter.GetHashCode());
 
             // The (IS NULL) affects the uniqueness of the object
-            if (Operation == Operation.Equal && ReferenceEquals(null, Parameter.Value))
+            if (Operation == Operation.Equal && Parameter.Value == null)
             {
                 hashCode += HASHCODE_ISNULL;
             }
             // The (IS NOT NULL) affects the uniqueness of the object
-            else if (Operation == Operation.NotEqual && ReferenceEquals(null, Parameter.Value))
+            else if (Operation == Operation.NotEqual && Parameter.Value == null)
             {
                 hashCode += HASHCODE_ISNOTNULL;
             }
             // The parameter's length affects the uniqueness of the object
             else if ((Operation == Operation.In || Operation == Operation.NotIn) &&
-                !ReferenceEquals(null, Parameter.Value) && Parameter.Value is Array)
+                Parameter.Value != null && Parameter.Value is Array)
             {
                 hashCode += ((Array)Parameter.Value).Length.GetHashCode();
             }
 
-            // Set back the value
-            m_hashCode = hashCode;
-
-            // Return the value
-            return hashCode;
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>
@@ -327,5 +322,7 @@ namespace RepoDb
         {
             return (objA == objB) == false;
         }
+
+        #endregion
     }
 }

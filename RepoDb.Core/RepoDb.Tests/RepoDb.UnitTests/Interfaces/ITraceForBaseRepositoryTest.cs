@@ -5,6 +5,7 @@ using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
+using RepoDb.UnitTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,6 +21,8 @@ namespace RepoDb.UnitTests.Interfaces
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
+            DbSettingMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), Helper.DbSetting, true);
+            DbValidatorMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), Helper.DbValidator, true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), new BaseRepositoryCustomDbHelper(), true);
             DbOperationMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), new BaseRepositoryCustomDbOperationProvider(), true);
         }
@@ -43,7 +46,7 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace,
-                new SqlServerStatementBuilder())
+                Helper.StatementBuilder)
             { }
         }
 
@@ -62,8 +65,8 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     return new[]
                     {
-                        new DbField("Id", true, true, false, typeof(int), null, null, null),
-                        new DbField("Name", false, false, true, typeof(string), null, null, null)
+                        new DbField("Id", true, true, false, typeof(int), null, null, null, null),
+                        new DbField("Name", false, false, true, typeof(string), null, null, null, null)
                     };
                 }
                 return null;
@@ -80,8 +83,8 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     return Task.FromResult<IEnumerable<DbField>>(new[]
                     {
-                        new DbField("Id", true, true, false, typeof(int), null, null, null),
-                        new DbField("Name", false, false, true, typeof(string), null, null, null)
+                        new DbField("Id", true, true, false, typeof(int), null, null, null, null),
+                        new DbField("Name", false, false, true, typeof(string), null, null, null, null)
                     });
                 }
                 return null;

@@ -4,6 +4,7 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
+using RepoDb.UnitTests.Setup;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -13,6 +14,14 @@ namespace RepoDb.UnitTests.DbHelpers
     [TestClass]
     public class DbHelperTest
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            DbSettingMapper.Add(typeof(CustomDbConnectionForDbHelper), Helper.DbSetting, true);
+            DbValidatorMapper.Add(typeof(CustomDbConnectionForDbHelper), Helper.DbValidator, true);
+            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), Helper.StatementBuilder, true);
+        }
+
         #region SubClasses
 
         private class DataEntityForDbHelper
@@ -31,8 +40,8 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             return new[]
             {
-                new DbField("Id", true, true, false, typeof(int), null, null, null),
-                new DbField("Name", false, false, false, typeof(string), null, null, null)
+                new DbField("Id", true, true, false, typeof(int), null, null, null, null),
+                new DbField("Name", false, false, false, typeof(string), null, null, null, null)
             };
         }
 
@@ -58,7 +67,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -85,7 +93,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -109,7 +116,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -133,7 +139,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -157,7 +162,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -181,7 +185,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -205,7 +208,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -229,7 +231,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -253,7 +254,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -289,7 +289,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -325,7 +324,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -358,7 +356,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -391,7 +388,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -424,7 +420,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -457,7 +452,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -490,7 +484,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -522,7 +515,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act
@@ -555,7 +547,6 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), new SqlServerStatementBuilder(), true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
 
             // Act

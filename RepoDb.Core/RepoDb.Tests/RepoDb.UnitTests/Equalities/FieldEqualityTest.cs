@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -15,7 +14,7 @@ namespace RepoDb.UnitTests.Equalities
             var objA = new Field("FieldName");
 
             // Act
-            var equal = Equals(objA, "FieldName".AsQuoted(true, null));
+            var equal = Equals(objA, "FieldName");
 
             // Assert
             Assert.IsTrue(equal);
@@ -55,7 +54,7 @@ namespace RepoDb.UnitTests.Equalities
             var objA = new Field("FieldName");
 
             // Act
-            var equal = (objA.GetHashCode() == "FieldName".AsQuoted(true, null).GetHashCode());
+            var equal = (objA.GetHashCode() == "FieldName".GetHashCode());
 
             // Assert
             Assert.IsTrue(equal);

@@ -43,7 +43,7 @@ namespace RepoDb.UnitTests.Interfaces
                       cache,
                       cacheItemExpiration,
                       null,
-                      new SqlServerStatementBuilder())
+                      Helper.StatementBuilder)
             { }
         }
 

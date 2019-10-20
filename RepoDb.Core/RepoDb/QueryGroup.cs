@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Dynamic;
 using System.Data;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -115,7 +116,7 @@ namespace RepoDb
         /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
-            Conjunction conjunction = Conjunction.And) :
+            Conjunction conjunction) :
             this(queryFields,
                 null,
                 conjunction,
@@ -128,7 +129,7 @@ namespace RepoDb
         /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
-            bool isNot = false) :
+            bool isNot) :
             this(queryFields,
                 null,
                 Conjunction.And,
@@ -143,7 +144,7 @@ namespace RepoDb
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             IEnumerable<QueryGroup> queryGroups,
-            Conjunction conjunction = Conjunction.And) :
+            Conjunction conjunction) :
             this(queryFields,
                 queryGroups,
                 conjunction,
@@ -158,7 +159,7 @@ namespace RepoDb
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             IEnumerable<QueryGroup> queryGroups,
-            bool isNot = false) :
+            bool isNot) :
             this(queryFields,
                 queryGroups,
                 Conjunction.And,
@@ -172,8 +173,8 @@ namespace RepoDb
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
-            Conjunction conjunction = Conjunction.And,
-            bool isNot = false) :
+            Conjunction conjunction,
+            bool isNot) :
             this(queryFields,
                 null,
                 conjunction,
@@ -197,7 +198,7 @@ namespace RepoDb
         /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         public QueryGroup(IEnumerable<QueryGroup> queryGroups,
-            Conjunction conjunction = Conjunction.And) :
+            Conjunction conjunction) :
             this(null,
                 queryGroups,
                 conjunction,
@@ -212,8 +213,8 @@ namespace RepoDb
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryGroup> queryGroups,
-            Conjunction conjunction = Conjunction.And,
-            bool isNot = false) :
+            Conjunction conjunction,
+            bool isNot) :
             this(null,
                 queryGroups,
                 conjunction,
@@ -229,12 +230,12 @@ namespace RepoDb
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             IEnumerable<QueryGroup> queryGroups,
-            Conjunction conjunction = Conjunction.And,
-            bool isNot = false)
+            Conjunction conjunction,
+            bool isNot)
         {
             Conjunction = conjunction;
-            QueryFields = queryFields;
-            QueryGroups = queryGroups;
+            QueryFields = queryFields?.AsList();
+            QueryGroups = queryGroups.AsList();
             IsNot = isNot;
         }
 
@@ -271,7 +272,7 @@ namespace RepoDb
         /// </summary>
         internal void PrependAnUnderscoreAtTheParameters()
         {
-            if (ReferenceEquals(null, QueryFields))
+            if (QueryFields?.Any() != true)
             {
                 return;
             }
@@ -302,7 +303,7 @@ namespace RepoDb
             }
 
             // Check the presence
-            var fields = GetFields();
+            var fields = GetFields(true);
             if (fields == null)
             {
                 return this;
@@ -405,7 +406,7 @@ namespace RepoDb
             for (var i = 0; i < queryGroups.Length; i++)
             {
                 var queryGroup = queryGroups[i];
-                var fields = queryGroup.GetFields();
+                var fields = queryGroup.GetFields(true);
                 foreach (var field in fields)
                 {
                     field.Parameter.SetName(string.Format("T{0}_{1}", i, field.Parameter.Name));
@@ -422,7 +423,8 @@ namespace RepoDb
         /// <param name="queryGroupTypeMaps">The list of <see cref="QueryGroupTypeMap"/> objects to be converted.</param>
         /// <param name="fixParameters">A boolean value whether to fix the parameter name before converting.</param>
         /// <returns>An instance of an object that contains all the definition of the converted underlying <see cref="QueryFields"/>s.</returns>
-        internal static object AsMappedObject(QueryGroupTypeMap[] queryGroupTypeMaps, bool fixParameters = true)
+        internal static object AsMappedObject(QueryGroupTypeMap[] queryGroupTypeMaps,
+            bool fixParameters = true)
         {
             // Create a new instance of ExpandObject
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
@@ -581,10 +583,11 @@ namespace RepoDb
         /// Gets the stringified query expression format of the current instance. A formatted string for field-operation-parameter will be
         /// conjuncted by the value of the <see cref="Conjunction"/> property.
         /// </summary>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A stringified formatted-text of the current instance.</returns>
-        public string GetString()
+        public string GetString(IDbSetting dbSetting)
         {
-            return GetString(0);
+            return GetString(0, dbSetting);
         }
 
         /// <summary>
@@ -592,8 +595,10 @@ namespace RepoDb
         /// conjuncted by the value of the <see cref="Conjunction"/> property.
         /// </summary>
         /// <param name="index">The parameter index for batch operation.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A stringified formatted-text of the current instance.</returns>
-        public string GetString(int index)
+        public string GetString(int index,
+            IDbSetting dbSetting)
         {
             // Fix first the parameters
             Fix();
@@ -608,7 +613,7 @@ namespace RepoDb
             {
                 var fields = QueryFields
                     .AsList()
-                    .Select(qf => qf.AsFieldAndParameter(index)).Join(separator);
+                    .Select(qf => qf.AsFieldAndParameter(index, dbSetting)).Join(separator);
                 groupList.Add(fields);
             }
 
@@ -617,7 +622,7 @@ namespace RepoDb
             {
                 var groups = QueryGroups
                     .AsList()
-                    .Select(qg => qg.GetString(index)).Join(separator);
+                    .Select(qg => qg.GetString(index, dbSetting)).Join(separator);
                 groupList.Add(groups);
             }
 
@@ -630,7 +635,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="traverse">Identify whether to explore all the children of the child <see cref="QueryGroup"/> objects.</param>
         /// <returns>An enumerable list of <see cref="QueryField"/> objects.</returns>
-        public IEnumerable<QueryField> GetFields(bool traverse = true)
+        public IEnumerable<QueryField> GetFields(bool traverse)
         {
             // Variables
             var explore = (Action<QueryGroup>)null;
@@ -714,7 +719,8 @@ namespace RepoDb
             return null;
         }
 
-        private static QueryGroup Parse<TEntity>(BinaryExpression expression) where TEntity : class
+        private static QueryGroup Parse<TEntity>(BinaryExpression expression)
+            where TEntity : class
         {
             var leftQueryGroup = (QueryGroup)null;
             var rightQueryGroup = (QueryGroup)null;
@@ -758,7 +764,8 @@ namespace RepoDb
                 // Extractable
                 if (expression.IsExtractable())
                 {
-                    leftQueryGroup = new QueryGroup(QueryField.Parse<TEntity>(expression));
+                    var queryField = QueryField.Parse<TEntity>(expression);
+                    leftQueryGroup = new QueryGroup(queryField);
                     skipRight = true;
                 }
             }
@@ -803,7 +810,11 @@ namespace RepoDb
             return leftQueryGroup ?? rightQueryGroup;
         }
 
-        private static QueryGroup Parse<TEntity>(UnaryExpression expression, object rightValue, ExpressionType expressionType, bool isEqualsTo) where TEntity : class
+        private static QueryGroup Parse<TEntity>(UnaryExpression expression,
+            object rightValue,
+            ExpressionType expressionType,
+            bool isEqualsTo)
+            where TEntity : class
         {
             if (expression.Operand?.IsMember() == true)
             {
@@ -816,7 +827,12 @@ namespace RepoDb
             return null;
         }
 
-        private static QueryGroup Parse<TEntity>(MemberExpression expression, object rightValue, ExpressionType expressionType, bool isNot, bool isEqualsTo) where TEntity : class
+        private static QueryGroup Parse<TEntity>(MemberExpression expression,
+            object rightValue,
+            ExpressionType expressionType,
+            bool isNot,
+            bool isEqualsTo)
+            where TEntity : class
         {
             var queryGroup = (QueryGroup)null;
             var value = rightValue ?? expression.GetValue();
@@ -832,7 +848,9 @@ namespace RepoDb
                 }
 
                 // Create a new field
-                var field = new QueryField(expression.Member.GetMappedName(), QueryField.GetOperation(expressionType), value);
+                var field = new QueryField(expression.Member.GetMappedName(),
+                    QueryField.GetOperation(expressionType),
+                    value);
 
                 // Set the query group
                 queryGroup = new QueryGroup(field);
@@ -845,7 +863,10 @@ namespace RepoDb
             return queryGroup;
         }
 
-        private static QueryGroup Parse<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo) where TEntity : class
+        private static QueryGroup Parse<TEntity>(MethodCallExpression expression,
+            bool isNot,
+            bool isEqualsTo)
+            where TEntity : class
         {
             // Check methods for the 'Like', both 'Array.<All|Any>()'
             if (expression.Method.Name == "All" || expression.Method.Name == "Any")
@@ -894,7 +915,10 @@ namespace RepoDb
             return null;
         }
 
-        private static QueryGroup ParseAllOrAnyForArrayOrAnyForList<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo) where TEntity : class
+        private static QueryGroup ParseAllOrAnyForArrayOrAnyForList<TEntity>(MethodCallExpression expression,
+            bool isNot,
+            bool isEqualsTo)
+            where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() != true)
@@ -975,7 +999,8 @@ namespace RepoDb
                 var operation = QueryField.GetOperation(binary.NodeType);
                 foreach (var value in (Array)values)
                 {
-                    queryFields.Add(new QueryField(PropertyMappedNameCache.Get(property, true), operation, value));
+                    var queryField = new QueryField(PropertyMappedNameCache.Get(property), operation, value);
+                    queryFields.Add(queryField);
                 }
             }
 
@@ -983,7 +1008,10 @@ namespace RepoDb
             return new QueryGroup(queryFields, null, conjunction, (isNot == isEqualsTo));
         }
 
-        private static QueryGroup ParseContainsForArrayOrList<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo) where TEntity : class
+        private static QueryGroup ParseContainsForArrayOrList<TEntity>(MethodCallExpression expression,
+            bool isNot,
+            bool isEqualsTo)
+            where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() != true)
@@ -1041,7 +1069,7 @@ namespace RepoDb
 
             // Add to query fields
             var operation = (isNot == false && isEqualsTo == true) ? Operation.In : Operation.NotIn;
-            var queryField = new QueryField(PropertyMappedNameCache.Get(property, true), operation, values);
+            var queryField = new QueryField(PropertyMappedNameCache.Get(property), operation, values);
 
             // Return the result
             var queryGroup = new QueryGroup(queryField);
@@ -1053,7 +1081,10 @@ namespace RepoDb
             return queryGroup;
         }
 
-        private static QueryGroup ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo) where TEntity : class
+        private static QueryGroup ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression,
+            bool isNot,
+            bool isEqualsTo)
+            where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() != true)
@@ -1088,13 +1119,16 @@ namespace RepoDb
 
             // Add to query fields
             var operation = (isNot == isEqualsTo) ? Operation.NotLike : Operation.Like;
-            var queryField = new QueryField(PropertyMappedNameCache.Get(property, true), operation, ConvertToLikeableValue(expression.Method.Name, value));
+            var queryField = new QueryField(PropertyMappedNameCache.Get(property),
+                operation,
+                ConvertToLikeableValue(expression.Method.Name, value));
 
             // Return the result
             return new QueryGroup(queryField.AsEnumerable());
         }
 
-        private static string ConvertToLikeableValue(string methodName, string value)
+        private static string ConvertToLikeableValue(string methodName,
+            string value)
         {
             if (methodName == "Contains")
             {
@@ -1136,7 +1170,7 @@ namespace RepoDb
 
             if (type.GetTypeInfo().IsGenericType == false)
             {
-                throw new InvalidOperationException("Only dynamic object is supported in the 'where' expression.");
+                throw new InvalidQueryExpressionException("Only dynamic object is supported as a query expression.");
             }
 
             // Declare variables
@@ -1146,7 +1180,7 @@ namespace RepoDb
             foreach (var property in type.GetProperties())
             {
                 var value = property.GetValue(obj);
-                fields.Add(new QueryField(PropertyMappedNameCache.Get(property, true), value));
+                fields.Add(new QueryField(PropertyMappedNameCache.Get(property), value));
             }
 
             // Return
@@ -1164,16 +1198,15 @@ namespace RepoDb
         public override int GetHashCode()
         {
             // Make sure to check if this is already taken
-            if (!ReferenceEquals(null, m_hashCode))
+            if (m_hashCode != null)
             {
                 return m_hashCode.Value;
             }
 
-            // Set the default value (should not be nullable for better performance)
             var hashCode = 0;
 
             // Iterates the child query field
-            if (!ReferenceEquals(null, QueryFields))
+            if (QueryFields != null)
             {
                 foreach (var queryField in QueryFields)
                 {
@@ -1182,7 +1215,7 @@ namespace RepoDb
             }
 
             // Iterates the child query groups
-            if (!ReferenceEquals(null, QueryGroups))
+            if (QueryGroups?.Any() == true)
             {
                 foreach (var queryGroup in QueryGroups)
                 {
@@ -1196,11 +1229,8 @@ namespace RepoDb
             // Set the IsNot
             hashCode += IsNot.GetHashCode();
 
-            // Set back the hashcode value
-            m_hashCode = hashCode;
-
-            // Return the actual hash code
-            return hashCode;
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>

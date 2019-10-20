@@ -11,7 +11,9 @@
         /// <param name="name">The name of the property.</param>
         /// <param name="value">The value of the property.</param>
         /// <param name="property">The actual property object.</param>
-        public PropertyValue(string name, object value, ClassProperty property)
+        public PropertyValue(string name,
+            object value,
+            ClassProperty property)
         {
             Name = name;
             Value = value;

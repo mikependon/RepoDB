@@ -11,17 +11,20 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
+using RepoDb.UnitTests.Setup;
 
 namespace RepoDb.UnitTests.Interfaces
 {
     [TestClass]
     public class ITraceForDbConnectionTest
     {
-        private readonly IStatementBuilder m_statementBuilder = new SqlServerStatementBuilder();
+        private readonly IStatementBuilder m_statementBuilder = Helper.StatementBuilder;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
+            DbSettingMapper.Add(typeof(CustomDbConnectionForDbConnectionITrace), Helper.DbSetting, true);
+            DbValidatorMapper.Add(typeof(CustomDbConnectionForDbConnectionITrace), Helper.DbValidator, true);
             DbHelperMapper.Add(typeof(CustomDbConnectionForDbConnectionITrace), new CustomerDbConnectionDbHelper(), true);
             DbOperationMapper.Add(typeof(CustomDbConnectionForDbConnectionITrace), new DbConnectionCustomDbOperationProvider(), true);
         }
@@ -50,8 +53,8 @@ namespace RepoDb.UnitTests.Interfaces
             {
                 return new[]
                 {
-                    new DbField("Id", true, true, false, typeof(int), null, null, null),
-                    new DbField("Name", false, false, true, typeof(string), null, null, null)
+                    new DbField("Id", true, true, false, typeof(int), null, null, null, null),
+                    new DbField("Name", false, false, true, typeof(string), null, null, null, null)
                 };
             }
 
@@ -64,8 +67,8 @@ namespace RepoDb.UnitTests.Interfaces
             {
                 return Task.FromResult<IEnumerable<DbField>>(new[]
                 {
-                    new DbField("Id", true, true, false, typeof(int), null, null, null),
-                    new DbField("Name", false, false, true, typeof(string), null, null, null)
+                    new DbField("Id", true, true, false, typeof(int), null, null, null, null),
+                    new DbField("Name", false, false, true, typeof(string), null, null, null, null)
                 });
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RepoDb.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoDb.Extensions
@@ -19,84 +20,108 @@ namespace RepoDb.Extensions
         }
 
         // AsField
-        private static string AsField(this Field field)
+        private static string AsField(this Field field,
+            IDbSetting dbSetting)
         {
-            return field.Name;
+            return field.Name.AsQuoted(true, dbSetting);
         }
 
         // AsParameter
-        private static string AsParameter(this Field field, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        private static string AsParameter(this Field field,
+            int index,
+            IDbSetting dbSetting)
         {
-            return index > 0 ? string.Concat(prefix, field.UnquotedName.AsAlphaNumeric(true), "_", index) :
-                string.Concat(prefix, field.UnquotedName.AsAlphaNumeric(true));
+            return field.Name.AsParameter(index, dbSetting);
         }
 
         // AsAliasField
-        private static string AsAliasField(this Field field, string alias)
+        private static string AsAliasField(this Field field,
+            string alias,
+            IDbSetting dbSetting)
         {
-            return string.Concat(alias, ".", field.Name);
+            return field.Name.AsAliasField(alias, dbSetting);
         }
 
         // AsParameterAsField
-        private static string AsParameterAsField(this Field field, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        private static string AsParameterAsField(this Field field,
+            int index,
+            IDbSetting dbSetting)
         {
-            return string.Concat(AsParameter(field, index, prefix), " AS ", AsField(field));
+            return field.Name.AsParameterAsField(index, dbSetting);
         }
 
         // AsFieldAndParameter
-        private static string AsFieldAndParameter(this Field field, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        private static string AsFieldAndParameter(this Field field,
+            int index,
+            IDbSetting dbSetting)
         {
-            return string.Concat(AsField(field), " = ", AsParameter(field, index, prefix));
+            return field.Name.AsFieldAndParameter(index, dbSetting);
         }
 
         // AsFieldAndAliasField
-        private static string AsFieldAndAliasField(this Field field, string alias)
+        private static string AsFieldAndAliasField(this Field field,
+            string alias,
+            IDbSetting dbSetting)
         {
-            return string.Concat(AsField(field), " = ", alias, ".", AsField(field));
+            return field.Name.AsFieldAndAliasField(alias, dbSetting);
         }
 
         // AsJoinQualifier
-        internal static string AsJoinQualifier(this Field field, string leftAlias, string rightAlias)
+        internal static string AsJoinQualifier(this Field field,
+            string leftAlias,
+            string rightAlias,
+            IDbSetting dbSetting)
         {
-            return string.Concat(leftAlias, ".", field.Name, " = ", rightAlias, ".", field.Name);
+            return field.Name.AsJoinQualifier(leftAlias, rightAlias, dbSetting);
         }
 
         /* IEnumerable<PropertyInfo> */
 
         // AsFields
-        internal static IEnumerable<string> AsFields(this IEnumerable<Field> fields)
+        internal static IEnumerable<string> AsFields(this IEnumerable<Field> fields,
+            IDbSetting dbSetting)
         {
-            return fields?.Select(field => field.AsField());
+            return fields?.Select(field => field.AsField(dbSetting));
         }
 
         // AsParameters
-        internal static IEnumerable<string> AsParameters(this IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        internal static IEnumerable<string> AsParameters(this IEnumerable<Field> fields,
+            int index,
+            IDbSetting dbSetting)
         {
-            return fields?.Select(field => field.AsParameter(index, prefix));
+            return fields?.Select(field => field.AsParameter(index, dbSetting));
         }
 
         // AsAliasFields
-        internal static IEnumerable<string> AsAliasFields(this IEnumerable<Field> fields, string alias)
+        internal static IEnumerable<string> AsAliasFields(this IEnumerable<Field> fields,
+            string alias,
+            IDbSetting dbSetting)
         {
-            return fields?.Select(field => field.AsAliasField(alias));
+            return fields?.Select(field => field.AsAliasField(alias, dbSetting));
         }
 
         // AsParametersAsFields
-        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<Field> fields,
+            int index,
+            IDbSetting dbSetting)
         {
-            return fields?.Select(field => field.AsParameterAsField(index, prefix));
+            return fields?.Select(field => field.AsParameterAsField(index, dbSetting));
         }
 
         // AsFieldsAndParameters
-        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<Field> fields, int index = 0, string prefix = Constant.DefaultParameterPrefix)
+        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<Field> fields,
+            int index,
+            IDbSetting dbSetting)
         {
-            return fields?.Select(field => field.AsFieldAndParameter(index, prefix));
+            return fields?.Select(field => field.AsFieldAndParameter(index, dbSetting));
         }
 
         // AsFieldsAndAliasFields
-        internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<Field> fields, string alias)
+        internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<Field> fields,
+            string alias,
+            IDbSetting dbSetting)
         {
-            return fields?.Select(field => field.AsFieldAndAliasField(alias));
+            return fields?.Select(field => field.AsFieldAndAliasField(alias, dbSetting));
         }
     }
 }

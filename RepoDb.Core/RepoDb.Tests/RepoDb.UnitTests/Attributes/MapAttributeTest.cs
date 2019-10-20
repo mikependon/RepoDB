@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
-using RepoDb.Extensions;
 
 namespace RepoDb.UnitTests.Attributes
 {
@@ -8,7 +7,12 @@ namespace RepoDb.UnitTests.Attributes
     public class MapAttributeTest
     {
         [Map("Name")]
-        public class TestMapAttributeNameClass
+        public class TestMapAttributeUnquotedNameClass
+        {
+        }
+
+        [Map("[dbo].[Name]")]
+        public class TestMapAttributeQuotedNameClass
         {
         }
 
@@ -16,8 +20,8 @@ namespace RepoDb.UnitTests.Attributes
         public void TestMapAttributeName()
         {
             // Act
-            var actual = ClassMappedNameCache.Get<TestMapAttributeNameClass>();
-            var expected = "Name".AsQuoted(true);
+            var actual = ClassMappedNameCache.Get<TestMapAttributeUnquotedNameClass>();
+            var expected = "Name";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -27,8 +31,8 @@ namespace RepoDb.UnitTests.Attributes
         public void TestMapAttributeUnquotedName()
         {
             // Act
-            var actual = ClassMappedNameCache.Get<TestMapAttributeNameClass>(false);
-            var expected = "Name";
+            var actual = ClassMappedNameCache.Get<TestMapAttributeQuotedNameClass>();
+            var expected = "[dbo].[Name]";
 
             // Assert
             Assert.AreEqual(expected, actual);

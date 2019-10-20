@@ -1,4 +1,5 @@
 ﻿using RepoDb.DbHelpers;
+using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
@@ -19,7 +20,7 @@ namespace RepoDb
         static DbHelperMapper()
         {
             // By default, map the Sql
-            Add(typeof(SqlConnection), new SqlServerDbHelper());
+            Add(typeof(SqlConnection), new SqlServerDbHelper(), true);
         }
 
         /// <summary>
@@ -29,7 +30,7 @@ namespace RepoDb
         {
             if (type.GetTypeInfo().IsSubclassOf(m_type) == false)
             {
-                throw new InvalidOperationException($"Type must be a subclass of '{m_type.FullName}'.");
+                throw new InvalidTypeException($"Type must be a subclass of '{m_type.FullName}'.");
             }
         }
 
@@ -70,12 +71,14 @@ namespace RepoDb
         /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
         /// <param name="dbHelper">The instance of <see cref="IDbHelper"/> object to mapped to.</param>
         /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
-        public static void Add(Type type, IDbHelper dbHelper, bool @override = false)
+        public static void Add(Type type,
+            IDbHelper dbHelper,
+            bool @override)
         {
             // Guard the type
             Guard(type);
 
-            // Variables for cache
+            // Variables
             var key = type.FullName.GetHashCode();
             var existing = (IDbHelper)null;
 
@@ -90,7 +93,7 @@ namespace RepoDb
                 else
                 {
                     // Throw an exception
-                    throw new InvalidOperationException($"Mapping to provider '{key}' already exists.");
+                    throw new MappingExistsException($"The database helper mapping to provider '{type.FullName}' already exists.");
                 }
             }
             else

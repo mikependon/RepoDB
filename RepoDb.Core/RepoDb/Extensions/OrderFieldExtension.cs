@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RepoDb.Interfaces;
+using System.Collections.Generic;
 
 namespace RepoDb.Extensions
 {
@@ -21,21 +22,33 @@ namespace RepoDb.Extensions
         /// Converts an instance of order field into an enumerable list of fields.
         /// </summary>
         /// <param name="orderField">The order field instance to be converted.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>An enumerable list of fields.</returns>
-        public static string AsField(this OrderField orderField)
+        public static string AsField(this OrderField orderField,
+            IDbSetting dbSetting)
         {
-            return string.Concat(orderField.Name, " ", orderField.GetOrderText());
+            return AsField(orderField, null, dbSetting);
         }
 
         /// <summary>
-        /// Converts an instance of order field into an stringified alias-formatted string.
+        /// Converts an instance of order field into an enumerable list of fields.
         /// </summary>
-        /// <param name="orderField">The order field to be converted.</param>
+        /// <param name="orderField">The order field instance to be converted.</param>
         /// <param name="alias">The alias to be used for conversion.</param>
-        /// <returns>A string value for the stringified alias-formatted converted string.</returns>
-        public static string AsAliasField(this OrderField orderField, string alias)
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>An enumerable list of fields.</returns>
+        public static string AsField(this OrderField orderField,
+            string alias,
+            IDbSetting dbSetting)
         {
-            return string.Concat(alias, ".", orderField.Name, " ", orderField.GetOrderText());
+            if (string.IsNullOrEmpty(alias))
+            {
+                return string.Concat(orderField.Name.AsField(dbSetting), " ", orderField.GetOrderText());
+            }
+            else
+            {
+                return string.Concat(orderField.Name.AsAliasField(alias, dbSetting), " ", orderField.GetOrderText());
+            }
         }
     }
 }

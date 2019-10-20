@@ -1,5 +1,6 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Data;
@@ -26,10 +27,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the wrapped property of this object.
         /// </summary>
-        public PropertyInfo PropertyInfo
-        {
-            get;
-        }
+        public PropertyInfo PropertyInfo { get; }
 
         #endregion
 
@@ -53,7 +51,7 @@ namespace RepoDb
             }
 
             // Set the properties
-            m_field = new Field(GetUnquotedMappedName(), PropertyInfo.PropertyType);
+            m_field = new Field(GetMappedName(), PropertyInfo.PropertyType);
 
             // Return the value
             return m_field;
@@ -170,7 +168,7 @@ namespace RepoDb
         /*
          * GetDbType
          */
-        private ClientTypeToSqlDbTypeResolver m_clientTypeToSqlDbTypeResolver = new ClientTypeToSqlDbTypeResolver();
+        private ClientTypeToDbTypeResolver m_clientTypeToSqlDbTypeResolver = new ClientTypeToDbTypeResolver();
         private bool m_isDbTypeWasSet;
         private DbType? m_dbType;
 
@@ -208,41 +206,22 @@ namespace RepoDb
         }
 
         /*
-         * GetQuotedMappedName
+         * GetName
          */
 
-        private string m_quotedMappedName;
+        private string m_mappedName;
 
         /// <summary>
-        /// Gets the quoted mapped-name for the current property.
+        /// Gets the mapped-name for the current property.
         /// </summary>
-        /// <returns>The quoted mapped-name value.</returns>
-        public string GetQuotedMappedName()
+        /// <returns>The mapped-name value.</returns>
+        public string GetMappedName()
         {
-            if (m_quotedMappedName != null)
+            if (m_mappedName != null)
             {
-                return m_quotedMappedName;
+                return m_mappedName;
             }
-            return m_quotedMappedName = PropertyMappedNameCache.Get(PropertyInfo);
-        }
-
-        /*
-         * GetUnquotedMappedName
-         */
-
-        private string m_unquotedMappedName;
-
-        /// <summary>
-        /// Gets the unquoted mapped-name for the current property.
-        /// </summary>
-        /// <returns>The unquoted mapped-name value.</returns>
-        public string GetUnquotedMappedName()
-        {
-            if (m_unquotedMappedName != null)
-            {
-                return m_unquotedMappedName;
-            }
-            return m_unquotedMappedName = PropertyMappedNameCache.Get(PropertyInfo, false);
+            return m_mappedName = PropertyMappedNameCache.Get(PropertyInfo);
         }
 
         /// <summary>
@@ -251,7 +230,7 @@ namespace RepoDb
         /// <returns>The unquoted name.</returns>
         public override string ToString()
         {
-            return m_quotedMappedName ?? base.ToString();
+            return string.Concat(GetMappedName(), " (", PropertyInfo.PropertyType.Name, ")");
         }
 
         #endregion

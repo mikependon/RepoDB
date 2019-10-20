@@ -1,4 +1,5 @@
-﻿using RepoDb.DbValidators;
+﻿using RepoDb.DbSettings;
+using RepoDb.DbValidators;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -39,6 +40,7 @@ namespace RepoDb
         {
             var command = connection.CreateCommand();
             command.CommandText = commandText;
+            command.Connection = connection;
             if (commandType != null)
             {
                 command.CommandType = commandType.Value;
@@ -1046,15 +1048,14 @@ namespace RepoDb
 
         #endregion
 
-        #region Helper Methods
+        #region Mapped Operations
 
         /// <summary>
-        /// Gets the associated <see cref="IDbValidator"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
-        /// By default, the <see cref="SqlServerDbValidator"/> is being used.
+        /// Gets the associated <see cref="IDbSetting"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <returns>An instance of the mapped <see cref="IDbValidator"/> object.</returns>
-        private static IDbValidator GetDbValidator(IDbConnection connection)
+        /// <returns>An instance of the mapped <see cref="IDbSetting"/> object.</returns>
+        public static IDbSetting GetDbSetting(this IDbConnection connection)
         {
             // Check the connection
             if (connection == null)
@@ -1062,15 +1063,50 @@ namespace RepoDb
                 throw new NullReferenceException("The connection object cannot be null.");
             }
 
+            // Get the setting
+            var setting = DbSettingMapper.Get(connection.GetType());
+
+            // Check the presence
+            if (setting == null)
+            {
+                throw new MissingMappingException($"There is no database setting mapping found for '{connection.GetType().FullName}'.");
+            }
+
             // Return the validator
-            return DbValidatorMapper.Get(connection.GetType()) ?? new SqlServerDbValidator();
+            return setting;
+        }
+
+        /// <summary>
+        /// Gets the associated <see cref="IDbValidator"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <returns>An instance of the mapped <see cref="IDbValidator"/> object.</returns>
+        public static IDbValidator GetDbValidator(this IDbConnection connection)
+        {
+            // Check the connection
+            if (connection == null)
+            {
+                throw new NullReferenceException("The connection object cannot be null.");
+            }
+
+            // Get the validator
+            var validator = DbValidatorMapper.Get(connection.GetType());
+
+            // Check the presence
+            if (validator == null)
+            {
+                throw new MissingMappingException($"There is no database validator mapping found for '{connection.GetType().FullName}'.");
+            }
+
+            // Return the validator
+            return validator;
         }
 
         /// <summary>
         /// Gets the associated <see cref="IDbOperation"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
         /// </summary>
         /// <returns>The actual field.</returns>
-        private static IDbOperation GetDbOperation(IDbConnection connection)
+        public static IDbOperation GetDbOperation(this IDbConnection connection)
         {
             // Check the connection
             if (connection == null)
@@ -1091,6 +1127,10 @@ namespace RepoDb
             return provider;
         }
 
+        #endregion
+
+        #region Helper Methods
+
         /// <summary>
         /// Throws an exception if there is no defined primary key on the data entity type.
         /// </summary>
@@ -1098,7 +1138,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The primary <see cref="ClassProperty"/> of the type.</returns>
-        private static ClassProperty GetAndGuardPrimaryKey<TEntity>(IDbConnection connection, IDbTransaction transaction)
+        private static ClassProperty GetAndGuardPrimaryKey<TEntity>(IDbConnection connection,
+            IDbTransaction transaction)
             where TEntity : class
         {
             var property = PrimaryCache.Get<TEntity>();
@@ -1109,7 +1150,8 @@ namespace RepoDb
                 if (primary != null)
                 {
                     var properties = PropertyCache.Get<TEntity>();
-                    property = properties.FirstOrDefault(p => string.Equals(p.GetUnquotedMappedName(), primary.UnquotedName, StringComparison.OrdinalIgnoreCase));
+                    property = properties.FirstOrDefault(p =>
+                        string.Equals(p.GetMappedName(), primary.Name, StringComparison.OrdinalIgnoreCase));
                 }
             }
             if (property == null)
@@ -1159,13 +1201,11 @@ namespace RepoDb
                 var primary = DbFieldCache.Get(connection, tableName, transaction)?.FirstOrDefault(p => p.IsPrimary == true);
                 if (primary == null)
                 {
-                    throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.",
-                        tableName));
+                    throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", tableName));
                 }
                 else
                 {
-                    return new QueryGroup(new QueryField(new Field(primary.UnquotedName, primary.Type),
-                        whereOrPrimaryKey).AsEnumerable());
+                    return new QueryGroup(new QueryField(new Field(primary.Name, primary.Type), whereOrPrimaryKey));
                 }
             }
         }
@@ -1196,7 +1236,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    return new QueryGroup(new QueryField(primary.GetUnquotedMappedName(), whereOrPrimaryKey).AsEnumerable());
+                    return new QueryGroup(new QueryField(primary.GetMappedName(), whereOrPrimaryKey));
                 }
             }
         }
@@ -1218,7 +1258,7 @@ namespace RepoDb
             }
             else
             {
-                throw new InvalidOperationException("Only dynamic object is supported in the 'where' expression.");
+                throw new InvalidQueryExpressionException("Only dynamic object is supported in the 'where' expression.");
             }
         }
 
@@ -1253,7 +1293,7 @@ namespace RepoDb
             {
                 return null;
             }
-            return new QueryGroup(property.PropertyInfo.AsQueryField(entity).AsEnumerable());
+            return new QueryGroup(property.PropertyInfo.AsQueryField(entity));
         }
 
         /// <summary>
@@ -1267,7 +1307,7 @@ namespace RepoDb
             {
                 return null;
             }
-            return new QueryGroup(field.AsEnumerable());
+            return new QueryGroup(field);
         }
 
         /// <summary>
@@ -1312,7 +1352,7 @@ namespace RepoDb
             // Check the array parameters
             if (skipCommandArrayParametersCheck == false)
             {
-                commandArrayParameters = AsCommandArrayParameters(param, ref commandText);
+                commandArrayParameters = AsCommandArrayParameters(param, connection.GetDbSetting(), ref commandText);
             }
 
             // Command object initialization
@@ -1332,15 +1372,17 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the command text into a raw SQL with Array Parameters.
+        /// Converts the command text into a raw SQL with array parameters.
         /// </summary>
         /// <param name="commandText">The current command text where the raw sql parameters will be replaced.</param>
         /// <param name="parameterName">The name of the parameter to be replaced.</param>
         /// <param name="values">The array of the values.</param>
-        /// <returns></returns>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The raw SQL with array parameters.</returns>
         private static string ToRawSqlWithArrayParams(string commandText,
             string parameterName,
-            IEnumerable<object> values)
+            IEnumerable<object> values,
+            IDbSetting dbSetting)
         {
             // Check for the defined parameter
             if (commandText.IndexOf(parameterName) < 0)
@@ -1355,11 +1397,11 @@ namespace RepoDb
             // Iterate and set the parameter values
             for (var i = 0; i < length; i++)
             {
-                parameters[i] = string.Concat(parameterName, i).AsParameter();
+                parameters[i] = string.Concat(parameterName, i).AsParameter(dbSetting);
             }
 
             // Replace the target parameter
-            return commandText.Replace(parameterName.AsParameter(), parameters.Join(", "));
+            return commandText.Replace(parameterName.AsParameter(dbSetting), parameters.Join(", "));
         }
 
         #region AsCommandArrayParameters
@@ -1369,8 +1411,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="param">The parameter passed.</param>
         /// <param name="commandText">The command text to be replaced.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(object param,
+            IDbSetting dbSetting,
             ref string commandText)
         {
             if (param == null)
@@ -1384,19 +1428,19 @@ namespace RepoDb
             // Return if any of this
             if (param is ExpandoObject || param is IDictionary<string, object>)
             {
-                return AsCommandArrayParameters((IDictionary<string, object>)param, ref commandText);
+                return AsCommandArrayParameters((IDictionary<string, object>)param, dbSetting, ref commandText);
             }
             else if (param is QueryField)
             {
-                return AsCommandArrayParameters((QueryField)param, ref commandText);
+                return AsCommandArrayParameters((QueryField)param, dbSetting, ref commandText);
             }
             else if (param is IEnumerable<QueryField>)
             {
-                return AsCommandArrayParameters((IEnumerable<QueryField>)param, ref commandText);
+                return AsCommandArrayParameters((IEnumerable<QueryField>)param, dbSetting, ref commandText);
             }
             else if (param is QueryGroup)
             {
-                return AsCommandArrayParameters((QueryGroup)param, ref commandText);
+                return AsCommandArrayParameters((QueryGroup)param, dbSetting, ref commandText);
             }
             else
             {
@@ -1422,8 +1466,10 @@ namespace RepoDb
                     }
 
                     // Replace the target parameters
-                    commandArrayParameters.Add(AsCommandArrayParameter(property.Name, ((Array)property.GetValue(param)).AsEnumerable(),
-                        ref commandText));
+                    var parameter = AsCommandArrayParameter(property.Name, ((Array)property.GetValue(param)).AsEnumerable(),
+                        dbSetting,
+                        ref commandText);
+                    commandArrayParameters.Add(parameter);
                 }
             }
 
@@ -1436,8 +1482,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(IDictionary<string, object> dictionary,
+            IDbSetting dbSetting,
             ref string commandText)
         {
             if (dictionary == null)
@@ -1467,8 +1515,11 @@ namespace RepoDb
                 }
 
                 // Replace the target parameters
-                commandArrayParameters.Add(AsCommandArrayParameter(kvp.Key, ((Array)kvp.Value).AsEnumerable(),
-                    ref commandText));
+                var parameter = AsCommandArrayParameter(kvp.Key,
+                    ((Array)kvp.Value).AsEnumerable(),
+                    dbSetting,
+                    ref commandText);
+                commandArrayParameters.Add(parameter);
             }
 
             // Return the values
@@ -1480,11 +1531,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryGroup queryGroup,
+            IDbSetting dbSetting,
             ref string commandText)
         {
-            return AsCommandArrayParameters(queryGroup.GetFields(true), ref commandText);
+            return AsCommandArrayParameters(queryGroup.GetFields(true), dbSetting, ref commandText);
         }
 
         /// <summary>
@@ -1492,8 +1545,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
         /// <param name="commandText">The command text to be replaced.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(IEnumerable<QueryField> queryFields,
+            IDbSetting dbSetting,
             ref string commandText)
         {
             if (queryFields == null)
@@ -1523,8 +1578,11 @@ namespace RepoDb
                 }
 
                 // Replace the target parameters
-                commandArrayParameters.Add(AsCommandArrayParameter(field.Field.UnquotedName, ((Array)field.Parameter.Value).AsEnumerable(),
-                    ref commandText));
+                var parameter = AsCommandArrayParameter(field.Field.Name,
+                    ((Array)field.Parameter.Value).AsEnumerable(),
+                    dbSetting,
+                    ref commandText);
+                commandArrayParameters.Add(parameter);
             }
 
             // Return the values
@@ -1535,9 +1593,11 @@ namespace RepoDb
         /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
         /// </summary>
         /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
         /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryField queryField,
+            IDbSetting dbSetting,
             ref string commandText)
         {
             if (queryField == null)
@@ -1558,8 +1618,11 @@ namespace RepoDb
             var commandArrayParameters = new List<CommandArrayParameter>();
 
             // Replace the target parameters
-            commandArrayParameters.Add(AsCommandArrayParameter(queryField.Field.UnquotedName, ((Array)queryField.Parameter.Value).AsEnumerable(),
-                ref commandText));
+            var parameter = AsCommandArrayParameter(queryField.Field.Name,
+                ((Array)queryField.Parameter.Value).AsEnumerable(),
+                dbSetting,
+                ref commandText);
+            commandArrayParameters.Add(parameter);
 
             // Return the values
             return commandArrayParameters;
@@ -1570,14 +1633,16 @@ namespace RepoDb
         /// </summary>
         /// <param name="name">The target name of the <see cref="CommandArrayParameter"/> object.</param>
         /// <param name="values">The array value of the <see cref="CommandArrayParameter"/> object.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <param name="commandText">The command text to be replaced.</param>
         /// <returns>An instance of <see cref="CommandArrayParameter"/> object.</returns>
         private static CommandArrayParameter AsCommandArrayParameter(string name,
             IEnumerable<object> values,
+            IDbSetting dbSetting,
             ref string commandText)
         {
             // Convert to raw sql
-            commandText = ToRawSqlWithArrayParams(commandText, name, values);
+            commandText = ToRawSqlWithArrayParams(commandText, name, values, dbSetting);
 
             // Add to the list
             return new CommandArrayParameter(name, values);

@@ -1,4 +1,5 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System.Collections.Concurrent;
 using System.Reflection;
 
@@ -17,19 +18,17 @@ namespace RepoDb
         /// Gets the cached mapped-name of the property.
         /// </summary>
         /// <param name="property">The target property.</param>
-        /// <param name="quoted">True whether the string is quoted.</param>
         /// <returns>The cached mapped-name of the property.</returns>
-        public static string Get(PropertyInfo property, bool quoted = true)
+        public static string Get(PropertyInfo property)
         {
             var key = property.DeclaringType.FullName.GetHashCode() +
-                property.Name.GetHashCode() +
-                quoted.GetHashCode();
+                property.Name.GetHashCode();
             var result = (string)null;
 
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = PropertyInfoExtension.GetMappedName(property, quoted);
+                result = PropertyInfoExtension.GetMappedName(property);
                 m_cache.TryAdd(key, result);
             }
 

@@ -13,7 +13,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object.</param>
         /// <param name="type">The type where the <see cref="QueryGroup"/> object is mapped.</param>
-        public QueryGroupTypeMap(QueryGroup queryGroup, Type type)
+        public QueryGroupTypeMap(QueryGroup queryGroup,
+            Type type)
         {
             QueryGroup = queryGroup;
             MappedType = type;

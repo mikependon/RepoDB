@@ -1628,7 +1628,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateQuery(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateQuery();
+            connection.GetDbValidator()?.ValidateQuery();
         }
 
         /// <summary>
@@ -1637,7 +1637,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateQueryAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateQueryAsync();
+            connection.GetDbValidator()?.ValidateQueryAsync();
         }
 
         #endregion

@@ -136,7 +136,6 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -145,7 +144,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt);",
-                    param);
+                    new QueryField("ColumnInt", 5));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -190,6 +189,7 @@ namespace RepoDb.IntegrationTests
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
+
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
@@ -487,10 +487,12 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
+                // Setup
+                var param = new QueryField("ColumnInt", 5);
+
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
@@ -592,7 +594,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.ColumnInt = 5;
             param.ColumnBit = true;
-            
+
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
@@ -1173,7 +1175,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.ColumnInt = 5;
             param.ColumnBit = true;
-            
+
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act

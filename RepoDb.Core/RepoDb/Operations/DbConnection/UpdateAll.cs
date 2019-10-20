@@ -658,13 +658,14 @@ namespace RepoDb
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
                 // Variables needed
+                var dbSetting = connection.GetDbSetting();
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the context
@@ -677,7 +678,8 @@ namespace RepoDb
                     singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".UpdateAll"),
                         inputFields?.AsList(),
-                        null);
+                        null,
+                        dbSetting);
                 }
                 else
                 {
@@ -685,7 +687,8 @@ namespace RepoDb
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".UpdateAll"),
                         inputFields?.AsList(),
                         null,
-                        batchSizeValue);
+                        batchSizeValue,
+                        dbSetting);
                 }
 
                 // Identity the requests
@@ -912,12 +915,13 @@ namespace RepoDb
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
                 // Variables needed
+                var dbSetting = connection.GetDbSetting();
                 var inputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.UnquotedName, dbField.UnquotedName, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the context
@@ -930,7 +934,8 @@ namespace RepoDb
                     singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".UpdateAll"),
                         inputFields?.AsList(),
-                        null);
+                        null,
+                        dbSetting);
                 }
                 else
                 {
@@ -938,7 +943,8 @@ namespace RepoDb
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".UpdateAll"),
                         inputFields?.AsList(),
                         null,
-                        batchSizeValue);
+                        batchSizeValue,
+                        dbSetting);
                 }
 
                 // Identity the requests
@@ -1133,7 +1139,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateUpdateAll(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateUpdateAll();
+            connection.GetDbValidator()?.ValidateUpdateAll();
         }
 
         /// <summary>
@@ -1142,7 +1148,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         private static void InvokeValidatorValidateUpdateAllAsync(IDbConnection connection)
         {
-            GetDbValidator(connection)?.ValidateUpdateAllAsync();
+            connection.GetDbValidator()?.ValidateUpdateAllAsync();
         }
 
         #endregion

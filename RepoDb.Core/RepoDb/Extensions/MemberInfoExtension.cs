@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using RepoDb.Interfaces;
+using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -15,8 +16,8 @@ namespace RepoDb.Extensions
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
         internal static string GetMappedName(this MemberInfo member)
         {
-            return member.IsPropertyInfo() ? 
-                PropertyMappedNameCache.Get(member.ToPropertyInfo(), false) : member.Name;
+            return member.IsPropertyInfo() ?
+                PropertyMappedNameCache.Get(member.ToPropertyInfo()) : member.Name;
         }
 
         /// <summary>
@@ -26,7 +27,9 @@ namespace RepoDb.Extensions
         /// <param name="obj">The object whose member value will be returned.</param>
         /// <param name="parameters">The argument list of parameters if needed.</param>
         /// <returns>The extracted value from <see cref="MemberInfo"/> object.</returns>
-        internal static object GetValue(this MemberInfo member, object obj, object[] parameters = null)
+        internal static object GetValue(this MemberInfo member,
+            object obj,
+            object[] parameters = null)
         {
             if (member.IsFieldInfo())
             {
@@ -49,7 +52,9 @@ namespace RepoDb.Extensions
         /// <param name="member">The instance of <see cref="MemberInfo"/> object where the value is to be retrieved.</param>
         /// <param name="obj">The object whose member value will be set.</param>
         /// <param name="value">The target value of the member.</param>
-        internal static void SetValue(this MemberInfo member, object obj, object value)
+        internal static void SetValue(this MemberInfo member,
+            object obj,
+            object value)
         {
             if (member.IsFieldInfo())
             {

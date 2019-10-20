@@ -1,4 +1,4 @@
-﻿using RepoDb.Extensions;
+﻿using RepoDb.Interfaces;
 using System;
 
 namespace RepoDb
@@ -8,34 +8,21 @@ namespace RepoDb
     /// </summary>
     public class DbField : IEquatable<DbField>
     {
-        private int m_hashCode = 0;
+        private int? m_hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="DbField"/> object.
         /// </summary>
+        /// <param name="name">The name of the field.</param>
+        /// <param name="isPrimary">The value that indicates whether the field is primary.</param>
+        /// <param name="isIdentity">The value that indicates whether the field is identity.</param>
+        /// <param name="isNullable">The value that indicates whether the field is nullable.</param>
+        /// <param name="type">The equivalent .NET CLR type of the field.</param>
+        /// <param name="size">The size of the field.</param>
+        /// <param name="precision">The precision of the field.</param>
+        /// <param name="scale">The scale of the field.</param>
+        /// <param name="databaseType">The database type of the field.</param>
         public DbField(string name,
-            bool isPrimary,
-            bool isIdentity,
-            bool isNullable,
-            Type type,
-            int? size,
-            byte? precision,
-            byte? scale)
-            : this(name,
-                  isPrimary,
-                  isIdentity,
-                  isNullable,
-                  type,
-                  size,
-                  precision,
-                  scale,
-                  null)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DbField"/> object.
-        /// </summary>
-        internal DbField(string name,
             bool isPrimary,
             bool isIdentity,
             bool isNullable,
@@ -52,8 +39,7 @@ namespace RepoDb
             }
 
             // Set the properties
-            Name = name.AsQuoted(true);
-            UnquotedName = name.AsUnquoted(true);
+            Name = name;
             IsPrimary = isPrimary;
             IsIdentity = isIdentity;
             IsNullable = isNullable;
@@ -62,40 +48,14 @@ namespace RepoDb
             Precision = precision;
             Scale = scale;
             DatabaseType = databaseType;
-
-            // Set the hashcode
-            m_hashCode = name.GetHashCode() + isPrimary.GetHashCode() + isIdentity.GetHashCode() + isNullable.GetHashCode();
-            if (type != null)
-            {
-                m_hashCode += type.GetHashCode();
-            }
-            if (size != null)
-            {
-                m_hashCode += size.GetHashCode();
-            }
-            if (precision != null)
-            {
-                m_hashCode += precision.GetHashCode();
-            }
-            if (scale != null)
-            {
-                m_hashCode += scale.GetHashCode();
-            }
-            if (databaseType != null)
-            {
-                m_hashCode += databaseType.GetHashCode();
-            }
         }
+
+        #region Properties
 
         /// <summary>
         /// Gets the quoted name of the database field.
         /// </summary>
         public string Name { get; }
-
-        /// <summary>
-        /// Gets the unquoted name of the database field.
-        /// </summary>
-        public string UnquotedName { get; }
 
         /// <summary>
         /// Gets the value whether the column is a primary column.
@@ -137,7 +97,9 @@ namespace RepoDb
         /// </summary>
         public string DatabaseType { get; }
 
-        // Methods
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Gets the string that represents the instance of this <see cref="DbField"/> object.
@@ -145,10 +107,12 @@ namespace RepoDb
         /// <returns>The string that represents the instance of this <see cref="DbField"/> object.</returns>
         public override string ToString()
         {
-            return string.Concat(Name, " (", m_hashCode, ")");
+            return string.Concat(Name, ", ", IsPrimary.ToString(), " (", m_hashCode, ")");
         }
 
-        // Equality and comparers
+        #endregion
+
+        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="DbField"/>.
@@ -156,7 +120,38 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            return m_hashCode;
+            if (m_hashCode != null)
+            {
+                return m_hashCode.Value;
+            }
+
+            var hashCode = 0;
+
+            // Set the hashcode
+            hashCode = Name.GetHashCode() + IsPrimary.GetHashCode() + IsIdentity.GetHashCode() + IsNullable.GetHashCode();
+            if (Type != null)
+            {
+                hashCode += Type.GetHashCode();
+            }
+            if (Size != null)
+            {
+                hashCode += Size.GetHashCode();
+            }
+            if (Precision != null)
+            {
+                hashCode += Precision.GetHashCode();
+            }
+            if (Scale != null)
+            {
+                hashCode += Scale.GetHashCode();
+            }
+            if (DatabaseType != null)
+            {
+                hashCode += DatabaseType.GetHashCode();
+            }
+
+            // Set and return the hashcode
+            return (m_hashCode = hashCode).Value;
         }
 
         /// <summary>
@@ -204,5 +199,7 @@ namespace RepoDb
         {
             return (objA == objB) == false;
         }
+
+        #endregion
     }
 }

@@ -46,7 +46,7 @@ namespace RepoDb.UnitTests.Interfaces
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
                 trace,
-                new SqlServerStatementBuilder())
+                Helper.StatementBuilder)
             { }
         }
 

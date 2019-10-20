@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// An interface used to be a helper class on some database related activity.
+    /// An interface used to mark a class be a helper class on some database related activity.
     /// </summary>
     public interface IDbHelper
     {
