@@ -92,24 +92,25 @@ namespace RepoDb.Reflection
             var isDefaultConversion = TypeMapper.ConversionType == ConversionType.Default;
             var properties = PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite);
             var fieldNames = readerFields.Select(f => f.Name.ToLower()).AsList();
+            var dbSetting = connection.GetDbSetting();
 
             // Filter the properties by reader fields
             properties = properties.Where(property =>
                 fieldNames.FirstOrDefault(field =>
-                    string.Equals(field, property.GetMappedName(), StringComparison.OrdinalIgnoreCase)) != null);
+                    string.Equals(field.AsUnquoted(true, dbSetting), property.GetMappedName().AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null);
 
             // Iterate each properties
             foreach (var property in properties)
             {
                 // Gets the mapped name and the ordinal
-                var mappedName = property.GetMappedName();
+                var mappedName = property.GetMappedName().AsUnquoted(true, dbSetting);
                 var ordinal = fieldNames.IndexOf(mappedName.ToLower());
 
                 // Process only if there is a correct ordinal
                 if (ordinal >= 0)
                 {
                     // Variables needed for the iteration
-                    var readerField = readerFields.First(f => string.Equals(f.Name, mappedName, StringComparison.OrdinalIgnoreCase));
+                    var readerField = readerFields.First(f => string.Equals(f.Name.AsUnquoted(true, dbSetting), mappedName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     var underlyingType = Nullable.GetUnderlyingType(property.PropertyInfo.PropertyType);
                     var propertyType = underlyingType ?? property.PropertyInfo.PropertyType;
                     var convertType = readerField.Type;
@@ -350,7 +351,7 @@ namespace RepoDb.Reflection
                     Name = name,
                     Ordinal = ordinal,
                     Type = reader.GetFieldType(ordinal),
-                    DbField = dbFields?.FirstOrDefault(dbField => string.Equals(dbField.Name.AsUnquoted(true, dbSetting), name, StringComparison.OrdinalIgnoreCase))
+                    DbField = dbFields?.FirstOrDefault(dbField => string.Equals(dbField.Name.AsUnquoted(true, dbSetting), name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase))
                 });
 
             // Initialize the elements
@@ -874,7 +875,7 @@ namespace RepoDb.Reflection
                 }
                 else
                 {
-                    classProperty = entityProperties.First(property => string.Equals(property.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
+                    classProperty = entityProperties.First(property => string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting), propertyName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     if (classProperty != null)
                     {
                         propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", propertyName));
@@ -1019,7 +1020,7 @@ namespace RepoDb.Reflection
 
                 // Set the name
                 var nameAssignment = Expression.Call(parameterVariable, dbParameterParameterNameSetMethod,
-            Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
+                    Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
                 parameterAssignments.Add(nameAssignment);
 
                 // Property instance
@@ -1371,7 +1372,8 @@ namespace RepoDb.Reflection
                     }
                     else
                     {
-                        classProperty = entityProperties.FirstOrDefault(property => string.Equals(property.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
+                        classProperty = entityProperties.FirstOrDefault(property =>
+                            string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting), propertyName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                         if (classProperty != null)
                         {
                             propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", propertyName));

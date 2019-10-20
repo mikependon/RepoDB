@@ -363,7 +363,7 @@ namespace RepoDb
                     if (identity == null && identityDbField != null)
                     {
                         identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     }
                 }
 
@@ -371,7 +371,7 @@ namespace RepoDb
                 inputFields = dbFields?
                     .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Set the output fields
@@ -697,7 +697,7 @@ namespace RepoDb
                     if (identity == null && identityDbField != null)
                     {
                         identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     }
                 }
 
@@ -705,7 +705,7 @@ namespace RepoDb
                 inputFields = dbFields?
                     .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Set the output fields

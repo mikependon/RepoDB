@@ -450,10 +450,12 @@ namespace RepoDb
 
             // Get all the fields from the database, and the setting
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var dbSetting = connection.GetDbSetting();
 
             // Return the filtered one
             return dbFields?.Any() == true ?
-                fields.Where(f => dbFields.FirstOrDefault(df => string.Equals(df.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != null) :
+                fields.Where(f => dbFields.FirstOrDefault(df =>
+                    string.Equals(df.Name.AsUnquoted(true, dbSetting), f.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null) :
                 fields;
         }
 

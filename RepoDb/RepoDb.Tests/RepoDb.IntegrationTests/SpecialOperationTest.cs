@@ -36,7 +36,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Prepare
-                var field = new QueryField(nameof(IdentityTable.Id), Operation.Between, new[] { 4, 6 }, connection.GetDbSetting());
+                var field = new QueryField(nameof(IdentityTable.Id), Operation.Between, new[] { 4, 6 });
 
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -63,7 +63,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Prepare
-                var field = new QueryField(nameof(IdentityTable.Id), Operation.NotBetween, new[] { 4, 6 }, connection.GetDbSetting());
+                var field = new QueryField(nameof(IdentityTable.Id), Operation.NotBetween, new[] { 4, 6 });
 
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -568,7 +568,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Prepare
-                var field = new QueryField(nameof(IdentityTable.Id), Operation.In, new[] { 4, 7 }, connection.GetDbSetting());
+                var field = new QueryField(nameof(IdentityTable.Id), Operation.In, new[] { 4, 7 });
 
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -595,7 +595,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Prepare
-                var field = new QueryField(nameof(IdentityTable.Id), Operation.NotIn, new[] { 4, 7 }, connection.GetDbSetting());
+                var field = new QueryField(nameof(IdentityTable.Id), Operation.NotIn, new[] { 4, 7 });
 
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -622,7 +622,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Prepare
-                var field = new QueryField(nameof(IdentityTable.ColumnNVarChar), Operation.Like, "NVARCHAR1%", connection.GetDbSetting()); // Matching: NVARCHAR1, NVARCHAR10
+                var field = new QueryField(nameof(IdentityTable.ColumnNVarChar), Operation.Like, "NVARCHAR1%"); // Matching: NVARCHAR1, NVARCHAR10
 
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -649,7 +649,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Prepare
-                var field = new QueryField(nameof(IdentityTable.ColumnNVarChar), Operation.NotLike, "NVARCHAR1%", connection.GetDbSetting()); // Not Matching: NVARCHAR1, NVARCHAR10
+                var field = new QueryField(nameof(IdentityTable.ColumnNVarChar), Operation.NotLike, "NVARCHAR1%"); // Not Matching: NVARCHAR1, NVARCHAR10
 
                 // Act
                 connection.InsertAll<IdentityTable>(entities);

@@ -121,21 +121,15 @@ namespace RepoDb.DbHelpers
         /// <returns>The actual table name.</returns>
         private string GetTableName(string tableName)
         {
-            // Check for the command type
-            var schema = m_dbSetting.DefaultSchema;
-
             // Get the schema and table name
             if (tableName.IndexOf(m_dbSetting.SchemaSeparator) > 0)
             {
                 var splitted = tableName.Split(m_dbSetting.SchemaSeparator.ToCharArray());
-                schema = splitted[0].AsUnquoted(true, m_dbSetting);
-
-                // Return the splitted one
                 return splitted[1].AsUnquoted(true, m_dbSetting);
             }
 
             // Return the unquoted
-            return tableName.AsUnquoted(m_dbSetting);
+            return tableName.AsUnquoted(true, m_dbSetting);
         }
 
         /// <summary>
@@ -222,8 +216,16 @@ namespace RepoDb.DbHelpers
             // Open a command
             using (var dbCommand = connection.EnsureOpen().CreateCommand(GetCommandText(), transaction: transaction))
             {
+                // Param values
+                var schema = GetSchema(tableName);
+                var name = GetTableName(tableName);
+
                 // Create parameters
-                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) });
+                dbCommand.CreateParameters(new
+                {
+                    Schema = schema,
+                    TableName = name
+                });
 
                 // Execute and set the result
                 using (var reader = dbCommand.ExecuteReader())

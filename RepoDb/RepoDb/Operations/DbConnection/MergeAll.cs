@@ -693,14 +693,14 @@ namespace RepoDb
                     if (identity == null && identityDbField != null)
                     {
                         identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     }
                 }
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the context
@@ -1038,14 +1038,14 @@ namespace RepoDb
                     if (identity == null && identityDbField != null)
                     {
                         identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
+                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     }
                 }
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the context

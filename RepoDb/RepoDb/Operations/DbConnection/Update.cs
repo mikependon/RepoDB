@@ -925,7 +925,7 @@ namespace RepoDb
                 inputFields = dbFields?
                     .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Identify the requests
@@ -1071,7 +1071,7 @@ namespace RepoDb
                 inputFields = dbFields?
                     .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Identify the requests

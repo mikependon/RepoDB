@@ -585,8 +585,7 @@ namespace RepoDb.IntegrationTests
                     "ColumnBit",
                     "ColumnDateTime2",
                     "ColumnNVarChar"
-                },
-                DbSettingMapper.Get(typeof(SqlConnection)));
+                });
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;
@@ -666,8 +665,7 @@ namespace RepoDb.IntegrationTests
                     "ColumnBit",
                     "ColumnDateTime2",
                     "ColumnNVarChar"
-                },
-                DbSettingMapper.Get(typeof(SqlConnection)));
+                });
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;

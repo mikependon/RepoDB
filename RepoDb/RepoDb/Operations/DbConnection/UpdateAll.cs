@@ -666,7 +666,7 @@ namespace RepoDb
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the context
@@ -922,7 +922,7 @@ namespace RepoDb
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Variables for the context
