@@ -40,7 +40,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.BatchQuery<IdentityTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }, connection.GetDbSetting()), it => it.Id != 0, transaction: transaction);
+                    connection.BatchQuery<IdentityTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction);
                 }
             }
         }
@@ -58,7 +58,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.BatchQueryAsync<IdentityTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }, connection.GetDbSetting()), it => it.Id != 0, transaction: transaction).Wait();
+                    connection.BatchQueryAsync<IdentityTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction).Wait();
                 }
             }
         }

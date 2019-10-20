@@ -155,7 +155,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -182,7 +182,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -209,7 +209,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -357,7 +357,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -384,7 +384,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -411,7 +411,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -539,7 +539,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -561,7 +561,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -583,7 +583,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -706,7 +706,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -728,7 +728,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -750,7 +750,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -909,7 +909,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -940,7 +940,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -971,7 +971,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1139,7 +1139,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1170,7 +1170,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1201,7 +1201,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1333,7 +1333,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1355,7 +1355,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1377,7 +1377,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1500,7 +1500,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1522,7 +1522,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1544,7 +1544,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1691,7 +1691,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1718,7 +1718,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1745,7 +1745,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1893,7 +1893,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1920,7 +1920,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1947,7 +1947,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2075,7 +2075,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2097,7 +2097,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2119,7 +2119,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2242,7 +2242,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2264,7 +2264,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2286,7 +2286,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2409,7 +2409,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2431,7 +2431,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2453,7 +2453,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2576,7 +2576,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("Values", values);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2598,7 +2598,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))).AsEnumerable();
+            var param = new QueryField("Values", values).AsEnumerable();
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2620,7 +2620,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new QueryGroup(new QueryField("Values", values, DbSettingMapper.Get(typeof(SqlConnection))), DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryGroup(new QueryField("Values", values));
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {

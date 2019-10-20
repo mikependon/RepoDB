@@ -144,7 +144,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt);",
-                    new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))));
+                    new QueryField("ColumnInt", 5));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -158,8 +158,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -183,10 +183,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -312,7 +311,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -335,8 +334,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -360,10 +359,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -493,7 +491,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
-                var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+                var param = new QueryField("ColumnInt", 5);
 
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -514,8 +512,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -539,10 +537,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -667,7 +664,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -690,8 +687,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -715,10 +712,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -859,7 +855,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -886,8 +882,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -915,10 +911,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1063,7 +1058,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1090,8 +1085,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1119,10 +1114,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1251,7 +1245,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1274,8 +1268,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1299,10 +1293,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1427,7 +1420,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1450,8 +1443,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1475,10 +1468,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1607,7 +1599,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1630,8 +1622,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1655,10 +1647,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1783,7 +1774,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1806,8 +1797,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -1831,10 +1822,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1960,7 +1950,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -1983,8 +1973,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2008,10 +1998,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2136,7 +2125,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2159,8 +2148,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2184,10 +2173,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2312,7 +2300,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2335,8 +2323,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2360,10 +2348,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2488,7 +2475,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var param = new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection)));
+            var param = new QueryField("ColumnInt", 5);
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
@@ -2511,8 +2498,8 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
             };
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -2536,10 +2523,9 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryGroup(new[]
             {
-                new QueryField("ColumnInt", 5, DbSettingMapper.Get(typeof(SqlConnection))),
-                new QueryField("ColumnBit", true, DbSettingMapper.Get(typeof(SqlConnection)))
-            },
-            DbSettingMapper.Get(typeof(SqlConnection)));
+                new QueryField("ColumnInt", 5),
+                new QueryField("ColumnBit", true)
+            });
 
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {

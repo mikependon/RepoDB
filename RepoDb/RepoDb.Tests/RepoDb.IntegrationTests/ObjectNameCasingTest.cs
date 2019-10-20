@@ -255,7 +255,7 @@ namespace RepoDb.IntegrationTests
                 // Act Insert
                 var id = connection.InsertAll("COMPLETETABLE",
                     new[] { entity },
-                    fields: entity.GetType().GetProperties().AsFields(connection.GetDbSetting()));
+                    fields: entity.GetType().GetProperties().AsFields());
 
                 // Act Query
                 var data = connection.Query("COMPLETETABLE", new { SessionId = entity.SESSIONID }).FirstOrDefault();

@@ -335,10 +335,10 @@ namespace RepoDb.IntegrationTests.Types.Dates
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var id = connection.Insert(ClassMappedNameCache.Get<DatesClass>(DbSettingMapper.Get(typeof(SqlConnection))), entity);
+                var id = connection.Insert(ClassMappedNameCache.Get<DatesClass>(), entity);
 
                 // Act Query
-                var data = connection.Query(ClassMappedNameCache.Get<DatesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id }).FirstOrDefault();
+                var data = connection.Query(ClassMappedNameCache.Get<DatesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -369,10 +369,10 @@ namespace RepoDb.IntegrationTests.Types.Dates
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var id = connection.Insert(ClassMappedNameCache.Get<DatesClass>(DbSettingMapper.Get(typeof(SqlConnection))), entity);
+                var id = connection.Insert(ClassMappedNameCache.Get<DatesClass>(), entity);
 
                 // Act Query
-                var data = connection.Query(ClassMappedNameCache.Get<DatesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id }).FirstOrDefault();
+                var data = connection.Query(ClassMappedNameCache.Get<DatesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -405,11 +405,11 @@ namespace RepoDb.IntegrationTests.Types.Dates
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<DatesClass>(DbSettingMapper.Get(typeof(SqlConnection))), entity);
+                var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<DatesClass>(), entity);
                 var id = insertResult.Result;
 
                 // Act Query
-                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<DatesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id });
+                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<DatesClass>(), new { SessionId = (Guid)id });
                 var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
@@ -441,11 +441,11 @@ namespace RepoDb.IntegrationTests.Types.Dates
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<DatesClass>(DbSettingMapper.Get(typeof(SqlConnection))), entity);
+                var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<DatesClass>(), entity);
                 var id = insertResult.Result;
 
                 // Act Query
-                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<DatesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id });
+                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<DatesClass>(), new { SessionId = (Guid)id });
                 var data = queryResult.Result.FirstOrDefault();
 
                 // Assert

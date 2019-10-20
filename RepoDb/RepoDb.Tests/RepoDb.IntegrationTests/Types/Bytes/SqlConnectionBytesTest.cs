@@ -304,10 +304,10 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var id = connection.Insert(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), entity);
+                var id = connection.Insert(ClassMappedNameCache.Get<BytesClass>(), entity);
 
                 // Act Query
-                var data = connection.Query(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id }).FirstOrDefault();
+                var data = connection.Query(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -334,10 +334,10 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var id = connection.Insert(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), entity);
+                var id = connection.Insert(ClassMappedNameCache.Get<BytesClass>(), entity);
 
                 // Act Query
-                var data = connection.Query(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id }).FirstOrDefault();
+                var data = connection.Query(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -366,11 +366,11 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), entity);
+                var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
                 var id = insertResult.Result;
 
                 // Act Query
-                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id });
+                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id });
                 var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
@@ -398,11 +398,11 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), entity);
+                var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
                 var id = insertResult.Result;
 
                 // Act Query
-                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<BytesClass>(DbSettingMapper.Get(typeof(SqlConnection))), new { SessionId = (Guid)id });
+                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id });
                 var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
