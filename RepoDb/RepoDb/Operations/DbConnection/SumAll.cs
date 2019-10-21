@@ -3,6 +3,7 @@ using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
 using System.Data;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -12,20 +13,22 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region CountAll<TEntity>
+        #region SumAll<TEntity>
 
         /// <summary>
-        /// Counts all the table data from the database.
+        /// Sums the target field from all data of the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long CountAll<TEntity>(this IDbConnection connection,
+        public static object SumAll<TEntity>(this IDbConnection connection,
+            Field field,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -33,7 +36,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAllInternal<TEntity>(connection: connection,
+            return SumAllInternal<TEntity>(connection: connection,
+                field: field,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -42,17 +46,49 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts all the table data from the database.
+        /// Sums the target field from all data of the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountAllInternal<TEntity>(this IDbConnection connection,
+        public static object SumAll<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return SumAllInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Sums the target field from all data of the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        internal static object SumAllInternal<TEntity>(this IDbConnection connection,
+            Field field,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -61,15 +97,16 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new CountAllRequest(typeof(TEntity),
+            var request = new SumAllRequest(typeof(TEntity),
                 connection,
                 transaction,
+                field,
                 hints,
                 statementBuilder);
             var param = (object)null;
 
             // Return the result
-            return CountAllInternalBase(connection: connection,
+            return SumAllInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -79,20 +116,22 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAllAsync<TEntity>
+        #region SumAllAsync<TEntity>
 
         /// <summary>
-        /// CountAlls the number of table data from the database in an asynchronous way.
+        /// SumAlls the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> SumAllAsync<TEntity>(this IDbConnection connection,
+            Field field,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -100,7 +139,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAllAsyncInternal<TEntity>(connection: connection,
+            return SumAllAsyncInternal<TEntity>(connection: connection,
+                field: field,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -109,17 +149,49 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// CountAlls the number of table data from the database in an asynchronous way.
+        /// SumAlls the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> CountAllAsyncInternal<TEntity>(this IDbConnection connection,
+        public static Task<object> SumAllAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return SumAllAsyncInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// SumAlls the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        internal static Task<object> SumAllAsyncInternal<TEntity>(this IDbConnection connection,
+            Field field,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -128,15 +200,16 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new CountAllRequest(typeof(TEntity),
+            var request = new SumAllRequest(typeof(TEntity),
                 connection,
                 transaction,
+                field,
                 hints,
                 statementBuilder);
             var param = (object)null;
 
             // Return the result
-            return CountAllInternalAsyncBase(connection: connection,
+            return SumAllInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -146,29 +219,32 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAll(TableName)
+        #region SumAll(TableName)
 
         /// <summary>
-        /// Counts all the table data from the database.
+        /// Sums the target field from all data of the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long CountAll(this IDbConnection connection,
+        public static object SumAll(this IDbConnection connection,
             string tableName,
+            Field field,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAllInternal(connection: connection,
+            return SumAllInternal(connection: connection,
                 tableName: tableName,
+                field: field,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -177,18 +253,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts all the table data from the database.
+        /// Sums the target field from all data of the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountAllInternal(this IDbConnection connection,
+        internal static object SumAllInternal(this IDbConnection connection,
             string tableName,
+            Field field,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -196,16 +274,17 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new CountAllRequest(tableName,
+            var request = new SumAllRequest(tableName,
                 connection,
                 transaction,
+                field,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountAllText(request);
+            var commandText = CommandTextCache.GetSumAllText(request);
             var param = (object)null;
 
             // Return the result
-            return CountAllInternalBase(connection: connection,
+            return SumAllInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -215,29 +294,32 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAllAsync(TableName)
+        #region SumAllAsync(TableName)
 
         /// <summary>
-        /// CountAlls the number of table data from the database in an asynchronous way.
+        /// SumAlls the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAllAsync(this IDbConnection connection,
+        public static Task<object> SumAllAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAllAsyncInternal(connection: connection,
+            return SumAllAsyncInternal(connection: connection,
                 tableName: tableName,
+                field: field,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -246,18 +328,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// CountAlls the number of table data from the database in an asynchronous way.
+        /// SumAlls the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> CountAllAsyncInternal(this IDbConnection connection,
+        internal static Task<object> SumAllAsyncInternal(this IDbConnection connection,
             string tableName,
+            Field field,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -265,16 +349,17 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new CountAllRequest(tableName,
+            var request = new SumAllRequest(tableName,
                 connection,
                 transaction,
+                field,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountAllText(request);
+            var commandText = CommandTextCache.GetSumAllText(request);
             var param = (object)null;
 
             // Return the result
-            return CountAllInternalAsyncBase(connection: connection,
+            return SumAllInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -284,37 +369,37 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAllInternalBase
+        #region SumAllInternalBase
 
         /// <summary>
-        /// Counts all the table data from the database.
+        /// Sums the target field from all data of the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="CountAllRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="SumAllRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountAllInternalBase(this IDbConnection connection,
-            CountAllRequest request,
+        internal static object SumAllInternalBase(this IDbConnection connection,
+            SumAllRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateCountAll(connection);
+            InvokeValidatorValidateSumAll(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetCountAllText(request);
+            var commandText = CommandTextCache.GetSumAllText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeCountAll(cancellableTraceLog);
+                trace.BeforeSumAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -331,7 +416,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternal<long>(connection: connection,
+            var result = ExecuteScalarInternal<object>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -342,7 +427,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterCountAll(new TraceLog(commandText, param, result,
+                trace.AfterSumAll(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -352,37 +437,37 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAllAsyncInternalBase
+        #region SumAllAsyncInternalBase
 
         /// <summary>
-        /// CountAlls the number of table data from the database in an asynchronous way.
+        /// SumAlls the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="CountAllRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="SumAllRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static async Task<long> CountAllInternalAsyncBase(this IDbConnection connection,
-            CountAllRequest request,
+        internal static async Task<object> SumAllInternalAsyncBase(this IDbConnection connection,
+            SumAllRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateCountAllAsync(connection);
+            InvokeValidatorValidateSumAllAsync(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetCountAllText(request);
+            var commandText = CommandTextCache.GetSumAllText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeCountAll(cancellableTraceLog);
+                trace.BeforeSumAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -399,7 +484,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = await ExecuteScalarAsyncInternal<long>(connection: connection,
+            var result = await ExecuteScalarAsyncInternal<object>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -410,7 +495,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterCountAll(new TraceLog(commandText, param, result,
+                trace.AfterSumAll(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -423,21 +508,21 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateCountAll"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateSumAll"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateCountAll(IDbConnection connection)
+        private static void InvokeValidatorValidateSumAll(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateCountAll();
+            connection.GetDbValidator()?.ValidateSumAll();
         }
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateCountAllAsync"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateSumAllAsync"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateCountAllAsync(IDbConnection connection)
+        private static void InvokeValidatorValidateSumAllAsync(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateCountAllAsync();
+            connection.GetDbValidator()?.ValidateSumAllAsync();
         }
 
         #endregion

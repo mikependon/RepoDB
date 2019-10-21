@@ -87,7 +87,7 @@ namespace RepoDb.UnitTests.Fields
             Assert.AreEqual(Order.Descending, orderField.Last().Order);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
+        [TestMethod, ExpectedException(typeof(InvalidExpressionException))]
         public void ThrowExceptionOnOrderFieldIfTheParseLinqExpressionHasNoProperty()
         {
             // Act/Assert

@@ -15,21 +15,23 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region Count<TEntity>
+        #region Average<TEntity>
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static object Average<TEntity>(this IDbConnection connection,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -38,7 +40,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Average<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -48,18 +51,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static object Average<TEntity>(this IDbConnection connection,
+            Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -68,7 +73,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Average<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -78,18 +84,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static object Average<TEntity>(this IDbConnection connection,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -98,7 +106,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Average<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -108,18 +117,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static object Average<TEntity>(this IDbConnection connection,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -128,7 +139,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Average<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -138,18 +150,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static object Average<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -158,7 +172,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountInternal<TEntity>(connection: connection,
+            return AverageInternal<TEntity>(connection: connection,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -168,18 +183,185 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value.</returns>
+        public static object Average<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            object where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Average<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static object Average<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Average<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value.</returns>
+        public static object Average<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryField where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Average<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value.</returns>
+        public static object Average<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Average<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value.</returns>
+        public static object Average<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryGroup where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field),
+                where: where,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value.</returns>
+        internal static object AverageInternal<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -189,9 +371,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new CountRequest(typeof(TEntity),
+            var request = new AverageRequest(typeof(TEntity),
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
@@ -204,7 +387,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalBase(connection: connection,
+            return AverageInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -214,21 +397,23 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAsync<TEntity>
+        #region AverageAsync<TEntity>
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -237,7 +422,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return AverageAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -247,18 +433,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+            Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -267,7 +455,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return AverageAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -277,18 +466,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -297,7 +488,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return AverageAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -307,18 +499,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -327,7 +521,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return AverageAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -337,18 +532,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -357,7 +554,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsyncInternal<TEntity>(connection: connection,
+            return AverageAsyncInternal<TEntity>(connection: connection,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -367,18 +565,185 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            object where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> CountAsyncInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryField where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryGroup where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageAsyncInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field),
+                where: where,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value.</returns>
+        internal static Task<object> AverageAsyncInternal<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             int? commandTimeout = null,
             string hints = null,
@@ -388,9 +753,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new CountRequest(typeof(TEntity),
+            var request = new AverageRequest(typeof(TEntity),
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
@@ -403,7 +769,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalAsyncBase(connection: connection,
+            return AverageInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -413,22 +779,24 @@ namespace RepoDb
 
         #endregion
 
-        #region Count(TableName)
+        #region Average(TableName)
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static object Average(this IDbConnection connection,
             string tableName,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -436,8 +804,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return Average(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -447,19 +816,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static object Average(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -467,8 +838,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return Average(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -478,19 +850,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static object Average(this IDbConnection connection,
             string tableName,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -498,8 +872,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return Average(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -509,19 +884,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static object Average(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -529,8 +906,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountInternal(connection: connection,
+            return AverageInternal(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -540,19 +918,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountInternal(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        internal static object AverageInternal(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -561,13 +941,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new CountRequest(tableName,
+            var request = new AverageRequest(tableName,
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetAverageText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -577,7 +958,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalBase(connection: connection,
+            return AverageInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -587,22 +968,24 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAsync(TableName)
+        #region AverageAsync(TableName)
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -610,8 +993,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return AverageAsync(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -621,19 +1005,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -641,8 +1027,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return AverageAsync(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -652,19 +1039,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -672,8 +1061,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return AverageAsync(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -683,19 +1073,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        public static Task<object> AverageAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -703,8 +1095,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsyncInternal(connection: connection,
+            return AverageAsyncInternal(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -714,19 +1107,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> CountAsyncInternal(this IDbConnection connection,
+        /// <returns>The average value.</returns>
+        internal static Task<object> AverageAsyncInternal(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -735,13 +1130,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new CountRequest(tableName,
+            var request = new AverageRequest(tableName,
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetAverageText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -751,7 +1147,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalAsyncBase(connection: connection,
+            return AverageInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -761,37 +1157,37 @@ namespace RepoDb
 
         #endregion
 
-        #region CounterInternalBase
+        #region AverageInternalBase
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Averages the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="CountRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="AverageRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountInternalBase(this IDbConnection connection,
-            CountRequest request,
+        /// <returns>The average value.</returns>
+        internal static object AverageInternalBase(this IDbConnection connection,
+            AverageRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateCount(connection);
+            InvokeValidatorValidateAverage(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetAverageText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeCount(cancellableTraceLog);
+                trace.BeforeAverage(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -808,7 +1204,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternal<long>(connection: connection,
+            var result = ExecuteScalarInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -819,7 +1215,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterCount(new TraceLog(commandText, param, result,
+                trace.AfterAverage(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -829,37 +1225,37 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAsyncInternalBase
+        #region AverageAsyncInternalBase
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="CountRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="AverageRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static async Task<long> CountInternalAsyncBase(this IDbConnection connection,
-            CountRequest request,
+        /// <returns>The average value.</returns>
+        internal static async Task<object> AverageInternalAsyncBase(this IDbConnection connection,
+            AverageRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateCountAsync(connection);
+            InvokeValidatorValidateAverageAsync(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetAverageText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeCount(cancellableTraceLog);
+                trace.BeforeAverage(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -876,7 +1272,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = await ExecuteScalarAsyncInternal<long>(connection: connection,
+            var result = await ExecuteScalarAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -887,7 +1283,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterCount(new TraceLog(commandText, param, result,
+                trace.AfterAverage(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -900,21 +1296,21 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateCount"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateAverage"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateCount(IDbConnection connection)
+        private static void InvokeValidatorValidateAverage(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateCount();
+            connection.GetDbValidator()?.ValidateAverage();
         }
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateCountAsync"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateAverageAsync"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateCountAsync(IDbConnection connection)
+        private static void InvokeValidatorValidateAverageAsync(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateCountAsync();
+            connection.GetDbValidator()?.ValidateAverageAsync();
         }
 
         #endregion

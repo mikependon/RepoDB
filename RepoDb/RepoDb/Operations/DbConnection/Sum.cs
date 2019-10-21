@@ -15,13 +15,14 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region Count<TEntity>
+        #region Sum<TEntity>
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -29,7 +30,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static object Sum<TEntity>(this IDbConnection connection,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -38,7 +40,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Sum<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -48,10 +51,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -59,7 +63,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static object Sum<TEntity>(this IDbConnection connection,
+            Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -68,7 +73,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Sum<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -78,10 +84,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -89,7 +96,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static object Sum<TEntity>(this IDbConnection connection,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -98,7 +106,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Sum<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -108,10 +117,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -119,7 +129,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static object Sum<TEntity>(this IDbConnection connection,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -128,7 +139,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Sum<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -138,10 +150,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -149,7 +162,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static object Sum<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -158,7 +172,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountInternal<TEntity>(connection: connection,
+            return SumInternal<TEntity>(connection: connection,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -168,10 +183,44 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static object Sum<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            object where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Sum<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Sums the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -179,7 +228,140 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountInternal<TEntity>(this IDbConnection connection,
+        public static object Sum<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Sum<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Sums the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static object Sum<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryField where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Sum<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Sums the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static object Sum<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Sum<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Sums the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static object Sum<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryGroup where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return SumInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field),
+                where: where,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Sums the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        internal static object SumInternal<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -189,9 +371,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new CountRequest(typeof(TEntity),
+            var request = new SumRequest(typeof(TEntity),
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
@@ -204,7 +387,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalBase(connection: connection,
+            return SumInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -214,13 +397,14 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAsync<TEntity>
+        #region SumAsync<TEntity>
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -228,7 +412,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> SumAsync<TEntity>(this IDbConnection connection,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -237,7 +422,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return SumAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -247,10 +433,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -258,7 +445,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> SumAsync<TEntity>(this IDbConnection connection,
+            Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -267,7 +455,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return SumAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -277,10 +466,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -288,7 +478,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> SumAsync<TEntity>(this IDbConnection connection,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -297,7 +488,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return SumAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -307,10 +499,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -318,7 +511,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> SumAsync<TEntity>(this IDbConnection connection,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -327,7 +521,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return SumAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -337,10 +532,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -348,7 +544,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> SumAsync<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -357,7 +554,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsyncInternal<TEntity>(connection: connection,
+            return SumAsyncInternal<TEntity>(connection: connection,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -367,10 +565,44 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static Task<object> SumAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            object where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return SumAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Sums the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -378,7 +610,140 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> CountAsyncInternal<TEntity>(this IDbConnection connection,
+        public static Task<object> SumAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return SumAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Sums the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static Task<object> SumAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryField where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return SumAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Sums the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static Task<object> SumAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return SumAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Sums the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static Task<object> SumAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryGroup where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return SumAsyncInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field),
+                where: where,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Sums the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        internal static Task<object> SumAsyncInternal<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             int? commandTimeout = null,
             string hints = null,
@@ -388,9 +753,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new CountRequest(typeof(TEntity),
+            var request = new SumRequest(typeof(TEntity),
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
@@ -403,7 +769,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalAsyncBase(connection: connection,
+            return SumInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -413,13 +779,14 @@ namespace RepoDb
 
         #endregion
 
-        #region Count(TableName)
+        #region Sum(TableName)
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -427,8 +794,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        public static object Sum(this IDbConnection connection,
             string tableName,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -436,8 +804,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return Sum(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -447,10 +816,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -458,8 +828,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        public static object Sum(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -467,8 +838,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return Sum(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -478,10 +850,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -489,8 +862,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        public static object Sum(this IDbConnection connection,
             string tableName,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -498,8 +872,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return Sum(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -509,10 +884,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -520,8 +896,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        public static object Sum(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -529,8 +906,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountInternal(connection: connection,
+            return SumInternal(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -540,10 +918,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -551,8 +930,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountInternal(this IDbConnection connection,
+        internal static object SumInternal(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -561,13 +941,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new CountRequest(tableName,
+            var request = new SumRequest(tableName,
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetSumText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -577,7 +958,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalBase(connection: connection,
+            return SumInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -587,13 +968,14 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAsync(TableName)
+        #region SumAsync(TableName)
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -601,8 +983,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        public static Task<object> SumAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -610,8 +993,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return SumAsync(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -621,10 +1005,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -632,8 +1017,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        public static Task<object> SumAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -641,8 +1027,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return SumAsync(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -652,10 +1039,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -663,8 +1051,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        public static Task<object> SumAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -672,8 +1061,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return SumAsync(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -683,10 +1073,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -694,8 +1085,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        public static Task<object> SumAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -703,8 +1095,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsyncInternal(connection: connection,
+            return SumAsyncInternal(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -714,10 +1107,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -725,8 +1119,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> CountAsyncInternal(this IDbConnection connection,
+        internal static Task<object> SumAsyncInternal(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -735,13 +1130,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new CountRequest(tableName,
+            var request = new SumRequest(tableName,
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetSumText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -751,7 +1147,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalAsyncBase(connection: connection,
+            return SumInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -761,37 +1157,37 @@ namespace RepoDb
 
         #endregion
 
-        #region CounterInternalBase
+        #region SumInternalBase
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Sums the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="CountRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="SumRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountInternalBase(this IDbConnection connection,
-            CountRequest request,
+        internal static object SumInternalBase(this IDbConnection connection,
+            SumRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateCount(connection);
+            InvokeValidatorValidateSum(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetSumText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeCount(cancellableTraceLog);
+                trace.BeforeSum(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -808,7 +1204,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternal<long>(connection: connection,
+            var result = ExecuteScalarInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -819,7 +1215,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterCount(new TraceLog(commandText, param, result,
+                trace.AfterSum(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -829,37 +1225,37 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAsyncInternalBase
+        #region SumAsyncInternalBase
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Sums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="CountRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="SumRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static async Task<long> CountInternalAsyncBase(this IDbConnection connection,
-            CountRequest request,
+        internal static async Task<object> SumInternalAsyncBase(this IDbConnection connection,
+            SumRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateCountAsync(connection);
+            InvokeValidatorValidateSumAsync(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetSumText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeCount(cancellableTraceLog);
+                trace.BeforeSum(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -876,7 +1272,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = await ExecuteScalarAsyncInternal<long>(connection: connection,
+            var result = await ExecuteScalarAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -887,7 +1283,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterCount(new TraceLog(commandText, param, result,
+                trace.AfterSum(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -900,21 +1296,21 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateCount"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateSum"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateCount(IDbConnection connection)
+        private static void InvokeValidatorValidateSum(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateCount();
+            connection.GetDbValidator()?.ValidateSum();
         }
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateCountAsync"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateSumAsync"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateCountAsync(IDbConnection connection)
+        private static void InvokeValidatorValidateSumAsync(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateCountAsync();
+            connection.GetDbValidator()?.ValidateSumAsync();
         }
 
         #endregion

@@ -5,7 +5,7 @@ namespace RepoDb.Interfaces
     /// <summary>
     /// An interface used to mark a class to be a statement builder. The statement builder is an object being mapped or injected into the
     /// repositories to be used for composing the SQL Statements. Implement this interface if the caller would likely to support the different
-    /// statement building approach, or by supporting the other data providers like Oracle, OleDb, MySql, etc.
+    /// statement building approach, or by supporting the other data providers.
     /// </summary>
     public interface IStatementBuilder
     {

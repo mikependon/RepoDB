@@ -15,7 +15,7 @@ namespace RepoDb
         #region CountAll<TEntity>
 
         /// <summary>
-        /// Counts all the table data from the database.
+        /// Counts all the number of data from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -42,7 +42,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts all the table data from the database.
+        /// Counts all the number of data from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -82,7 +82,7 @@ namespace RepoDb
         #region CountAllAsync<TEntity>
 
         /// <summary>
-        /// CountAlls the number of table data from the database in an asynchronous way.
+        /// Counts all the number of data from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -109,7 +109,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// CountAlls the number of table data from the database in an asynchronous way.
+        /// Counts all the number of data from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -120,8 +120,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
         internal static Task<long> CountAllAsyncInternal<TEntity>(this IDbConnection connection,
-            int? commandTimeout = null,
             string hints = null,
+            int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -149,7 +149,7 @@ namespace RepoDb
         #region CountAll(TableName)
 
         /// <summary>
-        /// Counts all the table data from the database.
+        /// Counts all the number of data from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -177,7 +177,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts all the table data from the database.
+        /// Counts all the number of data from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -218,7 +218,7 @@ namespace RepoDb
         #region CountAllAsync(TableName)
 
         /// <summary>
-        /// CountAlls the number of table data from the database in an asynchronous way.
+        /// Counts all the number of data from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -246,7 +246,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// CountAlls the number of table data from the database in an asynchronous way.
+        /// Counts all the number of data from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -284,10 +284,10 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAllerInternalBase
+        #region CountAllInternalBase
 
         /// <summary>
-        /// Counts all the table data from the database.
+        /// Counts all the number of data from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="CountAllRequest"/> object.</param>
@@ -355,7 +355,7 @@ namespace RepoDb
         #region CountAllAsyncInternalBase
 
         /// <summary>
-        /// CountAlls the number of table data from the database in an asynchronous way.
+        /// Counts all the number of data from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="CountAllRequest"/> object.</param>

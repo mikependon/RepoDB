@@ -62,7 +62,8 @@ namespace RepoDb
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateCount(new QueryBuilder(),
                     request.Name,
-                    request.Where);
+                    request.Where,
+                    request.Hints);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -84,7 +85,8 @@ namespace RepoDb
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateCountAll(new QueryBuilder(),
-                    request.Name);
+                    request.Name,
+                    request.Hints);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;

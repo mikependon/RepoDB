@@ -105,7 +105,7 @@ namespace RepoDb
             {
                 return new OrderField(expression.Body.ToBinary().GetName(), order);
             }
-            throw new InvalidQueryExpressionException($"Expression '{expression.ToString()}' is invalid.");
+            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
         }
 
         /// <summary>

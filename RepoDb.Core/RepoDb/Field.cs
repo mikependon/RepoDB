@@ -2,8 +2,9 @@
 using System.Linq;
 using System;
 using RepoDb.Extensions;
-using RepoDb.Interfaces;
+using System.Linq.Expressions;
 using System.Reflection;
+using RepoDb.Exceptions;
 
 namespace RepoDb
 {
@@ -28,7 +29,7 @@ namespace RepoDb
         /// <param name="name">The name of the field.</param>
         /// <param name="type">The type of the field.</param>
         public Field(string name,
-        Type type)
+            Type type)
         {
             // Name is required
             if (string.IsNullOrEmpty(name))
@@ -68,14 +69,16 @@ namespace RepoDb
             return string.Concat(Name, ", ", Type?.FullName, " (", m_hashCode, ")");
         }
 
+        #endregion
+
+        #region Static Methods
+
         /// <summary>
         /// Creates an enumerable of <see cref="Field"/> objects that derived from the string value.
         /// </summary>
         /// <param name="name">The enumerable of string values that signifies the name of the fields (for each item).</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>An enumerable of <see cref="Field"/> object.</returns>
-        public static IEnumerable<Field> From(string name,
-            IDbSetting dbSetting)
+        public static IEnumerable<Field> From(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -111,7 +114,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="entity">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> Parse<TEntity>(TEntity entity)
+        public static IEnumerable<Field> Parse<TEntity>(TEntity entity)
             where TEntity : class
         {
             foreach (var property in PropertyCache.Get<TEntity>())
@@ -125,12 +128,61 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> Parse(object obj)
+        public static IEnumerable<Field> Parse(object obj)
         {
             foreach (var property in obj?.GetType().GetProperties())
             {
                 yield return property.AsField();
             }
+        }
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
+        /// to <see cref="Field"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <returns>An instance of <see cref="Field"/> object.</returns>
+        public static Field Parse<TEntity>(Expression<Func<TEntity, object>> expression)
+            where TEntity : class
+        {
+            if (expression.Body.IsUnary())
+            {
+                var unary = expression.Body.ToUnary();
+                if (unary.Operand.IsMember())
+                {
+                    var member = unary.Operand.ToMember().Member;
+                    if (member is PropertyInfo)
+                    {
+                        return ((PropertyInfo)member).AsField();
+                    }
+                    else
+                    {
+                        return new Field(member.Name);
+                    }
+                }
+                else if (unary.Operand.IsBinary())
+                {
+                    return new Field(unary.Operand.ToBinary().GetName());
+                }
+            }
+            if (expression.Body.IsMember())
+            {
+                var member = expression.Body.ToMember().Member;
+                if (member is PropertyInfo)
+                {
+                    return ((PropertyInfo)member).AsField();
+                }
+                else
+                {
+                    return new Field(member.Name);
+                }
+            }
+            if (expression.Body.IsBinary())
+            {
+                return new Field(expression.Body.ToBinary().GetName());
+            }
+            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
         }
 
         #endregion

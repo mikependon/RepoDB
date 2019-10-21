@@ -962,7 +962,7 @@ namespace RepoDb
             var property = member.ToPropertyInfo();
             if (PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo == property) == null)
             {
-                throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
+                throw new Exceptions.InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
 
             // Variables needed for fields
@@ -1043,7 +1043,7 @@ namespace RepoDb
             // Make sure the property is in the entity
             if (PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo == property) == null)
             {
-                throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
+                throw new Exceptions.InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
 
             // Get the values
@@ -1114,7 +1114,7 @@ namespace RepoDb
             // Make sure the property is in the entity
             if (PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo == property) == null)
             {
-                throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
+                throw new Exceptions.InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
 
             // Add to query fields
@@ -1170,7 +1170,7 @@ namespace RepoDb
 
             if (type.IsGenericType == false)
             {
-                throw new InvalidQueryExpressionException("Only dynamic object is supported as a query expression.");
+                throw new Exceptions.InvalidExpressionException("Only dynamic object is supported as a query expression.");
             }
 
             // Declare variables

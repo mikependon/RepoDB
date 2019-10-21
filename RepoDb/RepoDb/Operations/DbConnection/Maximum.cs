@@ -15,13 +15,14 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region Count<TEntity>
+        #region Maximum<TEntity>
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -29,7 +30,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static long Maximum<TEntity>(this IDbConnection connection,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -38,7 +40,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Maximum<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -48,10 +51,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -59,7 +63,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static long Maximum<TEntity>(this IDbConnection connection,
+            Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -68,7 +73,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Maximum<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -78,10 +84,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -89,7 +96,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static long Maximum<TEntity>(this IDbConnection connection,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -98,7 +106,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Maximum<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -108,10 +117,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -119,7 +129,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static long Maximum<TEntity>(this IDbConnection connection,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -128,7 +139,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return Maximum<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -138,10 +150,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -149,7 +162,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static long Maximum<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -158,7 +172,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountInternal<TEntity>(connection: connection,
+            return MaximumInternal<TEntity>(connection: connection,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -168,10 +183,44 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static long Maximum<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            object where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Maximum<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Extracts the maximum value of the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -179,7 +228,140 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountInternal<TEntity>(this IDbConnection connection,
+        public static long Maximum<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Maximum<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Extracts the maximum value of the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static long Maximum<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryField where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Maximum<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Extracts the maximum value of the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static long Maximum<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Maximum<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Extracts the maximum value of the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static long Maximum<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryGroup where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MaximumInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field),
+                where: where,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Extracts the maximum value of the target field from the database table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        internal static long MaximumInternal<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -189,9 +371,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new CountRequest(typeof(TEntity),
+            var request = new MaximumRequest(typeof(TEntity),
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
@@ -204,7 +387,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalBase(connection: connection,
+            return MaximumInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -214,13 +397,14 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAsync<TEntity>
+        #region MaximumAsync<TEntity>
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -228,7 +412,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MaximumAsync<TEntity>(this IDbConnection connection,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -237,7 +422,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return MaximumAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -247,10 +433,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -258,7 +445,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MaximumAsync<TEntity>(this IDbConnection connection,
+            Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -267,7 +455,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return MaximumAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -277,10 +466,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -288,7 +478,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MaximumAsync<TEntity>(this IDbConnection connection,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -297,7 +488,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return MaximumAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -307,10 +499,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -318,7 +511,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MaximumAsync<TEntity>(this IDbConnection connection,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -327,7 +521,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return MaximumAsync<TEntity>(connection: connection,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -337,10 +532,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -348,7 +544,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MaximumAsync<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -357,7 +554,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsyncInternal<TEntity>(connection: connection,
+            return MaximumAsyncInternal<TEntity>(connection: connection,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -367,10 +565,44 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static Task<long> MaximumAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            object where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MaximumAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Maximums the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -378,7 +610,140 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> CountAsyncInternal<TEntity>(this IDbConnection connection,
+        public static Task<long> MaximumAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MaximumAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Maximums the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static Task<long> MaximumAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryField where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MaximumAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Maximums the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static Task<long> MaximumAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MaximumAsync<TEntity>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Maximums the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        public static Task<long> MaximumAsync<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, object>> field,
+            QueryGroup where = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MaximumAsyncInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field),
+                where: where,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Maximums the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An integer value that holds the number of data from the database.</returns>
+        internal static Task<long> MaximumAsyncInternal<TEntity>(this IDbConnection connection,
+            Field field,
             QueryGroup where = null,
             int? commandTimeout = null,
             string hints = null,
@@ -388,9 +753,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new CountRequest(typeof(TEntity),
+            var request = new MaximumRequest(typeof(TEntity),
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
@@ -403,7 +769,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalAsyncBase(connection: connection,
+            return MaximumInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -413,13 +779,14 @@ namespace RepoDb
 
         #endregion
 
-        #region Count(TableName)
+        #region Maximum(TableName)
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -427,8 +794,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        public static long Maximum(this IDbConnection connection,
             string tableName,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -436,8 +804,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return Maximum(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -447,10 +816,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -458,8 +828,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        public static long Maximum(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -467,8 +838,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return Maximum(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -478,10 +850,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -489,8 +862,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        public static long Maximum(this IDbConnection connection,
             string tableName,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -498,8 +872,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return Maximum(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -509,10 +884,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -520,8 +896,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Count(this IDbConnection connection,
+        public static long Maximum(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -529,8 +906,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountInternal(connection: connection,
+            return MaximumInternal(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -540,10 +918,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -551,8 +930,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountInternal(this IDbConnection connection,
+        internal static long MaximumInternal(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -561,13 +941,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new CountRequest(tableName,
+            var request = new MaximumRequest(tableName,
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetMaximumText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -577,7 +958,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalBase(connection: connection,
+            return MaximumInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -587,13 +968,14 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAsync(TableName)
+        #region MaximumAsync(TableName)
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -601,8 +983,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        public static Task<long> MaximumAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             object where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -610,8 +993,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return MaximumAsync(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -621,10 +1005,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -632,8 +1017,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        public static Task<long> MaximumAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -641,8 +1027,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return MaximumAsync(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -652,10 +1039,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -663,8 +1051,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        public static Task<long> MaximumAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -672,8 +1061,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return MaximumAsync(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -683,10 +1073,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -694,8 +1085,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> CountAsync(this IDbConnection connection,
+        public static Task<long> MaximumAsync(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -703,8 +1095,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsyncInternal(connection: connection,
+            return MaximumAsyncInternal(connection: connection,
                 tableName: tableName,
+                field: field,
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -714,10 +1107,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -725,8 +1119,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> CountAsyncInternal(this IDbConnection connection,
+        internal static Task<long> MaximumAsyncInternal(this IDbConnection connection,
             string tableName,
+            Field field,
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
@@ -735,13 +1130,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new CountRequest(tableName,
+            var request = new MaximumRequest(tableName,
                 connection,
                 transaction,
+                field,
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetMaximumText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -751,7 +1147,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalAsyncBase(connection: connection,
+            return MaximumInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -761,37 +1157,37 @@ namespace RepoDb
 
         #endregion
 
-        #region CounterInternalBase
+        #region MaximumerInternalBase
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Extracts the maximum value of the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="CountRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="MaximumRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long CountInternalBase(this IDbConnection connection,
-            CountRequest request,
+        internal static long MaximumInternalBase(this IDbConnection connection,
+            MaximumRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateCount(connection);
+            InvokeValidatorValidateMaximum(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetMaximumText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeCount(cancellableTraceLog);
+                trace.BeforeMaximum(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -819,7 +1215,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterCount(new TraceLog(commandText, param, result,
+                trace.AfterMaximum(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -829,37 +1225,37 @@ namespace RepoDb
 
         #endregion
 
-        #region CountAsyncInternalBase
+        #region MaximumAsyncInternalBase
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Maximums the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="CountRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="MaximumRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static async Task<long> CountInternalAsyncBase(this IDbConnection connection,
-            CountRequest request,
+        internal static async Task<long> MaximumInternalAsyncBase(this IDbConnection connection,
+            MaximumRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateCountAsync(connection);
+            InvokeValidatorValidateMaximumAsync(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetCountText(request);
+            var commandText = CommandTextCache.GetMaximumText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeCount(cancellableTraceLog);
+                trace.BeforeMaximum(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -887,7 +1283,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterCount(new TraceLog(commandText, param, result,
+                trace.AfterMaximum(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -900,21 +1296,21 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateCount"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateMaximum"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateCount(IDbConnection connection)
+        private static void InvokeValidatorValidateMaximum(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateCount();
+            connection.GetDbValidator()?.ValidateMaximum();
         }
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateCountAsync"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateMaximumAsync"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateCountAsync(IDbConnection connection)
+        private static void InvokeValidatorValidateMaximumAsync(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateCountAsync();
+            connection.GetDbValidator()?.ValidateMaximumAsync();
         }
 
         #endregion

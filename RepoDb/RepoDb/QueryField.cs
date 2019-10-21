@@ -201,7 +201,7 @@ namespace RepoDb
             var fieldName = expression.GetName();
             if (PropertyCache.Get<TEntity>().Any(property => PropertyMappedNameCache.Get(property.PropertyInfo) == fieldName) == false)
             {
-                throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
+                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
 
             // Value
