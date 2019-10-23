@@ -9,6 +9,42 @@ namespace RepoDb.Interfaces
     /// </summary>
     public interface IStatementBuilder
     {
+        #region CreateAverage
+
+        /// <summary>
+        /// Creates a SQL Statement for average operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for average operation.</returns>
+        string CreateAverage(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null);
+
+        #endregion
+
+        #region CreateAverageAll
+
+        /// <summary>
+        /// Creates a SQL Statement for average-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for average-all operation.</returns>
+        string CreateAverageAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            string hints = null);
+
+        #endregion
+
         #region CreateBatchQuery
 
         /// <summary>
@@ -134,6 +170,42 @@ namespace RepoDb.Interfaces
 
         #endregion
 
+        #region CreateMaximum
+
+        /// <summary>
+        /// Creates a SQL Statement for maximum operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for maximum operation.</returns>
+        string CreateMaximum(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null);
+
+        #endregion
+
+        #region CreateMaximumAll
+
+        /// <summary>
+        /// Creates a SQL Statement for maximum-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for maximum-all operation.</returns>
+        string CreateMaximumAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            string hints = null);
+
+        #endregion
+
         #region CreateMerge
 
         /// <summary>
@@ -178,6 +250,42 @@ namespace RepoDb.Interfaces
 
         #endregion
 
+        #region CreateMinimum
+
+        /// <summary>
+        /// Creates a SQL Statement for minimum operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for minimum operation.</returns>
+        string CreateMinimum(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null);
+
+        #endregion
+
+        #region CreateMinimumAll
+
+        /// <summary>
+        /// Creates a SQL Statement for minimum-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for minimum-all operation.</returns>
+        string CreateMinimumAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            string hints = null);
+
+        #endregion
+
         #region CreateQuery
 
         /// <summary>
@@ -216,6 +324,42 @@ namespace RepoDb.Interfaces
             string tableName,
             IEnumerable<Field> fields,
             IEnumerable<OrderField> orderBy = null,
+            string hints = null);
+
+        #endregion
+
+        #region CreateSum
+
+        /// <summary>
+        /// Creates a SQL Statement for sum operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for sum operation.</returns>
+        string CreateSum(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null);
+
+        #endregion
+
+        #region CreateSumAll
+
+        /// <summary>
+        /// Creates a SQL Statement for sum-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for sum-all operation.</returns>
+        string CreateSumAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
             string hints = null);
 
         #endregion

@@ -7,6 +7,34 @@ namespace RepoDb.Interfaces
     /// </summary>
     public interface IDbValidator
     {
+        #region Average
+
+        /// <summary>
+        /// Validates the Average extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateAverage();
+
+        /// <summary>
+        /// Validates the AverageAsync extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateAverageAsync();
+
+        #endregion
+
+        #region AverageAll
+
+        /// <summary>
+        /// Validates the AverageAll extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateAverageAll();
+
+        /// <summary>
+        /// Validates the AverageAllAsync extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateAverageAllAsync();
+
+        #endregion
+
         #region BatchQuery
 
         /// <summary>
@@ -119,6 +147,34 @@ namespace RepoDb.Interfaces
 
         #endregion
 
+        #region Maximum
+
+        /// <summary>
+        /// Validates the Maximum extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateMaximum();
+
+        /// <summary>
+        /// Validates the MaximumAsync extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateMaximumAsync();
+
+        #endregion
+
+        #region MaximumAll
+
+        /// <summary>
+        /// Validates the MaximumAll extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateMaximumAll();
+
+        /// <summary>
+        /// Validates the MaximumAllAsync extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateMaximumAllAsync();
+
+        #endregion
+
         #region Merge
 
         /// <summary>
@@ -144,6 +200,34 @@ namespace RepoDb.Interfaces
         /// Validates the MergeAllAsync extended method of the <see cref="DbConnection"/> object.
         /// </summary>
         void ValidateMergeAllAsync();
+
+        #endregion
+
+        #region Minimum
+
+        /// <summary>
+        /// Validates the Minimum extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateMinimum();
+
+        /// <summary>
+        /// Validates the MinimumAsync extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateMinimumAsync();
+
+        #endregion
+
+        #region MinimumAll
+
+        /// <summary>
+        /// Validates the MinimumAll extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateMinimumAll();
+
+        /// <summary>
+        /// Validates the MinimumAllAsync extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateMinimumAllAsync();
 
         #endregion
 
@@ -186,6 +270,34 @@ namespace RepoDb.Interfaces
         /// Validates the QueryMultipleAsync extended method of the <see cref="DbConnection"/> object.
         /// </summary>
         void ValidateQueryMultipleAsync();
+
+        #endregion
+
+        #region Sum
+
+        /// <summary>
+        /// Validates the Sum extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateSum();
+
+        /// <summary>
+        /// Validates the SumAsync extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateSumAsync();
+
+        #endregion
+
+        #region SumAll
+
+        /// <summary>
+        /// Validates the SumAll extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateSumAll();
+
+        /// <summary>
+        /// Validates the SumAllAsync extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateSumAllAsync();
 
         #endregion
 

@@ -84,7 +84,7 @@ namespace RepoDb
             {
                 throw new NullReferenceException("The field name must be null or empty.");
             }
-            return From(name);
+            return From(new[] { name });
         }
 
         /// <summary>

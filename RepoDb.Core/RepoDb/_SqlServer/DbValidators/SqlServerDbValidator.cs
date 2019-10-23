@@ -8,6 +8,34 @@ namespace RepoDb.DbValidators
     /// </summary>
     internal sealed class SqlServerDbValidator : IDbValidator
     {
+        #region Average
+
+        /// <summary>
+        /// Validates the Average extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateAverage() { /* This is supported. */ }
+
+        /// <summary>
+        /// Validates the AverageAsync extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateAverageAsync() { /* This is supported. */ }
+
+        #endregion
+
+        #region AverageAll
+
+        /// <summary>
+        /// Validates the AverageAll extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateAverageAll() { /* This is supported. */ }
+
+        /// <summary>
+        /// Validates the AverageAllAsync extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateAverageAllAsync() { /* This is supported. */ }
+
+        #endregion
+
         #region BatchQuery
 
         /// <summary>
@@ -120,6 +148,34 @@ namespace RepoDb.DbValidators
 
         #endregion
 
+        #region Maximum
+
+        /// <summary>
+        /// Validates the Maximum extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateMaximum() { /* This is supported. */ }
+
+        /// <summary>
+        /// Validates the MaximumAsync extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateMaximumAsync() { /* This is supported. */ }
+
+        #endregion
+
+        #region MaximumAll
+
+        /// <summary>
+        /// Validates the MaximumAll extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateMaximumAll() { /* This is supported. */ }
+
+        /// <summary>
+        /// Validates the MaximumAllAsync extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateMaximumAllAsync() { /* This is supported. */ }
+
+        #endregion
+
         #region Merge
 
         /// <summary>
@@ -145,6 +201,34 @@ namespace RepoDb.DbValidators
         /// Validates the MergeAllAsync extended method of the <see cref="SqlConnection"/> object.
         /// </summary>
         public void ValidateMergeAllAsync() { /* This is supported. */ }
+
+        #endregion
+
+        #region Minimum
+
+        /// <summary>
+        /// Validates the Minimum extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateMinimum() { /* This is supported. */ }
+
+        /// <summary>
+        /// Validates the MinimumAsync extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateMinimumAsync() { /* This is supported. */ }
+
+        #endregion
+
+        #region MinimumAll
+
+        /// <summary>
+        /// Validates the MinimumAll extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateMinimumAll() { /* This is supported. */ }
+
+        /// <summary>
+        /// Validates the MinimumAllAsync extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateMinimumAllAsync() { /* This is supported. */ }
 
         #endregion
 
@@ -187,6 +271,34 @@ namespace RepoDb.DbValidators
         /// Validates the QueryMultipleAsync extended method of the <see cref="SqlConnection"/> object.
         /// </summary>
         public void ValidateQueryMultipleAsync() { /* This is supported. */ }
+
+        #endregion
+
+        #region Sum
+
+        /// <summary>
+        /// Validates the Sum extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateSum() { /* This is supported. */ }
+
+        /// <summary>
+        /// Validates the SumAsync extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateSumAsync() { /* This is supported. */ }
+
+        #endregion
+
+        #region SumAll
+
+        /// <summary>
+        /// Validates the SumAll extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateSumAll() { /* This is supported. */ }
+
+        /// <summary>
+        /// Validates the SumAllAsync extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateSumAllAsync() { /* This is supported. */ }
 
         #endregion
 

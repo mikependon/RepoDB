@@ -111,6 +111,42 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Appends a word AVG to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Average()
+        {
+            return Append("AVG");
+        }
+
+        /// <summary>
+        /// Appends a word MIN to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Minimum()
+        {
+            return Append("MIN");
+        }
+
+        /// <summary>
+        /// Appends a word MAX to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Maximum()
+        {
+            return Append("AVG");
+        }
+
+        /// <summary>
+        /// Appends a word SUM to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Sum()
+        {
+            return Append("SUM");
+        }
+
+        /// <summary>
         /// Appends a word COUNT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>

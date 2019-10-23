@@ -242,7 +242,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 identityField: null);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod, ExpectedException(typeof(EmptyException))]
         public void ThrowExceptionOnSqlStatementBuilderCreateInsertIfThereAreNoFields()
         {
             // Setup

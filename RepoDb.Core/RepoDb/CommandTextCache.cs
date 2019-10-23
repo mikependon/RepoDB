@@ -18,6 +18,55 @@ namespace RepoDb
     {
         private static readonly ConcurrentDictionary<BaseRequest, string> m_cache = new ConcurrentDictionary<BaseRequest, string>();
 
+        #region GetAverageText
+
+        /// <summary>
+        /// Gets a command text from the cache for the average operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetAverageText(AverageRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateAverage(new QueryBuilder(),
+                    request.Name,
+                    request.Field,
+                    request.Where,
+                    request.Hints);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
+        #region GetAverageAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the average-all operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetAverageAllText(AverageAllRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateAverageAll(new QueryBuilder(),
+                    request.Name,
+                    request.Field,
+                    request.Hints);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
         #region GetBatchQueryText
 
         /// <summary>
@@ -196,6 +245,55 @@ namespace RepoDb
 
         #endregion
 
+        #region GetMaximumText
+
+        /// <summary>
+        /// Gets a command text from the cache for the maximum operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetMaximumText(MaximumRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateMaximum(new QueryBuilder(),
+                    request.Name,
+                    request.Field,
+                    request.Where,
+                    request.Hints);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
+        #region GetMaximumAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the maximum-all operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetMaximumAllText(MaximumAllRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateMaximumAll(new QueryBuilder(),
+                    request.Name,
+                    request.Field,
+                    request.Hints);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
         #region GetMergeText
 
         /// <summary>
@@ -249,6 +347,55 @@ namespace RepoDb
                     request.BatchSize,
                     primaryField,
                     identityField);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
+        #region GetMinimumText
+
+        /// <summary>
+        /// Gets a command text from the cache for the minimum operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetMinimumText(MinimumRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateMinimum(new QueryBuilder(),
+                    request.Name,
+                    request.Field,
+                    request.Where,
+                    request.Hints);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
+        #region GetMinimumAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the minimum-all operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetMinimumAllText(MinimumAllRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateMinimumAll(new QueryBuilder(),
+                    request.Name,
+                    request.Field,
+                    request.Hints);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -332,6 +479,55 @@ namespace RepoDb
                     request.Where,
                     request.OrderBy,
                     request.Top,
+                    request.Hints);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
+        #region GetSumText
+
+        /// <summary>
+        /// Gets a command text from the cache for the sum operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetSumText(SumRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateSum(new QueryBuilder(),
+                    request.Name,
+                    request.Field,
+                    request.Where,
+                    request.Hints);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        #endregion
+
+        #region GetSumAllText
+
+        /// <summary>
+        /// Gets a command text from the cache for the sum-all operation.
+        /// </summary>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        internal static string GetSumAllText(SumAllRequest request)
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateSumAll(new QueryBuilder(),
+                    request.Name,
+                    request.Field,
                     request.Hints);
                 m_cache.TryAdd(request, commandText);
             }
