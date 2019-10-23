@@ -302,6 +302,101 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        /// <summary>
+        /// Averages the target field from the database table in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value.</returns>
+        public Task<object> AverageAsync(Expression<Func<TEntity, object>> field,
+            object where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value.</returns>
+        public Task<object> AverageAsync(Expression<Func<TEntity, object>> field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value.</returns>
+        public Task<object> AverageAsync(Expression<Func<TEntity, object>> field,
+            QueryField where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value.</returns>
+        public Task<object> AverageAsync(Expression<Func<TEntity, object>> field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Averages the target field from the database table in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value.</returns>
+        public Task<object> AverageAsync(Expression<Func<TEntity, object>> field,
+            QueryGroup where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
         #endregion
     }
 }

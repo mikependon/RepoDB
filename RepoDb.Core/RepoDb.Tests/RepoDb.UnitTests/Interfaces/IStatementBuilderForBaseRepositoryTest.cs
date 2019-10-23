@@ -40,6 +40,88 @@ namespace RepoDb.UnitTests.Interfaces
 
         #region Sync
 
+        #region CreateAverage
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForAverage()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.Average(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateAverage(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Average(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateAverage(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateAverageAll
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForAverageAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.AverageAll(e => e.Id);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateAverageAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.AverageAll(e => e.Id);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateAverageAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
         #region CreateBatchQuery
 
         [TestMethod]
@@ -392,6 +474,88 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region CreateMaximum
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForMaximum()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.Maximum(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMaximum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Maximum(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMaximum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateMaximumAll
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForMaximumAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.MaximumAll(e => e.Id);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMaximumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.MaximumAll(e => e.Id);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMaximumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
         #region CreateMerge
 
         [TestMethod]
@@ -556,6 +720,88 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region CreateMinimum
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForMinimum()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.Minimum(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMinimum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Minimum(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMinimum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateMinimumAll
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForMinimumAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.MinimumAll(e => e.Id);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMinimumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.MinimumAll(e => e.Id);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMinimumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
         #region CreateQuery
 
         [TestMethod]
@@ -636,6 +882,88 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<string>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateSum
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForSum()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.Sum(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateSum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Sum(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateSum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateSumAll
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForSumAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.SumAll(e => e.Id);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateSumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.SumAll(e => e.Id);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateSumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
                     It.IsAny<string>()), Times.Exactly(0));
         }
 
@@ -792,6 +1120,88 @@ namespace RepoDb.UnitTests.Interfaces
         #endregion
 
         #region Async
+
+        #region CreateAverageAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForAverageAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.AverageAsync(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateAverage(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.AverageAsync(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateAverage(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateAverageAsyncAll
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForAverageAsyncAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.AverageAllAsync(e => e.Id);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateAverageAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.AverageAllAsync(e => e.Id);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateAverageAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
 
         #region CreateBatchQueryAsync
 
@@ -1144,6 +1554,88 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region CreateMaximumAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForMaximumAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.MaximumAsync(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMaximum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.MaximumAsync(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMaximum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateMaximumAsyncAll
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForMaximumAsyncAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.MaximumAllAsync(e => e.Id);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMaximumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.MaximumAllAsync(e => e.Id);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMaximumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
         #region CreateMergeAsync
 
         [TestMethod]
@@ -1308,6 +1800,88 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region CreateMinimumAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForMinimumAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.MinimumAsync(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMinimum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.MinimumAsync(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMinimum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateMinimumAsyncAll
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForMinimumAsyncAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.MinimumAllAsync(e => e.Id);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateMinimumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.MinimumAllAsync(e => e.Id);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateMinimumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
         #region CreateQueryAsync
 
         [TestMethod]
@@ -1388,6 +1962,88 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<string>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateSumAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForSumAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.SumAsync(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateSum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.SumAsync(e => e.Id,
+                (object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateSum(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateSumAsyncAll
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForSumAsyncAll()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DataEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.SumAllAsync(e => e.Id);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateSumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.SumAllAsync(e => e.Id);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateSumAll(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
+                    It.IsAny<Field>(),
                     It.IsAny<string>()), Times.Exactly(0));
         }
 

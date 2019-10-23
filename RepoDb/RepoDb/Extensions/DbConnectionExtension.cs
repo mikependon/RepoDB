@@ -1257,7 +1257,7 @@ namespace RepoDb
             }
             else
             {
-                throw new InvalidExpressionException("Only dynamic object is supported in the 'where' expression.");
+                throw new Exceptions.InvalidExpressionException("Only dynamic object is supported in the 'where' expression.");
             }
         }
 
