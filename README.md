@@ -51,7 +51,9 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - It has Table-Based call operations.
  - It has an extensible Tracers.
  - It has an extensible Database Helpers.
- - It has an extensible DB Operation Providers.
+ - It has an extensible DB Operations.
+ - It has an extensible DB Settings.
+ - It has an extensible DB Validators.
  - It has an extensible Statement Builders.
  - It has ADO.NET transaction supports.
  - It is always free!
@@ -64,14 +66,18 @@ Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status
  - Caching
  - Connection Persistency
  - Database Helpers
- - Database Operation Providers
+ - Database Operations (Provider Specifics)
+ - Database Settings
+ - Database Validators
  - Expression Trees
+ - Extension Methods
  - Field Mapping
  - Inline Hints
  - Massive Operations (Generics/Explicits/MethodCalls/TableBased)
  - Multi-Resultset Query
  - Query Builder
  - Repositories
+ - Resolvers (CLR Types, DB Types)
  - Statement Builder
  - Tracing
  - Transaction
