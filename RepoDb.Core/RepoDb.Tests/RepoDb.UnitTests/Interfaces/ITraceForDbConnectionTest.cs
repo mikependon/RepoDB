@@ -9,7 +9,6 @@ using Moq;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
 using RepoDb.UnitTests.Setup;
 
@@ -115,6 +114,302 @@ namespace RepoDb.UnitTests.Interfaces
                 return Task.FromResult(1);
             }
         }
+
+        #endregion
+
+        #region Average
+
+        #region Average
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeAverage()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Average<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterAverage()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Average<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeAverageViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Average(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterAverageViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Average(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region AverageAsync
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeAverageAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterAverageAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeAverageAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterAverageAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #endregion
+
+        #region AverageAll
+
+        #region AverageAll
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeAverageAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAll<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterAverageAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAll<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeAverageAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAll(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterAverageAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAll(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region AverageAllAsync
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeAverageAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterAverageAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeAverageAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterAverageAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
 
         #endregion
 
@@ -1150,6 +1445,302 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region Maximum
+
+        #region Maximum
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMaximum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Maximum<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMaximum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Maximum<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMaximumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Maximum(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMaximumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Maximum(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region MaximumAsync
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMaximumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMaximumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMaximumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMaximumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #endregion
+
+        #region MaximumAll
+
+        #region MaximumAll
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMaximumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAll<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMaximumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAll<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMaximumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMaximumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region MaximumAllAsync
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMaximumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMaximumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMaximumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMaximumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MaximumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #endregion
+
         #region Merge
 
         #region Merge
@@ -1446,6 +2037,302 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region Minimum
+
+        #region Minimum
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMinimum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Minimum<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMinimum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Minimum<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMinimumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Minimum(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMinimumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Minimum(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region MinimumAsync
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMinimumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMinimumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMinimumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMinimumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #endregion
+
+        #region MinimumAll
+
+        #region MinimumAll
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMinimumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAll<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMinimumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAll<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMinimumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMinimumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region MinimumAllAsync
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMinimumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMinimumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeMinimumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterMinimumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.MinimumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #endregion
+
         #region Query
 
         #region Query
@@ -1668,6 +2555,302 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t => t.AfterQueryMultiple(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Sum
+
+        #region Sum
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeSum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Sum<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterSum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Sum<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeSumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Sum(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterSumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.Sum(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region SumAsync
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeSumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterSumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeSumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterSumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                where: (object)null,
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #endregion
+
+        #region SumAll
+
+        #region SumAll
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeSumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAll<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterSumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAll<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeSumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterSumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder);
+
+            // Assert
+            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region SumAllAsync
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeSumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterSumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeSumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterSumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new CustomDbConnectionForDbConnectionITrace();
+
+            // Act
+            connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                field: new Field("Id"),
+                trace: trace.Object,
+                statementBuilder: m_statementBuilder).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
         #endregion

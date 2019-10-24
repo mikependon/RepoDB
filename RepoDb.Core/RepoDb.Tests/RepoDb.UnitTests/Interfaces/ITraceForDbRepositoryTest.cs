@@ -3,7 +3,6 @@ using Moq;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
 using RepoDb.UnitTests.Setup;
 using System;
@@ -115,6 +114,350 @@ namespace RepoDb.UnitTests.Interfaces
                 return Task.FromResult(1);
             }
         }
+
+        #endregion
+
+        #region Average
+
+        #region Average
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeAverage()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Average<TraceEntity>(e => e.Id,
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterAverage()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Average<TraceEntity>(e => e.Id,
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeAverageViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Average(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterAverageViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Average(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region AverageAsync
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeAverageAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAsync<TraceEntity>(e => e.Id,
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterAverageAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAsync<TraceEntity>(e => e.Id,
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeAverageAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterAverageAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region AverageAll
+
+        #region AverageAll
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeAverageAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAll<TraceEntity>(e => e.Id);
+
+            // Assert
+            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterAverageAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAll<TraceEntity>(e => e.Id);
+
+            // Assert
+            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeAverageAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAll(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"));
+
+            // Assert
+            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterAverageAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAll(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"));
+
+            // Assert
+            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region AverageAllAsync
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeAverageAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAllAsync<TraceEntity>(e => e.Id).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterAverageAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAllAsync<TraceEntity>(e => e.Id).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeAverageAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id")).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterAverageAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id")).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
 
         #endregion
 
@@ -1290,6 +1633,350 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region Maximum
+
+        #region Maximum
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMaximum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Maximum<TraceEntity>(e => e.Id,
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMaximum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Maximum<TraceEntity>(e => e.Id,
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMaximumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Maximum(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMaximumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Maximum(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region MaximumAsync
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMaximumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAsync<TraceEntity>(e => e.Id,
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMaximumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAsync<TraceEntity>(e => e.Id,
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMaximumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMaximumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region MaximumAll
+
+        #region MaximumAll
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMaximumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAll<TraceEntity>(e => e.Id);
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMaximumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAll<TraceEntity>(e => e.Id);
+
+            // Assert
+            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMaximumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"));
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMaximumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"));
+
+            // Assert
+            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region MaximumAllAsync
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMaximumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAllAsync<TraceEntity>(e => e.Id).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMaximumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAllAsync<TraceEntity>(e => e.Id).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMaximumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id")).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMaximumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MaximumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id")).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
         #region Merge
 
         #region Merge
@@ -1618,6 +2305,350 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region Minimum
+
+        #region Minimum
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMinimum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Minimum<TraceEntity>(e => e.Id,
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMinimum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Minimum<TraceEntity>(e => e.Id,
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMinimumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Minimum(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMinimumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Minimum(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region MinimumAsync
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMinimumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAsync<TraceEntity>(e => e.Id,
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMinimumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAsync<TraceEntity>(e => e.Id,
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMinimumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMinimumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region MinimumAll
+
+        #region MinimumAll
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMinimumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAll<TraceEntity>(e => e.Id);
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMinimumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAll<TraceEntity>(e => e.Id);
+
+            // Assert
+            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMinimumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"));
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMinimumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"));
+
+            // Assert
+            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region MinimumAllAsync
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMinimumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAllAsync<TraceEntity>(e => e.Id).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMinimumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAllAsync<TraceEntity>(e => e.Id).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeMinimumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id")).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterMinimumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.MinimumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id")).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
         #region Query
 
         #region Query
@@ -1880,6 +2911,350 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t => t.AfterQueryMultiple(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Sum
+
+        #region Sum
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeSum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Sum<TraceEntity>(e => e.Id,
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterSum()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Sum<TraceEntity>(e => e.Id,
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeSumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Sum(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterSumViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.Sum(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region SumAsync
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeSumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAsync<TraceEntity>(e => e.Id,
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterSumAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAsync<TraceEntity>(e => e.Id,
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeSumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterSumAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"),
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region SumAll
+
+        #region SumAll
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeSumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAll<TraceEntity>(e => e.Id);
+
+            // Assert
+            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterSumAll()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAll<TraceEntity>(e => e.Id);
+
+            // Assert
+            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeSumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"));
+
+            // Assert
+            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterSumAllViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAll(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id"));
+
+            // Assert
+            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region SumAllAsync
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeSumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAllAsync<TraceEntity>(e => e.Id).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterSumAllAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAllAsync<TraceEntity>(e => e.Id).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeSumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id")).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterSumAllAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object,
+                m_statementBuilder);
+
+            // Act
+            repository.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                new Field("Id")).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
