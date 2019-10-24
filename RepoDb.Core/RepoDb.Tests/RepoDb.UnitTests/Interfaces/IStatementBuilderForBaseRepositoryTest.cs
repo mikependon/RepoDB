@@ -474,10 +474,10 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region CreateMaximum
+        #region CreateMax
 
         [TestMethod]
-        public void TestBaseRepositoryStatementBuilderForMaximum()
+        public void TestBaseRepositoryStatementBuilderForMax()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -485,12 +485,12 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            repository.Maximum(e => e.Id,
+            repository.Max(e => e.Id,
                 (object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateMaximum(
+                builder.CreateMax(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -502,12 +502,12 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Maximum(e => e.Id,
+            repositoryNever.Max(e => e.Id,
                 (object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateMaximum(
+                builder.CreateMax(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -517,10 +517,10 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region CreateMaximumAll
+        #region CreateMaxAll
 
         [TestMethod]
-        public void TestBaseRepositoryStatementBuilderForMaximumAll()
+        public void TestBaseRepositoryStatementBuilderForMaxAll()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -528,11 +528,11 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            repository.MaximumAll(e => e.Id);
+            repository.MaxAll(e => e.Id);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateMaximumAll(
+                builder.CreateMaxAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -543,11 +543,11 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.MaximumAll(e => e.Id);
+            repositoryNever.MaxAll(e => e.Id);
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateMaximumAll(
+                builder.CreateMaxAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -720,10 +720,10 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region CreateMinimum
+        #region CreateMin
 
         [TestMethod]
-        public void TestBaseRepositoryStatementBuilderForMinimum()
+        public void TestBaseRepositoryStatementBuilderForMin()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -731,12 +731,12 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            repository.Minimum(e => e.Id,
+            repository.Min(e => e.Id,
                 (object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateMinimum(
+                builder.CreateMin(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -748,12 +748,12 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.Minimum(e => e.Id,
+            repositoryNever.Min(e => e.Id,
                 (object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateMinimum(
+                builder.CreateMin(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -763,10 +763,10 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region CreateMinimumAll
+        #region CreateMinAll
 
         [TestMethod]
-        public void TestBaseRepositoryStatementBuilderForMinimumAll()
+        public void TestBaseRepositoryStatementBuilderForMinAll()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -774,11 +774,11 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            repository.MinimumAll(e => e.Id);
+            repository.MinAll(e => e.Id);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateMinimumAll(
+                builder.CreateMinAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -789,11 +789,11 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.MinimumAll(e => e.Id);
+            repositoryNever.MinAll(e => e.Id);
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateMinimumAll(
+                builder.CreateMinAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -1554,10 +1554,10 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region CreateMaximumAsync
+        #region CreateMaxAsync
 
         [TestMethod]
-        public void TestBaseRepositoryStatementBuilderForMaximumAsync()
+        public void TestBaseRepositoryStatementBuilderForMaxAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -1565,12 +1565,12 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            repository.MaximumAsync(e => e.Id,
+            repository.MaxAsync(e => e.Id,
                 (object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateMaximum(
+                builder.CreateMax(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -1582,12 +1582,12 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.MaximumAsync(e => e.Id,
+            repositoryNever.MaxAsync(e => e.Id,
                 (object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateMaximum(
+                builder.CreateMax(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -1597,10 +1597,10 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region CreateMaximumAsyncAll
+        #region CreateMaxAsyncAll
 
         [TestMethod]
-        public void TestBaseRepositoryStatementBuilderForMaximumAsyncAll()
+        public void TestBaseRepositoryStatementBuilderForMaxAsyncAll()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -1608,11 +1608,11 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            repository.MaximumAllAsync(e => e.Id);
+            repository.MaxAllAsync(e => e.Id);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateMaximumAll(
+                builder.CreateMaxAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -1623,11 +1623,11 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.MaximumAllAsync(e => e.Id);
+            repositoryNever.MaxAllAsync(e => e.Id);
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateMaximumAll(
+                builder.CreateMaxAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -1800,10 +1800,10 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region CreateMinimumAsync
+        #region CreateMinAsync
 
         [TestMethod]
-        public void TestBaseRepositoryStatementBuilderForMinimumAsync()
+        public void TestBaseRepositoryStatementBuilderForMinAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -1811,12 +1811,12 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            repository.MinimumAsync(e => e.Id,
+            repository.MinAsync(e => e.Id,
                 (object)null);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateMinimum(
+                builder.CreateMin(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -1828,12 +1828,12 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.MinimumAsync(e => e.Id,
+            repositoryNever.MinAsync(e => e.Id,
                 (object)null);
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateMinimum(
+                builder.CreateMin(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -1843,10 +1843,10 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region CreateMinimumAsyncAll
+        #region CreateMinAsyncAll
 
         [TestMethod]
-        public void TestBaseRepositoryStatementBuilderForMinimumAsyncAll()
+        public void TestBaseRepositoryStatementBuilderForMinAsyncAll()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -1854,11 +1854,11 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            repository.MinimumAllAsync(e => e.Id);
+            repository.MinAllAsync(e => e.Id);
 
             // Assert
             statementBuilder.Verify(builder =>
-                builder.CreateMinimumAll(
+                builder.CreateMinAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),
@@ -1869,11 +1869,11 @@ namespace RepoDb.UnitTests.Interfaces
             var repositoryNever = new DataEntityRepository(statementBuilderNever.Object);
 
             // Act
-            repositoryNever.MinimumAllAsync(e => e.Id);
+            repositoryNever.MinAllAsync(e => e.Id);
 
             // Assert
             statementBuilderNever.Verify(builder =>
-                builder.CreateMinimumAll(
+                builder.CreateMinAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<DataEntityForBaseRepositoryStatementBuilder>()),
                     It.IsAny<Field>(),

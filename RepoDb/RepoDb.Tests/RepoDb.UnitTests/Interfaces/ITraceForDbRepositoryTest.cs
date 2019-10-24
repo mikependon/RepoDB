@@ -1633,12 +1633,12 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region Maximum
+        #region Max
 
-        #region Maximum
+        #region Max
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMaximum()
+        public void TestDbRepositoryTraceForBeforeMax()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1650,15 +1650,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Maximum<TraceEntity>(e => e.Id,
+            repository.Max<TraceEntity>(e => e.Id,
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMax(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMaximum()
+        public void TestDbRepositoryTraceForAfterMax()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1670,15 +1670,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Maximum<TraceEntity>(e => e.Id,
+            repository.Max<TraceEntity>(e => e.Id,
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMax(It.IsAny<TraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMaximumViaTableName()
+        public void TestDbRepositoryTraceForBeforeMaxViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1690,16 +1690,16 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Maximum(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.Max(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"),
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMax(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMaximumViaTableName()
+        public void TestDbRepositoryTraceForAfterMaxViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1711,20 +1711,20 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Maximum(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.Max(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"),
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMax(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
-        #region MaximumAsync
+        #region MaxAsync
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMaximumAsync()
+        public void TestDbRepositoryTraceForBeforeMaxAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1736,15 +1736,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAsync<TraceEntity>(e => e.Id,
+            repository.MaxAsync<TraceEntity>(e => e.Id,
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMax(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMaximumAsync()
+        public void TestDbRepositoryTraceForAfterMaxAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1756,15 +1756,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAsync<TraceEntity>(e => e.Id,
+            repository.MaxAsync<TraceEntity>(e => e.Id,
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMax(It.IsAny<TraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMaximumAsyncViaTableName()
+        public void TestDbRepositoryTraceForBeforeMaxAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1776,16 +1776,16 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"),
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMax(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMaximumAsyncViaTableName()
+        public void TestDbRepositoryTraceForAfterMaxAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1797,24 +1797,24 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"),
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMax(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
         #endregion
 
-        #region MaximumAll
+        #region MaxAll
 
-        #region MaximumAll
+        #region MaxAll
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMaximumAll()
+        public void TestDbRepositoryTraceForBeforeMaxAll()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1826,14 +1826,14 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAll<TraceEntity>(e => e.Id);
+            repository.MaxAll<TraceEntity>(e => e.Id);
 
             // Assert
-            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMaxAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMaximumAll()
+        public void TestDbRepositoryTraceForAfterMaxAll()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1845,14 +1845,14 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAll<TraceEntity>(e => e.Id);
+            repository.MaxAll<TraceEntity>(e => e.Id);
 
             // Assert
-            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMaxAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMaximumAllViaTableName()
+        public void TestDbRepositoryTraceForBeforeMaxAllViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1864,15 +1864,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAll(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MaxAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"));
 
             // Assert
-            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMaxAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMaximumAllViaTableName()
+        public void TestDbRepositoryTraceForAfterMaxAllViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1884,19 +1884,19 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAll(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MaxAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"));
 
             // Assert
-            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMaxAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
-        #region MaximumAllAsync
+        #region MaxAllAsync
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMaximumAllAsync()
+        public void TestDbRepositoryTraceForBeforeMaxAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1908,14 +1908,14 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAllAsync<TraceEntity>(e => e.Id).Wait();
+            repository.MaxAllAsync<TraceEntity>(e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMaxAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMaximumAllAsync()
+        public void TestDbRepositoryTraceForAfterMaxAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1927,14 +1927,14 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAllAsync<TraceEntity>(e => e.Id).Wait();
+            repository.MaxAllAsync<TraceEntity>(e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMaxAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMaximumAllAsyncViaTableName()
+        public void TestDbRepositoryTraceForBeforeMaxAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1946,15 +1946,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id")).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMaxAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMaximumAllAsyncViaTableName()
+        public void TestDbRepositoryTraceForAfterMaxAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -1966,11 +1966,11 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MaximumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id")).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMaxAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
@@ -2305,12 +2305,12 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region Minimum
+        #region Min
 
-        #region Minimum
+        #region Min
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMinimum()
+        public void TestDbRepositoryTraceForBeforeMin()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2322,15 +2322,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Minimum<TraceEntity>(e => e.Id,
+            repository.Min<TraceEntity>(e => e.Id,
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMin(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMinimum()
+        public void TestDbRepositoryTraceForAfterMin()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2342,15 +2342,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Minimum<TraceEntity>(e => e.Id,
+            repository.Min<TraceEntity>(e => e.Id,
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMin(It.IsAny<TraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMinimumViaTableName()
+        public void TestDbRepositoryTraceForBeforeMinViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2362,16 +2362,16 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Minimum(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.Min(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"),
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMin(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMinimumViaTableName()
+        public void TestDbRepositoryTraceForAfterMinViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2383,20 +2383,20 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.Minimum(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.Min(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"),
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMin(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
-        #region MinimumAsync
+        #region MinAsync
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMinimumAsync()
+        public void TestDbRepositoryTraceForBeforeMinAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2408,15 +2408,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAsync<TraceEntity>(e => e.Id,
+            repository.MinAsync<TraceEntity>(e => e.Id,
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMin(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMinimumAsync()
+        public void TestDbRepositoryTraceForAfterMinAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2428,15 +2428,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAsync<TraceEntity>(e => e.Id,
+            repository.MinAsync<TraceEntity>(e => e.Id,
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMin(It.IsAny<TraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMinimumAsyncViaTableName()
+        public void TestDbRepositoryTraceForBeforeMinAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2448,16 +2448,16 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"),
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMin(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMinimumAsyncViaTableName()
+        public void TestDbRepositoryTraceForAfterMinAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2469,24 +2469,24 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"),
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMin(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
         #endregion
 
-        #region MinimumAll
+        #region MinAll
 
-        #region MinimumAll
+        #region MinAll
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMinimumAll()
+        public void TestDbRepositoryTraceForBeforeMinAll()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2498,14 +2498,14 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAll<TraceEntity>(e => e.Id);
+            repository.MinAll<TraceEntity>(e => e.Id);
 
             // Assert
-            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMinAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMinimumAll()
+        public void TestDbRepositoryTraceForAfterMinAll()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2517,14 +2517,14 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAll<TraceEntity>(e => e.Id);
+            repository.MinAll<TraceEntity>(e => e.Id);
 
             // Assert
-            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMinAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMinimumAllViaTableName()
+        public void TestDbRepositoryTraceForBeforeMinAllViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2536,15 +2536,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAll(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MinAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"));
 
             // Assert
-            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMinAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMinimumAllViaTableName()
+        public void TestDbRepositoryTraceForAfterMinAllViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2556,19 +2556,19 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAll(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MinAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id"));
 
             // Assert
-            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMinAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
-        #region MinimumAllAsync
+        #region MinAllAsync
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMinimumAllAsync()
+        public void TestDbRepositoryTraceForBeforeMinAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2580,14 +2580,14 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAllAsync<TraceEntity>(e => e.Id).Wait();
+            repository.MinAllAsync<TraceEntity>(e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMinAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMinimumAllAsync()
+        public void TestDbRepositoryTraceForAfterMinAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2599,14 +2599,14 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAllAsync<TraceEntity>(e => e.Id).Wait();
+            repository.MinAllAsync<TraceEntity>(e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMinAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForBeforeMinimumAllAsyncViaTableName()
+        public void TestDbRepositoryTraceForBeforeMinAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2618,15 +2618,15 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id")).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMinAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestDbRepositoryTraceForAfterMinimumAllAsyncViaTableName()
+        public void TestDbRepositoryTraceForAfterMinAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2638,11 +2638,11 @@ namespace RepoDb.UnitTests.Interfaces
                 m_statementBuilder);
 
             // Act
-            repository.MinimumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            repository.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new Field("Id")).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMinAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion

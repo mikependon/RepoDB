@@ -16,7 +16,7 @@ namespace RepoDb
         #region SumAll<TEntity>
 
         /// <summary>
-        /// Sums the target field from all data of the database table.
+        /// Summarizes the target field from all data of the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -46,7 +46,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from all data of the database table.
+        /// Summarizes the target field from all data of the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -76,7 +76,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from all data of the database table.
+        /// Summarizes the target field from all data of the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -119,7 +119,7 @@ namespace RepoDb
         #region SumAllAsync<TEntity>
 
         /// <summary>
-        /// SumAlls the number of table data from the database in an asynchronous way.
+        /// Summarizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -149,7 +149,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// SumAlls the number of table data from the database in an asynchronous way.
+        /// Summarizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -179,7 +179,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// SumAlls the number of table data from the database in an asynchronous way.
+        /// Summarizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -222,7 +222,7 @@ namespace RepoDb
         #region SumAll(TableName)
 
         /// <summary>
-        /// Sums the target field from all data of the database table.
+        /// Summarizes the target field from all data of the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -253,7 +253,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from all data of the database table.
+        /// Summarizes the target field from all data of the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -297,7 +297,7 @@ namespace RepoDb
         #region SumAllAsync(TableName)
 
         /// <summary>
-        /// SumAlls the number of table data from the database in an asynchronous way.
+        /// Summarizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -328,7 +328,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// SumAlls the number of table data from the database in an asynchronous way.
+        /// Summarizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -372,7 +372,7 @@ namespace RepoDb
         #region SumAllInternalBase
 
         /// <summary>
-        /// Sums the target field from all data of the database table.
+        /// Summarizes the target field from all data of the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="SumAllRequest"/> object.</param>
@@ -440,7 +440,7 @@ namespace RepoDb
         #region SumAllAsyncInternalBase
 
         /// <summary>
-        /// SumAlls the number of table data from the database in an asynchronous way.
+        /// Summarizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="SumAllRequest"/> object.</param>

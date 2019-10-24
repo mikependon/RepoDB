@@ -15,10 +15,10 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region Minimum<TEntity>
+        #region Min<TEntity>
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -30,7 +30,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum<TEntity>(this IDbConnection connection,
+        public static long Min<TEntity>(this IDbConnection connection,
             Field field,
             object where = null,
             string hints = null,
@@ -40,7 +40,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Minimum<TEntity>(connection: connection,
+            return Min<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -51,7 +51,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -63,7 +63,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum<TEntity>(this IDbConnection connection,
+        public static long Min<TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -73,7 +73,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Minimum<TEntity>(connection: connection,
+            return Min<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -84,7 +84,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -96,7 +96,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum<TEntity>(this IDbConnection connection,
+        public static long Min<TEntity>(this IDbConnection connection,
             Field field,
             QueryField where = null,
             string hints = null,
@@ -106,7 +106,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Minimum<TEntity>(connection: connection,
+            return Min<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -117,7 +117,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -129,7 +129,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum<TEntity>(this IDbConnection connection,
+        public static long Min<TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -139,7 +139,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Minimum<TEntity>(connection: connection,
+            return Min<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -150,7 +150,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -162,7 +162,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum<TEntity>(this IDbConnection connection,
+        public static long Min<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             string hints = null,
@@ -172,7 +172,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumInternal<TEntity>(connection: connection,
+            return MinInternal<TEntity>(connection: connection,
                 field: field,
                 where: where,
                 hints: hints,
@@ -183,7 +183,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -195,7 +195,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum<TEntity>(this IDbConnection connection,
+        public static long Min<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
@@ -205,7 +205,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Minimum<TEntity>(connection: connection,
+            return Min<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -216,7 +216,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -228,7 +228,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum<TEntity>(this IDbConnection connection,
+        public static long Min<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -238,7 +238,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Minimum<TEntity>(connection: connection,
+            return Min<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -249,7 +249,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -261,7 +261,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum<TEntity>(this IDbConnection connection,
+        public static long Min<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
@@ -271,7 +271,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Minimum<TEntity>(connection: connection,
+            return Min<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -282,7 +282,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -294,7 +294,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum<TEntity>(this IDbConnection connection,
+        public static long Min<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -304,7 +304,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Minimum<TEntity>(connection: connection,
+            return Min<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -315,7 +315,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -327,7 +327,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum<TEntity>(this IDbConnection connection,
+        public static long Min<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
@@ -337,7 +337,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumInternal<TEntity>(connection: connection,
+            return MinInternal<TEntity>(connection: connection,
                 field: Field.Parse<TEntity>(field),
                 where: where,
                 hints: hints,
@@ -348,7 +348,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -360,7 +360,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MinimumInternal<TEntity>(this IDbConnection connection,
+        internal static long MinInternal<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             string hints = null,
@@ -371,7 +371,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new MinimumRequest(typeof(TEntity),
+            var request = new MinRequest(typeof(TEntity),
                 connection,
                 transaction,
                 field,
@@ -387,7 +387,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return MinimumInternalBase(connection: connection,
+            return MinInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -397,10 +397,10 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumAsync<TEntity>
+        #region MinAsync<TEntity>
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -412,7 +412,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
             Field field,
             object where = null,
             string hints = null,
@@ -422,7 +422,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAsync<TEntity>(connection: connection,
+            return MinAsync<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -433,7 +433,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -445,7 +445,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -455,7 +455,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAsync<TEntity>(connection: connection,
+            return MinAsync<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -466,7 +466,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -478,7 +478,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
             Field field,
             QueryField where = null,
             string hints = null,
@@ -488,7 +488,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAsync<TEntity>(connection: connection,
+            return MinAsync<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -499,7 +499,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -511,7 +511,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -521,7 +521,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAsync<TEntity>(connection: connection,
+            return MinAsync<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -532,7 +532,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -544,7 +544,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             string hints = null,
@@ -554,7 +554,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAsyncInternal<TEntity>(connection: connection,
+            return MinAsyncInternal<TEntity>(connection: connection,
                 field: field,
                 where: where,
                 hints: hints,
@@ -565,7 +565,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -577,7 +577,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
@@ -587,7 +587,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAsync<TEntity>(connection: connection,
+            return MinAsync<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -598,7 +598,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -610,7 +610,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -620,7 +620,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAsync<TEntity>(connection: connection,
+            return MinAsync<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -631,7 +631,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -643,7 +643,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
@@ -653,7 +653,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAsync<TEntity>(connection: connection,
+            return MinAsync<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -664,7 +664,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -676,7 +676,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -686,7 +686,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAsync<TEntity>(connection: connection,
+            return MinAsync<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -697,7 +697,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -709,7 +709,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
@@ -719,7 +719,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAsyncInternal<TEntity>(connection: connection,
+            return MinAsyncInternal<TEntity>(connection: connection,
                 field: Field.Parse<TEntity>(field),
                 where: where,
                 hints: hints,
@@ -730,7 +730,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -742,7 +742,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> MinimumAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static Task<long> MinAsyncInternal<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             int? commandTimeout = null,
@@ -753,7 +753,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new MinimumRequest(typeof(TEntity),
+            var request = new MinRequest(typeof(TEntity),
                 connection,
                 transaction,
                 field,
@@ -769,7 +769,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return MinimumInternalAsyncBase(connection: connection,
+            return MinInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -779,10 +779,10 @@ namespace RepoDb
 
         #endregion
 
-        #region Minimum(TableName)
+        #region Min(TableName)
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -794,7 +794,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum(this IDbConnection connection,
+        public static long Min(this IDbConnection connection,
             string tableName,
             Field field,
             object where = null,
@@ -804,7 +804,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Minimum(connection: connection,
+            return Min(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),
@@ -816,7 +816,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -828,7 +828,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum(this IDbConnection connection,
+        public static long Min(this IDbConnection connection,
             string tableName,
             Field field,
             QueryField where = null,
@@ -838,7 +838,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Minimum(connection: connection,
+            return Min(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),
@@ -850,7 +850,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -862,7 +862,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum(this IDbConnection connection,
+        public static long Min(this IDbConnection connection,
             string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
@@ -872,7 +872,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Minimum(connection: connection,
+            return Min(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),
@@ -884,7 +884,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -896,7 +896,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Minimum(this IDbConnection connection,
+        public static long Min(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -906,7 +906,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinimumInternal(connection: connection,
+            return MinInternal(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: where,
@@ -918,7 +918,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -930,7 +930,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MinimumInternal(this IDbConnection connection,
+        internal static long MinInternal(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -941,14 +941,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new MinimumRequest(tableName,
+            var request = new MinRequest(tableName,
                 connection,
                 transaction,
                 field,
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetMinimumText(request);
+            var commandText = CommandTextCache.GetMinText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -958,7 +958,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return MinimumInternalBase(connection: connection,
+            return MinInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -968,10 +968,10 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumAsync(TableName)
+        #region MinAsync(TableName)
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -983,7 +983,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync(this IDbConnection connection,
+        public static Task<long> MinAsync(this IDbConnection connection,
             string tableName,
             Field field,
             object where = null,
@@ -993,7 +993,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinimumAsync(connection: connection,
+            return MinAsync(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),
@@ -1005,7 +1005,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -1017,7 +1017,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync(this IDbConnection connection,
+        public static Task<long> MinAsync(this IDbConnection connection,
             string tableName,
             Field field,
             QueryField where = null,
@@ -1027,7 +1027,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinimumAsync(connection: connection,
+            return MinAsync(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),
@@ -1039,7 +1039,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -1051,7 +1051,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync(this IDbConnection connection,
+        public static Task<long> MinAsync(this IDbConnection connection,
             string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
@@ -1061,7 +1061,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinimumAsync(connection: connection,
+            return MinAsync(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),
@@ -1073,7 +1073,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -1085,7 +1085,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAsync(this IDbConnection connection,
+        public static Task<long> MinAsync(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -1095,7 +1095,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinimumAsyncInternal(connection: connection,
+            return MinAsyncInternal(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: where,
@@ -1107,7 +1107,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -1119,7 +1119,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> MinimumAsyncInternal(this IDbConnection connection,
+        internal static Task<long> MinAsyncInternal(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -1130,14 +1130,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new MinimumRequest(tableName,
+            var request = new MinRequest(tableName,
                 connection,
                 transaction,
                 field,
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetMinimumText(request);
+            var commandText = CommandTextCache.GetMinText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -1147,7 +1147,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return MinimumInternalAsyncBase(connection: connection,
+            return MinInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -1157,37 +1157,37 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumerInternalBase
+        #region MinInternalBase
 
         /// <summary>
-        /// Extracts the minimum value of the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="MinimumRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="MinRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MinimumInternalBase(this IDbConnection connection,
-            MinimumRequest request,
+        internal static long MinInternalBase(this IDbConnection connection,
+            MinRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateMinimum(connection);
+            InvokeValidatorValidateMin(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetMinimumText(request);
+            var commandText = CommandTextCache.GetMinText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeMinimum(cancellableTraceLog);
+                trace.BeforeMin(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -1215,7 +1215,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterMinimum(new TraceLog(commandText, param, result,
+                trace.AfterMin(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1225,37 +1225,37 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumAsyncInternalBase
+        #region MinAsyncInternalBase
 
         /// <summary>
-        /// Minimums the number of table data from the database in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="MinimumRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="MinRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static async Task<long> MinimumInternalAsyncBase(this IDbConnection connection,
-            MinimumRequest request,
+        internal static async Task<long> MinInternalAsyncBase(this IDbConnection connection,
+            MinRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateMinimumAsync(connection);
+            InvokeValidatorValidateMinAsync(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetMinimumText(request);
+            var commandText = CommandTextCache.GetMinText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeMinimum(cancellableTraceLog);
+                trace.BeforeMin(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -1283,7 +1283,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterMinimum(new TraceLog(commandText, param, result,
+                trace.AfterMin(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1296,21 +1296,21 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateMinimum"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateMin"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateMinimum(IDbConnection connection)
+        private static void InvokeValidatorValidateMin(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateMinimum();
+            connection.GetDbValidator()?.ValidateMin();
         }
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateMinimumAsync"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateMinAsync"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateMinimumAsync(IDbConnection connection)
+        private static void InvokeValidatorValidateMinAsync(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateMinimumAsync();
+            connection.GetDbValidator()?.ValidateMinAsync();
         }
 
         #endregion

@@ -835,140 +835,140 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region Maximum
+        #region Max
 
-        #region Maximum
+        #region Max
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForBeforeMaximum()
+        public void TestBaseRepositoryTraceForBeforeMax()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.Maximum(e => e.Id,
+            repository.Max(e => e.Id,
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMax(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForAfterMaximum()
+        public void TestBaseRepositoryTraceForAfterMax()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.Maximum(e => e.Id,
+            repository.Max(e => e.Id,
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMax(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
-        #region MaximumAsync
+        #region MaxAsync
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForBeforeMaximumAsync()
+        public void TestBaseRepositoryTraceForBeforeMaxAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MaximumAsync(e => e.Id,
+            repository.MaxAsync(e => e.Id,
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMaximum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMax(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForAfterMaximumAsync()
+        public void TestBaseRepositoryTraceForAfterMaxAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MaximumAsync(e => e.Id,
+            repository.MaxAsync(e => e.Id,
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMaximum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMax(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
         #endregion
 
-        #region MaximumAll
+        #region MaxAll
 
-        #region MaximumAll
+        #region MaxAll
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForBeforeMaximumAll()
+        public void TestBaseRepositoryTraceForBeforeMaxAll()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MaximumAll(e => e.Id);
+            repository.MaxAll(e => e.Id);
 
             // Assert
-            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMaxAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForAfterMaximumAll()
+        public void TestBaseRepositoryTraceForAfterMaxAll()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MaximumAll(e => e.Id);
+            repository.MaxAll(e => e.Id);
 
             // Assert
-            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMaxAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
-        #region MaximumAllAsync
+        #region MaxAllAsync
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForBeforeMaximumAllAsync()
+        public void TestBaseRepositoryTraceForBeforeMaxAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MaximumAllAsync(e => e.Id).Wait();
+            repository.MaxAllAsync(e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMaximumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMaxAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForAfterMaximumAllAsync()
+        public void TestBaseRepositoryTraceForAfterMaxAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MaximumAllAsync(e => e.Id).Wait();
+            repository.MaxAllAsync(e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMaximumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMaxAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
@@ -1111,140 +1111,140 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
-        #region Minimum
+        #region Min
 
-        #region Minimum
+        #region Min
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForBeforeMinimum()
+        public void TestBaseRepositoryTraceForBeforeMin()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.Minimum(e => e.Id,
+            repository.Min(e => e.Id,
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMin(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForAfterMinimum()
+        public void TestBaseRepositoryTraceForAfterMin()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.Minimum(e => e.Id,
+            repository.Min(e => e.Id,
                 (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMin(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
-        #region MinimumAsync
+        #region MinAsync
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForBeforeMinimumAsync()
+        public void TestBaseRepositoryTraceForBeforeMinAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MinimumAsync(e => e.Id,
+            repository.MinAsync(e => e.Id,
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMinimum(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMin(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForAfterMinimumAsync()
+        public void TestBaseRepositoryTraceForAfterMinAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MinimumAsync(e => e.Id,
+            repository.MinAsync(e => e.Id,
                 (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMinimum(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMin(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
         #endregion
 
-        #region MinimumAll
+        #region MinAll
 
-        #region MinimumAll
+        #region MinAll
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForBeforeMinimumAll()
+        public void TestBaseRepositoryTraceForBeforeMinAll()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MinimumAll(e => e.Id);
+            repository.MinAll(e => e.Id);
 
             // Assert
-            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMinAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForAfterMinimumAll()
+        public void TestBaseRepositoryTraceForAfterMinAll()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MinimumAll(e => e.Id);
+            repository.MinAll(e => e.Id);
 
             // Assert
-            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMinAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion
 
-        #region MinimumAllAsync
+        #region MinAllAsync
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForBeforeMinimumAllAsync()
+        public void TestBaseRepositoryTraceForBeforeMinAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MinimumAllAsync(e => e.Id).Wait();
+            repository.MinAllAsync(e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMinimumAll(It.IsAny<CancellableTraceLog>()), Times.Once);
+            trace.Verify(t => t.BeforeMinAll(It.IsAny<CancellableTraceLog>()), Times.Once);
         }
 
         [TestMethod]
-        public void TestBaseRepositoryTraceForAfterMinimumAllAsync()
+        public void TestBaseRepositoryTraceForAfterMinAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var repository = new TraceEntityRepository(trace.Object);
 
             // Act
-            repository.MinimumAllAsync(e => e.Id).Wait();
+            repository.MinAllAsync(e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMinimumAll(It.IsAny<TraceLog>()), Times.Once);
+            trace.Verify(t => t.AfterMinAll(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion

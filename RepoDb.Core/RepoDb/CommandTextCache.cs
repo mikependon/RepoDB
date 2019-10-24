@@ -245,20 +245,20 @@ namespace RepoDb
 
         #endregion
 
-        #region GetMaximumText
+        #region GetMaxText
 
         /// <summary>
         /// Gets a command text from the cache for the maximum operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        internal static string GetMaximumText(MaximumRequest request)
+        internal static string GetMaxText(MaxRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateMaximum(new QueryBuilder(),
+                commandText = statementBuilder.CreateMax(new QueryBuilder(),
                     request.Name,
                     request.Field,
                     request.Where,
@@ -270,20 +270,20 @@ namespace RepoDb
 
         #endregion
 
-        #region GetMaximumAllText
+        #region GetMaxAllText
 
         /// <summary>
         /// Gets a command text from the cache for the maximum-all operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        internal static string GetMaximumAllText(MaximumAllRequest request)
+        internal static string GetMaxAllText(MaxAllRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateMaximumAll(new QueryBuilder(),
+                commandText = statementBuilder.CreateMaxAll(new QueryBuilder(),
                     request.Name,
                     request.Field,
                     request.Hints);
@@ -354,20 +354,20 @@ namespace RepoDb
 
         #endregion
 
-        #region GetMinimumText
+        #region GetMinText
 
         /// <summary>
         /// Gets a command text from the cache for the minimum operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        internal static string GetMinimumText(MinimumRequest request)
+        internal static string GetMinText(MinRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateMinimum(new QueryBuilder(),
+                commandText = statementBuilder.CreateMin(new QueryBuilder(),
                     request.Name,
                     request.Field,
                     request.Where,
@@ -379,20 +379,20 @@ namespace RepoDb
 
         #endregion
 
-        #region GetMinimumAllText
+        #region GetMinAllText
 
         /// <summary>
         /// Gets a command text from the cache for the minimum-all operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        internal static string GetMinimumAllText(MinimumAllRequest request)
+        internal static string GetMinAllText(MinAllRequest request)
         {
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateMinimumAll(new QueryBuilder(),
+                commandText = statementBuilder.CreateMinAll(new QueryBuilder(),
                     request.Name,
                     request.Field,
                     request.Hints);

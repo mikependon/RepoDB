@@ -104,22 +104,22 @@ namespace RepoDb.UnitTests.Setup
             // This is supported.
         }
 
-        public void ValidateMaximum()
+        public void ValidateMax()
         {
             // This is supported.
         }
 
-        public void ValidateMaximumAll()
+        public void ValidateMaxAll()
         {
             // This is supported.
         }
 
-        public void ValidateMaximumAllAsync()
+        public void ValidateMaxAllAsync()
         {
             // This is supported.
         }
 
-        public void ValidateMaximumAsync()
+        public void ValidateMaxAsync()
         {
             // This is supported.
         }
@@ -144,22 +144,22 @@ namespace RepoDb.UnitTests.Setup
             // This is supported.
         }
 
-        public void ValidateMinimum()
+        public void ValidateMin()
         {
             // This is supported.
         }
 
-        public void ValidateMinimumAll()
+        public void ValidateMinAll()
         {
             // This is supported.
         }
 
-        public void ValidateMinimumAllAsync()
+        public void ValidateMinAllAsync()
         {
             // This is supported.
         }
 
-        public void ValidateMinimumAsync()
+        public void ValidateMinAsync()
         {
             // This is supported.
         }

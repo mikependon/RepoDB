@@ -12,10 +12,10 @@ namespace RepoDb
     /// </summary>
     public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
     {
-        #region Minimum<TEntity>
+        #region Min<TEntity>
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -23,7 +23,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum<TEntity>(Field field,
+        public object Min<TEntity>(Field field,
             object where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -35,7 +35,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum<TEntity>(field: field,
+                return connection.Min<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -56,7 +56,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -64,7 +64,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum<TEntity>(Field field,
+        public object Min<TEntity>(Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -76,7 +76,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum<TEntity>(field: field,
+                return connection.Min<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -97,7 +97,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -105,7 +105,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum<TEntity>(Field field,
+        public object Min<TEntity>(Field field,
             QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -117,7 +117,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum<TEntity>(field: field,
+                return connection.Min<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -138,7 +138,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -146,7 +146,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum<TEntity>(Field field,
+        public object Min<TEntity>(Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -158,7 +158,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum<TEntity>(field: field,
+                return connection.Min<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -179,7 +179,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -187,7 +187,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum<TEntity>(Field field,
+        public object Min<TEntity>(Field field,
             QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -199,7 +199,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum<TEntity>(field: field,
+                return connection.Min<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -220,7 +220,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -228,7 +228,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum<TEntity>(Expression<Func<TEntity, object>> field,
+        public object Min<TEntity>(Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -240,7 +240,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum<TEntity>(field: field,
+                return connection.Min<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -261,7 +261,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -269,7 +269,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum<TEntity>(Expression<Func<TEntity, object>> field,
+        public object Min<TEntity>(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -281,7 +281,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum<TEntity>(field: field,
+                return connection.Min<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -302,7 +302,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -310,7 +310,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum<TEntity>(Expression<Func<TEntity, object>> field,
+        public object Min<TEntity>(Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -322,7 +322,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum<TEntity>(field: field,
+                return connection.Min<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -343,7 +343,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -351,7 +351,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum<TEntity>(Expression<Func<TEntity, object>> field,
+        public object Min<TEntity>(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -363,7 +363,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum<TEntity>(field: field,
+                return connection.Min<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -384,7 +384,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -392,7 +392,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum<TEntity>(Expression<Func<TEntity, object>> field,
+        public object Min<TEntity>(Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -404,7 +404,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum<TEntity>(field: field,
+                return connection.Min<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -426,10 +426,10 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumAsync<TEntity>
+        #region MinAsync<TEntity>
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -437,7 +437,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync<TEntity>(Field field,
+        public async Task<object> MinAsync<TEntity>(Field field,
             object where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -449,7 +449,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync<TEntity>(field: field,
+                return await connection.MinAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -470,7 +470,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -478,7 +478,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync<TEntity>(Field field,
+        public async Task<object> MinAsync<TEntity>(Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -490,7 +490,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync<TEntity>(field: field,
+                return await connection.MinAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -511,7 +511,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -519,7 +519,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync<TEntity>(Field field,
+        public async Task<object> MinAsync<TEntity>(Field field,
             QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -531,7 +531,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync<TEntity>(field: field,
+                return await connection.MinAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -552,7 +552,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -560,7 +560,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync<TEntity>(Field field,
+        public async Task<object> MinAsync<TEntity>(Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -572,7 +572,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync<TEntity>(field: field,
+                return await connection.MinAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -593,7 +593,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -601,7 +601,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync<TEntity>(Field field,
+        public async Task<object> MinAsync<TEntity>(Field field,
             QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -613,7 +613,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync<TEntity>(field: field,
+                return await connection.MinAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -634,7 +634,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -642,7 +642,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<object> MinAsync<TEntity>(Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -654,7 +654,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync<TEntity>(field: field,
+                return await connection.MinAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -675,7 +675,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -683,7 +683,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<object> MinAsync<TEntity>(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -695,7 +695,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync<TEntity>(field: field,
+                return await connection.MinAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -716,7 +716,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -724,7 +724,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<object> MinAsync<TEntity>(Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -736,7 +736,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync<TEntity>(field: field,
+                return await connection.MinAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -757,7 +757,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -765,7 +765,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<object> MinAsync<TEntity>(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -777,7 +777,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync<TEntity>(field: field,
+                return await connection.MinAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -798,7 +798,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be minimumd.</param>
@@ -806,7 +806,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<object> MinAsync<TEntity>(Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -818,7 +818,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync<TEntity>(field: field,
+                return await connection.MinAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -840,10 +840,10 @@ namespace RepoDb
 
         #endregion
 
-        #region Minimum(TableName)
+        #region Min(TableName)
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be minimumd.</param>
@@ -851,7 +851,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(string tableName,
+        public object Min(string tableName,
             Field field,
             object where = null,
             string hints = null,
@@ -863,7 +863,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum(tableName: tableName,
+                return connection.Min(tableName: tableName,
                     field: field,
                     where: where,
                     hints: hints,
@@ -885,7 +885,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be minimumd.</param>
@@ -893,7 +893,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(string tableName,
+        public object Min(string tableName,
             Field field,
             QueryField where = null,
             string hints = null,
@@ -905,7 +905,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum(tableName: tableName,
+                return connection.Min(tableName: tableName,
                     field: field,
                     where: where,
                     hints: hints,
@@ -927,7 +927,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be minimumd.</param>
@@ -935,7 +935,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(string tableName,
+        public object Min(string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -947,7 +947,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum(tableName: tableName,
+                return connection.Min(tableName: tableName,
                     field: field,
                     where: where,
                     hints: hints,
@@ -969,7 +969,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be minimumd.</param>
@@ -977,7 +977,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(string tableName,
+        public object Min(string tableName,
             Field field,
             QueryGroup where = null,
             string hints = null,
@@ -989,7 +989,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Minimum(tableName: tableName,
+                return connection.Min(tableName: tableName,
                     field: field,
                     hints: hints,
                     where: where,
@@ -1012,10 +1012,10 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumAsync(TableName)
+        #region MinAsync(TableName)
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be minimumd.</param>
@@ -1023,7 +1023,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync(string tableName,
+        public async Task<object> MinAsync(string tableName,
             Field field,
             object where = null,
             string hints = null,
@@ -1035,7 +1035,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync(tableName: tableName,
+                return await connection.MinAsync(tableName: tableName,
                     field: field,
                     where: where,
                     hints: hints,
@@ -1057,7 +1057,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be minimumd.</param>
@@ -1065,7 +1065,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync(string tableName,
+        public async Task<object> MinAsync(string tableName,
             Field field,
             QueryField where = null,
             string hints = null,
@@ -1077,7 +1077,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync(tableName: tableName,
+                return await connection.MinAsync(tableName: tableName,
                     field: field,
                     where: where,
                     hints: hints,
@@ -1099,7 +1099,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be minimumd.</param>
@@ -1107,7 +1107,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync(string tableName,
+        public async Task<object> MinAsync(string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -1119,7 +1119,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync(tableName: tableName,
+                return await connection.MinAsync(tableName: tableName,
                     field: field,
                     where: where,
                     hints: hints,
@@ -1141,7 +1141,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be minimumd.</param>
@@ -1149,7 +1149,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public async Task<object> MinimumAsync(string tableName,
+        public async Task<object> MinAsync(string tableName,
             Field field,
             QueryGroup where = null,
             string hints = null,
@@ -1161,7 +1161,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MinimumAsync(tableName: tableName,
+                return await connection.MinAsync(tableName: tableName,
                     field: field,
                     where: where,
                     hints: hints,

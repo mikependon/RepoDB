@@ -510,7 +510,7 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateMaximum
+        #region CreateMax
 
         /// <summary>
         /// Creates a SQL Statement for maximum operation.
@@ -521,7 +521,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for maximum operation.</returns>
-        public string CreateMaximum(QueryBuilder queryBuilder,
+        public string CreateMax(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -540,8 +540,8 @@ namespace RepoDb.StatementBuilders
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .Maximum()
-                .WriteText("(1) AS [MaximumValue]")
+                .Min()
+                .WriteText("(1) AS [MaxValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
@@ -554,7 +554,7 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateMaximumAll
+        #region CreateMaxAll
 
         /// <summary>
         /// Creates a SQL Statement for maximum-all operation.
@@ -564,7 +564,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for maximum-all operation.</returns>
-        public string CreateMaximumAll(QueryBuilder queryBuilder,
+        public string CreateMaxAll(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             string hints = null)
@@ -582,8 +582,8 @@ namespace RepoDb.StatementBuilders
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .Maximum()
-                .WriteText("(1) AS [MaximumValue]")
+                .Min()
+                .WriteText("(1) AS [MaxValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
@@ -908,7 +908,7 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateMinimum
+        #region CreateMin
 
         /// <summary>
         /// Creates a SQL Statement for minimum operation.
@@ -919,7 +919,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for minimum operation.</returns>
-        public string CreateMinimum(QueryBuilder queryBuilder,
+        public string CreateMin(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -938,8 +938,8 @@ namespace RepoDb.StatementBuilders
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .Minimum()
-                .WriteText("(1) AS [MinimumValue]")
+                .Min()
+                .WriteText("(1) AS [MinValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
@@ -952,7 +952,7 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateMinimumAll
+        #region CreateMinAll
 
         /// <summary>
         /// Creates a SQL Statement for minimum-all operation.
@@ -962,7 +962,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for minimum-all operation.</returns>
-        public string CreateMinimumAll(QueryBuilder queryBuilder,
+        public string CreateMinAll(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             string hints = null)
@@ -980,8 +980,8 @@ namespace RepoDb.StatementBuilders
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .Minimum()
-                .WriteText("(1) AS [MinimumValue]")
+                .Min()
+                .WriteText("(1) AS [MinValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)

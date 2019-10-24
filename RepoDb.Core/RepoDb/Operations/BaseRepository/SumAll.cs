@@ -13,7 +13,7 @@ namespace RepoDb
         #region SumAll<TEntity>
 
         /// <summary>
-        /// Sums the target field from all data of the database table.
+        /// Summarizes the target field from all data of the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
@@ -29,7 +29,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from all data of the database table.
+        /// Summarizes the target field from all data of the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
@@ -49,7 +49,7 @@ namespace RepoDb
         #region SumAllAsync<TEntity>
 
         /// <summary>
-        /// Sums the target field from all data of the database table in an asynchronous way.
+        /// Summarizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
@@ -65,7 +65,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from all data of the database table in an asynchronous way.
+        /// Summarizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>

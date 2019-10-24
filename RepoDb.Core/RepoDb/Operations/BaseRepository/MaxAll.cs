@@ -10,72 +10,72 @@ namespace RepoDb
     /// </summary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region MinimumAll<TEntity>
+        #region MaxAll<TEntity>
 
         /// <summary>
-        /// Extracts the minimum value of the target field from all data of the database table.
+        /// Maximizes the target field from all data of the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The minimum value.</returns>
-        public object MinimumAll(Field field,
+        /// <returns>The maximum value.</returns>
+        public object MaxAll(Field field,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAll<TEntity>(field: field,
+            return DbRepository.MaxAll<TEntity>(field: field,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from all data of the database table.
+        /// Maximizes the target field from all data of the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The minimum value.</returns>
-        public object MinimumAll(Expression<Func<TEntity, object>> field,
+        /// <returns>The maximum value.</returns>
+        public object MaxAll(Expression<Func<TEntity, object>> field,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAll<TEntity>(field: field,
+            return DbRepository.MaxAll<TEntity>(field: field,
                 hints: hints,
                 transaction: transaction);
         }
 
         #endregion
 
-        #region MinimumAllAsync<TEntity>
+        #region MaxAllAsync<TEntity>
 
         /// <summary>
-        /// Extracts the minimum value of the target field from all data of the database table in an asynchronous way.
+        /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public Task<object> MinimumAllAsync(Field field,
+        public Task<object> MaxAllAsync(Field field,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAllAsync<TEntity>(field: field,
+            return DbRepository.MaxAllAsync<TEntity>(field: field,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from all data of the database table in an asynchronous way.
+        /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public Task<object> MinimumAllAsync(Expression<Func<TEntity, object>> field,
+        public Task<object> MaxAllAsync(Expression<Func<TEntity, object>> field,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAllAsync<TEntity>(field: field,
+            return DbRepository.MaxAllAsync<TEntity>(field: field,
                 hints: hints,
                 transaction: transaction);
         }

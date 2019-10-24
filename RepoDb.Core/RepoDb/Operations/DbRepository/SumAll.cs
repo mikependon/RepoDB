@@ -14,7 +14,7 @@ namespace RepoDb
         #region SumAll<TEntity>
 
         /// <summary>
-        /// Sums all the number of data from the database table.
+        /// Summarizes all the number of data from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -52,7 +52,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums all the number of data from the database table.
+        /// Summarizes all the number of data from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -94,7 +94,7 @@ namespace RepoDb
         #region SumAllAsync<TEntity>
 
         /// <summary>
-        /// Sums all the number of data from the database table in an asynchronous way.
+        /// Summarizes all the number of data from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -132,7 +132,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums all the number of data from the database table in an asynchronous way.
+        /// Summarizes all the number of data from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -174,7 +174,7 @@ namespace RepoDb
         #region SumAll(TableName)
 
         /// <summary>
-        /// Sums all the number of data from the database table.
+        /// Summarizes all the number of data from the database table.
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -217,7 +217,7 @@ namespace RepoDb
         #region SumAllAsync(TableName)
 
         /// <summary>
-        /// Sums all the number of data from the database table in an asynchronous way.
+        /// Summarizes all the number of data from the database table in an asynchronous way.
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>

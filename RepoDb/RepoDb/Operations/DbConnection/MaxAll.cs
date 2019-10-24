@@ -13,21 +13,21 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region MinimumAll<TEntity>
+        #region MaxAll<TEntity>
 
         /// <summary>
-        /// Extracts the minimum value of the target field from all data of the database table.
+        /// Maximizes the target field from all data of the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long MinimumAll<TEntity>(this IDbConnection connection,
+        public static long MaxAll<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -36,7 +36,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAllInternal<TEntity>(connection: connection,
+            return MaxAllInternal<TEntity>(connection: connection,
                 field: field,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -46,18 +46,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from all data of the database table.
+        /// Maximizes the target field from all data of the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long MinimumAll<TEntity>(this IDbConnection connection,
+        public static long MaxAll<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -66,7 +66,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAllInternal<TEntity>(connection: connection,
+            return MaxAllInternal<TEntity>(connection: connection,
                 field: Field.Parse<TEntity>(field),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -76,18 +76,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from all data of the database table.
+        /// Maximizes the target field from all data of the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MinimumAllInternal<TEntity>(this IDbConnection connection,
+        internal static long MaxAllInternal<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -97,7 +97,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new MinimumAllRequest(typeof(TEntity),
+            var request = new MaxAllRequest(typeof(TEntity),
                 connection,
                 transaction,
                 field,
@@ -106,7 +106,7 @@ namespace RepoDb
             var param = (object)null;
 
             // Return the result
-            return MinimumAllInternalBase(connection: connection,
+            return MaxAllInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -116,21 +116,21 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumAllAsync<TEntity>
+        #region MaxAllAsync<TEntity>
 
         /// <summary>
-        /// MinimumAlls the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MaxAllAsync<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -139,7 +139,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAllAsyncInternal<TEntity>(connection: connection,
+            return MaxAllAsyncInternal<TEntity>(connection: connection,
                 field: field,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -149,18 +149,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// MinimumAlls the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> MaxAllAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -169,7 +169,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinimumAllAsyncInternal<TEntity>(connection: connection,
+            return MaxAllAsyncInternal<TEntity>(connection: connection,
                 field: Field.Parse<TEntity>(field),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -179,18 +179,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// MinimumAlls the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> MinimumAllAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static Task<long> MaxAllAsyncInternal<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -200,7 +200,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var request = new MinimumAllRequest(typeof(TEntity),
+            var request = new MaxAllRequest(typeof(TEntity),
                 connection,
                 transaction,
                 field,
@@ -209,7 +209,7 @@ namespace RepoDb
             var param = (object)null;
 
             // Return the result
-            return MinimumAllInternalAsyncBase(connection: connection,
+            return MaxAllInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -219,21 +219,21 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumAll(TableName)
+        #region MaxAll(TableName)
 
         /// <summary>
-        /// Extracts the minimum value of the target field from all data of the database table.
+        /// Maximizes the target field from all data of the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long MinimumAll(this IDbConnection connection,
+        public static long MaxAll(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -242,7 +242,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinimumAllInternal(connection: connection,
+            return MaxAllInternal(connection: connection,
                 tableName: tableName,
                 field: field,
                 hints: hints,
@@ -253,18 +253,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Extracts the minimum value of the target field from all data of the database table.
+        /// Maximizes the target field from all data of the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MinimumAllInternal(this IDbConnection connection,
+        internal static long MaxAllInternal(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -274,17 +274,17 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new MinimumAllRequest(tableName,
+            var request = new MaxAllRequest(tableName,
                 connection,
                 transaction,
                 field,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetMinimumAllText(request);
+            var commandText = CommandTextCache.GetMaxAllText(request);
             var param = (object)null;
 
             // Return the result
-            return MinimumAllInternalBase(connection: connection,
+            return MaxAllInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -294,21 +294,21 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumAllAsync(TableName)
+        #region MaxAllAsync(TableName)
 
         /// <summary>
-        /// MinimumAlls the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinimumAllAsync(this IDbConnection connection,
+        public static Task<long> MaxAllAsync(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -317,7 +317,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinimumAllAsyncInternal(connection: connection,
+            return MaxAllAsyncInternal(connection: connection,
                 tableName: tableName,
                 field: field,
                 hints: hints,
@@ -328,18 +328,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// MinimumAlls the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> MinimumAllAsyncInternal(this IDbConnection connection,
+        internal static Task<long> MaxAllAsyncInternal(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -349,17 +349,17 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             // Variables
-            var request = new MinimumAllRequest(tableName,
+            var request = new MaxAllRequest(tableName,
                 connection,
                 transaction,
                 field,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetMinimumAllText(request);
+            var commandText = CommandTextCache.GetMaxAllText(request);
             var param = (object)null;
 
             // Return the result
-            return MinimumAllInternalAsyncBase(connection: connection,
+            return MaxAllInternalAsyncBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -369,37 +369,37 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumAllerInternalBase
+        #region MaxAllerInternalBase
 
         /// <summary>
-        /// Extracts the minimum value of the target field from all data of the database table.
+        /// Maximizes the target field from all data of the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="MinimumAllRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="MaxAllRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MinimumAllInternalBase(this IDbConnection connection,
-            MinimumAllRequest request,
+        internal static long MaxAllInternalBase(this IDbConnection connection,
+            MaxAllRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateMinimumAll(connection);
+            InvokeValidatorValidateMaxAll(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetMinimumAllText(request);
+            var commandText = CommandTextCache.GetMaxAllText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeMinimumAll(cancellableTraceLog);
+                trace.BeforeMaxAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -427,7 +427,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterMinimumAll(new TraceLog(commandText, param, result,
+                trace.AfterMaxAll(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -437,37 +437,37 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumAllAsyncInternalBase
+        #region MaxAllAsyncInternalBase
 
         /// <summary>
-        /// MinimumAlls the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="request">The actual <see cref="MinimumAllRequest"/> object.</param>
+        /// <param name="request">The actual <see cref="MaxAllRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static async Task<long> MinimumAllInternalAsyncBase(this IDbConnection connection,
-            MinimumAllRequest request,
+        internal static async Task<long> MaxAllInternalAsyncBase(this IDbConnection connection,
+            MaxAllRequest request,
             object param,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Validate
-            InvokeValidatorValidateMinimumAllAsync(connection);
+            InvokeValidatorValidateMaxAllAsync(connection);
 
             // Variables
             var commandType = CommandType.Text;
-            var commandText = CommandTextCache.GetMinimumAllText(request);
+            var commandText = CommandTextCache.GetMaxAllText(request);
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
-                trace.BeforeMinimumAll(cancellableTraceLog);
+                trace.BeforeMaxAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -495,7 +495,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterMinimumAll(new TraceLog(commandText, param, result,
+                trace.AfterMaxAll(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -508,21 +508,21 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateMinimumAll"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateMaxAll"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateMinimumAll(IDbConnection connection)
+        private static void InvokeValidatorValidateMaxAll(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateMinimumAll();
+            connection.GetDbValidator()?.ValidateMaxAll();
         }
 
         /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateMinimumAllAsync"/> method.
+        /// Invokes the <see cref="IDbValidator.ValidateMaxAllAsync"/> method.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateMinimumAllAsync(IDbConnection connection)
+        private static void InvokeValidatorValidateMaxAllAsync(IDbConnection connection)
         {
-            connection.GetDbValidator()?.ValidateMinimumAllAsync();
+            connection.GetDbValidator()?.ValidateMaxAllAsync();
         }
 
         #endregion

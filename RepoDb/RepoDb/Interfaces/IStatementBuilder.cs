@@ -170,7 +170,7 @@ namespace RepoDb.Interfaces
 
         #endregion
 
-        #region CreateMaximum
+        #region CreateMax
 
         /// <summary>
         /// Creates a SQL Statement for maximum operation.
@@ -181,7 +181,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for maximum operation.</returns>
-        string CreateMaximum(QueryBuilder queryBuilder,
+        string CreateMax(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -189,7 +189,7 @@ namespace RepoDb.Interfaces
 
         #endregion
 
-        #region CreateMaximumAll
+        #region CreateMaxAll
 
         /// <summary>
         /// Creates a SQL Statement for maximum-all operation.
@@ -199,7 +199,7 @@ namespace RepoDb.Interfaces
         /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for maximum-all operation.</returns>
-        string CreateMaximumAll(QueryBuilder queryBuilder,
+        string CreateMaxAll(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             string hints = null);
@@ -250,7 +250,7 @@ namespace RepoDb.Interfaces
 
         #endregion
 
-        #region CreateMinimum
+        #region CreateMin
 
         /// <summary>
         /// Creates a SQL Statement for minimum operation.
@@ -261,7 +261,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for minimum operation.</returns>
-        string CreateMinimum(QueryBuilder queryBuilder,
+        string CreateMin(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -269,7 +269,7 @@ namespace RepoDb.Interfaces
 
         #endregion
 
-        #region CreateMinimumAll
+        #region CreateMinAll
 
         /// <summary>
         /// Creates a SQL Statement for minimum-all operation.
@@ -279,7 +279,7 @@ namespace RepoDb.Interfaces
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for minimum-all operation.</returns>
-        string CreateMinimumAll(QueryBuilder queryBuilder,
+        string CreateMinAll(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             string hints = null);

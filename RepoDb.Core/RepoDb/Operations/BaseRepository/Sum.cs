@@ -14,7 +14,7 @@ namespace RepoDb
         #region Sum<TEntity>
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
@@ -33,7 +33,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -52,7 +52,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -71,7 +71,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -90,7 +90,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -109,7 +109,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
@@ -128,7 +128,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -147,7 +147,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -166,7 +166,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -185,7 +185,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -208,7 +208,7 @@ namespace RepoDb
         #region SumAsync<TEntity>
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
@@ -227,7 +227,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -246,7 +246,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -265,7 +265,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -284,7 +284,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -303,7 +303,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
@@ -322,7 +322,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -341,7 +341,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -360,7 +360,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -379,7 +379,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>

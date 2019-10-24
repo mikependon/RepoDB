@@ -11,193 +11,193 @@ namespace RepoDb
     /// </summary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region Minimum<TEntity>
+        #region Min<TEntity>
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(Field field,
+        public object Min(Field field,
             object where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Minimum<TEntity>(field: field,
+            return DbRepository.Min<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(Field field,
+        public object Min(Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Minimum<TEntity>(field: field,
+            return DbRepository.Min<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(Field field,
+        public object Min(Field field,
             QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Minimum<TEntity>(field: field,
+            return DbRepository.Min<TEntity>(field: field,
                 where: where,
                 transaction: transaction,
                 hints: hints);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(Field field,
+        public object Min(Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Minimum<TEntity>(field: field,
+            return DbRepository.Min<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(Field field,
+        public object Min(Field field,
             QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Minimum<TEntity>(field: field,
+            return DbRepository.Min<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(Expression<Func<TEntity, object>> field,
+        public object Min(Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Minimum<TEntity>(field: field,
+            return DbRepository.Min<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(Expression<Func<TEntity, object>> field,
+        public object Min(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Minimum<TEntity>(field: field,
+            return DbRepository.Min<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(Expression<Func<TEntity, object>> field,
+        public object Min(Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Minimum<TEntity>(field: field,
+            return DbRepository.Min<TEntity>(field: field,
                 where: where,
                 transaction: transaction,
                 hints: hints);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(Expression<Func<TEntity, object>> field,
+        public object Min(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Minimum<TEntity>(field: field,
+            return DbRepository.Min<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public object Minimum(Expression<Func<TEntity, object>> field,
+        public object Min(Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Minimum<TEntity>(field: field,
+            return DbRepository.Min<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
@@ -205,193 +205,193 @@ namespace RepoDb
 
         #endregion
 
-        #region MinimumAsync<TEntity>
+        #region MinAsync<TEntity>
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public Task<object> MinimumAsync(Field field,
+        public Task<object> MinAsync(Field field,
             object where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAsync<TEntity>(field: field,
+            return DbRepository.MinAsync<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public Task<object> MinimumAsync(Field field,
+        public Task<object> MinAsync(Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAsync<TEntity>(field: field,
+            return DbRepository.MinAsync<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public Task<object> MinimumAsync(Field field,
+        public Task<object> MinAsync(Field field,
             QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAsync<TEntity>(field: field,
+            return DbRepository.MinAsync<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public Task<object> MinimumAsync(Field field,
+        public Task<object> MinAsync(Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAsync<TEntity>(field: field,
+            return DbRepository.MinAsync<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public Task<object> MinimumAsync(Field field,
+        public Task<object> MinAsync(Field field,
             QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAsync<TEntity>(field: field,
+            return DbRepository.MinAsync<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public Task<object> MinimumAsync(Expression<Func<TEntity, object>> field,
+        public Task<object> MinAsync(Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAsync<TEntity>(field: field,
+            return DbRepository.MinAsync<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public Task<object> MinimumAsync(Expression<Func<TEntity, object>> field,
+        public Task<object> MinAsync(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAsync<TEntity>(field: field,
+            return DbRepository.MinAsync<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public Task<object> MinimumAsync(Expression<Func<TEntity, object>> field,
+        public Task<object> MinAsync(Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAsync<TEntity>(field: field,
+            return DbRepository.MinAsync<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public Task<object> MinimumAsync(Expression<Func<TEntity, object>> field,
+        public Task<object> MinAsync(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAsync<TEntity>(field: field,
+            return DbRepository.MinAsync<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Minimums the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
-        public Task<object> MinimumAsync(Expression<Func<TEntity, object>> field,
+        public Task<object> MinAsync(Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.MinimumAsync<TEntity>(field: field,
+            return DbRepository.MinAsync<TEntity>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);

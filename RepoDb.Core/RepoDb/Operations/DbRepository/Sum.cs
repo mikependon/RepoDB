@@ -15,7 +15,7 @@ namespace RepoDb
         #region Sum<TEntity>
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -56,7 +56,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -97,7 +97,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -138,7 +138,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -179,7 +179,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -220,7 +220,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -261,7 +261,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -302,7 +302,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -343,7 +343,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -384,7 +384,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -429,7 +429,7 @@ namespace RepoDb
         #region SumAsync<TEntity>
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -470,7 +470,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -511,7 +511,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -552,7 +552,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -593,7 +593,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -634,7 +634,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -675,7 +675,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -716,7 +716,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -757,7 +757,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -798,7 +798,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be sumd.</param>
@@ -843,7 +843,7 @@ namespace RepoDb
         #region Sum(TableName)
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
@@ -885,7 +885,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
@@ -927,7 +927,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
@@ -969,7 +969,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table.
+        /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
@@ -1015,7 +1015,7 @@ namespace RepoDb
         #region SumAsync(TableName)
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
@@ -1057,7 +1057,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
@@ -1099,7 +1099,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
@@ -1141,7 +1141,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Sums the target field from the database table in an asynchronous way.
+        /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>

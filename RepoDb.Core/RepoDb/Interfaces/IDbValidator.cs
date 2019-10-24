@@ -147,31 +147,31 @@ namespace RepoDb.Interfaces
 
         #endregion
 
-        #region Maximum
+        #region Max
 
         /// <summary>
-        /// Validates the Maximum extended method of the <see cref="DbConnection"/> object.
+        /// Validates the Max extended method of the <see cref="DbConnection"/> object.
         /// </summary>
-        void ValidateMaximum();
+        void ValidateMax();
 
         /// <summary>
-        /// Validates the MaximumAsync extended method of the <see cref="DbConnection"/> object.
+        /// Validates the MaxAsync extended method of the <see cref="DbConnection"/> object.
         /// </summary>
-        void ValidateMaximumAsync();
+        void ValidateMaxAsync();
 
         #endregion
 
-        #region MaximumAll
+        #region MaxAll
 
         /// <summary>
-        /// Validates the MaximumAll extended method of the <see cref="DbConnection"/> object.
+        /// Validates the MaxAll extended method of the <see cref="DbConnection"/> object.
         /// </summary>
-        void ValidateMaximumAll();
+        void ValidateMaxAll();
 
         /// <summary>
-        /// Validates the MaximumAllAsync extended method of the <see cref="DbConnection"/> object.
+        /// Validates the MaxAllAsync extended method of the <see cref="DbConnection"/> object.
         /// </summary>
-        void ValidateMaximumAllAsync();
+        void ValidateMaxAllAsync();
 
         #endregion
 
@@ -203,31 +203,31 @@ namespace RepoDb.Interfaces
 
         #endregion
 
-        #region Minimum
+        #region Min
 
         /// <summary>
-        /// Validates the Minimum extended method of the <see cref="DbConnection"/> object.
+        /// Validates the Min extended method of the <see cref="DbConnection"/> object.
         /// </summary>
-        void ValidateMinimum();
+        void ValidateMin();
 
         /// <summary>
-        /// Validates the MinimumAsync extended method of the <see cref="DbConnection"/> object.
+        /// Validates the MinAsync extended method of the <see cref="DbConnection"/> object.
         /// </summary>
-        void ValidateMinimumAsync();
+        void ValidateMinAsync();
 
         #endregion
 
-        #region MinimumAll
+        #region MinAll
 
         /// <summary>
-        /// Validates the MinimumAll extended method of the <see cref="DbConnection"/> object.
+        /// Validates the MinAll extended method of the <see cref="DbConnection"/> object.
         /// </summary>
-        void ValidateMinimumAll();
+        void ValidateMinAll();
 
         /// <summary>
-        /// Validates the MinimumAllAsync extended method of the <see cref="DbConnection"/> object.
+        /// Validates the MinAllAsync extended method of the <see cref="DbConnection"/> object.
         /// </summary>
-        void ValidateMinimumAllAsync();
+        void ValidateMinAllAsync();
 
         #endregion
 

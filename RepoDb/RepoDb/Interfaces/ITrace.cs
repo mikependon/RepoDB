@@ -232,35 +232,35 @@
 
         #endregion
 
-        #region Maximum
+        #region Max
 
         /// <summary>
         /// A method being raised before the actual maximum operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the maximum execution.</param>
-        void BeforeMaximum(CancellableTraceLog log);
+        void BeforeMax(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised after the actual maximum operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the maximum execution.</param>
-        void AfterMaximum(TraceLog log);
+        void AfterMax(TraceLog log);
 
         #endregion
 
-        #region MaximumAll
+        #region MaxAll
 
         /// <summary>
         /// A method being raised before the actual maximum-all operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the maximum-all execution.</param>
-        void BeforeMaximumAll(CancellableTraceLog log);
+        void BeforeMaxAll(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised after the actual maximum-all operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the maximum-all execution.</param>
-        void AfterMaximumAll(TraceLog log);
+        void AfterMaxAll(TraceLog log);
 
         #endregion
 
@@ -296,35 +296,35 @@
 
         #endregion
 
-        #region Minimum
+        #region Min
 
         /// <summary>
         /// A method being raised before the actual minimum operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the minimum execution.</param>
-        void BeforeMinimum(CancellableTraceLog log);
+        void BeforeMin(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised after the actual minimum operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the minimum execution.</param>
-        void AfterMinimum(TraceLog log);
+        void AfterMin(TraceLog log);
 
         #endregion
 
-        #region MinimumAll
+        #region MinAll
 
         /// <summary>
         /// A method being raised before the actual minimum-all operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the minimum-all execution.</param>
-        void BeforeMinimumAll(CancellableTraceLog log);
+        void BeforeMinAll(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised after the actual minimum-all operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the minimum-all execution.</param>
-        void AfterMinimumAll(TraceLog log);
+        void AfterMinAll(TraceLog log);
 
         #endregion
 

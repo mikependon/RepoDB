@@ -123,7 +123,7 @@ namespace RepoDb
         /// Appends a word MIN to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Minimum()
+        public QueryBuilder Min()
         {
             return Append("MIN");
         }
@@ -132,7 +132,7 @@ namespace RepoDb
         /// Appends a word MAX to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Maximum()
+        public QueryBuilder Max()
         {
             return Append("AVG");
         }
@@ -804,15 +804,6 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Appends a word MAX to the SQL Query Statement.
-        /// </summary>
-        /// <returns>The current instance.</returns>
-        public QueryBuilder Max()
-        {
-            return Append("MAX");
-        }
-
-        /// <summary>
         /// Appends a word MAX and the field to the SQL Query Statement, otherwise an empty string.
         /// </summary>
         /// <param name="field">The target field.</param>
@@ -820,15 +811,6 @@ namespace RepoDb
         public QueryBuilder MaxFrom(Field field)
         {
             return field != null ? Append(string.Concat("MAX(", field.Name, ")")) : this;
-        }
-
-        /// <summary>
-        /// Appends a word MIN to the SQL Query Statement.
-        /// </summary>
-        /// <returns>The current instance.</returns>
-        public QueryBuilder Min()
-        {
-            return Append("MIN");
         }
 
         /// <summary>

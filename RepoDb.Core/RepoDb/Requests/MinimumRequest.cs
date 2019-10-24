@@ -7,12 +7,12 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the minimum operation arguments.
     /// </summary>
-    internal class MinimumRequest : BaseRequest, IEquatable<MinimumRequest>
+    internal class MinRequest : BaseRequest, IEquatable<MinRequest>
     {
         private int? m_hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <see cref="MinimumRequest"/> object.
+        /// Creates a new instance of <see cref="MinRequest"/> object.
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
@@ -21,7 +21,7 @@ namespace RepoDb.Requests
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public MinimumRequest(Type type,
+        public MinRequest(Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             Field field = null,
@@ -40,7 +40,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="MinimumRequest"/> object.
+        /// Creates a new instance of <see cref="MinRequest"/> object.
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
@@ -49,7 +49,7 @@ namespace RepoDb.Requests
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public MinimumRequest(string name,
+        public MinRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
             Field field = null,
@@ -84,7 +84,7 @@ namespace RepoDb.Requests
         #region Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <see cref="MinimumRequest"/>.
+        /// Returns the hashcode for this <see cref="MinRequest"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -96,7 +96,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".Minimum").GetHashCode();
+            var hashCode = string.Concat(Name, ".Min").GetHashCode();
 
             // Add the field
             if (Field != null)
@@ -121,7 +121,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <see cref="MinimumRequest"/> object equality against the given target object.
+        /// Compares the <see cref="MinRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -131,22 +131,22 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <see cref="MinimumRequest"/> object equality against the given target object.
+        /// Compares the <see cref="MinRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(MinimumRequest other)
+        public bool Equals(MinRequest other)
         {
             return other?.GetHashCode() == GetHashCode();
         }
 
         /// <summary>
-        /// Compares the equality of the two <see cref="MinimumRequest"/> objects.
+        /// Compares the equality of the two <see cref="MinRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="MinimumRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="MinimumRequest"/> object.</param>
+        /// <param name="objA">The first <see cref="MinRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="MinRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(MinimumRequest objA, MinimumRequest objB)
+        public static bool operator ==(MinRequest objA, MinRequest objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -156,12 +156,12 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the inequality of the two <see cref="MinimumRequest"/> objects.
+        /// Compares the inequality of the two <see cref="MinRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="MinimumRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="MinimumRequest"/> object.</param>
+        /// <param name="objA">The first <see cref="MinRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="MinRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(MinimumRequest objA, MinimumRequest objB)
+        public static bool operator !=(MinRequest objA, MinRequest objB)
         {
             return (objA == objB) == false;
         }

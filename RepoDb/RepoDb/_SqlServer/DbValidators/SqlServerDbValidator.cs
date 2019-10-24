@@ -148,31 +148,31 @@ namespace RepoDb.DbValidators
 
         #endregion
 
-        #region Maximum
+        #region Max
 
         /// <summary>
-        /// Validates the Maximum extended method of the <see cref="SqlConnection"/> object.
+        /// Validates the Max extended method of the <see cref="SqlConnection"/> object.
         /// </summary>
-        public void ValidateMaximum() { /* This is supported. */ }
+        public void ValidateMax() { /* This is supported. */ }
 
         /// <summary>
-        /// Validates the MaximumAsync extended method of the <see cref="SqlConnection"/> object.
+        /// Validates the MaxAsync extended method of the <see cref="SqlConnection"/> object.
         /// </summary>
-        public void ValidateMaximumAsync() { /* This is supported. */ }
+        public void ValidateMaxAsync() { /* This is supported. */ }
 
         #endregion
 
-        #region MaximumAll
+        #region MaxAll
 
         /// <summary>
-        /// Validates the MaximumAll extended method of the <see cref="SqlConnection"/> object.
+        /// Validates the MaxAll extended method of the <see cref="SqlConnection"/> object.
         /// </summary>
-        public void ValidateMaximumAll() { /* This is supported. */ }
+        public void ValidateMaxAll() { /* This is supported. */ }
 
         /// <summary>
-        /// Validates the MaximumAllAsync extended method of the <see cref="SqlConnection"/> object.
+        /// Validates the MaxAllAsync extended method of the <see cref="SqlConnection"/> object.
         /// </summary>
-        public void ValidateMaximumAllAsync() { /* This is supported. */ }
+        public void ValidateMaxAllAsync() { /* This is supported. */ }
 
         #endregion
 
@@ -204,31 +204,31 @@ namespace RepoDb.DbValidators
 
         #endregion
 
-        #region Minimum
+        #region Min
 
         /// <summary>
-        /// Validates the Minimum extended method of the <see cref="SqlConnection"/> object.
+        /// Validates the Min extended method of the <see cref="SqlConnection"/> object.
         /// </summary>
-        public void ValidateMinimum() { /* This is supported. */ }
+        public void ValidateMin() { /* This is supported. */ }
 
         /// <summary>
-        /// Validates the MinimumAsync extended method of the <see cref="SqlConnection"/> object.
+        /// Validates the MinAsync extended method of the <see cref="SqlConnection"/> object.
         /// </summary>
-        public void ValidateMinimumAsync() { /* This is supported. */ }
+        public void ValidateMinAsync() { /* This is supported. */ }
 
         #endregion
 
-        #region MinimumAll
+        #region MinAll
 
         /// <summary>
-        /// Validates the MinimumAll extended method of the <see cref="SqlConnection"/> object.
+        /// Validates the MinAll extended method of the <see cref="SqlConnection"/> object.
         /// </summary>
-        public void ValidateMinimumAll() { /* This is supported. */ }
+        public void ValidateMinAll() { /* This is supported. */ }
 
         /// <summary>
-        /// Validates the MinimumAllAsync extended method of the <see cref="SqlConnection"/> object.
+        /// Validates the MinAllAsync extended method of the <see cref="SqlConnection"/> object.
         /// </summary>
-        public void ValidateMinimumAllAsync() { /* This is supported. */ }
+        public void ValidateMinAllAsync() { /* This is supported. */ }
 
         #endregion
 
