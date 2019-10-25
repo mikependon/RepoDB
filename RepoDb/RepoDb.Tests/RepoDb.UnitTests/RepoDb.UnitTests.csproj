@@ -96,6 +96,8 @@
     <Compile Include="Interfaces\ICacheForBaseRepositoryTest.cs" />
     <Compile Include="Interfaces\ICacheForDbConnectionTest.cs" />
     <Compile Include="Interfaces\ICacheForDbRepositoryTest.cs" />
+    <Compile Include="Interfaces\IDbValidatorForBaseRepository.cs" />
+    <Compile Include="Interfaces\IDbValidatorForDbRepository.cs" />
     <Compile Include="Interfaces\IDbValidatorForDbConnection.cs" />
     <Compile Include="Interfaces\IStatementBuilderForBaseRepositoryTest.cs" />
     <Compile Include="Interfaces\IStatementBuilderForDbConnectionTest.cs" />

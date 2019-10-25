@@ -30,8 +30,6 @@ namespace RepoDb.UnitTests.Interfaces
             public string Name { get; set; }
         }
 
-        private class DbValidatorCustomDbOperation : CustomDbOperation { }
-
         #endregion
 
         #region Sync

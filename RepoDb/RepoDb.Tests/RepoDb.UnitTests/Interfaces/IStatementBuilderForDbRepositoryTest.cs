@@ -24,70 +24,60 @@ namespace RepoDb.UnitTests.Interfaces
 
         private class StatementBuilderEntity
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
         private class StatementBuilderEntityForTableName
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
         private class StatementBuilderEntityForCrossCall
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
         private class StatementBuilderEntityT1
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
         private class StatementBuilderEntityT2
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
         private class StatementBuilderEntityT3
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
         private class StatementBuilderEntityT4
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
         private class StatementBuilderEntityT5
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
         private class StatementBuilderEntityT6
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
         private class StatementBuilderEntityT7
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }

@@ -7,7 +7,7 @@ using RepoDb.UnitTests.CustomObjects;
 namespace RepoDb.UnitTests.Interfaces
 {
     [TestClass]
-    public class IDbValidatorForDbConnection
+    public class IDbValidatorForDbRepository
     {
         private static Mock<IDbValidator> validator = new Mock<IDbValidator>();
 
@@ -30,6 +30,8 @@ namespace RepoDb.UnitTests.Interfaces
             public string Name { get; set; }
         }
 
+        private class DbValidatorCustomDbOperation : CustomDbOperation { }
+
         #endregion
 
         #region Sync
@@ -40,12 +42,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForAverageViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Average<DbValidatorEntity>(field: e => e.Id,
+            repository.Average<DbValidatorEntity>(field: e => e.Id,
                 where: (object)null);
 
             // Assert
@@ -56,12 +58,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForAverageViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Average(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.Average(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"),
                 where: (object)null);
 
@@ -77,12 +79,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForAverageAllViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.AverageAll<DbValidatorEntity>(field: e => e.Id);
+            repository.AverageAll<DbValidatorEntity>(field: e => e.Id);
 
             // Assert
             validator.Verify(t => t.ValidateAverageAll(), Times.Exactly(1));
@@ -92,12 +94,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForAverageViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.AverageAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.AverageAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"));
 
             // Assert
@@ -112,12 +114,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBatchQueryViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.BatchQuery<DbValidatorEntity>(page: 0,
+            repository.BatchQuery<DbValidatorEntity>(page: 0,
                 rowsPerBatch: 10,
                 where: (object)null,
                 orderBy: OrderField.Parse(new { Id = Order.Ascending }));
@@ -130,12 +132,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBatchQueryViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.BatchQuery(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.BatchQuery(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 page: 0,
                 rowsPerBatch: 10,
                 where: (object)null,
@@ -153,13 +155,13 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBulkInsertViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var entities = new[] { new DbValidatorEntity() };
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.BulkInsert<DbValidatorEntity>(entities);
+            repository.BulkInsert<DbValidatorEntity>(entities);
 
             // Assert
             validator.Verify(t => t.ValidateBulkInsert(), Times.Exactly(1));
@@ -169,7 +171,7 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBulkInsertViaDataEntityAsDataReader()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var entities = new[] { new DbValidatorEntity() };
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
@@ -177,7 +179,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             using (var reader = new DataEntityDataReader<DbValidatorEntity>(entities))
             {
-                connection.BulkInsert<DbValidatorEntity>(reader);
+                repository.BulkInsert<DbValidatorEntity>(reader);
             }
 
             // Assert
@@ -188,13 +190,13 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBulkInsertViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var entities = new[] { new DbValidatorEntity() };
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.BulkInsert(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.BulkInsert(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 entities);
 
             // Assert
@@ -205,7 +207,7 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBulkInsertViaTableNameAsDataReader()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var entities = new[] { new DbValidatorEntity() };
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
@@ -213,7 +215,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             using (var reader = new DataEntityDataReader<DbValidatorEntity>(entities))
             {
-                connection.BulkInsert(ClassMappedNameCache.Get<DbValidatorEntity>(),
+                repository.BulkInsert(ClassMappedNameCache.Get<DbValidatorEntity>(),
                     reader);
             }
 
@@ -229,12 +231,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForCountViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Count<DbValidatorEntity>(where: e => e.Id == 1);
+            repository.Count<DbValidatorEntity>(where: e => e.Id == 1);
 
             // Assert
             validator.Verify(t => t.ValidateCount(), Times.Exactly(1));
@@ -244,12 +246,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForCountViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Count(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.Count(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 where: new { Id = 1 });
 
             // Assert
@@ -264,12 +266,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForCountAllViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.CountAll<DbValidatorEntity>();
+            repository.CountAll<DbValidatorEntity>();
 
             // Assert
             validator.Verify(t => t.ValidateCountAll(), Times.Exactly(1));
@@ -279,12 +281,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForCountViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.CountAll(ClassMappedNameCache.Get<DbValidatorEntity>());
+            repository.CountAll(ClassMappedNameCache.Get<DbValidatorEntity>());
 
             // Assert
             validator.Verify(t => t.ValidateCountAll(), Times.Exactly(1));
@@ -298,12 +300,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForDeleteViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Delete<DbValidatorEntity>(where: e => e.Id == 1);
+            repository.Delete<DbValidatorEntity>(where: e => e.Id == 1);
 
             // Assert
             validator.Verify(t => t.ValidateDelete(), Times.Exactly(1));
@@ -313,12 +315,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForDeleteViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Delete(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.Delete(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 where: new { Id = 1 });
 
             // Assert
@@ -333,12 +335,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForDeleteAllViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.DeleteAll<DbValidatorEntity>();
+            repository.DeleteAll<DbValidatorEntity>();
 
             // Assert
             validator.Verify(t => t.ValidateDeleteAll(), Times.Exactly(1));
@@ -348,12 +350,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForDeleteViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.DeleteAll(ClassMappedNameCache.Get<DbValidatorEntity>());
+            repository.DeleteAll(ClassMappedNameCache.Get<DbValidatorEntity>());
 
             // Assert
             validator.Verify(t => t.ValidateDeleteAll(), Times.Exactly(1));
@@ -367,12 +369,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForInsertViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Insert<DbValidatorEntity>(new DbValidatorEntity());
+            repository.Insert<DbValidatorEntity>(new DbValidatorEntity());
 
             // Assert
             validator.Verify(t => t.ValidateInsert(), Times.Exactly(1));
@@ -382,12 +384,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForInsertViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Insert(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.Insert(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new DbValidatorEntity());
 
             // Assert
@@ -402,12 +404,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForInsertAllViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.InsertAll<DbValidatorEntity>(new[] { new DbValidatorEntity() });
+            repository.InsertAll<DbValidatorEntity>(new[] { new DbValidatorEntity() });
 
             // Assert
             validator.Verify(t => t.ValidateInsertAll(), Times.Exactly(1));
@@ -417,12 +419,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForInsertViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.InsertAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.InsertAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new[] { new DbValidatorEntity() });
 
             // Assert
@@ -437,12 +439,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMaxViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Max<DbValidatorEntity>(field: e => e.Id,
+            repository.Max<DbValidatorEntity>(field: e => e.Id,
                 where: (object)null);
 
             // Assert
@@ -453,12 +455,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMaxViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Max(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.Max(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"),
                 where: (object)null);
 
@@ -474,12 +476,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMaxAllViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MaxAll<DbValidatorEntity>(field: e => e.Id);
+            repository.MaxAll<DbValidatorEntity>(field: e => e.Id);
 
             // Assert
             validator.Verify(t => t.ValidateMaxAll(), Times.Exactly(1));
@@ -489,12 +491,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMaxViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MaxAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.MaxAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"));
 
             // Assert
@@ -509,12 +511,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMergeViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Merge<DbValidatorEntity>(new DbValidatorEntity());
+            repository.Merge<DbValidatorEntity>(new DbValidatorEntity());
 
             // Assert
             validator.Verify(t => t.ValidateMerge(), Times.Exactly(1));
@@ -524,12 +526,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMergeViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Merge(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.Merge(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new DbValidatorEntity());
 
             // Assert
@@ -544,12 +546,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMergeAllViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MergeAll<DbValidatorEntity>(new[] { new DbValidatorEntity() });
+            repository.MergeAll<DbValidatorEntity>(new[] { new DbValidatorEntity() });
 
             // Assert
             validator.Verify(t => t.ValidateMergeAll(), Times.Exactly(1));
@@ -559,12 +561,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMergeViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MergeAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.MergeAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new[] { new DbValidatorEntity() });
 
             // Assert
@@ -579,12 +581,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMinViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Min<DbValidatorEntity>(field: e => e.Id,
+            repository.Min<DbValidatorEntity>(field: e => e.Id,
                 where: (object)null);
 
             // Assert
@@ -595,12 +597,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMinViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Min(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.Min(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"),
                 where: (object)null);
 
@@ -616,12 +618,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMinAllViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MinAll<DbValidatorEntity>(field: e => e.Id);
+            repository.MinAll<DbValidatorEntity>(field: e => e.Id);
 
             // Assert
             validator.Verify(t => t.ValidateMinAll(), Times.Exactly(1));
@@ -631,12 +633,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMinViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MinAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.MinAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"));
 
             // Assert
@@ -651,12 +653,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Query<DbValidatorEntity>(where: e => e.Id == 1);
+            repository.Query<DbValidatorEntity>(where: e => e.Id == 1);
 
             // Assert
             validator.Verify(t => t.ValidateQuery(), Times.Exactly(1));
@@ -666,12 +668,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Query(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.Query(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 whereOrPrimaryKey: new { Id = 1 });
 
             // Assert
@@ -686,12 +688,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryAllViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryAll<DbValidatorEntity>();
+            repository.QueryAll<DbValidatorEntity>();
 
             // Assert
             validator.Verify(t => t.ValidateQueryAll(), Times.Exactly(1));
@@ -701,12 +703,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryAll(ClassMappedNameCache.Get<DbValidatorEntity>());
+            repository.QueryAll(ClassMappedNameCache.Get<DbValidatorEntity>());
 
             // Assert
             validator.Verify(t => t.ValidateQueryAll(), Times.Exactly(1));
@@ -720,12 +722,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleT2()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultiple<DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
+            repository.QueryMultiple<DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2);
 
             // Assert
@@ -736,12 +738,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleT3()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultiple<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
+            repository.QueryMultiple<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2,
                 e => e.Id == 2);
 
@@ -753,12 +755,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleT4()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultiple<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
+            repository.QueryMultiple<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
                 DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2,
                 e => e.Id == 2,
@@ -772,12 +774,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleT5()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultiple<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
+            repository.QueryMultiple<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
                 DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2,
                 e => e.Id == 2,
@@ -792,12 +794,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleT6()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultiple<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
+            repository.QueryMultiple<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
                 DbValidatorEntity, DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2,
                 e => e.Id == 2,
@@ -813,12 +815,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleT7()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultiple<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
+            repository.QueryMultiple<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
                 DbValidatorEntity, DbValidatorEntity, DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2,
                 e => e.Id == 2,
@@ -839,12 +841,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForSumViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Sum<DbValidatorEntity>(field: e => e.Id,
+            repository.Sum<DbValidatorEntity>(field: e => e.Id,
                 where: (object)null);
 
             // Assert
@@ -855,12 +857,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForSumViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Sum(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.Sum(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"),
                 where: (object)null);
 
@@ -876,12 +878,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForSumAllViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.SumAll<DbValidatorEntity>(field: e => e.Id);
+            repository.SumAll<DbValidatorEntity>(field: e => e.Id);
 
             // Assert
             validator.Verify(t => t.ValidateSumAll(), Times.Exactly(1));
@@ -891,12 +893,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForSumViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.SumAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.SumAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"));
 
             // Assert
@@ -911,12 +913,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForTruncateViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Truncate<DbValidatorEntity>();
+            repository.Truncate<DbValidatorEntity>();
 
             // Assert
             validator.Verify(t => t.ValidateTruncate(), Times.Exactly(1));
@@ -926,12 +928,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForTruncateViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Truncate(ClassMappedNameCache.Get<DbValidatorEntity>());
+            repository.Truncate(ClassMappedNameCache.Get<DbValidatorEntity>());
 
             // Assert
             validator.Verify(t => t.ValidateTruncate(), Times.Exactly(1));
@@ -945,12 +947,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForUpdateViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Update<DbValidatorEntity>(new DbValidatorEntity(),
+            repository.Update<DbValidatorEntity>(new DbValidatorEntity(),
                 where: e => e.Id == 1);
 
             // Assert
@@ -961,12 +963,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForUpdateViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.Update(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.Update(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new DbValidatorEntity());
 
             // Assert
@@ -981,12 +983,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForUpdateAllViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.UpdateAll<DbValidatorEntity>(new[] { new DbValidatorEntity() });
+            repository.UpdateAll<DbValidatorEntity>(new[] { new DbValidatorEntity() });
 
             // Assert
             validator.Verify(t => t.ValidateUpdateAll(), Times.Exactly(1));
@@ -996,12 +998,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForUpdateViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.UpdateAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.UpdateAll(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new[] { new DbValidatorEntity() });
 
             // Assert
@@ -1020,12 +1022,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForAverageAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.AverageAsync<DbValidatorEntity>(field: e => e.Id,
+            repository.AverageAsync<DbValidatorEntity>(field: e => e.Id,
                 where: (object)null).Wait();
 
             // Assert
@@ -1036,12 +1038,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForAverageAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.AverageAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.AverageAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"),
                 where: (object)null).Wait();
 
@@ -1057,12 +1059,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForAverageAllAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.AverageAllAsync<DbValidatorEntity>(field: e => e.Id).Wait();
+            repository.AverageAllAsync<DbValidatorEntity>(field: e => e.Id).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateAverageAllAsync(), Times.Exactly(1));
@@ -1072,12 +1074,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForAverageAsyncViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.AverageAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.AverageAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id")).Wait();
 
             // Assert
@@ -1092,12 +1094,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBatchQueryAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.BatchQueryAsync<DbValidatorEntity>(page: 0,
+            repository.BatchQueryAsync<DbValidatorEntity>(page: 0,
                 rowsPerBatch: 10,
                 where: (object)null,
                 orderBy: OrderField.Parse(new { Id = Order.Ascending })).Wait();
@@ -1110,12 +1112,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBatchQueryAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.BatchQueryAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.BatchQueryAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 page: 0,
                 rowsPerBatch: 10,
                 where: (object)null,
@@ -1133,13 +1135,13 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBulkInsertAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var entities = new[] { new DbValidatorEntity() };
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.BulkInsertAsync<DbValidatorEntity>(entities).Wait();
+            repository.BulkInsertAsync<DbValidatorEntity>(entities).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateBulkInsertAsync(), Times.Exactly(1));
@@ -1149,7 +1151,7 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBulkInsertAsyncViaDataEntityAsDataReader()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var entities = new[] { new DbValidatorEntity() };
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
@@ -1157,7 +1159,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             using (var reader = new DataEntityDataReader<DbValidatorEntity>(entities))
             {
-                connection.BulkInsertAsync<DbValidatorEntity>(reader).Wait();
+                repository.BulkInsertAsync<DbValidatorEntity>(reader).Wait();
             }
 
             // Assert
@@ -1168,13 +1170,13 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBulkInsertAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var entities = new[] { new DbValidatorEntity() };
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.BulkInsertAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.BulkInsertAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 entities).Wait();
 
             // Assert
@@ -1185,7 +1187,7 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForBulkInsertAsyncViaTableNameAsDataReader()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var entities = new[] { new DbValidatorEntity() };
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
@@ -1193,7 +1195,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             using (var reader = new DataEntityDataReader<DbValidatorEntity>(entities))
             {
-                connection.BulkInsertAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+                repository.BulkInsertAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                     reader).Wait();
             }
 
@@ -1209,12 +1211,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForCountAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.CountAsync<DbValidatorEntity>(where: e => e.Id == 1).Wait();
+            repository.CountAsync<DbValidatorEntity>(where: e => e.Id == 1).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateCountAsync(), Times.Exactly(1));
@@ -1224,12 +1226,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForCountAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.CountAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.CountAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 where: new { Id = 1 }).Wait();
 
             // Assert
@@ -1244,12 +1246,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForCountAllAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.CountAllAsync<DbValidatorEntity>().Wait();
+            repository.CountAllAsync<DbValidatorEntity>().Wait();
 
             // Assert
             validator.Verify(t => t.ValidateCountAllAsync(), Times.Exactly(1));
@@ -1259,12 +1261,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForCountAsyncViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.CountAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>()).Wait();
+            repository.CountAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>()).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateCountAllAsync(), Times.Exactly(1));
@@ -1278,12 +1280,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForDeleteAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.DeleteAsync<DbValidatorEntity>(where: e => e.Id == 1).Wait();
+            repository.DeleteAsync<DbValidatorEntity>(where: e => e.Id == 1).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateDeleteAsync(), Times.Exactly(1));
@@ -1293,12 +1295,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForDeleteAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.DeleteAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.DeleteAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 where: new { Id = 1 }).Wait();
 
             // Assert
@@ -1313,12 +1315,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForDeleteAllAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.DeleteAllAsync<DbValidatorEntity>().Wait();
+            repository.DeleteAllAsync<DbValidatorEntity>().Wait();
 
             // Assert
             validator.Verify(t => t.ValidateDeleteAllAsync(), Times.Exactly(1));
@@ -1328,12 +1330,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForDeleteAsyncViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.DeleteAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>()).Wait();
+            repository.DeleteAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>()).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateDeleteAllAsync(), Times.Exactly(1));
@@ -1347,12 +1349,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForInsertAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.InsertAsync<DbValidatorEntity>(new DbValidatorEntity()).Wait();
+            repository.InsertAsync<DbValidatorEntity>(new DbValidatorEntity()).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateInsertAsync(), Times.Exactly(1));
@@ -1362,12 +1364,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForInsertAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.InsertAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.InsertAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new DbValidatorEntity()).Wait();
 
             // Assert
@@ -1382,12 +1384,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForInsertAllAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.InsertAllAsync<DbValidatorEntity>(new[] { new DbValidatorEntity() }).Wait();
+            repository.InsertAllAsync<DbValidatorEntity>(new[] { new DbValidatorEntity() }).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateInsertAllAsync(), Times.Exactly(1));
@@ -1397,12 +1399,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForInsertAsyncViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.InsertAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.InsertAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new[] { new DbValidatorEntity() }).Wait();
 
             // Assert
@@ -1417,12 +1419,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMaxAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MaxAsync<DbValidatorEntity>(field: e => e.Id,
+            repository.MaxAsync<DbValidatorEntity>(field: e => e.Id,
                 where: (object)null).Wait();
 
             // Assert
@@ -1433,12 +1435,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMaxAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MaxAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.MaxAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"),
                 where: (object)null).Wait();
 
@@ -1454,12 +1456,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMaxAllAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MaxAllAsync<DbValidatorEntity>(field: e => e.Id).Wait();
+            repository.MaxAllAsync<DbValidatorEntity>(field: e => e.Id).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateMaxAllAsync(), Times.Exactly(1));
@@ -1469,12 +1471,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMaxAsyncViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MaxAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.MaxAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id")).Wait();
 
             // Assert
@@ -1489,12 +1491,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMergeAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MergeAsync<DbValidatorEntity>(new DbValidatorEntity()).Wait();
+            repository.MergeAsync<DbValidatorEntity>(new DbValidatorEntity()).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateMergeAsync(), Times.Exactly(1));
@@ -1504,12 +1506,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMergeAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MergeAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.MergeAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new DbValidatorEntity()).Wait();
 
             // Assert
@@ -1524,12 +1526,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMergeAllAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MergeAllAsync<DbValidatorEntity>(new[] { new DbValidatorEntity() }).Wait();
+            repository.MergeAllAsync<DbValidatorEntity>(new[] { new DbValidatorEntity() }).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateMergeAllAsync(), Times.Exactly(1));
@@ -1539,12 +1541,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMergeAsyncViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MergeAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.MergeAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new[] { new DbValidatorEntity() }).Wait();
 
             // Assert
@@ -1559,12 +1561,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMinAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MinAsync<DbValidatorEntity>(field: e => e.Id,
+            repository.MinAsync<DbValidatorEntity>(field: e => e.Id,
                 where: (object)null).Wait();
 
             // Assert
@@ -1575,12 +1577,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMinAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MinAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.MinAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"),
                 where: (object)null).Wait();
 
@@ -1596,12 +1598,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMinAllAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MinAllAsync<DbValidatorEntity>(field: e => e.Id).Wait();
+            repository.MinAllAsync<DbValidatorEntity>(field: e => e.Id).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateMinAllAsync(), Times.Exactly(1));
@@ -1611,12 +1613,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForMinAsyncViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.MinAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.MinAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id")).Wait();
 
             // Assert
@@ -1631,12 +1633,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryAsync<DbValidatorEntity>(where: e => e.Id == 1).Wait();
+            repository.QueryAsync<DbValidatorEntity>(where: e => e.Id == 1).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateQueryAsync(), Times.Exactly(1));
@@ -1646,12 +1648,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.QueryAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 whereOrPrimaryKey: new { Id = 1 }).Wait();
 
             // Assert
@@ -1666,12 +1668,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryAllAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryAllAsync<DbValidatorEntity>().Wait();
+            repository.QueryAllAsync<DbValidatorEntity>().Wait();
 
             // Assert
             validator.Verify(t => t.ValidateQueryAllAsync(), Times.Exactly(1));
@@ -1681,12 +1683,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryAsyncViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>()).Wait();
+            repository.QueryAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>()).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateQueryAllAsync(), Times.Exactly(1));
@@ -1700,12 +1702,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleAsyncT2()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
+            repository.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2).Wait();
 
             // Assert
@@ -1716,12 +1718,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleAsyncT3()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
+            repository.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2,
                 e => e.Id == 2).Wait();
 
@@ -1733,12 +1735,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleAsyncT4()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
+            repository.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
                 DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2,
                 e => e.Id == 2,
@@ -1752,12 +1754,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleAsyncT5()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
+            repository.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
                 DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2,
                 e => e.Id == 2,
@@ -1772,12 +1774,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleAsyncT6()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
+            repository.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
                 DbValidatorEntity, DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2,
                 e => e.Id == 2,
@@ -1793,12 +1795,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForQueryMultipleAsyncT7()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
+            repository.QueryMultipleAsync<DbValidatorEntity, DbValidatorEntity, DbValidatorEntity,
                 DbValidatorEntity, DbValidatorEntity, DbValidatorEntity, DbValidatorEntity>(e => e.Id == 1,
                 e => e.Id == 2,
                 e => e.Id == 2,
@@ -1819,12 +1821,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForSumAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.SumAsync<DbValidatorEntity>(field: e => e.Id,
+            repository.SumAsync<DbValidatorEntity>(field: e => e.Id,
                 where: (object)null).Wait();
 
             // Assert
@@ -1835,12 +1837,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForSumAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.SumAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.SumAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id"),
                 where: (object)null).Wait();
 
@@ -1856,12 +1858,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForSumAllAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.SumAllAsync<DbValidatorEntity>(field: e => e.Id).Wait();
+            repository.SumAllAsync<DbValidatorEntity>(field: e => e.Id).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateSumAllAsync(), Times.Exactly(1));
@@ -1871,12 +1873,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForSumAsyncViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.SumAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.SumAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 field: new Field("Id")).Wait();
 
             // Assert
@@ -1891,12 +1893,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForTruncateAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.TruncateAsync<DbValidatorEntity>().Wait();
+            repository.TruncateAsync<DbValidatorEntity>().Wait();
 
             // Assert
             validator.Verify(t => t.ValidateTruncateAsync(), Times.Exactly(1));
@@ -1906,12 +1908,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForTruncateAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.TruncateAsync(ClassMappedNameCache.Get<DbValidatorEntity>()).Wait();
+            repository.TruncateAsync(ClassMappedNameCache.Get<DbValidatorEntity>()).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateTruncateAsync(), Times.Exactly(1));
@@ -1925,12 +1927,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForUpdateAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.UpdateAsync<DbValidatorEntity>(new DbValidatorEntity(),
+            repository.UpdateAsync<DbValidatorEntity>(new DbValidatorEntity(),
                 where: e => e.Id == 1).Wait();
 
             // Assert
@@ -1941,12 +1943,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForUpdateAsyncViaTableName()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.UpdateAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.UpdateAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new DbValidatorEntity()).Wait();
 
             // Assert
@@ -1961,12 +1963,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForUpdateAllAsyncViaDataEntity()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.UpdateAllAsync<DbValidatorEntity>(new[] { new DbValidatorEntity() }).Wait();
+            repository.UpdateAllAsync<DbValidatorEntity>(new[] { new DbValidatorEntity() }).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateUpdateAllAsync(), Times.Exactly(1));
@@ -1976,12 +1978,12 @@ namespace RepoDb.UnitTests.Interfaces
         public void TestDbConnectionDbValidatorForUpdateAsyncViaTableNameAll()
         {
             // Prepare
-            var connection = new DbValidatorDbConnection();
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
             var validator = new Mock<IDbValidator>();
             DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
 
             // Act
-            connection.UpdateAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+            repository.UpdateAllAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
                 new[] { new DbValidatorEntity() }).Wait();
 
             // Assert

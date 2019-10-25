@@ -24,7 +24,6 @@ namespace RepoDb.UnitTests.Interfaces
 
         private class StatementBuilderEntity
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
