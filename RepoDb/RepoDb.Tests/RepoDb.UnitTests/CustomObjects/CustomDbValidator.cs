@@ -1,6 +1,6 @@
 ﻿using RepoDb.Interfaces;
 
-namespace RepoDb.UnitTests.Setup
+namespace RepoDb.UnitTests.CustomObjects
 {
     public class CustomDbValidator : IDbValidator
     {

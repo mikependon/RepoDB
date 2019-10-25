@@ -1,11 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
-using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
-using RepoDb.UnitTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,22 +16,22 @@ namespace RepoDb.UnitTests.Interfaces
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add(typeof(CustomDbConnectionForBaseRepositoryICache), Helper.DbSetting, true);
-            DbValidatorMapper.Add(typeof(CustomDbConnectionForBaseRepositoryICache), Helper.DbValidator, true);
+            DbSettingMapper.Add(typeof(CacheDbConnection), new CustomDbSetting(), true);
+            DbValidatorMapper.Add(typeof(CacheDbConnection), new CustomDbValidator(), true);
+            StatementBuilderMapper.Add(typeof(CacheDbConnection), new CustomStatementBuilder(), true);
         }
 
         #region SubClasses
 
-        private class CustomDbConnectionForBaseRepositoryICache : CustomDbConnection { }
+        private class CacheDbConnection : CustomDbConnection { }
 
         private class CacheEntity
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        private class CacheEntityRepository : BaseRepository<CacheEntity, CustomDbConnectionForBaseRepositoryICache>
+        private class CacheEntityRepository : BaseRepository<CacheEntity, CacheDbConnection>
         {
             public CacheEntityRepository(ICache cache, int cacheItemExpiration)
                 : base("ConnectionString",
@@ -42,8 +39,7 @@ namespace RepoDb.UnitTests.Interfaces
                       ConnectionPersistency.PerCall,
                       cache,
                       cacheItemExpiration,
-                      null,
-                      Helper.StatementBuilder)
+                      null)
             { }
         }
 

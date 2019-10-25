@@ -96,6 +96,7 @@
     <Compile Include="Interfaces\ICacheForBaseRepositoryTest.cs" />
     <Compile Include="Interfaces\ICacheForDbConnectionTest.cs" />
     <Compile Include="Interfaces\ICacheForDbRepositoryTest.cs" />
+    <Compile Include="Interfaces\IDbValidatorForDbConnection.cs" />
     <Compile Include="Interfaces\IStatementBuilderForBaseRepositoryTest.cs" />
     <Compile Include="Interfaces\IStatementBuilderForDbConnectionTest.cs" />
     <Compile Include="Interfaces\IStatementBuilderForDbRepositoryTest.cs" />
@@ -130,9 +131,11 @@
     <Compile Include="Resolvers\ClientTypeToDbTypeResolverTest.cs" />
     <Compile Include="Resolvers\DbTypeToSqlServerStringNameResolverTest.cs" />
     <Compile Include="Resolvers\SqlServerTypeNameToClientTypeResolverTest.cs" />
-    <Compile Include="Setup\CustomDbSetting.cs" />
-    <Compile Include="Setup\CustomDbValidator.cs" />
-    <Compile Include="Setup\Helper.cs" />
+    <Compile Include="CustomObjects\CustomDbHelper.cs" />
+    <Compile Include="CustomObjects\CustomDbOperation.cs" />
+    <Compile Include="CustomObjects\CustomDbSetting.cs" />
+    <Compile Include="CustomObjects\CustomDbValidator.cs" />
+    <Compile Include="CustomObjects\CustomStatementBuilder.cs" />
     <Compile Include="SqlServer\StatementBuilders\CreateBatchQueryTest.cs" />
     <Compile Include="SqlServer\StatementBuilders\CreateCountAllTest.cs" />
     <Compile Include="SqlServer\StatementBuilders\CreateCountTest.cs" />

@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.StatementBuilders;
-using RepoDb.UnitTests.Setup;
 using System;
+using System.Data.SqlClient;
 
 namespace RepoDb.UnitTests.StatementBuilders
 {
@@ -12,7 +11,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateDeleteAll()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
@@ -29,7 +28,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateDeleteAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
 
@@ -46,7 +45,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateDeleteAllWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
 
@@ -63,7 +62,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateDeleteAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
 
@@ -76,7 +75,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateDeleteAllIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "";
 
@@ -89,7 +88,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateDeleteAllIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
 

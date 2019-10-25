@@ -1,9 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
-using RepoDb.StatementBuilders;
-using RepoDb.UnitTests.Setup;
 using System;
+using System.Data.SqlClient;
 
 namespace RepoDb.UnitTests.StatementBuilders
 {
@@ -14,7 +13,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateBatchQueryFirstBatch()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -47,7 +46,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateBatchQuerySecondBatch()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -80,7 +79,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateBatchQueryWithHints()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -114,7 +113,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateBatchQueryWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -147,7 +146,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateBatchQueryWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -180,7 +179,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateBatchQueryWithWhereExpression()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -215,7 +214,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestSqlStatementBuilderCreateBatchQueryWithWhereExpressionUniqueField()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -250,7 +249,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -269,7 +268,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -288,7 +287,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -307,7 +306,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheFieldsAreNull()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -326,7 +325,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfThereAreNoOrderFields()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -345,7 +344,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfThePageIsLessThanZero()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -365,7 +364,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheRowsPerBatchIsLessThanOne()
         {
             // Setup
-            var statementBuilder = Helper.StatementBuilder;
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });

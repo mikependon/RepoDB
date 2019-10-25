@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.UnitTests.Setup;
 using System.Linq;
 
 namespace RepoDb.UnitTests

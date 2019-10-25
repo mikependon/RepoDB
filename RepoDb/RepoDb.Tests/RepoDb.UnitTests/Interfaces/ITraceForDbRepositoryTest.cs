@@ -4,115 +4,30 @@ using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
-using RepoDb.UnitTests.Setup;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace RepoDb.UnitTests.Interfaces
 {
     [TestClass]
     public class ITraceForDbRepositoryTest
     {
-        private readonly IStatementBuilder m_statementBuilder = Helper.StatementBuilder;
-
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            DbSettingMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), Helper.DbSetting, true);
-            DbValidatorMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), Helper.DbValidator, true);
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), new DbRepositoryCustomDbHelper(), true);
-            DbOperationMapper.Add(typeof(CustomDbConnectionForDbRepositoryITrace), new DbRepositoryCustomDbOperationProvider(), true);
+            DbSettingMapper.Add(typeof(TraceDbConnection), new CustomDbSetting(), true);
+            DbValidatorMapper.Add(typeof(TraceDbConnection), new CustomDbValidator(), true);
+            DbOperationMapper.Add(typeof(TraceDbConnection), new CustomDbOperation(), true);
+            DbHelperMapper.Add(typeof(TraceDbConnection), new CustomDbHelper(), true);
+            StatementBuilderMapper.Add(typeof(TraceDbConnection), new CustomStatementBuilder(), true);
         }
 
         #region SubClasses
 
-        private class CustomDbConnectionForDbRepositoryITrace : CustomDbConnection { }
+        private class TraceDbConnection : CustomDbConnection { }
 
         private class TraceEntity
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
-        }
-
-        private class DbRepositoryCustomDbHelper : IDbHelper
-        {
-            public IResolver<string, Type> DbTypeResolver { get; set; }
-
-            public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection
-            {
-                return new[]
-                {
-                    new DbField("Id", true, true, false, typeof(int), null, null, null, null),
-                    new DbField("Name", false, false, true, typeof(string), null, null, null, null)
-                };
-            }
-
-            public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection
-            {
-                return Task.FromResult<IEnumerable<DbField>>(new[]
-                {
-                    new DbField("Id", true, true, false, typeof(int), null, null, null, null),
-                    new DbField("Name", false, false, true, typeof(string), null, null, null, null)
-                });
-            }
-        }
-
-        private class DbRepositoryCustomDbOperationProvider : IDbOperation
-        {
-            public int BulkInsert<TEntity>(IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return 1;
-            }
-
-            public int BulkInsert<TEntity>(IDbConnection connection, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return 1;
-            }
-
-            public int BulkInsert(IDbConnection connection, string tableName, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
-            {
-                return 1;
-            }
-
-            public int BulkInsert<TEntity>(IDbConnection connection, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return 1;
-            }
-
-            public int BulkInsert(IDbConnection connection, string tableName, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
-            {
-                return 1;
-            }
-
-            public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return Task.FromResult(1);
-            }
-
-            public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return Task.FromResult(1);
-            }
-
-            public Task<int> BulkInsertAsync(IDbConnection connection, string tableName, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
-            {
-                return Task.FromResult(1);
-            }
-
-            public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return Task.FromResult(1);
-            }
-
-            public Task<int> BulkInsertAsync(IDbConnection connection, string tableName, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
-            {
-                return Task.FromResult(1);
-            }
         }
 
         #endregion
@@ -126,12 +41,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Average<TraceEntity>(e => e.Id,
@@ -146,12 +60,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Average<TraceEntity>(e => e.Id,
@@ -166,12 +79,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Average(ClassMappedNameCache.Get<TraceEntity>(),
@@ -187,12 +99,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Average(ClassMappedNameCache.Get<TraceEntity>(),
@@ -212,12 +123,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAsync<TraceEntity>(e => e.Id,
@@ -232,12 +142,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAsync<TraceEntity>(e => e.Id,
@@ -252,12 +161,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -273,12 +181,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -302,12 +209,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAll<TraceEntity>(e => e.Id);
@@ -321,12 +227,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAll<TraceEntity>(e => e.Id);
@@ -340,12 +245,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -360,12 +264,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -384,12 +287,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAllAsync<TraceEntity>(e => e.Id).Wait();
@@ -403,12 +305,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAllAsync<TraceEntity>(e => e.Id).Wait();
@@ -422,12 +323,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -442,12 +342,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -470,12 +369,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.BatchQuery<TraceEntity>(0,
@@ -492,12 +390,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.BatchQuery<TraceEntity>(0,
@@ -518,12 +415,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.BatchQueryAsync<TraceEntity>(0,
@@ -540,12 +436,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.BatchQueryAsync<TraceEntity>(0,
@@ -570,7 +465,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 trace.Object);
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
@@ -586,7 +481,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 trace.Object);
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
@@ -606,7 +501,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 trace.Object);
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
@@ -622,7 +517,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 trace.Object);
             var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
@@ -646,12 +541,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Count<TraceEntity>((object)null);
@@ -665,12 +559,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Count<TraceEntity>((object)null);
@@ -684,12 +577,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Count(ClassMappedNameCache.Get<TraceEntity>(),
@@ -704,12 +596,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Count(ClassMappedNameCache.Get<TraceEntity>(),
@@ -728,12 +619,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAsync<TraceEntity>((object)null).Wait();
@@ -747,12 +637,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAsync<TraceEntity>((object)null).Wait();
@@ -766,12 +655,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -786,12 +674,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -814,12 +701,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAll<TraceEntity>();
@@ -833,12 +719,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAll<TraceEntity>();
@@ -852,12 +737,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAll(ClassMappedNameCache.Get<TraceEntity>());
@@ -871,12 +755,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAll(ClassMappedNameCache.Get<TraceEntity>());
@@ -894,12 +777,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAllAsync<TraceEntity>().Wait();
@@ -913,12 +795,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAllAsync<TraceEntity>().Wait();
@@ -932,12 +813,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
@@ -951,12 +831,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
@@ -978,12 +857,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Delete<TraceEntity>(0);
@@ -997,12 +875,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Delete<TraceEntity>(0);
@@ -1016,12 +893,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Delete(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 0 });
@@ -1035,12 +911,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Delete(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 0 });
@@ -1058,12 +933,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAsync<TraceEntity>(0).Wait();
@@ -1077,12 +951,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAsync<TraceEntity>(0).Wait();
@@ -1096,12 +969,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 0 }).Wait();
@@ -1115,12 +987,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 0 }).Wait();
@@ -1142,12 +1013,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAll<TraceEntity>();
@@ -1161,12 +1031,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAll<TraceEntity>();
@@ -1180,12 +1049,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAll(ClassMappedNameCache.Get<TraceEntity>());
@@ -1199,12 +1067,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAll(ClassMappedNameCache.Get<TraceEntity>());
@@ -1222,12 +1089,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAllAsync<TraceEntity>().Wait();
@@ -1241,12 +1107,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAllAsync<TraceEntity>().Wait();
@@ -1260,12 +1125,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
@@ -1279,12 +1143,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
@@ -1306,12 +1169,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Insert<TraceEntity>(new TraceEntity { Name = "Name" });
@@ -1325,12 +1187,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Insert<TraceEntity>(new TraceEntity { Name = "Name" });
@@ -1344,12 +1205,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Insert(ClassMappedNameCache.Get<TraceEntity>(), new { Name = "Name" });
@@ -1363,12 +1223,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Insert(ClassMappedNameCache.Get<TraceEntity>(), new { Name = "Name" });
@@ -1386,12 +1245,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAsync<TraceEntity>(new TraceEntity { Name = "Name" }).Wait();
@@ -1405,12 +1263,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAsync<TraceEntity>(new TraceEntity { Name = "Name" }).Wait();
@@ -1424,12 +1281,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Name = "Name" }).Wait();
@@ -1443,12 +1299,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Name = "Name" }).Wait();
@@ -1470,12 +1325,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAll<TraceEntity>(new[] { new TraceEntity { Name = "Name" } });
@@ -1489,12 +1343,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAll<TraceEntity>(new[] { new TraceEntity { Name = "Name" } });
@@ -1508,12 +1361,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1529,12 +1381,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1554,12 +1405,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } }).Wait();
@@ -1573,12 +1423,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } }).Wait();
@@ -1592,12 +1441,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1613,12 +1461,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1642,12 +1489,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Max<TraceEntity>(e => e.Id,
@@ -1662,12 +1508,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Max<TraceEntity>(e => e.Id,
@@ -1682,12 +1527,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Max(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1703,12 +1547,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Max(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1728,12 +1571,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAsync<TraceEntity>(e => e.Id,
@@ -1748,12 +1590,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAsync<TraceEntity>(e => e.Id,
@@ -1768,12 +1609,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1789,12 +1629,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1818,12 +1657,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAll<TraceEntity>(e => e.Id);
@@ -1837,12 +1675,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAll<TraceEntity>(e => e.Id);
@@ -1856,12 +1693,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1876,12 +1712,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1900,12 +1735,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAllAsync<TraceEntity>(e => e.Id).Wait();
@@ -1919,12 +1753,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAllAsync<TraceEntity>(e => e.Id).Wait();
@@ -1938,12 +1771,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1958,12 +1790,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -1986,12 +1817,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Merge<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" });
@@ -2005,12 +1835,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Merge<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" });
@@ -2024,12 +1853,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Merge(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 1, Name = "Name" });
@@ -2043,12 +1871,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Merge(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 1, Name = "Name" });
@@ -2066,12 +1893,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAsync<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" }).Wait();
@@ -2085,12 +1911,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAsync<TraceEntity>(new TraceEntity { Id = 1, Name = "Name" }).Wait();
@@ -2104,12 +1929,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 1, Name = "Name" }).Wait();
@@ -2123,12 +1947,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(), new { Id = 1, Name = "Name" }).Wait();
@@ -2150,12 +1973,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAll<TraceEntity>(new[] { new TraceEntity { Id = 1, Name = "Name" } });
@@ -2169,12 +1991,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAll<TraceEntity>(new[] { new TraceEntity { Id = 1, Name = "Name" } });
@@ -2188,12 +2009,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAll(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } });
@@ -2207,12 +2027,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAll(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } });
@@ -2230,12 +2049,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAllAsync<TraceEntity>(new[] { new TraceEntity { Id = 1, Name = "Name" } }).Wait();
@@ -2249,12 +2067,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAllAsync<TraceEntity>(new[] { new TraceEntity { Id = 1, Name = "Name" } }).Wait();
@@ -2268,12 +2085,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } }).Wait();
@@ -2287,12 +2103,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } }).Wait();
@@ -2314,12 +2129,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Min<TraceEntity>(e => e.Id,
@@ -2334,12 +2148,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Min<TraceEntity>(e => e.Id,
@@ -2354,12 +2167,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Min(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2375,12 +2187,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Min(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2400,12 +2211,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAsync<TraceEntity>(e => e.Id,
@@ -2420,12 +2230,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAsync<TraceEntity>(e => e.Id,
@@ -2440,12 +2249,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2461,12 +2269,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2490,12 +2297,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAll<TraceEntity>(e => e.Id);
@@ -2509,12 +2315,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAll<TraceEntity>(e => e.Id);
@@ -2528,12 +2333,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2548,12 +2352,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2572,12 +2375,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAllAsync<TraceEntity>(e => e.Id).Wait();
@@ -2591,12 +2393,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAllAsync<TraceEntity>(e => e.Id).Wait();
@@ -2610,12 +2411,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2630,12 +2430,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2658,12 +2457,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Query<TraceEntity>(te => te.Id == 1);
@@ -2677,12 +2475,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Query<TraceEntity>(te => te.Id == 1);
@@ -2700,12 +2497,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.QueryAsync<TraceEntity>(te => te.Id == 1).Wait();
@@ -2719,12 +2515,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.QueryAsync<TraceEntity>(te => te.Id == 1).Wait();
@@ -2746,12 +2541,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.QueryAll<TraceEntity>();
@@ -2765,12 +2559,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.QueryAll<TraceEntity>();
@@ -2788,12 +2581,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.QueryAllAsync<TraceEntity>().Wait();
@@ -2807,12 +2599,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.QueryAllAsync<TraceEntity>().Wait();
@@ -2834,12 +2625,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1,
@@ -2854,12 +2644,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1,
@@ -2878,12 +2667,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
@@ -2898,12 +2686,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
@@ -2926,12 +2713,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Sum<TraceEntity>(e => e.Id,
@@ -2946,12 +2732,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Sum<TraceEntity>(e => e.Id,
@@ -2966,12 +2751,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Sum(ClassMappedNameCache.Get<TraceEntity>(),
@@ -2987,12 +2771,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Sum(ClassMappedNameCache.Get<TraceEntity>(),
@@ -3012,12 +2795,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAsync<TraceEntity>(e => e.Id,
@@ -3032,12 +2814,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAsync<TraceEntity>(e => e.Id,
@@ -3052,12 +2833,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -3073,12 +2853,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -3102,12 +2881,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAll<TraceEntity>(e => e.Id);
@@ -3121,12 +2899,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAll<TraceEntity>(e => e.Id);
@@ -3140,12 +2917,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -3160,12 +2936,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAll(ClassMappedNameCache.Get<TraceEntity>(),
@@ -3184,12 +2959,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAllAsync<TraceEntity>(e => e.Id).Wait();
@@ -3203,12 +2977,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAllAsync<TraceEntity>(e => e.Id).Wait();
@@ -3222,12 +2995,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -3242,12 +3014,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -3270,12 +3041,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Truncate<TraceEntity>();
@@ -3289,12 +3059,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Truncate<TraceEntity>();
@@ -3308,12 +3077,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Truncate(ClassMappedNameCache.Get<TraceEntity>());
@@ -3327,12 +3095,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Truncate(ClassMappedNameCache.Get<TraceEntity>());
@@ -3350,12 +3117,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.TruncateAsync<TraceEntity>().Wait();
@@ -3369,12 +3135,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.TruncateAsync<TraceEntity>().Wait();
@@ -3388,12 +3153,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
@@ -3407,12 +3171,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>()).Wait();
@@ -3434,12 +3197,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Update<TraceEntity>(
@@ -3455,12 +3217,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Update<TraceEntity>(
@@ -3476,12 +3237,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Update(ClassMappedNameCache.Get<TraceEntity>(),
@@ -3497,12 +3257,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.Update(ClassMappedNameCache.Get<TraceEntity>(),
@@ -3522,12 +3281,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAsync<TraceEntity>(
@@ -3543,12 +3301,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAsync<TraceEntity>(
@@ -3564,12 +3321,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -3585,12 +3341,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
@@ -3614,12 +3369,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAll<TraceEntity>(new[] { new TraceEntity { Id = 1, Name = "Name" } });
@@ -3633,12 +3387,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAll<TraceEntity>(new[] { new TraceEntity { Id = 1, Name = "Name" } });
@@ -3652,12 +3405,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } });
@@ -3671,12 +3423,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } });
@@ -3694,12 +3445,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAllAsync<TraceEntity>(new[] { new TraceEntity { Id = 1, Name = "Name" } }).Wait();
@@ -3713,12 +3463,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAllAsync<TraceEntity>(new[] { new TraceEntity { Id = 1, Name = "Name" } }).Wait();
@@ -3732,12 +3481,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } }).Wait();
@@ -3751,12 +3499,11 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryITrace>("ConnectionString",
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace.Object,
-                m_statementBuilder);
+                trace.Object);
 
             // Act
             repository.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(), new[] { new { Id = 1, Name = "Name" } }).Wait();

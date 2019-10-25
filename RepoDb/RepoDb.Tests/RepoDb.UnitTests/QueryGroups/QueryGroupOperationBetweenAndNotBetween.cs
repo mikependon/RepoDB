@@ -1,11 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
-using RepoDb.UnitTests.Setup;
+using RepoDb.Interfaces;
+using RepoDb.UnitTests.CustomObjects;
 
 namespace RepoDb.UnitTests
 {
     public partial class QueryGroupTest
     {
+        private IDbSetting m_dbSetting = new CustomDbSetting();
+
         #region Between
 
         [TestMethod]
@@ -15,7 +18,7 @@ namespace RepoDb.UnitTests
             var queryGroup = new QueryGroup(new QueryField("Field1", Operation.Between, new[] { 1, 100 }));
 
             // Act
-            var actual = queryGroup.GetString(Helper.DbSetting);
+            var actual = queryGroup.GetString(m_dbSetting);
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right)";
 
             // Assert
@@ -33,7 +36,7 @@ namespace RepoDb.UnitTests
             });
 
             // Act
-            var actual = queryGroup.GetString(Helper.DbSetting);
+            var actual = queryGroup.GetString(m_dbSetting);
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right AND [Field2] BETWEEN @Field2_Left AND @Field2_Right)";
 
             // Assert
@@ -51,7 +54,7 @@ namespace RepoDb.UnitTests
             });
 
             // Act
-            var actual = queryGroup.GetString(Helper.DbSetting);
+            var actual = queryGroup.GetString(m_dbSetting);
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right AND [Field1] BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
@@ -70,7 +73,7 @@ namespace RepoDb.UnitTests
             Conjunction.Or);
 
             // Act
-            var actual = queryGroup.GetString(Helper.DbSetting);
+            var actual = queryGroup.GetString(m_dbSetting);
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right OR [Field1] BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
@@ -88,7 +91,7 @@ namespace RepoDb.UnitTests
             var queryGroup = new QueryGroup(new QueryField("Field1", Operation.NotBetween, new[] { 1, 100 }));
 
             // Act
-            var actual = queryGroup.GetString(Helper.DbSetting);
+            var actual = queryGroup.GetString(m_dbSetting);
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right)";
 
             // Assert
@@ -106,7 +109,7 @@ namespace RepoDb.UnitTests
             });
 
             // Act
-            var actual = queryGroup.GetString(Helper.DbSetting);
+            var actual = queryGroup.GetString(m_dbSetting);
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right AND [Field2] NOT BETWEEN @Field2_Left AND @Field2_Right)";
 
             // Assert
@@ -124,7 +127,7 @@ namespace RepoDb.UnitTests
             });
 
             // Act
-            var actual = queryGroup.GetString(Helper.DbSetting);
+            var actual = queryGroup.GetString(m_dbSetting);
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right AND [Field1] NOT BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
@@ -143,7 +146,7 @@ namespace RepoDb.UnitTests
             Conjunction.Or);
 
             // Act
-            var actual = queryGroup.GetString(Helper.DbSetting);
+            var actual = queryGroup.GetString(m_dbSetting);
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right OR [Field1] NOT BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert

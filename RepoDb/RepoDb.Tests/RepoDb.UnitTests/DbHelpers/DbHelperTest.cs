@@ -2,9 +2,7 @@
 using Moq;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
-using RepoDb.UnitTests.Setup;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -17,20 +15,20 @@ namespace RepoDb.UnitTests.DbHelpers
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add(typeof(CustomDbConnectionForDbHelper), Helper.DbSetting, true);
-            DbValidatorMapper.Add(typeof(CustomDbConnectionForDbHelper), Helper.DbValidator, true);
-            StatementBuilderMapper.Add(typeof(CustomDbConnectionForDbHelper), Helper.StatementBuilder, true);
+            DbSettingMapper.Add(typeof(DbHelperDbConnection), new CustomDbSetting(), true);
+            DbValidatorMapper.Add(typeof(DbHelperDbConnection), new CustomDbValidator(), true);
+            StatementBuilderMapper.Add(typeof(DbHelperDbConnection), new CustomStatementBuilder(), true);
         }
 
         #region SubClasses
 
-        private class DataEntityForDbHelper
+        private class DbHelperDataEntity
         {
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        private class CustomDbConnectionForDbHelper : CustomDbConnection { }
+        private class DbHelperDbConnection : CustomDbConnection { }
 
         #endregion
 
@@ -54,32 +52,32 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>())
                 ).Returns(GetDbFields());
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.BatchQuery<DataEntityForDbHelper>(0,
+            connection.BatchQuery<DbHelperDataEntity>(0,
                 10,
-                OrderField.Ascending<DataEntityForDbHelper>(e => e.Id).AsEnumerable(),
+                OrderField.Ascending<DbHelperDataEntity>(e => e.Id).AsEnumerable(),
                 e => e.Id == 1);
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -88,21 +86,21 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.Insert<DataEntityForDbHelper>(new DataEntityForDbHelper { Id = 1, Name = "Name" });
+            connection.Insert<DbHelperDataEntity>(new DbHelperDataEntity { Id = 1, Name = "Name" });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -111,21 +109,21 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.InsertAll<DataEntityForDbHelper>(new[] { new DataEntityForDbHelper { Id = 1, Name = "Name" } });
+            connection.InsertAll<DbHelperDataEntity>(new[] { new DbHelperDataEntity { Id = 1, Name = "Name" } });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -134,21 +132,21 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.Merge<DataEntityForDbHelper>(new DataEntityForDbHelper { Id = 1, Name = "Name" });
+            connection.Merge<DbHelperDataEntity>(new DbHelperDataEntity { Id = 1, Name = "Name" });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -157,21 +155,21 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.MergeAll<DataEntityForDbHelper>(new[] { new DataEntityForDbHelper { Id = 1, Name = "Name" } });
+            connection.MergeAll<DbHelperDataEntity>(new[] { new DbHelperDataEntity { Id = 1, Name = "Name" } });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -180,21 +178,21 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.Query<DataEntityForDbHelper>((object)null);
+            connection.Query<DbHelperDataEntity>((object)null);
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -203,21 +201,21 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.QueryAll<DataEntityForDbHelper>();
+            connection.QueryAll<DbHelperDataEntity>();
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -226,21 +224,21 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.Update<DataEntityForDbHelper>(new DataEntityForDbHelper { Id = 1, Name = "Name" });
+            connection.Update<DbHelperDataEntity>(new DbHelperDataEntity { Id = 1, Name = "Name" });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -249,21 +247,21 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.UpdateAll<DataEntityForDbHelper>(new[] { new DataEntityForDbHelper { Id = 1, Name = "Name" } });
+            connection.UpdateAll<DbHelperDataEntity>(new[] { new DbHelperDataEntity { Id = 1, Name = "Name" } });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -276,33 +274,33 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>())
                 ).Returns(GetDbFields());
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.BatchQuery(ClassMappedNameCache.Get<DataEntityForDbHelper>(),
+            connection.BatchQuery(ClassMappedNameCache.Get<DbHelperDataEntity>(),
                 0,
                 10,
-                OrderField.Ascending<DataEntityForDbHelper>(e => e.Id).AsEnumerable(),
+                OrderField.Ascending<DbHelperDataEntity>(e => e.Id).AsEnumerable(),
                 new { Id = 1 });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -311,30 +309,30 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>())
                 ).Returns(GetDbFields());
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.Insert(ClassMappedNameCache.Get<DataEntityForDbHelper>(),
+            connection.Insert(ClassMappedNameCache.Get<DbHelperDataEntity>(),
                 new { Id = 1, Name = "Name" });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -343,30 +341,30 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>())
                 ).Returns(GetDbFields());
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.InsertAll(ClassMappedNameCache.Get<DataEntityForDbHelper>(),
+            connection.InsertAll(ClassMappedNameCache.Get<DbHelperDataEntity>(),
                 new[] { new { Id = 1, Name = "Name" } });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -375,30 +373,30 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>())
                 ).Returns(GetDbFields());
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.Merge(ClassMappedNameCache.Get<DataEntityForDbHelper>(),
+            connection.Merge(ClassMappedNameCache.Get<DbHelperDataEntity>(),
                 new { Id = 1, Name = "Name" });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -407,30 +405,30 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>())
                 ).Returns(GetDbFields());
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.MergeAll(ClassMappedNameCache.Get<DataEntityForDbHelper>(),
-                new[] { new DataEntityForDbHelper { Id = 1, Name = "Name" } });
+            connection.MergeAll(ClassMappedNameCache.Get<DbHelperDataEntity>(),
+                new[] { new DbHelperDataEntity { Id = 1, Name = "Name" } });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -439,30 +437,30 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>())
                 ).Returns(GetDbFields());
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.Query(ClassMappedNameCache.Get<DataEntityForDbHelper>(),
+            connection.Query(ClassMappedNameCache.Get<DbHelperDataEntity>(),
                 (object)null);
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -471,29 +469,29 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>())
                 ).Returns(GetDbFields());
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.QueryAll(ClassMappedNameCache.Get<DataEntityForDbHelper>());
+            connection.QueryAll(ClassMappedNameCache.Get<DbHelperDataEntity>());
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -502,30 +500,30 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>())
                 ).Returns(GetDbFields());
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.Update(ClassMappedNameCache.Get<DataEntityForDbHelper>(),
-                new DataEntityForDbHelper { Id = 1, Name = "Name" });
+            connection.Update(ClassMappedNameCache.Get<DbHelperDataEntity>(),
+                new DbHelperDataEntity { Id = 1, Name = "Name" });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 
@@ -534,30 +532,30 @@ namespace RepoDb.UnitTests.DbHelpers
         {
             // Prepare
             var dbHelper = new Mock<IDbHelper>();
-            var connection = new CustomDbConnectionForDbHelper();
+            var connection = new DbHelperDbConnection();
 
             // Setup
             dbHelper.Setup(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>())
                 ).Returns(GetDbFields());
 
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(CustomDbConnectionForDbHelper), dbHelper.Object, true);
+            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
 
             // Act
-            connection.UpdateAll(ClassMappedNameCache.Get<DataEntityForDbHelper>(),
-                new[] { new DataEntityForDbHelper { Id = 1, Name = "Name" } });
+            connection.UpdateAll(ClassMappedNameCache.Get<DbHelperDataEntity>(),
+                new[] { new DbHelperDataEntity { Id = 1, Name = "Name" } });
 
             // Assert
             dbHelper.Verify(builder =>
                 builder.GetFields(
                     It.Is<IDbConnection>(s => s == connection),
-                    It.Is<string>(s => s == ClassMappedNameCache.Get<DataEntityForDbHelper>()),
+                    It.Is<string>(s => s == ClassMappedNameCache.Get<DbHelperDataEntity>()),
                     It.IsAny<IDbTransaction>()), Times.Exactly(1));
         }
 

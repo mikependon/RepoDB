@@ -1,11 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
-using RepoDb.StatementBuilders;
 using RepoDb.UnitTests.CustomObjects;
-using RepoDb.UnitTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,17 +16,17 @@ namespace RepoDb.UnitTests.Interfaces
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add(typeof(CustomDbConnectionForDbRepositoryICache), Helper.DbSetting, true);
-            DbValidatorMapper.Add(typeof(CustomDbConnectionForDbRepositoryICache), Helper.DbValidator, true);
+            DbSettingMapper.Add(typeof(CacheDbConnection), new CustomDbSetting(), true);
+            DbValidatorMapper.Add(typeof(CacheDbConnection), new CustomDbValidator(), true);
+            StatementBuilderMapper.Add(typeof(CacheDbConnection), new CustomStatementBuilder(), true);
         }
 
         #region SubClasses
 
-        private class CustomDbConnectionForDbRepositoryICache : CustomDbConnection { }
+        private class CacheDbConnection : CustomDbConnection { }
 
         private class CacheEntity
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
@@ -45,13 +42,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             repository.Query<CacheEntity>(where: (QueryGroup)null,
@@ -77,13 +73,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             repository.Query<CacheEntity>((object)null, /* whereOrPrimaryKey */
@@ -109,13 +104,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             repository.Query<CacheEntity>(where: (QueryField)null,
@@ -141,13 +135,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             repository.Query<CacheEntity>(where: (IEnumerable<QueryField>)null,
@@ -173,13 +166,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             repository.Query<CacheEntity>(where: (Expression<Func<CacheEntity, bool>>)null,
@@ -205,13 +197,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             repository.Query<CacheEntity>(where: (QueryGroup)null,
@@ -241,13 +232,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>(where: (QueryGroup)null,
@@ -273,13 +263,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>((object)null, /* whereOrPrimaryKey */
@@ -305,13 +294,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>(where: (QueryField)null,
@@ -337,13 +325,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>(where: (IEnumerable<QueryField>)null,
@@ -369,13 +356,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>(where: (Expression<Func<CacheEntity, bool>>)null,
@@ -401,13 +387,12 @@ namespace RepoDb.UnitTests.Interfaces
             var cache = new Mock<ICache>();
             var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
-            var repository = new DbRepository<CustomDbConnectionForDbRepositoryICache>("ConnectionString",
+            var repository = new DbRepository<CacheDbConnection>("ConnectionString",
                 0,
                 ConnectionPersistency.PerCall,
                 cache.Object,
                 cacheItemExpiration,
-                null,
-                Helper.StatementBuilder);
+                null);
 
             // Act
             var result = repository.QueryAsync<CacheEntity>(where: (QueryGroup)null,

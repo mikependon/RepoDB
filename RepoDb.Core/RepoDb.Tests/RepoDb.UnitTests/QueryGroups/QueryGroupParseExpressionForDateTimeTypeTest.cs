@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.UnitTests.Setup;
 using System;
 
 namespace RepoDb.UnitTests
@@ -12,7 +11,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionDateTimeConstant()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == DateTime.UtcNow).GetString(Helper.DbSetting);
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == DateTime.UtcNow).GetString(m_dbSetting);
             var expected = "([PropertyDateTime] = @PropertyDateTime)";
 
             // Assert
@@ -26,7 +25,7 @@ namespace RepoDb.UnitTests
             var value = DateTime.UtcNow;
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == value).GetString(Helper.DbSetting);
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == value).GetString(m_dbSetting);
             var expected = "([PropertyDateTime] = @PropertyDateTime)";
 
             // Assert
@@ -43,7 +42,7 @@ namespace RepoDb.UnitTests
             };
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == value.PropertyDateTime).GetString(Helper.DbSetting);
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == value.PropertyDateTime).GetString(m_dbSetting);
             var expected = "([PropertyDateTime] = @PropertyDateTime)";
 
             // Assert
@@ -54,7 +53,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionDateTimeMethodCall()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == GetDateTimeValueForParseExpression()).GetString(Helper.DbSetting);
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == GetDateTimeValueForParseExpression()).GetString(m_dbSetting);
             var expected = "([PropertyDateTime] = @PropertyDateTime)";
 
             // Assert
@@ -68,7 +67,7 @@ namespace RepoDb.UnitTests
             var value = GetDateTimeValueForParseExpression();
 
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == value).GetString(Helper.DbSetting);
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == value).GetString(m_dbSetting);
             var expected = "([PropertyDateTime] = @PropertyDateTime)";
 
             // Assert

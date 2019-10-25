@@ -4,13 +4,6 @@ using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
-using RepoDb.UnitTests.Setup;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace RepoDb.UnitTests.Interfaces
 {
@@ -20,117 +13,32 @@ namespace RepoDb.UnitTests.Interfaces
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            DbSettingMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), Helper.DbSetting, true);
-            DbValidatorMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), Helper.DbValidator, true);
-            DbHelperMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), new BaseRepositoryCustomDbHelper(), true);
-            DbOperationMapper.Add(typeof(CustomDbConnectionForBaseRepositoryITrace), new BaseRepositoryCustomDbOperationProvider(), true);
+            DbSettingMapper.Add(typeof(TraceDbConnection), new CustomDbSetting(), true);
+            DbValidatorMapper.Add(typeof(TraceDbConnection), new CustomDbValidator(), true);
+            DbOperationMapper.Add(typeof(TraceDbConnection), new CustomDbOperation(), true);
+            DbHelperMapper.Add(typeof(TraceDbConnection), new CustomDbHelper(), true);
+            StatementBuilderMapper.Add(typeof(TraceDbConnection), new CustomStatementBuilder(), true);
         }
 
         #region SubClasses
 
-        private class CustomDbConnectionForBaseRepositoryITrace : CustomDbConnection { }
+        private class TraceDbConnection : CustomDbConnection { }
 
         private class TraceEntity
         {
-            [Primary, Identity]
             public int Id { get; set; }
             public string Name { get; set; }
         }
 
-        private class TraceEntityRepository : BaseRepository<TraceEntity, CustomDbConnectionForBaseRepositoryITrace>
+        private class TraceEntityRepository : BaseRepository<TraceEntity, TraceDbConnection>
         {
             public TraceEntityRepository(ITrace trace) :
                 base("ConnectionString",
                 0,
                 null,
                 Constant.DefaultCacheItemExpirationInMinutes,
-                trace,
-                Helper.StatementBuilder)
+                trace)
             { }
-        }
-
-        private class BaseRepositoryCustomDbHelper : IDbHelper
-        {
-            public IResolver<string, Type> DbTypeResolver { get; set; }
-
-            public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection
-            {
-                if (tableName == ClassMappedNameCache.Get<TraceEntity>())
-                {
-                    return new[]
-                    {
-                        new DbField("Id", true, true, false, typeof(int), null, null, null, null),
-                        new DbField("Name", false, false, true, typeof(string), null, null, null, null)
-                    };
-                }
-                return null;
-            }
-
-            public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null) where TDbConnection : IDbConnection
-            {
-                if (tableName == ClassMappedNameCache.Get<TraceEntity>())
-                {
-                    return Task.FromResult<IEnumerable<DbField>>(new[]
-                    {
-                        new DbField("Id", true, true, false, typeof(int), null, null, null, null),
-                        new DbField("Name", false, false, true, typeof(string), null, null, null, null)
-                    });
-                }
-                return null;
-            }
-        }
-
-        private class BaseRepositoryCustomDbOperationProvider : IDbOperation
-        {
-            public int BulkInsert<TEntity>(IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return 1;
-            }
-
-            public int BulkInsert<TEntity>(IDbConnection connection, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return 1;
-            }
-
-            public int BulkInsert(IDbConnection connection, string tableName, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
-            {
-                return 1;
-            }
-
-            public int BulkInsert<TEntity>(IDbConnection connection, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return 1;
-            }
-
-            public int BulkInsert(IDbConnection connection, string tableName, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
-            {
-                return 1;
-            }
-
-            public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return Task.FromResult(1);
-            }
-
-            public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return Task.FromResult(1);
-            }
-
-            public Task<int> BulkInsertAsync(IDbConnection connection, string tableName, DbDataReader reader, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
-            {
-                return Task.FromResult(1);
-            }
-
-            public Task<int> BulkInsertAsync<TEntity>(IDbConnection connection, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null) where TEntity : class
-            {
-                return Task.FromResult(1);
-            }
-
-            public Task<int> BulkInsertAsync(IDbConnection connection, string tableName, DataTable dataTable, DataRowState rowState = DataRowState.Unchanged, IEnumerable<BulkInsertMapItem> mappings = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default, int? bulkCopyTimeout = null, int? batchSize = null, IDbTransaction transaction = null)
-            {
-                return Task.FromResult(1);
-            }
         }
 
         #endregion
