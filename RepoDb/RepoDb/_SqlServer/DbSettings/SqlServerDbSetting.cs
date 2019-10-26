@@ -96,6 +96,12 @@ namespace RepoDb.DbSettings
                 hashCode += DefaultSchema.GetHashCode();
             }
 
+            // DefaultAverageableType
+            if (DefaultAverageableType != null)
+            {
+                hashCode += DefaultAverageableType.GetHashCode();
+            }
+
             // Set and return the hashcode
             return (m_hashCode = hashCode).Value;
         }

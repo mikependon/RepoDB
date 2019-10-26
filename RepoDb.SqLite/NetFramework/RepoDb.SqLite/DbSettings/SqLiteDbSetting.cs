@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using System;
+using RepoDb.Interfaces;
 
 namespace RepoDb.SqLite.DbSettings
 {
@@ -19,12 +20,12 @@ namespace RepoDb.SqLite.DbSettings
         /// <summary>
         /// Gets the character (or string) used for opening quote.
         /// </summary>
-        public string OpeningQuote { get; } = "(";
+        public string OpeningQuote { get; } = "[";
 
         /// <summary>
         /// Gets the character (or string) used for closing quote.
         /// </summary>
-        public string ClosingQuote { get; } = ")";
+        public string ClosingQuote { get; } = "]";
 
         /// <summary>
         /// Gets the character (or string) used for the database command parameter quoting.
@@ -40,6 +41,11 @@ namespace RepoDb.SqLite.DbSettings
         /// Gets the default schema of the database.
         /// </summary>
         public string DefaultSchema { get; } = null; // Research the SQLite default schema
+
+        /// <summary>
+        /// Gets the default averageable .NET CLR types for the database.
+        /// </summary>
+        public Type DefaultAverageableType { get; } = typeof(double);
 
         #endregion
 
@@ -87,6 +93,12 @@ namespace RepoDb.SqLite.DbSettings
             if (!string.IsNullOrEmpty(DefaultSchema))
             {
                 hashCode += DefaultSchema.GetHashCode();
+            }
+
+            // DefaultAverageableType
+            if (DefaultAverageableType != null)
+            {
+                hashCode += DefaultAverageableType.GetHashCode();
             }
 
             // Set and return the hashcode

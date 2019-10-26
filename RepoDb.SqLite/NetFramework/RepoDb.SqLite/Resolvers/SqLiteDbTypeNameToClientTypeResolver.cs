@@ -6,7 +6,7 @@ namespace RepoDb.Resolvers
     /// <summary>
     /// A class used to resolve the SqLite Database Types into its equivalent .NET CLR Types.
     /// </summary>
-    public class SqLiteDbTypeNameToClientTypeResolver : IResolver<string, Type>
+    public class SqLiteTypeNameToClientTypeResolver : IResolver<string, Type>
     {
         /// <summary>
         /// Returns the equivalent .NET CLR Types of the Database Type.

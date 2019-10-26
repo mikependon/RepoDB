@@ -1,5 +1,6 @@
 ﻿using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -23,6 +24,84 @@ namespace RepoDb.StatementBuilders
         /// Gets the database setting object that is currently in used.
         /// </summary>
         private IDbSetting DbSetting => DbSettingMapper.Get(typeof(SQLiteConnection));
+
+        /// <summary>
+        /// Gets the resolver used to get the <see cref="Field"/> object for SQLite.
+        /// </summary>
+        private IResolver<Field, IDbSetting, string> ConvertFieldResolver => new SqlServerConvertFieldResolver();
+
+        /// <summary>
+        /// Gets the resolver that is being used to resolve the type to be averageable type.
+        /// </summary>
+        private IResolver<Type, Type> AverageableClientTypeResolver => new ClientTypeToAverageableClientTypeResolver();
+
+        #endregion
+
+        #region CreateAverage
+
+        /// <summary>
+        /// Creates a SQL Statement for average operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for average operation.</returns>
+        public string CreateAverage(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Check the field
+            if (field == null)
+            {
+                throw new NullReferenceException("The field cannot be null.");
+            }
+            else
+            {
+                field.Type = AverageableClientTypeResolver.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .Average(field, DbSetting /*, ConvertFieldResolver*/)
+                .WriteText("AS [AverageValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .WhereFrom(where, DbSetting)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
+        }
+
+        #endregion
+
+        #region CreateAverageAll
+
+        /// <summary>
+        /// Creates a SQL Statement for average-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for average-all operation.</returns>
+        public string CreateAverageAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            string hints = null)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
 
@@ -172,6 +251,48 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateMax
+
+        /// <summary>
+        /// Creates a SQL Statement for maximum operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for maximum operation.</returns>
+        public string CreateMax(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region CreateMaxAll
+
+        /// <summary>
+        /// Creates a SQL Statement for maximum-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for maximum-all operation.</returns>
+        public string CreateMaxAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            string hints = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region CreateMerge
 
         /// <summary>
@@ -216,6 +337,48 @@ namespace RepoDb.StatementBuilders
             int batchSize = 10,
             DbField primaryField = null,
             DbField identityField = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region CreateMin
+
+        /// <summary>
+        /// Creates a SQL Statement for minimum operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for minimum operation.</returns>
+        public string CreateMin(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region CreateMinAll
+
+        /// <summary>
+        /// Creates a SQL Statement for minimum-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for minimum-all operation.</returns>
+        public string CreateMinAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            string hints = null)
         {
             throw new NotImplementedException();
         }
@@ -302,6 +465,48 @@ namespace RepoDb.StatementBuilders
 
             // Return the query
             return queryBuilder.GetString();
+        }
+
+        #endregion
+
+        #region CreateSum
+
+        /// <summary>
+        /// Creates a SQL Statement for sum operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for sum operation.</returns>
+        public string CreateSum(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region CreateSumAll
+
+        /// <summary>
+        /// Creates a SQL Statement for sum-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for sum-all operation.</returns>
+        public string CreateSumAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            string hints = null)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

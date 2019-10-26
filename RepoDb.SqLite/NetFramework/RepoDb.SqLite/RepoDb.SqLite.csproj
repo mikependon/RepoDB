@@ -67,7 +67,9 @@
     <Compile Include="DbValidators\SqLiteDbValidator.cs" />
     <Compile Include="Initializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resolvers\DbTypeToSqlServerStringNameResolver.cs" />
     <Compile Include="Resolvers\SqLiteDbTypeNameToClientTypeResolver.cs" />
+    <Compile Include="Resolvers\SqLiteConvertFieldResolver.cs" />
     <Compile Include="StatementBuilders\SqLiteStatementBuilder.cs" />
   </ItemGroup>
   <ItemGroup>

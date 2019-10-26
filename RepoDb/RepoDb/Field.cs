@@ -52,9 +52,9 @@ namespace RepoDb
         public string Name { get; }
 
         /// <summary>
-        /// Gets the type of the field.
+        /// Gets or sets the type of the field.
         /// </summary>
-        public Type Type { get; internal set; }
+        public Type Type { get; set; }
 
         #endregion
 

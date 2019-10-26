@@ -23,6 +23,26 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestDbRepositoryCount()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
+            {
+                // Act
+                //repository.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<CompleteTable>(e => e.ColumnInt,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryQuery()
         {
             // Setup

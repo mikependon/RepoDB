@@ -23,7 +23,7 @@ namespace RepoDb.DbHelpers
         /// </summary>
         public SqlServerDbHelper()
         {
-            DbTypeResolver = new SqlServerTypeNameToClientTypeResolver();
+            DbTypeResolver = new SqlServerDbTypeNameToClientTypeResolver();
         }
 
         /// <summary>

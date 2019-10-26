@@ -260,7 +260,7 @@
     <Compile Include="_SqlServer\Resolvers\SqlServerConvertFieldResolver.cs" />
     <Compile Include="_SqlServer\Resolvers\DbTypeToSqlServerStringNameResolver.cs" />
     <Compile Include="Resolvers\ClientTypeToDbTypeResolver.cs" />
-    <Compile Include="_SqlServer\Resolvers\SqlServerTypeNameToClientTypeResolver.cs" />
+    <Compile Include="_SqlServer\Resolvers\SqlServerDbTypeNameToClientTypeResolver.cs" />
     <Compile Include="DbOperationMapper.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="_SqlServer\SqlServerTableHints.cs" />
