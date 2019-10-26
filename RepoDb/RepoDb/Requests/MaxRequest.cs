@@ -5,31 +5,34 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the maximum-all operation arguments.
+    /// A class that holds the value of the maximum operation arguments.
     /// </summary>
-    internal class MaxAllRequest : BaseRequest, IEquatable<MaxAllRequest>
+    internal class MaxRequest : BaseRequest, IEquatable<MaxRequest>
     {
         private int? m_hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <see cref="MaxAllRequest"/> object.
+        /// Creates a new instance of <see cref="MaxRequest"/> object.
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="transaction">The transaction object.</param>
         /// <param name="field">The field object.</param>
+        /// <param name="where">The query expression.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public MaxAllRequest(Type type,
+        public MaxRequest(Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             Field field = null,
+            QueryGroup where = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
                   transaction,
                   field,
+                  where,
                   hints,
                   statementBuilder)
         {
@@ -37,18 +40,20 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="MaxAllRequest"/> object.
+        /// Creates a new instance of <see cref="MaxRequest"/> object.
         /// </summary>
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="transaction">The transaction object.</param>
         /// <param name="field">The field object.</param>
+        /// <param name="where">The query expression.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public MaxAllRequest(string name,
+        public MaxRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
             Field field = null,
+            QueryGroup where = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
@@ -57,6 +62,7 @@ namespace RepoDb.Requests
                   statementBuilder)
         {
             Field = field;
+            Where = where;
             Hints = hints;
         }
 
@@ -66,6 +72,11 @@ namespace RepoDb.Requests
         public Field Field { get; }
 
         /// <summary>
+        /// Gets the query expression used.
+        /// </summary>
+        public QueryGroup Where { get; }
+
+        /// <summary>
         /// Gets the hints for the table.
         /// </summary>
         public string Hints { get; }
@@ -73,7 +84,7 @@ namespace RepoDb.Requests
         #region Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <see cref="MaxAllRequest"/>.
+        /// Returns the hashcode for this <see cref="MaxRequest"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -85,12 +96,18 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".MinAll").GetHashCode();
+            var hashCode = string.Concat(Name, ".Max").GetHashCode();
 
             // Add the field
             if (Field != null)
             {
                 hashCode += Field.GetHashCode();
+            }
+
+            // Add the where
+            if (Where != null)
+            {
+                hashCode += Where.GetHashCode();
             }
 
             // Add the hints
@@ -104,7 +121,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <see cref="MaxAllRequest"/> object equality against the given target object.
+        /// Compares the <see cref="MaxRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -114,22 +131,22 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <see cref="MaxAllRequest"/> object equality against the given target object.
+        /// Compares the <see cref="MaxRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(MaxAllRequest other)
+        public bool Equals(MaxRequest other)
         {
             return other?.GetHashCode() == GetHashCode();
         }
 
         /// <summary>
-        /// Compares the equality of the two <see cref="MaxAllRequest"/> objects.
+        /// Compares the equality of the two <see cref="MaxRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="MaxAllRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="MaxAllRequest"/> object.</param>
+        /// <param name="objA">The first <see cref="MaxRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="MaxRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(MaxAllRequest objA, MaxAllRequest objB)
+        public static bool operator ==(MaxRequest objA, MaxRequest objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -139,12 +156,12 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the inequality of the two <see cref="MaxAllRequest"/> objects.
+        /// Compares the inequality of the two <see cref="MaxRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="MaxAllRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="MaxAllRequest"/> object.</param>
+        /// <param name="objA">The first <see cref="MaxRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="MaxRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(MaxAllRequest objA, MaxAllRequest objB)
+        public static bool operator !=(MaxRequest objA, MaxRequest objB)
         {
             return (objA == objB) == false;
         }

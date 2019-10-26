@@ -1,4 +1,5 @@
 ﻿using RepoDb.Interfaces;
+using System;
 using System.Data.SqlClient;
 
 namespace RepoDb.DbSettings
@@ -41,6 +42,11 @@ namespace RepoDb.DbSettings
         /// Gets the default schema of the database.
         /// </summary>
         public string DefaultSchema { get; } = "dbo";
+
+        /// <summary>
+        /// Gets the default averageable .NET CLR types for the database.
+        /// </summary>
+        public Type DefaultAverageableType { get; } = typeof(double);
 
         #endregion
 

@@ -27,6 +27,16 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         private IDbSetting DbSetting => DbSettingMapper.Get<SqlConnection>();
 
+        /// <summary>
+        /// Gets the resolver used to get the <see cref="Field"/> object for SQL Server.
+        /// </summary>
+        private IResolver<Field, IDbSetting, string> ConvertFieldResolver => new SqlServerConvertFieldResolver();
+
+        /// <summary>
+        /// Gets the resolver that is being used to resolve the type to be averageable type.
+        /// </summary>
+        private IResolver<Type, Type> AverageableClientTypeResolver => new ClientTypeToAverageableClientTypeResolver();
+
         #endregion
 
         #region CreateAverage
@@ -54,12 +64,16 @@ namespace RepoDb.StatementBuilders
             {
                 throw new NullReferenceException("The field cannot be null.");
             }
+            else
+            {
+                field.Type = AverageableClientTypeResolver.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
+            }
 
             // Build the query
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .Average(field, DbSetting)
+                .Average(field, DbSetting, ConvertFieldResolver)
                 .WriteText("AS [AverageValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
@@ -96,12 +110,16 @@ namespace RepoDb.StatementBuilders
             {
                 throw new NullReferenceException("The field cannot be null.");
             }
+            else
+            {
+                field.Type = AverageableClientTypeResolver.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
+            }
 
             // Build the query
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .Average(field, DbSetting)
+                .Average(field, DbSetting, ConvertFieldResolver)
                 .WriteText("AS [AverageValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)

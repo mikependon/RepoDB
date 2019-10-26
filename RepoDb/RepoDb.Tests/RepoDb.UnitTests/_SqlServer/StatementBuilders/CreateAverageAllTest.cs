@@ -21,7 +21,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 field: field,
                 tableName: tableName,
                 hints: null);
-            var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [Table] ;";
+            var expected = "SELECT AVG (CONVERT([FLOAT], [Value])) AS [AverageValue] FROM [Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -42,7 +42,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 tableName: tableName,
                 field: field,
                 hints: hints);
-            var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [Table] WITH (NOLOCK) ;";
+            var expected = "SELECT AVG (CONVERT([FLOAT], [Value])) AS [AverageValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -62,7 +62,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 tableName: tableName,
                 field: field,
                 hints: null);
-            var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT AVG (CONVERT([FLOAT], [Value])) AS [AverageValue] FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -82,7 +82,47 @@ namespace RepoDb.UnitTests.StatementBuilders
                 tableName: tableName,
                 field: field,
                 hints: null);
-            var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT AVG (CONVERT([FLOAT], [Value])) AS [AverageValue] FROM [dbo].[Table] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlStatementBuilderCreateAverageAllForOtherAverageableFieldType()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var field = new Field("Value", typeof(long));
+
+            // Act
+            var actual = statementBuilder.CreateAverageAll(queryBuilder: queryBuilder,
+                field: field,
+                tableName: tableName,
+                hints: null);
+            var expected = "SELECT AVG (CONVERT([FLOAT], [Value])) AS [AverageValue] FROM [Table] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlStatementBuilderCreateAverageAllForNonAverageableFieldType()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var field = new Field("Value", typeof(string));
+
+            // Act
+            var actual = statementBuilder.CreateAverageAll(queryBuilder: queryBuilder,
+                field: field,
+                tableName: tableName,
+                hints: null);
+            var expected = "SELECT AVG (CONVERT([NVARCHAR], [Value])) AS [AverageValue] FROM [Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);

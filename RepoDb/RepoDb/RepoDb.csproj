@@ -95,12 +95,13 @@
     <Compile Include="Operations\DbRepository\AverageAll.cs" />
     <Compile Include="Requests\SumAllRequest.cs" />
     <Compile Include="Requests\SumRequest.cs" />
-    <Compile Include="Requests\MaximumAllRequest.cs" />
-    <Compile Include="Requests\MinimumAllRequest.cs" />
-    <Compile Include="Requests\MaximumRequest.cs" />
-    <Compile Include="Requests\MinimumRequest.cs" />
+    <Compile Include="Requests\MaxAllRequest.cs" />
+    <Compile Include="Requests\MinAllRequest.cs" />
+    <Compile Include="Requests\MaxRequest.cs" />
+    <Compile Include="Requests\MinRequest.cs" />
     <Compile Include="Requests\AverageRequest.cs" />
     <Compile Include="Requests\AverageAllRequest.cs" />
+    <Compile Include="Resolvers\ClientTypeToAverageableClientTypeResolver.cs" />
     <Compile Include="_SqlServer\DbSettings\SqlServerDbSetting.cs" />
     <Compile Include="DbSettingMapper.cs" />
     <Compile Include="DbValidatorMapper.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="CancellableTraceLog.cs" />
     <Compile Include="ObjectConverter.cs" />
     <Compile Include="Resolvers\DbTypeToClientTypeResolver.cs" />
+    <Compile Include="_SqlServer\Resolvers\SqlServerConvertFieldResolver.cs" />
     <Compile Include="_SqlServer\Resolvers\DbTypeToSqlServerStringNameResolver.cs" />
     <Compile Include="Resolvers\ClientTypeToDbTypeResolver.cs" />
     <Compile Include="_SqlServer\Resolvers\SqlServerTypeNameToClientTypeResolver.cs" />

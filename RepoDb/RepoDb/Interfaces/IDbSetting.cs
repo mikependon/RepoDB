@@ -1,4 +1,6 @@
-﻿namespace RepoDb.Interfaces
+﻿using System;
+
+namespace RepoDb.Interfaces
 {
     /// <summary>
     /// An interface used to mark the class to become a database setting object.
@@ -34,5 +36,10 @@
         /// Gets the default schema of the database.
         /// </summary>
         string DefaultSchema { get; }
+
+        /// <summary>
+        /// Gets the default averageable .NET CLR types for the database.
+        /// </summary>
+        Type DefaultAverageableType { get; }
     }
 }

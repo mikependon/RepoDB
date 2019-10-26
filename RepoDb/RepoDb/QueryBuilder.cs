@@ -119,7 +119,23 @@ namespace RepoDb
         public QueryBuilder Average(Field field,
             IDbSetting dbSetting)
         {
-            return Append(string.Concat("AVG (", field.Name.AsField(dbSetting), ")"));
+            return Average(field, dbSetting, null);
+        }
+
+        /// <summary>
+        /// Appends a word AVG to the SQL Query Statement.
+        /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation..</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Average(Field field,
+            IDbSetting dbSetting,
+            IResolver<Field, IDbSetting, string> convertResolver)
+        {
+            var name = convertResolver == null ? field.Name.AsField(dbSetting) :
+                convertResolver.Resolve(field, dbSetting);
+            return Append(string.Concat("AVG (", name, ")"));
         }
 
         /// <summary>
@@ -131,7 +147,23 @@ namespace RepoDb
         public QueryBuilder Min(Field field,
             IDbSetting dbSetting)
         {
-            return Append(string.Concat("MIN (", field.Name.AsField(dbSetting), ")"));
+            return Min(field, dbSetting, null);
+        }
+
+        /// <summary>
+        /// Appends a word MIN to the SQL Query Statement.
+        /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation..</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Min(Field field,
+            IDbSetting dbSetting,
+            IResolver<Field, IDbSetting, string> convertResolver)
+        {
+            var name = convertResolver == null ? field.Name.AsField(dbSetting) :
+                convertResolver.Resolve(field, dbSetting);
+            return Append(string.Concat("MIN (", name, ")"));
         }
 
         /// <summary>
@@ -143,7 +175,23 @@ namespace RepoDb
         public QueryBuilder Max(Field field,
             IDbSetting dbSetting)
         {
-            return Append(string.Concat("MAX (", field.Name.AsField(dbSetting), ")"));
+            return Max(field, dbSetting, null);
+        }
+
+        /// <summary>
+        /// Appends a word MAX to the SQL Query Statement.
+        /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation..</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Max(Field field,
+            IDbSetting dbSetting,
+            IResolver<Field, IDbSetting, string> convertResolver)
+        {
+            var name = convertResolver == null ? field.Name.AsField(dbSetting) :
+                convertResolver.Resolve(field, dbSetting);
+            return Append(string.Concat("MAX (", name, ")"));
         }
 
         /// <summary>
@@ -155,7 +203,23 @@ namespace RepoDb
         public QueryBuilder Sum(Field field,
             IDbSetting dbSetting)
         {
-            return Append(string.Concat("SUM (", field.Name.AsField(dbSetting), ")"));
+            return Sum(field, dbSetting, null);
+        }
+
+        /// <summary>
+        /// Appends a word SUM to the SQL Query Statement.
+        /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation..</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Sum(Field field,
+            IDbSetting dbSetting,
+            IResolver<Field, IDbSetting, string> convertResolver)
+        {
+            var name = convertResolver == null ? field.Name.AsField(dbSetting) :
+                convertResolver.Resolve(field, dbSetting);
+            return Append(string.Concat("SUM (", name, ")"));
         }
 
         /// <summary>

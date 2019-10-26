@@ -54,7 +54,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the type of the field.
         /// </summary>
-        public Type Type { get; }
+        public Type Type { get; internal set; }
 
         #endregion
 

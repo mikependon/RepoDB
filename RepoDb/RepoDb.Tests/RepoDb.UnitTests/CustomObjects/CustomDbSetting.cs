@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using System;
+using RepoDb.Interfaces;
 
 namespace RepoDb.UnitTests.CustomObjects
 {
@@ -15,5 +16,7 @@ namespace RepoDb.UnitTests.CustomObjects
         public string SchemaSeparator => ".";
 
         public string DefaultSchema => "dbo";
+
+        public Type DefaultAverageableType => typeof(double);
     }
 }

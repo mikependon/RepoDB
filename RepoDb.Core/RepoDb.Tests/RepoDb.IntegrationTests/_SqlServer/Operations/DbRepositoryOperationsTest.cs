@@ -34,6 +34,704 @@ namespace RepoDb.IntegrationTests.Operations
             Database.Cleanup();
         }
 
+        #region Average
+
+        #region Average<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryAverageWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Average<IdentityTable>(e => e.ColumnInt,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Average<IdentityTable>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Average<IdentityTable>(e => e.ColumnInt,
+                    new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Average<IdentityTable>(e => e.ColumnInt,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Average<IdentityTable>(e => e.ColumnInt,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Average<IdentityTable>(e => e.ColumnInt,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region AverageAsync<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAsyncWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAsyncViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAsyncViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAsyncViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    field).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAsyncViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAsyncViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region Average(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryAverageViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Average(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Average(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Average(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Average(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Average(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region AverageAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAsyncViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAsyncViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAsyncViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    field).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAsyncViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAsyncViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region AverageAll
+
+        #region AverageAll<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAll<IdentityTable>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAllWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAll<IdentityTable>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region AverageAllAsync<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAllAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAllAsync<IdentityTable>(e => e.ColumnInt).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAllAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAllAsync<IdentityTable>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region AverageAll(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryAverageViaAllTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAllViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region AverageAllAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAllTableNameAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryAverageAllTableNameAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.AverageAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region BatchQuery
 
         #region BatchQuery<TEntity>
@@ -2884,7 +3582,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region CountAll(TableName)
 
         [TestMethod]
-        public void TestDbRepositoryCountViaAllTaleName()
+        public void TestDbRepositoryCountViaAllTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2903,7 +3601,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryCountAllViaTaleNameWithHints()
+        public void TestDbRepositoryCountAllViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2927,7 +3625,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region CountAllAsync(TableName)
 
         [TestMethod]
-        public void TestDbRepositoryCountAllTaleNameAsync()
+        public void TestDbRepositoryCountAllTableNameAsync()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2946,7 +3644,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryCountAllTaleNameAsyncWithHints()
+        public void TestDbRepositoryCountAllTableNameAsyncWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4752,6 +5450,704 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 tables.ToList().ForEach(item => Helper.AssertMembersEquality(item,
                     queryResult.First(data => data.RowGuid == item.RowGuid)));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Max
+
+        #region Max<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryMaxWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Max<IdentityTable>(e => e.ColumnInt,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Max<IdentityTable>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Max<IdentityTable>(e => e.ColumnInt,
+                    new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Max<IdentityTable>(e => e.ColumnInt,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Max<IdentityTable>(e => e.ColumnInt,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Max<IdentityTable>(e => e.ColumnInt,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region MaxAsync<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAsyncWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAsync<IdentityTable>(e => e.ColumnInt,
+                    (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAsyncViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAsync<IdentityTable>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAsyncViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAsync<IdentityTable>(e => e.ColumnInt,
+                    new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAsyncViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAsync<IdentityTable>(e => e.ColumnInt,
+                    field).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAsyncViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAsync<IdentityTable>(e => e.ColumnInt,
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAsyncViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAsync<IdentityTable>(e => e.ColumnInt,
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region Max(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryMaxViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Max(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Max(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Max(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Max(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Max(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region MaxAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAsyncViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAsyncViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAsyncViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    field).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAsyncViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAsyncViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region MaxAll
+
+        #region MaxAll<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAll<IdentityTable>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAllWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAll<IdentityTable>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region MaxAllAsync<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAllAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAllAsync<IdentityTable>(e => e.ColumnInt).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAllAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAllAsync<IdentityTable>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region MaxAll(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryMaxViaAllTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAllViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region MaxAllAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAllTableNameAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMaxAllTableNameAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MaxAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -8184,6 +9580,704 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 tables.ForEach(item => Helper.AssertPropertiesEquality(item,
                     queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Min
+
+        #region Min<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryMinWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Min<IdentityTable>(e => e.ColumnInt,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Min<IdentityTable>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Min<IdentityTable>(e => e.ColumnInt,
+                    new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Min<IdentityTable>(e => e.ColumnInt,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Min<IdentityTable>(e => e.ColumnInt,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Min<IdentityTable>(e => e.ColumnInt,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region MinAsync<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryMinAsyncWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAsync<IdentityTable>(e => e.ColumnInt,
+                    (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAsyncViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAsync<IdentityTable>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAsyncViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAsync<IdentityTable>(e => e.ColumnInt,
+                    new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAsyncViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAsync<IdentityTable>(e => e.ColumnInt,
+                    field).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAsyncViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAsync<IdentityTable>(e => e.ColumnInt,
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAsyncViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAsync<IdentityTable>(e => e.ColumnInt,
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region Min(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryMinViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Min(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Min(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Min(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Min(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Min(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region MinAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryMinAsyncViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAsyncViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAsyncViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    field).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAsyncViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAsyncViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region MinAll
+
+        #region MinAll<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryMinAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAll<IdentityTable>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAllWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAll<IdentityTable>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region MinAllAsync<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositoryMinAllAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAllAsync<IdentityTable>(e => e.ColumnInt).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAllAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAllAsync<IdentityTable>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region MinAll(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryMinViaAllTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAllViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region MinAllAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositoryMinAllTableNameAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryMinAllTableNameAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.MinAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -12314,6 +14408,704 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         #endregion
+
+        #endregion
+
+        #endregion
+
+        #region Sum
+
+        #region Sum<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositorySumWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Sum<IdentityTable>(e => e.ColumnInt,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Sum<IdentityTable>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Sum<IdentityTable>(e => e.ColumnInt,
+                    new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Sum<IdentityTable>(e => e.ColumnInt,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Sum<IdentityTable>(e => e.ColumnInt,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Sum<IdentityTable>(e => e.ColumnInt,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region SumAsync<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositorySumAsyncWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAsyncViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAsyncViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAsyncViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    field).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAsyncViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAsyncViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region Sum(TableName)
+
+        [TestMethod]
+        public void TestDbRepositorySumViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Sum(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Sum(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Sum(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Sum(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Sum(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region SumAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositorySumAsyncViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAsyncViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAsyncViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    field).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAsyncViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    fields).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAsyncViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region SumAll
+
+        #region SumAll<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositorySumAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAll<IdentityTable>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAllWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAll<IdentityTable>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region SumAllAsync<TEntity>
+
+        [TestMethod]
+        public void TestDbRepositorySumAllAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAllAsync<IdentityTable>(e => e.ColumnInt).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAllAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAllAsync<IdentityTable>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region SumAll(TableName)
+
+        [TestMethod]
+        public void TestDbRepositorySumViaAllTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAllViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAll(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        #endregion
+
+        #region SumAllAsync(TableName)
+
+        [TestMethod]
+        public void TestDbRepositorySumAllTableNameAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositorySumAllTableNameAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.SumAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
 
         #endregion
 
