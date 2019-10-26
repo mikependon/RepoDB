@@ -5,111 +5,139 @@ using System.Data.SqlClient;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateCountAllTest
+    public class SqlStatementBuilderCreateMaxAllTest
     {
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountAll()
+        public void TestSqlStatementBuilderCreateMaxAll()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMaxAll(queryBuilder: queryBuilder,
+                field: field,
                 tableName: tableName,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] ;";
+            var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountAllWithHints()
+        public void TestSqlStatementBuilderCreateMaxAllWithHints()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMaxAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: hints);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] WITH (NOLOCK) ;";
+            var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountAllWithQuotedTableSchema()
+        public void TestSqlStatementBuilderCreateMaxAllWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMaxAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountAllWithUnquotedTableSchema()
+        public void TestSqlStatementBuilderCreateMaxAllWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMaxAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountAllIfTheTableIsNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMaxAllIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
+            var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            statementBuilder.CreateMaxAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountAllIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMaxAllIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "";
+            var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            statementBuilder.CreateMaxAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountAllIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMaxAllIfTheTableIsWhitespace()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = " ";
+            var field = new Field("Value");
+
+            // Act
+            statementBuilder.CreateMaxAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                field: field,
+                hints: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateMaxAllIfTheFieldIsNull()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -117,8 +145,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            statementBuilder.CreateMaxAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: null,
                 hints: null);
         }
     }

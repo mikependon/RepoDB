@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
                 tableName: tableName,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (1) AS [CountValue] FROM [Table] ;";
+            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -39,7 +39,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 tableName: tableName,
                 where: where);
             var expected = $"" +
-                $"SELECT COUNT_BIG (1) AS [CountValue] " +
+                $"SELECT COUNT_BIG (*) AS [CountValue] " +
                 $"FROM [Table] " +
                 $"WHERE ([Id] = @Id) ;";
 
@@ -60,7 +60,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
                 tableName: tableName,
                 hints: hints);
-            var expected = "SELECT COUNT_BIG (1) AS [CountValue] FROM [Table] WITH (NOLOCK) ;";
+            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -82,7 +82,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 where: where,
                 hints: hints);
             var expected = $"" +
-                $"SELECT COUNT_BIG (1) AS [CountValue] " +
+                $"SELECT COUNT_BIG (*) AS [CountValue] " +
                 $"FROM [Table] WITH (NOLOCK) " +
                 $"WHERE ([Id] = @Id) ;";
 
@@ -102,7 +102,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
                 tableName: tableName,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (1) AS [CountValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -120,7 +120,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
                 tableName: tableName,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (1) AS [CountValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);

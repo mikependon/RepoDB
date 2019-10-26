@@ -5,41 +5,45 @@ using System.Data.SqlClient;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateCountTest
+    public class SqlStatementBuilderCreateMaxTest
     {
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCount()
+        public void TestSqlStatementBuilderCreateMax()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
+                field: field,
                 tableName: tableName,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] ;";
+            var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithWhereExpression()
+        public void TestSqlStatementBuilderCreateMaxWithWhereExpression()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
             var where = new QueryGroup(new QueryField("Id", 1));
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 where: where);
             var expected = $"" +
-                $"SELECT COUNT_BIG (*) AS [CountValue] " +
+                $"SELECT MAX ([Value]) AS [MaxValue] " +
                 $"FROM [Table] " +
                 $"WHERE ([Id] = @Id) ;";
 
@@ -48,41 +52,45 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithHints()
+        public void TestSqlStatementBuilderCreateMaxWithHints()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: hints);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] WITH (NOLOCK) ;";
+            var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithWhereExpressionAndWithHints()
+        public void TestSqlStatementBuilderCreateMaxWithWhereExpressionAndWithHints()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
             var where = new QueryGroup(new QueryField("Id", 1));
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 where: where,
                 hints: hints);
             var expected = $"" +
-                $"SELECT COUNT_BIG (*) AS [CountValue] " +
+                $"SELECT MAX ([Value]) AS [MaxValue] " +
                 $"FROM [Table] WITH (NOLOCK) " +
                 $"WHERE ([Id] = @Id) ;";
 
@@ -91,71 +99,95 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithQuotedTableSchema()
+        public void TestSqlStatementBuilderCreateMaxWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithUnquotedTableSchema()
+        public void TestSqlStatementBuilderCreateMaxWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMaxIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
+            var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            statementBuilder.CreateMax(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMaxIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "";
+            var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            statementBuilder.CreateMax(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMaxIfTheTableIsWhitespace()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = " ";
+            var field = new Field("Value");
+
+            // Act
+            statementBuilder.CreateMax(queryBuilder: queryBuilder,
+                tableName: tableName,
+                field: field,
+                hints: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateMaxIfTheFieldIsNull()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -163,8 +195,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            statementBuilder.CreateMax(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: null,
                 hints: null);
         }
     }

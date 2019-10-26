@@ -5,41 +5,45 @@ using System.Data.SqlClient;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateCountTest
+    public class SqlStatementBuilderCreateSumTest
     {
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCount()
+        public void TestSqlStatementBuilderCreateSum()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateSum(queryBuilder: queryBuilder,
+                field: field,
                 tableName: tableName,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] ;";
+            var expected = "SELECT SUM ([Value]) AS [SumValue] FROM [Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithWhereExpression()
+        public void TestSqlStatementBuilderCreateSumWithWhereExpression()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
             var where = new QueryGroup(new QueryField("Id", 1));
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateSum(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 where: where);
             var expected = $"" +
-                $"SELECT COUNT_BIG (*) AS [CountValue] " +
+                $"SELECT SUM ([Value]) AS [SumValue] " +
                 $"FROM [Table] " +
                 $"WHERE ([Id] = @Id) ;";
 
@@ -48,41 +52,45 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithHints()
+        public void TestSqlStatementBuilderCreateSumWithHints()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateSum(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: hints);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] WITH (NOLOCK) ;";
+            var expected = "SELECT SUM ([Value]) AS [SumValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithWhereExpressionAndWithHints()
+        public void TestSqlStatementBuilderCreateSumWithWhereExpressionAndWithHints()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
             var where = new QueryGroup(new QueryField("Id", 1));
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateSum(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 where: where,
                 hints: hints);
             var expected = $"" +
-                $"SELECT COUNT_BIG (*) AS [CountValue] " +
+                $"SELECT SUM ([Value]) AS [SumValue] " +
                 $"FROM [Table] WITH (NOLOCK) " +
                 $"WHERE ([Id] = @Id) ;";
 
@@ -91,71 +99,95 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithQuotedTableSchema()
+        public void TestSqlStatementBuilderCreateSumWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateSum(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT SUM ([Value]) AS [SumValue] FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountWithUnquotedTableSchema()
+        public void TestSqlStatementBuilderCreateSumWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateSum(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT SUM ([Value]) AS [SumValue] FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateSumIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
+            var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            statementBuilder.CreateSum(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlStatementBuilderCreateSumIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "";
+            var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            statementBuilder.CreateSum(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlStatementBuilderCreateSumIfTheTableIsWhitespace()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = " ";
+            var field = new Field("Value");
+
+            // Act
+            statementBuilder.CreateSum(queryBuilder: queryBuilder,
+                tableName: tableName,
+                field: field,
+                hints: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateSumIfTheFieldIsNull()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -163,8 +195,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateCount(queryBuilder: queryBuilder,
+            statementBuilder.CreateSum(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: null,
                 hints: null);
         }
     }

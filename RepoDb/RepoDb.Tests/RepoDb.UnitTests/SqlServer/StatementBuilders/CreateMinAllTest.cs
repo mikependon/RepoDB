@@ -5,111 +5,139 @@ using System.Data.SqlClient;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateCountAllTest
+    public class SqlStatementBuilderCreateMinAllTest
     {
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountAll()
+        public void TestSqlStatementBuilderCreateMinAll()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
+                field: field,
                 tableName: tableName,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] ;";
+            var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountAllWithHints()
+        public void TestSqlStatementBuilderCreateMinAllWithHints()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
+            var field = new Field("Value");
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: hints);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] WITH (NOLOCK) ;";
+            var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountAllWithQuotedTableSchema()
+        public void TestSqlStatementBuilderCreateMinAllWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateCountAllWithUnquotedTableSchema()
+        public void TestSqlStatementBuilderCreateMinAllWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
+            var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
-            var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
+            var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [dbo].[Table] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountAllIfTheTableIsNull()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMinAllIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
+            var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountAllIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMinAllIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "";
+            var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: field,
                 hints: null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateCountAllIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlStatementBuilderCreateMinAllIfTheTableIsWhitespace()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = " ";
+            var field = new Field("Value");
+
+            // Act
+            statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                field: field,
+                hints: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlStatementBuilderCreateMinAllIfTheFieldIsNull()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -117,8 +145,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+            statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
                 tableName: tableName,
+                field: null,
                 hints: null);
         }
     }

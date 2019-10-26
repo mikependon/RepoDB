@@ -113,55 +113,75 @@ namespace RepoDb
         /// <summary>
         /// Appends a word AVG to the SQL Query Statement.
         /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Average()
+        public QueryBuilder Average(Field field,
+            IDbSetting dbSetting)
         {
-            return Append("AVG");
+            return Append(string.Concat("AVG (", field.Name.AsField(dbSetting), ")"));
         }
 
         /// <summary>
         /// Appends a word MIN to the SQL Query Statement.
         /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Min()
+        public QueryBuilder Min(Field field,
+            IDbSetting dbSetting)
         {
-            return Append("MIN");
+            return Append(string.Concat("MIN (", field.Name.AsField(dbSetting), ")"));
         }
 
         /// <summary>
         /// Appends a word MAX to the SQL Query Statement.
         /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Max()
+        public QueryBuilder Max(Field field,
+            IDbSetting dbSetting)
         {
-            return Append("AVG");
+            return Append(string.Concat("MAX (", field.Name.AsField(dbSetting), ")"));
         }
 
         /// <summary>
         /// Appends a word SUM to the SQL Query Statement.
         /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Sum()
+        public QueryBuilder Sum(Field field,
+            IDbSetting dbSetting)
         {
-            return Append("SUM");
+            return Append(string.Concat("SUM (", field.Name.AsField(dbSetting), ")"));
         }
 
         /// <summary>
         /// Appends a word COUNT to the SQL Query Statement.
         /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Count()
+        public QueryBuilder Count(Field field,
+            IDbSetting dbSetting)
         {
-            return Append("COUNT");
+            var name = field != null ? field.Name.AsField(dbSetting) : "*";
+            return Append(string.Concat("COUNT (", name, ")"));
         }
 
         /// <summary>
         /// Appends a word COUNT_BIG to the SQL Query Statement.
         /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder CountBig()
+        public QueryBuilder CountBig(Field field,
+            IDbSetting dbSetting)
         {
-            return Append("COUNT_BIG");
+            var name = field != null ? field.Name.AsField(dbSetting) : "*";
+            return Append(string.Concat("COUNT_BIG (", name, ")"));
         }
 
         /// <summary>
