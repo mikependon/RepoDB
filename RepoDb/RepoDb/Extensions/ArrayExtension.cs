@@ -27,6 +27,7 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Converts an <see cref="Array"/> object into an enumerable of objects.
         /// </summary>
+        /// <typeparam name="T">The type of the object to be filtered.</typeparam>
         /// <param name="array">The array to be converted.</param>
         /// <returns>An enumerable of objects.</returns>
         public static IEnumerable<T> AsEnumerable<T>(this Array array)
