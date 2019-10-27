@@ -3,7 +3,7 @@ using RepoDb.Extensions;
 using System;
 using System.Linq;
 
-namespace RepoDb.UnitTests.Fields
+namespace RepoDb.UnitTests.Others
 {
     [TestClass]
     public partial class FieldTest

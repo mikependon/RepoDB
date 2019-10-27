@@ -1166,25 +1166,19 @@ namespace RepoDb
             // Type of the object
             var type = obj.GetType();
 
-            // Check if it is a generic type
-
-            if (type.IsGenericType == false)
-            {
-                throw new Exceptions.InvalidExpressionException("Only dynamic object is supported as a query expression.");
-            }
-
             // Declare variables
-            var fields = new List<QueryField>();
+            var queryFields = new List<QueryField>();
 
             // Iterate every property
             foreach (var property in type.GetProperties())
             {
                 var value = property.GetValue(obj);
-                fields.Add(new QueryField(PropertyMappedNameCache.Get(property), value));
+                var field = new Field(PropertyMappedNameCache.Get(property), property.PropertyType);
+                queryFields.Add(new QueryField(field, value));
             }
 
             // Return
-            return fields != null ? new QueryGroup(fields).Fix() : null;
+            return queryFields != null ? new QueryGroup(queryFields).Fix() : null;
         }
 
         #endregion

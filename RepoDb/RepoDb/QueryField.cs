@@ -2,7 +2,6 @@
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -198,11 +197,14 @@ namespace RepoDb
             }
 
             // Name
-            var fieldName = expression.GetName();
-            if (PropertyCache.Get<TEntity>().Any(property => PropertyMappedNameCache.Get(property.PropertyInfo) == fieldName) == false)
+            var name = expression.GetName();
+            if (PropertyCache.Get<TEntity>().Any(property => string.Equals(PropertyMappedNameCache.Get(property.PropertyInfo), name, StringComparison.OrdinalIgnoreCase)) == false)
             {
-                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
+                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {name} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
+
+            // Type
+            var type = expression.GetMemberType();
 
             // Value
             var value = expression.GetValue();
@@ -211,7 +213,8 @@ namespace RepoDb
             var operation = GetOperation(expression.NodeType);
 
             // Return the value
-            return new QueryField(fieldName, operation, value);
+            var field = new Field(name, type);
+            return new QueryField(field, operation, value);
         }
 
         // GetOperation

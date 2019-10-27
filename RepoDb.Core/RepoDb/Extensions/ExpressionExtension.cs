@@ -65,6 +65,8 @@ namespace RepoDb.Extensions
             return m_mathematicalExpressionTypes.Contains(expression.NodeType);
         }
 
+        #region GetName
+
         /// <summary>
         /// Gets the name of the <see cref="MemberInfo"/> defines on the current instance of <see cref="BinaryExpression"/> object.
         /// </summary>
@@ -132,6 +134,77 @@ namespace RepoDb.Extensions
         {
             return expression.Member.GetMappedName();
         }
+
+        #endregion
+
+        #region GetMemberType
+
+        /// <summary>
+        /// Gets the type of the <see cref="MemberInfo"/> defines on the current instance of <see cref="BinaryExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="BinaryExpression"/> to be checked.</param>
+        /// <returns>The type of the <see cref="MemberInfo"/>.</returns>
+        public static Type GetMemberType(this BinaryExpression expression)
+        {
+            if (expression.Left.IsMember())
+            {
+                return expression.Left.ToMember().GetMemberType();
+            }
+            else if (expression.Left.IsUnary())
+            {
+                return expression.Left.ToUnary().GetMemberType();
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        /// <summary>
+        /// Gets the type of the operand defines on the current instance of <see cref="UnaryExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="UnaryExpression"/> to be checked.</param>
+        /// <returns>The type of the operand.</returns>
+        public static Type GetMemberType(this UnaryExpression expression)
+        {
+            if (expression.Operand.IsMethodCall())
+            {
+                return expression.Operand.ToMethodCall().GetMemberType();
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        /// <summary>
+        /// Gets the type of the operand defines on the current instance of <see cref="MethodCallExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="MethodCallExpression"/> to be checked.</param>
+        /// <returns>The type of the operand.</returns>
+        public static Type GetMemberType(this MethodCallExpression expression)
+        {
+            if (expression.Object?.IsMember() == true)
+            {
+                return expression.Object.ToMember().GetMemberType();
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        /// <summary>
+        /// Gets the type of the <see cref="MemberInfo"/> defines on the current instance of <see cref="MemberExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="MemberExpression"/> to be checked.</param>
+        /// <returns>The type of the <see cref="MemberInfo"/>.</returns>
+        public static Type GetMemberType(this MemberExpression expression)
+        {
+            var member = expression.Member;
+            if (member.IsPropertyInfo())
+            {
+                return member.ToPropertyInfo().PropertyType;
+            }
+            else if (member.IsFieldInfo())
+            {
+                return member.ToFieldInfo().FieldType;
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        #endregion
 
         #region GetValue
 

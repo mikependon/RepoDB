@@ -4,7 +4,7 @@ using RepoDb.Exceptions;
 using System;
 using System.Linq;
 
-namespace RepoDb.UnitTests.Fields
+namespace RepoDb.UnitTests.Others
 {
     [TestClass]
     public class OrderFieldTest
