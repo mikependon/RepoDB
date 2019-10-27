@@ -960,7 +960,7 @@ namespace RepoDb
 
             // Make sure the property is in the entity
             var property = member.ToPropertyInfo();
-            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo == property) == null)
+            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, property.Name, StringComparison.OrdinalIgnoreCase)) == null)
             {
                 throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
@@ -1041,7 +1041,7 @@ namespace RepoDb
             var property = member.ToPropertyInfo();
 
             // Make sure the property is in the entity
-            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo == property) == null)
+            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, property.Name, StringComparison.OrdinalIgnoreCase)) == null)
             {
                 throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
@@ -1112,7 +1112,7 @@ namespace RepoDb
             var property = member.ToPropertyInfo();
 
             // Make sure the property is in the entity
-            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo == property) == null)
+            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, property.Name, StringComparison.OrdinalIgnoreCase)) == null)
             {
                 throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
