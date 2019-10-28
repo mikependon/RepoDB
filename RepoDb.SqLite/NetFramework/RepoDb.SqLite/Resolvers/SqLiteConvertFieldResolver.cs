@@ -18,7 +18,7 @@ namespace RepoDb.Resolvers
         /// <summary>
         /// Gets the resolver that is being used to resolve the <see cref="DbType"/> and the database type string name.
         /// </summary>
-        private static DbTypeToSqlServerStringNameResolver StringNameResolver => new DbTypeToSqlServerStringNameResolver();
+        private static DbTypeToSqLiteStringNameResolver StringNameResolver => new DbTypeToSqLiteStringNameResolver();
 
         #endregion
 
@@ -39,7 +39,7 @@ namespace RepoDb.Resolvers
                 if (dbType != null)
                 {
                     var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpper().AsQuoted(dbSetting);
-                    return string.Concat("CONVERT(", dbTypeName, ", ", field.Name.AsQuoted(true, true, dbSetting), ")");
+                    return string.Concat("CAST(", field.Name.AsQuoted(true, true, dbSetting), " AS ", dbTypeName, ")");
                 }
             }
             return field?.Name?.AsQuoted(true, true, dbSetting);

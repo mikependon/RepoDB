@@ -1,4 +1,5 @@
-﻿using RepoDb.Extensions;
+﻿using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
@@ -28,7 +29,7 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Gets the resolver used to get the <see cref="Field"/> object for SQLite.
         /// </summary>
-        private IResolver<Field, IDbSetting, string> ConvertFieldResolver => new SqlServerConvertFieldResolver();
+        private IResolver<Field, IDbSetting, string> ConvertFieldResolver => new SqLiteConvertFieldResolver();
 
         /// <summary>
         /// Gets the resolver that is being used to resolve the type to be averageable type.
@@ -71,7 +72,7 @@ namespace RepoDb.StatementBuilders
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .Average(field, DbSetting /*, ConvertFieldResolver*/)
+                .Average(field, DbSetting, ConvertFieldResolver)
                 .WriteText("AS [AverageValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
@@ -100,7 +101,32 @@ namespace RepoDb.StatementBuilders
             Field field,
             string hints = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Check the field
+            if (field == null)
+            {
+                throw new NullReferenceException("The field cannot be null.");
+            }
+            else
+            {
+                field.Type = AverageableClientTypeResolver.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .Average(field, DbSetting, ConvertFieldResolver)
+                .WriteText("AS [AverageValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -148,7 +174,23 @@ namespace RepoDb.StatementBuilders
             QueryGroup where = null,
             string hints = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .Count(null, DbSetting)
+                .WriteText("AS [CountValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .WhereFrom(where, DbSetting)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -166,7 +208,22 @@ namespace RepoDb.StatementBuilders
             string tableName,
             string hints = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .Count(null, DbSetting)
+                .WriteText("AS [CountValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -184,7 +241,20 @@ namespace RepoDb.StatementBuilders
             string tableName,
             QueryGroup where = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Delete()
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .WhereFrom(where, DbSetting)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -200,7 +270,19 @@ namespace RepoDb.StatementBuilders
         public string CreateDeleteAll(QueryBuilder queryBuilder,
             string tableName)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Delete()
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -268,7 +350,29 @@ namespace RepoDb.StatementBuilders
             QueryGroup where = null,
             string hints = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Check the field
+            if (field == null)
+            {
+                throw new NullReferenceException("The field cannot be null.");
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .Max(field, DbSetting)
+                .WriteText("AS [MaxValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .WhereFrom(where, DbSetting)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -288,7 +392,28 @@ namespace RepoDb.StatementBuilders
             Field field,
             string hints = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Check the field
+            if (field == null)
+            {
+                throw new NullReferenceException("The field cannot be null.");
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .Max(field, DbSetting)
+                .WriteText("AS [MaxValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -360,7 +485,29 @@ namespace RepoDb.StatementBuilders
             QueryGroup where = null,
             string hints = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Check the field
+            if (field == null)
+            {
+                throw new NullReferenceException("The field cannot be null.");
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .Min(field, DbSetting)
+                .WriteText("AS [MinValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .WhereFrom(where, DbSetting)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -380,7 +527,28 @@ namespace RepoDb.StatementBuilders
             Field field,
             string hints = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Check the field
+            if (field == null)
+            {
+                throw new NullReferenceException("The field cannot be null.");
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .Min(field, DbSetting)
+                .WriteText("AS [MinValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -406,7 +574,45 @@ namespace RepoDb.StatementBuilders
             int? top = null,
             string hints = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // There should be fields
+            if (fields?.Any() != true)
+            {
+                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+            }
+
+            if (orderBy != null)
+            {
+                // Check if the order fields are present in the given fields
+                var unmatchesOrderFields = orderBy?.Where(orderField =>
+                    fields?.FirstOrDefault(f =>
+                        string.Equals(orderField.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
+
+                // Throw an error we found any unmatches
+                if (unmatchesOrderFields?.Any() == true)
+                {
+                    throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.Name).Join(", ")}' are not " +
+                        $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
+                }
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .TopFrom(top) /* TODO: Limit(top) */
+                .FieldsFrom(fields, DbSetting)
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .WhereFrom(where, DbSetting)
+                .OrderByFrom(orderBy, DbSetting)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -486,7 +692,29 @@ namespace RepoDb.StatementBuilders
             QueryGroup where = null,
             string hints = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Check the field
+            if (field == null)
+            {
+                throw new NullReferenceException("The field cannot be null.");
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .Sum(field, DbSetting)
+                .WriteText("AS [SumValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .WhereFrom(where, DbSetting)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -506,7 +734,28 @@ namespace RepoDb.StatementBuilders
             Field field,
             string hints = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Check the field
+            if (field == null)
+            {
+                throw new NullReferenceException("The field cannot be null.");
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .Sum(field, DbSetting)
+                .WriteText("AS [SumValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -546,7 +795,37 @@ namespace RepoDb.StatementBuilders
             DbField primaryField = null,
             DbField identityField = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
+
+            // Append the proper prefix
+            where?.PrependAnUnderscoreAtTheParameters();
+
+            // Gets the updatable fields
+            var updatableFields = fields
+                .Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Check if there are updatable fields
+            if (updatableFields?.Any() != true)
+            {
+                throw new EmptyException("The list of updatable fields cannot be null or empty.");
+            }
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Update()
+                .TableNameFrom(tableName, DbSetting)
+                .Set()
+                .FieldsAndParametersFrom(updatableFields, 0, DbSetting)
+                .WhereFrom(where, DbSetting)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
