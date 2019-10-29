@@ -142,7 +142,7 @@ namespace RepoDb
         /// <summary>
         /// Prepend an underscore on the bound parameter object.
         /// </summary>
-        internal virtual void PrependAnUnderscoreAtParameter()
+        internal void PrependAnUnderscoreAtParameter()
         {
             Parameter?.PrependAnUnderscore();
         }
