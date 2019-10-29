@@ -656,6 +656,37 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Appends a word TOP with the number of rows to the SQL Query Statement.
+        /// </summary>
+        /// <param name="rows">The number of rows.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder TopFrom(int? rows)
+        {
+            return rows > 0 ? Append(string.Concat("TOP (", rows, ")")) : this;
+        }
+
+        /// <summary>
+        /// Appends a word LIMIT to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Limit()
+        {
+            return Append("LIMIT");
+        }
+
+        /// <summary>
+        /// Appends a word LIMIT with the number of rows to be skipped and return the SQL Query Statement.
+        /// </summary>
+        /// <param name="skip">The number of rows to be skipped.</param>
+        /// <param name="take">The number of rows to be taken.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder LimitFrom(int? skip,
+            int? take)
+        {
+            return skip > 0 ? Append(string.Concat("LIMIT ", skip, ", ", take)) : Append(string.Concat("LIMIT ", take));
+        }
+
+        /// <summary>
         /// Appends a word ORDER BY to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
@@ -671,16 +702,6 @@ namespace RepoDb
         public QueryBuilder Where()
         {
             return Append("WHERE");
-        }
-
-        /// <summary>
-        /// Appends a word TOP and row number to the SQL Query Statement.
-        /// </summary>
-        /// <param name="rows">The row number to be appended.</param>
-        /// <returns>The current instance.</returns>
-        public QueryBuilder TopFrom(int? rows)
-        {
-            return rows > 0 ? Append(string.Concat("TOP (", rows, ")")) : this;
         }
 
         /// <summary>

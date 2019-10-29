@@ -10,7 +10,7 @@ namespace RepoDb.SqLite.UnitTests
         [TestInitialize]
         public void Initialize()
         {
-            Initializer.Initialize();
+            Bootstrap.Initialize();
         }
 
         [TestMethod]

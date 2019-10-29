@@ -58,6 +58,9 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // Check the field
             if (field == null)
             {
@@ -72,11 +75,10 @@ namespace RepoDb.StatementBuilders
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .Average(field, DbSetting, ConvertFieldResolver)
+                .Average(field, DbSetting /* , ConvertFieldResolver */ )
                 .WriteText("AS [AverageValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .End();
 
@@ -104,6 +106,9 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // Check the field
             if (field == null)
             {
@@ -118,11 +123,10 @@ namespace RepoDb.StatementBuilders
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .Average(field, DbSetting, ConvertFieldResolver)
+                .Average(field, DbSetting /* , ConvertFieldResolver */ )
                 .WriteText("AS [AverageValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .End();
 
             // Return the query
@@ -154,7 +158,53 @@ namespace RepoDb.StatementBuilders
             QueryGroup where = null,
             string hints = null)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Validate the hints
+            ValidateHints(hints);
+
+            // There should be fields
+            if (fields?.Any() != true)
+            {
+                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+            }
+
+            // Validate order by
+            if (orderBy == null || orderBy?.Any() != true)
+            {
+                throw new EmptyException("The argument 'orderBy' is required.");
+            }
+
+            // Validate the page
+            if (page == null || page < 0)
+            {
+                throw new ArgumentOutOfRangeException("The page must be equals or greater than 0.");
+            }
+
+            // Validate the page
+            if (rowsPerBatch == null || rowsPerBatch < 1)
+            {
+                throw new ArgumentOutOfRangeException($"The rows per batch must be equals or greater than 1.");
+            }
+
+            // Skipping variables
+            var skip = (page * rowsPerBatch);
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Select()
+                .FieldsFrom(fields, DbSetting)
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .WhereFrom(where, DbSetting)
+                .OrderByFrom(orderBy, DbSetting)
+                .LimitFrom(skip, rowsPerBatch)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -177,6 +227,9 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // Build the query
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
@@ -185,7 +238,6 @@ namespace RepoDb.StatementBuilders
                 .WriteText("AS [CountValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .End();
 
@@ -211,6 +263,9 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // Build the query
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
@@ -219,7 +274,6 @@ namespace RepoDb.StatementBuilders
                 .WriteText("AS [CountValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .End();
 
             // Return the query
@@ -328,7 +382,7 @@ namespace RepoDb.StatementBuilders
             DbField primaryField = null,
             DbField identityField = null)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Multiple statement execution is not supported on SQLite. Therefore, the batch-insert operation is not supported.");
         }
 
         #endregion
@@ -353,6 +407,9 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // Check the field
             if (field == null)
             {
@@ -367,7 +424,6 @@ namespace RepoDb.StatementBuilders
                 .WriteText("AS [MaxValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .End();
 
@@ -395,6 +451,9 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // Check the field
             if (field == null)
             {
@@ -409,7 +468,6 @@ namespace RepoDb.StatementBuilders
                 .WriteText("AS [MaxValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .End();
 
             // Return the query
@@ -463,7 +521,7 @@ namespace RepoDb.StatementBuilders
             DbField primaryField = null,
             DbField identityField = null)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Multiple statement execution is not supported on SQLite. Therefore, the batch-merge operation is not supported.");
         }
 
         #endregion
@@ -488,6 +546,9 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // Check the field
             if (field == null)
             {
@@ -502,7 +563,6 @@ namespace RepoDb.StatementBuilders
                 .WriteText("AS [MinValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .End();
 
@@ -530,6 +590,9 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // Check the field
             if (field == null)
             {
@@ -544,7 +607,6 @@ namespace RepoDb.StatementBuilders
                 .WriteText("AS [MinValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .End();
 
             // Return the query
@@ -577,12 +639,16 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // There should be fields
             if (fields?.Any() != true)
             {
                 throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
+            // Validate the ordering
             if (orderBy != null)
             {
                 // Check if the order fields are present in the given fields
@@ -602,13 +668,12 @@ namespace RepoDb.StatementBuilders
             (queryBuilder ?? new QueryBuilder())
                 .Clear()
                 .Select()
-                .TopFrom(top) /* TODO: Limit(top) */
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy, DbSetting)
+                .LimitFrom(0, top)
                 .End();
 
             // Return the query
@@ -637,12 +702,16 @@ namespace RepoDb.StatementBuilders
             // Guard the target table
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // There should be fields
             if (fields?.Any() != true)
             {
                 throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
+            // Validate the ordering
             if (orderBy != null)
             {
                 // Check if the order fields are present in the given fields
@@ -665,7 +734,6 @@ namespace RepoDb.StatementBuilders
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .OrderByFrom(orderBy, DbSetting)
                 .End();
 
@@ -695,6 +763,9 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // Check the field
             if (field == null)
             {
@@ -709,7 +780,6 @@ namespace RepoDb.StatementBuilders
                 .WriteText("AS [SumValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .End();
 
@@ -737,6 +807,9 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Validate the hints
+            ValidateHints(hints);
+
             // Check the field
             if (field == null)
             {
@@ -751,7 +824,6 @@ namespace RepoDb.StatementBuilders
                 .WriteText("AS [SumValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .End();
 
             // Return the query
@@ -771,7 +843,19 @@ namespace RepoDb.StatementBuilders
         public string CreateTruncate(QueryBuilder queryBuilder,
             string tableName)
         {
-            throw new NotImplementedException();
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Delete()
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
         }
 
         #endregion
@@ -801,7 +885,7 @@ namespace RepoDb.StatementBuilders
             GuardIdentity(identityField);
 
             // Append the proper prefix
-            where?.PrependAnUnderscoreAtTheParameters();
+            where?.IsForUpdate();
 
             // Gets the updatable fields
             var updatableFields = fields
@@ -851,7 +935,7 @@ namespace RepoDb.StatementBuilders
             DbField primaryField = null,
             DbField identityField = null)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Multiple statement execution is not supported on SQLite. Therefore, the batch-update operation is not supported.");
         }
 
         #endregion
@@ -891,6 +975,18 @@ namespace RepoDb.StatementBuilders
             if (field?.IsIdentity == false)
             {
                 throw new InvalidOperationException("The field is not defined as identity.");
+            }
+        }
+
+        /// <summary>
+        /// Throws an exception if the 'hints' is present.
+        /// </summary>
+        /// <param name="hints">The value to be evaluated.</param>
+        private void ValidateHints(string hints = null)
+        {
+            if (!string.IsNullOrEmpty(hints))
+            {
+                throw new NotSupportedException("The hints are not supported at SQLite.");
             }
         }
 

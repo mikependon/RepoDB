@@ -1041,6 +1041,7 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
+            // Validate the ordering
             if (orderBy != null)
             {
                 // Check if the order fields are present in the given fields
@@ -1101,6 +1102,7 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
+            // Validate the ordering
             if (orderBy != null)
             {
                 // Check if the order fields are present in the given fields

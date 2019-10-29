@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Enumerations;
 using RepoDb.SqLite.IntegrationTests.Models;
 using System.Data.SQLite;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestInitialize]
         public void Initialize()
         {
-            Initializer.Initialize();
+            Bootstrap.Initialize();
             //Database.Initialize();
             Cleanup();
         }
@@ -22,21 +23,27 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             //Database.Cleanup();
         }
 
-        //[TestMethod]
-        //public void TestExtractColumnType()
-        //{
-        //    using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
-        //    {
-        //        using (var reader = connection.ExecuteReader("select * from completetable where id = 5;"))
-        //        {
-        //            var text = string.Empty;
-        //            for (var i = 0; i < reader.FieldCount; i++)
-        //            {
-        //                text = string.Concat(text, $"{reader.GetName(i)} : {reader.GetFieldType(i)}\n");
-        //            }
-        //        }
-        //    }
-        //}
+        [TestMethod]
+        public void TestExtractColumnType()
+        {
+            using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
+            {
+                using (var reader = connection.ExecuteReader("select * from completetable where id = 5;"))
+                {
+                    //var text = string.Empty;
+                    //for (var i = 0; i < reader.FieldCount; i++)
+                    //{
+                    //    text = string.Concat(text, $"{reader.GetName(i)} : {reader.GetFieldType(i)}\n");
+                    //}
+                    while (reader.Read())
+                    {
+                        var value = reader.GetValue(0);
+                        var ordinal = reader.GetOrdinal("ColumnTime");
+                        value = reader.GetValue(ordinal);
+                    }
+                }
+            }
+        }
 
         [TestMethod]
         public void TestDbRepositoryAverage()
@@ -51,6 +58,28 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Act
                 var result = connection.Average<CompleteTable>(e => e.ColumnInt,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryBatchQuery()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
+            {
+                // Act
+                //repository.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<CompleteTable>(3,
+                    1,
+                    OrderField.Parse(new { Id = Order.Ascending }),
                     (object)null);
 
                 // Assert

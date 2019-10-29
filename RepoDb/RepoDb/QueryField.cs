@@ -20,6 +20,8 @@ namespace RepoDb
         private int? m_hashCode = null;
         private TextAttribute m_operationTextAttribute = null;
 
+        #region Constructors
+
         /// <summary>
         /// Creates a new instance of <see cref="QueryField"/> object.
         /// </summary>
@@ -114,6 +116,8 @@ namespace RepoDb
             Parameter = new Parameter(field.Name, value, appendUnderscore);
         }
 
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -141,6 +145,14 @@ namespace RepoDb
         internal virtual void PrependAnUnderscoreAtParameter()
         {
             Parameter?.PrependAnUnderscore();
+        }
+
+        /// <summary>
+        /// Make the current instance of <see cref="QueryField"/> object to become an expression for 'Update' operations.
+        /// </summary>
+        public void IsForUpdate()
+        {
+            PrependAnUnderscoreAtParameter();
         }
 
         /// <summary>

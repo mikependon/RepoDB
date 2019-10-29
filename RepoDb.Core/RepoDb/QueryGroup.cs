@@ -292,61 +292,6 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Fix the names of the <see cref="Parameter"/> on every <see cref="QueryField"/> (and on every child <see cref="QueryGroup"/>) of the current <see cref="QueryGroup"/>.
-        /// </summary>
-        /// <returns>The current instance.</returns>
-        public QueryGroup Fix()
-        {
-            if (m_isFixed)
-            {
-                return this;
-            }
-
-            // Check the presence
-            var fields = GetFields(true);
-            if (fields == null)
-            {
-                return this;
-            }
-
-            // Check any item
-            if (fields.Any() != true)
-            {
-                return this;
-            }
-
-            // Filter the items
-            var firstList = fields.OrderBy(queryField => queryField.Parameter.Name);
-            var secondList = new List<QueryField>(firstList);
-
-            // Iterate and fix the names
-            for (var i = 0; i < firstList.Count(); i++)
-            {
-                var queryField = firstList.ElementAt(i);
-                for (var c = 0; c < secondList.Count; c++)
-                {
-                    var cQueryField = secondList[c];
-                    if (ReferenceEquals(queryField, cQueryField))
-                    {
-                        continue;
-                    }
-                    if (queryField.Field.Equals(cQueryField.Field))
-                    {
-                        var fieldValue = cQueryField.Parameter;
-                        fieldValue.SetName(string.Concat(cQueryField.Parameter.Name, "_", c));
-                    }
-                }
-                secondList.RemoveAll(qf => qf.Field.Equals(queryField.Field));
-            }
-
-            // Force the fixes
-            ForceFix();
-
-            // Return the current instance
-            return this;
-        }
-
-        /// <summary>
         /// Force to set the <see cref="m_isFixed"/> variable to True.
         /// </summary>
         private void ForceFix()
@@ -362,37 +307,6 @@ namespace RepoDb
 
             // Set the flag of the current instance
             m_isFixed = true;
-        }
-
-        /// <summary>
-        /// Reset the <see cref="QueryGroup"/> back to its default state (as is newly instantiated).
-        /// </summary>
-        public void Reset()
-        {
-            // Rest all fields
-            if (QueryFields?.Any() == true)
-            {
-                foreach (var field in QueryFields)
-                {
-                    field.Reset();
-                }
-            }
-
-            // Rest all groups
-            if (QueryGroups?.Any() == true)
-            {
-                foreach (var group in QueryGroups)
-                {
-                    group.Reset();
-                }
-            }
-
-            // Reset the attribute
-            m_conjuctionTextAttribute = null;
-            m_isFixed = false;
-
-            // Reset the hash code
-            m_hashCode = null;
         }
 
         /// <summary>
@@ -561,6 +475,100 @@ namespace RepoDb
         #endregion
 
         #region Methods (Public)
+
+        /// <summary>
+        /// Reset the <see cref="QueryGroup"/> back to its default state (as is newly instantiated).
+        /// </summary>
+        public void Reset()
+        {
+            // Rest all fields
+            if (QueryFields?.Any() == true)
+            {
+                foreach (var field in QueryFields)
+                {
+                    field.Reset();
+                }
+            }
+
+            // Rest all groups
+            if (QueryGroups?.Any() == true)
+            {
+                foreach (var group in QueryGroups)
+                {
+                    group.Reset();
+                }
+            }
+
+            // Reset the attribute
+            m_conjuctionTextAttribute = null;
+            m_isFixed = false;
+
+            // Reset the hash code
+            m_hashCode = null;
+        }
+
+        /// <summary>
+        /// Fix the names of the <see cref="Parameter"/> on every <see cref="QueryField"/> (and on every child <see cref="QueryGroup"/>) of the current <see cref="QueryGroup"/>.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryGroup Fix()
+        {
+            if (m_isFixed)
+            {
+                return this;
+            }
+
+            // Check the presence
+            var fields = GetFields(true);
+            if (fields == null)
+            {
+                return this;
+            }
+
+            // Check any item
+            if (fields.Any() != true)
+            {
+                return this;
+            }
+
+            // Filter the items
+            var firstList = fields.OrderBy(queryField => queryField.Parameter.Name);
+            var secondList = new List<QueryField>(firstList);
+
+            // Iterate and fix the names
+            for (var i = 0; i < firstList.Count(); i++)
+            {
+                var queryField = firstList.ElementAt(i);
+                for (var c = 0; c < secondList.Count; c++)
+                {
+                    var cQueryField = secondList[c];
+                    if (ReferenceEquals(queryField, cQueryField))
+                    {
+                        continue;
+                    }
+                    if (queryField.Field.Equals(cQueryField.Field))
+                    {
+                        var fieldValue = cQueryField.Parameter;
+                        fieldValue.SetName(string.Concat(cQueryField.Parameter.Name, "_", c));
+                    }
+                }
+                secondList.RemoveAll(qf => qf.Field.Equals(queryField.Field));
+            }
+
+            // Force the fixes
+            ForceFix();
+
+            // Return the current instance
+            return this;
+        }
+
+        /// <summary>
+        /// Make the current instance of <see cref="QueryGroup"/> object to become an expression for 'Update' operations.
+        /// </summary>
+        public void IsForUpdate()
+        {
+            PrependAnUnderscoreAtTheParameters();
+        }
 
         /// <summary>
         /// Gets the text value of <see cref="TextAttribute"/> implemented at the <see cref="Conjunction"/> property value of this instance.
