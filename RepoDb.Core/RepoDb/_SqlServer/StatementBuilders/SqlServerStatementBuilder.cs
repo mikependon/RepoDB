@@ -1,11 +1,9 @@
 ﻿using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System;
 using RepoDb.Exceptions;
 using RepoDb.Resolvers;
-using RepoDb.DbSettings;
 using System.Data.SqlClient;
 
 namespace RepoDb.StatementBuilders
@@ -13,124 +11,16 @@ namespace RepoDb.StatementBuilders
     /// <summary>
     /// A class used to build a SQL Statement for SQL Server. This is the default statement builder used by the library.
     /// </summary>
-    internal sealed class SqlServerStatementBuilder : IStatementBuilder
+    public sealed class SqlServerStatementBuilder : BaseStatementBuilder
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> object.
         /// </summary>
-        public SqlServerStatementBuilder() { }
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the database setting object that is currently in used.
-        /// </summary>
-        private IDbSetting DbSetting => DbSettingMapper.Get<SqlConnection>();
-
-        /// <summary>
-        /// Gets the resolver used to get the <see cref="Field"/> object for SQL Server.
-        /// </summary>
-        private IResolver<Field, IDbSetting, string> ConvertFieldResolver => new SqlServerConvertFieldResolver();
-
-        /// <summary>
-        /// Gets the resolver that is being used to resolve the type to be averageable type.
-        /// </summary>
-        private IResolver<Type, Type> AverageableClientTypeResolver => new ClientTypeToAverageableClientTypeResolver();
-
-        #endregion
-
-        #region CreateAverage
-
-        /// <summary>
-        /// Creates a SQL Statement for average operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for average operation.</returns>
-        public string CreateAverage(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            QueryGroup where = null,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Check the field
-            if (field == null)
-            {
-                throw new NullReferenceException("The field cannot be null.");
-            }
-            else
-            {
-                field.Type = AverageableClientTypeResolver.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .Average(field, DbSetting, ConvertFieldResolver)
-                .WriteText("AS [AverageValue]")
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .WhereFrom(where, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateAverageAll
-
-        /// <summary>
-        /// Creates a SQL Statement for average-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for average-all operation.</returns>
-        public string CreateAverageAll(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Check the field
-            if (field == null)
-            {
-                throw new NullReferenceException("The field cannot be null.");
-            }
-            else
-            {
-                field.Type = AverageableClientTypeResolver.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .Average(field, DbSetting, ConvertFieldResolver)
-                .WriteText("AS [AverageValue]")
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
+        public SqlServerStatementBuilder()
+        : base(new SqlServerConvertFieldResolver(),
+             new ClientTypeToAverageableClientTypeResolver(),
+             DbSettingMapper.Get<SqlConnection>())
+        { }
 
         #region CreateBatchQuery
 
@@ -146,7 +36,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for batch query operation.</returns>
-        public string CreateBatchQuery(QueryBuilder queryBuilder,
+        public override string CreateBatchQuery(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             int? page,
@@ -216,134 +106,6 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateCount
-
-        /// <summary>
-        /// Creates a SQL Statement for count operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for count operation.</returns>
-        public string CreateCount(QueryBuilder queryBuilder,
-            string tableName,
-            QueryGroup where = null,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .CountBig(null, DbSetting)
-                .WriteText("AS [CountValue]")
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .WhereFrom(where, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateCountAll
-
-        /// <summary>
-        /// Creates a SQL Statement for count-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for count-all operation.</returns>
-        public string CreateCountAll(QueryBuilder queryBuilder,
-            string tableName,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .CountBig(null, DbSetting)
-                .WriteText("AS [CountValue]")
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateDelete
-
-        /// <summary>
-        /// Creates a SQL Statement for delete operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="where">The query expression.</param>
-        /// <returns>A sql statement for delete operation.</returns>
-        public string CreateDelete(QueryBuilder queryBuilder,
-            string tableName,
-            QueryGroup where = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Delete()
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .WhereFrom(where, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateDeleteAll
-
-        /// <summary>
-        /// Creates a SQL Statement for delete-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <returns>A sql statement for delete-all operation.</returns>
-        public string CreateDeleteAll(QueryBuilder queryBuilder,
-            string tableName)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Delete()
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
         #region CreateInsert
 
         /// <summary>
@@ -355,7 +117,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <returns>A sql statement for insert operation.</returns>
-        public string CreateInsert(QueryBuilder queryBuilder,
+        public override string CreateInsert(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields = null,
             DbField primaryField = null,
@@ -443,7 +205,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <returns>A sql statement for insert operation.</returns>
-        public string CreateInsertAll(QueryBuilder queryBuilder,
+        public override string CreateInsertAll(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -528,91 +290,6 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateMax
-
-        /// <summary>
-        /// Creates a SQL Statement for maximum operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be maximumd.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for maximum operation.</returns>
-        public string CreateMax(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            QueryGroup where = null,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Check the field
-            if (field == null)
-            {
-                throw new NullReferenceException("The field cannot be null.");
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .Max(field, DbSetting)
-                .WriteText("AS [MaxValue]")
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .WhereFrom(where, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateMaxAll
-
-        /// <summary>
-        /// Creates a SQL Statement for maximum-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be maximumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for maximum-all operation.</returns>
-        public string CreateMaxAll(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Check the field
-            if (field == null)
-            {
-                throw new NullReferenceException("The field cannot be null.");
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .Max(field, DbSetting)
-                .WriteText("AS [MaxValue]")
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
         #region CreateMerge
 
         /// <summary>
@@ -625,7 +302,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <returns>A sql statement for merge operation.</returns>
-        public string CreateMerge(QueryBuilder queryBuilder,
+        public override string CreateMerge(QueryBuilder queryBuilder,
              string tableName,
              IEnumerable<Field> fields,
              IEnumerable<Field> qualifiers = null,
@@ -775,7 +452,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <returns>A sql statement for merge operation.</returns>
-        public string CreateMergeAll(QueryBuilder queryBuilder,
+        public override string CreateMergeAll(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers = null,
@@ -926,298 +603,6 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateMin
-
-        /// <summary>
-        /// Creates a SQL Statement for minimum operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be minimumd.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for minimum operation.</returns>
-        public string CreateMin(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            QueryGroup where = null,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Check the field
-            if (field == null)
-            {
-                throw new NullReferenceException("The field cannot be null.");
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .Min(field, DbSetting)
-                .WriteText("AS [MinValue]")
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .WhereFrom(where, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateMinAll
-
-        /// <summary>
-        /// Creates a SQL Statement for minimum-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be minimumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for minimum-all operation.</returns>
-        public string CreateMinAll(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Check the field
-            if (field == null)
-            {
-                throw new NullReferenceException("The field cannot be null.");
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .Min(field, DbSetting)
-                .WriteText("AS [MinValue]")
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateQuery
-
-        /// <summary>
-        /// Creates a SQL Statement for query operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="orderBy">The list of fields for ordering.</param>
-        /// <param name="top">The number of rows to be returned.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for query operation.</returns>
-        public string CreateQuery(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields,
-            QueryGroup where = null,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = null,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // There should be fields
-            if (fields?.Any() != true)
-            {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
-            }
-
-            if (orderBy != null)
-            {
-                // Check if the order fields are present in the given fields
-                var unmatchesOrderFields = orderBy?.Where(orderField =>
-                    fields?.FirstOrDefault(f =>
-                        string.Equals(orderField.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
-
-                // Throw an error we found any unmatches
-                if (unmatchesOrderFields?.Any() == true)
-                {
-                    throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.Name).Join(", ")}' are not " +
-                        $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
-                }
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .TopFrom(top)
-                .FieldsFrom(fields, DbSetting)
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .WhereFrom(where, DbSetting)
-                .OrderByFrom(orderBy, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateQueryAll
-
-        /// <summary>
-        /// Creates a SQL Statement for query-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields.</param>
-        /// <param name="orderBy">The list of fields for ordering.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for query operation.</returns>
-        public string CreateQueryAll(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields,
-            IEnumerable<OrderField> orderBy = null,
-            string hints = null)
-        {
-            // Guard the target table
-            GuardTableName(tableName);
-
-            // There should be fields
-            if (fields?.Any() != true)
-            {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
-            }
-
-            if (orderBy != null)
-            {
-                // Check if the order fields are present in the given fields
-                var unmatchesOrderFields = orderBy?.Where(orderField =>
-                    fields?.FirstOrDefault(f =>
-                        string.Equals(orderField.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
-
-                // Throw an error we found any unmatches
-                if (unmatchesOrderFields?.Any() == true)
-                {
-                    throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField(DbSetting)).Join(", ")}' are not " +
-                        $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
-                }
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .FieldsFrom(fields, DbSetting)
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .OrderByFrom(orderBy, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateSum
-
-        /// <summary>
-        /// Creates a SQL Statement for sum operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be sumd.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for sum operation.</returns>
-        public string CreateSum(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            QueryGroup where = null,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Check the field
-            if (field == null)
-            {
-                throw new NullReferenceException("The field cannot be null.");
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .Sum(field, DbSetting)
-                .WriteText("AS [SumValue]")
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .WhereFrom(where, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateSumAll
-
-        /// <summary>
-        /// Creates a SQL Statement for sum-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be sumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for sum-all operation.</returns>
-        public string CreateSumAll(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Check the field
-            if (field == null)
-            {
-                throw new NullReferenceException("The field cannot be null.");
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .Sum(field, DbSetting)
-                .WriteText("AS [SumValue]")
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
         #region CreateTruncate
 
         /// <summary>
@@ -1226,7 +611,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>A sql statement for truncate operation.</returns>
-        public string CreateTruncate(QueryBuilder queryBuilder,
+        public override string CreateTruncate(QueryBuilder queryBuilder,
             string tableName)
         {
             // Guard the target table
@@ -1238,60 +623,6 @@ namespace RepoDb.StatementBuilders
                 .Truncate()
                 .Table()
                 .TableNameFrom(tableName, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateUpdate
-
-        /// <summary>
-        /// Creates a SQL Statement for update operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be updated.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="identityField">The identity field from the database.</param>
-        /// <returns>A sql statement for update operation.</returns>
-        public string CreateUpdate(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields,
-            QueryGroup where = null,
-            DbField primaryField = null,
-            DbField identityField = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-            GuardPrimary(primaryField);
-            GuardIdentity(identityField);
-
-            // Append the proper prefix
-            where?.PrependAnUnderscoreAtTheParameters();
-
-            // Gets the updatable fields
-            var updatableFields = fields
-                .Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
-                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
-
-            // Check if there are updatable fields
-            if (updatableFields?.Any() != true)
-            {
-                throw new EmptyException("The list of updatable fields cannot be null or empty.");
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Update()
-                .TableNameFrom(tableName, DbSetting)
-                .Set()
-                .FieldsAndParametersFrom(updatableFields, 0, DbSetting)
-                .WhereFrom(where, DbSetting)
                 .End();
 
             // Return the query
@@ -1313,7 +644,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <returns>A sql statement for update-all operation.</returns>
-        public string CreateUpdateAll(QueryBuilder queryBuilder,
+        public override string CreateUpdateAll(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,

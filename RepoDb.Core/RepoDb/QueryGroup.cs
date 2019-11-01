@@ -8,7 +8,6 @@ using RepoDb.Exceptions;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Dynamic;
-using System.Data;
 using RepoDb.Interfaces;
 
 namespace RepoDb

@@ -13,6 +13,16 @@ namespace RepoDb.Interfaces
         bool IsMultipleStatementExecutionSupported { get; }
 
         /// <summary>
+        /// Gets the value that indicates whether the table hints are supported.
+        /// </summary>
+        bool AreTableHintsSupported { get; }
+
+        /// <summary>
+        /// Gets the value that indicates whether the count big operation is supported.
+        /// </summary>
+        bool IsCountBigSupported { get; }
+
+        /// <summary>
         /// Gets the character used for opening quote.
         /// </summary>
         string OpeningQuote { get; }

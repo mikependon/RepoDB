@@ -19,6 +19,16 @@ namespace RepoDb.DbSettings
         public bool IsMultipleStatementExecutionSupported { get; } = true;
 
         /// <summary>
+        /// Gets the value that indicates whether the table hints are supported.
+        /// </summary>
+        public bool AreTableHintsSupported { get; } = true;
+
+        /// <summary>
+        /// Gets the value that indicates whether the count big operation is supported.
+        /// </summary>
+        public bool IsCountBigSupported { get; } = true;
+
+        /// <summary>
         /// Gets the character (or string) used for opening quote.
         /// </summary>
         public string OpeningQuote { get; } = "[";
@@ -65,6 +75,15 @@ namespace RepoDb.DbSettings
 
             // Use the non nullable for perf purposes
             var hashCode = 0;
+
+            // IsMultipleStatementExecutionSupported
+            hashCode += IsMultipleStatementExecutionSupported.GetHashCode();
+
+            // AreTableHintsSupported
+            hashCode += AreTableHintsSupported.GetHashCode();
+
+            // IsCountBigSupported
+            hashCode += IsCountBigSupported.GetHashCode();
 
             // OpeningQuote
             if (!string.IsNullOrEmpty(OpeningQuote))

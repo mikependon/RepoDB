@@ -102,6 +102,7 @@
     <Compile Include="Requests\AverageRequest.cs" />
     <Compile Include="Requests\AverageAllRequest.cs" />
     <Compile Include="Resolvers\ClientTypeToAverageableClientTypeResolver.cs" />
+    <Compile Include="StatementBuilders\BaseStatementBuilder.cs" />
     <Compile Include="_SqlServer\DbSettings\SqlServerDbSetting.cs" />
     <Compile Include="DbSettingMapper.cs" />
     <Compile Include="DbValidatorMapper.cs" />

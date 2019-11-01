@@ -1,42 +1,52 @@
-﻿using RepoDb.Exceptions;
-using RepoDb.Extensions;
+﻿using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.Resolvers;
-using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Linq;
+using System;
+using RepoDb.Exceptions;
 
 namespace RepoDb.StatementBuilders
 {
     /// <summary>
-    /// A class used to build a SQL Statement for SQLite.
+    /// A class used to be as base <see cref="IStatementBuilder"/> for the database.
     /// </summary>
-    public sealed class SqLiteStatementBuilder : IStatementBuilder
+    public abstract class BaseStatementBuilder : IStatementBuilder
     {
         /// <summary>
-        /// Creates a new instance of <see cref="SqLiteStatementBuilder"/> object.
+        /// Creates a new instance of <see cref="BaseStatementBuilder"/> class.
         /// </summary>
-        public SqLiteStatementBuilder() { }
+        /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
+        /// <param name="averageableClientTypeResolver">The resolver used to identity the type for average.</param>
+        /// <param name="dbSetting">The database settings object currently in used.</param>
+        public BaseStatementBuilder(IResolver<Field, IDbSetting, string> convertFieldResolver,
+            IResolver<Type, Type> averageableClientTypeResolver,
+            IDbSetting dbSetting)
+        {
+            ConvertFieldResolver = convertFieldResolver;
+            AverageableClientTypeResolver = averageableClientTypeResolver;
+            DbSetting = dbSetting;
+        }
 
         #region Properties
 
         /// <summary>
         /// Gets the database setting object that is currently in used.
         /// </summary>
-        private IDbSetting DbSetting => DbSettingMapper.Get(typeof(SQLiteConnection));
+        internal IDbSetting DbSetting { get; }
 
         /// <summary>
-        /// Gets the resolver used to get the <see cref="Field"/> object for SQLite.
+        /// Gets the resolver used to convert the <see cref="Field"/> object.
         /// </summary>
-        private IResolver<Field, IDbSetting, string> ConvertFieldResolver => new SqLiteConvertFieldResolver();
+        internal IResolver<Field, IDbSetting, string> ConvertFieldResolver { get; }
 
         /// <summary>
         /// Gets the resolver that is being used to resolve the type to be averageable type.
         /// </summary>
-        private IResolver<Type, Type> AverageableClientTypeResolver => new ClientTypeToAverageableClientTypeResolver();
+        internal IResolver<Type, Type> AverageableClientTypeResolver { get; }
 
         #endregion
+
+        #region Common
 
         #region CreateAverage
 
@@ -68,22 +78,25 @@ namespace RepoDb.StatementBuilders
             }
             else
             {
-                field.Type = AverageableClientTypeResolver.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
+                field.Type = AverageableClientTypeResolver?.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
+            builder.Clear()
                 .Select()
-                .Average(field, DbSetting /* , ConvertFieldResolver */ )
+                .Average(field, DbSetting, ConvertFieldResolver)
                 .WriteText("AS [AverageValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -116,95 +129,24 @@ namespace RepoDb.StatementBuilders
             }
             else
             {
-                field.Type = AverageableClientTypeResolver.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
+                field.Type = AverageableClientTypeResolver?.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
+            builder.Clear()
                 .Select()
-                .Average(field, DbSetting /* , ConvertFieldResolver */ )
+                .Average(field, DbSetting, ConvertFieldResolver)
                 .WriteText("AS [AverageValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateBatchQuery
-
-        /// <summary>
-        /// Creates a SQL Statement for batch query operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
-        /// <param name="page">The page of the batch.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch.</param>
-        /// <param name="orderBy">The list of fields for ordering.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for batch query operation.</returns>
-        public string CreateBatchQuery(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields,
-            int? page,
-            int? rowsPerBatch,
-            IEnumerable<OrderField> orderBy = null,
-            QueryGroup where = null,
-            string hints = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Validate the hints
-            ValidateHints(hints);
-
-            // There should be fields
-            if (fields?.Any() != true)
-            {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
-            }
-
-            // Validate order by
-            if (orderBy == null || orderBy?.Any() != true)
-            {
-                throw new EmptyException("The argument 'orderBy' is required.");
-            }
-
-            // Validate the page
-            if (page == null || page < 0)
-            {
-                throw new ArgumentOutOfRangeException("The page must be equals or greater than 0.");
-            }
-
-            // Validate the page
-            if (rowsPerBatch == null || rowsPerBatch < 1)
-            {
-                throw new ArgumentOutOfRangeException($"The rows per batch must be equals or greater than 1.");
-            }
-
-            // Skipping variables
-            var skip = (page * rowsPerBatch);
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .FieldsFrom(fields, DbSetting)
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .WhereFrom(where, DbSetting)
-                .OrderByFrom(orderBy, DbSetting)
-                .LimitFrom(skip, rowsPerBatch)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -230,19 +172,33 @@ namespace RepoDb.StatementBuilders
             // Validate the hints
             ValidateHints(hints);
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .Count(null, DbSetting)
-                .WriteText("AS [CountValue]")
+            builder.Clear()
+                .Select();
+
+            // Way of count
+            if (DbSetting.IsCountBigSupported)
+            {
+                builder.CountBig(null, DbSetting);
+            }
+            else
+            {
+                builder.Count(null, DbSetting);
+            }
+
+            // Continuation
+            builder.WriteText("AS [CountValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -266,18 +222,32 @@ namespace RepoDb.StatementBuilders
             // Validate the hints
             ValidateHints(hints);
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Select()
-                .Count(null, DbSetting)
-                .WriteText("AS [CountValue]")
+            builder.Clear()
+                .Select();
+
+            // Way of count
+            if (DbSetting.IsCountBigSupported)
+            {
+                builder.CountBig(null, DbSetting);
+            }
+            else
+            {
+                builder.Count(null, DbSetting);
+            }
+
+            // Continuation
+            builder.WriteText("AS [CountValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -298,8 +268,11 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Delete()
                 .From()
@@ -308,7 +281,7 @@ namespace RepoDb.StatementBuilders
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -327,8 +300,11 @@ namespace RepoDb.StatementBuilders
             // Ensure with guards
             GuardTableName(tableName);
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Delete()
                 .From()
@@ -336,118 +312,7 @@ namespace RepoDb.StatementBuilders
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateInsert
-
-        /// <summary>
-        /// Creates a SQL Statement for insert operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be inserted.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="identityField">The identity field from the database.</param>
-        /// <returns>A sql statement for insert operation.</returns>
-        public string CreateInsert(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields = null,
-            DbField primaryField = null,
-            DbField identityField = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-            GuardPrimary(primaryField);
-            GuardIdentity(identityField);
-
-            // Verify the fields
-            if (fields?.Any() != true)
-            {
-                throw new EmptyException($"The list of insertable fields must not be null or empty for '{tableName}'.");
-            }
-
-            // Ensure the primary is on the list if it is not an identity
-            if (primaryField != null)
-            {
-                if (primaryField != identityField)
-                {
-                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
-                    if (isPresent == false)
-                    {
-                        throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
-                    }
-                }
-            }
-
-            // Variables needed
-            var databaseType = "BIGINT";
-            var insertableFields = fields
-                .Where(f => !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
-
-            // Check for the identity
-            if (identityField != null)
-            {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-                }
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Insert()
-                .Into()
-                .TableNameFrom(tableName, DbSetting)
-                .OpenParen()
-                .FieldsFrom(insertableFields, DbSetting)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .ParametersFrom(insertableFields, 0, DbSetting)
-                .CloseParen()
-                .End();
-
-            // Set the return value
-            var result = identityField != null ?
-                string.Concat("CONVERT(", databaseType, ", SCOPE_IDENTITY())") :
-                    primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
-            queryBuilder
-                .Select()
-                .WriteText(result)
-                .As("[Result]")
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateInsertAll
-
-        /// <summary>
-        /// Creates a SQL Statement for insert-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be inserted.</param>
-        /// <param name="batchSize">The batch size of the operation.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="identityField">The identity field from the database.</param>
-        /// <returns>A sql statement for insert operation.</returns>
-        public string CreateInsertAll(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields = null,
-            int batchSize = 10,
-            DbField primaryField = null,
-            DbField identityField = null)
-        {
-            throw new NotSupportedException("Multiple statement execution is not supported on SQLite. Therefore, the batch-insert operation is not supported.");
+            return builder.GetString();
         }
 
         #endregion
@@ -481,19 +346,23 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException("The field cannot be null.");
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Select()
                 .Max(field, DbSetting)
                 .WriteText("AS [MaxValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -525,68 +394,22 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException("The field cannot be null.");
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Select()
                 .Max(field, DbSetting)
                 .WriteText("AS [MaxValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateMerge
-
-        /// <summary>
-        /// Creates a SQL Statement for merge operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be merged.</param>
-        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="identityField">The identity field from the database.</param>
-        /// <returns>A sql statement for merge operation.</returns>
-        public string CreateMerge(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers = null,
-            DbField primaryField = null,
-            DbField identityField = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region CreateMergeAll
-
-        /// <summary>
-        /// Creates a SQL Statement for merge-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be merged.</param>
-        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
-        /// <param name="batchSize">The batch size of the operation.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="identityField">The identity field from the database.</param>
-        /// <returns>A sql statement for merge operation.</returns>
-        public string CreateMergeAll(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
-            int batchSize = 10,
-            DbField primaryField = null,
-            DbField identityField = null)
-        {
-            throw new NotSupportedException("Multiple statement execution is not supported on SQLite. Therefore, the batch-merge operation is not supported.");
+            return builder.GetString();
         }
 
         #endregion
@@ -620,19 +443,23 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException("The field cannot be null.");
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Select()
                 .Min(field, DbSetting)
                 .WriteText("AS [MinValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -664,18 +491,22 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException("The field cannot be null.");
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Select()
                 .Min(field, DbSetting)
                 .WriteText("AS [MinValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -729,20 +560,24 @@ namespace RepoDb.StatementBuilders
                 }
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Select()
+                .TopFrom(top)
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy, DbSetting)
-                .LimitFrom(0, top)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -787,23 +622,27 @@ namespace RepoDb.StatementBuilders
                 // Throw an error we found any unmatches
                 if (unmatchesOrderFields?.Any() == true)
                 {
-                    throw new InvalidOperationException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField(DbSetting)).Join(", ")}' are not " +
+                    throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField(DbSetting)).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
                 }
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Select()
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .OrderByFrom(orderBy, DbSetting)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -837,19 +676,23 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException("The field cannot be null.");
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Select()
                 .Sum(field, DbSetting)
                 .WriteText("AS [SumValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -881,46 +724,22 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException("The field cannot be null.");
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Select()
                 .Sum(field, DbSetting)
                 .WriteText("AS [SumValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateTruncate
-
-        /// <summary>
-        /// Creates a SQL Statement for truncate operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <returns>A sql statement for truncate operation.</returns>
-        public string CreateTruncate(QueryBuilder queryBuilder,
-            string tableName)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Delete()
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -950,7 +769,7 @@ namespace RepoDb.StatementBuilders
             GuardIdentity(identityField);
 
             // Append the proper prefix
-            where?.IsForUpdate();
+            where?.PrependAnUnderscoreAtTheParameters();
 
             // Gets the updatable fields
             var updatableFields = fields
@@ -963,8 +782,11 @@ namespace RepoDb.StatementBuilders
                 throw new EmptyException("The list of updatable fields cannot be null or empty.");
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Update()
                 .TableNameFrom(tableName, DbSetting)
@@ -974,8 +796,134 @@ namespace RepoDb.StatementBuilders
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
+
+        #endregion
+
+        #endregion
+
+        #region Virtual
+
+        #region CreateBatchQuery
+
+        /// <summary>
+        /// Creates a SQL Statement for batch query operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="page">The page of the batch.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for batch query operation.</returns>
+        public abstract string CreateBatchQuery(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            int? page,
+            int? rowsPerBatch,
+            IEnumerable<OrderField> orderBy = null,
+            QueryGroup where = null,
+            string hints = null);
+
+        #endregion
+
+        #region CreateInsert
+
+        /// <summary>
+        /// Creates a SQL Statement for insert operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        public abstract string CreateInsert(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
+            DbField primaryField = null,
+            DbField identityField = null);
+
+        #endregion
+
+        #region CreateInsertAll
+
+        /// <summary>
+        /// Creates a SQL Statement for insert-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        public abstract string CreateInsertAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            DbField primaryField = null,
+            DbField identityField = null);
+
+        #endregion
+
+        #region CreateMerge
+
+        /// <summary>
+        /// Creates a SQL Statement for merge operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be merged.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for merge operation.</returns>
+        public abstract string CreateMerge(QueryBuilder queryBuilder,
+             string tableName,
+             IEnumerable<Field> fields,
+             IEnumerable<Field> qualifiers = null,
+             DbField primaryField = null,
+             DbField identityField = null);
+
+        #endregion
+
+        #region CreateMergeAll
+
+        /// <summary>
+        /// Creates a SQL Statement for merge-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be merged.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for merge operation.</returns>
+        public abstract string CreateMergeAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers = null,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            DbField primaryField = null,
+            DbField identityField = null);
+
+        #endregion
+
+        #region CreateTruncate
+
+        /// <summary>
+        /// Creates a SQL Statement for truncate operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A sql statement for truncate operation.</returns>
+        public abstract string CreateTruncate(QueryBuilder queryBuilder,
+            string tableName);
 
         #endregion
 
@@ -992,16 +940,15 @@ namespace RepoDb.StatementBuilders
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <returns>A sql statement for update-all operation.</returns>
-        public string CreateUpdateAll(QueryBuilder queryBuilder,
+        public abstract string CreateUpdateAll(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
-            int batchSize = 10,
+            int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
-            DbField identityField = null)
-        {
-            throw new NotSupportedException("Multiple statement execution is not supported on SQLite. Therefore, the batch-update operation is not supported.");
-        }
+            DbField identityField = null);
+
+        #endregion
 
         #endregion
 
@@ -1044,14 +991,14 @@ namespace RepoDb.StatementBuilders
         }
 
         /// <summary>
-        /// Throws an exception if the 'hints' is present.
+        /// Throws an exception if the 'hints' is present and the <see cref="IDbSetting"/> object does not support it.
         /// </summary>
         /// <param name="hints">The value to be evaluated.</param>
         private void ValidateHints(string hints = null)
         {
-            if (!string.IsNullOrEmpty(hints))
+            if (!string.IsNullOrEmpty(hints) && !DbSetting.AreTableHintsSupported)
             {
-                throw new NotSupportedException("The hints are not supported at SQLite.");
+                throw new NotSupportedException("The table hints are not supported on this database provider statement builder.");
             }
         }
 

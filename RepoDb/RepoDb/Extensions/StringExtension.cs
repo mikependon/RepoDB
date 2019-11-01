@@ -213,10 +213,51 @@ namespace RepoDb.Extensions
             return value;
         }
 
-        // AsEnumerable
-        internal static IEnumerable<string> AsEnumerable(this string value)
+        /// <summary>
+        /// Returns the string as an enumerable.
+        /// </summary>
+        /// <param name="value">The string to be converted.</param>
+        /// <returns>The enumerable of string</returns>
+        public static IEnumerable<string> AsEnumerable(this string value)
         {
             yield return value;
+        }
+
+        /// <summary>
+        /// Returns the string as an enumerable of character.
+        /// </summary>
+        /// <param name="value">The string to be converted.</param>
+        /// <returns>The enumerable of character</returns>
+        public static IEnumerable<char> AsCharList(this string value)
+        {
+            foreach (var c in value)
+            {
+                yield return c;
+            }
+        }
+
+        /// <summary>
+        /// Returns the string as a field name in the database.
+        /// </summary>
+        /// <param name="value">The string to be converted.</param>
+        /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
+        /// <returns>The string value represented as database field.</returns>
+        public static string AsField(this string value,
+            IDbSetting dbSetting)
+        {
+            return value.AsQuoted(true, true, dbSetting);
+        }
+
+        /// <summary>
+        /// Returns the string as a parameter name in the database.
+        /// </summary>
+        /// <param name="value">The string to be converted.</param>
+        /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
+        /// <returns>The string value represented as database parameter.</returns>
+        public static string AsParameter(this string value,
+            IDbSetting dbSetting)
+        {
+            return AsParameter(value, 0, dbSetting);
         }
 
         // AsJoinQualifier
@@ -226,20 +267,6 @@ namespace RepoDb.Extensions
             IDbSetting dbSetting)
         {
             return string.Concat(leftAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting), " = ", rightAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting));
-        }
-
-        // AsField
-        internal static string AsField(this string value,
-            IDbSetting dbSetting)
-        {
-            return value.AsQuoted(true, true, dbSetting);
-        }
-
-        // AsParameter
-        internal static string AsParameter(this string value,
-            IDbSetting dbSetting)
-        {
-            return AsParameter(value, 0, dbSetting);
         }
 
         // AsParameter
