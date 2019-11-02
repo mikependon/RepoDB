@@ -328,6 +328,9 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            // Variables needed
+            var dbSetting = connection.GetDbSetting();
+
             // Validate
             InvokeValidatorValidateInsertAll(connection);
 
@@ -335,11 +338,10 @@ namespace RepoDb
             GuardInsertAll(entities);
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, entities.Count());
+            batchSize = (dbSetting.IsMultipleStatementExecutionSupported == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
+            // Get the fields
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-
-            // Check the fields
             if (fields == null)
             {
                 fields = dbFields?.AsFields();
@@ -353,7 +355,6 @@ namespace RepoDb
                 var inputFields = (IEnumerable<DbField>)null;
                 var outputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity value
                 if (skipIdentityCheck == false)
@@ -543,6 +544,12 @@ namespace RepoDb
                             // Actual Execution
                             var returnValue = ObjectConverter.DbNullToNull(command.ExecuteScalar());
 
+                            // Get explicity if needed
+                            if (Equals(returnValue, null) == true && dbSetting.IsMultipleStatementExecutionSupported == false)
+                            {
+                                returnValue = ObjectConverter.DbNullToNull(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
+                            }
+
                             // Set the return value
                             if (returnValue != null)
                             {
@@ -663,6 +670,9 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            // Variables needed
+            var dbSetting = connection.GetDbSetting();
+
             // Validate
             InvokeValidatorValidateInsertAllAsync(connection);
 
@@ -670,12 +680,13 @@ namespace RepoDb
             GuardInsertAll(entities);
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, entities.Count());
+            batchSize = (dbSetting.IsMultipleStatementExecutionSupported == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
-            // Check the fields
+            // Get the fields
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
             if (fields == null)
             {
-                fields = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
+                fields = dbFields?.AsFields();
             }
 
             // Get the function
@@ -683,11 +694,9 @@ namespace RepoDb
             {
                 // Variables needed
                 var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = (IEnumerable<DbField>)null;
                 var outputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity value
                 if (skipIdentityCheck == false)
@@ -873,6 +882,12 @@ namespace RepoDb
 
                             // Actual Execution
                             var returnValue = ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
+
+                            // Get explicity if needed
+                            if (Equals(returnValue, null) == true && dbSetting.IsMultipleStatementExecutionSupported == false)
+                            {
+                                returnValue = ObjectConverter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction));
+                            }
 
                             // Set the return value
                             if (returnValue != null)

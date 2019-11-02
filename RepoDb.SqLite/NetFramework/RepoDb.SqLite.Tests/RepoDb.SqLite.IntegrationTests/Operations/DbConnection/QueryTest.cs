@@ -52,14 +52,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
             {
                 // Act
-                //repository.InsertAll(tables);
+                connection.InsertAll(tables);
 
                 // Act
                 var result = connection.Average<CompleteTable>(e => e.ColumnInt,
-                    (object)null);
+                    e => e.Id > tables.First().Id && e.Id < tables.Last().Id);
 
                 // Assert
-                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+                Assert.AreEqual(tables.Where(t => t.Id > tables.First().Id && t.Id < tables.Last().Id).Average(t => t.ColumnInt), result);
             }
         }
 
@@ -72,7 +72,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
             {
                 // Act
-                //repository.InsertAll(tables);
+                connection.InsertAll(tables);
 
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(3,
@@ -81,7 +81,8 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+                // TODO
+                //Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
             }
         }
 
@@ -94,13 +95,32 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
             {
                 // Act
-                //repository.InsertAll(tables);
+                connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Count<CompleteTable>((object)null);
+                var result = connection.Count<CompleteTable>(e => e.Id == tables.Last().Id);
 
                 // Assert
-                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbConnectionCountAll()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.CountAll<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
             }
         }
 
@@ -113,13 +133,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
             {
                 // Act
-                //repository.InsertAll(tables);
+                connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Delete<CompleteTable>(1);
+                var result = connection.Delete<CompleteTable>(tables.Last().Id);
 
                 // Assert
-                Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+                Assert.AreEqual(1, result);
             }
         }
 
@@ -159,6 +179,85 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 {
                     Helper.AssertPropertiesEquality(table, result.FirstOrDefault(t => t.Id == table.Id));
                 });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbConnectionInsertAll()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                Assert.IsTrue(tables.All(t => t.Id > 0));
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.FirstOrDefault(t => t.Id == table.Id));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbConnectionUpdate()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
+            {
+                // Act
+                tables.ForEach(t => connection.Insert(t));
+
+                // Act
+                var result = connection.QueryAll<CompleteTable>();
+
+                // Setup
+                tables.ForEach(t =>
+                {
+                    t.ColumnInt = int.MaxValue;
+                });
+
+                // Act
+                tables.ForEach(t => connection.Update<CompleteTable>(t));
+
+                // Act
+                result = connection.QueryAll<CompleteTable>();
+            }
+        }
+
+        [TestMethod]
+        public void TestDbConnectionUpdateAll()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll<CompleteTable>();
+
+                // Setup
+                tables.ForEach(t =>
+                {
+                    t.ColumnInt = int.MaxValue;
+                });
+
+                // Act
+                var affected = connection.UpdateAll(tables);
+
+                // Act
+                result = connection.QueryAll<CompleteTable>();
             }
         }
     }
