@@ -4,7 +4,6 @@ using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
@@ -118,36 +117,17 @@ namespace RepoDb.DbHelpers
         {
             // Sql text
             var commandText = "SELECT sql FROM [sqlite_master] WHERE name = @TableName AND type = 'table';";
+            var sql = connection.ExecuteScalar<string>(commandText, new { TableName = GetTableName(tableName) });
+            var fields = ParseTableFieldsFromSql(sql);
 
-            // Open a command
-            using (var dbCommand = connection.EnsureOpen().CreateCommand(commandText, transaction: transaction))
+            // Iterate the fields
+            if (fields != null && fields.Length > 0)
             {
-                // Create parameters
-                dbCommand.CreateParameters(new
+                foreach (var field in fields)
                 {
-                    TableName = GetTableName(tableName)
-                });
-
-                // Execute and set the result
-                using (var reader = dbCommand.ExecuteReader())
-                {
-                    if (reader.Read())
+                    if (field.ToUpper().Contains("AUTOINCREMENT"))
                     {
-                        var sql = reader.GetString(0);
-                        var fields = ParseTableFieldsFromSql(sql);
-
-                        // Parse
-                        if (fields != null && fields.Length > 0)
-                        {
-                            foreach (var field in fields)
-                            {
-                                if (field.ToUpper().Contains("AUTOINCREMENT"))
-                                {
-                                    var identity = field.Substring(0, field.IndexOf(" "));
-                                    return identity;
-                                }
-                            }
-                        }
+                        return field.Substring(0, field.IndexOf(" "));
                     }
                 }
             }
@@ -227,30 +207,27 @@ namespace RepoDb.DbHelpers
             IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            // Open a command
-            using (var dbCommand = connection.EnsureOpen().CreateCommand(GetCommandText(tableName), transaction: transaction))
+            // Variables
+            var commandText = GetCommandText(tableName);
+            var param = new
             {
-                // Create parameters
-                dbCommand.CreateParameters(new
+                TableName = GetTableName(tableName)
+            };
+
+            // Iterate and extract
+            using (var reader = connection.ExecuteReader(commandText, param, transaction: transaction))
+            {
+                var dbFields = new List<DbField>();
+                var identity = GetIdentityFieldName(connection, tableName, transaction);
+
+                // Iterate the list of the fields
+                while (reader.Read())
                 {
-                    TableName = GetTableName(tableName)
-                });
-
-                // Execute and set the result
-                using (var reader = dbCommand.ExecuteReader())
-                {
-                    var dbFields = new List<DbField>();
-                    var identity = GetIdentityFieldName(connection, tableName, transaction);
-
-                    // Iterate the list of the fields
-                    while (reader.Read())
-                    {
-                        dbFields.Add(ReaderToDbField(reader, identity));
-                    }
-
-                    // Return the list of fields
-                    return dbFields;
+                    dbFields.Add(ReaderToDbField(reader, identity));
                 }
+
+                // Return the list of fields
+                return dbFields;
             }
         }
 
@@ -267,30 +244,27 @@ namespace RepoDb.DbHelpers
             IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            // Open a command
-            using (var dbCommand = ((DbConnection)await connection.EnsureOpenAsync()).CreateCommand(GetCommandText(tableName), transaction: transaction))
+            // Variables
+            var commandText = GetCommandText(tableName);
+            var param = new
             {
-                // Create parameters
-                dbCommand.CreateParameters(new
+                TableName = GetTableName(tableName)
+            };
+
+            // Iterate and extract
+            using (var reader = await connection.ExecuteReaderAsync(commandText, param, transaction: transaction))
+            {
+                var dbFields = new List<DbField>();
+                var identity = GetIdentityFieldName(connection, tableName, transaction);
+
+                // Iterate the list of the fields
+                while (reader.Read())
                 {
-                    TableName = GetTableName(tableName)
-                });
-
-                // Execute and set the result
-                using (var reader = await ((DbCommand)dbCommand).ExecuteReaderAsync())
-                {
-                    var dbFields = new List<DbField>();
-                    var identity = GetIdentityFieldName(connection, tableName, transaction);
-
-                    // Iterate the list of the fields
-                    while (await reader.ReadAsync())
-                    {
-                        dbFields.Add(ReaderToDbField(reader, identity));
-                    }
-
-                    // return the list of fields
-                    return dbFields;
+                    dbFields.Add(ReaderToDbField(reader, identity));
                 }
+
+                // Return the list of fields
+                return dbFields;
             }
         }
 
