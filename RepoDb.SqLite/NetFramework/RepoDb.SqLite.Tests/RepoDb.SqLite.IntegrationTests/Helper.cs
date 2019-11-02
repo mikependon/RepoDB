@@ -4,6 +4,7 @@ using RepoDb.SqLite.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace RepoDb.SqLite.IntegrationTests
 {
@@ -63,7 +64,23 @@ namespace RepoDb.SqLite.IntegrationTests
                 var index = i + 1;
                 tables.Add(new CompleteTable
                 {
-
+                    ColumnBigInt = i,
+                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
+                    ColumnBool = true,
+                    ColumnChar = "C",
+                    ColumnDate = DateTime.UtcNow.Date,
+                    ColumnDateTime = DateTime.UtcNow,
+                    ColumnDecimal = Convert.ToDecimal(i),
+                    ColumnDouble = Convert.ToDouble(i),
+                    ColumnInt = i,
+                    ColumnInteger = i,
+                    ColumnNone = "N",
+                    ColumnNumeric = Convert.ToDecimal(i),
+                    ColumnReal = (float)i,
+                    ColumnString = $"ColumnString:{i}",
+                    ColumnText = $"ColumnText:{i}",
+                    ColumnTime = DateTime.UtcNow.TimeOfDay,
+                    ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }
             return tables;

@@ -70,7 +70,7 @@
   <ItemGroup>
     <Compile Include="Helper.cs" />
     <Compile Include="Models\CompleteTable.cs" />
-    <Compile Include="Operations\DbOperationQueryTest.cs" />
+    <Compile Include="Operations\DbConnection\QueryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -88,7 +88,10 @@ namespace RepoDb.Reflection
         {
             // Initialize variables
             var memberAssignments = new List<MemberAssignment>();
-            var dataReaderType = typeof(DbDataReader);
+            var typeOfDbDataReader = typeof(DbDataReader);
+            var typeOfDateTime = typeof(DateTime);
+            var typeOfTimeSpan = typeof(TimeSpan);
+            var typeOfSingle = typeof(Single);
             var isDefaultConversion = TypeMapper.ConversionType == ConversionType.Default;
             var properties = PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite);
             var fieldNames = readerFields.Select(f => f.Name.ToLower()).AsList();
@@ -118,13 +121,21 @@ namespace RepoDb.Reflection
                     var isNullable = readerField.DbField == null || readerField.DbField?.IsNullable == true;
 
                     // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue() method
-                    var readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", readerField.Type.Name));
+                    var readerGetValueMethod = (MethodInfo)null;
+
+                    // Ignore for the TimeSpan
+                    if (propertyType != typeOfTimeSpan)
+                    {
+                        readerGetValueMethod = typeOfDbDataReader.GetMethod(string.Concat("Get", readerField.Type.Name));
+                    }
+
+                    // If null, use the object
                     if (readerGetValueMethod == null)
                     {
                         // Single value is throwing an exception in GetString(), skip it and use the GetValue() instead
-                        if (isDefaultConversion == false && readerField.Type != typeof(Single))
+                        if (isDefaultConversion == false && readerField.Type != typeOfSingle)
                         {
-                            readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", propertyType.Name));
+                            readerGetValueMethod = typeOfDbDataReader.GetMethod(string.Concat("Get", propertyType.Name));
                         }
 
                         // If present, then use the property type, otherwise, use the object
@@ -134,7 +145,7 @@ namespace RepoDb.Reflection
                         }
                         else
                         {
-                            readerGetValueMethod = dataReaderType.GetMethod("GetValue");
+                            readerGetValueMethod = typeOfDbDataReader.GetMethod("GetValue");
                             convertType = typeof(object);
                         }
 
@@ -149,7 +160,7 @@ namespace RepoDb.Reflection
                     // Check for nullables
                     if (isNullable == true)
                     {
-                        var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
+                        var isDbNullExpression = Expression.Call(readerParameterExpression, typeOfDbDataReader.GetMethod("IsDBNull"), ordinalExpression);
 
                         // True expression
                         var trueExpression = (Expression)null;
@@ -210,13 +221,42 @@ namespace RepoDb.Reflection
                                 }
                                 else
                                 {
-                                    falseExpression = Expression.Convert(falseExpression, propertyType);
+                                    #region TimeSpanToDateTime
+
+                                    if (readerField.Type == typeOfDateTime && propertyType == typeOfTimeSpan)
+                                    {
+                                        falseExpression = Expression.Convert(falseExpression, typeOfDateTime);
+                                    }
+
+                                    #endregion
+
+                                    #region Default
+
+                                    else
+                                    {
+                                        falseExpression = Expression.Convert(falseExpression, propertyType);
+                                    }
+
+                                    #endregion
                                 }
                             }
                             else
                             {
                                 falseExpression = ConvertValueExpressionForDataEntity(falseExpression, readerField, propertyType, convertType);
                             }
+
+                            #region DateTimeToTimeSpan
+
+                            // In SqLite, the Time column is represented as System.DateTime in .NET. If in any case that the models
+                            // has been designed to have it as System.TimeSpan, then we should somehow be able to set it properly.
+
+                            if (readerField.Type == typeOfDateTime && propertyType == typeOfTimeSpan)
+                            {
+                                var timeOfDayProperty = typeof(DateTime).GetProperty("TimeOfDay");
+                                falseExpression = Expression.Property(falseExpression, timeOfDayProperty);
+                            }
+
+                            #endregion
                         }
                         if (underlyingType != null && underlyingType.IsValueType == true)
                         {

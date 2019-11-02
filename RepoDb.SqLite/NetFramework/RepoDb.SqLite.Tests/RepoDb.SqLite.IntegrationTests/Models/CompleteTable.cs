@@ -1,9 +1,11 @@
-﻿using System;
+﻿using RepoDb.Attributes;
+using System;
 
 namespace RepoDb.SqLite.IntegrationTests.Models
 {
     public class CompleteTable
     {
+        [Identity]
         public long Id { get; set; }
         public long ColumnBigInt { get; set; }
         public byte[] ColumnBlob { get; set; }
@@ -13,14 +15,14 @@ namespace RepoDb.SqLite.IntegrationTests.Models
         public DateTime ColumnDateTime { get; set; }
         public decimal ColumnDecimal { get; set; }
         public double ColumnDouble { get; set; }
-        public int ColumnInteger { get; set; }
+        public long ColumnInteger { get; set; }
         public int ColumnInt { get; set; }
         public object ColumnNone { get; set; }
         public decimal ColumnNumeric { get; set; }
         public float ColumnReal { get; set; }
         public string ColumnString { get; set; }
         public string ColumnText { get; set; }
-        public DateTime ColumnTime { get; set; }  // TODO: Make this as TimeSpan
+        public TimeSpan ColumnTime { get; set; }
         public string ColumnVarChar { get; set; }
     }
 }

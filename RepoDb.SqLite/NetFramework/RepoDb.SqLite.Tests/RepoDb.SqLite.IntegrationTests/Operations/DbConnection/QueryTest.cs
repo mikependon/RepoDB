@@ -7,7 +7,7 @@ using System.Linq;
 namespace RepoDb.SqLite.IntegrationTests.Operations
 {
     [TestClass]
-    public class DbOperationQueryTest
+    public class DbConnectionOperationQueryTest
     {
         [TestInitialize]
         public void Initialize()
@@ -30,23 +30,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             {
                 using (var reader = connection.ExecuteReader("select * from completetable where id = 5;"))
                 {
-                    //var text = string.Empty;
-                    //for (var i = 0; i < reader.FieldCount; i++)
-                    //{
-                    //    text = string.Concat(text, $"{reader.GetName(i)} : {reader.GetFieldType(i)}\n");
-                    //}
-                    while (reader.Read())
+                    var text = string.Empty;
+                    for (var i = 0; i < reader.FieldCount; i++)
                     {
-                        var value = reader.GetValue(0);
-                        var ordinal = reader.GetOrdinal("ColumnTime");
-                        value = reader.GetValue(ordinal);
+                        text = string.Concat(text, $"{reader.GetName(i)} : {reader.GetFieldType(i)}\n");
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryAverage()
+        public void TestDbConnectionAverage()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -66,7 +60,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQuery()
+        public void TestDbConnectionBatchQuery()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -88,7 +82,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryCount()
+        public void TestDbConnectionCount()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -107,7 +101,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryDelete()
+        public void TestDbConnectionDelete()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -126,7 +120,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQuery()
+        public void TestDbConnectionQuery()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -134,7 +128,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
             {
                 // Act
-                //repository.InsertAll(tables);
+                tables.ForEach(t => connection.Insert(t));
 
                 // Act
                 var result = connection.QueryAll<CompleteTable>();
