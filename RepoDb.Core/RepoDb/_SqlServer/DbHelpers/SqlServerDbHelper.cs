@@ -1,5 +1,4 @@
-﻿using RepoDb.DbSettings;
-using RepoDb.Extensions;
+﻿using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
@@ -26,10 +25,16 @@ namespace RepoDb.DbHelpers
             DbTypeResolver = new SqlServerDbTypeNameToClientTypeResolver();
         }
 
+        #region Properties
+
         /// <summary>
         /// Gets the type resolver used by this <see cref="SqlServerDbHelper"/> instance.
         /// </summary>
         public IResolver<string, Type> DbTypeResolver { get; }
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Returns the command text that is being used to extract schema definitions.
@@ -132,6 +137,10 @@ namespace RepoDb.DbHelpers
             return tableName.AsUnquoted(true, m_dbSetting);
         }
 
+        #endregion
+
+        #region IDbHelper
+
         /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table.
         /// </summary>
@@ -177,34 +186,27 @@ namespace RepoDb.DbHelpers
             IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            // Open a command
-            using (var dbCommand = connection.EnsureOpen().CreateCommand(GetCommandText(), transaction: transaction))
+            // Variables
+            var commandText = GetCommandText();
+            var param = new
             {
-                // Param values
-                var schema = GetSchema(tableName);
-                var name = GetTableName(tableName);
+                Schema = GetSchema(tableName),
+                TableName = GetTableName(tableName)
+            };
 
-                // Create parameters
-                dbCommand.CreateParameters(new
+            // Iterate and extract
+            using (var reader = connection.ExecuteReader(commandText, param, transaction: transaction))
+            {
+                var dbFields = new List<DbField>();
+
+                // Iterate the list of the fields
+                while (reader.Read())
                 {
-                    Schema = schema,
-                    TableName = name
-                });
-
-                // Execute and set the result
-                using (var reader = dbCommand.ExecuteReader())
-                {
-                    var dbFields = new List<DbField>();
-
-                    // Iterate the list of the fields
-                    while (reader.Read())
-                    {
-                        dbFields.Add(ReaderToDbField(reader));
-                    }
-
-                    // return the list of fields
-                    return dbFields;
+                    dbFields.Add(ReaderToDbField(reader));
                 }
+
+                // Return the list of fields
+                return dbFields;
             }
         }
 
@@ -221,27 +223,30 @@ namespace RepoDb.DbHelpers
             IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            // Open a command
-            using (var dbCommand = ((DbConnection)await connection.EnsureOpenAsync()).CreateCommand(GetCommandText(), transaction: transaction))
+            // Variables
+            var commandText = GetCommandText();
+            var param = new
             {
-                // Create parameters
-                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = GetTableName(tableName) });
+                Schema = GetSchema(tableName),
+                TableName = GetTableName(tableName)
+            };
 
-                // Execute and set the result
-                using (var reader = await ((DbCommand)dbCommand).ExecuteReaderAsync())
+            // Iterate and extract
+            using (var reader = await connection.ExecuteReaderAsync(commandText, param, transaction: transaction))
+            {
+                var dbFields = new List<DbField>();
+
+                // Iterate the list of the fields
+                while (reader.Read())
                 {
-                    var dbFields = new List<DbField>();
-
-                    // Iterate the list of the fields
-                    while (await reader.ReadAsync())
-                    {
-                        dbFields.Add(ReaderToDbField(reader));
-                    }
-
-                    // return the list of fields
-                    return dbFields;
+                    dbFields.Add(ReaderToDbField(reader));
                 }
+
+                // Return the list of fields
+                return dbFields;
             }
         }
+
+        #endregion
     }
 }
