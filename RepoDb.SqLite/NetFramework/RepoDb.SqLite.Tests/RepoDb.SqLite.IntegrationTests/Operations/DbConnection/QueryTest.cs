@@ -21,6 +21,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         public void Cleanup()
         {
             //Database.Cleanup();
+            using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
+            {
+                connection.DeleteAll<CompleteTable>();
+            }
         }
 
         [TestMethod]
@@ -120,6 +124,22 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestDbConnectionInsert()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(@"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;"))
+            {
+                // Act
+                tables.ForEach(t => connection.Insert(t));
+
+                // Assert
+                Assert.IsTrue(tables.All(t => t.Id > 0));
+            }
+        }
+
+        [TestMethod]
         public void TestDbConnectionQuery()
         {
             // Setup
@@ -134,6 +154,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 var result = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.IsTrue(tables.All(t => t.Id > 0));
                 tables.ForEach(table =>
                 {
                     Helper.AssertPropertiesEquality(table, result.FirstOrDefault(t => t.Id == table.Id));

@@ -162,7 +162,9 @@ namespace RepoDb.DbHelpers
 
         #endregion
 
-        #region IDbHelper
+        #region Methods
+
+        #region GetFields
 
         /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table.
@@ -173,36 +175,6 @@ namespace RepoDb.DbHelpers
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
         public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection,
-            string tableName,
-            IDbTransaction transaction = null)
-            where TDbConnection : IDbConnection
-        {
-            return GetFieldsInternal(connection, tableName, transaction);
-        }
-
-        /// <summary>
-        /// Gets the list of <see cref="DbField"/> of the table in an asychronous way.
-        /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
-        /// <param name="connection">The instance of the connection object.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
-            where TDbConnection : IDbConnection
-        {
-            return GetFieldsAsyncInternal(connection, tableName, transaction);
-        }
-
-        /// <summary>
-        /// Gets the list of <see cref="DbField"/> of the table.
-        /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
-        /// <param name="connection">The instance of the connection object.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        internal IEnumerable<DbField> GetFieldsInternal<TDbConnection>(TDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
@@ -239,9 +211,7 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        internal async Task<IEnumerable<DbField>> GetFieldsAsyncInternal<TDbConnection>(TDbConnection connection,
-            string tableName,
-            IDbTransaction transaction = null)
+        public async Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
             // Variables
@@ -267,6 +237,40 @@ namespace RepoDb.DbHelpers
                 return dbFields;
             }
         }
+
+        #endregion
+
+        #region GetScopeIdentity
+
+        /// <summary>
+        /// Gets the newly generated identity from the database.
+        /// </summary>
+        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
+        /// <param name="connection">The instance of the connection object.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <returns>The newly generated identity from the database.</returns>
+        public object GetScopeIdentity<TDbConnection>(TDbConnection connection,
+            IDbTransaction transaction = null)
+            where TDbConnection : IDbConnection
+        {
+            return connection.ExecuteScalar("SELECT last_insert_rowid();");
+        }
+
+        /// <summary>
+        /// Gets the newly generated identity from the database in an asychronous way.
+        /// </summary>
+        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
+        /// <param name="connection">The instance of the connection object.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <returns>The newly generated identity from the database.</returns>
+        public async Task<object> GetScopeIdentityAsync<TDbConnection>(TDbConnection connection,
+            IDbTransaction transaction = null)
+            where TDbConnection : IDbConnection
+        {
+            return await connection.ExecuteScalarAsync("SELECT last_insert_rowid();");
+        }
+
+        #endregion
 
         #endregion
     }

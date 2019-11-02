@@ -44,8 +44,23 @@ namespace RepoDb.SqLite.IntegrationTests
                 }
                 var value1 = propertyOfType1.GetValue(t1);
                 var value2 = propertyOfType2.GetValue(t2);
-                Assert.AreEqual(value1, value2,
-                    $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
+                if (value1 is byte[] && value2 is byte[])
+                {
+                    var b1 = (byte[])value1;
+                    var b2 = (byte[])value2;
+                    for (var i = 0; i < b1.Length; i++)
+                    {
+                        var v1 = b1[i];
+                        var v2 = b2[i];
+                        Assert.AreEqual(v1, v2,
+                            $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
+                    }
+                }
+                else
+                {
+                    Assert.AreEqual(value1, value2,
+                        $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
+                }
             });
         }
 
@@ -66,10 +81,10 @@ namespace RepoDb.SqLite.IntegrationTests
                 {
                     ColumnBigInt = i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
-                    ColumnBool = true,
+                    ColumnBoolean = true,
                     ColumnChar = "C",
-                    ColumnDate = DateTime.UtcNow.Date,
-                    ColumnDateTime = DateTime.UtcNow,
+                    ColumnDate = EpocDate,
+                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     ColumnDecimal = Convert.ToDecimal(i),
                     ColumnDouble = Convert.ToDouble(i),
                     ColumnInt = i,
@@ -79,7 +94,7 @@ namespace RepoDb.SqLite.IntegrationTests
                     ColumnReal = (float)i,
                     ColumnString = $"ColumnString:{i}",
                     ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.UtcNow.TimeOfDay,
+                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
                     ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }

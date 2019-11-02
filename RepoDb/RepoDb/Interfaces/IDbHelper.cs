@@ -15,6 +15,8 @@ namespace RepoDb.Interfaces
         /// </summary>
         IResolver<string, Type> DbTypeResolver { get; }
 
+        #region GetFields
+
         /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table.
         /// </summary>
@@ -40,5 +42,33 @@ namespace RepoDb.Interfaces
             string tableName,
             IDbTransaction transaction = null)
             where TDbConnection : IDbConnection;
+
+        #endregion
+
+        #region GetScopeIdentity
+
+        /// <summary>
+        /// Gets the newly generated identity from the database.
+        /// </summary>
+        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
+        /// <param name="connection">The instance of the connection object.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <returns>The newly generated identity from the database.</returns>
+        object GetScopeIdentity<TDbConnection>(TDbConnection connection,
+            IDbTransaction transaction = null)
+            where TDbConnection : IDbConnection;
+
+        /// <summary>
+        /// Gets the newly generated identity from the database in an asychronous way.
+        /// </summary>
+        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
+        /// <param name="connection">The instance of the connection object.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <returns>The newly generated identity from the database.</returns>
+        Task<object> GetScopeIdentityAsync<TDbConnection>(TDbConnection connection,
+            IDbTransaction transaction = null)
+            where TDbConnection : IDbConnection;
+
+        #endregion
     }
 }

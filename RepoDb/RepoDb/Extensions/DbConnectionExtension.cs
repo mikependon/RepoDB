@@ -1124,6 +1124,58 @@ namespace RepoDb
             return provider;
         }
 
+        /// <summary>
+        /// Gets the associated <see cref="IDbHelper"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <returns>An instance of the mapped <see cref="IDbHelper"/> object.</returns>
+        public static IDbHelper GetDbHelper(this IDbConnection connection)
+        {
+            // Check the connection
+            if (connection == null)
+            {
+                throw new NullReferenceException("The connection object cannot be null.");
+            }
+
+            // Get the setting
+            var helper = DbHelperMapper.Get(connection.GetType());
+
+            // Check the presence
+            if (helper == null)
+            {
+                throw new MissingMappingException($"There is no database helper mapping found for '{connection.GetType().FullName}'.");
+            }
+
+            // Return the validator
+            return helper;
+        }
+
+        /// <summary>
+        /// Gets the associated <see cref="IStatementBuilder"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <returns>An instance of the mapped <see cref="IStatementBuilder"/> object.</returns>
+        public static IStatementBuilder GetStatementBuilder(this IDbConnection connection)
+        {
+            // Check the connection
+            if (connection == null)
+            {
+                throw new NullReferenceException("The connection object cannot be null.");
+            }
+
+            // Get the setting
+            var statementBuilder = StatementBuilderMapper.Get(connection.GetType());
+
+            // Check the presence
+            if (statementBuilder == null)
+            {
+                throw new MissingMappingException($"There is no database statement builder mapping found for '{connection.GetType().FullName}'.");
+            }
+
+            // Return the validator
+            return statementBuilder;
+        }
+
         #endregion
 
         #region Helper Methods

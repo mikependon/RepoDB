@@ -8,7 +8,7 @@ namespace RepoDb.SqLite.IntegrationTests.Models
         public long Id { get; set; }
         public long ColumnBigInt { get; set; }
         public byte[] ColumnBlob { get; set; }
-        public bool ColumnBool { get; set; }
+        public bool ColumnBoolean { get; set; }
         public string ColumnChar { get; set; }
         public DateTime ColumnDate { get; set; }
         public DateTime ColumnDateTime { get; set; }
