@@ -20,24 +20,24 @@ namespace RepoDb.Resolvers
                 throw new NullReferenceException("The DB Type name must not be null.");
             }
             /*
-                Id : System.Int64
-                ColumnBigInt : System.Int64
-                ColumnBlob : System.Byte[]
-                ColumnBoolean : System.Boolean
-                ColumnChar : System.String
-                ColumnDate : System.DateTime
-                ColumnDateTime : System.DateTime
-                ColumnDecimal : System.Decimal
-                ColumnDouble : System.Double
-                ColumnInteger : System.Int64
-                ColumnInt : System.Int32
-                ColumnNone : System.Double
-                ColumnNumeric : System.Decimal
-                ColumnReal : System.Double
-                ColumnString : System.String
-                ColumnText : System.String
-                ColumnTime : System.DateTime
-                ColumnVarChar : System.String
+            Id : System.Int64
+            ColumnBigInt : System.Int64
+            ColumnBlob : System.Byte[]
+            ColumnBoolean : System.Boolean
+            ColumnChar : System.String
+            ColumnDate : System.DateTime
+            ColumnDateTime : System.DateTime
+            ColumnDecimal : System.Decimal
+            ColumnDouble : System.Double
+            ColumnInteger : System.Int64
+            ColumnInt : System.Int32
+            ColumnNone : System.Double
+            ColumnNumeric : System.Decimal
+            ColumnReal : System.Double
+            ColumnString : System.String
+            ColumnText : System.String
+            ColumnTime : System.DateTime
+            ColumnVarChar : System.String
              */
             switch (dbTypeName.ToLower())
             {
@@ -55,13 +55,14 @@ namespace RepoDb.Resolvers
                     return typeof(string);
                 case "date":
                 case "datetime":
-                case "time": //  return typeof(TimeSpan);
                     return typeof(DateTime);
+                case "time":
+                    return typeof(TimeSpan);
                 case "decimal":
                 case "numeric":
                     return typeof(decimal);
                 case "double":
-                case "real": // return typeof(float);
+                case "real":
                     return typeof(double);
                 case "int":
                     return typeof(int);

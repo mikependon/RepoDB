@@ -11,15 +11,15 @@ namespace RepoDb.StatementBuilders
     /// <summary>
     /// A class used to build a SQL Statement for SQL Server. This is the default statement builder used by the library.
     /// </summary>
-    public sealed class SqlServerStatementBuilder : BaseStatementBuilder
+    internal sealed class SqlServerStatementBuilder : BaseStatementBuilder
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> object.
         /// </summary>
         public SqlServerStatementBuilder()
-        : base(new SqlServerConvertFieldResolver(),
-             new ClientTypeToAverageableClientTypeResolver(),
-             DbSettingMapper.Get<SqlConnection>())
+        : base(DbSettingMapper.Get<SqlConnection>(),
+            new SqlServerConvertFieldResolver(),
+            new ClientTypeToAverageableClientTypeResolver())
         { }
 
         #region CreateBatchQuery
@@ -47,6 +47,9 @@ namespace RepoDb.StatementBuilders
         {
             // Ensure with guards
             GuardTableName(tableName);
+
+            // Validate the hints
+            ValidateHints(hints);
 
             // There should be fields
             if (fields?.Any() != true)
@@ -123,34 +126,15 @@ namespace RepoDb.StatementBuilders
             DbField primaryField = null,
             DbField identityField = null)
         {
-            // Ensure with guards
-            GuardTableName(tableName);
-            GuardPrimary(primaryField);
-            GuardIdentity(identityField);
-
-            // Verify the fields
-            if (fields?.Any() != true)
-            {
-                throw new EmptyException($"The list of insertable fields must not be null or empty for '{tableName}'.");
-            }
-
-            // Ensure the primary is on the list if it is not an identity
-            if (primaryField != null)
-            {
-                if (primaryField != identityField)
-                {
-                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
-                    if (isPresent == false)
-                    {
-                        throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
-                    }
-                }
-            }
+            // Call the base
+            base.CreateInsert(queryBuilder,
+                tableName,
+                fields,
+                primaryField,
+                identityField);
 
             // Variables needed
             var databaseType = "BIGINT";
-            var insertableFields = fields
-                .Where(f => !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
             // Check for the identity
             if (identityField != null)
@@ -161,21 +145,6 @@ namespace RepoDb.StatementBuilders
                     databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
                 }
             }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Insert()
-                .Into()
-                .TableNameFrom(tableName, DbSetting)
-                .OpenParen()
-                .FieldsFrom(insertableFields, DbSetting)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .ParametersFrom(insertableFields, 0, DbSetting)
-                .CloseParen()
-                .End();
 
             // Set the return value
             var result = identityField != null ?
@@ -733,46 +702,6 @@ namespace RepoDb.StatementBuilders
 
             // Return the query
             return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region Helper
-
-        /// <summary>
-        /// Throws an exception if the table name is null or empty.
-        /// </summary>
-        /// <param name="tableName">The name of the table.</param>
-        private void GuardTableName(string tableName)
-        {
-            if (string.IsNullOrEmpty(tableName?.Trim()))
-            {
-                throw new NullReferenceException("The name of the table could be null.");
-            }
-        }
-
-        /// <summary>
-        /// Throws an exception if the primary field is not really a primary field.
-        /// </summary>
-        /// <param name="field">The instance of the primary field.</param>
-        private void GuardPrimary(DbField field)
-        {
-            if (field?.IsPrimary == false)
-            {
-                throw new InvalidOperationException("The field is not defined as primary.");
-            }
-        }
-
-        /// <summary>
-        /// Throws an exception if the identity field is not really an identity field.
-        /// </summary>
-        /// <param name="field">The instance of the identity field.</param>
-        private void GuardIdentity(DbField field)
-        {
-            if (field?.IsIdentity == false)
-            {
-                throw new InvalidOperationException("The field is not defined as identity.");
-            }
         }
 
         #endregion

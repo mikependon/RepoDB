@@ -122,22 +122,25 @@ namespace RepoDb.UnitTests.CustomObjects
     public class CustomBaseStatementBuilder : BaseStatementBuilder
     {
         public CustomBaseStatementBuilder()
-            : this(null, null, new CustomDbSetting())
+            : this(new CustomDbSetting(), null, null)
         {
         }
 
-        public CustomBaseStatementBuilder(IResolver<Field, IDbSetting, string> convertFieldResolver,
-            IResolver<Type, Type> averageableClientTypeResolver,
-            IDbSetting dbSetting) : base(convertFieldResolver, averageableClientTypeResolver, dbSetting)
+        public CustomBaseStatementBuilder(IDbSetting dbSetting)
+            : this(dbSetting, null, null)
+        {
+        }
+
+        public CustomBaseStatementBuilder(IDbSetting dbSetting,
+            IResolver<Field, IDbSetting, string> convertFieldResolver = null,
+            IResolver<Type, Type> averageableClientTypeResolver = null)
+            : base(dbSetting,
+                  convertFieldResolver,
+                  averageableClientTypeResolver)
         {
         }
 
         public override string CreateBatchQuery(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, int? page, int? rowsPerBatch, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string CreateInsert(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields = null, DbField primaryField = null, DbField identityField = null)
         {
             throw new NotImplementedException();
         }
@@ -170,19 +173,17 @@ namespace RepoDb.UnitTests.CustomObjects
 
     public class CustomNonHintsSupportingBaseStatementBuilder : CustomBaseStatementBuilder
     {
-        public CustomNonHintsSupportingBaseStatementBuilder() :
-            base(null,
-                null,
-                new CustomNonHintsSupportingDbSetting())
+        public CustomNonHintsSupportingBaseStatementBuilder()
+            : base(new CustomNonHintsSupportingDbSetting())
         { }
     }
 
     public class CustomDefinedBaseStatementBuilder : CustomBaseStatementBuilder
     {
-        public CustomDefinedBaseStatementBuilder() :
-            base(new SqlServerConvertFieldResolver(),
-                new ClientTypeToAverageableClientTypeResolver(),
-                new CustomDbSetting())
+        public CustomDefinedBaseStatementBuilder()
+            : base(new CustomDbSetting(),
+                new SqlServerConvertFieldResolver(),
+                new ClientTypeToAverageableClientTypeResolver())
         { }
     }
 }

@@ -15,12 +15,12 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a new instance of <see cref="BaseStatementBuilder"/> class.
         /// </summary>
+        /// <param name="dbSetting">The database settings object currently in used.</param>
         /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
         /// <param name="averageableClientTypeResolver">The resolver used to identity the type for average.</param>
-        /// <param name="dbSetting">The database settings object currently in used.</param>
-        public BaseStatementBuilder(IResolver<Field, IDbSetting, string> convertFieldResolver,
-            IResolver<Type, Type> averageableClientTypeResolver,
-            IDbSetting dbSetting)
+        public BaseStatementBuilder(IDbSetting dbSetting,
+            IResolver<Field, IDbSetting, string> convertFieldResolver = null,
+            IResolver<Type, Type> averageableClientTypeResolver = null)
         {
             ConvertFieldResolver = convertFieldResolver;
             AverageableClientTypeResolver = averageableClientTypeResolver;
@@ -32,21 +32,21 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Gets the database setting object that is currently in used.
         /// </summary>
-        internal IDbSetting DbSetting { get; }
+        protected IDbSetting DbSetting { get; }
 
         /// <summary>
         /// Gets the resolver used to convert the <see cref="Field"/> object.
         /// </summary>
-        internal IResolver<Field, IDbSetting, string> ConvertFieldResolver { get; }
+        protected IResolver<Field, IDbSetting, string> ConvertFieldResolver { get; }
 
         /// <summary>
         /// Gets the resolver that is being used to resolve the type to be averageable type.
         /// </summary>
-        internal IResolver<Type, Type> AverageableClientTypeResolver { get; }
+        protected IResolver<Type, Type> AverageableClientTypeResolver { get; }
 
         #endregion
 
-        #region Common
+        #region Virtual/Common
 
         #region CreateAverage
 
@@ -59,7 +59,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for average operation.</returns>
-        public string CreateAverage(QueryBuilder queryBuilder,
+        public virtual string CreateAverage(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -111,7 +111,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for average-all operation.</returns>
-        public string CreateAverageAll(QueryBuilder queryBuilder,
+        public virtual string CreateAverageAll(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             string hints = null)
@@ -161,7 +161,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for count operation.</returns>
-        public string CreateCount(QueryBuilder queryBuilder,
+        public virtual string CreateCount(QueryBuilder queryBuilder,
             string tableName,
             QueryGroup where = null,
             string hints = null)
@@ -212,7 +212,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for count-all operation.</returns>
-        public string CreateCountAll(QueryBuilder queryBuilder,
+        public virtual string CreateCountAll(QueryBuilder queryBuilder,
             string tableName,
             string hints = null)
         {
@@ -261,7 +261,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression.</param>
         /// <returns>A sql statement for delete operation.</returns>
-        public string CreateDelete(QueryBuilder queryBuilder,
+        public virtual string CreateDelete(QueryBuilder queryBuilder,
             string tableName,
             QueryGroup where = null)
         {
@@ -294,7 +294,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>A sql statement for delete-all operation.</returns>
-        public string CreateDeleteAll(QueryBuilder queryBuilder,
+        public virtual string CreateDeleteAll(QueryBuilder queryBuilder,
             string tableName)
         {
             // Ensure with guards
@@ -317,6 +317,72 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateInsert
+
+        /// <summary>
+        /// Creates a SQL Statement for insert operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        public virtual string CreateInsert(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
+            DbField primaryField = null,
+            DbField identityField = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
+
+            // Verify the fields
+            if (fields?.Any() != true)
+            {
+                throw new EmptyException($"The list of insertable fields must not be null or empty for '{tableName}'.");
+            }
+
+            // Ensure the primary is on the list if it is not an identity
+            if (primaryField != null)
+            {
+                if (primaryField != identityField)
+                {
+                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+                    if (isPresent == false)
+                    {
+                        throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
+                    }
+                }
+            }
+
+            // Variables needed
+            var insertableFields = fields
+                .Where(f => !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Build the query
+            (queryBuilder ?? new QueryBuilder())
+                .Clear()
+                .Insert()
+                .Into()
+                .TableNameFrom(tableName, DbSetting)
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .CloseParen()
+                .Values()
+                .OpenParen()
+                .ParametersFrom(insertableFields, 0, DbSetting)
+                .CloseParen()
+                .End();
+
+            // Return the query
+            return queryBuilder.GetString();
+        }
+
+        #endregion
+
         #region CreateMax
 
         /// <summary>
@@ -328,7 +394,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for maximum operation.</returns>
-        public string CreateMax(QueryBuilder queryBuilder,
+        public virtual string CreateMax(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -377,7 +443,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="field">The field to be maximumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for maximum-all operation.</returns>
-        public string CreateMaxAll(QueryBuilder queryBuilder,
+        public virtual string CreateMaxAll(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             string hints = null)
@@ -425,7 +491,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for minimum operation.</returns>
-        public string CreateMin(QueryBuilder queryBuilder,
+        public virtual string CreateMin(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -474,7 +540,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for minimum-all operation.</returns>
-        public string CreateMinAll(QueryBuilder queryBuilder,
+        public virtual string CreateMinAll(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             string hints = null)
@@ -524,7 +590,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for query operation.</returns>
-        public string CreateQuery(QueryBuilder queryBuilder,
+        public virtual string CreateQuery(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             QueryGroup where = null,
@@ -593,7 +659,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="orderBy">The list of fields for ordering.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for query operation.</returns>
-        public string CreateQueryAll(QueryBuilder queryBuilder,
+        public virtual string CreateQueryAll(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             IEnumerable<OrderField> orderBy = null,
@@ -658,7 +724,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for sum operation.</returns>
-        public string CreateSum(QueryBuilder queryBuilder,
+        public virtual string CreateSum(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -707,7 +773,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="field">The field to be sumd.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for sum-all operation.</returns>
-        public string CreateSumAll(QueryBuilder queryBuilder,
+        public virtual string CreateSumAll(QueryBuilder queryBuilder,
             string tableName,
             Field field,
             string hints = null)
@@ -756,7 +822,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <returns>A sql statement for update operation.</returns>
-        public string CreateUpdate(QueryBuilder queryBuilder,
+        public virtual string CreateUpdate(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             QueryGroup where = null,
@@ -803,7 +869,7 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region Virtual
+        #region Abstract
 
         #region CreateBatchQuery
 
@@ -827,25 +893,6 @@ namespace RepoDb.StatementBuilders
             IEnumerable<OrderField> orderBy = null,
             QueryGroup where = null,
             string hints = null);
-
-        #endregion
-
-        #region CreateInsert
-
-        /// <summary>
-        /// Creates a SQL Statement for insert operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be inserted.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="identityField">The identity field from the database.</param>
-        /// <returns>A sql statement for insert operation.</returns>
-        public abstract string CreateInsert(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields = null,
-            DbField primaryField = null,
-            DbField identityField = null);
 
         #endregion
 
@@ -958,7 +1005,7 @@ namespace RepoDb.StatementBuilders
         /// Throws an exception if the table name is null or empty.
         /// </summary>
         /// <param name="tableName">The name of the table.</param>
-        private void GuardTableName(string tableName)
+        protected void GuardTableName(string tableName)
         {
             if (string.IsNullOrEmpty(tableName?.Trim()))
             {
@@ -970,7 +1017,7 @@ namespace RepoDb.StatementBuilders
         /// Throws an exception if the primary field is not really a primary field.
         /// </summary>
         /// <param name="field">The instance of the primary field.</param>
-        private void GuardPrimary(DbField field)
+        protected void GuardPrimary(DbField field)
         {
             if (field?.IsPrimary == false)
             {
@@ -982,7 +1029,7 @@ namespace RepoDb.StatementBuilders
         /// Throws an exception if the identity field is not really an identity field.
         /// </summary>
         /// <param name="field">The instance of the identity field.</param>
-        private void GuardIdentity(DbField field)
+        protected void GuardIdentity(DbField field)
         {
             if (field?.IsIdentity == false)
             {
@@ -994,7 +1041,7 @@ namespace RepoDb.StatementBuilders
         /// Throws an exception if the 'hints' is present and the <see cref="IDbSetting"/> object does not support it.
         /// </summary>
         /// <param name="hints">The value to be evaluated.</param>
-        private void ValidateHints(string hints = null)
+        protected void ValidateHints(string hints = null)
         {
             if (!string.IsNullOrEmpty(hints) && !DbSetting.AreTableHintsSupported)
             {
