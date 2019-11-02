@@ -5,7 +5,6 @@ namespace RepoDb.SqLite.IntegrationTests.Models
 {
     public class CompleteTable
     {
-        [Identity]
         public long Id { get; set; }
         public long ColumnBigInt { get; set; }
         public byte[] ColumnBlob { get; set; }

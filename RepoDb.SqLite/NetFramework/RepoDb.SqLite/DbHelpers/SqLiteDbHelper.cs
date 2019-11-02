@@ -6,11 +6,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb.DbHelpers
 {
-    public class SqLiteDbHelper : IDbHelper
+    /// <summary>
+    /// A helper class for database specially for the direct access. This class is only meant for SQLite.
+    /// </summary>
+    internal class SqLiteDbHelper : IDbHelper
     {
         private IDbSetting m_dbSetting = DbSettingMapper.Get<SQLiteConnection>();
 
@@ -22,10 +26,16 @@ namespace RepoDb.DbHelpers
             DbTypeResolver = new SqLiteTypeNameToClientTypeResolver();
         }
 
+        #region Properties
+
         /// <summary>
         /// Gets the type resolver used by this <see cref="SqlDbHelper"/> instance.
         /// </summary>
         public IResolver<string, Type> DbTypeResolver { get; }
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Returns the command text that is being used to extract schema definitions.
@@ -41,12 +51,14 @@ namespace RepoDb.DbHelpers
         /// Converts the <see cref="IDataReader"/> object into <see cref="DbField"/> object.
         /// </summary>
         /// <param name="reader">The instance of <see cref="IDataReader"/> object.</param>
+        /// <param name="identityFieldName">The name of the identity column.</param>
         /// <returns>The instance of converted <see cref="DbField"/> object.</returns>
-        private DbField ReaderToDbField(IDataReader reader)
+        private DbField ReaderToDbField(IDataReader reader,
+            string identityFieldName)
         {
             return new DbField(reader.GetString(1),
                 reader.IsDBNull(5) ? false : reader.GetBoolean(5),
-                false,
+                string.Equals(reader.GetString(1), identityFieldName, StringComparison.OrdinalIgnoreCase),
                 reader.IsDBNull(3) ? true : reader.GetBoolean(3) == false,
                 reader.IsDBNull(2) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(reader.GetString(2)),
                 null,
@@ -94,34 +106,83 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table.
         /// </summary>
-        /// <param name="connectionString">The connection string to connect to.</param>
+        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
+        /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public IEnumerable<DbField> GetFields(string connectionString, string tableName, IDbTransaction transaction = null)
+        private string GetIdentityFieldName<TDbConnection>(TDbConnection connection,
+            string tableName,
+            IDbTransaction transaction = null)
+            where TDbConnection : IDbConnection
         {
-            // Open a connection
-            using (var connection = new SQLiteConnection(connectionString))
+            // Sql text
+            var commandText = "SELECT sql FROM [sqlite_master] WHERE name = @TableName AND type = 'table';";
+
+            // Open a command
+            using (var dbCommand = connection.EnsureOpen().CreateCommand(commandText, transaction: transaction))
             {
-                return GetFieldsInternal(connection, tableName, transaction);
+                // Create parameters
+                dbCommand.CreateParameters(new
+                {
+                    TableName = GetTableName(tableName)
+                });
+
+                // Execute and set the result
+                using (var reader = dbCommand.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        var sql = reader.GetString(0);
+                        var fields = ParseTableFieldsFromSql(sql);
+
+                        // Parse
+                        if (fields != null && fields.Length > 0)
+                        {
+                            foreach (var field in fields)
+                            {
+                                if (field.ToUpper().Contains("AUTOINCREMENT"))
+                                {
+                                    var identity = field.Substring(0, field.IndexOf(" "));
+                                    return identity;
+                                }
+                            }
+                        }
+                    }
+                }
             }
+
+            // Return null
+            return null;
         }
 
         /// <summary>
-        /// Gets the list of <see cref="DbField"/> of the table in an asychronous way.
+        /// Parses the table sql and return the list of the fields.
         /// </summary>
-        /// <param name="connectionString">The connection string to connect to.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public Task<IEnumerable<DbField>> GetFieldsAsync(string connectionString, string tableName, IDbTransaction transaction = null)
+        /// <param name="sql">The sql to be parsed.</param>
+        /// <returns>The list of the fields.</returns>
+        private string[] ParseTableFieldsFromSql(string sql)
         {
-            // Open a connection
-            using (var connection = new SQLiteConnection(connectionString))
+            if (string.IsNullOrEmpty(sql))
             {
-                return GetFieldsAsyncInternal(connection, tableName, transaction);
+                return null;
             }
+
+            // Do parse
+            var openingTokenIndex = sql.IndexOf("(");
+            var closingTokenIndex = sql.IndexOf(")");
+            var parsed = sql.Substring((openingTokenIndex + 1), (closingTokenIndex - (openingTokenIndex + 1)));
+
+            // Simply split by comma
+            return parsed
+                .Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim())
+                .AsArray();
         }
+
+        #endregion
+
+        #region IDbHelper
 
         /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table.
@@ -131,7 +192,9 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
+        public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection,
+            string tableName,
+            IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
             return GetFieldsInternal(connection, tableName, transaction);
@@ -159,29 +222,33 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        internal IEnumerable<DbField> GetFieldsInternal<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
+        internal IEnumerable<DbField> GetFieldsInternal<TDbConnection>(TDbConnection connection,
+            string tableName,
+            IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            tableName = GetTableName(tableName);
-
             // Open a command
             using (var dbCommand = connection.EnsureOpen().CreateCommand(GetCommandText(tableName), transaction: transaction))
             {
                 // Create parameters
-                dbCommand.CreateParameters(new { TableName = tableName });
+                dbCommand.CreateParameters(new
+                {
+                    TableName = GetTableName(tableName)
+                });
 
                 // Execute and set the result
                 using (var reader = dbCommand.ExecuteReader())
                 {
                     var dbFields = new List<DbField>();
+                    var identity = GetIdentityFieldName(connection, tableName, transaction);
 
                     // Iterate the list of the fields
                     while (reader.Read())
                     {
-                        dbFields.Add(ReaderToDbField(reader));
+                        dbFields.Add(ReaderToDbField(reader, identity));
                     }
 
-                    // return the list of fields
+                    // Return the list of fields
                     return dbFields;
                 }
             }
@@ -195,26 +262,30 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        internal async Task<IEnumerable<DbField>> GetFieldsAsyncInternal<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
+        internal async Task<IEnumerable<DbField>> GetFieldsAsyncInternal<TDbConnection>(TDbConnection connection,
+            string tableName,
+            IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            tableName = GetTableName(tableName);
-
             // Open a command
             using (var dbCommand = ((DbConnection)await connection.EnsureOpenAsync()).CreateCommand(GetCommandText(tableName), transaction: transaction))
             {
                 // Create parameters
-                dbCommand.CreateParameters(new { Schema = GetSchema(tableName), TableName = tableName });
+                dbCommand.CreateParameters(new
+                {
+                    TableName = GetTableName(tableName)
+                });
 
                 // Execute and set the result
                 using (var reader = await ((DbCommand)dbCommand).ExecuteReaderAsync())
                 {
                     var dbFields = new List<DbField>();
+                    var identity = GetIdentityFieldName(connection, tableName, transaction);
 
                     // Iterate the list of the fields
                     while (await reader.ReadAsync())
                     {
-                        dbFields.Add(ReaderToDbField(reader));
+                        dbFields.Add(ReaderToDbField(reader, identity));
                     }
 
                     // return the list of fields
@@ -222,5 +293,7 @@ namespace RepoDb.DbHelpers
                 }
             }
         }
+
+        #endregion
     }
 }
