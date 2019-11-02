@@ -411,6 +411,9 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            // Variables needed
+            var dbSetting = connection.GetDbSetting();
+
             // Validate
             InvokeValidatorValidateInsert(connection);
 
@@ -422,7 +425,6 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity field
                 if (skipIdentityCheck == false)
@@ -522,6 +524,12 @@ namespace RepoDb
                 // Actual Execution
                 result = ObjectConverter.ToType<TResult>(command.ExecuteScalar());
 
+                // Get explicity if needed
+                if (Equals(result, default(TResult)) == true && dbSetting.IsMultipleStatementExecutionSupported == false)
+                {
+                    result = ObjectConverter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
+                }
+
                 // Set the return value
                 if (Equals(result, default(TResult)) == false)
                 {
@@ -570,6 +578,9 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            // Variables needed
+            var dbSetting = connection.GetDbSetting();
+
             // Validate
             InvokeValidatorValidateInsertAsync(connection);
 
@@ -583,7 +594,6 @@ namespace RepoDb
                 var identity = (Field)null;
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity field
                 if (skipIdentityCheck == false)
@@ -682,7 +692,13 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Actual Execution
-                result = ObjectConverter.ToType<TResult>(await command.ExecuteScalarAsync());
+                result = ObjectConverter.ToType<TResult>(command.ExecuteScalar());
+
+                // Get explicity if needed
+                if (Equals(result, default(TResult)) == true && dbSetting.IsMultipleStatementExecutionSupported == false)
+                {
+                    result = ObjectConverter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
+                }
 
                 // Set the return value
                 if (Equals(result, default(TResult)) == false)

@@ -33,6 +33,16 @@ namespace RepoDb.UnitTests.CustomObjects
                 new DbField("Name", false, false, true, typeof(string), null, null, null, null)
             });
         }
+
+        public object GetScopeIdentity<TDbConnection>(TDbConnection connection, IDbTransaction transaction = null) where TDbConnection : IDbConnection
+        {
+            return 0;
+        }
+
+        public Task<object> GetScopeIdentityAsync<TDbConnection>(TDbConnection connection, IDbTransaction transaction = null) where TDbConnection : IDbConnection
+        {
+            return Task.FromResult((object)0);
+        }
     }
 
 }
