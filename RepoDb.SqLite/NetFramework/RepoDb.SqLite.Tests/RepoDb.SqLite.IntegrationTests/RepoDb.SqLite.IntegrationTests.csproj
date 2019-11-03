@@ -70,16 +70,16 @@
   <ItemGroup>
     <Compile Include="Helper.cs" />
     <Compile Include="Models\CompleteTable.cs" />
+    <Compile Include="Operations\BatchQueryTest.cs" />
     <Compile Include="Operations\DbConnection\QueryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Setup\Database.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Setup\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.SqLite\RepoDb.SqLite.csproj">
       <Project>{a550c9ad-3912-419e-a503-89f2db8cc5d7}</Project>

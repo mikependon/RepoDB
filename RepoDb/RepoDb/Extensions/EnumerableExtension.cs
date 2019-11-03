@@ -10,6 +10,27 @@ namespace RepoDb.Extensions
     public static class EnumerableExtension
     {
         /// <summary>
+        /// Return the items of the enumerable on the defined range.
+        /// </summary>
+        /// <typeparam name="T">The type of the items in the enumerable.</typeparam>
+        /// <param name="value">The actual enumerable instance.</param>
+        /// <param name="from">The starting index in which to start the range.</param>
+        /// <param name="to">The end index of the range.</param>
+        /// <returns>The items within the range of the enumerable.</returns>
+        public static IEnumerable<T> Range<T>(this IEnumerable<T> value,
+            int from,
+            int to)
+        {
+            for (var i = 0; i < value.Count(); i++)
+            {
+                if (i >= from && i <= to)
+                {
+                    yield return value.ElementAt(i);
+                }
+            }
+        }
+
+        /// <summary>
         /// Split the enumerable into multiple enumerables.
         /// </summary>
         /// <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
