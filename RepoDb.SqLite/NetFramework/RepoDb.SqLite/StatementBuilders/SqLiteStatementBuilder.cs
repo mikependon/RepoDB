@@ -10,7 +10,7 @@ namespace RepoDb.StatementBuilders
     /// <summary>
     /// A class used to build a SQL Statement for SqLite.
     /// </summary>
-    public sealed class SqLiteStatementBuilder : BaseStatementBuilder
+    internal sealed class SqLiteStatementBuilder : BaseStatementBuilder
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqLiteStatementBuilder"/> object.
@@ -218,7 +218,20 @@ namespace RepoDb.StatementBuilders
             DbField primaryField = null,
             DbField identityField = null)
         {
-            throw new NotSupportedException("The multiple statement execution is not supported in SqLite. Therefore, the batch-update operation is not supported.");
+            if (batchSize > 1)
+            {
+                throw new NotSupportedException("The multiple statement execution is not supported in SqLite. Therefore, the batch-update operation is not supported. Consider setting the batchsize to 1.");
+            }
+            else
+            {
+                return base.CreateUpdateAll(queryBuilder,
+                    tableName,
+                    fields,
+                    qualifiers,
+                    batchSize,
+                    primaryField,
+                    identityField);
+            }
         }
 
         #endregion

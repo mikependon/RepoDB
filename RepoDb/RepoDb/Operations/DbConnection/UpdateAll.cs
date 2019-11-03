@@ -646,6 +646,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Variables needed
+            var dbSetting = connection.GetDbSetting();
+
             // Validate
             InvokeValidatorValidateUpdateAll(connection);
 
@@ -653,13 +656,12 @@ namespace RepoDb
             GuardUpdateAll(entities);
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, entities.Count());
+            batchSize = (dbSetting.IsMultipleStatementExecutionSupported == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the function
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
                 // Variables needed
-                var dbSetting = connection.GetDbSetting();
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = new List<DbField>();
 
@@ -887,6 +889,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Variables needed
+            var dbSetting = connection.GetDbSetting();
+
             // Validate
             InvokeValidatorValidateUpdateAllAsync(connection);
 
@@ -894,12 +899,10 @@ namespace RepoDb
             GuardUpdateAll(entities);
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, entities.Count());
+            batchSize = (dbSetting.IsMultipleStatementExecutionSupported == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
-            // Variables
+            // Get the fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-
-            // Check the fields
             if (fields?.Any() != true)
             {
                 fields = dbFields?.AsFields();
@@ -916,7 +919,6 @@ namespace RepoDb
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
                 // Variables needed
-                var dbSetting = connection.GetDbSetting();
                 var inputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields

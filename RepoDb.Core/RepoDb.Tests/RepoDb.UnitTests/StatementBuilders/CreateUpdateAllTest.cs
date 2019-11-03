@@ -1,18 +1,33 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
+using RepoDb.UnitTests.CustomObjects;
 using System;
-using System.Data.SqlClient;
 
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateUpdateAllTest
+    public class BaseStatementBuilderCreateUpdateAllTest
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            StatementBuilderMapper.Add(typeof(BaseStatementBuilderDbConnection), new CustomBaseStatementBuilder(), true);
+            StatementBuilderMapper.Add(typeof(SingleStatementSupportBaseStatementBuilderDbConnection), new CustomSingleStatementSupportBaseStatementBuilder(), true);
+        }
+
+        #region SubClasses
+
+        private class BaseStatementBuilderDbConnection : CustomDbConnection { }
+
+        private class SingleStatementSupportBaseStatementBuilderDbConnection : CustomDbConnection { }
+
+        #endregion
+
         [TestMethod]
-        public void TestSqlStatementBuilderCreateUpdateAll()
+        public void TestBaseStatementBuilderCreateUpdateAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -36,10 +51,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateUpdateAllWithQuotedTableSchema()
+        public void TestBaseStatementBuilderCreateUpdateAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -63,10 +78,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateUpdateAllWithUnquotedTableSchema()
+        public void TestBaseStatementBuilderCreateUpdateAllWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -90,10 +105,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateUpdateAllWithCoveredPrimaryField()
+        public void TestBaseStatementBuilderCreateUpdateAllWithCoveredPrimaryField()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -117,10 +132,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateUpdateAllWithCoveredIdentityField()
+        public void TestBaseStatementBuilderCreateUpdateAllWithCoveredIdentityField()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -145,10 +160,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateUpdateAllWithCoveredPrimaryAsIdentity()
+        public void TestBaseStatementBuilderCreateUpdateAllWithCoveredPrimaryAsIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -173,10 +188,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateUpdateAllForThreeBatches()
+        public void TestBaseStatementBuilderCreateUpdateAllForThreeBatches()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -206,10 +221,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateUpdateAllIfTheTableIsNull()
+        public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -226,10 +241,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateUpdateAllIfTheTableIsEmpty()
+        public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -246,10 +261,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateUpdateAllIfTheTableIsWhitespace()
+        public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -266,10 +281,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateUpdateAllIfThePrimaryIsNotReallyAPrimary()
+        public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -287,10 +302,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateUpdateAllIfTheIdentityIsNotReallyAnIdentity()
+        public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -308,10 +323,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateUpdateAllIfAnyOfTheQualifierIsNotCovered()
+        public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfAnyOfTheQualifierIsNotCovered()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -328,10 +343,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateUpdateAllIfThereAreNoQualifiers()
+        public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfThereAreNoQualifiers()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -342,6 +357,26 @@ namespace RepoDb.UnitTests.StatementBuilders
                 fields: fields,
                 qualifiers: null,
                 batchSize: 1,
+                primaryField: null,
+                identityField: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfTheBatchSizeIsGreaterThan1AndTheMultipleStatementExecutionIsNotSupported()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SingleStatementSupportBaseStatementBuilderDbConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+
+            // Act
+            statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                qualifiers: qualifiers,
+                batchSize: 10,
                 primaryField: null,
                 identityField: null);
         }

@@ -75,8 +75,11 @@ namespace RepoDb.StatementBuilders
                 throw new ArgumentOutOfRangeException($"The rows per batch must be equals or greater than 1.");
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .With()
                 .WriteText("CTE")
@@ -104,7 +107,7 @@ namespace RepoDb.StatementBuilders
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -126,8 +129,11 @@ namespace RepoDb.StatementBuilders
             DbField primaryField = null,
             DbField identityField = null)
         {
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Call the base
-            base.CreateInsert(queryBuilder,
+            base.CreateInsert(builder,
                 tableName,
                 fields,
                 primaryField,
@@ -150,14 +156,15 @@ namespace RepoDb.StatementBuilders
             var result = identityField != null ?
                 string.Concat("CONVERT(", databaseType, ", SCOPE_IDENTITY())") :
                     primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
-            queryBuilder
+
+            builder
                 .Select()
                 .WriteText(result)
                 .As("[Result]")
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -181,34 +188,19 @@ namespace RepoDb.StatementBuilders
             DbField primaryField = null,
             DbField identityField = null)
         {
-            // Ensure with guards
-            GuardTableName(tableName);
-            GuardPrimary(primaryField);
-            GuardIdentity(identityField);
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
 
-            // Verify the fields
-            if (fields?.Any() != true)
-            {
-                throw new EmptyException($"The list of fields cannot be null or empty.");
-            }
-
-            // Ensure the primary is on the list if it is not an identity
-            if (primaryField != null)
-            {
-                if (primaryField != identityField)
-                {
-                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
-                    if (isPresent == false)
-                    {
-                        throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
-                    }
-                }
-            }
+            // Call the base
+            var commandText = base.CreateInsertAll(builder,
+                tableName,
+                fields,
+                batchSize,
+                primaryField,
+                identityField);
 
             // Variables needed
             var databaseType = (string)null;
-            var insertableFields = fields
-                .Where(f => !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
             // Check for the identity
             if (identityField != null)
@@ -220,41 +212,29 @@ namespace RepoDb.StatementBuilders
                 }
             }
 
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear();
-
-            // Iterate the indexes
-            for (var index = 0; index < batchSize; index++)
+            if (identityField != null)
             {
-                queryBuilder.Insert()
-                    .Into()
-                    .TableNameFrom(tableName, DbSetting)
-                    .OpenParen()
-                    .FieldsFrom(insertableFields, DbSetting)
-                    .CloseParen()
-                    .Values()
-                    .OpenParen()
-                    .ParametersFrom(insertableFields, index, DbSetting)
-                    .CloseParen()
-                    .End();
+                // Variables needed
+                var commandTexts = new List<string>();
+                var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-                // Set the return field
-                if (identityField != null)
+                // Iterate the indexes
+                for (var index = 0; index < splitted.Count(); index++)
                 {
-                    var returnValue = string.Concat(identityField.Name.AsUnquoted(true, DbSetting).AsParameter(index, DbSetting), " = ",
+                    var line = splitted[index].Trim();
+                    var returnValue = string.Concat("SET ", identityField.Name.AsUnquoted(true, DbSetting).AsParameter(index, DbSetting), " = ",
                         string.IsNullOrEmpty(databaseType) ?
                             "SCOPE_IDENTITY()" :
                             "CONVERT(", databaseType, ", SCOPE_IDENTITY())");
-                    queryBuilder
-                        .Set()
-                        .WriteText(returnValue)
-                        .End();
+                    commandTexts.Add(string.Concat(line, " ; ", returnValue, " ;"));
                 }
+
+                // Set the command text
+                commandText = commandTexts.Join(" ");
             }
 
             // Return the query
-            return queryBuilder.GetString();
+            return commandText;
         }
 
         #endregion
@@ -348,8 +328,11 @@ namespace RepoDb.StatementBuilders
                 }
             }
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 // MERGE T USING S
                 .Merge()
@@ -403,7 +386,7 @@ namespace RepoDb.StatementBuilders
             queryBuilder.End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -506,9 +489,11 @@ namespace RepoDb.StatementBuilders
                     databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
                 }
             }
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
 
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear();
 
             // Iterate the indexes
@@ -567,7 +552,7 @@ namespace RepoDb.StatementBuilders
             }
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -586,8 +571,11 @@ namespace RepoDb.StatementBuilders
             // Guard the target table
             GuardTableName(tableName);
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Truncate()
                 .Table()
@@ -595,113 +583,7 @@ namespace RepoDb.StatementBuilders
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
-        }
-
-        #endregion
-
-        #region CreateUpdateAll
-
-        /// <summary>
-        /// Creates a SQL Statement for update-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be updated.</param>
-        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
-        /// <param name="batchSize">The batch size of the operation.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="identityField">The identity field from the database.</param>
-        /// <returns>A sql statement for update-all operation.</returns>
-        public override string CreateUpdateAll(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            DbField primaryField = null,
-            DbField identityField = null)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-            GuardPrimary(primaryField);
-            GuardIdentity(identityField);
-
-            // Ensure the fields
-            if (fields?.Any() != true)
-            {
-                throw new EmptyException($"The list of fields cannot be null or empty.");
-            }
-
-            // Check the qualifiers
-            if (qualifiers?.Any() == true)
-            {
-                // Check if the qualifiers are present in the given fields
-                var unmatchesQualifiers = qualifiers?.Where(field =>
-                    fields?.FirstOrDefault(f =>
-                        string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
-
-                // Throw an error we found any unmatches
-                if (unmatchesQualifiers?.Any() == true)
-                {
-                    throw new InvalidQualifiersException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
-                        $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
-                }
-            }
-            else
-            {
-                if (primaryField != null)
-                {
-                    // Make sure that primary is present in the list of fields before qualifying to become a qualifier
-                    var isPresent = fields?.FirstOrDefault(f =>
-                        string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
-
-                    // Throw if not present
-                    if (isPresent == false)
-                    {
-                        throw new InvalidQualifiersException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
-                            $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
-                    }
-
-                    // The primary is present, use it as a default if there are no qualifiers given
-                    qualifiers = primaryField.AsField().AsEnumerable();
-                }
-                else
-                {
-                    // Throw exception, qualifiers are not defined
-                    throw new NullReferenceException($"There are no qualifier field objects found for '{tableName}'.");
-                }
-            }
-
-            // Gets the updatable fields
-            fields = fields
-                .Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
-                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) &&
-                    qualifiers.FirstOrDefault(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
-
-            // Check if there are updatable fields
-            if (fields?.Any() != true)
-            {
-                throw new EmptyException("The list of updatable fields cannot be null or empty.");
-            }
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear();
-
-            // Iterate the indexes
-            for (var index = 0; index < batchSize; index++)
-            {
-                queryBuilder
-                    .Update()
-                    .TableNameFrom(tableName, DbSetting)
-                    .Set()
-                    .FieldsAndParametersFrom(fields, index, DbSetting)
-                    .WhereFrom(qualifiers, index, DbSetting)
-                    .End();
-            }
-
-            // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion

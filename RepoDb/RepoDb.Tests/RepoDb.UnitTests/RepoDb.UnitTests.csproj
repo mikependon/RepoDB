@@ -142,6 +142,7 @@
     <Compile Include="CustomObjects\CustomDbSetting.cs" />
     <Compile Include="CustomObjects\CustomDbValidator.cs" />
     <Compile Include="CustomObjects\CustomStatementBuilder.cs" />
+    <Compile Include="StatementBuilders\CreateInsertAllTest.cs" />
     <Compile Include="StatementBuilders\CreateInsertTest.cs" />
     <Compile Include="StatementBuilders\CreateSumAllTest.cs" />
     <Compile Include="StatementBuilders\CreateMinAllTest.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="StatementBuilders\CreateSumTest.cs" />
     <Compile Include="StatementBuilders\CreateMinTest.cs" />
     <Compile Include="StatementBuilders\CreateMaxTest.cs" />
+    <Compile Include="StatementBuilders\CreateUpdateAllTest.cs" />
     <Compile Include="_SqlServer\StatementBuilders\CreateBatchQueryTest.cs" />
     <Compile Include="StatementBuilders\CreateCountAllTest.cs" />
     <Compile Include="StatementBuilders\CreateAverageTest.cs" />
@@ -163,7 +165,6 @@
     <Compile Include="StatementBuilders\CreateQueryAllTest.cs" />
     <Compile Include="StatementBuilders\CreateQueryTest.cs" />
     <Compile Include="_SqlServer\StatementBuilders\CreateTruncateTest.cs" />
-    <Compile Include="_SqlServer\StatementBuilders\CreateUpdateAllTest.cs" />
     <Compile Include="StatementBuilders\CreateUpdateTest.cs" />
   </ItemGroup>
   <ItemGroup>

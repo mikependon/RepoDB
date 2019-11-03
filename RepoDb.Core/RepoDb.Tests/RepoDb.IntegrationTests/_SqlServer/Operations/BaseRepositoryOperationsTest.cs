@@ -2455,7 +2455,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.InsertAll(tables);
+                tables.ForEach(item => item.Id = repository.Insert<long>(item));
 
                 // Act
                 var result = repository.QueryAll();

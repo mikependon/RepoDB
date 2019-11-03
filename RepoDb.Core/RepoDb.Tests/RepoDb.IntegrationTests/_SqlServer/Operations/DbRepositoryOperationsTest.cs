@@ -4388,7 +4388,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InsertAll(tables);
+                tables.ForEach(item => item.Id = repository.Insert<IdentityTable, long>(item));
 
                 // Act
                 var result = repository.QueryAll<IdentityTable>();

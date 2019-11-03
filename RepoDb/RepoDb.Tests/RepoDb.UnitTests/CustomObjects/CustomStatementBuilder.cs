@@ -145,11 +145,6 @@ namespace RepoDb.UnitTests.CustomObjects
             throw new NotImplementedException();
         }
 
-        public override string CreateInsertAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null)
-        {
-            throw new NotImplementedException();
-        }
-
         public override string CreateMerge(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, DbField primaryField = null, DbField identityField = null)
         {
             throw new NotImplementedException();
@@ -164,17 +159,19 @@ namespace RepoDb.UnitTests.CustomObjects
         {
             throw new NotImplementedException();
         }
-
-        public override string CreateUpdateAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField primaryField = null, DbField identityField = null)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class CustomNonHintsSupportingBaseStatementBuilder : CustomBaseStatementBuilder
     {
         public CustomNonHintsSupportingBaseStatementBuilder()
             : base(new CustomNonHintsSupportingDbSetting())
+        { }
+    }
+
+    public class CustomSingleStatementSupportBaseStatementBuilder : CustomBaseStatementBuilder
+    {
+        public CustomSingleStatementSupportBaseStatementBuilder()
+            : base(new CustomSingleStatementSupportDbSetting())
         { }
     }
 

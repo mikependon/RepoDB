@@ -362,8 +362,11 @@ namespace RepoDb.StatementBuilders
             var insertableFields = fields
                 .Where(f => !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
+            builder.Clear()
                 .Clear()
                 .Insert()
                 .Into()
@@ -378,7 +381,86 @@ namespace RepoDb.StatementBuilders
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
+        }
+
+        #endregion
+
+        #region CreateInsertAll
+
+        /// <summary>
+        /// Creates a SQL Statement for insert-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        public virtual string CreateInsertAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            DbField primaryField = null,
+            DbField identityField = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
+
+            // Validate the multiple statement execution
+            ValidateMultipleStatementExecution(batchSize);
+
+            // Verify the fields
+            if (fields?.Any() != true)
+            {
+                throw new EmptyException($"The list of fields cannot be null or empty.");
+            }
+
+            // Ensure the primary is on the list if it is not an identity
+            if (primaryField != null)
+            {
+                if (primaryField != identityField)
+                {
+                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+                    if (isPresent == false)
+                    {
+                        throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
+                    }
+                }
+            }
+
+            // Variables needed
+            var insertableFields = fields
+                .Where(f => !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Clear();
+
+            // Iterate the indexes
+            for (var index = 0; index < batchSize; index++)
+            {
+                queryBuilder.Insert()
+                    .Into()
+                    .TableNameFrom(tableName, DbSetting)
+                    .OpenParen()
+                    .FieldsFrom(insertableFields, DbSetting)
+                    .CloseParen()
+                    .Values()
+                    .OpenParen()
+                    .ParametersFrom(insertableFields, index, DbSetting)
+                    .CloseParen()
+                    .End();
+            }
+
+            // Return the query
+            return builder.GetString();
         }
 
         #endregion
@@ -867,6 +949,118 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateUpdateAll
+
+        /// <summary>
+        /// Creates a SQL Statement for update-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be updated.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for update-all operation.</returns>
+        public virtual string CreateUpdateAll(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            DbField primaryField = null,
+            DbField identityField = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
+
+            // Validate the multiple statement execution
+            ValidateMultipleStatementExecution(batchSize);
+
+            // Ensure the fields
+            if (fields?.Any() != true)
+            {
+                throw new EmptyException($"The list of fields cannot be null or empty.");
+            }
+
+            // Check the qualifiers
+            if (qualifiers?.Any() == true)
+            {
+                // Check if the qualifiers are present in the given fields
+                var unmatchesQualifiers = qualifiers?.Where(field =>
+                    fields?.FirstOrDefault(f =>
+                        string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
+
+                // Throw an error we found any unmatches
+                if (unmatchesQualifiers?.Any() == true)
+                {
+                    throw new InvalidQualifiersException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
+                        $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
+                }
+            }
+            else
+            {
+                if (primaryField != null)
+                {
+                    // Make sure that primary is present in the list of fields before qualifying to become a qualifier
+                    var isPresent = fields?.FirstOrDefault(f =>
+                        string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+
+                    // Throw if not present
+                    if (isPresent == false)
+                    {
+                        throw new InvalidQualifiersException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
+                            $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
+                    }
+
+                    // The primary is present, use it as a default if there are no qualifiers given
+                    qualifiers = primaryField.AsField().AsEnumerable();
+                }
+                else
+                {
+                    // Throw exception, qualifiers are not defined
+                    throw new NullReferenceException($"There are no qualifier field objects found for '{tableName}'.");
+                }
+            }
+
+            // Gets the updatable fields
+            fields = fields
+                .Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) &&
+                    qualifiers.FirstOrDefault(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
+
+            // Check if there are updatable fields
+            if (fields?.Any() != true)
+            {
+                throw new EmptyException("The list of updatable fields cannot be null or empty.");
+            }
+
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Clear();
+
+            // Iterate the indexes
+            for (var index = 0; index < batchSize; index++)
+            {
+                queryBuilder
+                    .Update()
+                    .TableNameFrom(tableName, DbSetting)
+                    .Set()
+                    .FieldsAndParametersFrom(fields, index, DbSetting)
+                    .WhereFrom(qualifiers, index, DbSetting)
+                    .End();
+            }
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
+
         #endregion
 
         #region Abstract
@@ -893,27 +1087,6 @@ namespace RepoDb.StatementBuilders
             IEnumerable<OrderField> orderBy = null,
             QueryGroup where = null,
             string hints = null);
-
-        #endregion
-
-        #region CreateInsertAll
-
-        /// <summary>
-        /// Creates a SQL Statement for insert-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be inserted.</param>
-        /// <param name="batchSize">The batch size of the operation.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="identityField">The identity field from the database.</param>
-        /// <returns>A sql statement for insert operation.</returns>
-        public abstract string CreateInsertAll(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields = null,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            DbField primaryField = null,
-            DbField identityField = null);
 
         #endregion
 
@@ -974,29 +1147,6 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateUpdateAll
-
-        /// <summary>
-        /// Creates a SQL Statement for update-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be updated.</param>
-        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
-        /// <param name="batchSize">The batch size of the operation.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="identityField">The identity field from the database.</param>
-        /// <returns>A sql statement for update-all operation.</returns>
-        public abstract string CreateUpdateAll(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            DbField primaryField = null,
-            DbField identityField = null);
-
-        #endregion
-
         #endregion
 
         #region Helper
@@ -1046,6 +1196,19 @@ namespace RepoDb.StatementBuilders
             if (!string.IsNullOrEmpty(hints) && !DbSetting.AreTableHintsSupported)
             {
                 throw new NotSupportedException("The table hints are not supported on this database provider statement builder.");
+            }
+        }
+
+        /// <summary>
+        /// Throws an exception if the 'batchSize' is greater than 1 and the multiple statement execution is not being supported
+        /// based on the settings of the <see cref="IDbSetting"/> object.
+        /// </summary>
+        /// <param name="batchSize">The batch size to be evaluated.</param>
+        protected void ValidateMultipleStatementExecution(int batchSize = Constant.DefaultBatchOperationSize)
+        {
+            if (DbSetting.IsMultipleStatementExecutionSupported == false && batchSize > 1)
+            {
+                throw new NotSupportedException($"Multiple execution is not supported based on the current database setting '{DbSetting.GetType().FullName}'. Consider setting the batchsize to 1.");
             }
         }
 
