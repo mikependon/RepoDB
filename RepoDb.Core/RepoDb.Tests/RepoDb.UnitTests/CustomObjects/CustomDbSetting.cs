@@ -7,7 +7,6 @@ namespace RepoDb.UnitTests.CustomObjects
     {
         public bool IsMultipleStatementExecutionSupported => true;
         public bool AreTableHintsSupported => true;
-        public bool IsCountBigSupported => true;
         public string OpeningQuote => "[";
         public string ClosingQuote => "]";
         public string ParameterPrefix => "@";
@@ -20,7 +19,6 @@ namespace RepoDb.UnitTests.CustomObjects
     {
         public bool IsMultipleStatementExecutionSupported => true;
         public bool AreTableHintsSupported => false;
-        public bool IsCountBigSupported => true;
         public string OpeningQuote => "[";
         public string ClosingQuote => "]";
         public string ParameterPrefix => "@";
@@ -33,7 +31,6 @@ namespace RepoDb.UnitTests.CustomObjects
     {
         public bool IsMultipleStatementExecutionSupported => false;
         public bool AreTableHintsSupported => true;
-        public bool IsCountBigSupported => true;
         public string OpeningQuote => "[";
         public string ClosingQuote => "]";
         public string ParameterPrefix => "@";

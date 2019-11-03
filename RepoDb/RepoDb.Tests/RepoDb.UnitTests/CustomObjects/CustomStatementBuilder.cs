@@ -154,11 +154,6 @@ namespace RepoDb.UnitTests.CustomObjects
         {
             throw new NotImplementedException();
         }
-
-        public override string CreateTruncate(QueryBuilder queryBuilder, string tableName)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class CustomNonHintsSupportingBaseStatementBuilder : CustomBaseStatementBuilder

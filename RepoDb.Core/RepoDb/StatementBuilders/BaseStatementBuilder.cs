@@ -177,20 +177,9 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Select();
-
-            // Way of count
-            if (DbSetting.IsCountBigSupported)
-            {
-                builder.CountBig(null, DbSetting);
-            }
-            else
-            {
-                builder.Count(null, DbSetting);
-            }
-
-            // Continuation
-            builder.WriteText("AS [CountValue]")
+                .Select()
+                .Count(null, DbSetting)
+                .WriteText("AS [CountValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
@@ -227,20 +216,9 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Select();
-
-            // Way of count
-            if (DbSetting.IsCountBigSupported)
-            {
-                builder.CountBig(null, DbSetting);
-            }
-            else
-            {
-                builder.Count(null, DbSetting);
-            }
-
-            // Continuation
-            builder.WriteText("AS [CountValue]")
+                .Select()
+                .Count(null, DbSetting)
+                .WriteText("AS [CountValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
@@ -892,6 +870,37 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateTruncate
+
+        /// <summary>
+        /// Creates a SQL Statement for truncate operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A sql statement for truncate operation.</returns>
+        public virtual string CreateTruncate(QueryBuilder queryBuilder,
+            string tableName)
+        {
+            // Guard the target table
+            GuardTableName(tableName);
+
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Clear()
+                .Truncate()
+                .Table()
+                .TableNameFrom(tableName, DbSetting)
+                .End();
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
+
         #region CreateUpdate
 
         /// <summary>
@@ -1131,19 +1140,6 @@ namespace RepoDb.StatementBuilders
             int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
             DbField identityField = null);
-
-        #endregion
-
-        #region CreateTruncate
-
-        /// <summary>
-        /// Creates a SQL Statement for truncate operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <returns>A sql statement for truncate operation.</returns>
-        public abstract string CreateTruncate(QueryBuilder queryBuilder,
-            string tableName);
 
         #endregion
 

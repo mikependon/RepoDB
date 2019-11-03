@@ -1,17 +1,29 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.UnitTests.CustomObjects;
 using System;
-using System.Data.SqlClient;
 
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateTruncateTest
+    public class BaseStatementBuilderCreateTruncateTest
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            StatementBuilderMapper.Add(typeof(BaseStatementBuilderDbConnection), new CustomBaseStatementBuilder(), true);
+        }
+
+        #region SubClasses
+
+        private class BaseStatementBuilderDbConnection : CustomDbConnection { }
+
+        #endregion
+
         [TestMethod]
-        public void TestSqlStatementBuilderCreateTruncate()
+        public void TestBaseStatementBuilderCreateTruncate()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
@@ -25,10 +37,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateTruncateWithQuotedTableSchema()
+        public void TestBaseStatementBuilderCreateTruncateWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
 
@@ -42,10 +54,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateTruncateWithUnquotedTableSchema()
+        public void TestBaseStatementBuilderCreateTruncateWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
 
@@ -59,10 +71,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateTruncateIfTheTableIsNull()
+        public void ThrowExceptionOnBaseStatementBuilderCreateTruncateIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
 
@@ -72,10 +84,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateTruncateIfTheTableIsEmpty()
+        public void ThrowExceptionOnBaseStatementBuilderCreateTruncateIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = "";
 
@@ -85,10 +97,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateTruncateIfTheTableIsWhitespace()
+        public void ThrowExceptionOnBaseStatementBuilderCreateTruncateIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
 

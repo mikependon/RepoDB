@@ -136,10 +136,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Delete<CompleteTable>(tables.Last().Id);
+                var deletedRows = connection.Delete<CompleteTable>(tables.Last().Id);
+
+                // Act
+                var result = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                Assert.AreEqual(1, result);
+                Assert.AreEqual(1, deletedRows);
             }
         }
 

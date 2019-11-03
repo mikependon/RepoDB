@@ -110,11 +110,23 @@ namespace RepoDb.StatementBuilders
         public override string CreateInsertAll(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields = null,
-            int batchSize = 10,
+            int batchSize = 1,
             DbField primaryField = null,
             DbField identityField = null)
         {
-            throw new NotSupportedException("The multiple statement execution is not supported in SqLite. Therefore, the batch-insert operation is not supported.");
+            if (batchSize > 1)
+            {
+                throw new NotSupportedException("The multiple execution is not supported in SqLite. Consider setting the batchsize to 1.");
+            }
+            else
+            {
+                return base.CreateInsertAll(queryBuilder,
+                    tableName,
+                    fields,
+                    batchSize,
+                    primaryField,
+                    identityField);
+            }
         }
 
         #endregion
@@ -164,35 +176,7 @@ namespace RepoDb.StatementBuilders
             DbField primaryField = null,
             DbField identityField = null)
         {
-            throw new NotSupportedException("The multiple statement execution is not supported in SqLite. Therefore, the batch-merge operation is not supported.");
-        }
-
-        #endregion
-
-        #region CreateTruncate
-
-        /// <summary>
-        /// Creates a SQL Statement for truncate operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <returns>A sql statement for truncate operation.</returns>
-        public override string CreateTruncate(QueryBuilder queryBuilder,
-            string tableName)
-        {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
-                .Delete()
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .End();
-
-            // Return the query
-            return queryBuilder.GetString();
+            throw new NotSupportedException("The merge statement is not supported in SqLite.");
         }
 
         #endregion
@@ -214,13 +198,13 @@ namespace RepoDb.StatementBuilders
             string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
-            int batchSize = 10,
+            int batchSize = 1,
             DbField primaryField = null,
             DbField identityField = null)
         {
             if (batchSize > 1)
             {
-                throw new NotSupportedException("The multiple statement execution is not supported in SqLite. Therefore, the batch-update operation is not supported. Consider setting the batchsize to 1.");
+                throw new NotSupportedException("The multiple execution is not supported in SqLite. Consider setting the batchsize to 1.");
             }
             else
             {

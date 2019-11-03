@@ -6,10 +6,10 @@ using System.Data.SqlClient;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateMergeTest
+    public class SqlServerStatementBuilderCreateMergeTest
     {
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMerge()
+        public void TestSqlServerStatementBuilderCreateMerge()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -40,7 +40,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithQuotedTableSchema()
+        public void TestSqlServerStatementBuilderCreateMergeWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -71,7 +71,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithUnquotedTableSchema()
+        public void TestSqlServerStatementBuilderCreateMergeWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -102,7 +102,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithCoveredPrimary()
+        public void TestSqlServerStatementBuilderCreateMergeWithCoveredPrimary()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -135,7 +135,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithCoveredPrimaryAsIdentity()
+        public void TestSqlServerStatementBuilderCreateMergeWithCoveredPrimaryAsIdentity()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -169,7 +169,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithUncoveredPrimary()
+        public void TestSqlServerStatementBuilderCreateMergeWithUncoveredPrimary()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -202,7 +202,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithCoveredIdentity()
+        public void TestSqlServerStatementBuilderCreateMergeWithCoveredIdentity()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -235,7 +235,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithUncoveredIdentity()
+        public void TestSqlServerStatementBuilderCreateMergeWithUncoveredIdentity()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -268,7 +268,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithCoveredPrimaryButWithoutQualifiers()
+        public void TestSqlServerStatementBuilderCreateMergeWithCoveredPrimaryButWithoutQualifiers()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -300,7 +300,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateMergeWithCoveredPrimaryAndWithCoveredIdentityButWithoutQualifiers()
+        public void TestSqlServerStatementBuilderCreateMergeWithCoveredPrimaryAndWithCoveredIdentityButWithoutQualifiers()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -333,7 +333,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThereAreNoFields()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThereAreNoFields()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -351,7 +351,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThereAreNoPrimaryAndNoQualifiers()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThereAreNoPrimaryAndNoQualifiers()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -369,7 +369,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheQualifiersAreNotPresentAtTheGivenFields()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheQualifiersAreNotPresentAtTheGivenFields()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -388,7 +388,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThePrimaryAsQualifierIsNotPresentAtTheGivenFields()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThePrimaryAsQualifierIsNotPresentAtTheGivenFields()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -407,7 +407,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheTableIsNull()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -426,7 +426,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -445,7 +445,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheTableIsWhitespace()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -464,7 +464,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfThePrimaryIsNotReallyAPrimary()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -483,7 +483,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateMergeIfTheIdentityIsNotReallyAnIdentity()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));

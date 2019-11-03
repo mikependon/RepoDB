@@ -112,6 +112,85 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateCount
+
+        /// <summary>
+        /// Creates a SQL Statement for count operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for count operation.</returns>
+        public override string CreateCount(QueryBuilder queryBuilder,
+            string tableName,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Validate the hints
+            ValidateHints(hints);
+
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Select()
+                .CountBig(null, DbSetting)
+                .WriteText("AS [CountValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .WhereFrom(where, DbSetting)
+                .End();
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
+
+        #region CreateCountAll
+
+        /// <summary>
+        /// Creates a SQL Statement for count-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for count-all operation.</returns>
+        public override string CreateCountAll(QueryBuilder queryBuilder,
+            string tableName,
+            string hints = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Validate the hints
+            ValidateHints(hints);
+
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Select()
+                .CountBig(null, DbSetting)
+                .WriteText("AS [CountValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .End();
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
+
         #region CreateInsert
 
         /// <summary>
@@ -550,37 +629,6 @@ namespace RepoDb.StatementBuilders
                 // End the builder
                 queryBuilder.End();
             }
-
-            // Return the query
-            return builder.GetString();
-        }
-
-        #endregion
-
-        #region CreateTruncate
-
-        /// <summary>
-        /// Creates a SQL Statement for truncate operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <returns>A sql statement for truncate operation.</returns>
-        public override string CreateTruncate(QueryBuilder queryBuilder,
-            string tableName)
-        {
-            // Guard the target table
-            GuardTableName(tableName);
-
-            // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
-
-            // Build the query
-            builder.Clear()
-                .Clear()
-                .Truncate()
-                .Table()
-                .TableNameFrom(tableName, DbSetting)
-                .End();
 
             // Return the query
             return builder.GetString();

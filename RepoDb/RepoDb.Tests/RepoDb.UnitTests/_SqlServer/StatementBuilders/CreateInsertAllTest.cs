@@ -4,10 +4,10 @@ using System.Data.SqlClient;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateInsertAllTest
+    public class SqlServerStatementBuilderCreateInsertAllTest
     {
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertAllWithIdentity()
+        public void TestSqlServerStatementBuilderCreateInsertAllWithIdentity()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -35,7 +35,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertAllWithIdentityAsBigInt()
+        public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityAsBigInt()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -63,7 +63,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertAllWithPrimaryAndIdentity()
+        public void TestSqlServerStatementBuilderCreateInsertAllWithPrimaryAndIdentity()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -92,7 +92,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertAllWithPrimaryAndIdentityAsBigInt()
+        public void TestSqlServerStatementBuilderCreateInsertAllWithPrimaryAndIdentityAsBigInt()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -121,7 +121,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertAllWithIdentityForThreeBatches()
+        public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityForThreeBatches()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));

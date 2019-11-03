@@ -24,11 +24,6 @@ namespace RepoDb.DbSettings
         public bool AreTableHintsSupported { get; } = true;
 
         /// <summary>
-        /// Gets the value that indicates whether the count big operation is supported.
-        /// </summary>
-        public bool IsCountBigSupported { get; } = true;
-
-        /// <summary>
         /// Gets the character (or string) used for opening quote.
         /// </summary>
         public string OpeningQuote { get; } = "[";
@@ -81,9 +76,6 @@ namespace RepoDb.DbSettings
 
             // AreTableHintsSupported
             hashCode += AreTableHintsSupported.GetHashCode();
-
-            // IsCountBigSupported
-            hashCode += IsCountBigSupported.GetHashCode();
 
             // OpeningQuote
             if (!string.IsNullOrEmpty(OpeningQuote))

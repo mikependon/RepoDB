@@ -7,10 +7,10 @@ using System.Data.SqlClient;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateBatchQueryTest
+    public class SqlServerStatementBuilderCreateBatchQueryTest
     {
         [TestMethod]
-        public void TestSqlStatementBuilderCreateBatchQueryFirstBatch()
+        public void TestSqlServerStatementBuilderCreateBatchQueryFirstBatch()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -43,7 +43,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateBatchQuerySecondBatch()
+        public void TestSqlServerStatementBuilderCreateBatchQuerySecondBatch()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -76,7 +76,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateBatchQueryWithHints()
+        public void TestSqlServerStatementBuilderCreateBatchQueryWithHints()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -110,7 +110,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateBatchQueryWithQuotedTableSchema()
+        public void TestSqlServerStatementBuilderCreateBatchQueryWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -143,7 +143,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateBatchQueryWithUnquotedTableSchema()
+        public void TestSqlServerStatementBuilderCreateBatchQueryWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -176,7 +176,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateBatchQueryWithWhereExpression()
+        public void TestSqlServerStatementBuilderCreateBatchQueryWithWhereExpression()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -211,7 +211,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateBatchQueryWithWhereExpressionUniqueField()
+        public void TestSqlServerStatementBuilderCreateBatchQueryWithWhereExpressionUniqueField()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -246,7 +246,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheTableIsNull()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsNull()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -265,7 +265,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheTableIsEmpty()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsEmpty()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -284,7 +284,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheTableIsWhitespace()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsWhitespace()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -303,7 +303,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheFieldsAreNull()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheFieldsAreNull()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -322,7 +322,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(EmptyException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfThereAreNoOrderFields()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfThereAreNoOrderFields()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -341,7 +341,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfThePageIsLessThanZero()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfThePageIsLessThanZero()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -361,7 +361,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void ThrowExceptionOnSqlStatementBuilderCreateBatchQueryIfTheRowsPerBatchIsLessThanOne()
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheRowsPerBatchIsLessThanOne()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));

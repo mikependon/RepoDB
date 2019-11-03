@@ -158,13 +158,15 @@
     <Compile Include="StatementBuilders\CreateCountTest.cs" />
     <Compile Include="StatementBuilders\CreateDeleteAllTest.cs" />
     <Compile Include="StatementBuilders\CreateDeleteTest.cs" />
+    <Compile Include="_SqlServer\StatementBuilders\CreateCountAllTest.cs" />
+    <Compile Include="_SqlServer\StatementBuilders\CreateCountTest.cs" />
     <Compile Include="_SqlServer\StatementBuilders\CreateInsertAllTest.cs" />
     <Compile Include="_SqlServer\StatementBuilders\CreateInsertTest.cs" />
     <Compile Include="_SqlServer\StatementBuilders\CreateMergeAllTest.cs" />
     <Compile Include="_SqlServer\StatementBuilders\CreateMergeTest.cs" />
     <Compile Include="StatementBuilders\CreateQueryAllTest.cs" />
     <Compile Include="StatementBuilders\CreateQueryTest.cs" />
-    <Compile Include="_SqlServer\StatementBuilders\CreateTruncateTest.cs" />
+    <Compile Include="StatementBuilders\CreateTruncateTest.cs" />
     <Compile Include="StatementBuilders\CreateUpdateTest.cs" />
   </ItemGroup>
   <ItemGroup>
