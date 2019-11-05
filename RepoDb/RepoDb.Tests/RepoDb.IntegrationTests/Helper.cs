@@ -125,8 +125,23 @@ namespace RepoDb.IntegrationTests
                 }
                 var value1 = propertyOfType1.GetValue(t1);
                 var value2 = propertyOfType2.GetValue(t2);
-                Assert.AreEqual(value1, value2,
-                    $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
+                if (value1 is byte[] && value2 is byte[])
+                {
+                    var b1 = (byte[])value1;
+                    var b2 = (byte[])value2;
+                    for (var i = 0; i < b1.Length; i++)
+                    {
+                        var v1 = b1[i];
+                        var v2 = b2[i];
+                        Assert.AreEqual(v1, v2,
+                            $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
+                    }
+                }
+                else
+                {
+                    Assert.AreEqual(value1, value2,
+                        $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
+                }
             });
         }
 
@@ -150,13 +165,26 @@ namespace RepoDb.IntegrationTests
                 {
                     var value1 = property.GetValue(obj);
                     var value2 = dictionary[property.Name];
-                    Assert.AreEqual(
-                        Convert.ChangeType(value1, property.PropertyType.GetUnderlyingType()),
-                        Convert.ChangeType(value2, property.PropertyType.GetUnderlyingType()),
-                        $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
+                    if (value1 is byte[] && value2 is byte[])
+                    {
+                        var b1 = (byte[])value1;
+                        var b2 = (byte[])value2;
+                        for (var i = 0; i < b1.Length; i++)
+                        {
+                            var v1 = b1[i];
+                            var v2 = b2[i];
+                            Assert.AreEqual(v1, v2,
+                                $"Assert failed for '{property.Name}'. The values are '{v1}' and '{v2}'.");
+                        }
+                    }
+                    else
+                    {
+                        var propertyType = property.PropertyType.GetUnderlyingType();
+                        Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
+                            $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
+                    }
                 }
             });
-
         }
 
         #region IdentityTable
