@@ -72,9 +72,11 @@
     <Compile Include="CustomTrace.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Models\CompleteTable.cs" />
+    <Compile Include="Operations\SumAllTest.cs" />
     <Compile Include="Operations\MinAllTest.cs" />
     <Compile Include="Operations\MaxAllTest.cs" />
     <Compile Include="Operations\AverageAllTest.cs" />
+    <Compile Include="Operations\SumTest.cs" />
     <Compile Include="Operations\MinTest.cs" />
     <Compile Include="Operations\MaxTest.cs" />
     <Compile Include="Operations\AverageTest.cs" />
