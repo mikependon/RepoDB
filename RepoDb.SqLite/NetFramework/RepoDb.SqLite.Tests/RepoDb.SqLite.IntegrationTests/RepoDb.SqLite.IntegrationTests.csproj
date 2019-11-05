@@ -72,6 +72,7 @@
     <Compile Include="CustomTrace.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Models\CompleteTable.cs" />
+    <Compile Include="Operations\AverageAllTest.cs" />
     <Compile Include="Operations\AverageTest.cs" />
     <Compile Include="Operations\BatchQueryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
