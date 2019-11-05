@@ -31,7 +31,7 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
 
         public static IEnumerable<CompleteTable> CreateCompleteTables(int count)
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SQLiteConnection(ConnectionString))
             {
                 var tables = Helper.CreateCompleteTables(count);
                 connection.InsertAll(tables);

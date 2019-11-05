@@ -41,13 +41,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
-                var items = tables
-                    .OrderBy(item => item.Id)
-                    .Range(0, 2)
-                    .AsList();
 
                 // Assert
-                Assert.IsTrue(items.All(item => result.FirstOrDefault(e => e.Id == item.Id) != null));
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(2));
             }
         }
 
@@ -64,13 +61,50 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
-                var items = tables
-                    .OrderByDescending(item => item.Id)
-                    .Range(0, 2)
-                    .AsList();
 
                 // Assert
-                Assert.IsTrue(items.All(item => result.FirstOrDefault(e => e.Id == item.Id) != null));
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestBatchQueryThirdBatchAscending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQuery<CompleteTable>(2,
+                    3,
+                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null);
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(8), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestBatchQueryThirdBatchDescending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQuery<CompleteTable>(2,
+                    3,
+                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null);
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.ElementAt(2));
             }
         }
 
@@ -83,7 +117,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery<CompleteTable>(0,
+                connection.BatchQuery<CompleteTable>(0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null,
@@ -95,11 +129,320 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
         #region Async
 
+        [TestMethod]
+        public void TestBatchQueryAsyncFirstBatchAscending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQueryAsync<CompleteTable>(0,
+                    3,
+                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestBatchQueryAsyncFirstBatchDescending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQueryAsync<CompleteTable>(0,
+                    3,
+                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestBatchQueryAsyncThirdBatchAscending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQueryAsync<CompleteTable>(2,
+                    3,
+                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(8), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestBatchQueryAsyncThirdBatchDescending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQueryAsync<CompleteTable>(2,
+                    3,
+                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(1), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void TestBatchQueryAsyncFirstBatchWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.BatchQueryAsync<CompleteTable>(0,
+                    3,
+                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null,
+                    hints: "WhatEver").Wait();
+            }
+        }
+
         #endregion
 
         #endregion
 
         #region TableName
+
+        #region Sync
+
+        [TestMethod]
+        public void TestBatchQueryViaTableNameFirstBatchAscending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                    0,
+                    3,
+                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null);
+
+                // Assert
+                Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(2), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestBatchQueryViaTableNameFirstBatchDescending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                    0,
+                    3,
+                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null);
+
+                // Assert
+                Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(7), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestBatchQueryViaTableNameThirdBatchAscending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                    2,
+                    3,
+                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null);
+
+                // Assert
+                Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(8), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestBatchQueryViaTableNameThirdBatchDescending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                    2,
+                    3,
+                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null);
+
+                // Assert
+                Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(1), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void TestBatchQueryViaTableNameFirstBatchWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                    0,
+                    3,
+                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null,
+                    hints: "WhatEver");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public void TestBatchQueryViaTableNameAsyncFirstBatchAscending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    0,
+                    3,
+                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null).Result;
+
+                // Assert
+                Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(2), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestBatchQueryViaTableNameAsyncFirstBatchDescending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    0,
+                    3,
+                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null).Result;
+
+                // Assert
+                Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(7), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestBatchQueryViaTableNameAsyncThirdBatchAscending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    2,
+                    3,
+                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null).Result;
+
+                // Assert
+                Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(8), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestBatchQueryViaTableNameAsyncThirdBatchDescending()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    2,
+                    3,
+                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null).Result;
+
+                // Assert
+                Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(1), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void TestBatchQueryViaTableNameAsyncFirstBatchWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    0,
+                    3,
+                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    (object)null,
+                    hints: "WhatEver").Wait();
+            }
+        }
+
+        #endregion
 
         #endregion
     }

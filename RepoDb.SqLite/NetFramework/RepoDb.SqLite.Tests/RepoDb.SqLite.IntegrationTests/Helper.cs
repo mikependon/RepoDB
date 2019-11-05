@@ -3,6 +3,7 @@ using RepoDb.Extensions;
 using RepoDb.SqLite.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 
@@ -60,6 +61,53 @@ namespace RepoDb.SqLite.IntegrationTests
                 {
                     Assert.AreEqual(value1, value2,
                         $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
+                }
+            });
+        }
+
+
+        /// <summary>
+        /// Asserts the members equality of 2 object and <see cref="ExpandoObject"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of first object.</typeparam>
+        /// <param name="obj">The instance of first object.</param>
+        /// <param name="expandoObj">The instance of second object.</param>
+        public static void AssertMembersEquality(object obj, ExpandoObject expandoObj)
+        {
+            var properties = obj.GetType().GetProperties();
+            var dictionary = expandoObj as IDictionary<string, object>;
+            properties.AsList().ForEach(property =>
+            {
+                if (property.Name == "Id")
+                {
+                    return;
+                }
+                if (dictionary.ContainsKey(property.Name))
+                {
+                    var value1 = property.GetValue(obj);
+                    var value2 = dictionary[property.Name];
+                    if (value1 is byte[] && value2 is byte[])
+                    {
+                        var b1 = (byte[])value1;
+                        var b2 = (byte[])value2;
+                        for (var i = 0; i < b1.Length; i++)
+                        {
+                            var v1 = b1[i];
+                            var v2 = b2[i];
+                            Assert.AreEqual(v1, v2,
+                                $"Assert failed for '{property.Name}'. The values are '{v1}' and '{v2}'.");
+                        }
+                    }
+                    else
+                    {
+                        var propertyType = property.PropertyType.GetUnderlyingType();
+                        if (propertyType == typeof(TimeSpan) && value2 is DateTime)
+                        {
+                            value2 = ((DateTime)value2).TimeOfDay;
+                        }
+                        Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
+                            $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
+                    }
                 }
             });
         }
