@@ -151,10 +151,37 @@ namespace RepoDb.IntegrationTests
         /// <typeparam name="T">The type of first object.</typeparam>
         /// <param name="obj">The instance of first object.</param>
         /// <param name="expandoObj">The instance of second object.</param>
+        public static void AssertMembersEquality(object obj, object expandoObj)
+        {
+            var dictionary = new ExpandoObject() as IDictionary<string, object>;
+            foreach (var property in expandoObj.GetType().GetProperties())
+            {
+                dictionary.Add(property.Name, property.GetValue(expandoObj));
+            }
+            AssertMembersEquality(obj, dictionary);
+        }
+
+        /// <summary>
+        /// Asserts the members equality of 2 object and <see cref="ExpandoObject"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of first object.</typeparam>
+        /// <param name="obj">The instance of first object.</param>
+        /// <param name="expandoObj">The instance of second object.</param>
         public static void AssertMembersEquality(object obj, ExpandoObject expandoObj)
         {
-            var properties = obj.GetType().GetProperties();
             var dictionary = expandoObj as IDictionary<string, object>;
+            AssertMembersEquality(obj, dictionary);
+        }
+
+        /// <summary>
+        /// Asserts the members equality of 2 objects.
+        /// </summary>
+        /// <typeparam name="T">The type of first object.</typeparam>
+        /// <param name="obj">The instance of first object.</param>
+        /// <param name="dictionary">The instance of second object.</param>
+        public static void AssertMembersEquality(object obj, IDictionary<string, object> dictionary)
+        {
+            var properties = obj.GetType().GetProperties();
             properties.AsList().ForEach(property =>
             {
                 if (property.Name == "Id")
@@ -180,6 +207,10 @@ namespace RepoDb.IntegrationTests
                     else
                     {
                         var propertyType = property.PropertyType.GetUnderlyingType();
+                        if (propertyType == typeof(TimeSpan) && value2 is DateTime)
+                        {
+                            value2 = ((DateTime)value2).TimeOfDay;
+                        }
                         Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                     }
