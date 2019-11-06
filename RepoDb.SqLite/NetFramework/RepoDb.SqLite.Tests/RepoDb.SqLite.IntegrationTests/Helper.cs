@@ -65,6 +65,21 @@ namespace RepoDb.SqLite.IntegrationTests
             });
         }
 
+        /// <summary>
+        /// Asserts the members equality of 2 object and <see cref="ExpandoObject"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of first object.</typeparam>
+        /// <param name="obj">The instance of first object.</param>
+        /// <param name="expandoObj">The instance of second object.</param>
+        public static void AssertMembersEquality(object obj, object expandoObj)
+        {
+            var dictionary = new ExpandoObject() as IDictionary<string, object>;
+            foreach (var property in expandoObj.GetType().GetProperties())
+            {
+                dictionary.Add(property.Name, property.GetValue(expandoObj));
+            }
+            AssertMembersEquality(obj, dictionary);
+        }
 
         /// <summary>
         /// Asserts the members equality of 2 object and <see cref="ExpandoObject"/>.
@@ -74,8 +89,19 @@ namespace RepoDb.SqLite.IntegrationTests
         /// <param name="expandoObj">The instance of second object.</param>
         public static void AssertMembersEquality(object obj, ExpandoObject expandoObj)
         {
-            var properties = obj.GetType().GetProperties();
             var dictionary = expandoObj as IDictionary<string, object>;
+            AssertMembersEquality(obj, dictionary);
+        }
+
+        /// <summary>
+        /// Asserts the members equality of 2 objects.
+        /// </summary>
+        /// <typeparam name="T">The type of first object.</typeparam>
+        /// <param name="obj">The instance of first object.</param>
+        /// <param name="dictionary">The instance of second object.</param>
+        public static void AssertMembersEquality(object obj, IDictionary<string, object> dictionary)
+        {
+            var properties = obj.GetType().GetProperties();
             properties.AsList().ForEach(property =>
             {
                 if (property.Name == "Id")
@@ -127,6 +153,117 @@ namespace RepoDb.SqLite.IntegrationTests
                 var index = i + 1;
                 tables.Add(new CompleteTable
                 {
+                    ColumnBigInt = i,
+                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
+                    ColumnBoolean = true,
+                    ColumnChar = "C",
+                    ColumnDate = EpocDate,
+                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                    ColumnDecimal = Convert.ToDecimal(i),
+                    ColumnDouble = Convert.ToDouble(i),
+                    ColumnInt = i,
+                    ColumnInteger = i,
+                    ColumnNone = "N",
+                    ColumnNumeric = Convert.ToDecimal(i),
+                    ColumnReal = (float)i,
+                    ColumnString = $"ColumnString:{i}",
+                    ColumnText = $"ColumnText:{i}",
+                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
+                    ColumnVarChar = $"ColumnVarChar:{i}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates a list of <see cref="CompleteTable"/> objects represented as dynamics.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="CompleteTable"/> objects represented as dynamics.</returns>
+        public static List<dynamic> CreateCompleteTablesAsDynamics(int count)
+        {
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    ColumnBigInt = i,
+                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
+                    ColumnBoolean = true,
+                    ColumnChar = "C",
+                    ColumnDate = EpocDate,
+                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                    ColumnDecimal = Convert.ToDecimal(i),
+                    ColumnDouble = Convert.ToDouble(i),
+                    ColumnInt = i,
+                    ColumnInteger = i,
+                    ColumnNone = "N",
+                    ColumnNumeric = Convert.ToDecimal(i),
+                    ColumnReal = (float)i,
+                    ColumnString = $"ColumnString:{i}",
+                    ColumnText = $"ColumnText:{i}",
+                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
+                    ColumnVarChar = $"ColumnVarChar:{i}"
+                });
+            }
+            return tables;
+        }
+
+        #endregion
+
+        #region NonIdentityCompleteTable
+
+        /// <summary>
+        /// Creates a list of <see cref="NonIdentityCompleteTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="NonIdentityCompleteTable"/> objects.</returns>
+        public static List<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
+        {
+            var tables = new List<NonIdentityCompleteTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new NonIdentityCompleteTable
+                {
+                    Id = (i + 1),
+                    ColumnBigInt = i,
+                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
+                    ColumnBoolean = true,
+                    ColumnChar = "C",
+                    ColumnDate = EpocDate,
+                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                    ColumnDecimal = Convert.ToDecimal(i),
+                    ColumnDouble = Convert.ToDouble(i),
+                    ColumnInt = i,
+                    ColumnInteger = i,
+                    ColumnNone = "N",
+                    ColumnNumeric = Convert.ToDecimal(i),
+                    ColumnReal = (float)i,
+                    ColumnString = $"ColumnString:{i}",
+                    ColumnText = $"ColumnText:{i}",
+                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
+                    ColumnVarChar = $"ColumnVarChar:{i}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates a list of <see cref="NonIdentityCompleteTable"/> objects represented as dynamics.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="NonIdentityCompleteTable"/> objects represented as dynamics.</returns>
+        public static List<dynamic> CreateNonIdentityCompleteTablesAsDynamics(int count)
+        {
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    Id = (long)(i + 1),
                     ColumnBigInt = i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = true,

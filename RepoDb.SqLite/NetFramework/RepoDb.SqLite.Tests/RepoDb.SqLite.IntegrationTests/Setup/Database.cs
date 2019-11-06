@@ -26,6 +26,7 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.DeleteAll<CompleteTable>();
+                connection.DeleteAll<NonIdentityCompleteTable>();
             }
         }
 
@@ -37,6 +38,26 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
                 connection.InsertAll(tables);
                 return tables;
             }
+        }
+
+        public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
+        {
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                var tables = Helper.CreateNonIdentityCompleteTables(count);
+                connection.InsertAll(tables);
+                return tables;
+            }
+        }
+
+        private static void CreateCompleteTable()
+        {
+            // CREATE TABLE CompleteTable (Id INTEGER PRIMARY KEY AUTOINCREMENT, ColumnBigInt BIGINT, ColumnBlob BLOB, ColumnBoolean BOOLEAN, ColumnChar CHAR, ColumnDate DATE, ColumnDateTime DATETIME, ColumnDecimal DECIMAL, ColumnDouble DOUBLE, ColumnInteger INTEGER, ColumnInt INT, ColumnNone NONE, ColumnNumeric NUMERIC, ColumnReal REAL, ColumnString STRING, ColumnText TEXT, ColumnTime TIME, ColumnVarChar VARCHAR)
+        }
+
+        private static void CreateNonIdentityCompleteTable()
+        {
+            // CREATE TABLE NonIdentityCompleteTable (Id INTEGER PRIMARY KEY, ColumnBigInt BIGINT, ColumnBlob BLOB, ColumnBoolean BOOLEAN, ColumnChar CHAR, ColumnDate DATE, ColumnDateTime DATETIME, ColumnDecimal DECIMAL, ColumnDouble DOUBLE, ColumnInteger INTEGER, ColumnInt INT, ColumnNone NONE, ColumnNumeric NUMERIC, ColumnReal REAL, ColumnString STRING, ColumnText TEXT, ColumnTime TIME, ColumnVarChar VARCHAR)
         }
 
         #endregion
