@@ -281,6 +281,8 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
         #endregion
 
+        #region TableName
+
         #region Sync
 
         [TestMethod]
@@ -468,6 +470,8 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 Assert.AreEqual(8, result);
             }
         }
+
+        #endregion
 
         #endregion
     }
