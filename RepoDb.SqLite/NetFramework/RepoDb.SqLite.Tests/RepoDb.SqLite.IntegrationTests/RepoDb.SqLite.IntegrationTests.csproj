@@ -73,6 +73,7 @@
     <Compile Include="Helper.cs" />
     <Compile Include="Models\NonIdentityCompleteTable.cs" />
     <Compile Include="Models\CompleteTable.cs" />
+    <Compile Include="Operations\TruncateTest.cs" />
     <Compile Include="Operations\DeleteAllTest.cs" />
     <Compile Include="Operations\CountAllTest.cs" />
     <Compile Include="Operations\InsertTest.cs" />

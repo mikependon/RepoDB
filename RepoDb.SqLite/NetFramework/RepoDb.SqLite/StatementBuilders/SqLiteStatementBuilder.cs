@@ -181,6 +181,37 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateTruncate
+
+        //// <summary>
+        /// Creates a SQL Statement for truncate operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A sql statement for truncate operation.</returns>
+        public override string CreateTruncate(QueryBuilder queryBuilder,
+            string tableName)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Clear()
+                .Delete()
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .End();
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
+
         #region CreateUpdateAll
 
         /// <summary>
