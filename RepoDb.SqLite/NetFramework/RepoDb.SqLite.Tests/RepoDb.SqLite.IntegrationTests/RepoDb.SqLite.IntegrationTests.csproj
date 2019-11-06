@@ -72,7 +72,9 @@
     <Compile Include="CustomTrace.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Models\CompleteTable.cs" />
+    <Compile Include="Operations\DeleteAllTest.cs" />
     <Compile Include="Operations\CountAllTest.cs" />
+    <Compile Include="Operations\DeleteTest.cs" />
     <Compile Include="Operations\CountTest.cs" />
     <Compile Include="Operations\SumAllTest.cs" />
     <Compile Include="Operations\MinAllTest.cs" />
