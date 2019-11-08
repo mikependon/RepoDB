@@ -73,6 +73,7 @@
     <Compile Include="Helper.cs" />
     <Compile Include="Models\NonIdentityCompleteTable.cs" />
     <Compile Include="Models\CompleteTable.cs" />
+    <Compile Include="Operations\QueryAllTest.cs" />
     <Compile Include="Operations\UpdateAllTest.cs" />
     <Compile Include="Operations\QueryTest.cs" />
     <Compile Include="Operations\UpdateTest.cs" />
