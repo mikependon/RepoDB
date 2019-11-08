@@ -74,6 +74,7 @@
     <Compile Include="Models\NonIdentityCompleteTable.cs" />
     <Compile Include="Models\CompleteTable.cs" />
     <Compile Include="Operations\UpdateAllTest.cs" />
+    <Compile Include="Operations\QueryTest.cs" />
     <Compile Include="Operations\UpdateTest.cs" />
     <Compile Include="Operations\InsertAllTest.cs" />
     <Compile Include="Operations\TruncateTest.cs" />

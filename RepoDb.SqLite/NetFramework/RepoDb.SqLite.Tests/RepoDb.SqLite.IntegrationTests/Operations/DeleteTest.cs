@@ -44,6 +44,22 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestDeleteViaPrimaryKey()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Delete<CompleteTable>(tables.First().Id);
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
         public void TestDeleteViaDataEntity()
         {
             // Setup
@@ -167,6 +183,22 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDeleteAsyncViaPrimaryKey()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.DeleteAsync<CompleteTable>(tables.First().Id).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
             }
         }
 
@@ -302,6 +334,22 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestDeleteViaTableNameViaPrimaryKey()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Delete<CompleteTable>(tables.First().Id);
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
         public void TestDeleteViaTableNameViaDynamic()
         {
             // Setup
@@ -393,6 +441,22 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestDeleteAsyncViaTableNameViaPrimaryKey()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.DeleteAsync<CompleteTable>(tables.First().Id).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
             }
         }
 
