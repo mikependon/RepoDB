@@ -1,6 +1,8 @@
 ﻿using RepoDb.SqLite.IntegrationTests.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Text;
 
 namespace RepoDb.SqLite.IntegrationTests.Setup
 {
@@ -30,6 +32,10 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             }
         }
 
+        #endregion
+
+        #region CompleteTable
+
         public static IEnumerable<CompleteTable> CreateCompleteTables(int count)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
@@ -40,6 +46,10 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             }
         }
 
+        #endregion
+
+        #region NonIdentityCompleteTable
+
         public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
@@ -49,6 +59,10 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
                 return tables;
             }
         }
+
+        #endregion
+
+        #region CreateTables
 
         private static void CreateCompleteTable()
         {
