@@ -913,6 +913,9 @@ namespace RepoDb
             // Validate
             InvokeValidatorValidateUpdate(connection);
 
+            // Set the flags
+            where?.IsForUpdate();
+
             // Get the function
             var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
             {
@@ -1000,6 +1003,7 @@ namespace RepoDb
                 // Add the fields from the query group
                 if (where != null)
                 {
+                    // Iterate the fields
                     foreach (var queryField in where.GetFields(true))
                     {
                         // Create a parameter
@@ -1056,6 +1060,9 @@ namespace RepoDb
         {
             // Validate
             InvokeValidatorValidateUpdateAsync(connection);
+
+            // Set the flags
+            where?.IsForUpdate();
 
             // Get the database fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
@@ -1146,6 +1153,7 @@ namespace RepoDb
                 // Add the fields from the query group
                 if (where != null)
                 {
+                    // Iterate the fields
                     foreach (var queryField in where.GetFields(true))
                     {
                         // Create a parameter

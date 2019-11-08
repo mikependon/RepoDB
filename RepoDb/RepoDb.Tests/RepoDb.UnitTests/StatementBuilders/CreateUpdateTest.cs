@@ -104,6 +104,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Field1", 1));
 
+            // Setup
+            where.IsForUpdate();
+
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
@@ -130,6 +133,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Field1", 1));
             var field = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+
+            // Setup
+            where.IsForUpdate();
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -158,6 +164,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var where = new QueryGroup(new QueryField("Field1", 1));
             var field = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
 
+            // Setup
+            where.IsForUpdate();
+
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
@@ -184,6 +193,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Field1", 1));
             var field = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+
+            // Setup
+            where.IsForUpdate();
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -212,6 +224,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var where = new QueryGroup(new QueryField("Id", 1));
             var field = new DbField("Id", true, true, false, typeof(int), null, null, null, null);
 
+            // Setup
+            where.IsForUpdate();
+
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
@@ -238,6 +253,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Id", 1));
             var field = new DbField("Id", true, true, false, typeof(int), null, null, null, null);
+
+            // Setup
+            where.IsForUpdate();
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
@@ -266,6 +284,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var where = new QueryGroup(new QueryField("Id", 1));
             var field = new DbField("Id", true, true, false, typeof(int), null, null, null, null);
 
+            // Setup
+            where.IsForUpdate();
+
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
@@ -293,6 +314,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var where = new QueryGroup(new QueryField("Id", 1));
             var field = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
 
+            // Setup
+            where.IsForUpdate();
+
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
                 tableName: tableName,
@@ -319,6 +343,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Id", 1));
             var field = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+
+            // Setup
+            where.IsForUpdate();
 
             // Act
             var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,

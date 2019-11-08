@@ -925,9 +925,6 @@ namespace RepoDb.StatementBuilders
             GuardPrimary(primaryField);
             GuardIdentity(identityField);
 
-            // Append the proper prefix
-            where?.PrependAnUnderscoreAtTheParameters();
-
             // Gets the updatable fields
             var updatableFields = fields
                 .Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
