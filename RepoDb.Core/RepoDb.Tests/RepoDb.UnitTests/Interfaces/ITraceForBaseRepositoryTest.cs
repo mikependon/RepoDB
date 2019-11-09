@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
@@ -601,6 +600,74 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Exists
+
+        #region Exists
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForBeforeExists()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.Exists((object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForAfterExists()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.Exists((object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region ExistsAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForBeforeExistsAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.ExistsAsync((object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryTraceForAfterExistsAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new TraceEntityRepository(trace.Object);
+
+            // Act
+            repository.ExistsAsync((object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion

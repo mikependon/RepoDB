@@ -43,6 +43,11 @@ namespace RepoDb.UnitTests.CustomObjects
             return string.Empty;
         }
 
+        public string CreateExists(QueryBuilder queryBuilder, string tableName, QueryGroup where = null, string hints = null)
+        {
+            return string.Empty;
+        }
+
         public string CreateInsert(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields = null, DbField primaryField = null, DbField identityField = null)
         {
             return string.Empty;

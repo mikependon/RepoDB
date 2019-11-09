@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
@@ -1006,6 +1005,142 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Exists
+
+        #region Exists
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeExists()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.Exists<TraceEntity>(trace: trace.Object,
+                whereOrPrimaryKey: (object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterExists()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.Exists<TraceEntity>(trace: trace.Object,
+                whereOrPrimaryKey: (object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeExistsViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.Exists(ClassMappedNameCache.Get<TraceEntity>(),
+                whereOrPrimaryKey: (object)null,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterExistsViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.Exists(ClassMappedNameCache.Get<TraceEntity>(),
+                whereOrPrimaryKey: (object)null,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region ExistsAsync
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeExistsAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.ExistsAsync<TraceEntity>(trace: trace.Object,
+                whereOrPrimaryKey: (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterExistsAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.ExistsAsync<TraceEntity>(trace: trace.Object,
+                whereOrPrimaryKey: (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeExistsAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                whereOrPrimaryKey: (object)null,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterExistsAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                whereOrPrimaryKey: (object)null,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Exactly(1));
         }
 
         #endregion

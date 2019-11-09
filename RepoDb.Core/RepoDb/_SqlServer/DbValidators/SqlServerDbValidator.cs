@@ -120,6 +120,20 @@ namespace RepoDb.DbValidators
 
         #endregion
 
+        #region Exists
+
+        /// <summary>
+        /// Validates the Exists extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateExists() { /* This is supported. */ }
+
+        /// <summary>
+        /// Validates the ExistsAsync extended method of the <see cref="SqlConnection"/> object.
+        /// </summary>
+        public void ValidateExistsAsync() { /* This is supported. */ }
+
+        #endregion
+
         #region Insert
 
         /// <summary>

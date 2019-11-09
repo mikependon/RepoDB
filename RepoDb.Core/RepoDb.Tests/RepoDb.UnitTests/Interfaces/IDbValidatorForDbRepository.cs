@@ -363,6 +363,41 @@ namespace RepoDb.UnitTests.Interfaces
 
         #endregion
 
+        #region Exists
+
+        [TestMethod]
+        public void TestDbConnectionDbValidatorForExistsViaDataEntity()
+        {
+            // Prepare
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
+            var validator = new Mock<IDbValidator>();
+            DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
+
+            // Act
+            repository.Exists<DbValidatorEntity>(where: e => e.Id == 1);
+
+            // Assert
+            validator.Verify(t => t.ValidateExists(), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionDbValidatorForExistsViaTableName()
+        {
+            // Prepare
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
+            var validator = new Mock<IDbValidator>();
+            DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
+
+            // Act
+            repository.Exists(ClassMappedNameCache.Get<DbValidatorEntity>(),
+                whereOrPrimaryKey: new { Id = 1 });
+
+            // Assert
+            validator.Verify(t => t.ValidateExists(), Times.Exactly(1));
+        }
+
+        #endregion
+
         #region Insert
 
         [TestMethod]
@@ -1339,6 +1374,41 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             validator.Verify(t => t.ValidateDeleteAllAsync(), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region ExistsAsync
+
+        [TestMethod]
+        public void TestDbConnectionDbValidatorForExistsAsyncViaDataEntity()
+        {
+            // Prepare
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
+            var validator = new Mock<IDbValidator>();
+            DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
+
+            // Act
+            repository.ExistsAsync<DbValidatorEntity>(where: e => e.Id == 1).Wait();
+
+            // Assert
+            validator.Verify(t => t.ValidateExistsAsync(), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionDbValidatorForExistsAsyncViaTableName()
+        {
+            // Prepare
+            var repository = new DbRepository<DbValidatorDbConnection>("ConnectionString");
+            var validator = new Mock<IDbValidator>();
+            DbValidatorMapper.Add(typeof(DbValidatorDbConnection), validator.Object, true);
+
+            // Act
+            repository.ExistsAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
+                whereOrPrimaryKey: new { Id = 1 }).Wait();
+
+            // Assert
+            validator.Verify(t => t.ValidateExistsAsync(), Times.Exactly(1));
         }
 
         #endregion

@@ -16,10 +16,6 @@ namespace RepoDb.IntegrationTests.Operations
     [TestClass]
     public class BaseRepositoryOperationsTest
     {
-        private const int BatchQueryFirstPage = 0;
-
-        private const int BatchQuerySecondPage = 1;
-
         [TestInitialize]
         public void Initialize()
         {
@@ -448,7 +444,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
@@ -473,7 +469,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
@@ -498,7 +494,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery(
-                    page: BatchQuerySecondPage,
+                    page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
@@ -523,7 +519,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQuery(
-                    page: BatchQuerySecondPage,
+                    page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
@@ -549,7 +545,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQuery(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null);
@@ -574,7 +570,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQuery(
                     where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     transaction: null);
@@ -599,7 +595,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQuery(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
-                    page: BatchQuerySecondPage,
+                    page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null);
@@ -624,7 +620,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQuery(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
-                    page: BatchQuerySecondPage,
+                    page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     transaction: null);
@@ -649,7 +645,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQuery(
                     where: new { ColumnInt = 3 },
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null);
@@ -674,7 +670,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQuery(
                     where: field,
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null);
@@ -704,7 +700,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQuery(
                     where: fields,
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null);
@@ -735,7 +731,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQuery(
                     where: queryGroup,
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null);
@@ -766,7 +762,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var result = repository.BatchQuery(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new { ColumnInt = 3 },
@@ -795,7 +791,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var result = repository.BatchQuery(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: field,
@@ -829,7 +825,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var result = repository.BatchQuery(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: fields,
@@ -864,7 +860,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var result = repository.BatchQuery(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: queryGroup,
@@ -894,7 +890,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
@@ -919,7 +915,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
@@ -944,7 +940,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync(
-                    page: BatchQuerySecondPage,
+                    page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: (object)null,
@@ -969,7 +965,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.BatchQueryAsync(
-                    page: BatchQuerySecondPage,
+                    page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
@@ -995,7 +991,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQueryAsync(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null).Result;
@@ -1020,7 +1016,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQueryAsync(
                     where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     transaction: null).Result;
@@ -1045,7 +1041,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQueryAsync(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
-                    page: BatchQuerySecondPage,
+                    page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null).Result;
@@ -1070,7 +1066,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQueryAsync(
                     where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
-                    page: BatchQuerySecondPage,
+                    page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     transaction: null).Result;
@@ -1095,7 +1091,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQueryAsync(
                     where: new { ColumnInt = 3 },
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null).Result;
@@ -1120,7 +1116,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQueryAsync(
                     where: field,
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null).Result;
@@ -1150,7 +1146,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQueryAsync(
                     where: fields,
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null).Result;
@@ -1181,7 +1177,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = repository.BatchQueryAsync(
                     where: queryGroup,
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     transaction: null).Result;
@@ -1212,7 +1208,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var result = repository.BatchQueryAsync(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new { ColumnInt = 3 },
@@ -1241,7 +1237,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var result = repository.BatchQueryAsync(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: field,
@@ -1275,7 +1271,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var result = repository.BatchQueryAsync(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: fields,
@@ -1310,7 +1306,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var result = repository.BatchQueryAsync(
-                    page: BatchQueryFirstPage,
+                    page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: queryGroup,
@@ -2058,6 +2054,270 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Exists
+
+        #region Exists
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists((object)null);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists(new { ColumnInt = 1 });
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists(field);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists(fields);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists(queryGroup);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        #endregion
+
+        #region ExistsAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync((object)null).Result;
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync(new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync(field).Result;
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync(fields).Result;
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync(queryGroup).Result;
+
+                // Assert
+                Assert.IsTrue(result);
             }
         }
 

@@ -119,6 +119,20 @@ namespace RepoDb.Interfaces
 
         #endregion
 
+        #region Exists
+
+        /// <summary>
+        /// Validates the Exists extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateExists();
+
+        /// <summary>
+        /// Validates the ExistsAsync extended method of the <see cref="DbConnection"/> object.
+        /// </summary>
+        void ValidateExistsAsync();
+
+        #endregion
+
         #region Insert
 
         /// <summary>

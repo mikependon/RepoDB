@@ -136,6 +136,22 @@
 
         #endregion
 
+        #region Exists
+
+        /// <summary>
+        /// A method being raised before the actual exists operation execution.
+        /// </summary>
+        /// <param name="log">The cancellable log object referenced by the count execution.</param>
+        void BeforeExists(CancellableTraceLog log);
+
+        /// <summary>
+        /// A method being raised after the actual exists operation execution.
+        /// </summary>
+        /// <param name="log">The log object referenced by the count execution.</param>
+        void AfterExists(TraceLog log);
+
+        #endregion
+
         #region ExecuteNonQuery
 
         /// <summary>

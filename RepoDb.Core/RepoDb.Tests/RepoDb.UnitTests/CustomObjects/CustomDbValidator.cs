@@ -84,6 +84,16 @@ namespace RepoDb.UnitTests.CustomObjects
             // This is supported.
         }
 
+        public void ValidateExists()
+        {
+            // This is supported.
+        }
+
+        public void ValidateExistsAsync()
+        {
+            // This is supported.
+        }
+
         public void ValidateInsert()
         {
             // This is supported.

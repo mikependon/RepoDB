@@ -4,10 +4,10 @@ using System.Data.SqlClient;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class SqlStatementBuilderCreateInsertTest
+    public class SqlServerStatementBuilderCreateInsertTest
     {
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsert()
+        public void TestSqlServerStatementBuilderCreateInsert()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -33,7 +33,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertWithQuotedTableSchema()
+        public void TestSqlServerStatementBuilderCreateInsertWithQuotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -59,7 +59,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertWithUnquotedTableSchema()
+        public void TestSqlServerStatementBuilderCreateInsertWithUnquotedTableSchema()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -85,7 +85,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertWithPrimary()
+        public void TestSqlServerStatementBuilderCreateInsertWithPrimary()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -112,7 +112,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertWithIdentity()
+        public void TestSqlServerStatementBuilderCreateInsertWithIdentity()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -139,7 +139,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertWithIdentityAsBigInt()
+        public void TestSqlServerStatementBuilderCreateInsertWithIdentityAsBigInt()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -166,7 +166,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertWithPrimaryAndIdentity()
+        public void TestSqlServerStatementBuilderCreateInsertWithPrimaryAndIdentity()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
@@ -194,7 +194,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlStatementBuilderCreateInsertWithPrimaryAndIdentityAsBigInt()
+        public void TestSqlServerStatementBuilderCreateInsertWithPrimaryAndIdentityAsBigInt()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
