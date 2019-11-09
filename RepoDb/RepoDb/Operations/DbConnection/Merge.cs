@@ -1194,6 +1194,7 @@ namespace RepoDb
 
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
+            var isObjectType = typeof(TEntity) == typeof(object);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
@@ -1255,24 +1256,51 @@ namespace RepoDb
 
             // Execution variables
             var result = default(TResult);
-            var exists = connection.Exists(tableName,
-                where,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+            var exists = false;
 
-            // Check the existence
-            if (exists == true)
+            if (isObjectType == true)
             {
-                // Call the update operation
-                var updateResult = connection.Update(tableName,
-                    entity,
+                exists = connection.Exists(tableName,
                     where,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder);
+            }
+            else
+            {
+                exists = connection.Exists<TEntity>(where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
+
+            // Check the existence
+            if (exists == true)
+            {
+                // Call the update operation
+                var updateResult = default(int);
+
+                if (isObjectType == true)
+                {
+                    updateResult = connection.Update(tableName,
+                        entity,
+                        where,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
+                else
+                {
+                    updateResult = connection.Update<TEntity>(entity,
+                        where,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
 
                 // Check if there is result
                 if (updateResult > 0)
@@ -1287,12 +1315,25 @@ namespace RepoDb
             else
             {
                 // Call the insert operation
-                var insertResult = connection.Insert(tableName,
-                    entity,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
+                var insertResult = (object)null;
+
+                if (isObjectType == true)
+                {
+                    insertResult = connection.Insert(tableName,
+                        entity,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
+                else
+                {
+                    insertResult = connection.Insert<TEntity>(entity,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
 
                 // Set the result
                 result = ObjectConverter.ToType<TResult>(insertResult);
@@ -1506,6 +1547,7 @@ namespace RepoDb
 
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
+            var isObjectType = typeof(TEntity) == typeof(object);
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
@@ -1567,24 +1609,51 @@ namespace RepoDb
 
             // Execution variables
             var result = default(TResult);
-            var exists = await connection.ExistsAsync(tableName,
-                where,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+            var exists = false;
 
-            // Check the existence
-            if (exists == true)
+            if (isObjectType == true)
             {
-                // Call the update operation
-                var updateResult = await connection.UpdateAsync(tableName,
-                    entity,
+                exists = await connection.ExistsAsync(tableName,
                     where,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder);
+            }
+            else
+            {
+                exists = await connection.ExistsAsync<TEntity>(where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
+
+            // Check the existence
+            if (exists == true)
+            {
+                // Call the update operation
+                var updateResult = default(int);
+
+                if (isObjectType == true)
+                {
+                    updateResult = await connection.UpdateAsync(tableName,
+                        entity,
+                        where,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
+                else
+                {
+                    updateResult = await connection.UpdateAsync<TEntity>(entity,
+                        where,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
 
                 // Check if there is result
                 if (updateResult > 0)
@@ -1599,12 +1668,25 @@ namespace RepoDb
             else
             {
                 // Call the insert operation
-                var insertResult = await connection.InsertAsync(tableName,
-                    entity,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
+                var insertResult = (object)null;
+
+                if (isObjectType == true)
+                {
+                    insertResult = await connection.InsertAsync(tableName,
+                        entity,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
+                else
+                {
+                    insertResult = await connection.InsertAsync<TEntity>(entity,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
 
                 // Set the result
                 result = ObjectConverter.ToType<TResult>(insertResult);

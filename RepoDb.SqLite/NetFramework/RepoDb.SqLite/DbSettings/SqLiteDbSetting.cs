@@ -18,6 +18,11 @@ namespace RepoDb.SqLite.DbSettings
         public bool IsMultipleStatementExecutionSupported { get; } = false;
 
         /// <summary>
+        /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
+        /// </summary>
+        public bool IsUseUpsertForMergeOperation { get; } = true;
+
+        /// <summary>
         /// Gets the value that indicates whether the table hints are supported.
         /// </summary>
         public bool AreTableHintsSupported { get; } = false;
@@ -77,6 +82,9 @@ namespace RepoDb.SqLite.DbSettings
 
             // IsMultipleStatementExecutionSupported
             hashCode += IsMultipleStatementExecutionSupported.GetHashCode();
+
+            // IsUseUpsertForMergeOperation
+            hashCode += IsUseUpsertForMergeOperation.GetHashCode();
 
             // AreTableHintsSupported
             hashCode += AreTableHintsSupported.GetHashCode();
