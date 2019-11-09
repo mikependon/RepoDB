@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
@@ -1154,6 +1153,166 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Exists
+
+        #region Exists
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeExists()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object);
+
+            // Act
+            repository.Exists<TraceEntity>((object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterExists()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object);
+
+            // Act
+            repository.Exists<TraceEntity>((object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeExistsViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object);
+
+            // Act
+            repository.Exists(ClassMappedNameCache.Get<TraceEntity>(),
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterExistsViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object);
+
+            // Act
+            repository.Exists(ClassMappedNameCache.Get<TraceEntity>(),
+                (object)null);
+
+            // Assert
+            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        #endregion
+
+        #region ExistsAsync
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeExistsAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object);
+
+            // Act
+            repository.ExistsAsync<TraceEntity>((object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterExistsAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object);
+
+            // Act
+            repository.ExistsAsync<TraceEntity>((object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForBeforeExistsAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object);
+
+            // Act
+            repository.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryTraceForAfterExistsAsyncViaTableName()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var repository = new DbRepository<TraceDbConnection>("ConnectionString",
+                0,
+                null,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                trace.Object);
+
+            // Act
+            repository.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                (object)null).Wait();
+
+            // Assert
+            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Once);
         }
 
         #endregion

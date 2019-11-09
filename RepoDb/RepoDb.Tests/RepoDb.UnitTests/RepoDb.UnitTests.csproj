@@ -142,6 +142,7 @@
     <Compile Include="CustomObjects\CustomDbSetting.cs" />
     <Compile Include="CustomObjects\CustomDbValidator.cs" />
     <Compile Include="CustomObjects\CustomStatementBuilder.cs" />
+    <Compile Include="StatementBuilders\CreateExistsTest.cs" />
     <Compile Include="StatementBuilders\CreateInsertAllTest.cs" />
     <Compile Include="StatementBuilders\CreateInsertTest.cs" />
     <Compile Include="StatementBuilders\CreateSumAllTest.cs" />

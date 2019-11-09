@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using RepoDb.Attributes;
 using RepoDb.Contexts.Execution;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
@@ -317,6 +316,45 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>())), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateExists
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForExists()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new StatementBuilderEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.Exists((object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new StatementBuilderEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Exists((object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -1398,6 +1436,45 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>())), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateExistsAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryStatementBuilderForExistsAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new StatementBuilderEntityRepository(statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.ExistsAsync((object)null).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new StatementBuilderEntityRepository(statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.ExistsAsync((object)null).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion

@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using RepoDb.Attributes;
 using RepoDb.Contexts.Execution;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
@@ -798,6 +797,118 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>())), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateExists
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForExists()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.Exists<StatementBuilderEntity>((object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Exists<StatementBuilderEntity>((object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForExistsViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.Exists(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+                (object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntityForTableName>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Exists(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+                (object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntityForTableName>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForExistsViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.Exists<StatementBuilderEntityForCrossCall>((object)null);
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.Exists(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+                (object)null);
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -4004,6 +4115,118 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>())), Times.Exactly(0));
+        }
+
+        #endregion
+
+        #region CreateExistsAsync
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForExistsAsync()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.ExistsAsync<StatementBuilderEntity>((object)null).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.ExistsAsync<StatementBuilderEntity>((object)null).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForExistsAsyncViaTableName()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.ExistsAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+                (object)null).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntityForTableName>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.ExistsAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+                (object)null).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntityForTableName>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryStatementBuilderForExistsAsyncViaCrossCall()
+        {
+            // Prepare
+            var statementBuilder = new Mock<IStatementBuilder>();
+            var repository = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilder.Object);
+
+            // Act
+            CommandTextCache.Flush();
+            repository.ExistsAsync<StatementBuilderEntityForCrossCall>((object)null).Wait();
+
+            // Assert
+            statementBuilder.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
+
+            // Prepare
+            var statementBuilderNever = new Mock<IStatementBuilder>();
+            var repositoryNever = new DbRepository<StatementBuilderDbConnection>("ConnectionString", statementBuilderNever.Object);
+
+            // Act
+            repositoryNever.ExistsAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+                (object)null).Wait();
+
+            // Assert
+            statementBuilderNever.Verify(builder =>
+                builder.CreateExists(
+                    It.IsAny<QueryBuilder>(),
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>()),
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
