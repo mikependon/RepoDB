@@ -1,8 +1,7 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RepoDb
 {
@@ -23,11 +22,12 @@ namespace RepoDb
         public static IEnumerable<ClassProperty> Get<TEntity>()
             where TEntity : class
         {
+            var type = typeof(TEntity);
             var properties = (IEnumerable<ClassProperty>)null;
-            var key = typeof(TEntity).FullName.GetHashCode();
+            var key = type.FullName.GetHashCode();
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out properties) == false)
+            if (type.IsGenericType == false && m_cache.TryGetValue(key, out properties) == false)
             {
                 properties = ClassExpression.GetProperties<TEntity>();
                 m_cache.TryAdd(key, properties);
@@ -48,9 +48,9 @@ namespace RepoDb
             var key = type.FullName.GetHashCode();
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out properties) == false)
+            if (type.IsGenericType == false && m_cache.TryGetValue(key, out properties) == false)
             {
-                properties = type.GetProperties().Select(p => new ClassProperty(p));
+                properties = type.GetClassProperties().AsList();
                 m_cache.TryAdd(key, properties);
             }
 

@@ -191,13 +191,19 @@ namespace RepoDb.Extensions
                 var properties = (IEnumerable<ClassProperty>)null;
 
                 // Add this check for performance
-                if (propertiesToSkip == null)
+                if (type.IsGenericType == true)
                 {
-                    properties = PropertyCache.Get(type);
+                    properties = type.GetClassProperties();
                 }
                 else
                 {
-                    properties = PropertyCache.Get(type)
+                    properties = PropertyCache.Get(type);
+                }
+
+                // Skip some properties
+                if (propertiesToSkip != null)
+                {
+                    properties = properties?
                         .Where(p => propertiesToSkip?.Contains(p.PropertyInfo.Name,
                             StringComparer.OrdinalIgnoreCase) == false);
                 }

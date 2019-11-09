@@ -13,6 +13,11 @@ namespace RepoDb.Interfaces
         bool IsMultipleStatementExecutionSupported { get; }
 
         /// <summary>
+        /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
+        /// </summary>
+        bool IsUseUpsertForMergeOperation { get; }
+
+        /// <summary>
         /// Gets the value that indicates whether the table hints are supported.
         /// </summary>
         bool AreTableHintsSupported { get; }

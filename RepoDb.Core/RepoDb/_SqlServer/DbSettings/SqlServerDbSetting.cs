@@ -19,6 +19,11 @@ namespace RepoDb.DbSettings
         public bool IsMultipleStatementExecutionSupported { get; } = true;
 
         /// <summary>
+        /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
+        /// </summary>
+        public bool IsUseUpsertForMergeOperation { get; } = false;
+
+        /// <summary>
         /// Gets the value that indicates whether the table hints are supported.
         /// </summary>
         public bool AreTableHintsSupported { get; } = true;
@@ -73,6 +78,9 @@ namespace RepoDb.DbSettings
 
             // IsMultipleStatementExecutionSupported
             hashCode += IsMultipleStatementExecutionSupported.GetHashCode();
+
+            // IsUseUpsertForMergeOperation
+            hashCode += IsUseUpsertForMergeOperation.GetHashCode();
 
             // AreTableHintsSupported
             hashCode += AreTableHintsSupported.GetHashCode();

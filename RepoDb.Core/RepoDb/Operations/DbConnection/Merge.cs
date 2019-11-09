@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -227,17 +228,34 @@ namespace RepoDb
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
+            // Variables needed
+            var setting = connection.GetDbSetting();
+
             // Return the result
-            return MergeInternalBase<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                entity: entity,
-                fields: entity.AsFields(),
-                qualifiers: qualifiers,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: false);
+            if (setting.IsUseUpsertForMergeOperation == false)
+            {
+                return MergeInternalBase<TEntity, TResult>(connection: connection,
+                    tableName: ClassMappedNameCache.Get<TEntity>(),
+                    entity: entity,
+                    fields: entity.AsFields(),
+                    qualifiers: qualifiers,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder,
+                    skipIdentityCheck: false);
+            }
+            else
+            {
+                return UpsertInternalBase<TEntity, TResult>(connection: connection,
+                    tableName: ClassMappedNameCache.Get<TEntity>(),
+                    entity: entity,
+                    qualifiers: qualifiers,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
         }
 
         #endregion
@@ -452,17 +470,34 @@ namespace RepoDb
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
+            // Variables needed
+            var setting = connection.GetDbSetting();
+
             // Return the result
-            return MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                entity: entity,
-                fields: entity.AsFields(),
-                qualifiers: qualifiers,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: false);
+            if (setting.IsUseUpsertForMergeOperation == false)
+            {
+                return MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
+                    tableName: ClassMappedNameCache.Get<TEntity>(),
+                    entity: entity,
+                    fields: entity.AsFields(),
+                    qualifiers: qualifiers,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder,
+                    skipIdentityCheck: false);
+            }
+            else
+            {
+                return UpsertAsyncInternalBase<TEntity, TResult>(connection: connection,
+                    tableName: ClassMappedNameCache.Get<TEntity>(),
+                    entity: entity,
+                    qualifiers: qualifiers,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
         }
 
         #endregion
@@ -676,17 +711,34 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
+            // Variables needed
+            var setting = connection.GetDbSetting();
+
             // Return the result
-            return MergeInternalBase<object, TResult>(connection: connection,
-                tableName: tableName,
-                entity: entity,
-                fields: entity.AsFields(),
-                qualifiers: qualifiers,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: true);
+            if (setting.IsUseUpsertForMergeOperation == false)
+            {
+                return MergeInternalBase<object, TResult>(connection: connection,
+                    tableName: tableName,
+                    entity: entity,
+                    fields: entity.AsFields(),
+                    qualifiers: qualifiers,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder,
+                    skipIdentityCheck: true);
+            }
+            else
+            {
+                return UpsertInternalBase<object, TResult>(connection: connection,
+                    tableName: tableName,
+                    entity: entity,
+                    qualifiers: qualifiers,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
         }
 
         #endregion
@@ -900,24 +952,34 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                var primary = (await DbFieldCache.GetAsync(connection, tableName, transaction)).FirstOrDefault(dbField => dbField.IsPrimary);
-                qualifiers = primary?.AsField().AsEnumerable();
-            }
+            // Variables needed
+            var setting = connection.GetDbSetting();
 
             // Return the result
-            return await MergeAsyncInternalBase<object, TResult>(connection: connection,
-                tableName: tableName,
-                entity: entity,
-                fields: entity.AsFields(),
-                qualifiers: qualifiers,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: true);
+            if (setting.IsUseUpsertForMergeOperation == false)
+            {
+                return await MergeAsyncInternalBase<object, TResult>(connection: connection,
+                    tableName: tableName,
+                    entity: entity,
+                    fields: entity.AsFields(),
+                    qualifiers: qualifiers,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder,
+                    skipIdentityCheck: true);
+            }
+            else
+            {
+                return await UpsertAsyncInternalBase<object, TResult>(connection: connection,
+                    tableName: tableName,
+                    entity: entity,
+                    qualifiers: qualifiers,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
         }
 
         #endregion
@@ -1102,6 +1164,154 @@ namespace RepoDb
 
         #endregion
 
+        #region UpsertInternalBase<TEntity>
+
+        /// <summary>
+        /// Upserts a data entity or dynamic object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity or dynamic object to be merged.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        internal static TResult UpsertInternalBase<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            IEnumerable<Field> qualifiers = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            // Validate
+            InvokeValidatorValidateMerge(connection);
+
+            // Variables needed
+            var type = entity?.GetType() ?? typeof(TEntity);
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var properties = (IEnumerable<ClassProperty>)null;
+            var primaryKey = (ClassProperty)null;
+
+            // Get the properties
+            if (type.GetTypeInfo().IsGenericType == true)
+            {
+                properties = type.GetClassProperties();
+            }
+            else
+            {
+                properties = PropertyCache.Get(type);
+            }
+
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                // Throw if there is no primary
+                if (primary == null)
+                {
+                    throw new PrimaryFieldNotFoundException($"There is no primary found for '{tableName}'.");
+                }
+
+                // Set the primary as the qualifier
+                qualifiers = primary.AsField().AsEnumerable();
+            }
+
+            // Set the primary key
+            primaryKey = properties?.FirstOrDefault(p =>
+                string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog("Upsert.Before", entity, null);
+                trace.BeforeMerge(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("Upsert.Cancelled");
+                    }
+                    return default(TResult);
+                }
+                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
+            }
+
+            // Expression
+            var where = CreateQueryGroupForUpsert(connection,
+                tableName,
+                entity,
+                properties,
+                qualifiers,
+                transaction);
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Execution variables
+            var result = default(TResult);
+            var exists = connection.Exists(tableName,
+                where,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+
+            // Check the existence
+            if (exists == true)
+            {
+                // Call the update operation
+                var updateResult = connection.Update(tableName,
+                    entity,
+                    where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+
+                // Check if there is result
+                if (updateResult > 0)
+                {
+                    if (primaryKey != null)
+                    {
+                        // Set the result
+                        result = ObjectConverter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                    }
+                }
+            }
+            else
+            {
+                // Call the insert operation
+                var insertResult = connection.Insert(tableName,
+                    entity,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+
+                // Set the result
+                result = ObjectConverter.ToType<TResult>(insertResult);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterMerge(new TraceLog("Upsert.After", entity, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Return the result
+            return result;
+        }
+
+        #endregion
+
         #region MergeAsyncInternalBase<TEntity>
 
         /// <summary>
@@ -1266,7 +1476,197 @@ namespace RepoDb
 
         #endregion
 
+        #region UpsertAsyncInternalBase<TEntity>
+
+        /// <summary>
+        /// Upserts a data entity or dynamic object into an existing data in the database in an .
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity or dynamic object to be merged.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        internal static async Task<TResult> UpsertAsyncInternalBase<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            IEnumerable<Field> qualifiers = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            // Validate
+            InvokeValidatorValidateMerge(connection);
+
+            // Variables needed
+            var type = entity?.GetType() ?? typeof(TEntity);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var properties = (IEnumerable<ClassProperty>)null;
+            var primaryKey = (ClassProperty)null;
+
+            // Get the properties
+            if (type.GetTypeInfo().IsGenericType == true)
+            {
+                properties = type.GetClassProperties();
+            }
+            else
+            {
+                properties = PropertyCache.Get(type);
+            }
+
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                // Throw if there is no primary
+                if (primary == null)
+                {
+                    throw new PrimaryFieldNotFoundException($"There is no primary found for '{tableName}'.");
+                }
+
+                // Set the primary as the qualifier
+                qualifiers = primary.AsField().AsEnumerable();
+            }
+
+            // Set the primary key
+            primaryKey = properties?.FirstOrDefault(p =>
+                string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog("Upsert.Before", entity, null);
+                trace.BeforeMerge(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("Upsert.Cancelled");
+                    }
+                    return default(TResult);
+                }
+                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
+            }
+
+            // Expression
+            var where = CreateQueryGroupForUpsert(connection,
+                tableName,
+                entity,
+                properties,
+                qualifiers,
+                transaction);
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Execution variables
+            var result = default(TResult);
+            var exists = await connection.ExistsAsync(tableName,
+                where,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+
+            // Check the existence
+            if (exists == true)
+            {
+                // Call the update operation
+                var updateResult = await connection.UpdateAsync(tableName,
+                    entity,
+                    where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+
+                // Check if there is result
+                if (updateResult > 0)
+                {
+                    if (primaryKey != null)
+                    {
+                        // Set the result
+                        result = ObjectConverter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                    }
+                }
+            }
+            else
+            {
+                // Call the insert operation
+                var insertResult = await connection.InsertAsync(tableName,
+                    entity,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+
+                // Set the result
+                result = ObjectConverter.ToType<TResult>(insertResult);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterMerge(new TraceLog("Upsert.After", entity, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Return the result
+            return result;
+        }
+
+        #endregion
+
         #region Helpers
+
+        /// <summary>
+        /// Creates a <see cref="QueryGroup"/> object based on the given qualifiers.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity or dynamic object to be merged.</param>
+        /// <param name="properties">The list of properties for the entity object.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static QueryGroup CreateQueryGroupForUpsert(this IDbConnection connection,
+            string tableName,
+            object entity,
+            IEnumerable<ClassProperty> properties,
+            IEnumerable<Field> qualifiers = null,
+            IDbTransaction transaction = null)
+        {
+            // Variables needed
+            var queryFields = (IList<QueryField>)null;
+
+            // Iterate the fields
+            foreach (var field in qualifiers)
+            {
+                // Get the property
+                var property = properties?.FirstOrDefault(p => string.Equals(p.GetMappedName(), field.Name, StringComparison.OrdinalIgnoreCase));
+                if (property != null)
+                {
+                    // Create the list if necessary
+                    if (queryFields == null)
+                    {
+                        queryFields = new List<QueryField>();
+                    }
+
+                    // Add the fields
+                    queryFields.Add(new QueryField(field, property.PropertyInfo.GetValue(entity)));
+                }
+            }
+
+            // Return the value
+            return new QueryGroup(queryFields);
+        }
 
         /// <summary>
         /// Invokes the <see cref="IDbValidator.ValidateMerge"/> method.

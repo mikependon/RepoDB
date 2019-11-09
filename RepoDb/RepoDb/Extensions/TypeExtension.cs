@@ -14,10 +14,23 @@ namespace RepoDb.Extensions
         /// Converts all properties of the type into an array of <see cref="Field"/> objects.
         /// </summary>
         /// <param name="type">The current type.</param>
-        /// <returns>A list of <see cref="string"/> objects.</returns>
+        /// <returns>A list of <see cref="Field"/> objects.</returns>
         internal static IEnumerable<Field> AsFields(this Type type)
         {
             return PropertyCache.Get(type).AsFields();
+        }
+
+        /// <summary>
+        /// Converts all properties of the type into an array of <see cref="ClassProperty"/> objects.
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <returns>A list of <see cref="ClassProperty"/> objects.</returns>
+        public static IEnumerable<ClassProperty> GetClassProperties(this Type type)
+        {
+            foreach (var property in type.GetProperties())
+            {
+                yield return new ClassProperty(property);
+            }
         }
 
         /// <summary>
