@@ -130,6 +130,23 @@ namespace RepoDb.Interfaces
 
         #endregion
 
+        #region CreateExists
+
+        /// <summary>
+        /// Creates a SQL Statement for exists operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for exists operation.</returns>
+        string CreateExists(QueryBuilder queryBuilder,
+            string tableName,
+            QueryGroup where = null,
+            string hints = null);
+
+        #endregion
+
         #region CreateInsert
 
         /// <summary>
