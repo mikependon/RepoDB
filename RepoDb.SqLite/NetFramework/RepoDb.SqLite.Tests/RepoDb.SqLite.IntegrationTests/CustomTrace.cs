@@ -64,6 +64,11 @@ namespace RepoDb.SqLite.IntegrationTests
             var statement = log.Statement;
         }
 
+        public void AfterExists(TraceLog log)
+        {
+            var statement = log.Statement;
+        }
+
         public void AfterInsert(TraceLog log)
         {
             var statement = log.Statement;
@@ -200,6 +205,11 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         public void BeforeExecuteScalar(CancellableTraceLog log)
+        {
+            var statement = log.Statement;
+        }
+
+        public void BeforeExists(CancellableTraceLog log)
         {
             var statement = log.Statement;
         }

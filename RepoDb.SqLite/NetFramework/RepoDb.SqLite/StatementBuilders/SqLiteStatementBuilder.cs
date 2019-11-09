@@ -98,6 +98,47 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateExists
+
+        /// <summary>
+        /// Creates a SQL Statement for exists operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for exists operation.</returns>
+        public override string CreateExists(QueryBuilder queryBuilder,
+            string tableName,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Validate the hints
+            ValidateHints(hints);
+
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Select()
+                .WriteText("1 AS [ExistsValue]")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .WhereFrom(where, DbSetting)
+                .LimitFrom(0, 1)
+                .End();
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
+
         #region CreateInsertAll
 
         /// <summary>
