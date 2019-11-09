@@ -222,7 +222,6 @@ namespace RepoDb
             var operation = GetOperation(expression.NodeType);
 
             // Return the value
-            //var field = new Field(name, type);
             return new QueryField(field, operation, value);
         }
 
