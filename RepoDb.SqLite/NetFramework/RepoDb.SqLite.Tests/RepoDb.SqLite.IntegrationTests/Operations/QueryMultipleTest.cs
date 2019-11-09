@@ -2,6 +2,7 @@
 using RepoDb.Extensions;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
+using System;
 using System.Data.SQLite;
 using System.Linq;
 
@@ -219,6 +220,24 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionQueryMultipleWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id > 0,
+                    e => e.Id > 0,
+                    top1: 1,
+                    hints1: "WhatEver",
+                    top2: 2,
+                    hints2: "WhatEver");
+            }
+        }
+
         #endregion
 
         #region Async
@@ -412,6 +431,24 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 result.Item5.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item6.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item7.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionQueryMultipleAsyncWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
+                    e => e.Id > 0,
+                    top1: 1,
+                    hints1: "WhatEver",
+                    top2: 2,
+                    hints2: "WhatEver").Wait();
             }
         }
 
