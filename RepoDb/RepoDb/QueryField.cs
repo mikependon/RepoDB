@@ -209,14 +209,11 @@ namespace RepoDb
             }
 
             // Name
-            var name = expression.GetName();
-            if (PropertyCache.Get<TEntity>().Any(property => string.Equals(PropertyMappedNameCache.Get(property.PropertyInfo), name, StringComparison.OrdinalIgnoreCase)) == false)
+            var field = expression.GetField();
+            if (PropertyCache.Get<TEntity>().Any(property => string.Equals(PropertyMappedNameCache.Get(property.PropertyInfo), field.Name, StringComparison.OrdinalIgnoreCase)) == false)
             {
-                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {name} is not defined on a target type '{typeof(TEntity).FullName}'.");
+                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {field.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
-
-            // Type
-            var type = expression.GetMemberType();
 
             // Value
             var value = expression.GetValue();
@@ -225,7 +222,6 @@ namespace RepoDb
             var operation = GetOperation(expression.NodeType);
 
             // Return the value
-            var field = new Field(name, type);
             return new QueryField(field, operation, value);
         }
 

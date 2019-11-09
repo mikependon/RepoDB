@@ -65,6 +65,91 @@ namespace RepoDb.Extensions
             return m_mathematicalExpressionTypes.Contains(expression.NodeType);
         }
 
+        #region GetField
+
+        /// <summary>
+        /// Gets the <see cref="Field"/> defined on the current instance of <see cref="BinaryExpression"/>
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static Field GetField(this BinaryExpression expression)
+        {
+            if (expression.Left.IsMember())
+            {
+                return expression.Left.ToMember().GetField();
+            }
+            else if (expression.Left.IsUnary())
+            {
+                return expression.Left.ToUnary().GetField();
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Field"/> defined on the current instance of <see cref="UnaryExpression"/>
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        public static Field GetField(this UnaryExpression expression)
+        {
+            if (expression.Operand.IsMethodCall())
+            {
+                return expression.Operand.ToMethodCall().GetField();
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Field"/> defined on the current instance of <see cref="MethodCallExpression"/>
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        public static Field GetField(this MethodCallExpression expression)
+        {
+            if (expression.Object?.IsMember() == true)
+            {
+                return expression.Object.ToMember().GetField();
+            }
+            else
+            {
+                // Contains
+                if (expression.Method.Name == "Contains")
+                {
+                    var last = expression.Arguments?.Last();
+                    if (last?.IsMember() == true)
+                    {
+                        return last.ToMember().GetField();
+                    }
+                }
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Field"/> defined on the current instance of <see cref="MemberExpression"/>
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        public static Field GetField(this MemberExpression expression)
+        {
+            var member = expression.Member;
+            if (member.IsPropertyInfo())
+            {
+                return member.ToPropertyInfo().AsField();
+            } else if (member.IsFieldInfo())
+            {
+                var fieldInfo = member.ToFieldInfo();
+                return new Field(fieldInfo.Name,fieldInfo.FieldType);
+            }
+
+            throw new NotSupportedException($"Only fields and properties are currently supported.");
+        }
+
+        #endregion
+
         #region GetName
 
         /// <summary>
