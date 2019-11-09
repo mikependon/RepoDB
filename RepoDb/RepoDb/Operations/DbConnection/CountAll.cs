@@ -201,7 +201,6 @@ namespace RepoDb
                 transaction,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountAllText(request);
             var param = (object)null;
 
             // Return the result
@@ -270,7 +269,6 @@ namespace RepoDb
                 transaction,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetCountAllText(request);
             var param = (object)null;
 
             // Return the result

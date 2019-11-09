@@ -442,7 +442,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -450,7 +450,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int Delete(this IDbConnection connection,
             string tableName,
-            object where,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -458,7 +458,7 @@ namespace RepoDb
         {
             return Delete(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where),
+                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -600,7 +600,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -608,7 +608,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
-            object where,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -616,7 +616,7 @@ namespace RepoDb
         {
             return DeleteAsync(connection: connection,
                 tableName: tableName,
-                where: ToQueryGroup(where),
+                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,

@@ -321,7 +321,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             repository.Delete(ClassMappedNameCache.Get<DbValidatorEntity>(),
-                where: new { Id = 1 });
+                whereOrPrimaryKey: new { Id = 1 });
 
             // Assert
             validator.Verify(t => t.ValidateDelete(), Times.Exactly(1));
@@ -1301,7 +1301,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             repository.DeleteAsync(ClassMappedNameCache.Get<DbValidatorEntity>(),
-                where: new { Id = 1 }).Wait();
+                whereOrPrimaryKey: new { Id = 1 }).Wait();
 
             // Assert
             validator.Verify(t => t.ValidateDeleteAsync(), Times.Exactly(1));

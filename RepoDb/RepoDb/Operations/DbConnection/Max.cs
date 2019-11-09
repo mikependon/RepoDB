@@ -948,7 +948,6 @@ namespace RepoDb
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetMaxText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -1137,7 +1136,6 @@ namespace RepoDb
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetMaxText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -1157,7 +1155,7 @@ namespace RepoDb
 
         #endregion
 
-        #region MaxerInternalBase
+        #region MaxInternalBase
 
         /// <summary>
         /// Maximizes the target field from the database table.

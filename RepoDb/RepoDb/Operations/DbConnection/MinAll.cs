@@ -280,7 +280,6 @@ namespace RepoDb
                 field,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetMinAllText(request);
             var param = (object)null;
 
             // Return the result
@@ -355,7 +354,6 @@ namespace RepoDb
                 field,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetMinAllText(request);
             var param = (object)null;
 
             // Return the result

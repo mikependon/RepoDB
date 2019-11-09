@@ -152,7 +152,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnMinAllAsyncViaTableNameWithHints()
         {
             // Setup

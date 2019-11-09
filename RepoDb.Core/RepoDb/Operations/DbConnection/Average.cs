@@ -948,7 +948,6 @@ namespace RepoDb
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetAverageText(request);
             var param = (object)null;
 
             // Converts to propery mapped object
@@ -1137,7 +1136,6 @@ namespace RepoDb
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetAverageText(request);
             var param = (object)null;
 
             // Converts to propery mapped object

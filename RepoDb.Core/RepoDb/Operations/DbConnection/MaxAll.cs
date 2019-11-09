@@ -280,7 +280,6 @@ namespace RepoDb
                 field,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetMaxAllText(request);
             var param = (object)null;
 
             // Return the result
@@ -355,7 +354,6 @@ namespace RepoDb
                 field,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetMaxAllText(request);
             var param = (object)null;
 
             // Return the result
@@ -369,7 +367,7 @@ namespace RepoDb
 
         #endregion
 
-        #region MaxAllerInternalBase
+        #region MaxAllInternalBase
 
         /// <summary>
         /// Maximizes the target field from all data of the database table.
