@@ -109,7 +109,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void TestBatchQueryFirstBatchWithHints()
+        public void ThrowExceptionOnBatchQueryWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -210,7 +210,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestBatchQueryAsyncFirstBatchWithHints()
+        public void ThrowExceptionOnBatchQueryAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -319,7 +319,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void TestBatchQueryViaTableNameFirstBatchWithHints()
+        public void ThrowExceptionOnBatchQueryViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -425,7 +425,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestBatchQueryViaTableNameAsyncFirstBatchWithHints()
+        public void ThrowExceptionOnBatchQueryAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

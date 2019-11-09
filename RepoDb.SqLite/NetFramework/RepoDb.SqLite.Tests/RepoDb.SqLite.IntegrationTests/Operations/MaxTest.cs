@@ -64,7 +64,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void TestMaxWithHints()
+        public void ThrowExceptionOnMaxWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -118,7 +118,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestMaxAsyncWithHints()
+        public void ThrowExceptionOnMaxAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -178,7 +178,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void TestMaxViaTableNameWithHints()
+        public void ThrowExceptionOnMaxViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -235,7 +235,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void TestMaxAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnMaxAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

@@ -2,6 +2,7 @@
 using RepoDb.Extensions;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
+using System;
 using System.Data.SQLite;
 using System.Linq;
 
@@ -44,6 +45,19 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionQueryAllWithHints()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.QueryAll<CompleteTable>(hints: "WhatEver");
+            }
+        }
+
         #endregion
 
         #region Async
@@ -62,6 +76,19 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 // Assert
                 tables.AsList().ForEach(table =>
                     Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionQueryAllAsyncWithHints()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.QueryAllAsync<CompleteTable>(hints: "WhatEver").Wait();
             }
         }
 
@@ -90,6 +117,21 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionQueryAllViaTableNameWithHints()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.Query(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)null,
+                    hints: "WhatEver");
+            }
+        }
+
         #endregion
 
         #region Async
@@ -108,6 +150,21 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 // Assert
                 tables.AsList().ForEach(table =>
                     Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionQueryAllAsyncViaTableNameWithHints()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)null,
+                    hints: "WhatEver").Wait();
             }
         }
 
