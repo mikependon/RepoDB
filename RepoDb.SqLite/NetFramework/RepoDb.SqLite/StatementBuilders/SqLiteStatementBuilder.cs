@@ -1,4 +1,5 @@
 ﻿using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
@@ -77,9 +78,11 @@ namespace RepoDb.StatementBuilders
             // Skipping variables
             var skip = (page * rowsPerBatch);
 
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
             // Build the query
-            (queryBuilder ?? new QueryBuilder())
-                .Clear()
+            builder.Clear()
                 .Select()
                 .FieldsFrom(fields, DbSetting)
                 .From()
@@ -177,6 +180,79 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null)
         {
             throw new NotSupportedException("The merge statement is not supported in SqLite.");
+        }
+
+        #endregion
+
+        #region CreateQuery
+
+        /// <summary>
+        /// Creates a SQL Statement for query operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="top">The number of rows to be returned.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for query operation.</returns>
+        public override string CreateQuery(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields,
+            QueryGroup where = null,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = null,
+            string hints = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Validate the hints
+            ValidateHints(hints);
+
+            // There should be fields
+            if (fields?.Any() != true)
+            {
+                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+            }
+
+            // Validate the ordering
+            if (orderBy != null)
+            {
+                // Check if the order fields are present in the given fields
+                var unmatchesOrderFields = orderBy?.Where(orderField =>
+                    fields?.FirstOrDefault(f =>
+                        string.Equals(orderField.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
+
+                // Throw an error we found any unmatches
+                if (unmatchesOrderFields?.Any() == true)
+                {
+                    throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.Name).Join(", ")}' are not " +
+                        $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
+                }
+            }
+
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Select()
+                .FieldsFrom(fields, DbSetting)
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .WhereFrom(where, DbSetting)
+                .OrderByFrom(orderBy, DbSetting);
+            if (top > 0)
+            {
+                builder.LimitFrom(0, top);
+            }
+            builder.End();
+
+            // Return the query
+            return builder.GetString();
         }
 
         #endregion
