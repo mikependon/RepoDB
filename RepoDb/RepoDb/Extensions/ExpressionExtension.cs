@@ -65,6 +65,22 @@ namespace RepoDb.Extensions
             return m_mathematicalExpressionTypes.Contains(expression.NodeType);
         }
 
+        #region GetField
+
+        /// <summary>
+        /// Gets the <see cref="Field"/> defined on the current instance of <see cref="BinaryExpression"/>
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static Field GetField(this BinaryExpression expression)
+        {
+            var name = expression.GetName();
+            var type = expression.GetMemberType();
+            return new Field(name,type);
+        }
+
+        #endregion
+
         #region GetName
 
         /// <summary>
