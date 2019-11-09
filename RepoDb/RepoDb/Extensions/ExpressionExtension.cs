@@ -139,9 +139,7 @@ namespace RepoDb.Extensions
             if (member.IsPropertyInfo())
             {
                 return member.ToPropertyInfo().AsField();
-            }
-
-            if (member.IsFieldInfo())
+            } else if (member.IsFieldInfo())
             {
                 var fieldInfo = member.ToFieldInfo();
                 return new Field(fieldInfo.Name,fieldInfo.FieldType);
