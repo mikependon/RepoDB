@@ -46,7 +46,25 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMaxWithExpression()
+        public void TestMaxViaExpression()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var ids = new[] { tables.First().Id, tables.Last().Id };
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                    e => ids.Contains(e.Id));
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -54,12 +72,73 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Act
-                var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = connection.Max<CompleteTable>(e => e.ColumnInt,
-                    e => ids.Contains(e.Id));
+                    new { tables.First().Id });
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Max(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxViaQueryField()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                    new QueryField("Id", tables.First().Id));
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxViaQueryFields()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var queryFields = new[]
+            {
+                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                new QueryField("Id", Operation.LessThan, tables.Last().Id)
+            };
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                    queryFields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxViaQueryGroup()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var queryFields = new[]
+            {
+                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                new QueryField("Id", Operation.LessThan, tables.Last().Id)
+            };
+            var queryGroup = new QueryGroup(queryFields);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), result);
             }
         }
 
@@ -100,7 +179,25 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMaxAsyncWithExpression()
+        public void TestMaxAsyncViaExpression()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var ids = new[] { tables.First().Id, tables.Last().Id };
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                    e => ids.Contains(e.Id)).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -108,12 +205,73 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Act
-                var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
-                    e => ids.Contains(e.Id)).Result;
+                    new { tables.First().Id }).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Max(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxAsyncViaQueryField()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                    new QueryField("Id", tables.First().Id)).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxAsyncViaQueryFields()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var queryFields = new[]
+            {
+                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                new QueryField("Id", Operation.LessThan, tables.Last().Id)
+            };
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                    queryFields).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxAsyncViaQueryGroup()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var queryFields = new[]
+            {
+                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                new QueryField("Id", Operation.LessThan, tables.Last().Id)
+            };
+            var queryGroup = new QueryGroup(queryFields);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), result);
             }
         }
 
@@ -150,7 +308,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    new Field("ColumnInt", typeof(int)),
                     (object)null);
 
                 // Assert
@@ -159,7 +317,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMaxViaTableNameWithExpression()
+        public void TestMaxViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -167,13 +325,77 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Act
-                var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
-                    new QueryField("Id", Operation.In, ids));
+                    new Field("ColumnInt", typeof(int)),
+                    new { tables.First().Id });
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Max(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
+                    new Field("ColumnInt", typeof(int)),
+                    new QueryField("Id", tables.First().Id));
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var queryFields = new[]
+            {
+                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                new QueryField("Id", Operation.LessThan, tables.Last().Id)
+            };
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
+                    new Field("ColumnInt", typeof(int)),
+                    queryFields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var queryFields = new[]
+            {
+                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                new QueryField("Id", Operation.LessThan, tables.Last().Id)
+            };
+            var queryGroup = new QueryGroup(queryFields);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
+                    new Field("ColumnInt", typeof(int)),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), result);
             }
         }
 
@@ -187,7 +409,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             {
                 // Act
                 connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    new Field("ColumnInt", typeof(int)),
                     (object)null,
                     hints: "WhatEver");
             }
@@ -207,7 +429,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    new Field("ColumnInt", typeof(int)),
                     (object)null).Result;
 
                 // Assert
@@ -216,7 +438,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMaxAsyncViaTableNameWithExpression()
+        public void TestMaxAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -224,13 +446,77 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Act
-                var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
-                    new QueryField("Id", Operation.In, ids)).Result;
+                    new Field("ColumnInt", typeof(int)),
+                    new { tables.First().Id }).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Max(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxAsyncViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    new Field("ColumnInt", typeof(int)),
+                    new QueryField("Id", tables.First().Id)).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxAsyncViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var queryFields = new[]
+            {
+                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                new QueryField("Id", Operation.LessThan, tables.Last().Id)
+            };
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    new Field("ColumnInt", typeof(int)),
+                    queryFields).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestMaxAsyncViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var queryFields = new[]
+            {
+                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                new QueryField("Id", Operation.LessThan, tables.Last().Id)
+            };
+            var queryGroup = new QueryGroup(queryFields);
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    new Field("ColumnInt", typeof(int)),
+                    queryGroup).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), result);
             }
         }
 
@@ -244,7 +530,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             {
                 // Act
                 connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    new Field("ColumnInt", typeof(int)),
                     (object)null,
                     hints: "WhatEver").Wait();
             }
