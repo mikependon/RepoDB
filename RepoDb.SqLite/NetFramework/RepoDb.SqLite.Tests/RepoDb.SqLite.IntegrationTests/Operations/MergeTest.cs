@@ -229,7 +229,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertPropertiesEquality(table, queryResult.First());
+                Helper.AssertMembersEquality(table, queryResult.First());
             }
         }
 
@@ -256,7 +256,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertPropertiesEquality(table, queryResult.First());
+                Helper.AssertMembersEquality(table, queryResult.First());
             }
         }
 
@@ -290,7 +290,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertPropertiesEquality(table, queryResult.First());
+                Helper.AssertMembersEquality(table, queryResult.First());
             }
         }
 
@@ -314,7 +314,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertPropertiesEquality(table, queryResult.First());
+                Helper.AssertMembersEquality(table, queryResult.First());
             }
         }
 
@@ -407,7 +407,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertPropertiesEquality(table, queryResult.First());
+                Helper.AssertMembersEquality(table, queryResult.First());
             }
         }
 
@@ -434,7 +434,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertPropertiesEquality(table, queryResult.First());
+                Helper.AssertMembersEquality(table, queryResult.First());
             }
         }
 
@@ -466,7 +466,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertPropertiesEquality(table, queryResult.First());
+                Helper.AssertMembersEquality(table, queryResult.First());
             }
         }
 
@@ -490,7 +490,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertPropertiesEquality(table, queryResult.First());
+                Helper.AssertMembersEquality(table, queryResult.First());
             }
         }
 
