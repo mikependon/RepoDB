@@ -10405,7 +10405,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
         public void ThrowExceptionOnSqlConnectionMergeAllAsyncIfThereIsNoPrimaryKey()
         {
             // Setup

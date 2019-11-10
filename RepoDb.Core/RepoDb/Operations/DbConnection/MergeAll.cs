@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -1095,7 +1096,7 @@ namespace RepoDb
             var primaryKey = (ClassProperty)null;
 
             // Get the properties
-            if (type.IsGenericType == true)
+            if (type.GetTypeInfo().IsGenericType == true)
             {
                 properties = type.GetClassProperties();
             }
@@ -1144,7 +1145,7 @@ namespace RepoDb
             var result = 0;
 
             // Make sure to create transaction if there is no passed one
-            var hasTransaction = (transaction != null || Transaction.Current != null);
+            var hasTransaction = (transaction != null);
 
             try
             {
@@ -1596,7 +1597,7 @@ namespace RepoDb
             var primaryKey = (ClassProperty)null;
 
             // Get the properties
-            if (type.IsGenericType == true)
+            if (type.GetTypeInfo().IsGenericType == true)
             {
                 properties = type.GetClassProperties();
             }
@@ -1645,7 +1646,7 @@ namespace RepoDb
             var result = 0;
 
             // Make sure to create transaction if there is no passed one
-            var hasTransaction = (transaction != null || Transaction.Current != null);
+            var hasTransaction = (transaction != null);
 
             try
             {
