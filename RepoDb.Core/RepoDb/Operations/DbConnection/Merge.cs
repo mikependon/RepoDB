@@ -1195,6 +1195,7 @@ namespace RepoDb
 
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
+            var isObjectType = typeof(TEntity) == typeof(object);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
@@ -1250,6 +1251,12 @@ namespace RepoDb
                 properties,
                 qualifiers,
                 transaction);
+
+            // Validate
+            if (where == null)
+            {
+                throw new RepoDb.Exceptions.InvalidExpressionException("The generated expression from the given qualifiers is not valid.");
+            }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
@@ -1603,6 +1610,12 @@ namespace RepoDb
                 properties,
                 qualifiers,
                 transaction);
+
+            // Validate
+            if (where == null)
+            {
+                throw new RepoDb.Exceptions.InvalidExpressionException("The generated expression from the given qualifiers is not valid.");
+            }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
