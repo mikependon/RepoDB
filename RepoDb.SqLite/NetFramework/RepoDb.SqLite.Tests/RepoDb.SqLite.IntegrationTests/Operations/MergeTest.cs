@@ -294,6 +294,95 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestMergeAsDynamicViaTableNameForIdentityForEmptyTable()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTablesAsDynamics(1).First();
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)table);
+
+                // Assert
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+            var obj = new
+            {
+                table.Id,
+                ColumnInt = int.MaxValue
+            };
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)obj);
+
+                // Assert
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(table.Id, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.IsTrue(queryResult.Count() > 0);
+                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+            var obj = new
+            {
+                table.Id,
+                ColumnInt = int.MaxValue
+            };
+            var qualifiers = new[]
+            {
+                new Field("Id", typeof(long))
+            };
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)obj,
+                    qualifiers);
+
+                // Assert
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(table.Id, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.IsTrue(queryResult.Count() > 0);
+                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
+            }
+        }
+
         #endregion
 
         #region Async
@@ -378,6 +467,95 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTablesAsDynamics(1).First();
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)table).Result;
+
+                // Assert
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+            var obj = new
+            {
+                table.Id,
+                ColumnInt = int.MaxValue
+            };
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)obj).Result;
+
+                // Assert
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(table.Id, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.IsTrue(queryResult.Count() > 0);
+                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+            var obj = new
+            {
+                table.Id,
+                ColumnInt = int.MaxValue
+            };
+            var qualifiers = new[]
+            {
+                new Field("Id", typeof(long))
+            };
+
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)obj,
+                    qualifiers).Result;
+
+                // Assert
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(table.Id, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.IsTrue(queryResult.Count() > 0);
+                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
             }
         }
 

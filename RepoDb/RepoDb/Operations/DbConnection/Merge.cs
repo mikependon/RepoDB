@@ -1251,6 +1251,12 @@ namespace RepoDb
                 qualifiers,
                 transaction);
 
+            // Validate
+            if (where == null)
+            {
+                throw new RepoDb.Exceptions.InvalidExpressionException("The generated expression from the given qualifiers is not valid.");
+            }
+
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
@@ -1603,6 +1609,12 @@ namespace RepoDb
                 properties,
                 qualifiers,
                 transaction);
+
+            // Validate
+            if (where == null)
+            {
+                throw new RepoDb.Exceptions.InvalidExpressionException("The generated expression from the given qualifiers is not valid.");
+            }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;

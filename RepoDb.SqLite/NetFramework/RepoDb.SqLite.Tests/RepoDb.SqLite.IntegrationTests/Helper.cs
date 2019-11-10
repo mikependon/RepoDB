@@ -155,7 +155,6 @@ namespace RepoDb.SqLite.IntegrationTests
             var tables = new List<CompleteTable>();
             for (var i = 0; i < count; i++)
             {
-                var index = i + 1;
                 tables.Add(new CompleteTable
                 {
                     ColumnBigInt = i,
@@ -214,10 +213,10 @@ namespace RepoDb.SqLite.IntegrationTests
             var tables = new List<dynamic>();
             for (var i = 0; i < count; i++)
             {
-                var index = i + 1;
                 tables.Add(new
                 {
-                    ColumnBigInt = i,
+                    Id = (long)(i + 1),
+                    ColumnBigInt = (long)i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = true,
                     ColumnChar = "C",
@@ -226,7 +225,7 @@ namespace RepoDb.SqLite.IntegrationTests
                     ColumnDecimal = Convert.ToDecimal(i),
                     ColumnDouble = Convert.ToDouble(i),
                     ColumnInt = i,
-                    ColumnInteger = i,
+                    ColumnInteger = (long)i,
                     ColumnNone = "N",
                     ColumnNumeric = Convert.ToDecimal(i),
                     ColumnReal = (float)i,
@@ -277,11 +276,10 @@ namespace RepoDb.SqLite.IntegrationTests
             var tables = new List<NonIdentityCompleteTable>();
             for (var i = 0; i < count; i++)
             {
-                var index = i + 1;
                 tables.Add(new NonIdentityCompleteTable
                 {
-                    Id = (i + 1),
-                    ColumnBigInt = i,
+                    Id = (long)(i + 1),
+                    ColumnBigInt = (long)i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = true,
                     ColumnChar = "C",
@@ -290,7 +288,7 @@ namespace RepoDb.SqLite.IntegrationTests
                     ColumnDecimal = Convert.ToDecimal(i),
                     ColumnDouble = Convert.ToDouble(i),
                     ColumnInt = i,
-                    ColumnInteger = i,
+                    ColumnInteger = (long)i,
                     ColumnNone = "N",
                     ColumnNumeric = Convert.ToDecimal(i),
                     ColumnReal = (float)i,
@@ -337,7 +335,6 @@ namespace RepoDb.SqLite.IntegrationTests
             var tables = new List<dynamic>();
             for (var i = 0; i < count; i++)
             {
-                var index = i + 1;
                 tables.Add(new
                 {
                     Id = (long)(i + 1),
