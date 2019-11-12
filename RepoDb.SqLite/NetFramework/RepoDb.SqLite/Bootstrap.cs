@@ -1,5 +1,4 @@
 ﻿using RepoDb.DbHelpers;
-using RepoDb.DbValidators;
 using RepoDb.SqLite.DbSettings;
 using RepoDb.StatementBuilders;
 using System.Data.SQLite;
@@ -35,9 +34,6 @@ namespace RepoDb.SqLite
 
             // Map the DbHelper
             DbHelperMapper.Add(typeof(SQLiteConnection), new SqLiteDbHelper(), true);
-
-            // Map the DbValidator
-            DbValidatorMapper.Add(typeof(SQLiteConnection), new SqLiteDbValidator(), true);
 
             // Map the Statement Builder
             StatementBuilderMapper.Add(typeof(SQLiteConnection), new SqLiteStatementBuilder(), true);
