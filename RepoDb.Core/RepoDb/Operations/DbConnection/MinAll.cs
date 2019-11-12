@@ -386,9 +386,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateMinAll(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetMinAllText(request);
@@ -454,9 +451,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateMinAllAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetMinAllText(request);
@@ -499,28 +493,6 @@ namespace RepoDb
 
             // Result
             return result;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateMinAll"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateMinAll(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateMinAll();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateMinAllAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateMinAllAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateMinAllAsync();
         }
 
         #endregion

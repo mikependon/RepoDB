@@ -649,9 +649,6 @@ namespace RepoDb
             // Variables needed
             var dbSetting = connection.GetDbSetting();
 
-            // Validate
-            InvokeValidatorValidateUpdateAll(connection);
-
             // Guard the parameters
             GuardUpdateAll(entities);
 
@@ -892,9 +889,6 @@ namespace RepoDb
             // Variables needed
             var dbSetting = connection.GetDbSetting();
 
-            // Validate
-            InvokeValidatorValidateUpdateAllAsync(connection);
-
             // Guard the parameters
             GuardUpdateAll(entities);
 
@@ -1134,24 +1128,6 @@ namespace RepoDb
             {
                 throw new EmptyException("The entities must not be empty.");
             }
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateUpdateAll"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateUpdateAll(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateUpdateAll();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateUpdateAllAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateUpdateAllAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateUpdateAllAsync();
         }
 
         #endregion

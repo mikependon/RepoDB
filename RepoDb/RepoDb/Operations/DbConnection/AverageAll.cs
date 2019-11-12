@@ -386,9 +386,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateAverageAll(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetAverageAllText(request);
@@ -454,9 +451,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateAverageAllAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetAverageAllText(request);
@@ -499,28 +493,6 @@ namespace RepoDb
 
             // Result
             return result;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateAverageAll"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateAverageAll(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateAverageAll();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateAverageAllAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateAverageAllAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateAverageAllAsync();
         }
 
         #endregion

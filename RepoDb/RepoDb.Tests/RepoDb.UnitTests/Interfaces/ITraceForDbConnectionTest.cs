@@ -13,8 +13,6 @@ namespace RepoDb.UnitTests.Interfaces
         public static void ClassInitialize(TestContext context)
         {
             DbSettingMapper.Add(typeof(TraceDbConnection), new CustomDbSetting(), true);
-            DbValidatorMapper.Add(typeof(TraceDbConnection), new CustomDbValidator(), true);
-            DbOperationMapper.Add(typeof(TraceDbConnection), new CustomDbOperation(), true);
             DbHelperMapper.Add(typeof(TraceDbConnection), new CustomDbHelper(), true);
             StatementBuilderMapper.Add(typeof(TraceDbConnection), new CustomStatementBuilder(), true);
         }
@@ -397,77 +395,77 @@ namespace RepoDb.UnitTests.Interfaces
 
         #region BulkInsert
 
-        #region BulkInsert
+        //#region BulkInsert
 
-        [TestMethod]
-        public void TestDbConnectionTraceForBeforeBulkInsert()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-            var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
+        //[TestMethod]
+        //public void TestDbConnectionTraceForBeforeBulkInsert()
+        //{
+        //    // Prepare
+        //    var trace = new Mock<ITrace>();
+        //    var connection = new TraceDbConnection();
+        //    var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
-            // Act
-            connection.BulkInsert<TraceEntity>(entities,
-                trace: trace.Object);
+        //    // Act
+        //    connection.BulkInsert<TraceEntity>(entities,
+        //        trace: trace.Object);
 
-            // Assert
-            trace.Verify(t => t.BeforeBulkInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
+        //    // Assert
+        //    trace.Verify(t => t.BeforeBulkInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        //}
 
-        [TestMethod]
-        public void TestDbConnectionTraceForAfterBulkInsert()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-            var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
+        //[TestMethod]
+        //public void TestDbConnectionTraceForAfterBulkInsert()
+        //{
+        //    // Prepare
+        //    var trace = new Mock<ITrace>();
+        //    var connection = new TraceDbConnection();
+        //    var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
-            // Act
-            connection.BulkInsert<TraceEntity>(entities,
-                trace: trace.Object);
+        //    // Act
+        //    connection.BulkInsert<TraceEntity>(entities,
+        //        trace: trace.Object);
 
-            // Assert
-            trace.Verify(t => t.AfterBulkInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
-        }
+        //    // Assert
+        //    trace.Verify(t => t.AfterBulkInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
+        //}
 
-        #endregion
+        //#endregion
 
-        #region BulkInsertAsync
+        //#region BulkInsertAsync
 
-        [TestMethod]
-        public void TestDbConnectionTraceForBeforeBulkInsertAsync()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-            var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
+        //[TestMethod]
+        //public void TestDbConnectionTraceForBeforeBulkInsertAsync()
+        //{
+        //    // Prepare
+        //    var trace = new Mock<ITrace>();
+        //    var connection = new TraceDbConnection();
+        //    var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
-            // Act
-            connection.BulkInsertAsync<TraceEntity>(entities,
-                trace: trace.Object).Wait();
+        //    // Act
+        //    connection.BulkInsertAsync<TraceEntity>(entities,
+        //        trace: trace.Object).Wait();
 
-            // Assert
-            trace.Verify(t => t.BeforeBulkInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
+        //    // Assert
+        //    trace.Verify(t => t.BeforeBulkInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        //}
 
-        [TestMethod]
-        public void TestDbConnectionTraceForAfterBulkInsertAsync()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-            var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
+        //[TestMethod]
+        //public void TestDbConnectionTraceForAfterBulkInsertAsync()
+        //{
+        //    // Prepare
+        //    var trace = new Mock<ITrace>();
+        //    var connection = new TraceDbConnection();
+        //    var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
 
-            // Act
-            connection.BulkInsertAsync<TraceEntity>(entities,
-                trace: trace.Object).Wait();
+        //    // Act
+        //    connection.BulkInsertAsync<TraceEntity>(entities,
+        //        trace: trace.Object).Wait();
 
-            // Assert
-            trace.Verify(t => t.AfterBulkInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
-        }
+        //    // Assert
+        //    trace.Verify(t => t.AfterBulkInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
+        //}
 
-        #endregion
+        //#endregion
 
         #endregion
 

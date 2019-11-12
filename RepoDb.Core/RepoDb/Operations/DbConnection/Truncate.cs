@@ -267,9 +267,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateTruncate(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetTruncateText(request);
@@ -331,9 +328,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateTruncateAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetTruncateText(request);
@@ -374,28 +368,6 @@ namespace RepoDb
 
             // Return the result
             return result;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateTruncate"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateTruncate(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateTruncate();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateTruncateAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateTruncateAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateTruncateAsync();
         }
 
         #endregion

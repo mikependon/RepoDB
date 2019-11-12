@@ -301,9 +301,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateCountAll(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetCountAllText(request);
@@ -369,9 +366,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateCountAllAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetCountAllText(request);
@@ -414,28 +408,6 @@ namespace RepoDb
 
             // Result
             return result;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateCountAll"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateCountAll(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateCountAll();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateCountAllAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateCountAllAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateCountAllAsync();
         }
 
         #endregion

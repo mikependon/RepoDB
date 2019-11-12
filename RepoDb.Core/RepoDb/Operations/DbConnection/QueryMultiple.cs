@@ -107,9 +107,6 @@ namespace RepoDb
         where T1 : class
         where T2 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultiple(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -316,9 +313,6 @@ namespace RepoDb
             where T2 : class
             where T3 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultiple(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -569,9 +563,6 @@ namespace RepoDb
             where T3 : class
             where T4 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultiple(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -864,9 +855,6 @@ namespace RepoDb
             where T4 : class
             where T5 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultiple(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -1201,9 +1189,6 @@ namespace RepoDb
             where T5 : class
             where T6 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultiple(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -1581,9 +1566,6 @@ namespace RepoDb
             where T6 : class
             where T7 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultiple(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -1861,9 +1843,6 @@ namespace RepoDb
             where T1 : class
             where T2 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultipleAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -2070,9 +2049,6 @@ namespace RepoDb
             where T2 : class
             where T3 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultipleAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -2323,9 +2299,6 @@ namespace RepoDb
             where T3 : class
             where T4 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultipleAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -2618,9 +2591,6 @@ namespace RepoDb
             where T4 : class
             where T5 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultipleAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -2955,9 +2925,6 @@ namespace RepoDb
             where T5 : class
             where T6 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultipleAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -3335,9 +3302,6 @@ namespace RepoDb
             where T6 : class
             where T7 : class
         {
-            // Validate
-            InvokeValidatorValidateQueryMultipleAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
 
@@ -3523,28 +3487,6 @@ namespace RepoDb
         }
 
         #endregion
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateQueryMultiple"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateQueryMultiple(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateQueryMultiple();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateQueryMultipleAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateQueryMultipleAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateQueryMultipleAsync();
-        }
 
         #endregion
     }

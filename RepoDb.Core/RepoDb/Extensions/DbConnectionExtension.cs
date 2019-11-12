@@ -1075,57 +1075,6 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the associated <see cref="IDbValidator"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <returns>An instance of the mapped <see cref="IDbValidator"/> object.</returns>
-        public static IDbValidator GetDbValidator(this IDbConnection connection)
-        {
-            // Check the connection
-            if (connection == null)
-            {
-                throw new NullReferenceException("The connection object cannot be null.");
-            }
-
-            // Get the validator
-            var validator = DbValidatorMapper.Get(connection.GetType());
-
-            // Check the presence
-            if (validator == null)
-            {
-                throw new MissingMappingException($"There is no database validator mapping found for '{connection.GetType().FullName}'.");
-            }
-
-            // Return the validator
-            return validator;
-        }
-
-        /// <summary>
-        /// Gets the associated <see cref="IDbOperation"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
-        /// </summary>
-        /// <returns>The actual field.</returns>
-        public static IDbOperation GetDbOperation(this IDbConnection connection)
-        {
-            // Check the connection
-            if (connection == null)
-            {
-                throw new NullReferenceException("The connection object cannot be null.");
-            }
-
-            // Get the provider
-            var provider = DbOperationMapper.Get(connection.GetType());
-
-            // Check the presence
-            if (provider == null)
-            {
-                throw new MissingMappingException($"There is no database operation provider mapping found for '{connection.GetType().FullName}'.");
-            }
-
-            // Return the provider
-            return provider;
-        }
-
-        /// <summary>
         /// Gets the associated <see cref="IDbHelper"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>

@@ -910,9 +910,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Validate
-            InvokeValidatorValidateUpdate(connection);
-
             // Set the flags
             where?.IsForUpdate();
 
@@ -1058,9 +1055,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Validate
-            InvokeValidatorValidateUpdateAsync(connection);
-
             // Set the flags
             where?.IsForUpdate();
 
@@ -1177,28 +1171,6 @@ namespace RepoDb
 
             // Return the result
             return result;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateUpdate"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateUpdate(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateUpdate();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateUpdateAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateUpdateAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateUpdateAsync();
         }
 
         #endregion

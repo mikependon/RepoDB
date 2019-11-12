@@ -386,9 +386,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateMaxAll(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetMaxAllText(request);
@@ -454,9 +451,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateMaxAllAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetMaxAllText(request);
@@ -499,28 +493,6 @@ namespace RepoDb
 
             // Result
             return result;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateMaxAll"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateMaxAll(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateMaxAll();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateMaxAllAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateMaxAllAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateMaxAllAsync();
         }
 
         #endregion

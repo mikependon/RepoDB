@@ -332,9 +332,6 @@ namespace RepoDb
             // Variables needed
             var dbSetting = connection.GetDbSetting();
 
-            // Validate
-            InvokeValidatorValidateInsertAll(connection);
-
             // Guard the parameters
             GuardInsertAll(entities);
 
@@ -674,9 +671,6 @@ namespace RepoDb
             // Variables needed
             var dbSetting = connection.GetDbSetting();
 
-            // Validate
-            InvokeValidatorValidateInsertAllAsync(connection);
-
             // Guard the parameters
             GuardInsertAll(entities);
 
@@ -999,24 +993,6 @@ namespace RepoDb
             {
                 throw new EmptyException("The entities must not be empty.");
             }
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateInsertAll"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateInsertAll(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateInsertAll();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateInsertAllAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateInsertAllAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateInsertAllAsync();
         }
 
         #endregion

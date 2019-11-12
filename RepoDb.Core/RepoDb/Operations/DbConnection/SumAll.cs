@@ -386,9 +386,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateSumAll(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetSumAllText(request);
@@ -454,9 +451,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateSumAllAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetSumAllText(request);
@@ -499,28 +493,6 @@ namespace RepoDb
 
             // Result
             return result;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateSumAll"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateSumAll(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateSumAll();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateSumAllAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateSumAllAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateSumAllAsync();
         }
 
         #endregion

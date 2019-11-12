@@ -778,9 +778,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateExists(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetExistsText(request);
@@ -846,9 +843,6 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            // Validate
-            InvokeValidatorValidateExistsAsync(connection);
-
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetExistsText(request);
@@ -891,28 +885,6 @@ namespace RepoDb
 
             // Result
             return ObjectConverter.DbNullToNull(result) != null;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateExists"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateExists(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateExists();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateExistsAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateExistsAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateExistsAsync();
         }
 
         #endregion

@@ -32,8 +32,7 @@ namespace RepoDb
                   Constant.DefaultCacheItemExpirationInMinutes,
                   null,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> class.
@@ -49,8 +48,7 @@ namespace RepoDb
                   Constant.DefaultCacheItemExpirationInMinutes,
                   null,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> class.
@@ -66,8 +64,7 @@ namespace RepoDb
                   Constant.DefaultCacheItemExpirationInMinutes,
                   null,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> class.
@@ -83,8 +80,7 @@ namespace RepoDb
                   Constant.DefaultCacheItemExpirationInMinutes,
                   trace,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> class.
@@ -100,8 +96,7 @@ namespace RepoDb
                   Constant.DefaultCacheItemExpirationInMinutes,
                   null,
                   statementBuilder)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> class.
@@ -120,8 +115,7 @@ namespace RepoDb
                   Constant.DefaultCacheItemExpirationInMinutes,
                   null,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> class.
@@ -141,8 +135,7 @@ namespace RepoDb
                   cacheItemExpiration,
                   null,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> class.
@@ -163,8 +156,7 @@ namespace RepoDb
                   cacheItemExpiration,
                   trace,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> class.
@@ -188,8 +180,7 @@ namespace RepoDb
                   cacheItemExpiration,
                   trace,
                   statementBuilder)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.
@@ -228,7 +219,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the underlying repository used by this repository.
         /// </summary>
-        private DbRepository<TDbConnection> DbRepository { get; set; }
+        internal DbRepository<TDbConnection> DbRepository { get; }
 
         /// <summary>
         /// Gets the connection used by this repository.

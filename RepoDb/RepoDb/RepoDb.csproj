@@ -109,10 +109,7 @@
     <Compile Include="StatementBuilders\BaseStatementBuilder.cs" />
     <Compile Include="_SqlServer\DbSettings\SqlServerDbSetting.cs" />
     <Compile Include="DbSettingMapper.cs" />
-    <Compile Include="DbValidatorMapper.cs" />
     <Compile Include="DbHelperMapper.cs" />
-    <Compile Include="_SqlServer\DbOperations\SqlServerDbOperation.BulkInsert.cs" />
-    <Compile Include="_SqlServer\DbValidators\SqlServerDbValidator.cs" />
     <Compile Include="Enumerations\ConversionType.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="Contexts\Execution\InsertAllExecutionContextCache.cs" />
@@ -148,10 +145,8 @@
     <Compile Include="Operations\BaseRepository\DeleteAll.cs" />
     <Compile Include="Operations\BaseRepository\Delete.cs" />
     <Compile Include="Operations\BaseRepository\Count.cs" />
-    <Compile Include="Operations\BaseRepository\BulkInsert.cs" />
     <Compile Include="Operations\BaseRepository\BatchQuery.cs" />
     <Compile Include="Operations\DbConnection\BatchQuery.cs" />
-    <Compile Include="Operations\DbConnection\BulkInsert.cs" />
     <Compile Include="Operations\DbConnection\CountAll.cs" />
     <Compile Include="Operations\DbConnection\InsertAll.cs" />
     <Compile Include="Operations\DbConnection\MergeAll.cs" />
@@ -174,7 +169,6 @@
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="IdentityCache.cs" />
     <Compile Include="Interfaces\IDbHelper.cs" />
-    <Compile Include="Operations\DbRepository\BulkInsert.cs" />
     <Compile Include="Operations\DbRepository\CountAll.cs" />
     <Compile Include="Operations\DbRepository\InsertAll.cs" />
     <Compile Include="Operations\DbRepository\QueryAll.cs" />
@@ -262,11 +256,13 @@
     <Compile Include="CancellableTraceLog.cs" />
     <Compile Include="ObjectConverter.cs" />
     <Compile Include="Resolvers\DbTypeToClientTypeResolver.cs" />
+    <Compile Include="_SqlServer\Operations\BaseRepository\BulkInsert.cs" />
+    <Compile Include="_SqlServer\Operations\DbRepository\BulkInsert.cs" />
+    <Compile Include="_SqlServer\Operations\SqlConnection\BulkInsert.cs" />
     <Compile Include="_SqlServer\Resolvers\SqlServerConvertFieldResolver.cs" />
     <Compile Include="_SqlServer\Resolvers\DbTypeToSqlServerStringNameResolver.cs" />
     <Compile Include="Resolvers\ClientTypeToDbTypeResolver.cs" />
     <Compile Include="_SqlServer\Resolvers\SqlServerDbTypeNameToClientTypeResolver.cs" />
-    <Compile Include="DbOperationMapper.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="_SqlServer\SqlServerTableHints.cs" />
     <Compile Include="_SqlServer\StatementBuilders\SqlServerStatementBuilder.cs" />

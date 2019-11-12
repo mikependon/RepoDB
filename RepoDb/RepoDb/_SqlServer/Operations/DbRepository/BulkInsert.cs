@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -8,9 +7,9 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// A base object for all shared-based repositories.
+    /// An extension class for <see cref="DbRepository{TDbConnection}"/> object.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public static partial class DbRepositoryExtension
     {
         #region BulkInsert
 
@@ -18,21 +17,23 @@ namespace RepoDb
         /// Bulk insert a list of data entity objects into the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public int BulkInsert<TEntity>(IEnumerable<TEntity> entities,
+        public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
+            IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -40,10 +41,10 @@ namespace RepoDb
                 return connection.BulkInsert<TEntity>(entities: entities,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -53,7 +54,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                repository.DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -61,6 +62,7 @@ namespace RepoDb
         /// Bulk insert a list of data entity objects into the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param> 
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -68,16 +70,17 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public int BulkInsert<TEntity>(string tableName,
+        public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
+            string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -86,10 +89,10 @@ namespace RepoDb
                     entities: entities,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -99,7 +102,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                repository.DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -107,21 +110,23 @@ namespace RepoDb
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param> 
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public int BulkInsert<TEntity>(DbDataReader reader,
+        public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
+            DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -129,10 +134,10 @@ namespace RepoDb
                 return connection.BulkInsert<TEntity>(reader: reader,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -142,13 +147,14 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                repository.DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param> 
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -156,15 +162,16 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public int BulkInsert(string tableName,
+        public static int BulkInsert(this DbRepository<SqlConnection> repository,
+            string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -173,10 +180,10 @@ namespace RepoDb
                     reader: reader,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -186,7 +193,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                repository.DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -194,6 +201,7 @@ namespace RepoDb
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param> 
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -201,16 +209,17 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public int BulkInsert<TEntity>(DataTable dataTable,
+        public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
+            DataTable dataTable,
             DataRowState rowState = DataRowState.Unchanged,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -219,10 +228,10 @@ namespace RepoDb
                     rowState: rowState,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -232,13 +241,14 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                repository.DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param> 
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
@@ -247,16 +257,17 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public int BulkInsert(string tableName,
+        public static int BulkInsert(this DbRepository<SqlConnection> repository,
+            string tableName,
             DataTable dataTable,
             DataRowState rowState = DataRowState.Unchanged,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -266,10 +277,10 @@ namespace RepoDb
                     rowState: rowState,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -279,7 +290,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                repository.DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -291,21 +302,23 @@ namespace RepoDb
         /// Bulk insert a list of data entity objects into the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param> 
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public async Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities,
+        public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
+            IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -313,10 +326,10 @@ namespace RepoDb
                 return await connection.BulkInsertAsync<TEntity>(entities: entities,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -326,7 +339,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection);
+                repository.DisposeConnectionForPerCall(connection);
             }
         }
 
@@ -334,6 +347,7 @@ namespace RepoDb
         /// Bulk insert a list of data entity objects into the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param> 
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -341,16 +355,17 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public async Task<int> BulkInsertAsync<TEntity>(string tableName,
+        public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
+            string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -359,10 +374,10 @@ namespace RepoDb
                     entities: entities,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -372,7 +387,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection);
+                repository.DisposeConnectionForPerCall(connection);
             }
         }
 
@@ -380,21 +395,23 @@ namespace RepoDb
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param> 
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public async Task<int> BulkInsertAsync<TEntity>(DbDataReader reader,
+        public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
+            DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -402,10 +419,10 @@ namespace RepoDb
                 return await connection.BulkInsertAsync<TEntity>(reader: reader,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -415,13 +432,14 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection);
+                repository.DisposeConnectionForPerCall(connection);
             }
         }
 
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param> 
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -429,15 +447,16 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public async Task<int> BulkInsertAsync(string tableName,
+        public static async Task<int> BulkInsertAsync(this DbRepository<SqlConnection> repository,
+            string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -446,10 +465,10 @@ namespace RepoDb
                     reader: reader,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -459,7 +478,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection);
+                repository.DisposeConnectionForPerCall(connection);
             }
         }
 
@@ -467,6 +486,7 @@ namespace RepoDb
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param> 
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -474,16 +494,17 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public async Task<int> BulkInsertAsync<TEntity>(DataTable dataTable,
+        public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
+            DataTable dataTable,
             DataRowState rowState = DataRowState.Unchanged,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -492,10 +513,10 @@ namespace RepoDb
                     rowState: rowState,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -505,13 +526,14 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                repository.DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param> 
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
@@ -520,16 +542,17 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public async Task<int> BulkInsertAsync(string tableName,
+        public static async Task<int> BulkInsertAsync(this DbRepository<SqlConnection> repository,
+            string tableName,
             DataTable dataTable,
             DataRowState rowState = DataRowState.Unchanged,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? batchSize = null,
-            IDbTransaction transaction = null)
+            SqlTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
 
             try
             {
@@ -539,10 +562,10 @@ namespace RepoDb
                     rowState: rowState,
                     mappings: mappings,
                     options: options,
-                    bulkCopyTimeout: CommandTimeout,
+                    bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    trace: Trace);
+                    trace: repository.Trace);
             }
             catch
             {
@@ -552,7 +575,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                repository.DisposeConnectionForPerCall(connection, transaction);
             }
         }
 

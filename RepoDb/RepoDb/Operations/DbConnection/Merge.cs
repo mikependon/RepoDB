@@ -1013,9 +1013,6 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
-            // Validate
-            InvokeValidatorValidateMerge(connection);
-
             // Get the database fields
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
 
@@ -1189,9 +1186,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Validate
-            InvokeValidatorValidateMerge(connection);
-
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
             var isObjectType = typeof(TEntity) == typeof(object);
@@ -1388,9 +1382,6 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
-            // Validate
-            InvokeValidatorValidateMergeAsync(connection);
-
             // Get the database fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
 
@@ -1548,9 +1539,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Validate
-            InvokeValidatorValidateMerge(connection);
-
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
             var isObjectType = typeof(TEntity) == typeof(object);
@@ -1713,28 +1701,6 @@ namespace RepoDb
 
             // Return the result
             return result;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateMerge"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateMerge(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateMerge();
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="IDbValidator.ValidateMergeAsync"/> method.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        private static void InvokeValidatorValidateMergeAsync(IDbConnection connection)
-        {
-            connection.GetDbValidator()?.ValidateMergeAsync();
         }
 
         #endregion
