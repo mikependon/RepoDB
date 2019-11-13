@@ -301,10 +301,9 @@ namespace RepoDb.StatementBuilders
                 for (var index = 0; index < splitted.Count(); index++)
                 {
                     var line = splitted[index].Trim();
-                    var returnValue = string.Concat("SET ", identityField.Name.AsUnquoted(true, DbSetting).AsParameter(index, DbSetting), " = ",
-                        string.IsNullOrEmpty(databaseType) ?
-                            "SCOPE_IDENTITY()" :
-                            "CONVERT(", databaseType, ", SCOPE_IDENTITY())");
+                    var returnValue = string.IsNullOrEmpty(databaseType) ?
+                            "SELECT SCOPE_IDENTITY()" :
+                            $"SELECT CONVERT({databaseType}, SCOPE_IDENTITY())";
                     commandTexts.Add(string.Concat(line, " ; ", returnValue, " ;"));
                 }
 

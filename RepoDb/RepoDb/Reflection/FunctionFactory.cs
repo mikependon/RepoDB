@@ -785,9 +785,12 @@ namespace RepoDb.Reflection
 
                 #region Direction
 
-                // Set the Parameter Direction
-                var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
-                parameterAssignments.Add(directionAssignment);
+                if (dbSetting.IsDbParameterDirectionSettingSupported)
+                {
+                    // Set the Parameter Direction
+                    var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
+                    parameterAssignments.Add(directionAssignment);
+                }
 
                 #endregion
 
@@ -1278,9 +1281,12 @@ namespace RepoDb.Reflection
 
                 #region Direction
 
-                // Set the Parameter Direction
-                var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
-                parameterAssignments.Add(directionAssignment);
+                if (dbSetting.IsDbParameterDirectionSettingSupported)
+                {
+                    // Set the Parameter Direction
+                    var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
+                    parameterAssignments.Add(directionAssignment);
+                }
 
                 #endregion
 
@@ -1583,63 +1589,66 @@ namespace RepoDb.Reflection
 
             // Function for each field
             var func = new Action<int, DbField, ParameterDirection>((int index,
-                 DbField field,
-                 ParameterDirection direction) =>
-             {
-                 // Create the parameter
-                 var parameter = command.CreateParameter();
+                DbField field,
+                ParameterDirection direction) =>
+            {
+                // Create the parameter
+                var parameter = command.CreateParameter();
 
-                 // Set the property
-                 parameter.ParameterName = field.Name.AsParameter(index, dbSetting);
+                // Set the property
+                parameter.ParameterName = field.Name.AsParameter(index, dbSetting);
 
-                 // Set the Direction
-                 parameter.Direction = direction;
+                // Set the Direction
+                if (dbSetting.IsDbParameterDirectionSettingSupported)
+                {
+                    parameter.Direction = direction;
+                }
 
-                 // Set the DB Type
-                 var dbType = TypeMapper.Get(field.Type?.GetUnderlyingType());
+                // Set the DB Type
+                var dbType = TypeMapper.Get(field.Type?.GetUnderlyingType());
 
-                 // Ensure the type mapping
-                 if (dbType == null)
-                 {
-                     if (field.Type == typeOfBytes)
-                     {
-                         dbType = DbType.Binary;
-                     }
-                 }
+                // Ensure the type mapping
+                if (dbType == null)
+                {
+                    if (field.Type == typeOfBytes)
+                    {
+                        dbType = DbType.Binary;
+                    }
+                }
 
-                 // Resolve manually
-                 if (dbType == null)
-                 {
-                     dbType = dbTypeResolver.Resolve(field.Type);
-                 }
+                // Resolve manually
+                if (dbType == null)
+                {
+                    dbType = dbTypeResolver.Resolve(field.Type);
+                }
 
-                 // Set the DB Type if present
-                 if (dbType != null)
-                 {
-                     parameter.DbType = dbType.Value;
-                 }
+                // Set the DB Type if present
+                if (dbType != null)
+                {
+                    parameter.DbType = dbType.Value;
+                }
 
-                 // Set the Size if present
-                 if (field.Size != null)
-                 {
-                     parameter.Size = field.Size.Value;
-                 }
+                // Set the Size if present
+                if (field.Size != null)
+                {
+                    parameter.Size = field.Size.Value;
+                }
 
-                 // Set the Precision if present
-                 if (field.Precision != null)
-                 {
-                     parameter.Precision = field.Precision.Value;
-                 }
+                // Set the Precision if present
+                if (field.Precision != null)
+                {
+                    parameter.Precision = field.Precision.Value;
+                }
 
-                 // Set the Scale if present
-                 if (field.Scale != null)
-                 {
-                     parameter.Scale = field.Scale.Value;
-                 }
+                // Set the Scale if present
+                if (field.Scale != null)
+                {
+                    parameter.Scale = field.Scale.Value;
+                }
 
-                 // Add the parameter
-                 command.Parameters.Add(parameter);
-             });
+                // Add the parameter
+                command.Parameters.Add(parameter);
+            });
 
             for (var index = 0; index < batchSize; index++)
             {

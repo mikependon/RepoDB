@@ -260,17 +260,14 @@ namespace RepoDb.Extensions
             return AsParameter(value, 0, dbSetting);
         }
 
-        // AsJoinQualifier
-        internal static string AsJoinQualifier(this string value,
-            string leftAlias,
-            string rightAlias,
-            IDbSetting dbSetting)
-        {
-            return string.Concat(leftAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting), " = ", rightAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting));
-        }
-
-        // AsParameter
-        internal static string AsParameter(this string value,
+        /// <summary>
+        /// Returns the string as a parameter name in the database.
+        /// </summary>
+        /// <param name="value">The string to be converted.</param>
+        /// <param name="index">The parameter index.</param>
+        /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
+        /// <returns>The string value represented as database parameter.</returns>
+        public static string AsParameter(this string value,
             int index,
             IDbSetting dbSetting)
         {
@@ -278,6 +275,15 @@ namespace RepoDb.Extensions
                 (value.StartsWith(dbSetting.ParameterPrefix) ? value.Substring(1) : value)
                     .AsUnquoted(true, dbSetting).AsAlphaNumeric());
             return index > 0 ? string.Concat(value, "_", index) : value;
+        }
+
+        // AsJoinQualifier
+        internal static string AsJoinQualifier(this string value,
+            string leftAlias,
+            string rightAlias,
+            IDbSetting dbSetting)
+        {
+            return string.Concat(leftAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting), " = ", rightAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting));
         }
 
         // AsAliasField

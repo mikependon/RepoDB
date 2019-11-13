@@ -350,7 +350,6 @@ namespace RepoDb
                 // Variables needed
                 var identity = (Field)null;
                 var inputFields = (IEnumerable<DbField>)null;
-                var outputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
                 // Set the identity value
@@ -371,12 +370,6 @@ namespace RepoDb
                         fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
-                // Set the output fields
-                if (batchSizeValue > 1)
-                {
-                    outputFields = identityDbField?.AsEnumerable();
-                }
-
                 // Variables for the context
                 var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
                 var identitySettersFunc = (List<Action<TEntity, DbCommand>>)null;
@@ -386,18 +379,7 @@ namespace RepoDb
                 // Get if we have not skipped it
                 if (skipIdentityCheck == false && identity != null)
                 {
-                    if (batchSizeValue <= 1)
-                    {
-                        identitySetterFunc = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
-                    }
-                    else
-                    {
-                        identitySettersFunc = new List<Action<TEntity, DbCommand>>();
-                        for (var index = 0; index < batchSizeValue; index++)
-                        {
-                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, identity.Name, index, dbSetting));
-                        }
-                    }
+                    identitySetterFunc = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
                 }
 
                 // Identity which objects to set
@@ -414,7 +396,7 @@ namespace RepoDb
                     multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".InsertAll"),
                         inputFields?.AsList(),
-                        outputFields,
+                        null,
                         batchSizeValue,
                         dbSetting);
                 }
@@ -470,7 +452,6 @@ namespace RepoDb
                 {
                     CommandText = batchSizeValue > 1 ? CommandTextCache.GetInsertAllText(insertAllRequest) : CommandTextCache.GetInsertText(insertRequest),
                     InputFields = inputFields,
-                    OutputFields = outputFields,
                     BatchSize = batchSizeValue,
                     SingleDataEntityParametersSetterFunc = singleEntityFunc,
                     MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc,
@@ -586,15 +567,36 @@ namespace RepoDb
                             context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
 
                             // Actual Execution
-                            result += command.ExecuteNonQuery();
-
-                            // Set the identities
-                            if (context.IdentityPropertySettersFunc != null && command.Parameters.Count > 0)
+                            if (context.IdentityPropertySetterFunc == null)
                             {
-                                for (var index = 0; index < batchItems.Count; index++)
+                                result += command.ExecuteNonQuery();
+                            }
+                            else
+                            {
+                                using (var reader = command.ExecuteReader())
                                 {
-                                    var func = context.IdentityPropertySettersFunc.ElementAt(index);
-                                    func(batchItems[index], command);
+                                    var index = 0;
+
+                                    // Get the first result
+                                    if (reader.Read())
+                                    {
+                                        var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
+                                        context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
+                                        result++;
+                                    }
+                                    index++;
+
+                                    // Iterate the other results
+                                    while (reader.NextResult())
+                                    {
+                                        if (reader.Read())
+                                        {
+                                            var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
+                                            context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
+                                            result++;
+                                        }
+                                        index++;
+                                    }
                                 }
                             }
                         }
@@ -689,7 +691,6 @@ namespace RepoDb
                 // Variables needed
                 var identity = (Field)null;
                 var inputFields = (IEnumerable<DbField>)null;
-                var outputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
                 // Set the identity value
@@ -710,12 +711,6 @@ namespace RepoDb
                         fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
-                // Set the output fields
-                if (batchSizeValue > 1)
-                {
-                    outputFields = identityDbField?.AsEnumerable();
-                }
-
                 // Variables for the context
                 var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
                 var identitySettersFunc = (List<Action<TEntity, DbCommand>>)null;
@@ -725,18 +720,7 @@ namespace RepoDb
                 // Get if we have not skipped it
                 if (skipIdentityCheck == false && identity != null)
                 {
-                    if (batchSizeValue <= 1)
-                    {
-                        identitySetterFunc = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
-                    }
-                    else
-                    {
-                        identitySettersFunc = new List<Action<TEntity, DbCommand>>();
-                        for (var index = 0; index < batchSizeValue; index++)
-                        {
-                            identitySettersFunc.Add(FunctionCache.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(identity, identity.Name, index, dbSetting));
-                        }
-                    }
+                    identitySetterFunc = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
                 }
 
                 // Identity which objects to set
@@ -753,7 +737,7 @@ namespace RepoDb
                     multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, ".", tableName, ".InsertAll"),
                         inputFields?.AsList(),
-                        outputFields,
+                        null,
                         batchSizeValue,
                         dbSetting);
                 }
@@ -809,7 +793,6 @@ namespace RepoDb
                 {
                     CommandText = batchSizeValue > 1 ? CommandTextCache.GetInsertAllText(insertAllRequest) : CommandTextCache.GetInsertText(insertRequest),
                     InputFields = inputFields,
-                    OutputFields = outputFields,
                     BatchSize = batchSizeValue,
                     SingleDataEntityParametersSetterFunc = singleEntityFunc,
                     MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc,
@@ -922,15 +905,36 @@ namespace RepoDb
                             context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
 
                             // Actual Execution
-                            result += await command.ExecuteNonQueryAsync();
-
-                            // Set the identities
-                            if (context.IdentityPropertySettersFunc != null && command.Parameters.Count > 0)
+                            if (context.IdentityPropertySetterFunc == null)
                             {
-                                for (var index = 0; index < batchItems.Count; index++)
+                                result += await command.ExecuteNonQueryAsync();
+                            }
+                            else
+                            {
+                                using (var reader = await command.ExecuteReaderAsync())
                                 {
-                                    var func = context.IdentityPropertySettersFunc.ElementAt(index);
-                                    func(batchItems[index], command);
+                                    var index = 0;
+
+                                    // Get the first result
+                                    if (await reader.ReadAsync())
+                                    {
+                                        var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
+                                        context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
+                                        result++;
+                                    }
+                                    index++;
+
+                                    // Iterate the other results
+                                    while (await reader.NextResultAsync())
+                                    {
+                                        if (await reader.ReadAsync())
+                                        {
+                                            var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
+                                            context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
+                                            result++;
+                                        }
+                                        index++;
+                                    }
                                 }
                             }
                         }

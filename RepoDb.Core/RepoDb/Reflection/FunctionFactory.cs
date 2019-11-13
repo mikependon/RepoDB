@@ -785,9 +785,12 @@ namespace RepoDb.Reflection
 
                 #region Direction
 
-                // Set the Parameter Direction
-                var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
-                parameterAssignments.Add(directionAssignment);
+                if (dbSetting.IsDbParameterDirectionSettingSupported)
+                {
+                    // Set the Parameter Direction
+                    var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
+                    parameterAssignments.Add(directionAssignment);
+                }
 
                 #endregion
 
@@ -1278,9 +1281,12 @@ namespace RepoDb.Reflection
 
                 #region Direction
 
-                // Set the Parameter Direction
-                var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
-                parameterAssignments.Add(directionAssignment);
+                if (dbSetting.IsDbParameterDirectionSettingSupported)
+                {
+                    // Set the Parameter Direction
+                    var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
+                    parameterAssignments.Add(directionAssignment);
+                }
 
                 #endregion
 
@@ -1583,8 +1589,8 @@ namespace RepoDb.Reflection
 
             // Function for each field
             var func = new Action<int, DbField, ParameterDirection>((int index,
-                 DbField field,
-                 ParameterDirection direction) =>
+                DbField field,
+                ParameterDirection direction) =>
             {
                 // Create the parameter
                 var parameter = command.CreateParameter();
@@ -1593,7 +1599,10 @@ namespace RepoDb.Reflection
                 parameter.ParameterName = field.Name.AsParameter(index, dbSetting);
 
                 // Set the Direction
-                parameter.Direction = direction;
+                if (dbSetting.IsDbParameterDirectionSettingSupported)
+                {
+                    parameter.Direction = direction;
+                }
 
                 // Set the DB Type
                 var dbType = TypeMapper.Get(field.Type?.GetUnderlyingType());

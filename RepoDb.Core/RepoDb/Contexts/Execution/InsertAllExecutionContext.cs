@@ -22,11 +22,6 @@ namespace RepoDb.Contexts.Execution
         public IEnumerable<DbField> InputFields { get; set; }
 
         /// <summary>
-        /// The list of the output <see cref="DbField"/> objects to be included in the execution.
-        /// </summary>
-        public IEnumerable<DbField> OutputFields { get; set; }
-
-        /// <summary>
         /// The batch size of the execution.
         /// </summary>
         public int BatchSize { get; set; }

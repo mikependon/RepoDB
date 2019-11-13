@@ -7,6 +7,7 @@ namespace RepoDb.UnitTests.CustomObjects
     {
         public bool IsMultipleStatementExecutionSupported => true;
         public bool IsUseUpsertForMergeOperation => false;
+        public bool IsDbParameterDirectionSettingSupported => false;
         public bool AreTableHintsSupported => true;
         public string OpeningQuote => "[";
         public string ClosingQuote => "]";
@@ -20,6 +21,7 @@ namespace RepoDb.UnitTests.CustomObjects
     {
         public bool IsMultipleStatementExecutionSupported => true;
         public bool IsUseUpsertForMergeOperation => false;
+        public bool IsDbParameterDirectionSettingSupported => false;
         public bool AreTableHintsSupported => false;
         public string OpeningQuote => "[";
         public string ClosingQuote => "]";
@@ -33,6 +35,7 @@ namespace RepoDb.UnitTests.CustomObjects
     {
         public bool IsMultipleStatementExecutionSupported => false;
         public bool IsUseUpsertForMergeOperation => false;
+        public bool IsDbParameterDirectionSettingSupported => false;
         public bool AreTableHintsSupported => true;
         public string OpeningQuote => "[";
         public string ClosingQuote => "]";

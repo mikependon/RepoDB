@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 
 namespace RepoDb.Interfaces
 {
@@ -16,6 +17,11 @@ namespace RepoDb.Interfaces
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
         bool IsUseUpsertForMergeOperation { get; }
+
+        /// <summary>
+        /// Gets a value that indicates whether setting the value of <see cref="DbParameter.Direction"/> object is supported.
+        /// </summary>
+        bool IsDbParameterDirectionSettingSupported { get; }
 
         /// <summary>
         /// Gets the value that indicates whether the table hints are supported.

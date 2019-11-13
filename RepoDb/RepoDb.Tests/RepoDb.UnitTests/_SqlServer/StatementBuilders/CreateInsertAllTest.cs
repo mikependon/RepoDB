@@ -28,7 +28,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2, @Field3 ) ; " +
-                $"SET @Field1 = CONVERT(INT, SCOPE_IDENTITY()) ;";
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -56,7 +56,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2, @Field3 ) ; " +
-                $"SET @Field1 = CONVERT(BIGINT, SCOPE_IDENTITY()) ;";
+                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -85,7 +85,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( [Field1], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field3 ) ; " +
-                $"SET @Field2 = CONVERT(INT, SCOPE_IDENTITY()) ;";
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -114,7 +114,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( [Field1], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field3 ) ; " +
-                $"SET @Field2 = CONVERT(BIGINT, SCOPE_IDENTITY()) ;";
+                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -142,17 +142,17 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2, @Field3 ) ; " +
-                $"SET @Field1 = CONVERT(INT, SCOPE_IDENTITY()) ; " +
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) ; " +
                 $"INSERT INTO [Table] " +
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2_1, @Field3_1 ) ; " +
-                $"SET @Field1_1 = CONVERT(INT, SCOPE_IDENTITY()) ; " +
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) ; " +
                 $"INSERT INTO [Table] " +
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2_2, @Field3_2 ) ; " +
-                $"SET @Field1_2 = CONVERT(INT, SCOPE_IDENTITY()) ;";
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
