@@ -946,5 +946,14 @@ namespace RepoDb
         {
             return field != null ? Append(string.Concat("AVG(", field.Name, ")")) : this;
         }
+
+        /// <summary>
+        /// Appends a word REPLACE to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Replace()
+        {
+            return Append("REPLACE");
+        }
     }
 }

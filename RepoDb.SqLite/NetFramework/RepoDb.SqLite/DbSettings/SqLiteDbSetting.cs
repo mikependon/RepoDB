@@ -20,7 +20,7 @@ namespace RepoDb.SqLite.DbSettings
         /// <summary>
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
-        public bool IsUseUpsertForMergeOperation { get; } = true;
+        public bool IsUseUpsertForMergeOperation { get; } = false;
 
         /// <summary>
         /// Gets a value that indicates whether setting the value of <see cref="DbParameter.Direction"/> object is supported.

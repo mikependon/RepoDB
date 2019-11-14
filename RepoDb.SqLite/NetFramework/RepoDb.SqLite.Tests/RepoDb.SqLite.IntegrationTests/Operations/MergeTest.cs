@@ -37,12 +37,6 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Merge<CompleteTable>(table);
-
-                // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
-                Assert.IsTrue(table.Id > 0);
-
-                // Act
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -66,8 +60,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 var result = connection.Merge<CompleteTable>(table);
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
-                Assert.IsTrue(table.Id > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -100,8 +93,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     qualifiers);
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
-                Assert.IsTrue(table.Id > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -126,12 +118,6 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.MergeAsync<CompleteTable>(table).Result;
-
-                // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
-                Assert.IsTrue(table.Id > 0);
-
-                // Act
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -155,8 +141,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 var result = connection.MergeAsync<CompleteTable>(table).Result;
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
-                Assert.IsTrue(table.Id > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -189,8 +174,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     qualifiers).Result;
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
-                Assert.IsTrue(table.Id > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -220,11 +204,6 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
                     table);
-
-                // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
-
-                // Act
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -249,7 +228,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     table);
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -283,7 +262,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     qualifiers);
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -307,7 +286,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     (object)table);
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -336,7 +315,6 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     (object)obj);
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -371,7 +349,6 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     qualifiers);
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -398,11 +375,6 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table).Result;
-
-                // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
-
-                // Act
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -427,7 +399,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     table).Result;
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -459,7 +431,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     qualifiers).Result;
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -483,7 +455,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     (object)table).Result;
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -512,7 +484,6 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     (object)obj).Result;
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -547,7 +518,6 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     qualifiers).Result;
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
                 Assert.AreEqual(table.Id, result);
 
                 // Act

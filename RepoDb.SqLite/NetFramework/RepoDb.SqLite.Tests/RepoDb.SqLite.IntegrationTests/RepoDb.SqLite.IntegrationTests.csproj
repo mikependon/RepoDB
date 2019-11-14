@@ -69,7 +69,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomTrace.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Models\NonIdentityCompleteTable.cs" />
     <Compile Include="Models\CompleteTable.cs" />
