@@ -139,6 +139,63 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateInsert
+
+        /// <summary>
+        /// Creates a SQL Statement for insert operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <returns>A sql statement for insert operation.</returns>
+        public override string CreateInsert(QueryBuilder queryBuilder,
+            string tableName,
+            IEnumerable<Field> fields = null,
+            DbField primaryField = null,
+            DbField identityField = null)
+        {
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
+            // Call the base
+            base.CreateInsert(builder,
+                tableName,
+                fields,
+                primaryField,
+                identityField);
+
+            // Variables needed
+            var databaseType = "BIGINT";
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                }
+            }
+
+            // Set the return value
+            var result = identityField != null ?
+                string.Concat($"CAST(last_insert_rowid() AS {databaseType})") :
+                    primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
+
+            builder
+                .Select()
+                .WriteText(result)
+                .As("[Result]")
+                .End();
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
+
         #region CreateInsertAll
 
         /// <summary>
@@ -158,19 +215,52 @@ namespace RepoDb.StatementBuilders
             DbField primaryField = null,
             DbField identityField = null)
         {
-            if (batchSize > 1)
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
+            // Call the base
+            var commandText = base.CreateInsertAll(builder,
+                tableName,
+                fields,
+                batchSize,
+                primaryField,
+                identityField);
+
+            // Variables needed
+            var databaseType = (string)null;
+
+            // Check for the identity
+            if (identityField != null)
             {
-                throw new NotSupportedException("The multiple execution is not supported in SqLite. Consider setting the batchsize to 1.");
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                }
             }
-            else
+
+            if (identityField != null)
             {
-                return base.CreateInsertAll(queryBuilder,
-                    tableName,
-                    fields,
-                    batchSize,
-                    primaryField,
-                    identityField);
+                // Variables needed
+                var commandTexts = new List<string>();
+                var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                // Iterate the indexes
+                for (var index = 0; index < splitted.Count(); index++)
+                {
+                    var line = splitted[index].Trim();
+                    var returnValue = string.IsNullOrEmpty(databaseType) ?
+                        "SELECT last_insert_rowid()" :
+                        $"SELECT CAST(last_insert_rowid() AS {databaseType})";
+                    commandTexts.Add(string.Concat(line, " ; ", returnValue, " ;"));
+                }
+
+                // Set the command text
+                commandText = commandTexts.Join(" ");
             }
+
+            // Return the query
+            return commandText;
         }
 
         #endregion
@@ -321,49 +411,12 @@ namespace RepoDb.StatementBuilders
                 .Delete()
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .End()
+                .WriteText("VACUUM")
                 .End();
 
             // Return the query
             return builder.GetString();
-        }
-
-        #endregion
-
-        #region CreateUpdateAll
-
-        /// <summary>
-        /// Creates a SQL Statement for update-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be updated.</param>
-        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
-        /// <param name="batchSize">The batch size of the operation.</param>
-        /// <param name="primaryField">The primary field from the database.</param>
-        /// <param name="identityField">The identity field from the database.</param>
-        /// <returns>A sql statement for update-all operation.</returns>
-        public override string CreateUpdateAll(QueryBuilder queryBuilder,
-            string tableName,
-            IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
-            int batchSize = 1,
-            DbField primaryField = null,
-            DbField identityField = null)
-        {
-            if (batchSize > 1)
-            {
-                throw new NotSupportedException("The multiple execution is not supported in SqLite. Consider setting the batchsize to 1.");
-            }
-            else
-            {
-                return base.CreateUpdateAll(queryBuilder,
-                    tableName,
-                    fields,
-                    qualifiers,
-                    batchSize,
-                    primaryField,
-                    identityField);
-            }
         }
 
         #endregion

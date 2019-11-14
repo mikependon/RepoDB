@@ -36,9 +36,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Truncate<CompleteTable>();
+                var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(0, countResult);
             }
         }
 
@@ -56,9 +57,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.TruncateAsync<CompleteTable>().Result;
+                var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(0, countResult);
             }
         }
 
@@ -80,9 +82,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Truncate(ClassMappedNameCache.Get<CompleteTable>());
+                var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(0, countResult);
             }
         }
 
@@ -100,9 +103,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+                var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(0, countResult);
             }
         }
 

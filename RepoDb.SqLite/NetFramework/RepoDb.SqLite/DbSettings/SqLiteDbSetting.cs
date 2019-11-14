@@ -15,12 +15,17 @@ namespace RepoDb.SqLite.DbSettings
         /// <summary>
         /// Gets a value whether the multiple statement execution is supported.
         /// </summary>
-        public bool IsMultipleStatementExecutionSupported { get; } = false;
+        public bool IsMultipleStatementExecutionSupported { get; } = true;
 
         /// <summary>
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
         public bool IsUseUpsertForMergeOperation { get; } = true;
+
+        /// <summary>
+        /// Gets a value that indicates whether setting the value of <see cref="DbParameter.Direction"/> object is supported.
+        /// </summary>
+        public bool IsDbParameterDirectionSettingSupported { get; } = false;
 
         /// <summary>
         /// Gets the value that indicates whether the table hints are supported.
@@ -82,6 +87,9 @@ namespace RepoDb.SqLite.DbSettings
 
             // IsMultipleStatementExecutionSupported
             hashCode += IsMultipleStatementExecutionSupported.GetHashCode();
+
+            // IsDbParameterDirectionSettingSupported
+            hashCode += IsDbParameterDirectionSettingSupported.GetHashCode();
 
             // IsUseUpsertForMergeOperation
             hashCode += IsUseUpsertForMergeOperation.GetHashCode();

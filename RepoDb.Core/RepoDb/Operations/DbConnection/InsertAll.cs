@@ -577,17 +577,8 @@ namespace RepoDb
                                 {
                                     var index = 0;
 
-                                    // Get the first result
-                                    if (reader.Read())
-                                    {
-                                        var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
-                                        context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
-                                        result++;
-                                    }
-                                    index++;
-
-                                    // Iterate the other results
-                                    while (reader.NextResult())
+                                    // Get the results
+                                    do
                                     {
                                         if (reader.Read())
                                         {
@@ -597,6 +588,7 @@ namespace RepoDb
                                         }
                                         index++;
                                     }
+                                    while (reader.NextResult());
                                 }
                             }
                         }
@@ -915,17 +907,8 @@ namespace RepoDb
                                 {
                                     var index = 0;
 
-                                    // Get the first result
-                                    if (await reader.ReadAsync())
-                                    {
-                                        var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
-                                        context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
-                                        result++;
-                                    }
-                                    index++;
-
-                                    // Iterate the other results
-                                    while (await reader.NextResultAsync())
+                                    // Get the results
+                                    do
                                     {
                                         if (await reader.ReadAsync())
                                         {
@@ -935,6 +918,7 @@ namespace RepoDb
                                         }
                                         index++;
                                     }
+                                    while (await reader.NextResultAsync());
                                 }
                             }
                         }
