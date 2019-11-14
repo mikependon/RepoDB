@@ -80,7 +80,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .With()
                 .WriteText("CTE")
                 .As()
@@ -411,7 +410,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 // MERGE T USING S
                 .Merge()
                 .TableNameFrom(tableName, DbSetting)
@@ -571,8 +569,7 @@ namespace RepoDb.StatementBuilders
             var builder = queryBuilder ?? new QueryBuilder();
 
             // Build the query
-            builder.Clear()
-                .Clear();
+            builder.Clear();
 
             // Iterate the indexes
             for (var index = 0; index < batchSize; index++)

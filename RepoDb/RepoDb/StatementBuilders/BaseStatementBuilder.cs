@@ -251,7 +251,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Delete()
                 .From()
                 .TableNameFrom(tableName, DbSetting)
@@ -283,7 +282,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Delete()
                 .From()
                 .TableNameFrom(tableName, DbSetting)
@@ -386,7 +384,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Insert()
                 .Into()
                 .TableNameFrom(tableName, DbSetting)
@@ -459,8 +456,7 @@ namespace RepoDb.StatementBuilders
             var builder = queryBuilder ?? new QueryBuilder();
 
             // Build the query
-            builder.Clear()
-                .Clear();
+            builder.Clear();
 
             // Iterate the indexes
             for (var index = 0; index < batchSize; index++)
@@ -518,7 +514,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Select()
                 .Max(field, DbSetting)
                 .WriteText("AS [MaxValue]")
@@ -566,7 +561,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Select()
                 .Max(field, DbSetting)
                 .WriteText("AS [MaxValue]")
@@ -615,7 +609,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Select()
                 .Min(field, DbSetting)
                 .WriteText("AS [MinValue]")
@@ -663,7 +656,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Select()
                 .Min(field, DbSetting)
                 .WriteText("AS [MinValue]")
@@ -732,7 +724,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Select()
                 .TopFrom(top)
                 .FieldsFrom(fields, DbSetting)
@@ -799,7 +790,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Select()
                 .FieldsFrom(fields, DbSetting)
                 .From()
@@ -848,7 +838,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Select()
                 .Sum(field, DbSetting)
                 .WriteText("AS [SumValue]")
@@ -896,7 +885,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Select()
                 .Sum(field, DbSetting)
                 .WriteText("AS [SumValue]")
@@ -930,7 +918,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Truncate()
                 .Table()
                 .TableNameFrom(tableName, DbSetting)
@@ -982,7 +969,6 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
                 .Update()
                 .TableNameFrom(tableName, DbSetting)
                 .Set()
@@ -1087,8 +1073,7 @@ namespace RepoDb.StatementBuilders
             var builder = queryBuilder ?? new QueryBuilder();
 
             // Build the query
-            builder.Clear()
-                .Clear();
+            builder.Clear();
 
             // Iterate the indexes
             for (var index = 0; index < batchSize; index++)
