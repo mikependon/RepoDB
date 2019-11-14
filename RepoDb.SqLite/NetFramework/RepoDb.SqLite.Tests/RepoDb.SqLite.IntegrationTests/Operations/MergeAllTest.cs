@@ -40,13 +40,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
-                Assert.IsTrue(tables.All(e => e.Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+                Assert.AreEqual(1, queryResult.Count());
+                Helper.AssertPropertiesEquality(tables.Last(), queryResult.First());
             }
         }
 
@@ -122,13 +122,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
-                Assert.IsTrue(tables.All(e => e.Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+                Assert.AreEqual(1, queryResult.Count());
+                Helper.AssertPropertiesEquality(tables.Last(), queryResult.First());
             }
         }
 
@@ -214,7 +214,8 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
+                Assert.AreEqual(1, queryResult.Count());
+                Helper.AssertMembersEquality(tables.Last(), queryResult.First());
             }
         }
 
@@ -382,7 +383,8 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
+                Assert.AreEqual(1, queryResult.Count());
+                Helper.AssertMembersEquality(tables.Last(), queryResult.First());
             }
         }
 

@@ -993,26 +993,18 @@ namespace RepoDb
                                 // Set the identity back
                                 using (var reader = command.ExecuteReader())
                                 {
-                                    // Variables for the reader
-                                    var readerPosition = 0;
-                                    var readable = (reader != null);
-
-                                    // Visit the next result
-                                    while (readable)
+                                    var index = 0;
+                                    do
                                     {
                                         if (reader.Read())
                                         {
                                             var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
-                                            context.IdentityPropertySetterFunc(batchItems[readerPosition], value);
+                                            context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
+                                            result++;
                                         }
-
-                                        // Iterate the result
-                                        result++;
-                                        readerPosition++;
-
-                                        // Set the flag
-                                        readable = reader.NextResult();
+                                        index++;
                                     }
+                                    while (reader.NextResult());
                                 }
                             }
                         }
@@ -1488,26 +1480,18 @@ namespace RepoDb
                                 // Set the identity back
                                 using (var reader = await command.ExecuteReaderAsync())
                                 {
-                                    // Variables for the reader
-                                    var readerPosition = 0;
-                                    var readable = (reader != null);
-
-                                    // Visit the next result
-                                    while (readable)
+                                    var index = 0;
+                                    do
                                     {
                                         if (await reader.ReadAsync())
                                         {
                                             var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
-                                            context.IdentityPropertySetterFunc(batchItems[readerPosition], value);
+                                            context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
+                                            result++;
                                         }
-
-                                        // Iterate the result
-                                        result++;
-                                        readerPosition++;
-
-                                        // Set the flag
-                                        readable = reader.NextResult();
+                                        index++;
                                     }
+                                    while (await reader.NextResultAsync());
                                 }
                             }
                         }
