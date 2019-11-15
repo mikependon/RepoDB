@@ -135,9 +135,7 @@
     <Compile Include="Resolvers\DbTypeToSqlServerStringNameResolverTest.cs" />
     <Compile Include="Resolvers\SqlServerTypeNameToClientTypeResolverTest.cs" />
     <Compile Include="CustomObjects\CustomDbHelper.cs" />
-    <Compile Include="CustomObjects\CustomDbOperation.cs" />
     <Compile Include="CustomObjects\CustomDbSetting.cs" />
-    <Compile Include="CustomObjects\CustomDbValidator.cs" />
     <Compile Include="CustomObjects\CustomStatementBuilder.cs" />
     <Compile Include="StatementBuilders\CreateExistsTest.cs" />
     <Compile Include="StatementBuilders\CreateInsertAllTest.cs" />

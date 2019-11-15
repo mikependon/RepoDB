@@ -37,7 +37,6 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
@@ -45,8 +44,7 @@ namespace RepoDb
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
-            ITrace trace = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
@@ -74,7 +72,6 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             string tableName,
@@ -83,8 +80,7 @@ namespace RepoDb
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
-            ITrace trace = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
@@ -111,7 +107,6 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             DbDataReader reader,
@@ -119,8 +114,7 @@ namespace RepoDb
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
-            ITrace trace = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             return BulkInsertInternal(connection: connection,
@@ -144,7 +138,6 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert(this SqlConnection connection,
             string tableName,
@@ -153,8 +146,7 @@ namespace RepoDb
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
-            ITrace trace = null)
+            SqlTransaction transaction = null)
         {
             return BulkInsertInternal(connection: connection,
                 tableName: tableName,
@@ -181,7 +173,6 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
@@ -189,8 +180,7 @@ namespace RepoDb
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
-            ITrace trace = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
@@ -218,7 +208,6 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             string tableName,
@@ -227,8 +216,7 @@ namespace RepoDb
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
-            ITrace trace = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
@@ -255,7 +243,6 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DbDataReader reader,
@@ -263,8 +250,7 @@ namespace RepoDb
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
-            ITrace trace = null)
+            SqlTransaction transaction = null)
             where TEntity : class
         {
             return await BulkInsertAsyncInternal(connection: connection,
@@ -288,7 +274,6 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync(this SqlConnection connection,
             string tableName,
@@ -297,8 +282,7 @@ namespace RepoDb
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
-            ITrace trace = null)
+            SqlTransaction transaction = null)
         {
             return await BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
@@ -325,7 +309,6 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal(SqlConnection connection,
             string tableName,
@@ -334,27 +317,10 @@ namespace RepoDb
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
-            ITrace trace = null)
+            SqlTransaction transaction = null)
         {
             // Validate the objects
             DbConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", reader, null);
-                trace.BeforeBulkInsert(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BulkInsert.Cancelled");
-                    }
-                    return 0;
-                }
-                reader = (DbDataReader)cancellableTraceLog.Parameter ?? reader;
-            }
 
             // Variables for the operation
             var result = 0;
@@ -426,13 +392,6 @@ namespace RepoDb
                 result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
             }
 
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", reader, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
             // Result
             return result;
         }
@@ -452,7 +411,6 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkInsertAsyncInternal(SqlConnection connection,
             string tableName,
@@ -461,27 +419,10 @@ namespace RepoDb
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
-            ITrace trace = null)
+            SqlTransaction transaction = null)
         {
             // Validate the objects
             DbConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog("BulkInsert.Before", reader, null);
-                trace.BeforeBulkInsert(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BulkInsert.Cancelled");
-                    }
-                    return 0;
-                }
-                reader = (DbDataReader)cancellableTraceLog.Parameter ?? reader;
-            }
 
             // Variables for the operation
             var result = 0;
@@ -551,13 +492,6 @@ namespace RepoDb
 
                 // Set the return value
                 result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
-            }
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterBulkInsert(new TraceLog("BulkInsert.After", reader, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
             // Result

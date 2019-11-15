@@ -128,9 +128,7 @@
     <Compile Include="Extensions\DataEntityExtension.cs" />
     <Compile Include="Extensions\DbFieldExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
-    <Compile Include="Interfaces\IDbOperation.cs" />
     <Compile Include="Interfaces\IDbSetting.cs" />
-    <Compile Include="Interfaces\IDbValidator.cs" />
     <Compile Include="Interfaces\IResolver.cs" />
     <Compile Include="Operations\BaseRepository\CountAll.cs" />
     <Compile Include="Operations\BaseRepository\InsertAll.cs" />

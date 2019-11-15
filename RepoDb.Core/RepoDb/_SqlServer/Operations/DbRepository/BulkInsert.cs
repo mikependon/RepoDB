@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -43,8 +42,7 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
-                    transaction: transaction,
-                    trace: repository.Trace);
+                    transaction: transaction);
             }
             catch
             {
@@ -91,8 +89,7 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
-                    transaction: transaction,
-                    trace: repository.Trace);
+                    transaction: transaction);
             }
             catch
             {
@@ -136,8 +133,7 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
-                    transaction: transaction,
-                    trace: repository.Trace);
+                    transaction: transaction);
             }
             catch
             {
@@ -182,8 +178,7 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
-                    transaction: transaction,
-                    trace: repository.Trace);
+                    transaction: transaction);
             }
             catch
             {
@@ -231,8 +226,7 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
-                    transaction: transaction,
-                    trace: repository.Trace);
+                    transaction: transaction);
             }
             catch
             {
@@ -279,8 +273,7 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
-                    transaction: transaction,
-                    trace: repository.Trace);
+                    transaction: transaction);
             }
             catch
             {
@@ -324,8 +317,7 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
-                    transaction: transaction,
-                    trace: repository.Trace);
+                    transaction: transaction);
             }
             catch
             {
@@ -370,8 +362,7 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
-                    transaction: transaction,
-                    trace: repository.Trace);
+                    transaction: transaction);
             }
             catch
             {

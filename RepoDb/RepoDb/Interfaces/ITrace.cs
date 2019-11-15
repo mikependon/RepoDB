@@ -56,22 +56,6 @@
 
         #endregion
 
-        #region BulkInsert
-
-        /// <summary>
-        /// A method being raised before the actual bulk-insert operation execution.
-        /// </summary>
-        /// <param name="log">The cancellable log object referenced by the bulk-insert execution.</param>
-        void BeforeBulkInsert(CancellableTraceLog log);
-
-        /// <summary>
-        /// A method being raised after the actual bulk-insert operation execution.
-        /// </summary>
-        /// <param name="log">The log object referenced by the bulk-insert execution.</param>
-        void AfterBulkInsert(TraceLog log);
-
-        #endregion
-
         #region Count
 
         /// <summary>
