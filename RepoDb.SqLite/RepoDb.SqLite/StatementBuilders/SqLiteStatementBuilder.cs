@@ -559,7 +559,7 @@ namespace RepoDb.StatementBuilders
 
         #region CreateTruncate
 
-        //// <summary>
+        /// <summary>
         /// Creates a SQL Statement for truncate operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>

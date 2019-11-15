@@ -1,10 +1,12 @@
-﻿using System;
-using RepoDb.Interfaces;
+﻿using RepoDb.Interfaces;
+using System;
+using System.Data.Common;
+using System.Data.SQLite;
 
 namespace RepoDb.SqLite.DbSettings
 {
     /// <summary>
-    /// A setting class used for <see cref="SqlConnection"/> data provider.
+    /// A setting class used for <see cref="SQLiteConnection"/> data provider.
     /// </summary>
     internal sealed class SqLiteDbSetting : IDbSetting
     {

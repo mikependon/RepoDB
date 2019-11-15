@@ -21,6 +21,9 @@ namespace RepoDb.SqLite
 
         #region Methods
 
+        /// <summary>
+        /// Initializes all necessary settings for SqLite.
+        /// </summary>
         public static void Initialize()
         {
             // Skip if already initialized

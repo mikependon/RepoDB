@@ -4,6 +4,7 @@ using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace RepoDb.DbHelpers
         private IDbSetting m_dbSetting = DbSettingMapper.Get<SQLiteConnection>();
 
         /// <summary>
-        /// Creates a new instance of <see cref="SqlDbHelper"/> class.
+        /// Creates a new instance of <see cref="SqLiteDbHelper"/> class.
         /// </summary>
         public SqLiteDbHelper()
         {
@@ -28,7 +29,7 @@ namespace RepoDb.DbHelpers
         #region Properties
 
         /// <summary>
-        /// Gets the type resolver used by this <see cref="SqlDbHelper"/> instance.
+        /// Gets the type resolver used by this <see cref="SqLiteDbHelper"/> instance.
         /// </summary>
         public IResolver<string, Type> DbTypeResolver { get; }
 
