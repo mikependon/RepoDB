@@ -16,18 +16,20 @@
  - It has Batch operations.
  - It has Bulk-Insert operation.
  - It has massive ORM operations.
+ - It has massive reusable extension methods.
  - It has Async operations.
  - It has Enumeration supports.
  - It has Multi-ResultSet query operations.
  - It has Type mapping.
  - It has Query Hints.
  - It has built-in Repositories.
+ - It has built-in Resolvers.
  - It has Dynamic Expressions support.
  - It has Linq Expressions support.
  - It has Table-Based call operations.
  - It has an extensible Tracers.
- - It has an extensible Database Helpers.
- - It has an extensible DB Operation Providers.
+ - It has an extensible DB Helpers.
+ - It has an extensible DB Settings.
  - It has an extensible Statement Builders.
  - It has ADO.NET transaction supports.
  - It is always free!
