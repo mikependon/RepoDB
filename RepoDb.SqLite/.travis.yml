@@ -1,4 +1,0 @@
-language: csharp
-solution: RepoDb.SqLite.sln
-mono: none
-dotnet: 2.1.502

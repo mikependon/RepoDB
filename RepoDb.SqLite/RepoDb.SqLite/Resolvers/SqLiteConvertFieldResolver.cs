@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class used to resolve the <see cref="Field"/> name conversion for SQLite.
+    /// A class used to resolve the <see cref="Field"/> name conversion for SqLite.
     /// </summary>
     public class SqLiteConvertFieldResolver : IResolver<Field, IDbSetting, string>
     {

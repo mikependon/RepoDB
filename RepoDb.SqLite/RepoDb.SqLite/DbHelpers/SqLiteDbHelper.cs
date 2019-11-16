@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace RepoDb.DbHelpers
 {
     /// <summary>
-    /// A helper class for database specially for the direct access. This class is only meant for SQLite.
+    /// A helper class for database specially for the direct access. This class is only meant for SqLite.
     /// </summary>
     internal class SqLiteDbHelper : IDbHelper
     {

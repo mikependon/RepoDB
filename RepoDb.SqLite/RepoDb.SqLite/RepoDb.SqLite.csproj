@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.10.1</Version>
+    <Version>1.0.0</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>The official RepoDb extented library for SqLite.</Description>
@@ -16,6 +16,8 @@
     <PackageReleaseNotes>Initial release for RepoDb.SqLite.</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
