@@ -1,0 +1,50 @@
+﻿using MySql.Data.MySqlClient;
+using RepoDb.DbHelpers;
+using RepoDb.MySql.DbSettings;
+using RepoDb.StatementBuilders;
+
+namespace RepoDb.MySql
+{
+    /// <summary>
+    /// A class used to initialize necessary objects that is connected to <see cref="MySqlConnection"/> object.
+    /// </summary>
+    public static class Bootstrap
+    {
+        #region Properties
+
+        /// <summary>
+        /// Gets the value indicating whether the initialization is completed.
+        /// </summary>
+        public static bool Initialized { get; private set; }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Initializes all necessary settings for MySql.
+        /// </summary>
+        public static void Initialize()
+        {
+            // Skip if already initialized
+            if (Initialized == true)
+            {
+                return;
+            }
+
+            // Map the DbSetting
+            DbSettingMapper.Add(typeof(MySqlConnection), new SqLiteDbSetting(), true);
+
+            // Map the DbHelper
+            DbHelperMapper.Add(typeof(MySqlConnection), new SqLiteDbHelper(), true);
+
+            // Map the Statement Builder
+            StatementBuilderMapper.Add(typeof(MySqlConnection), new SqLiteStatementBuilder(), true);
+
+            // Set the flag
+            Initialized = true;
+        }
+
+        #endregion
+    }
+}
