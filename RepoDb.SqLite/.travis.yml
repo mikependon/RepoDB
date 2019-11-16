@@ -1,4 +1,4 @@
 language: csharp
-solution: RepoDb.SqLite\RepoDb.SqLite.sln
+solution: RepoDb.SqLite.sln
 mono: none
 dotnet: 2.1.502
