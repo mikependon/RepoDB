@@ -1,4 +1,4 @@
 language: csharp
-solution: RepoDb.SqLite\RepoDb.SqLite.IntegrationTests\RepoDb.SqLite.IntegrationTests.csproj
+solution: RepoDb.SqLite\RepoDb.SqLite.sln
 mono: none
 dotnet: 2.1.502

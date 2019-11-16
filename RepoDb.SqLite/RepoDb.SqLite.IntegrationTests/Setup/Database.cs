@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Text;
 
 namespace RepoDb.SqLite.IntegrationTests.Setup
 {
@@ -10,7 +9,7 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
     {
         #region Properties
 
-        public static string ConnectionString = @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;";
+        public static string ConnectionString { get; private set; } = @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;";
 
         #endregion
 
@@ -18,8 +17,18 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
 
         public static void Initialize()
         {
+            // Check the connection string
+            var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.User);
+
+            // Master connection
+            ConnectionString = (environment == "DEVELOPMENT") ?
+                @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;" :
+                @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;";
+
+            // Initialize SqLite
             Bootstrap.Initialize();
-            CreateDatabase();
+
+            // Create tables
             CreateTables();
         }
 
@@ -58,15 +67,6 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
                 connection.InsertAll(tables);
                 return tables;
             }
-        }
-
-        #endregion
-
-        #region CreateDatabase
-
-        private static void CreateDatabase()
-        {
-
         }
 
         #endregion
