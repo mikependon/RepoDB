@@ -1,6 +1,6 @@
 language: csharp
 solution: RepoDb.SqLite\RepoDb.SqLite.IntegrationTests\RepoDb.SqLite.IntegrationTests.csproj
-install:
-  - dotnet restore RepoDb.SqLite\RepoDb.SqLite.IntegrationTests\RepoDb.SqLite.IntegrationTests.csproj
+mono: none
+dotnet: 2.1.502
 script:
-  - msbuild /p:Configuration=Release RepoDb.SqLite\RepoDb.SqLite.IntegrationTests\RepoDb.SqLite.IntegrationTests.csproj
+ - dotnet restore
