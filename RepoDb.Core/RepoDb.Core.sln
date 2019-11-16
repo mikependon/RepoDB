@@ -7,9 +7,60 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "RepoDb\RepoDb.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Tests", "RepoDb.Tests", "{23978120-52E6-40DB-8EDA-877308C54DC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.UnitTests", "RepoDb.Tests\RepoDb.UnitTests\RepoDb.UnitTests.csproj", "{668D001B-DD5C-4183-ABCC-D7316B298EFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.UnitTests", "RepoDb.Tests\RepoDb.UnitTests\RepoDb.UnitTests.csproj", "{668D001B-DD5C-4183-ABCC-D7316B298EFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.IntegrationTests", "RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj", "{0B22F8D2-D059-49B4-8481-46D0C5612C1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.IntegrationTests", "RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj", "{0B22F8D2-D059-49B4-8481-46D0C5612C1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Base", "RepoDb.Base", "{810FF947-4368-477F-9193-07532892B492}"
+	ProjectSection(SolutionItems) = preProject
+		..\CODE_OF_CONDUCT.md = ..\CODE_OF_CONDUCT.md
+		..\LICENSE.txt = ..\LICENSE.txt
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs", "{E8AA3BB8-F0A0-49C9-9015-6C6924955E8B}"
+	ProjectSection(SolutionItems) = preProject
+		..\Docs\index.rst = ..\Docs\index.rst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{701CE21D-0EEE-49ED-B901-563FE5C94371}"
+	ProjectSection(SolutionItems) = preProject
+		..\Docs\pages\attributes.rst = ..\Docs\pages\attributes.rst
+		..\Docs\pages\cache.rst = ..\Docs\pages\cache.rst
+		..\Docs\pages\connection.rst = ..\Docs\pages\connection.rst
+		..\Docs\pages\contact.rst = ..\Docs\pages\contact.rst
+		..\Docs\pages\dbhelper.rst = ..\Docs\pages\dbhelper.rst
+		..\Docs\pages\enumeration.rst = ..\Docs\pages\enumeration.rst
+		..\Docs\pages\extensibility.rst = ..\Docs\pages\extensibility.rst
+		..\Docs\pages\field.rst = ..\Docs\pages\field.rst
+		..\Docs\pages\hints.rst = ..\Docs\pages\hints.rst
+		..\Docs\pages\installation.rst = ..\Docs\pages\installation.rst
+		..\Docs\pages\introduction.rst = ..\Docs\pages\introduction.rst
+		..\Docs\pages\orderfield.rst = ..\Docs\pages\orderfield.rst
+		..\Docs\pages\performance.rst = ..\Docs\pages\performance.rst
+		..\Docs\pages\persistency.rst = ..\Docs\pages\persistency.rst
+		..\Docs\pages\provideroperation.rst = ..\Docs\pages\provideroperation.rst
+		..\Docs\pages\querygroup.rst = ..\Docs\pages\querygroup.rst
+		..\Docs\pages\rawsql.rst = ..\Docs\pages\rawsql.rst
+		..\Docs\pages\repository.rst = ..\Docs\pages\repository.rst
+		..\Docs\pages\statementbuilder.rst = ..\Docs\pages\statementbuilder.rst
+		..\Docs\pages\support.rst = ..\Docs\pages\support.rst
+		..\Docs\pages\trace.rst = ..\Docs\pages\trace.rst
+		..\Docs\pages\transaction.rst = ..\Docs\pages\transaction.rst
+		..\Docs\pages\typemapping.rst = ..\Docs\pages\typemapping.rst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Wiki", "RepoDb.Wiki", "{046EAFB0-B9D8-4C6F-A5D8-31A9D8A41CCE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{D8ED3F3D-D90D-42CD-83EF-C1F9A0D18108}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Wiki\Files\HLA.pptx = ..\RepoDb.Wiki\Files\HLA.pptx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{E79C4311-C8BF-4C4C-A7E9-72C7AF39FD26}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Wiki\Images\HLA.PNG = ..\RepoDb.Wiki\Images\HLA.PNG
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +87,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{668D001B-DD5C-4183-ABCC-D7316B298EFB} = {23978120-52E6-40DB-8EDA-877308C54DC3}
 		{0B22F8D2-D059-49B4-8481-46D0C5612C1F} = {23978120-52E6-40DB-8EDA-877308C54DC3}
+		{701CE21D-0EEE-49ED-B901-563FE5C94371} = {E8AA3BB8-F0A0-49C9-9015-6C6924955E8B}
+		{D8ED3F3D-D90D-42CD-83EF-C1F9A0D18108} = {046EAFB0-B9D8-4C6F-A5D8-31A9D8A41CCE}
+		{E79C4311-C8BF-4C4C-A7E9-72C7AF39FD26} = {046EAFB0-B9D8-4C6F-A5D8-31A9D8A41CCE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}

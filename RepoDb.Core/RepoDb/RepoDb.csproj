@@ -4,33 +4,15 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.10.0</Version>
+    <Version>1.10.1</Version>
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid ORM library for .NET.</Description>
     <Copyright>Copyright © 2019</Copyright>
     <PackageTags>orm orm-framework orm-library hybrid-orm</PackageTags>
-    <PackageReleaseNotes>RepoDb v1.10.0:
-- Breaking changes from the previous versions.
-- This release contains major code refactoring for performance optimization purposes.
-- Feature: Introduced the support 'IDbSetting'. Used for other data providers extensibility complete support.
-- Feature: Introduced 'DbSettingMapper' class.
-- Feature: Supported 'Upsert' operations (abstracted with 'Merge' operation) for the data providers that does not support multi-statement execution and 'MERGE' command.
-- Feature: Added support to 'Average' and 'AverageAll' (with its Async version).
-- Feature: Added support to 'Exists' (with its Async version).
-- Feature: Added support to 'Max' and 'MaxAll' (with its Async version).
-- Feature: Added support to 'Min' and 'MinAll' (with its Async version).
-- Feature: Added support to 'Sum' and 'SumAll' (with its Async version).
-- Feature: Create an extended method 'DbConnection.GetLastInsertedIdentity()' for other data providers extensibility complete support.
-- Enhancement: Introduced 'QueryGroup.IsForUpdate()' method.
-- Enhancement: Splitted the 'SqlServerStatementBuilder' to a 'BaseStatementBuilder'. Further supports for other data providers base statement building.
-- Enhancement: Supported 'IResolver' for 7 generic types.
-- Refactoring: Renamed the 'SqlDbHelper' to 'SqlServerDbHelper'.
-- Refactoring: Renamed the 'SqlStatementBuilder' to 'SqlServerStatementBuilder'.
-- Test: Added an extensive Unit/Integration Tests for Average, Exists, Max, Min, Sum (and all its Async operations).
-- Test: Added an extensive Unit Tests for 'QueryGroup.GetString()' and 'QueryField.GetString()'.
-- Bug: Where expression using IEnumerable's contains throws error when using inherited class property #301</PackageReleaseNotes>
+    <PackageReleaseNotes>RepoDb v1.10.1:
+- Removed the NetFramework Specific Library at Nuget.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb</RepositoryUrl>
@@ -38,8 +20,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.10.0.0</AssemblyVersion>
-    <FileVersion>1.10.0.0</FileVersion>
+    <AssemblyVersion>1.10.0.1</AssemblyVersion>
+    <FileVersion>1.10.0.1</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

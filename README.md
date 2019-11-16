@@ -17,11 +17,13 @@ Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter.
 
 ## Build Results
 
-Type of Build		 | Net (Framework)																																	 | Net (Standard)
----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-Project/Solution	 | [![Build status](https://ci.appveyor.com/api/projects/status/c563cikul4c2a5vc?svg=true)](https://ci.appveyor.com/project/mikependon/repodb)		 | [![Build status](https://ci.appveyor.com/api/projects/status/0ix2khcfrv1ub6ba?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw) |
-Unit Test			 | [![Build status](https://ci.appveyor.com/api/projects/status/xtfp2urkxa29s7b9?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-g4ml5) | [![Build status](https://ci.appveyor.com/api/projects/status/78nch60yyoj6wiok?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx) |
-Integration Test	 | [![Build status](https://ci.appveyor.com/api/projects/status/qnvun61tyyy1vwlb?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-neg8t) | [![Build status](https://ci.appveyor.com/api/projects/status/3fsp38vaqchmec7y?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-qksas) |
+Type of Build		    | Test Result
+------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+Core Solution		    | [![Build status](https://ci.appveyor.com/api/projects/status/0ix2khcfrv1ub6ba?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw) |
+Core Unit Test		    | [![Build status](https://ci.appveyor.com/api/projects/status/78nch60yyoj6wiok?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx) |
+Core Integration Test   | [![Build status](https://ci.appveyor.com/api/projects/status/3fsp38vaqchmec7y?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-qksas) |
+SqLite Solution		    | [![Build status](https://ci.appveyor.com/api/projects/status/0ix2khcfrv1ub6ba?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw) |
+SqLite Integration Test | [![Build status](https://ci.appveyor.com/api/projects/status/3fsp38vaqchmec7y?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-qksas) |
 
 ## High-Level Architecture
 
@@ -257,6 +259,18 @@ using (var connection = new SqlConnection(ConnectionString))
 	var affectedRows = connection.Update<Customer>(customer, new { Id = 10045 });
 }
 ```
+
+Via Expression:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(10045);
+	customer.FirstName = "John";
+	customer.LastUpdatedUtc = DateTime.UtcNow;
+	var affectedRows = connection.Update<Customer>(customer, e => e.Id == 10045);
+}
+```
 	
 Via Object:
 
@@ -331,6 +345,16 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ### Delete<TEntity>
 
+Via DataEntity:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(10045);
+	var deletedCount = connection.Delete<Customer>(customer);
+}
+```
+
 Via PrimaryKey:
 
 ```csharp
@@ -364,16 +388,6 @@ Via Object:
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var deletedCount = connection.Delete<Customer>(new QueryField(nameof(Customer.Id), 10045));
-}
-```
-
-Via DataEntity:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var customer = connection.Query<Customer>(new { Id = 10045 });
-	var deletedCount = connection.Delete<Customer>(customer);
 }
 ```
 
