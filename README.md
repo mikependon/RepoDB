@@ -15,14 +15,19 @@ Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter.
  - RepoDb is the fastest and the most efficient ORM library in .NET as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). You can see the actual execution result [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
  - RepoDb is covered by thousand of major business related Unit Tests and Integration Tests.
 
-## Build Results
+## Solution Builds
 
 Type of Build		    | Test Result
 ------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
 Core Solution		    | [![Build status](https://ci.appveyor.com/api/projects/status/0ix2khcfrv1ub6ba?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw) |
+SqLite Solution		    | [![Build status](https://ci.appveyor.com/api/projects/status/xmk0upvebxiva1ys?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-o6787) |
+
+## Test Builds
+
+Type of Build		    | Test Result
+------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
 Core Unit Test		    | [![Build status](https://ci.appveyor.com/api/projects/status/78nch60yyoj6wiok?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx) |
 Core Integration Test   | [![Build status](https://ci.appveyor.com/api/projects/status/3fsp38vaqchmec7y?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-qksas) |
-SqLite Solution		    | [![Build status](https://ci.appveyor.com/api/projects/status/xmk0upvebxiva1ys?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-o6787) |
 SqLite Integration Test | [![Build status](https://ci.appveyor.com/api/projects/status/r98i8f440hjs5q68?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-eg27p) |
 
 ## High-Level Architecture
