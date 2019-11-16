@@ -19,8 +19,8 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
         public static void Initialize()
         {
             Bootstrap.Initialize();
-            // Create Database
-            // Create Tables
+            CreateDatabase();
+            CreateTables();
         }
 
         public static void Cleanup()
@@ -62,16 +62,85 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
 
         #endregion
 
+        #region CreateDatabase
+
+        private static void CreateDatabase()
+        {
+
+        }
+
+        #endregion
+
         #region CreateTables
+
+        private static void CreateTables()
+        {
+            CreateCompleteTable();
+            CreateNonIdentityCompleteTable();
+        }
 
         private static void CreateCompleteTable()
         {
-            // CREATE TABLE CompleteTable (Id INTEGER PRIMARY KEY AUTOINCREMENT, ColumnBigInt BIGINT, ColumnBlob BLOB, ColumnBoolean BOOLEAN, ColumnChar CHAR, ColumnDate DATE, ColumnDateTime DATETIME, ColumnDecimal DECIMAL, ColumnDouble DOUBLE, ColumnInteger INTEGER, ColumnInt INT, ColumnNone NONE, ColumnNumeric NUMERIC, ColumnReal REAL, ColumnString STRING, ColumnText TEXT, ColumnTime TIME, ColumnVarChar VARCHAR)
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                var result = connection.ExecuteScalar<string>("SELECT sql FROM [sqlite_master] WHERE name = 'CompleteTable' AND type = 'table';");
+                if (string.IsNullOrEmpty(result))
+                {
+                    connection.ExecuteNonQuery("CREATE TABLE [CompleteTable] " +
+                        "(" +
+                        "   Id INTEGER PRIMARY KEY AUTOINCREMENT" +
+                        "   , ColumnBigInt BIGINT" +
+                        "   , ColumnBlob BLOB" +
+                        "   , ColumnBoolean BOOLEAN" +
+                        "   , ColumnChar CHAR" +
+                        "   , ColumnDate DATE" +
+                        "   , ColumnDateTime DATETIME" +
+                        "   , ColumnDecimal DECIMAL" +
+                        "   , ColumnDouble DOUBLE" +
+                        "   , ColumnInteger INTEGER" +
+                        "   , ColumnInt INT" +
+                        "   , ColumnNone NONE" +
+                        "   , ColumnNumeric NUMERIC" +
+                        "   , ColumnReal REAL" +
+                        "   , ColumnString STRING" +
+                        "   , ColumnText TEXT" +
+                        "   , ColumnTime TIME" +
+                        "   , ColumnVarChar VARCHAR" +
+                        ");");
+                }
+            }
         }
 
         private static void CreateNonIdentityCompleteTable()
         {
-            // CREATE TABLE NonIdentityCompleteTable (Id INTEGER PRIMARY KEY, ColumnBigInt BIGINT, ColumnBlob BLOB, ColumnBoolean BOOLEAN, ColumnChar CHAR, ColumnDate DATE, ColumnDateTime DATETIME, ColumnDecimal DECIMAL, ColumnDouble DOUBLE, ColumnInteger INTEGER, ColumnInt INT, ColumnNone NONE, ColumnNumeric NUMERIC, ColumnReal REAL, ColumnString STRING, ColumnText TEXT, ColumnTime TIME, ColumnVarChar VARCHAR)
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                var result = connection.ExecuteScalar<string>("SELECT sql FROM [sqlite_master] WHERE name = 'NonIdentityCompleteTable' AND type = 'table';");
+                if (string.IsNullOrEmpty(result))
+                {
+                    connection.ExecuteNonQuery("CREATE TABLE [NonIdentityCompleteTable] " +
+                        "(" +
+                        "   Id INTEGER PRIMARY KEY" +
+                        "   , ColumnBigInt BIGINT" +
+                        "   , ColumnBlob BLOB" +
+                        "   , ColumnBoolean BOOLEAN" +
+                        "   , ColumnChar CHAR" +
+                        "   , ColumnDate DATE" +
+                        "   , ColumnDateTime DATETIME" +
+                        "   , ColumnDecimal DECIMAL" +
+                        "   , ColumnDouble DOUBLE" +
+                        "   , ColumnInteger INTEGER" +
+                        "   , ColumnInt INT" +
+                        "   , ColumnNone NONE" +
+                        "   , ColumnNumeric NUMERIC" +
+                        "   , ColumnReal REAL" +
+                        "   , ColumnString STRING" +
+                        "   , ColumnText TEXT" +
+                        "   , ColumnTime TIME" +
+                        "   , ColumnVarChar VARCHAR" +
+                        ");");
+                }
+            }
         }
 
         #endregion

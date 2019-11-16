@@ -2,10 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.10.1</Version>
     <Authors>Michael Camara Pendon</Authors>
+    <Version>1.10.1</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid ORM library for .NET.</Description>
@@ -22,6 +20,8 @@
     <PreBuildEvent></PreBuildEvent>
     <AssemblyVersion>1.10.0.1</AssemblyVersion>
     <FileVersion>1.10.0.1</FileVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -34,7 +34,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Class1.cs" />
     <Compile Remove="PerformanceMonitor.cs" />
     <Compile Remove="Properties\AssemblyInfo.cs" />
     <Compile Remove="Reflection\DelegateCache.cs" />
