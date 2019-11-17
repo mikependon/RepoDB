@@ -9,9 +9,24 @@ namespace RepoDb.Interfaces
     public interface IDbSetting
     {
         /// <summary>
-        /// Gets a value whether the multiple statement execution is supported.
+        /// Gets the value that indicates whether the table hints are supported.
         /// </summary>
-        bool IsMultipleStatementExecutionSupported { get; }
+        bool AreTableHintsSupported { get; }
+
+        /// <summary>
+        /// Gets the character used for closing quote.
+        /// </summary>
+        string ClosingQuote { get; }
+
+        /// <summary>
+        /// Gets the default averageable .NET CLR types for the database.
+        /// </summary>
+        Type DefaultAverageableType { get; }
+
+        /// <summary>
+        /// Gets the default schema of the database.
+        /// </summary>
+        string DefaultSchema { get; }
 
         /// <summary>
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
@@ -24,19 +39,19 @@ namespace RepoDb.Interfaces
         bool IsDbParameterDirectionSettingSupported { get; }
 
         /// <summary>
-        /// Gets the value that indicates whether the table hints are supported.
+        /// Gets a value that indicates whether the <see cref="DbCommand"/> object must be disposed after calling the <see cref="DbCommand.ExecuteReader()"/> method.
         /// </summary>
-        bool AreTableHintsSupported { get; }
+        bool IsDisposeDbCommandAfterExecuteReader { get; }
+
+        /// <summary>
+        /// Gets a value whether the multiple statement execution is supported.
+        /// </summary>
+        bool IsMultipleStatementExecutionSupported { get; }
 
         /// <summary>
         /// Gets the character used for opening quote.
         /// </summary>
         string OpeningQuote { get; }
-
-        /// <summary>
-        /// Gets the character used for closing quote.
-        /// </summary>
-        string ClosingQuote { get; }
 
         /// <summary>
         /// Gets the character used for the database command parameter prefixing.
@@ -47,15 +62,5 @@ namespace RepoDb.Interfaces
         /// Gets the character (or string) used for dot notation.
         /// </summary>
         string SchemaSeparator { get; }
-
-        /// <summary>
-        /// Gets the default schema of the database.
-        /// </summary>
-        string DefaultSchema { get; }
-
-        /// <summary>
-        /// Gets the default averageable .NET CLR types for the database.
-        /// </summary>
-        Type DefaultAverageableType { get; }
     }
 }

@@ -547,8 +547,8 @@ namespace RepoDb
             IDbTransaction transaction,
             bool skipCommandArrayParametersCheck)
         {
-            // We used to use the 'using' keyword to wrap the 'DbCommand' object. However, it is actually
-            // failing in 'MySql'. Eventually, the command will be disposed by itself.
+            // Variables
+            var setting = connection.GetDbSetting();
             var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -556,7 +556,19 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
-            return command.ExecuteReader();
+
+            // Ensure the DbCommand disposal
+            try
+            {
+                return command.ExecuteReader();
+            }
+            finally
+            {
+                if (setting.IsDisposeDbCommandAfterExecuteReader)
+                {
+                    command.Dispose();
+                }
+            }
         }
 
         #endregion
@@ -616,8 +628,8 @@ namespace RepoDb
             IDbTransaction transaction,
             bool skipCommandArrayParametersCheck)
         {
-            // We used to use the 'using' keyword to wrap the 'DbCommand' object. However, it is actually
-            // failing in 'MySql'. Eventually, the command will be disposed by itself.
+            // Variables
+            var setting = connection.GetDbSetting();
             var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -625,7 +637,19 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
-            return await command.ExecuteReaderAsync();
+
+            // Ensure the DbCommand disposal
+            try
+            {
+                return await command.ExecuteReaderAsync();
+            }
+            finally
+            {
+                if (setting.IsDisposeDbCommandAfterExecuteReader)
+                {
+                    command.Dispose();
+                }
+            }
         }
 
         #endregion
