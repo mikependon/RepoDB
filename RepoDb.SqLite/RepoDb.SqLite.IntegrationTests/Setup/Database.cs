@@ -9,6 +9,9 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
     {
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the connection string to be used.
+        /// </summary>
         public static string ConnectionString { get; private set; } = @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;";
 
         #endregion
@@ -20,10 +23,11 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             // Check the connection string
             var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.User);
 
-            // Master connection
-            ConnectionString = (environment == "DEVELOPMENT") ?
-                @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;" :
-                @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;";
+            // Server connection
+            if (environment != "DEVELOPMENT")
+            {
+                ConnectionString = @"";
+            }
 
             // Initialize SqLite
             Bootstrap.Initialize();
