@@ -182,13 +182,9 @@ namespace RepoDb.DbHelpers
         {
             // Variables
             var commandText = GetCommandText(tableName);
-            var param = new
-            {
-                TableName = GetTableName(tableName)
-            };
 
             // Iterate and extract
-            using (var reader = connection.ExecuteReader(commandText, param, transaction: transaction))
+            using (var reader = connection.ExecuteReader(commandText, transaction: transaction))
             {
                 var dbFields = new List<DbField>();
                 var identity = GetIdentityFieldName(connection, tableName, transaction);

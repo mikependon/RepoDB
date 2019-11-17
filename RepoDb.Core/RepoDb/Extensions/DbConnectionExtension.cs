@@ -556,15 +556,21 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+            var hasError = false;
 
             // Ensure the DbCommand disposal
             try
             {
                 return command.ExecuteReader();
             }
+            catch
+            {
+                hasError = true;
+                throw;
+            }
             finally
             {
-                if (setting.IsDisposeDbCommandAfterExecuteReader)
+                if (setting.IsDisposeDbCommandAfterExecuteReader || hasError)
                 {
                     command.Dispose();
                 }
@@ -637,15 +643,21 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+            var hasError = false;
 
             // Ensure the DbCommand disposal
             try
             {
                 return await command.ExecuteReaderAsync();
             }
+            catch
+            {
+                hasError = true;
+                throw;
+            }
             finally
             {
-                if (setting.IsDisposeDbCommandAfterExecuteReader)
+                if (setting.IsDisposeDbCommandAfterExecuteReader || hasError)
                 {
                     command.Dispose();
                 }

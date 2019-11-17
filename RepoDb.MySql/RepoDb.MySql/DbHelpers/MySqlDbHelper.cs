@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb.DbHelpers
@@ -40,31 +39,40 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// Returns the command text that is being used to extract schema definitions.
         /// </summary>
-        /// <param name="tableName">The name of the target table.</param>
         /// <returns>The command text.</returns>
-        private string GetCommandText(string tableName)
+        private string GetCommandText()
         {
-            return $"pragma table_info({tableName});";
+            return $@"SELECT COLUMN_NAME AS ColumnName
+	            , CASE WHEN COLUMN_KEY = 'PRI' THEN 1 ELSE 0 END AS IsPrimary
+                , CASE WHEN EXTRA LIKE '%auto_increment%' THEN 1 ELSE 0 END AS IsIdentity
+                , CASE WHEN IS_NULLABLE = 'YES' THEN 1 ELSE 0 END AS IsNullable
+                , COLUMN_TYPE AS ColumnType
+                , CHARACTER_MAXIMUM_LENGTH AS Size
+                , COALESCE(NUMERIC_PRECISION, DATETIME_PRECISION) AS `Precision`
+                , NUMERIC_SCALE AS Scale
+                , DATA_TYPE AS DatabaseType
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE
+	            TABLE_NAME = @TableName
+            ORDER BY ORDINAL_POSITION;";
         }
 
         /// <summary>
         /// Converts the <see cref="IDataReader"/> object into <see cref="DbField"/> object.
         /// </summary>
         /// <param name="reader">The instance of <see cref="IDataReader"/> object.</param>
-        /// <param name="identityFieldName">The name of the identity column.</param>
         /// <returns>The instance of converted <see cref="DbField"/> object.</returns>
-        private DbField ReaderToDbField(IDataReader reader,
-            string identityFieldName)
+        private DbField ReaderToDbField(IDataReader reader)
         {
-            return new DbField(reader.GetString(1),
-                reader.IsDBNull(5) ? false : reader.GetBoolean(5),
-                string.Equals(reader.GetString(1), identityFieldName, StringComparison.OrdinalIgnoreCase),
-                reader.IsDBNull(3) ? true : reader.GetBoolean(3) == false,
-                reader.IsDBNull(2) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(reader.GetString(2)),
-                null,
-                null,
-                null,
-                null);
+            return new DbField(reader.GetString(0),
+                reader.GetBoolean(1),
+                reader.GetBoolean(2),
+                reader.GetBoolean(3),
+                DbTypeResolver.Resolve(reader.GetString(4)),
+                reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5),
+                reader.IsDBNull(6) ? (byte?)null : byte.Parse(reader.GetInt32(6).ToString()),
+                reader.IsDBNull(7) ? (byte?)null : byte.Parse(reader.GetInt32(7).ToString()),
+                reader.GetString(8));
         }
 
         /// <summary>
@@ -103,64 +111,6 @@ namespace RepoDb.DbHelpers
             return tableName.AsUnquoted(true, m_dbSetting);
         }
 
-        /// <summary>
-        /// Gets the list of <see cref="DbField"/> of the table.
-        /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
-        /// <param name="connection">The instance of the connection object.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        private string GetIdentityFieldName<TDbConnection>(TDbConnection connection,
-            string tableName,
-            IDbTransaction transaction = null)
-            where TDbConnection : IDbConnection
-        {
-            // Sql text
-            var commandText = "SELECT sql FROM [sqlite_master] WHERE name = @TableName AND type = 'table';";
-            var sql = connection.ExecuteScalar<string>(commandText, new { TableName = GetTableName(tableName) });
-            var fields = ParseTableFieldsFromSql(sql);
-
-            // Iterate the fields
-            if (fields != null && fields.Length > 0)
-            {
-                foreach (var field in fields)
-                {
-                    if (field.ToUpper().Contains("AUTOINCREMENT"))
-                    {
-                        return field.Substring(0, field.IndexOf(" "));
-                    }
-                }
-            }
-
-            // Return null
-            return null;
-        }
-
-        /// <summary>
-        /// Parses the table sql and return the list of the fields.
-        /// </summary>
-        /// <param name="sql">The sql to be parsed.</param>
-        /// <returns>The list of the fields.</returns>
-        private string[] ParseTableFieldsFromSql(string sql)
-        {
-            if (string.IsNullOrEmpty(sql))
-            {
-                return null;
-            }
-
-            // Do parse
-            var openingTokenIndex = sql.IndexOf("(");
-            var closingTokenIndex = sql.IndexOf(")");
-            var parsed = sql.Substring((openingTokenIndex + 1), (closingTokenIndex - (openingTokenIndex + 1)));
-
-            // Simply split by comma
-            return parsed
-                .Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s.Trim())
-                .AsArray();
-        }
-
         #endregion
 
         #region Methods
@@ -181,7 +131,7 @@ namespace RepoDb.DbHelpers
             where TDbConnection : IDbConnection
         {
             // Variables
-            var commandText = GetCommandText(tableName);
+            var commandText = GetCommandText();
             var param = new
             {
                 TableName = GetTableName(tableName)
@@ -191,12 +141,11 @@ namespace RepoDb.DbHelpers
             using (var reader = connection.ExecuteReader(commandText, param, transaction: transaction))
             {
                 var dbFields = new List<DbField>();
-                var identity = GetIdentityFieldName(connection, tableName, transaction);
 
                 // Iterate the list of the fields
                 while (reader.Read())
                 {
-                    dbFields.Add(ReaderToDbField(reader, identity));
+                    dbFields.Add(ReaderToDbField(reader));
                 }
 
                 // Return the list of fields
@@ -216,7 +165,7 @@ namespace RepoDb.DbHelpers
             where TDbConnection : IDbConnection
         {
             // Variables
-            var commandText = GetCommandText(tableName);
+            var commandText = GetCommandText();
             var param = new
             {
                 TableName = GetTableName(tableName)
@@ -226,12 +175,11 @@ namespace RepoDb.DbHelpers
             using (var reader = await connection.ExecuteReaderAsync(commandText, param, transaction: transaction))
             {
                 var dbFields = new List<DbField>();
-                var identity = GetIdentityFieldName(connection, tableName, transaction);
 
                 // Iterate the list of the fields
                 while (reader.Read())
                 {
-                    dbFields.Add(ReaderToDbField(reader, identity));
+                    dbFields.Add(ReaderToDbField(reader));
                 }
 
                 // Return the list of fields
@@ -254,7 +202,7 @@ namespace RepoDb.DbHelpers
             IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            return connection.ExecuteScalar("SELECT last_insert_rowid();");
+            return connection.ExecuteScalar("SELECT LAST_INSERT_ID();");
         }
 
         /// <summary>
@@ -268,7 +216,7 @@ namespace RepoDb.DbHelpers
             IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            return await connection.ExecuteScalarAsync("SELECT last_insert_rowid();");
+            return await connection.ExecuteScalarAsync("SELECT LAST_INSERT_ID();");
         }
 
         #endregion
