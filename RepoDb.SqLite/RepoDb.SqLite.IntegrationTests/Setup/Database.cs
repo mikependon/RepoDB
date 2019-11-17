@@ -90,27 +90,27 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
                 var result = connection.ExecuteScalar<string>("SELECT sql FROM [sqlite_master] WHERE name = 'CompleteTable' AND type = 'table';");
                 if (string.IsNullOrEmpty(result))
                 {
-                    connection.ExecuteNonQuery("CREATE TABLE [CompleteTable] " +
-                        "(" +
-                        "   Id INTEGER PRIMARY KEY AUTOINCREMENT" +
-                        "   , ColumnBigInt BIGINT" +
-                        "   , ColumnBlob BLOB" +
-                        "   , ColumnBoolean BOOLEAN" +
-                        "   , ColumnChar CHAR" +
-                        "   , ColumnDate DATE" +
-                        "   , ColumnDateTime DATETIME" +
-                        "   , ColumnDecimal DECIMAL" +
-                        "   , ColumnDouble DOUBLE" +
-                        "   , ColumnInteger INTEGER" +
-                        "   , ColumnInt INT" +
-                        "   , ColumnNone NONE" +
-                        "   , ColumnNumeric NUMERIC" +
-                        "   , ColumnReal REAL" +
-                        "   , ColumnString STRING" +
-                        "   , ColumnText TEXT" +
-                        "   , ColumnTime TIME" +
-                        "   , ColumnVarChar VARCHAR" +
-                        ");");
+                    connection.ExecuteNonQuery(@"CREATE TABLE [CompleteTable] 
+                        (
+                           Id INTEGER PRIMARY KEY AUTOINCREMENT
+                           , ColumnBigInt BIGINT
+                           , ColumnBlob BLOB
+                           , ColumnBoolean BOOLEAN
+                           , ColumnChar CHAR
+                           , ColumnDate DATE
+                           , ColumnDateTime DATETIME
+                           , ColumnDecimal DECIMAL
+                           , ColumnDouble DOUBLE
+                           , ColumnInteger INTEGER
+                           , ColumnInt INT
+                           , ColumnNone NONE
+                           , ColumnNumeric NUMERIC
+                           , ColumnReal REAL
+                           , ColumnString STRING
+                           , ColumnText TEXT
+                           , ColumnTime TIME
+                           , ColumnVarChar VARCHAR
+                        );");
                 }
             }
         }
@@ -122,27 +122,27 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
                 var result = connection.ExecuteScalar<string>("SELECT sql FROM [sqlite_master] WHERE name = 'NonIdentityCompleteTable' AND type = 'table';");
                 if (string.IsNullOrEmpty(result))
                 {
-                    connection.ExecuteNonQuery("CREATE TABLE [NonIdentityCompleteTable] " +
-                        "(" +
-                        "   Id INTEGER PRIMARY KEY" +
-                        "   , ColumnBigInt BIGINT" +
-                        "   , ColumnBlob BLOB" +
-                        "   , ColumnBoolean BOOLEAN" +
-                        "   , ColumnChar CHAR" +
-                        "   , ColumnDate DATE" +
-                        "   , ColumnDateTime DATETIME" +
-                        "   , ColumnDecimal DECIMAL" +
-                        "   , ColumnDouble DOUBLE" +
-                        "   , ColumnInteger INTEGER" +
-                        "   , ColumnInt INT" +
-                        "   , ColumnNone NONE" +
-                        "   , ColumnNumeric NUMERIC" +
-                        "   , ColumnReal REAL" +
-                        "   , ColumnString STRING" +
-                        "   , ColumnText TEXT" +
-                        "   , ColumnTime TIME" +
-                        "   , ColumnVarChar VARCHAR" +
-                        ");");
+                    connection.ExecuteNonQuery(@"CREATE TABLE [NonIdentityCompleteTable] 
+                        (
+                           Id INTEGER PRIMARY KEY
+                           , ColumnBigInt BIGINT
+                           , ColumnBlob BLOB
+                           , ColumnBoolean BOOLEAN
+                           , ColumnChar CHAR
+                           , ColumnDate DATE
+                           , ColumnDateTime DATETIME
+                           , ColumnDecimal DECIMAL
+                           , ColumnDouble DOUBLE
+                           , ColumnInteger INTEGER
+                           , ColumnInt INT
+                           , ColumnNone NONE
+                           , ColumnNumeric NUMERIC
+                           , ColumnReal REAL
+                           , ColumnString STRING
+                           , ColumnText TEXT
+                           , ColumnTime TIME
+                           , ColumnVarChar VARCHAR
+                        );");
                 }
             }
         }
